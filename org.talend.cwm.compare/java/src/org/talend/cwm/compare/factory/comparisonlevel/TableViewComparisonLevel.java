@@ -39,7 +39,7 @@ import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -95,7 +95,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
         URI uri = URI.createPlatformResourceURI(tempConnectionFile.getFullPath().toString(), false);
         Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
-        Collection<Connection> tdDataProviders = DataProviderHelper.getTdDataProviders(resource.getContents());
+        Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(resource.getContents());
 
         if (tdDataProviders.isEmpty()) {
             throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoDataProviderFound", //$NON-NLS-1$
@@ -149,7 +149,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     protected Connection findDataProvider() {
         ColumnSet columnSet = (ColumnSet) selectedObj;
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-        Connection provider = DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+        Connection provider = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
         return provider;
     }
 
@@ -207,7 +207,8 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         Resource rightResource = null;
         rightResource = EMFSharedResources.getInstance().getResource(uri, true);
         if (rightResource == null) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri)); //$NON-NLS-1$
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri));
+            //$NON-NLS-1$
         }
         rightResource.getContents().clear();
         for (TdColumn column : columns) {

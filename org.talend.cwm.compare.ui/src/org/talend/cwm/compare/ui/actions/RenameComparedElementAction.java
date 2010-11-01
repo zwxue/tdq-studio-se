@@ -191,6 +191,7 @@ public class RenameComparedElementAction extends Action {
      * @param checkedColumnSet
      * @return
      */
+    @SuppressWarnings("unused")
     private List<DiffElement> checkSubStructure(ColumnSet checkedColumnSet) {
         MatchModel match = null;
 
@@ -249,6 +250,7 @@ public class RenameComparedElementAction extends Action {
         return leftResource;
     }
 
+    @SuppressWarnings("deprecation")
     private Connection createCopyedProvider() {
         Package catalogOrSchema = getTopLevelPackage();
         IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
@@ -380,7 +382,7 @@ public class RenameComparedElementAction extends Action {
             tableViewer.setContentProvider(new IStructuredContentProvider() {
 
                 public Object[] getElements(Object inputElement) {
-                    if (inputElement instanceof List) {
+                    if (inputElement instanceof List<?>) {
                         return ((List<?>) inputElement).toArray();
                     }
                     return new Object[] { inputElement };

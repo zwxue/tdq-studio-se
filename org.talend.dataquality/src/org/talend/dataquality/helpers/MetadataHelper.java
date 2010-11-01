@@ -322,6 +322,7 @@ public final class MetadataHelper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static List<Status> getTechnicalStatus() {
         org.talend.core.model.properties.Project loadProject = null;
         try {
@@ -339,7 +340,6 @@ public final class MetadataHelper {
 
     public static List<String> toArray(List<org.talend.core.model.properties.Status> status) {
         List<String> res = new ArrayList<String>();
-        int i = 0;
         for (org.talend.core.model.properties.Status s : status) {
             res.add(s.getLabel());
         }

@@ -36,7 +36,6 @@ import org.talend.cwm.compare.ui.views.CompareModelStructureMergeViewer;
  * 
  * DOC mzhao class global comment. Detailled comment
  */
-@SuppressWarnings("restriction")
 public class ModelElementCompareEditorInput extends CompareEditorInput {
 
     private Object selectedObject = null;

@@ -49,7 +49,6 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -96,6 +95,7 @@ public final class DQStructureComparer {
 
     protected static Logger log = Logger.getLogger(THAT);
 
+    @SuppressWarnings("unused")
     private static DQStructureComparer comparer = new DQStructureComparer();
 
     private DQStructureComparer() {
@@ -380,7 +380,8 @@ public final class DQStructureComparer {
      * @throws ReloadCompareException
      */
     public static TdColumn findMatchedColumn(TdColumn column, Connection toMatchDataProvider) throws ReloadCompareException {
-        ColumnSet columnSet = ColumnHelper.getColumnSetOwner(column);
+        // MOD klliu update ColumnHelper.getColumnSetOwner(column)
+        ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet(column);
         ColumnSet toReloadColumnSet = DQStructureComparer.findMatchedColumnSet(columnSet, toMatchDataProvider);
         List<TdColumn> columns = ColumnSetHelper.getColumns(toReloadColumnSet);
         TdColumn oldColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
@@ -427,7 +428,7 @@ public final class DQStructureComparer {
      */
     private static Catalog findMatchedCatalogObj(Catalog catalog, Connection matchDataProvider)
             throws ReloadCompareException {
-        List<Catalog> tdCatalogs = DataProviderHelper.getCatalogs(matchDataProvider);
+        List<Catalog> tdCatalogs = ConnectionHelper.getCatalogs(matchDataProvider);
         for (Catalog matchCatalog : tdCatalogs) {
             if (catalog.getName().equals(matchCatalog.getName())) {
                 return matchCatalog;

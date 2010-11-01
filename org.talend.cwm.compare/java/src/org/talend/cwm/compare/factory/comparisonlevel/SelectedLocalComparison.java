@@ -29,7 +29,7 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
@@ -102,6 +102,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
 
     }
 
+    @SuppressWarnings("deprecation")
     protected void createTempConnectionFile() throws ReloadCompareException {
         // First resource.
         IFile selectedFile1 = PrvResourceFileHelper.getInstance().findCorrespondingFile(firstSelectedDataProvider);
@@ -188,15 +189,15 @@ public class SelectedLocalComparison implements IComparisonLevel {
                 Package package1 = SwitchHelpers.PACKAGE_SWITCH.doSwitch((ModelElement) element);
 
                 if (package1 != null) {
-                    adaptedDataProvider = DataProviderHelper.getTdDataProvider(package1);
+                    adaptedDataProvider = ConnectionHelper.getTdDataProvider(package1);
                 } else {
                     ColumnSet columnSet1 = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch((ModelElement) element);
                     if (columnSet1 != null) {
-                        adaptedDataProvider = DataProviderHelper.getDataProvider(columnSet1);
+                        adaptedDataProvider = ConnectionHelper.getDataProvider(columnSet1);
                     } else {
                         TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((TdColumn) element);
                         if (column1 != null) {
-                            adaptedDataProvider = DataProviderHelper.getTdDataProvider(column1);
+                            adaptedDataProvider = ConnectionHelper.getTdDataProvider(column1);
                         }
                     }
 

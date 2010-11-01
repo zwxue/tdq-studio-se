@@ -14,7 +14,6 @@ package org.talend.cwm.compare.ui.actions.provider;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
@@ -42,9 +41,9 @@ public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
             return;
         }
         // MOD bug 16532 scorreia 2010-10-19 hide menu when not in TOP standalone
-        if (!PluginChecker.isOnlyTopLoaded()) {
-            return;
-        }
+        // if (!PluginChecker.isOnlyTopLoaded()) {
+        // return;
+        // }
         // ~
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         String menuText = RELOADDATABASE_MENUTEXT;

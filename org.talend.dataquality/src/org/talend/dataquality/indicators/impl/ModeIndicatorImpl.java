@@ -158,8 +158,12 @@ public class ModeIndicatorImpl extends IndicatorImpl implements ModeIndicator {
         if (!checkResults(objects, 2)) {
             return false;
         }
-        Object c = objects.get(0)[0];
-        this.setMode(c);
+        Object c = null;
+        if (objects != null) {
+            c = objects.get(0)[0];
+            this.setMode(c);
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("Mode found: " + c);
         }

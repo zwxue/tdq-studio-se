@@ -42,7 +42,7 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
         TdColumn tdColumn = null;
         if (leftElement instanceof TdColumn) {
             tdColumn = (TdColumn) leftElement;
-            columnSet = ColumnHelper.getColumnSetOwner(tdColumn);
+            columnSet = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         }
         if (columnSet == null) {
             return Boolean.FALSE;
@@ -69,7 +69,7 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
         TdColumn tdColumn = null;
         if (leftElement instanceof TdColumn) {
             tdColumn = (TdColumn) leftElement;
-            columnSet = ColumnHelper.getColumnSetOwner(tdColumn);
+            columnSet = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         }
         if (columnSet == null) {
             return Boolean.FALSE;

@@ -239,7 +239,7 @@ public enum EResourceConstant {
     }
 
     private static EResourceConstant getTypeConstantsFromTDQ(Item item) {
-        return (EResourceConstant) new PropertiesSwitch() {
+        return (EResourceConstant) new PropertiesSwitch<Object>() {
 
             @Override
             public Object caseTDQReportItem(TDQReportItem object) {
@@ -280,6 +280,7 @@ public enum EResourceConstant {
      * @param provider
      * @return
      */
+    @SuppressWarnings("unused")
     private static boolean isMDMConnection(DataProvider provider) {
         return SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(provider) == null ? false : true;
     }

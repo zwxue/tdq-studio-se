@@ -61,7 +61,7 @@ import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
 import org.talend.cwm.compare.ui.actions.SubelementCompareAction;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -93,9 +93,9 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
     private Object selectedOjbect = null;
 
-    public ModelContentMergeDiffTab diffTabLeft = null;
+    private ModelContentMergeDiffTab diffTabLeft = null;
 
-    public ModelContentMergeDiffTab diffTabRight = null;
+    private ModelContentMergeDiffTab diffTabRight = null;
 
     public CompareModelContentMergeViewer(Composite parent, CompareConfiguration config, Object selObj) {
         super(parent, config);
@@ -416,15 +416,15 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
             if (ctatlogSwtich != null) {
                 resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
-                        DataProviderHelper.getTdDataProvider(ctatlogSwtich));
-                modelElement = DataProviderHelper.getTdDataProvider(ctatlogSwtich);
+                        ConnectionHelper.getTdDataProvider(ctatlogSwtich));
+                modelElement = ConnectionHelper.getTdDataProvider(ctatlogSwtich);
             }
             ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
                     .doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect).getParent());
             if (columnSet != null) {
                 resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
-                        DataProviderHelper.getDataProvider(columnSet));
-                modelElement = DataProviderHelper.getDataProvider(columnSet);
+                        ConnectionHelper.getDataProvider(columnSet));
+                modelElement = ConnectionHelper.getDataProvider(columnSet);
             }
         }
         if (modelElement != null && resourceFile != null) {

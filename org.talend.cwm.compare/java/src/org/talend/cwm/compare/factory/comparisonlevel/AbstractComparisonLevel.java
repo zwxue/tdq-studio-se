@@ -199,6 +199,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     }
 
+    @SuppressWarnings("deprecation")
     protected void createCopyedProvider() {
         if (oldDataProvider.eIsProxy()) {
             ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
@@ -209,6 +210,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
         TypedReturnCode<Connection> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
+
         copyedDataProvider = returnValue.getObject();
 
     }

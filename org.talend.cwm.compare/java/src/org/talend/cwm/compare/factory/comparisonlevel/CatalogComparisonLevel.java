@@ -24,7 +24,6 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.objectmodel.core.Package;
@@ -101,7 +100,7 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
         EObject rightElement = addElement.getRightElement();
         Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
         if (schema != null) {
-            DataProviderHelper.addSchema(schema, oldDataProvider);
+            ConnectionHelper.addSchema(schema, oldDataProvider);
         }
     }
 

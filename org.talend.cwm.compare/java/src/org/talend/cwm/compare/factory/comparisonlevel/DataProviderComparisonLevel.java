@@ -25,7 +25,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -129,12 +128,12 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         EObject rightElement = addElement.getRightElement();
         Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
         if (catalog != null) {
-            DataProviderHelper.addCatalog(catalog, oldDataProvider);
+            ConnectionHelper.addCatalog(catalog, oldDataProvider);
             this.tempReloadProvider.getDataPackage().remove(catalog);
         } else {
             Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
             if (schema != null) {
-                DataProviderHelper.addSchema(schema, oldDataProvider);
+                ConnectionHelper.addSchema(schema, oldDataProvider);
             }
         }
         return;

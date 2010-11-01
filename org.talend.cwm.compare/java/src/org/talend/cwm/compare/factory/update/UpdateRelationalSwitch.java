@@ -10,6 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
+
 package org.talend.cwm.compare.factory.update;
 
 import org.apache.log4j.Logger;
@@ -32,7 +33,8 @@ class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
     private EObject recentElement;
 
     public void setRightElement(EObject rightElement) {
-        this.recentElement = rightElement;
+        // MOD klliu add recentElement getter/setter
+        this.setRecentElement(rightElement);
         this.updateCoreSwitch.setRightElement(rightElement);
     }
     
@@ -68,6 +70,14 @@ class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
     @Override
     public Boolean defaultCase(EObject object) {
         return this.updateCoreSwitch.doSwitch(object);
+    }
+
+    public void setRecentElement(EObject recentElement) {
+        this.recentElement = recentElement;
+    }
+
+    public EObject getRecentElement() {
+        return recentElement;
     }
 
 }

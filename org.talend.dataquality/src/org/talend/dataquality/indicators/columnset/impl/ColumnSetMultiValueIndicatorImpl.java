@@ -324,7 +324,8 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                     continue;
                 }
                 final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
-                if (DataminingType.INTERVAL.equals(dmType) && Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
+                if (DataminingType.INTERVAL.equals(dmType)
+                        && Java2SqlType.isNumbericInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                     computedColumns.add(tdColumn);
                 }
             }
@@ -380,7 +381,8 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
             for (TdColumn column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
                 final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
-                if (DataminingType.INTERVAL.equals(dmType) && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                if (DataminingType.INTERVAL.equals(dmType)
+                        && Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                     dateColumns.add(tdColumn);
                 }
             }

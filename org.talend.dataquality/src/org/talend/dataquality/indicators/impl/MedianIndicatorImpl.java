@@ -336,7 +336,11 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
             return false;
         }
 
-        TimeTracer tt = (trace) ? new TimeTracer("Median computation with frequency table.", null) : null;
+        TimeTracer tt;
+        if (trace)
+            tt = new TimeTracer("Median computation with frequency table.", null);
+        else
+            tt = null;
 
         if (trace) {
             tt.start("searching median");
@@ -485,6 +489,14 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
             computeMedian();
         }
         return super.finalizeComputation();
+    }
+
+    public void setMedianComputed(boolean medianComputed) {
+        this.medianComputed = medianComputed;
+    }
+
+    public boolean isMedianComputed() {
+        return medianComputed;
     }
 
     

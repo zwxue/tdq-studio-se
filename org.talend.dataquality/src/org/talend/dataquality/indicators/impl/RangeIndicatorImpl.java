@@ -42,7 +42,8 @@ import org.talend.utils.sql.Java2SqlType;
  */
 public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeIndicator {
 
-    private static Logger log = Logger.getLogger(RangeIndicatorImpl.class);
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(RangeIndicatorImpl.class);
 
     /**
      * The cached value of the '{@link #getLowerValue() <em>Lower Value</em>}' containment reference. <!--

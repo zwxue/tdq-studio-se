@@ -105,6 +105,7 @@ public final class DataqualitySwitchHelper {
 
     public static final ExpressionsSwitch<TdExpression> TDEXPRESSION_SWITCH = new ExpressionsSwitch<TdExpression>() {
 
+        @SuppressWarnings("unused")
         public TdExpression caseTdExpression(TdExpression object) {
             return object;
         }

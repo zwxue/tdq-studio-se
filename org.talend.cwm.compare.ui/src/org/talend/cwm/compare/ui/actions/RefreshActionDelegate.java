@@ -70,6 +70,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
+@SuppressWarnings("deprecation")
 public class RefreshActionDelegate implements IObjectActionDelegate {
 
     protected static Logger log = Logger.getLogger(RefreshActionDelegate.class);
@@ -113,7 +114,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         // DQStructureComparer.deleteCopiedResourceFile();
     }
 
-    @SuppressWarnings("restriction")
+    @SuppressWarnings("unused")
     private void synchronizeDirect() {
         EMFUtil util = EMFSharedResources.getSharedEmfUtil();
         ResourceSet resourceSet = util.getResourceSet();
@@ -210,6 +211,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 System.out.println("Unmatched elt= " + modelElt.getName()); //$NON-NLS-1$
             }
             //System.out.println("LEFT MODEL=" + match.getLeftModel()); //$NON-NLS-1$
+            @SuppressWarnings("unused")
             EList<DiffElement> ownedElements = diff.getOwnedElements();
             // for (DiffElement oe : ownedElements) {
             // // System.out.println(oe.g);
@@ -271,6 +273,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         }
         URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
         final Resource resource = resourceSet.createResource(uri);
+        @SuppressWarnings("unused")
         boolean ok = resource.getContents().add(dataProvider);
 
         // save each catalog is its own file

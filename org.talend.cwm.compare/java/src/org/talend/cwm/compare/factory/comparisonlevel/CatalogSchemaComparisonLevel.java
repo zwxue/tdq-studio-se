@@ -231,6 +231,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void handleAddElement(ModelElementChangeRightTarget addElement) {
         EObject rightElement = addElement.getRightElement();

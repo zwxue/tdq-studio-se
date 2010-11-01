@@ -273,7 +273,9 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
         final ModelElement elt = getAnalyzedElement();
         if (elt != null) {
             final TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
-            if (col != null && (Java2SqlType.isDateInSQL(col.getJavaType()) || Java2SqlType.isDateTimeSQL(col.getJavaType()))) {
+            if (col != null
+                    && (Java2SqlType.isDateInSQL(col.getSqlDataType().getJavaDataType()) || Java2SqlType.isDateTimeSQL(col
+                            .getSqlDataType().getJavaDataType()))) {
                 return true;
             }
         }

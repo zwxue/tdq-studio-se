@@ -405,13 +405,12 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
         return ok;
     }
 
+    @SuppressWarnings("unchecked")
     private boolean instantiatePatterns() {
 
         EList<TdColumn> columns = this.getAnalyzedColumns();
         this.patterns = new List[columns.size()];
         EList<RegexpMatchingIndicator> indicators = this.getCompositeRegexMatchingIndicators();
-        String r = null;
-
         for (int i = 0; i < columns.size(); i++) {
             for (RegexpMatchingIndicator rmi : indicators) {
                 if (rmi.getAnalyzedElement() == columns.get(i)) {

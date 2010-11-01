@@ -17,7 +17,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * The activator class controls the plug-in life cycle
+ * 
+ * DOC klliu The activator class controls the plug-in life cycle 2010-11-01
  */
 public class Activator extends AbstractUIPlugin {
 
@@ -27,9 +28,6 @@ public class Activator extends AbstractUIPlugin {
     // The shared instance
     private static Activator plugin;
 
-    /**
-     * The constructor
-     */
     public Activator() {
     }
 

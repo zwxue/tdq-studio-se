@@ -972,7 +972,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         if (elt != null) {
             TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
             if (col != null) {
-                javaType = col.getJavaType();
+                javaType = col.getSqlDataType().getJavaDataType();
             }
         }
         return javaType;

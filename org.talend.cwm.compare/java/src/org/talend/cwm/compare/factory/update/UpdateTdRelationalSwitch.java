@@ -88,7 +88,8 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
             TdColumn c = (TdColumn) recentElement;
             object.setName(c.getName());
             object.setLength(c.getLength());
-            object.getSqlDataType().setJavaDataType(c.getJavaType());
+            // MOD klliu update the c.getJavaType()
+            object.getSqlDataType().setJavaDataType(c.getSqlDataType().getJavaDataType());
             return true;
         }
         return false;

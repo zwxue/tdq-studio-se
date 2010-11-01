@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
@@ -110,7 +110,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                             if (r == null) { // get regex valid for all kind of database and engine
                                 TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement);
                                 if (column != null) {
-                                    Connection tdDataProvider = DataProviderHelper.getTdDataProvider(column);
+                                    Connection tdDataProvider = ConnectionHelper.getTdDataProvider(column);
 
                                     String dbType = null;
                                     DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(tdDataProvider);

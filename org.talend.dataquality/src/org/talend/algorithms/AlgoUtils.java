@@ -83,12 +83,12 @@ public final class AlgoUtils {
             if (sumCount >= kthValue) {
                 // compute median
                 if (totalCount % qQuantile != 0) { // odd number of value, take the middle
-                    localMedian = searchedKey.doubleValue();
+                    localMedian = extracted(searchedKey).doubleValue();
                 } else { // even number of values
-                    localMedian = searchedKey.doubleValue();
+                    localMedian = extracted(searchedKey).doubleValue();
                     if (sumCount - kthValue < 1) { // in case there are not many identical values
                         Number nextKey = (Number) keyIterator.next(); // CAST here
-                        localMedian = (localMedian + nextKey.doubleValue()) / 2; // with averaging
+                        localMedian = (localMedian + extracted(nextKey).doubleValue()) / 2; // with averaging
                     }
                 }
                 break; // we got it.
@@ -98,6 +98,13 @@ public final class AlgoUtils {
             sumCount += curValue;
         }
         return localMedian;
+    }
+
+    private static Number extracted(Number searchedKey) {
+        if (searchedKey != null) {
+            return searchedKey;
+        }
+        return null;
     }
 
 }
