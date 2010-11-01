@@ -264,7 +264,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         Object[] selectItem = currentTree.getSelection();
         List<TdColumn> columnList = columnsElementViewer.getColumnSetMultiValueList();
         int index = 0;
-        boolean moveFlag = false;
+        // boolean moveFlag = false;
         List<Integer> indexArray = new ArrayList<Integer>();
         if (isDown) {
             for (int i = selectItem.length - 1; i >= 0; i--) {
@@ -301,7 +301,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     private List<TdColumn> convertList(List<TdColumn> columnList) {
-        List<TdColumn> resultList = new ArrayList();
+        List<TdColumn> resultList = new ArrayList<TdColumn>();
         for (int i = columnList.size() - 1; i >= 0; i--) {
             resultList.add(columnList.get(i));
         }
@@ -507,7 +507,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             }
             DataminingType dataminingType = MetadataHelper.getDataminingType(column);
             if (dataminingType == null) {
-                dataminingType = MetadataHelper.getDefaultDataminingType(column.getJavaType());
+                dataminingType = MetadataHelper.getDefaultDataminingType(column.getSqlDataType().getJavaDataType());
             }
 
             if (dataminingType == null) {

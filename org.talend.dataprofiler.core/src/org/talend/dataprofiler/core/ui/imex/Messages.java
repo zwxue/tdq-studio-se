@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  *
  */
-public class Messages {
+public final class Messages {
 
     private static final String BUNDLE_NAME = "org.talend.dataprofiler.core.ui.imex.messages"; //$NON-NLS-1$
 

@@ -24,7 +24,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.resource.ResourceManager;
 
 /**

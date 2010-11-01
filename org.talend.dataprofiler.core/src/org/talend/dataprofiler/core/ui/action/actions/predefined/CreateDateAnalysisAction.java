@@ -89,7 +89,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected boolean isAllowed() {
         for (TdColumn column : getColumns()) {
-            if (!Java2SqlType.isDateInSQL(column.getJavaType())) {
+            if (!Java2SqlType.isDateInSQL(column.getSqlDataType().getJavaDataType())) {
                 return false;
             }
         }

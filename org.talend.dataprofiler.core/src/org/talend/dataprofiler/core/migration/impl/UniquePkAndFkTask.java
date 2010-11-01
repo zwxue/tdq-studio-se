@@ -30,7 +30,6 @@ import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;

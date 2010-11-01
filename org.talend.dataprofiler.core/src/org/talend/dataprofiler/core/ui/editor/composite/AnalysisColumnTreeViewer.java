@@ -198,7 +198,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * DOC yyi create Up Down and Delete Buttons
+     * DOC yyi create Up Down and Delete Buttons.
      * 
      * @param parent
      */
@@ -255,7 +255,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * DOC yyi 7466 2010-03-22 change the order of appearence of indicators
+     * DOC yyi 7466 2010-03-22 change the order of appearence of indicators.
      * 
      * @param newTree
      * @param step
@@ -322,14 +322,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
                 if (unit != null && ((IndicatorUnit) data).getIndicator() == unit.getIndicator()) {
                     tree.setSelection(item);
-                } else
+                } else {
                     selectElement(item.getItems(), data);
+                }
             }
         }
     }
 
     /**
-     * DOC yyi Sort indicators
+     * DOC yyi Sort indicators.
      * 
      * @param units
      * @param targetUnit

@@ -47,7 +47,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
@@ -63,7 +63,6 @@ import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -433,7 +432,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         EIndicatorChartType matchingType = EIndicatorChartType.PATTERN_MATCHING;
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(matchingType, units);
-        ChartWithData chartData = new ChartWithData(matchingType, chartTypeState.getChart(), chartTypeState.getDataEntity());
+        // ChartWithData chartData = new ChartWithData(matchingType, chartTypeState.getChart(),
+        // chartTypeState.getDataEntity());
 
         JFreeChart chart = chartTypeState.getChart();
         ChartDecorator.decorate(chart);
@@ -528,7 +528,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         Connection tdProvider = null;
         if (columnList != null && columnList.size() != 0) {
-            tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
+            tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
             if (tdProvider.eIsProxy()) {
                 // Resolve the connection again
                 tdProvider = ((ConnectionItem) ProxyRepositoryViewObject.getRepositoryViewObject(tdProvider).getProperty()

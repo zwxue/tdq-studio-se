@@ -48,7 +48,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.DqRepositoryViewService;
@@ -510,7 +510,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
 
                 if (packageValue != null) {
-                    Connection conn = DataProviderHelper.getTdDataProvider(packageValue);
+                    Connection conn = ConnectionHelper.getTdDataProvider(packageValue);
                     // IFile findCorrespondingFile =
                     // PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
                     return ProxyRepositoryViewObject.getRepositoryViewObject(conn);
@@ -545,7 +545,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                     List<NamedColumnSet> temp = PackageHelper.getNmaedColumnSets(pckg);
                     NamedColumnSet[] tables = temp.toArray(new NamedColumnSet[temp.size()]);
                     if (tables.length <= 0) {
-                        Connection provider = DataProviderHelper.getTdDataProvider(pckg);
+                        Connection provider = ConnectionHelper.getTdDataProvider(pckg);
                         if (provider == null) {
                             return null;
                         }

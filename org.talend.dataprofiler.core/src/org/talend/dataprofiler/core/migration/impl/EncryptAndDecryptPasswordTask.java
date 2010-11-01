@@ -19,11 +19,10 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.security.CryptoHelper;
@@ -95,7 +94,7 @@ public class EncryptAndDecryptPasswordTask extends AbstractWorksapceUpdateTask {
                     if (tvObj != null) {
                         TaggedValue tv = (TaggedValue) tvObj;
                         if (TaggedValueHelper.PASSWORD.equals(tv.getTag())) {
-                            tv.setValue(new CryptoHelper(DataProviderHelper.PASSPHRASE).encrypt(tv.getValue()));
+                            tv.setValue(new CryptoHelper(ConnectionHelper.PASSPHRASE).encrypt(tv.getValue()));
                         }
                     }
                 }

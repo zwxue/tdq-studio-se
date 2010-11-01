@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.helper;
 
-import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -24,11 +23,10 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
  * 
  * This class helps to update the splited indicator files.
  */
-public class IndicatorDefinitionFileHelper {
+public final class IndicatorDefinitionFileHelper {
 
-    private static Logger log = Logger.getLogger(IndicatorDefinitionFileHelper.class);
-
-    private static DefinitionHandler handler = DefinitionHandler.getInstance();
+    private IndicatorDefinitionFileHelper() {
+    }
 
     /**
      * Get system indiactor by name.
@@ -41,7 +39,7 @@ public class IndicatorDefinitionFileHelper {
     }
 
     /**
-     * Add a sql expression for indicator
+     * Add a sql expression for indicator.
      * 
      * @param definition
      * @param language
@@ -57,7 +55,7 @@ public class IndicatorDefinitionFileHelper {
     }
 
     /**
-     * Save an indicator
+     * Save an indicator.
      * 
      * @param definition
      * @return true if indicator saved.

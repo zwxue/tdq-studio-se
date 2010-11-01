@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -78,7 +79,7 @@ public final class ImportFactory {
 
         List<ReturnCode> importEvent = new ArrayList<ReturnCode>();
 
-        Set<String> names = PatternUtilities.getAllPatternNames(selectionFolder);
+        Set<String> names = PatternUtilities.getNestFolderPatternNames(new HashSet<String>(), selectionFolder);
 
         String fileExtName = getFileExtName(importFile);
 
@@ -213,44 +214,44 @@ public final class ImportFactory {
      * 
      * @param importFile
      */
-    private static ReturnCode verifyImportFile(File importFile) {
+    // private static ReturnCode verifyImportFile(File importFile) {
+    //
+    // ReturnCode rc = new ReturnCode(true);
+    // CsvReader reader;
+    //
+    // try {
+    // reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
+    // reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+    // reader.setTextQualifier(TEXT_QUAL);
+    // reader.setUseTextQualifier(true);
+    //
+    // reader.readHeaders();
+    // if (!checkFileHeader(reader.getHeaders())) {
+    // rc.setReturnCode(DefaultMessagesImpl.getString("ImportFactory.noHeader"), false);
+    // return rc;
+    // }
+    // reader.setUseTextQualifier(false);
+    // while (reader.readRecord()) {
+    // if (!checkQuotes(reader.getValues())) {
+    // rc.setReturnCode(DefaultMessagesImpl.getString("ImportFactory.invalidFormat"), false);
+    // return rc;
+    // }
+    // }
+    // reader.close();
+    //
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // return rc;
+    // }
 
-        ReturnCode rc = new ReturnCode(true);
-        CsvReader reader;
-
-        try {
-            reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-            reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-            reader.setTextQualifier(TEXT_QUAL);
-            reader.setUseTextQualifier(true);
-
-            reader.readHeaders();
-            if (!checkFileHeader(reader.getHeaders())) {
-                rc.setReturnCode(DefaultMessagesImpl.getString("ImportFactory.noHeader"), false);
-                return rc;
-            }
-            reader.setUseTextQualifier(false);
-            while (reader.readRecord()) {
-                if (!checkQuotes(reader.getValues())) {
-                    rc.setReturnCode(DefaultMessagesImpl.getString("ImportFactory.invalidFormat"), false);
-                    return rc;
-                }
-            }
-            reader.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return rc;
-    }
-
-    private static boolean checkQuotes(String[] values) {
-        for (String value : values) {
-            if (!checkQuotationMarks(value))
-                return false;
-        }
-        return true;
-    }
+    // private static boolean checkQuotes(String[] values) {
+    // for (String value : values) {
+    // if (!checkQuotationMarks(value))
+    // return false;
+    // }
+    // return true;
+    // }
 
     private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
 
@@ -493,36 +494,36 @@ public final class ImportFactory {
         return information;
     }
 
-    private static boolean checkFileHeader(String[] headers) {
-
-        List<String> patternEnum = new ArrayList<String>();
-        for (PatternToExcelEnum tmpEnum : PatternToExcelEnum.values()) {
-            patternEnum.add(tmpEnum.getLiteral());
-        }
-
-        for (String header : headers) {
-            if (!patternEnum.contains(header))
-                return false;
-        }
-        return true;
-    }
-
-    private static boolean checkQuotationMarks(String text) {
-        if (0 == text.length())
-            return true;
-
-        int beginLen = 0;
-        int endLen = text.length();
-
-        while ('\"' == text.charAt(beginLen)) {
-            beginLen++;
-        }
-        while ('\"' == text.charAt(endLen - 1)) {
-            endLen--;
-        }
-        // System.out.println(text + "|" + beginLen + "|" + (text.length() - endLen));
-        return beginLen == text.length() - endLen;
-    }
+    // private static boolean checkFileHeader(String[] headers) {
+    //
+    // List<String> patternEnum = new ArrayList<String>();
+    // for (PatternToExcelEnum tmpEnum : PatternToExcelEnum.values()) {
+    // patternEnum.add(tmpEnum.getLiteral());
+    // }
+    //
+    // for (String header : headers) {
+    // if (!patternEnum.contains(header))
+    // return false;
+    // }
+    // return true;
+    // }
+    //
+    // private static boolean checkQuotationMarks(String text) {
+    // if (0 == text.length())
+    // return true;
+    //
+    // int beginLen = 0;
+    // int endLen = text.length();
+    //
+    // while ('\"' == text.charAt(beginLen)) {
+    // beginLen++;
+    // }
+    // while ('\"' == text.charAt(endLen - 1)) {
+    // endLen--;
+    // }
+    // // System.out.println(text + "|" + beginLen + "|" + (text.length() - endLen));
+    // return beginLen == text.length() - endLen;
+    // }
 
     /**
      * DOC xqliu Comment method "createAndStoreUDI".

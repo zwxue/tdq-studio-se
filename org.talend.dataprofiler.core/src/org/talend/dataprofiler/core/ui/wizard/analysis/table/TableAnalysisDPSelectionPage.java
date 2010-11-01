@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -66,7 +66,7 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 for (Object object : tempList) {
                     if (object instanceof NamedColumnSet) {
                         NamedColumnSet set = (NamedColumnSet) object;
-                        Connection tdProvider = DataProviderHelper.getTdDataProvider(TableHelper
+                        Connection tdProvider = ConnectionHelper.getTdDataProvider(TableHelper
                                 .getParentCatalogOrSchema(set));
                         oldTdDataProvider = oldTdDataProvider == null ? tdProvider : oldTdDataProvider;
                         if (oldTdDataProvider != null && !oldTdDataProvider.equals(tdProvider)) {

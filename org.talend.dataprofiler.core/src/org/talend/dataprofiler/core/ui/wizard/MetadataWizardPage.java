@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -61,8 +60,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      */
     private static final int TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT = 200;
 
-    private static Logger log = Logger.getLogger(MetadataWizardPage.class);
-
     // protected members
     protected Text nameText;
 
@@ -81,9 +78,9 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     protected Text pathText;
 
     // private members
-    private Button versionMajorBtn;
-
-    private Button versionMinorBtn;
+    // private Button versionMajorBtn;
+    //
+    // private Button versionMinorBtn;
 
     public MetadataWizardPage() {
         this.setPageComplete(false);

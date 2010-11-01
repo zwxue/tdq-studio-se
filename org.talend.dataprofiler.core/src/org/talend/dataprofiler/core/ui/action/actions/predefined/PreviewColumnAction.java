@@ -18,7 +18,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -54,8 +54,8 @@ public class PreviewColumnAction extends Action {
             }
             if (ColumnHelper.isFromSameTable(Arrays.asList((TdColumn[]) columns))) {
                 TdColumn oneColumn = columns[0];
-                Connection dataprovider = DataProviderHelper.getTdDataProvider(oneColumn);
-                ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(oneColumn);
+                Connection dataprovider = ConnectionHelper.getTdDataProvider(oneColumn);
+                ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(oneColumn);
                 String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
                 DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
                 String columnClause = ""; //$NON-NLS-1$

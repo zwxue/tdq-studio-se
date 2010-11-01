@@ -170,12 +170,12 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
             Label labelUrl = new Label(parent, SWT.NONE);
             labelUrl.setText("Url"); //$NON-NLS-1$
-            final Text urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
-            urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            urlText.addModifyListener(new ModifyListener() {
+            final Text urlText2 = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            urlText2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            urlText2.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
-                    connectionParam.setJdbcUrl(urlText.getText());
+                    connectionParam.setJdbcUrl(urlText2.getText());
                     if (abstractWizardPage instanceof DatabaseWizardPage) {
                         ((DatabaseWizardPage) abstractWizardPage).updateButtonState();
                     }
@@ -192,7 +192,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             final Text fileText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             final Button selectFile = new Button(parent, SWT.PUSH);
             Label labelUrl = new Label(parent, SWT.NONE);
-            final Text urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            final Text urlText3 = new Text(parent, SWT.BORDER | SWT.SINGLE);
 
             labelfile.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.File")); //$NON-NLS-1$
             fileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -208,28 +208,28 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             selectFile.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Browser")); //$NON-NLS-1$
 
             labelUrl.setText("Url"); //$NON-NLS-1$
-            urlText.setEditable(false);
-            urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            urlText3.setEditable(false);
+            urlText3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-            urlText.setText(getConnectionURL());
-            urlText.setEditable(false);
+            urlText3.setText(getConnectionURL());
+            urlText3.setEditable(false);
 
-            urlText.addKeyListener(new KeyAdapter() {
+            urlText3.addKeyListener(new KeyAdapter() {
 
                 public void keyReleased(KeyEvent e) {
-                    setConnectionURL(urlText.getText());
+                    setConnectionURL(urlText3.getText());
                 }
 
             });
 
-            urlText.addFocusListener(new FocusAdapter() {
+            urlText3.addFocusListener(new FocusAdapter() {
 
                 public void focusGained(FocusEvent e) {
-                    urlText.setEditable(true);
+                    urlText3.setEditable(true);
                 }
 
                 public void focusLost(FocusEvent e) {
-                    urlText.setEditable(false);
+                    urlText3.setEditable(false);
                 }
             });
 
@@ -250,7 +250,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                     }
 
                     setConnectionURL(url);
-                    urlText.setText(getConnectionURL());
+                    urlText3.setText(getConnectionURL());
                 }
             });
 

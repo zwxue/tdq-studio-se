@@ -53,7 +53,7 @@ public class CreateSourceFolderAction extends Action {
     public void run() {
         NewFolderDialog dialog = new NewFolderDialog(Display.getDefault().getActiveShell(), obj);
         if (dialog.open() == NewFolderDialog.OK) {
-            Object[] res = dialog.getResult();
+            // Object[] res = dialog.getResult();
             ProxyRepositoryManager.getInstance().save();
 
             // IFolder resl = (IFolder) res[0];

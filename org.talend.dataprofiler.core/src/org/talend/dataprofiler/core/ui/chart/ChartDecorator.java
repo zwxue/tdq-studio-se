@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.math.RandomUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.ValueAxis;
@@ -275,10 +274,10 @@ public final class ChartDecorator {
         colorList.add(COLOR_8);
     }
 
-    private static Color randomColorPicker() {
-        int i = RandomUtils.nextInt(colorList.size());
-        return colorList.get(i);
-    }
+    // private static Color randomColorPicker() {
+    // int i = RandomUtils.nextInt(colorList.size());
+    // return colorList.get(i);
+    // }
 
     /**
      * Returns true if this string contains the chinese char values. DOC yyi Comment method

@@ -144,32 +144,32 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
         URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
         Resource propertyResource = EMFSharedResources.getInstance().createResource(propertiesURI);
 
-        Property property = PropertiesFactory.eINSTANCE.createProperty();
-        property.setId(EcoreUtil.generateUUID());
-        property.setLabel(StringUtilities.tokenize(targetFile.getName(), ".").get(0));
-        property.setCreationDate(new Date());
-        property.setVersion("0.1");
+        Property prop = PropertiesFactory.eINSTANCE.createProperty();
+        prop.setId(EcoreUtil.generateUUID());
+        prop.setLabel(StringUtilities.tokenize(targetFile.getName(), ".").get(0));
+        prop.setCreationDate(new Date());
+        prop.setVersion("0.1");
 
         TDQJrxmlItem item = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
         item.setFilename(targetFile.getName());
 
-        item.setProperty(property);
-        property.setItem(item);
+        item.setProperty(prop);
+        prop.setItem(item);
 
         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
 
         // set the state path when first create it.
         IPath propPath = new Path(targetFile.getAbsolutePath()).removeLastSegments(1);
-        IPath typedPath = ResourceManager.getRootProject().getFolder(PropertyHelper.getItemTypedPath(property)).getLocation();
+        IPath typedPath = ResourceManager.getRootProject().getFolder(PropertyHelper.getItemTypedPath(prop)).getLocation();
         IPath itemPath = propPath.makeRelativeTo(typedPath);
         itemState.setPath(itemPath.toString());
 
         item.setState(itemState);
 
-        propertyResource.getContents().add(property);
-        propertyResource.getContents().add(property.getItem());
-        propertyResource.getContents().add(property.getItem().getState());
+        propertyResource.getContents().add(prop);
+        propertyResource.getContents().add(prop.getItem());
+        propertyResource.getContents().add(prop.getItem().getState());
 
         EMFSharedResources.getInstance().saveResource(propertyResource);
     }

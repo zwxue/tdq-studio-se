@@ -51,7 +51,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -378,7 +378,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
             public void handleEvent(Event event) {
 
-                Connection provider = DataProviderHelper.getDataProvider(columnSet);
+                Connection provider = ConnectionHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
@@ -394,7 +394,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
             public void handleEvent(Event event) {
 
-                Connection provider = DataProviderHelper.getDataProvider(columnSet);
+                Connection provider = ConnectionHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
@@ -416,7 +416,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                 //                String query = "SELECT * " + dbmsLanguage.from() + dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName()) //$NON-NLS-1$
                 //                        + "." + dbmsLanguage.quote(columnSet.getName()); //$NON-NLS-1$
                 // MOD 10913 zshen:unify the method that get sql query
-                Connection provider = DataProviderHelper.getDataProvider(columnSet);
+                Connection provider = ConnectionHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);

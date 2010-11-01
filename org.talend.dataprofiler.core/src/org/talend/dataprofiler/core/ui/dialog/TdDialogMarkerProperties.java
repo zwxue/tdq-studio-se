@@ -56,22 +56,22 @@ public class TdDialogMarkerProperties extends TrayDialog {
     private static final String DIALOG_SETTINGS_SECTION = "DialogMarkerPropertiesDialogSettings"; //$NON-NLS-1$
 
     /**
-     * The marker being shown, or <code>null</code> for a new marker
+     * The marker being shown, or <code>null</code> for a new marker.
      */
     private IMarker marker = null;
 
     /**
-     * The resource on which to create a new marker
+     * The resource on which to create a new marker.
      */
     private IResource resource = null;
 
     /**
-     * The type of marker to be created
+     * The type of marker to be created.
      */
     private String type = IMarker.MARKER;
 
     /**
-     * The initial attributes to use when creating a new marker
+     * The initial attributes to use when creating a new marker.
      */
     @SuppressWarnings("unchecked")
     private Map initialAttributes = null;
@@ -171,6 +171,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
             try {
                 type = marker.getType();
             } catch (CoreException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -275,6 +276,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
             try {
                 initialAttributes = marker.getAttributes();
             } catch (CoreException e) {
+                e.printStackTrace();
             }
         } else if (resource == null) {
             resource = ResourcesPlugin.getWorkspace().getRoot();
@@ -463,7 +465,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
     }
 
     /**
-     * Method declared on Dialog
+     * Method declared on Dialog.
      */
     protected void okPressed() {
         if (marker == null || Util.isEditable(marker)) {
@@ -473,7 +475,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
     }
 
     /**
-     * Sets the dialog's dirty flag to <code>true</code>
+     * Sets the dialog's dirty flag to <code>true</code>.
      */
     protected void markDirty() {
         dirty = true;
@@ -512,8 +514,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
             } catch (ExecutionException e) {
                 if (e.getCause() instanceof CoreException) {
                     ErrorDialog.openError(getShell(), MarkerMessages.Error, null, ((CoreException) e.getCause()).getStatus());
-                } else
+                } else {
                     IDEWorkbenchPlugin.log(e.getMessage(), e);
+                }
             }
         }
     }

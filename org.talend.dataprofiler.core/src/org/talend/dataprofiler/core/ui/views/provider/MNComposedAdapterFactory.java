@@ -25,9 +25,12 @@ import org.talend.dataquality.analysis.provider.AnalysisItemProviderAdapterFacto
  * @author rli
  * 
  */
-public class MNComposedAdapterFactory {
+public final class MNComposedAdapterFactory {
 
     private static ComposedAdapterFactory mnCompAdapterFactory;
+
+    private MNComposedAdapterFactory() {
+    }
 
     public static final ComposedAdapterFactory getAdapterFactory() {
         if (mnCompAdapterFactory == null) {

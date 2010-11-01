@@ -19,7 +19,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
@@ -76,7 +76,7 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
     protected Connection getTdDataProvidor() {
         Object obj = getSelection().getFirstElement();
         if (obj instanceof Table) {
-            return DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema((Table) obj));
+            return ConnectionHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema((Table) obj));
         }
         return null;
     }

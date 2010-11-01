@@ -41,7 +41,7 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
 
     private static final int HEIGHT = 350;
 
-    private final static int MDM_CONNECTION_TYPE_VALUE = 1;
+    private static final int MDM_CONNECTION_TYPE_VALUE = 1;
 
     private IFolder folder;
 

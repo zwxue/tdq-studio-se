@@ -92,8 +92,9 @@ public final class SqlExplorerBridge {
                         break;
                     }
                 }
-            } else
+            } else {
                 catalogOrSchemaNode = root;
+            }
 
         } else {
             for (INode schemaNode : schemas) {

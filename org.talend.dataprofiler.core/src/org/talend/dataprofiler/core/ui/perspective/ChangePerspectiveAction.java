@@ -55,6 +55,14 @@ public class ChangePerspectiveAction extends Action {
 
     private boolean toolbar;
 
+    public boolean isToolbar() {
+        return this.toolbar;
+    }
+
+    public void setToolbar(boolean toolbar) {
+        this.toolbar = toolbar;
+    }
+
     /**
      * Constructs a new ChangePerspectiveAction.
      */

@@ -29,9 +29,9 @@ public class DQRecycleBinNode {
 	   
    }
 
-
     /**
-     * store file or folder
+     * store file or folder.
+     * 
      * @return
      */
 	public Object getObject() {
@@ -46,10 +46,12 @@ public class DQRecycleBinNode {
 		this.obj = object;
 
 	}
-	/**
-	 * get its children
-	 * @return
-	 */
+
+    /**
+     * get its children.
+     * 
+     * @return
+     */
 	public List<Object> getDeletedChildren() {
 		return deletedChildren;
 	}

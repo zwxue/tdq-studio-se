@@ -42,6 +42,9 @@ public abstract class MessagesCore {
 
     public static final String KEY_NOT_FOUND_SUFFIX = "!!!"; //$NON-NLS-1$
 
+    protected MessagesCore() {
+    }
+
     /**
      * Returns the i18n formatted message for <i>key</i> in the specified bundle.
      * 

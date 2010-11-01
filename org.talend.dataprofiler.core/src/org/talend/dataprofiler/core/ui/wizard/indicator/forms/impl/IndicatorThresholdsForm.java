@@ -111,7 +111,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                     isDatetime = Java2SqlType.isDateTimeSQL(sqltype);
                 }
             } else {
-                int sqltype = ((TdColumn) analyzedElement).getJavaType();
+                // int sqltype = ((TdColumn) analyzedElement).getJavaType();
+                int sqltype = ((TdColumn) analyzedElement).getSqlDataType().getJavaDataType();
                 isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
                         && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
 

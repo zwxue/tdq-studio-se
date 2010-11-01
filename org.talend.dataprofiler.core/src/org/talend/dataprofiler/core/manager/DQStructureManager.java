@@ -119,9 +119,6 @@ public final class DQStructureManager {
 
             }
 
-            IFolder dataProfilingFolder = createNewFolder(project, EResourceConstant.DATA_PROFILING);
-            IFolder analysisFoler = createNewFolder(dataProfilingFolder, EResourceConstant.ANALYSIS);
-            IFolder reportFoler = createNewFolder(dataProfilingFolder, EResourceConstant.REPORTS);
 
             IFolder librariesFoler = createNewFolder(project, EResourceConstant.LIBRARIES);
             IFolder patternFoler = createNewFolder(librariesFoler, EResourceConstant.PATTERNS);
@@ -130,10 +127,7 @@ public final class DQStructureManager {
             IFolder sourceFileFoler = createNewFolder(librariesFoler, EResourceConstant.SOURCE_FILES);
             IFolder rulesFoler = createNewFolder(librariesFoler, EResourceConstant.RULES);
             IFolder rulesSQLFoler = createNewFolder(rulesFoler, EResourceConstant.RULES_SQL);
-            IFolder exchangeFoler = createNewFolder(librariesFoler, EResourceConstant.EXCHANGE);
             IFolder indicatorFoler = createNewFolder(librariesFoler, EResourceConstant.INDICATORS);
-            IFolder udiFoler = createNewFolder(indicatorFoler, EResourceConstant.USER_DEFINED_INDICATORS);
-            IFolder jrxmlFolder = createNewFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
             IFolder systemIndicatorFoler = createNewFolder(indicatorFoler, EResourceConstant.SYSTEM_INDICATORS);
 
             if (!project.getFolder(EResourceConstant.DB_CONNECTIONS.getPath()).exists()) {

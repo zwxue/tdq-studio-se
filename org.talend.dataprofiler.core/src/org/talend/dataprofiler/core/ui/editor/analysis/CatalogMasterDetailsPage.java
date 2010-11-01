@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -57,7 +57,7 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
         tdDataProvider = null;
         if (analysedElements.size() > 0) {
             ModelElement modelElement = analysedElements.get(0);
-            tdDataProvider = DataProviderHelper.getTdDataProvider((Package) modelElement);
+            tdDataProvider = ConnectionHelper.getTdDataProvider((Package) modelElement);
         }
     }
 

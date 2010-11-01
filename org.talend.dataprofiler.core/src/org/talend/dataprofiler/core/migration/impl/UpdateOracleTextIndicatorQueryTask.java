@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Date;
 
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
 
 /**

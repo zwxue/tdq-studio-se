@@ -354,7 +354,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /**
      * 
-     * DOC klliu Comment method "attachContentProvider".figure 13429 2010-08-03
+     * DOC klliu Comment method "attachContentProvider".figure 13429 2010-08-03.
      * 
      * @param viewer
      */
@@ -375,7 +375,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /**
      * 
-     * DOC klliu Comment method "buildAndLayoutTable".figure 13429 2010-08-03
+     * DOC klliu Comment method "buildAndLayoutTable".figure 13429 2010-08-03.
      * 
      * @param table
      * @return
@@ -398,7 +398,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /**
      * 
-     * DOC klliu Comment method "attachCellEditors".figure 13429 2010-08-03
+     * DOC klliu Comment method "attachCellEditors".figure 13429 2010-08-03.
      * 
      * @param viewer
      * @param parent
@@ -411,19 +411,21 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
             }
 
             public Object getValue(Object element, String property) {
-                if (NAME_PROPERTY.equals(property))
+                if (NAME_PROPERTY.equals(property)) {
                     return ((JavaUDIIndicatorParameter) element).getKey();
-                else
+                } else {
                     return ((JavaUDIIndicatorParameter) element).getValue();
+                }
             }
 
             public void modify(Object element, String property, Object value) {
                 TableItem tableItem = (TableItem) element;
                 JavaUDIIndicatorParameter data = (JavaUDIIndicatorParameter) tableItem.getData();
-                if (NAME_PROPERTY.equals(property))
+                if (NAME_PROPERTY.equals(property)) {
                     data.setKey(value.toString());
-                else
+                } else {
                     data.setValue(value.toString());
+                }
                 viewer.refresh(data);
                 checkFieldsValue();
             }

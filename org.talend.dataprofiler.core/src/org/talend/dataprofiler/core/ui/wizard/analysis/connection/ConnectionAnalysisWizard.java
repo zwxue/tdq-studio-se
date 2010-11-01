@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
@@ -74,11 +74,11 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
             // MOD xqliu 2009-1-21 feature 4715
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
             indicator.setAnalyzedElement(tdProvider);
-            List<Schema> tdSchemas = DataProviderHelper.getSchema(tdProvider);
+            List<Schema> tdSchemas = ConnectionHelper.getSchema(tdProvider);
             if (tdSchemas.size() != 0) {
                 addSchemaIndicator(tdSchemas, indicator);
             }
-            List<Catalog> tdCatalogs = DataProviderHelper.getCatalogs(tdProvider);
+            List<Catalog> tdCatalogs = ConnectionHelper.getCatalogs(tdProvider);
             for (Catalog tdCatalog : tdCatalogs) {
                 CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
                 // MOD xqliu 2009-1-21 feature 4715

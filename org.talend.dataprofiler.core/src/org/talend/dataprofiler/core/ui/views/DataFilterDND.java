@@ -38,7 +38,9 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 /**
  * DOC Zqin class global comment. Detailled comment
  */
-public class DataFilterDND {
+public final class DataFilterDND {
+    
+    private DataFilterDND() {}
 
     public static void installDND(final Text targetControl) {
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

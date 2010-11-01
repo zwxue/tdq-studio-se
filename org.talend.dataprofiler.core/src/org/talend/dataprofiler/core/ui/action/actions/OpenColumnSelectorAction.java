@@ -111,13 +111,13 @@ public class OpenColumnSelectorAction extends Action implements ICheatSheetActio
                 page1.doSave(null);
                 break;
 
-            case AnalysisType.COLUMN_CORRELATION_VALUE: {
+            case AnalysisType.COLUMN_CORRELATION_VALUE:
                 ColumnCorrelationNominalAndIntervalMasterPage page2 = (ColumnCorrelationNominalAndIntervalMasterPage) editor
                         .getMasterPage();
                 page2.openColumnsSelectionDialog();
                 page2.doSave(null);
                 break;
-            }
+
             default:
                 break;
             }

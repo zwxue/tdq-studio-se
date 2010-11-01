@@ -35,15 +35,12 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
         super(parameter);
     }
 
+    // private IStructuredSelection initalSelection = null;
+    // private TableAnalysisDPSelectionPage tableAnalysisDPSelectionPage = null;
+    // private DQRuleSelectPage dqruleSelectPage = null;
 
-    private IStructuredSelection initalSelection = null;
-    
     private TableAnalysisMetadataWizardPage analysisMetadataWizardPage = null;
-    
-    private TableAnalysisDPSelectionPage tableAnalysisDPSelectionPage = null;
 
-    private DQRuleSelectPage dqruleSelectPage = null;
- 
     @Override
     public ModelElement initCWMResourceBuilder() {
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
@@ -56,7 +53,7 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
      */
     public void init(IWorkbench workbench, IStructuredSelection selection) {
-        initalSelection = selection;
+        // initalSelection = selection;
         setHelpAvailable(true);
         setWindowTitle("Just a test");
     }

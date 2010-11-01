@@ -65,15 +65,15 @@ public class AnalyzeColumnSetAction extends Action {
             if (editor != null) {
                 ColumnSetMasterPage page = (ColumnSetMasterPage) editor.getMasterPage();
                 if (this.needselection && !this.selection.isEmpty()) {
-                    TdColumn[] columns = new TdColumn[selection.size()];
+                    TdColumn[] tdColumns = new TdColumn[selection.size()];
                     Iterator it = this.selection.iterator();
 
                     int i = 0;
                     while (it.hasNext()) {
-                        columns[i] = (TdColumn) it.next();
+                        tdColumns[i] = (TdColumn) it.next();
                         i++;
                     }
-                    page.getTreeViewer().setInput(columns);
+                    page.getTreeViewer().setInput(tdColumns);
                 } else if (!this.needselection && null != this.columns) {
                     page.getTreeViewer().setInput(this.columns);
                     page.doSave(null);

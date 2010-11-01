@@ -67,13 +67,13 @@ public class CsvFileTableViewer extends Composite {
 
         public Object[] getElements(Object parent) {
 
-            CsvReader reader = (CsvReader) parent;
+            CsvReader csvReader = (CsvReader) parent;
 
             List<Object> rows = new ArrayList<Object>();
 
             try {
-                while (reader.readRecord()) {
-                    rows.add(reader.getValues());
+                while (csvReader.readRecord()) {
+                    rows.add(csvReader.getValues());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -181,7 +181,7 @@ public class CsvFileTableViewer extends Composite {
     }
 
     /**
-     * set a csv file
+     * set a csv file.
      * 
      * @param csvFile
      * @return whether the file be loaded.

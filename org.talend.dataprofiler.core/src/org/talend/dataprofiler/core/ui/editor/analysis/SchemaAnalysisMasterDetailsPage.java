@@ -18,14 +18,13 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -34,7 +33,7 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
 
     private List<SchemaIndicator> schemaIndicatorList = new ArrayList<SchemaIndicator>();
 
-    private List<Schema> schemas = new ArrayList<Schema>();
+    // private List<Schema> schemas = new ArrayList<Schema>();
 
     public SchemaAnalysisMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -46,7 +45,7 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
         tdDataProvider = null;
         if (analysedElements.size() > 0) {
             ModelElement modelElement = analysedElements.get(0);
-            tdDataProvider = DataProviderHelper.getTdDataProvider((Package) modelElement);
+            tdDataProvider = ConnectionHelper.getTdDataProvider((Package) modelElement);
         }
     }
 

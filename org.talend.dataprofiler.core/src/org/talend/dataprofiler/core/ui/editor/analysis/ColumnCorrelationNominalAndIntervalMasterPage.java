@@ -736,12 +736,12 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         for (int i = 0; i < columns.size(); i++) {
             TdColumn tdColumn = (TdColumn) columns.get(i);
             if (className == ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator()) {
-                if (Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                     invalidCols.add(tdColumn);
                     break;
                 }
             } else if (className == ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator()) {
-                if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType())) {
+                if (Java2SqlType.isNumbericInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                     invalidCols.add(tdColumn);
                     break;
                 }

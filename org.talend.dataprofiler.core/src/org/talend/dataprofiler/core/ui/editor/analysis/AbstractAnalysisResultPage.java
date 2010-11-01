@@ -39,7 +39,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
      * width hint for tables in data area. ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid
      * crash and add consistency.
      */
-    private static final int TABLE_WIDTH_HINT = 1100;
+    // private static final int TABLE_WIDTH_HINT = 1100;
 
     /**
      * size in rows of a small table (that has less than TABLE_MIN_ROW_LIMIT rows). ADDED sgandon 15/03/2010 bug 11769 :

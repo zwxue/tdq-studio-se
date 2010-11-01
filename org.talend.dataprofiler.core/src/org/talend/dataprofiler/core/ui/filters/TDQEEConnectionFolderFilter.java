@@ -32,11 +32,12 @@ public class TDQEEConnectionFolderFilter extends ViewerFilter {
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         if (element instanceof IFolder) {
             IFolder folder = (IFolder) element;
-            if (ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder)) {
-                return true;
-            } else {
-                return false;
-            }
+            // if (ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder)) {
+            // return true;
+            // } else {
+            // return false;
+            // }
+            return ResourceManager.isConnectionFolder(folder) || ResourceManager.isMdmConnectionFolder(folder);
         }
         return true;
     }

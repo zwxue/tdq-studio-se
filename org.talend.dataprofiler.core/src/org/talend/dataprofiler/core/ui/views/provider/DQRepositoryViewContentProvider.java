@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
@@ -57,8 +56,6 @@ import orgomg.cwm.objectmodel.core.impl.PackageImpl;
  * 
  */
 public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvider {
-
-    private static Logger log = Logger.getLogger(DQRepositoryViewContentProvider.class);
 
     /**
      * @param adapterFactory

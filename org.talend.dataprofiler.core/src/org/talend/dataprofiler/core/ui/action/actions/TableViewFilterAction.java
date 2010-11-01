@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -25,7 +24,7 @@ import orgomg.cwm.objectmodel.core.Package;
  */
 public class TableViewFilterAction extends Action {
 
-    private static Logger log = Logger.getLogger(TableViewFilterAction.class);
+    // private static Logger log = Logger.getLogger(TableViewFilterAction.class);
 
     private static final int WIDTH = 300;
 

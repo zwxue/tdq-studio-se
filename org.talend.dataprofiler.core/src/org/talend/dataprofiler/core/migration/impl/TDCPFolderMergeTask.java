@@ -33,7 +33,6 @@ import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 

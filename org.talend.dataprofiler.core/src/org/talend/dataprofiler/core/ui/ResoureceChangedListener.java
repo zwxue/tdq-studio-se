@@ -94,8 +94,9 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
             IResourceDelta docDelta = initFolderForVisitor(rootDelta);
             if (docDelta == null) {
                 return;
-            } else
+            } else {
                 docDelta.accept(visitor);
+            }
         } catch (CoreException e1) {
             log.error(e1);
         }

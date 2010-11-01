@@ -35,7 +35,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -80,6 +80,14 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private ScrolledForm form;
 
     private Section columnsComparisonSection = null;
+
+    public Section getColumnsComparisonSection() {
+        return this.columnsComparisonSection;
+    }
+
+    public void setColumnsComparisonSection(Section columnsComparisonSection) {
+        this.columnsComparisonSection = columnsComparisonSection;
+    }
 
     DataFilterComp dataFilterCompA;
 
@@ -250,7 +258,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             analysedElements.add(anaColumnCompareViewer.getColumnListB().get(i));
         }
         if (analysedElements.size() > 0) {
-            tdDataProvider = DataProviderHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
+            tdDataProvider = ConnectionHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
             analysis.getContext().setConnection(tdDataProvider);
             // MOD qiongli bug 14437:Add dependency
             analysis.getContext().setConnection(tdDataProvider);
@@ -316,11 +324,11 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 TdColumn columnA = anaColumnCompareViewer.getColumnListA().get(i);
                 TdColumn columnB = anaColumnCompareViewer.getColumnListB().get(i);
 
-                ColumnSet ownerA = ColumnHelper.getColumnSetOwner(columnA);
-                ColumnSet ownerB = ColumnHelper.getColumnSetOwner(columnB);
+                ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(columnA);
+                ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(columnB);
 
-                int typeA = ((TdColumn) columnA).getJavaType();
-                int typeB = ((TdColumn) columnB).getJavaType();
+                int typeA = ((TdColumn) columnA).getSqlDataType().getJavaDataType();
+                int typeB = ((TdColumn) columnB).getSqlDataType().getJavaDataType();
                 if (!Java2SqlType.isGenericSameType(typeA, typeB)) {
                     return new ReturnCode(
                             DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$

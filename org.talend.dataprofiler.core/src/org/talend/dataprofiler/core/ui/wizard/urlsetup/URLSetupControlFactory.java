@@ -21,7 +21,10 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
 /**
  * 
  */
-public class URLSetupControlFactory {
+public final class URLSetupControlFactory {
+
+    private URLSetupControlFactory() {
+    }
 
     public static boolean hasControl(SupportDBUrlType dbType) {
         return null != getControlClass(dbType);

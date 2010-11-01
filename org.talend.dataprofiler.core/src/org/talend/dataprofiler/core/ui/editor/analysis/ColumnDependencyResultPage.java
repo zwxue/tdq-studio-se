@@ -39,7 +39,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -78,6 +77,14 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
     private ColumnDependencyMasterDetailsPage masterPage;
 
     private ColumnDependencyIndicator columnDependencyIndicator;
+
+    public ColumnDependencyIndicator getColumnDependencyIndicator() {
+        return this.columnDependencyIndicator;
+    }
+
+    public void setColumnDependencyIndicator(ColumnDependencyIndicator columnDependencyIndicator) {
+        this.columnDependencyIndicator = columnDependencyIndicator;
+    }
 
     /**
      * DOC jet ColumnDependencyResultPage constructor comment.
@@ -143,7 +150,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
 
-        Analysis analysis = this.getAnalysisHandler().getAnalysis();
+        // Analysis analysis = this.getAnalysisHandler().getAnalysis();
 
         analyzedColumnSetsComp = toolkit.createComposite(topComposite);
         analyzedColumnSetsComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
@@ -351,22 +358,22 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
      * @return
      * @deprecated
      */
-    private DefaultCategoryDataset initDataset() {
-
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        Analysis analysis = this.getAnalysisHandler().getAnalysis();
-
-        for (Iterator iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
-            ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
-            String label = getRowLabel(indicator);
-            if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
-                dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
-                dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label); //$NON-NLS-1$
-            }
-        }
-        return dataset;
-    }
+    // private DefaultCategoryDataset initDataset() {
+    //
+    // DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    //
+    // Analysis analysis = this.getAnalysisHandler().getAnalysis();
+    //
+    // for (Iterator iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
+    // ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
+    // String label = getRowLabel(indicator);
+    // if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
+    // dataset.addValue(indicator.getDistinctACount(), "Dependency Strength", label);
+    //                dataset.addValue(indicator.getACount() - indicator.getDistinctACount(), "", label); //$NON-NLS-1$
+    // }
+    // }
+    // return dataset;
+    // }
 
     /**
      * DOC xqliu Comment method "initCustomerDataset".
@@ -379,7 +386,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
         Analysis analysis = this.getAnalysisHandler().getAnalysis();
 
-        for (Iterator iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
+        for (Iterator<Indicator> iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
             ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
             String label = ColumnDependencyHelper.getIndicatorName(indicator);
             if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
@@ -411,12 +418,12 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
      * @return
      * @deprecated
      */
-    private String getRowLabel(ColumnDependencyIndicator indicator) {
-        assert indicator.getColumnA() != null;
-        assert indicator.getColumnB() != null;
-
-        return indicator.getColumnA().getName() + "-->" + indicator.getColumnB().getName(); //$NON-NLS-1$
-    }
+    // private String getRowLabel(ColumnDependencyIndicator indicator) {
+    // assert indicator.getColumnA() != null;
+    // assert indicator.getColumnB() != null;
+    //
+    //        return indicator.getColumnA().getName() + "-->" + indicator.getColumnB().getName(); //$NON-NLS-1$
+    // }
 
     private TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();

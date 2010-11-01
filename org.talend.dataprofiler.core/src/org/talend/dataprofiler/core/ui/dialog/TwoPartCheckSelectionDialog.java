@@ -105,6 +105,14 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     private Object[] fExpandedElements;
 
+    public Object[] getfExpandedElements() {
+        return this.fExpandedElements;
+    }
+
+    public void setfExpandedElements(Object[] fExpandedElements) {
+        this.fExpandedElements = fExpandedElements;
+    }
+
     private AbstractAnalysisMetadataPage metadataFormPage;
 
     protected int dialogType;
@@ -413,11 +421,12 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                     if (value != null && value instanceof Integer) {
                         connectionIndex = (Integer) value;
                     }
-                    if (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    // if (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue()) {
+                    // return true;
+                    // } else {
+                    // return false;
+                    // }
+                    return (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue());
                 } else if (element instanceof IRepositoryViewObject) {
                     Integer selectIndex = metadataFormPage.getConnCombo().getSelectionIndex();
                     Integer connectionIndex = null;
@@ -427,11 +436,12 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                     if (value != null && value instanceof Integer) {
                         connectionIndex = (Integer) value;
                     }
-                    if (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    // if (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue()) {
+                    // return true;
+                    // } else {
+                    // return false;
+                    // }
+                    return (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue());
                 }
                 return true;
             }

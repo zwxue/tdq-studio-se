@@ -57,6 +57,14 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
 
     private Connection connection;
 
+    public Connection getConnection() {
+        return this.connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
     protected Text urlText;
 
     /**
@@ -195,14 +203,14 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
 
             Label labelUrl = new Label(parent, SWT.NONE);
             labelUrl.setText("Url"); //$NON-NLS-1$
-            final Text urlText = new Text(parent, SWT.BORDER | SWT.SINGLE);
-            urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            urlText.setText(connectionParam.getJdbcUrl());
-            urlText.addModifyListener(new ModifyListener() {
+            final Text urlText2 = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            urlText2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            urlText2.setText(connectionParam.getJdbcUrl());
+            urlText2.addModifyListener(new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
-                    connectionParam.setJdbcUrl(urlText.getText());
-                    setConnectionURL(urlText.getText());
+                    connectionParam.setJdbcUrl(urlText2.getText());
+                    setConnectionURL(urlText2.getText());
                     if (abstractWizardPage instanceof DatabaseWizardPage) {
                         ((DatabaseWizardPage) abstractWizardPage).updateButtonState();
                     }
@@ -219,7 +227,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             final Text fileText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             final Button selectFile = new Button(parent, SWT.PUSH);
             Label labelUrl = new Label(parent, SWT.NONE);
-            final Text urlText = new Text(parent, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
+            final Text urlText3 = new Text(parent, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
 
             labelfile.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.File")); //$NON-NLS-1$
             fileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -243,15 +251,15 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             selectFile.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.Browser")); //$NON-NLS-1$
 
             labelUrl.setText("Url"); //$NON-NLS-1$
-            urlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            urlText3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             //            setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-            urlText.setText(connectionParam.getJdbcUrl());
-            urlText.setEditable(false);
+            urlText3.setText(connectionParam.getJdbcUrl());
+            urlText3.setEditable(false);
 
-            urlText.addKeyListener(new KeyAdapter() {
+            urlText3.addKeyListener(new KeyAdapter() {
 
                 public void keyReleased(KeyEvent e) {
-                    setConnectionURL(urlText.getText());
+                    setConnectionURL(urlText3.getText());
                 }
 
             });
@@ -281,7 +289,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
                             log.info("the formated url is :" + url);
                         }
                         setConnectionURL(url);
-                        urlText.setText(getConnectionURL());
+                        urlText3.setText(getConnectionURL());
                     }
                     // ~ 14593
                 }

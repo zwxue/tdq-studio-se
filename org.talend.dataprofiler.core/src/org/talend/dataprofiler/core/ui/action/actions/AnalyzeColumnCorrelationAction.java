@@ -115,9 +115,10 @@ public class AnalyzeColumnCorrelationAction extends Action {
 
             while (it.hasNext()) {
                 TdColumn column = (TdColumn) it.next();
-                if (Java2SqlType.isNumbericInSQL(column.getJavaType())) {
+                if (Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
                     hasNumberColumn = true;
-                } else if (Java2SqlType.isDateInSQL(column.getJavaType()) || Java2SqlType.isDateTimeSQL(column.getJavaType())) {
+                } else if (Java2SqlType.isDateInSQL(column.getSqlDataType().getJavaDataType())
+                        || Java2SqlType.isDateTimeSQL(column.getSqlDataType().getJavaDataType())) {
                     hasDateColumn = true;
                 }
             }

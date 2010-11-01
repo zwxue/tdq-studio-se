@@ -21,8 +21,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.TreePath;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -42,8 +40,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -55,7 +51,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
@@ -95,9 +90,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private ColumnSetMasterPage masterPage;
 
-    private Menu menu;
+    // private Menu menu;
 
-    private MenuItem editPatternMenuItem;
+    // private MenuItem editPatternMenuItem;
 
     public AnalysisColumnSetTreeViewer(Composite parent, ColumnSetMasterPage masterPage) {
         absMasterPage = masterPage;
@@ -284,7 +279,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     private List<TdColumn> convertList(List<TdColumn> columnList) {
-        List<TdColumn> resultList = new ArrayList();
+        List<TdColumn> resultList = new ArrayList<TdColumn>();
         for (int i = columnList.size() - 1; i >= 0; i--) {
             resultList.add(columnList.get(i));
         }
@@ -484,20 +479,20 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         return this.columnSetMultiValueList;
     }
 
-    private void createColumnAnalysis(Tree newTree) {
-        TreeItem[] items = newTree.getSelection();
-        if (items.length > 0) {
-            TreePath[] paths = new TreePath[items.length];
-
-            for (int i = 0; i < items.length; i++) {
-                TdColumn tdColumn = (TdColumn) items[i].getData(COLUMN_INDICATOR_KEY);
-                paths[i] = new TreePath(new Object[] { tdColumn });
-            }
-            CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();
-            analysisAction.setSelection(new TreeSelection(paths));
-            analysisAction.run();
-        }
-    }
+    // private void createColumnAnalysis(Tree newTree) {
+    // TreeItem[] items = newTree.getSelection();
+    // if (items.length > 0) {
+    // TreePath[] paths = new TreePath[items.length];
+    //
+    // for (int i = 0; i < items.length; i++) {
+    // TdColumn tdColumn = (TdColumn) items[i].getData(COLUMN_INDICATOR_KEY);
+    // paths[i] = new TreePath(new Object[] { tdColumn });
+    // }
+    // CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();
+    // analysisAction.setSelection(new TreeSelection(paths));
+    // analysisAction.run();
+    // }
+    // }
 
     /**
      * Remove the selected elements(eg:TdColumn or Indicator) from tree.
@@ -548,7 +543,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                boolean con = false;
+                // boolean con = false;
 
                 if (e.item instanceof TreeItem) {
                     enabledButtons(true);

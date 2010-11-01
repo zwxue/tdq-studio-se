@@ -141,10 +141,8 @@ public class IndicatorSelectDialog extends TrayDialog {
                         .getConnection();
                 this.dbms = DbmsLanguageFactory.createDbmsLanguage(connection);
             }
-
         }
         // ~
-
     }
 
     /*

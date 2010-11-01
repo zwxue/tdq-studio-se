@@ -26,15 +26,15 @@ import org.eclipse.swt.widgets.Control;
  */
 public class BorderLayout extends AWTLayout {
 
-    public final static String CENTER = "Center"; //$NON-NLS-1$
+    public static final String CENTER = "Center"; //$NON-NLS-1$
 
-    public final static String EAST = "East"; //$NON-NLS-1$
+    public static final String EAST = "East"; //$NON-NLS-1$
 
-    public final static String NORTH = "North"; //$NON-NLS-1$
+    public static final String NORTH = "North"; //$NON-NLS-1$
 
-    public final static String SOUTH = "South"; //$NON-NLS-1$
+    public static final String SOUTH = "South"; //$NON-NLS-1$
 
-    public final static String WEST = "West"; //$NON-NLS-1$
+    public static final String WEST = "West"; //$NON-NLS-1$
 
     // -----------------------
 
@@ -120,22 +120,28 @@ public class BorderLayout extends AWTLayout {
      * @param composite the parent composite
      */
     private void readLayoutData(Composite composite) {
-        northChild = southChild = eastChild = westChild = centerChild = null;
+        northChild = null;
+        southChild = null;
+        eastChild = null;
+        westChild = null;
+        centerChild = null;
+
         Control[] children = composite.getChildren();
         for (int i = 0; i < children.length; i++) {
             // if (!children[i].isVisible())
             // continue;
             Object layoutData = children[i].getLayoutData();
-            if (NORTH.equals(layoutData))
+            if (NORTH.equals(layoutData)) {
                 northChild = children[i];
-            else if (SOUTH.equals(layoutData))
+            } else if (SOUTH.equals(layoutData)) {
                 southChild = children[i];
-            else if (EAST.equals(layoutData))
+            } else if (EAST.equals(layoutData)) {
                 eastChild = children[i];
-            else if (WEST.equals(layoutData))
+            } else if (WEST.equals(layoutData)) {
                 westChild = children[i];
-            else
+            } else {
                 centerChild = children[i];
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
@@ -64,7 +64,7 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 PackagesAnalyisParameter schemaPanameter = (PackagesAnalyisParameter) getConnectionParams();
                 if (object instanceof Schema) {
                     Schema schema = (Schema) object;
-                    Connection tdProvider = DataProviderHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
+                    Connection tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
                             .doSwitch(schema));
                     if (tdProvider != null && schemaPanameter != null) {
                         schemaPanameter.setTdDataProvider(tdProvider);

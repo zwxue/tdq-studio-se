@@ -33,7 +33,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -70,6 +70,14 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     private ScrolledForm form;
 
     private Section columnsComparisonSection = null;
+
+    public Section getColumnsComparisonSection() {
+        return this.columnsComparisonSection;
+    }
+
+    public void setColumnsComparisonSection(Section columnsComparisonSection) {
+        this.columnsComparisonSection = columnsComparisonSection;
+    }
 
     List<TdColumn> columnListA = null;
 
@@ -211,28 +219,28 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     protected void saveAnalysis() throws DataprofilerCoreException {
         getAnalysisHandler().clearAnalysis();
 
-        List<TdColumn> columnListA = anaColumnCompareViewer.getColumnListA();
-        List<TdColumn> columnListB = anaColumnCompareViewer.getColumnListB();
+        List<TdColumn> columnListAA = anaColumnCompareViewer.getColumnListA();
+        List<TdColumn> columnListBB = anaColumnCompareViewer.getColumnListB();
 
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(this.analysis);
         Connection tdDataProvider = null;
 
-        for (int i = 0; i < columnListA.size(); i++) {
-            if (columnListB.size() > i) {
+        for (int i = 0; i < columnListAA.size(); i++) {
+            if (columnListBB.size() > i) {
                 ColumnDependencyIndicator indicator = ColumnsetFactory.eINSTANCE.createColumnDependencyIndicator();
-                indicator.setColumnA(columnListA.get(i));
-                indicator.setColumnB(columnListB.get(i));
+                indicator.setColumnA(columnListAA.get(i));
+                indicator.setColumnB(columnListBB.get(i));
                 indicator.setIndicatorDefinition(DefinitionHandler.getInstance().getFDRuleDefaultIndicatorDefinition());
                 analysis.getResults().getIndicators().add(indicator);
-                anaBuilder.addElementToAnalyze(columnListA.get(i), indicator);
+                anaBuilder.addElementToAnalyze(columnListAA.get(i), indicator);
                 // ADD this line qiongli 2010-6-8
-                anaBuilder.addElementToAnalyze(columnListB.get(i), indicator);
+                anaBuilder.addElementToAnalyze(columnListBB.get(i), indicator);
             }
         }
 
-        if (columnListA.size() > 0) {
-            tdDataProvider = DataProviderHelper.getTdDataProvider(columnListA.get(0));
+        if (columnListAA.size() > 0) {
+            tdDataProvider = ConnectionHelper.getTdDataProvider(columnListAA.get(0));
             // MOD qiongli bug 14437:Add dependency
             analysis.getContext().setConnection(tdDataProvider);
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
@@ -304,11 +312,11 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             TdColumn columnA = columnASet.get(i);
             TdColumn columnB = columnBSet.get(i);
 
-            ColumnSet ownerA = ColumnHelper.getColumnSetOwner(columnA);
-            ColumnSet ownerB = ColumnHelper.getColumnSetOwner(columnB);
+            ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(columnA);
+            ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(columnB);
 
-            int typeA = ((TdColumn) columnA).getJavaType();
-            int typeB = ((TdColumn) columnB).getJavaType();
+// int typeA = ((TdColumn) columnA).getJavaType();
+            // int typeB = ((TdColumn) columnB).getJavaType();
 
             if (ownerA != ownerB) {
                 // must come from one table

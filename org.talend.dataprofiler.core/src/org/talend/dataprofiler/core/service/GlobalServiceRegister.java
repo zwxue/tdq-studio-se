@@ -75,7 +75,7 @@ public class GlobalServiceRegister {
     }
 
     /**
-     * Gets the specific IService.overide klliu 2010-09-15 bug 15520
+     * Gets the specific IService.overide klliu 2010-09-15 bug 15520.
      * 
      * @param klass the Service type you want to get
      * @return IService IService
@@ -112,7 +112,7 @@ public class GlobalServiceRegister {
     }
 
     private AbstractSvnRepositoryService findSvnRepositoryService(Class<?> klass) {
-        String key = klass.getName();
+        // String key = klass.getName();
         for (int i = 0; i < svnRepositoryElements.length; i++) {
             IConfigurationElement element = svnRepositoryElements[i];
             if (element == null) {

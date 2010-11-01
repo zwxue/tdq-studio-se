@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.service;
 
 /**
  * 
- * DOC mzhao Svn repository service
+ * DOC mzhao Svn repository service.
  */
 public abstract class AbstractSvnRepositoryService implements IService {
 

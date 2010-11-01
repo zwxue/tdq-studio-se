@@ -45,7 +45,10 @@ import org.talend.utils.sugars.ReturnCode;
 /**
  * @author qiongli handle logical delete and restore .MOD qiongli 2010-10-8,bug 15674
  */
-public class LogicalDeleteFileHandle {
+public final class LogicalDeleteFileHandle {
+
+    private LogicalDeleteFileHandle() {
+    }
 
     private static Logger log = Logger.getLogger(LogicalDeleteFileHandle.class);
 

@@ -672,9 +672,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(table);
         ((GridData) table.getLayoutData()).heightHint = 60;
         createSchemaTableColumns(table);
-        SchemaViewerProvier provider = new SchemaViewerProvier();
-        secondTableViewer.setLabelProvider(provider);
-        secondTableViewer.setContentProvider(provider);
+        SchemaViewerProvier svProvider = new SchemaViewerProvier();
+        secondTableViewer.setLabelProvider(svProvider);
+        secondTableViewer.setContentProvider(svProvider);
         table.setVisible(false);
         return secondTableViewer;
     }

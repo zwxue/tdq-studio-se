@@ -81,8 +81,8 @@ public class ExportPatternsWizard extends Wizard {
             if (isForExchange) {
                 ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
 
-                for (Iterator iterator = seletedPatterns.iterator(); iterator.hasNext();) {
-                    Pattern pattern = (Pattern) iterator.next();
+                for (Iterator<Pattern> iterator = seletedPatterns.iterator(); iterator.hasNext();) {
+                    Pattern pattern = iterator.next();
                     File patternFile = new File(resource, ExportFactory.toLocalFileName(pattern.getName() + ".csv")); //$NON-NLS-1$
                     if (patternFile.isFile() && patternFile.exists()) {
                         try {

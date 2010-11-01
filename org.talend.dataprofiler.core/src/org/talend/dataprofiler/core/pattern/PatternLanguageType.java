@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.pattern;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.talend.cwm.dburl.SupportDBUrlType;
 
 /**
@@ -88,8 +87,6 @@ public enum PatternLanguageType {
           SupportDBUrlType.AS400DEFAULTURL.getLanguage(),
           PatternToExcelEnum.AS400);
 
-    private static Logger log = Logger.getLogger(PatternLanguageType.class);
-
     private int index;
 
     private String literal;
@@ -156,7 +153,7 @@ public enum PatternLanguageType {
     }
 
     /**
-     * DOC yyi 2009-09-28 Feature: 9289
+     * DOC yyi 2009-09-28 Feature: 9289.
      * 
      * @param hasJava set contains Java or not.
      * @return

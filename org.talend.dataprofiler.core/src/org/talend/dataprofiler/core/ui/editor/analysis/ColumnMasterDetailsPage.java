@@ -301,7 +301,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * DOC mzhao Comment method "packOtherColumns".
      */
     private void packOtherColumns() {
-        TreeColumn columns[] = treeViewer.getTree().getColumns();
+        TreeColumn[] columns = treeViewer.getTree().getColumns();
         for (TreeColumn column : columns) {
             column.pack();
         }
@@ -611,8 +611,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         javaEnginSection.setLayout(gridLayout);
         checkSection.setLayout(gridLayout);
         numberSection.setLayout(gridLayout);
-        Label drillDownLabel = toolkit.createLabel(checkSection, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
+        // Label drillDownLabel = toolkit.createLabel(checkSection, DefaultMessagesImpl
+        // .getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
         drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);
         drillDownCheck.setSelection(true);
         drillDownCheck.setSelection(anaParameters.isStoreData());

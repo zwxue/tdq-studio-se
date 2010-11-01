@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
@@ -135,7 +135,7 @@ public class ColumnFilterWizard extends AbstractWizard {
     private void initAction(NamedColumnSet namedColumnSet) {
         this.namedColumnSet = namedColumnSet;
         this.packageObj = ColumnSetHelper.getParentCatalogOrSchema(this.namedColumnSet);
-        this.tdDataProvider = DataProviderHelper.getTdDataProvider(this.packageObj);
+        this.tdDataProvider = ConnectionHelper.getTdDataProvider(this.packageObj);
         this.oldColumnFilter = ColumnHelper.getColumnFilter(namedColumnSet);
     }
 }

@@ -31,7 +31,8 @@ public class ColumnIndicatorImpl extends ModelElementIndicatorImpl implements Co
     }
 
     public int getJavaType() {
-        return this.getTdColumn().getJavaType();
+        // return this.getTdColumn().getJavaType();
+        return this.getTdColumn().getSqlDataType().getJavaDataType();
     }
 
     // public String getName() {

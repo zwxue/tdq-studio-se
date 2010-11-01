@@ -30,6 +30,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public final class FolderNodeHelper {
 
+    private FolderNodeHelper() {
+    }
+
     // private static final String TABLEFOLDER_SWITCH = "TABLEFOLDER_SWITCH";
     //    
     // private static final String TABLEFOLDER_SWITCH = "TABLEFOLDER_SWITCH";

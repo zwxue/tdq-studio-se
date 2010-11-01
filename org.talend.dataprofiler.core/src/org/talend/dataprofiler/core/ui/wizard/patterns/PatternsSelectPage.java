@@ -115,7 +115,7 @@ public class PatternsSelectPage extends WizardPage {
     }
 
     /**
-     * zshen
+     * zshen.
      * 
      * @return the input of table.
      */

@@ -59,7 +59,7 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
         List<TdColumn> tempList = new ArrayList<TdColumn>();
 
         for (TdColumn column : getColumns()) {
-            if (!Java2SqlType.isTextInSQL(column.getJavaType())) {
+            if (!Java2SqlType.isTextInSQL(column.getSqlDataType().getJavaDataType())) {
                 tempList.add(column);
             }
         }

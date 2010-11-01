@@ -77,8 +77,8 @@ public class ExportUDIWizard extends Wizard {
                 ExportFactory.export(resource, folder, seletedIndicators
                         .toArray(new IndicatorDefinition[seletedIndicators.size()]));
 
-                for (Iterator iterator = seletedIndicators.iterator(); iterator.hasNext();) {
-                    IndicatorDefinition id = (IndicatorDefinition) iterator.next();
+                for (Iterator<IndicatorDefinition> iterator = seletedIndicators.iterator(); iterator.hasNext();) {
+                    IndicatorDefinition id = iterator.next();
                     File idFile = new File(resource, id.getName() + ".csv"); //$NON-NLS-1$
                     if (idFile.isFile() && idFile.exists()) {
                         try {

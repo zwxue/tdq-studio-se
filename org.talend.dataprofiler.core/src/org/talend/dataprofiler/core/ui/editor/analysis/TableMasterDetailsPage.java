@@ -61,7 +61,7 @@ import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -302,7 +302,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * DOC xqliu Comment method "packOtherColumns".
      */
     private void packOtherColumns() {
-        TreeColumn columns[] = treeViewer.getTree().getColumns();
+        TreeColumn[] columns = treeViewer.getTree().getColumns();
         for (TreeColumn column : columns) {
             column.pack();
         }
@@ -607,7 +607,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         if (tableIndicators != null && tableIndicators.length != 0) {
 
-            tdProvider = DataProviderHelper.getDataProvider(tableIndicators[0].getColumnSet());
+            tdProvider = ConnectionHelper.getDataProvider(tableIndicators[0].getColumnSet());
             if (tdProvider.eIsProxy()) {
                 // Resolve the connection again
                 tdProvider = (Connection) EObjectHelper.resolveObject(tdProvider);

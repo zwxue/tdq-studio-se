@@ -56,7 +56,8 @@ public final class ModelElementIndicatorRule {
 
         int javaType = 0;
         if (me instanceof TdColumn) {
-            javaType = ((TdColumn) me).getJavaType();
+            // javaType = ((TdColumn) me).getJavaType();
+            javaType = ((TdColumn) me).getSqlDataType().getJavaDataType();
         } else if (me instanceof TdXmlElementType) {
             javaType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) me).getJavaType());
         }

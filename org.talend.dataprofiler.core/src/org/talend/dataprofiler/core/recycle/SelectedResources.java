@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -29,7 +28,6 @@ import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
@@ -39,11 +37,6 @@ import org.talend.resource.ResourceManager;
  * @author qiongli Get all selected elements which used to delete forever
  */
 public class SelectedResources {
-
-    /**
-	 * 
-	 */
-    private static Logger log = Logger.getLogger(DeleteObjectsAction.class);
 
     public SelectedResources() {
     }

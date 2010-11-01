@@ -71,8 +71,7 @@ import org.talend.dq.helper.EObjectHelper;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
- * 
- * DOC mzhao 2009-06-17 feature 5887
+ * DOC mzhao 2009-06-17 feature 5887.
  */
 public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
@@ -88,6 +87,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     // MOD mzhao 2009-06-17 feature 5887
     private SelectionListener selectionListener = null;
+
+    public SelectionListener getSelectionListener() {
+        return this.selectionListener;
+    }
+
+    public void setSelectionListener(SelectionListener selectionListener) {
+        this.selectionListener = selectionListener;
+    }
 
     // ADD mzhao 2009-02-03 Tableviewer creation stack that remember left or
     // right position.
@@ -107,7 +114,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private String mainTitle;
 
-    private String titleDescription;
+    // private String titleDescription;
 
     private Analysis analysis = null;
 
@@ -159,7 +166,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
             columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
-            RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
+            // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
             columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
 
         }
@@ -485,7 +492,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * 
      * DOC xqliu ColumnsComparisonMasterDetailsPage class global comment. Detailled comment
      */
-    private class CaseInsensitiveComparator implements Comparator {
+    private class CaseInsensitiveComparator implements Comparator<Object> {
 
         public int compare(Object element1, Object element2) {
             TdColumn col1 = (TdColumn) element1;
@@ -502,7 +509,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     public void setColumnABForMatchingIndicator(RowMatchingIndicator rowMatchingIndicator, List<TdColumn> columnsA,
             List<TdColumn> columnsB) {
         if (columnsA.size() != 0) {
-            ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner((TdColumn) columnsA.get(0));
+            ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) columnsA.get(0));
             rowMatchingIndicator.setAnalyzedElement(columnSetOwner);
         }
         rowMatchingIndicator.getColumnSetA().clear();
@@ -759,13 +766,12 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         int idx = 0;
         for (TdColumn col : columnListA) {
             if (col == colB) {
-                if (idx > columnListB.size() - 1) {
-                    return false;
-                } else if (columnListB.get(idx) == colA) {
-                    return false;
-                } else {
-                    return true;
-                }
+                // if ((idx > columnListB.size() - 1) || (columnListB.get(idx) == colA)) {
+                // return false;
+                // } else {
+                // return true;
+                // }
+                return !((idx > columnListB.size() - 1) || (columnListB.get(idx) == colA));
             }
             idx++;
         }

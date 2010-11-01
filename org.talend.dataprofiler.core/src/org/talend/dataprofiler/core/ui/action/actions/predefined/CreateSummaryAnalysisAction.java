@@ -67,7 +67,7 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
     protected boolean isAllowed() {
 
         for (TdColumn column : getColumns()) {
-            if (!Java2SqlType.isNumbericInSQL(column.getJavaType())) {
+            if (!Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
                 return false;
             }
         }

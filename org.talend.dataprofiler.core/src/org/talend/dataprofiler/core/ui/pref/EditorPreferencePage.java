@@ -243,7 +243,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     }
 
     /**
-     * DOC yyi 2010-07-07 13964: Hide the Graphics in the Analysis results page
+     * DOC yyi 2010-07-07 13964: Hide the Graphics in the Analysis results page.
      */
     private void createGraphicsGroup(Composite parent) {
         Group graphicGroup = new Group(parent, SWT.SHADOW_ETCHED_IN);

@@ -150,6 +150,7 @@ public class CreatePatternAction extends Action implements ICheatSheetAction {
                 this.folder = ResourceManager.getPatternRegexFolder();
                 setText(DefaultMessagesImpl.getString("CreatePatternAction.newRegularPattern")); //$NON-NLS-1$
                 break;
+            default:
             }
         }
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_PATTERN));

@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -109,7 +108,7 @@ public abstract class AbstractPagePart {
         // ArrayList<TdDataProvider>();
         Connection tdProvider = null;
         if (indicators != null && indicators.length != 0) {
-            tdProvider = DataProviderHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH
+            tdProvider = ConnectionHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH
                     .doSwitch(indicators[0].getColumnSet()));
 
             setConnectionState(masterPage, tdProvider);
@@ -128,11 +127,11 @@ public abstract class AbstractPagePart {
                 if (tree.getData() instanceof AnalysisColumnNominalIntervalTreeViewer) {
                     AnalysisColumnNominalIntervalTreeViewer treeViewer = (AnalysisColumnNominalIntervalTreeViewer) tree.getData();
                     TdColumn column = treeViewer.getColumnSetMultiValueList().get(0);
-                    dataManager = DataProviderHelper.getTdDataProvider(column);
+                    dataManager = ConnectionHelper.getTdDataProvider(column);
                 } else if (tree.getData() instanceof AnalysisColumnSetTreeViewer) {
                     AnalysisColumnSetTreeViewer treeViewer = (AnalysisColumnSetTreeViewer) tree.getData();
                     TdColumn column = treeViewer.getColumnSetMultiValueList().get(0);
-                    dataManager = DataProviderHelper.getTdDataProvider(column);
+                    dataManager = ConnectionHelper.getTdDataProvider(column);
                 }
             }
             setConnectionState(masterPage, dataManager);

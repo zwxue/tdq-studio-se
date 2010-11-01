@@ -22,10 +22,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -234,16 +232,16 @@ public final class PatternUtilities {
      * @return
      * @deprecated
      */
-    private static boolean isDBDefinedUDF(DbmsLanguage dbmsLanguage) {
-        Preferences prefers = ResourcesPlugin.getPlugin().getPluginPreferences();
-        if (prefers != null) {
-            String udfValue = prefers.getString(dbmsLanguage.getDbmsName());
-            if (udfValue != null && !"".equals(udfValue)) { //$NON-NLS-1$
-                return true;
-            }
-        }
-        return false;
-    }
+    // private static boolean isDBDefinedUDF(DbmsLanguage dbmsLanguage) {
+    // Preferences prefers = ResourcesPlugin.getPlugin().getPluginPreferences();
+    // if (prefers != null) {
+    // String udfValue = prefers.getString(dbmsLanguage.getDbmsName());
+    //            if (udfValue != null && !"".equals(udfValue)) { //$NON-NLS-1$
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
 
     public static Set<String> getAllPatternNames(IFolder folder) {
 
@@ -257,7 +255,7 @@ public final class PatternUtilities {
      * @param folder
      * @return
      */
-    private static Set<String> getNestFolderPatternNames(Set<String> list, IFolder folder) {
+    public static Set<String> getNestFolderPatternNames(Set<String> list, IFolder folder) {
         try {
             for (IResource resource : folder.members()) {
                 if (resource instanceof IFile) {

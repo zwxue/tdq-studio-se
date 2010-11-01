@@ -315,7 +315,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     }
 
     /**
-     * ADD yyi 2010-04-20 12173:update indicator name
+     * ADD yyi 2010-04-20 12173:update indicator name.
      * 
      * @param unit
      * @return

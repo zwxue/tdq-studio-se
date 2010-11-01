@@ -28,7 +28,6 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;

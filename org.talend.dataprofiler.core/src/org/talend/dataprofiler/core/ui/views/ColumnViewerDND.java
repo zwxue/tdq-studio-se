@@ -594,8 +594,8 @@ public class ColumnViewerDND {
                 if (event.item == null) {
                     index = -1;
                 } else {
-                    Widget widget = event.widget;
-                    Object data = event.data;
+//                    Widget widget = event.widget;
+//                    Object data = event.data;
                     TableItem item = (TableItem) event.item;
                     TableItem[] items = targetControl.getItems();
                     for (int i = 0; i < items.length; i++) {

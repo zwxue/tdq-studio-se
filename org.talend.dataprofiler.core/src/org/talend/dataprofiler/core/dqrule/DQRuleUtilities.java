@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.dqrule;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.model.TableIndicator;
@@ -29,8 +28,6 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  * DOC xqliu class global comment. Detailled comment
  */
 public final class DQRuleUtilities {
-
-    private static Logger log = Logger.getLogger(DQRuleUtilities.class);
 
     private DQRuleUtilities() {
     }
