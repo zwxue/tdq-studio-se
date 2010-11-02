@@ -20,7 +20,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlStore;
 import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.management.connection.DatabaseConstant;
@@ -72,7 +72,7 @@ public final class DbmsLanguageFactory {
                 dbmsLanguage = createDbmsLanguage(dbmsSubtype, version);
             }
         }
-        String identifierQuoteString = DataProviderHelper.getIdentifierQuoteString(dataprovider);
+        String identifierQuoteString = ConnectionHelper.getIdentifierQuoteString(dataprovider);
         if (identifierQuoteString == null || identifierQuoteString.length() == 0) {
             // MOD scorreia 2009-11-24 check for null because in some cases (DB2 z/OS and TOP 3.2.2), the identifier
             // quote was stored as null.

@@ -26,7 +26,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor implements Runnable {
+public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor implements Runnable {
 
     protected Connection connection;
 
@@ -35,7 +35,7 @@ public class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor
     protected Indicator indicator;
 
     protected boolean ok = true;
-    
+
     private Exception exception;
 
     public Exception getException() {
@@ -85,7 +85,7 @@ public class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor
                 // options of composite indicators are handled elsewhere
                 return;
             }
-            
+
             synchronized (schemata) {
                 // set the connection's catalog
                 String catalogName = getCatalogOrSchemaName(indicator.getAnalyzedElement());

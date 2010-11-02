@@ -22,13 +22,11 @@ import org.talend.utils.sql.Java2SqlType;
 
 /**
  * 
- * DOC mzhao Get sql query statement for correlation.(apply to multiColumnSetValue indicator)
+ * DOC mzhao Get sql query statement for correlation. (apply to multiColumnSetValue indicator)
  */
-public class MultiColumnSetValueExplorer extends DataExplorer {
+public final class MultiColumnSetValueExplorer extends DataExplorer {
 
     private static final String SELECT_ALL_FROM = "SELECT * FROM "; //$NON-NLS-1$
-
-    private static final String WHERE = " WHERE "; //$NON-NLS-1$
 
     private static MultiColumnSetValueExplorer instance = null;
 
@@ -77,7 +75,7 @@ public class MultiColumnSetValueExplorer extends DataExplorer {
 
     private String buildWhereClause(String queryString, final TdColumn tdColumn, String name, String value, String where) {
         if (tdColumn.getName().equals(name) && !value.equals("null")) { //$NON-NLS-1$
-            if (Java2SqlType.isTextInSQL(tdColumn.getJavaType())) {
+            if (Java2SqlType.isTextInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                 queryString += where + dbmsLanguage.quote(name) + dbmsLanguage.equal() + "'" + value + "'"; //$NON-NLS-1$ //$NON-NLS-2$
             } else {
                 queryString += where + dbmsLanguage.quote(name) + dbmsLanguage.equal() + value;

@@ -186,7 +186,7 @@ public abstract class DataExplorer implements IDataExplorer {
      * @return
      */
     protected String getFullyQualifiedTableName(TdColumn column) {
-        final ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+        final ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
         return getFullyQualifiedTableName(columnSetOwner);
     }
 

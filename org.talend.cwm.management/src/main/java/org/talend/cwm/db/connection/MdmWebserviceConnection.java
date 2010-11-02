@@ -38,7 +38,7 @@ import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.dburl.SupportDBUrlType;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.connection.DatabaseConstant;
@@ -279,7 +279,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         system.setVersion(parameter.getVersion());
         Component component = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory.eINSTANCE.createComponent();
         system.getOwnedElement().add(component);
-        DataProviderHelper.setSoftwareSystem(dataProvider, system);
+        ConnectionHelper.setSoftwareSystem(dataProvider, system);
     }
 
     /**
@@ -332,6 +332,10 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
 
     public String getUserPass() {
         return userPass;
+    }
+
+    public String getDataFilter() {
+        return dataFilter;
     }
 
 }

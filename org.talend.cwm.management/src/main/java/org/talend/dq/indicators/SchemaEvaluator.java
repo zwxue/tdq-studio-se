@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
@@ -43,7 +43,7 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
     @Override
     protected Connection getDataManager() {
         Schema schema = this.getAnalyzedElements().iterator().next();
-        return schema != null ? DataProviderHelper.getTdDataProvider(schema) : null;
+        return schema != null ? ConnectionHelper.getTdDataProvider(schema) : null;
     }
 
     @Override

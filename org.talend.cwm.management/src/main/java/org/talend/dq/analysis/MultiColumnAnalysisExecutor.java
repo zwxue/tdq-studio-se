@@ -24,7 +24,6 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
@@ -39,7 +38,6 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -170,7 +168,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @return the quoted table name
      */
     private String getTableName(final EList<TdColumn> analyzedColumns) {
-        ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(analyzedColumns.get(0));
+        ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(analyzedColumns.get(0));
         String tableName = columnSetOwner.getName();
 
         Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
@@ -322,18 +320,6 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     }
 
-    private String getRegexWithoutQuotes(String pattern) {
-        int beginIndex = 0;
-        int endIndex = pattern.length();
-        if ('\'' == pattern.charAt(0)) {
-            beginIndex++;
-        }
-        if ('\'' == pattern.charAt(endIndex - 1)) {
-            endIndex--;
-        }
-        return pattern.substring(beginIndex, endIndex);
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -343,10 +329,10 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      */
     @Override
     protected boolean checkAnalyzedElements(Analysis analysis, AnalysisContext context) {
-        for (ModelElement node : context.getAnalysedElements()) {
-            TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
-            // TODO scorreia
-        }
+        // for (ModelElement node : context.getAnalysedElements()) {
+        // // TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
+        // // TODO scorreia
+        // }
         return true;
     }
 
@@ -379,8 +365,10 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String patternNames = "";
         for (RegexpMatchingIndicator rmi : indicators) {
             if (null == rmi.getRegex()) {
+
                 patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
-            } // MOD klliu bug 14527 2010-08-09
+            }
+            // MOD klliu bug 14527 2010-08-09
             else if (rmi.getRegex().equals(rmi.getName())) {
                 patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
             }

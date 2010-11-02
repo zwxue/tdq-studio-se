@@ -18,7 +18,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
@@ -99,10 +99,10 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         ConnectionIndicator connectionIndicator = getConnectionIndicator();
         this.resetCounts(connectionIndicator); // TODO reset other indicators
 
-        List<Catalog> catalogs = DataProviderHelper.getCatalogs(dataProvider);
+        List<Catalog> catalogs = ConnectionHelper.getCatalogs(dataProvider);
 
         if (catalogs.isEmpty()) { // no catalog, only schemata
-            List<Schema> schemata = DataProviderHelper.getSchema(dataProvider);
+            List<Schema> schemata = ConnectionHelper.getSchema(dataProvider);
             // MOD yyi 2009-11-30 10187
             for (Schema tdSchema : schemata) {
                 if (!checkSchema(tdSchema)) {

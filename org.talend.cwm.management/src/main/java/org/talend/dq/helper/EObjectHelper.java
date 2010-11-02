@@ -34,7 +34,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -76,20 +76,20 @@ public final class EObjectHelper {
     }
 
     /**
-     * TODO scorreia see if we can replace this method by {@link DataProviderHelper#getTdDataProvider(TdColumn)}.
+     * TODO scorreia see if we can replace this method by {@link ConnectionHelper#getTdDataProvider(TdColumn)}.
      * 
-     * @deprecated it's probably better to use {@link DataProviderHelper#getTdDataProvider(TdColumn)}
+     * @deprecated it's probably better to use {@link ConnectionHelper#getTdDataProvider(TdColumn)}
      */
     public static Connection getTdDataProvider(TdColumn column) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
-        return DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+        return ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
 
     }
 
     public static Connection getTdDataProvider(TdTable table) {
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(table);
-        return DataProviderHelper.getTdDataProvider(parentCatalogOrSchema);
+        return ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
 
     }
 

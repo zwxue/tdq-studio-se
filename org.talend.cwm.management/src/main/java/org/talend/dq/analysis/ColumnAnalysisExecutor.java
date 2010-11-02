@@ -25,7 +25,8 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -129,7 +130,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             return true;
         }
         // get table or view
-        ColumnSet owner = ColumnHelper.getColumnSetOwner(tdColumn);
+        ColumnSet owner = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         if (owner == null) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NotFoundColumn", tdColumn.getName()); //$NON-NLS-1$
             return false;
@@ -223,7 +224,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         sql.append(dbms().from());
         // if(CatalogHelper.fromPart.iterator().next())
         ModelElement element = fromPart.iterator().next();
-        Package parentRelation = TableHelper.getParentCatalogOrSchema(fromPart.iterator().next());
+        Package parentRelation = PackageHelper.getCatalogOrSchema(fromPart.iterator().next());
         if (parentRelation instanceof Schema) {
             sql.append(dbms().toQualifiedName(null, parentRelation.getName(), element.getName()));
         } else if (parentRelation instanceof Catalog) {
@@ -305,7 +306,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             }
 
             // --- get the data provider
-            Connection dp = DataProviderHelper.getTdDataProvider(column);
+            Connection dp = ConnectionHelper.getTdDataProvider(column);
             if (!isAccessWith(dp)) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
                         column.getName(), dataprovider.getName());
@@ -340,7 +341,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         if (column != null && column.eIsProxy()) {
             column = (TdColumn) EObjectHelper.resolveObject(column);
         }
-        String table = quote(ColumnHelper.getColumnSetFullName(column));
+        String table = quote(ColumnHelper.getTableFullName(column));
         return table;
     }
 }

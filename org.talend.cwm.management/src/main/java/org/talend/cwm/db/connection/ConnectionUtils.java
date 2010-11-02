@@ -40,6 +40,7 @@ import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.utils.database.DB2ForZosDataBaseMetadata;
 import org.talend.core.database.EDatabaseTypeName;
@@ -94,7 +95,8 @@ public final class ConnectionUtils {
 
     public static final int LOGIN_TIMEOUT_SECOND = 20;
 
-    private static boolean timeout = CWMPlugin.getDefault().getPluginPreferences().getBoolean(PluginConstant.CONNECTION_TIMEOUT);
+    private static boolean timeout = Platform.getPreferencesService().getBoolean(
+            CWMPlugin.getDefault().getBundle().getSymbolicName(), PluginConstant.CONNECTION_TIMEOUT, false, null);
 
     // MOD mzhao 2009-06-05 Bug 7571
     private static final Map<String, Driver> DRIVER_CACHE = new HashMap<String, Driver>();
@@ -259,14 +261,14 @@ public final class ConnectionUtils {
                     for (int i = 0; i < jars.size(); i++) {
                         File file = new File(jars.get(i));
                         if (file.exists()) {
-                            urls.add(file.toURL());
+                            urls.add(file.toURI().toURL());
                         }
                     }
                     if (!urls.isEmpty()) {
                         try {
                             MyURLClassLoader cl;
                             cl = new MyURLClassLoader(urls.toArray(new URL[0]));
-                            Class clazz = cl.findClass(driverClassName);
+                            Class<?> clazz = cl.findClass(driverClassName);
                             if (clazz != null) {
                                 driver = (Driver) clazz.newInstance();
                                 // MOD mzhao 2009-06-05,Bug 7571 Get driver from

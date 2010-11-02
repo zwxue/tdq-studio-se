@@ -45,7 +45,6 @@ import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.connection.JavaSqlFactory;
@@ -491,7 +490,7 @@ public final class DqRepositoryViewService {
                 List<PrimaryKey> primaryKeys = tableBuild.getPrimaryKeys(catalogName, schemaPattern, tablePattern);
                 TableHelper.addPrimaryKeys(table, primaryKeys);
                 List<ForeignKey> foreignKeys = tableBuild.getForeignKeys(catalogName, schemaPattern, tablePattern);
-                TableHelper.addForeignKeys(table, foreignKeys);
+                TableHelper.addForeignKeys((TdTable) table, foreignKeys);
                 for (TdColumn tdColumn : columns) {
                     String colname = tdColumn.getName();
                     PrimaryKey primaryKey = tableBuild.getPrimaryKey(colname);
@@ -528,6 +527,7 @@ public final class DqRepositoryViewService {
      * @return true if ok
      * @throws TalendException
      */
+    @SuppressWarnings("unchecked")
     private static <T extends List<? extends NamedColumnSet>> boolean loadColumnSets(Connection dataProvider, Catalog catalog,
             Schema schema, String tablePattern, int classifierID, final T tables) throws TalendException {
         boolean ok = false;
@@ -587,7 +587,7 @@ public final class DqRepositoryViewService {
         TypedReturnCode<Connection> rc = new TypedReturnCode<Connection>();
         Resource r = EMFSharedResources.getInstance().getResource(
                 URI.createPlatformResourceURI(file.getFullPath().toString(), false), true);
-        Collection<Connection> tdDataProviders = DataProviderHelper.getTdDataProviders(r.getContents());
+        Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(r.getContents());
         if (tdDataProviders.isEmpty()) {
             rc.setReturnCode(
                     Messages.getString("DqRepositoryViewService.NoDataProviderFound", file.getFullPath().toString()), false); //$NON-NLS-1$

@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -72,7 +72,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
             for (ModelElement element : columns) {
                 TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
                 log.error("Connection has not been set in analysis Context");
-                connection = DataProviderHelper.getTdDataProvider(tdColumn);
+                connection = ConnectionHelper.getTdDataProvider(tdColumn);
                 analysis.getContext().setConnection(connection);
                 // FIXME connection should be set elsewhere }
             }
@@ -80,7 +80,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
         TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
         if (rc.isOk()) {
             // DependenciesHandler.getInstance().addDependency(rc.getObject());
-            Resource resource = connection.eResource();
+
             // if (resource != null) {
             // this.modifiedResources.add(resource);
             // }

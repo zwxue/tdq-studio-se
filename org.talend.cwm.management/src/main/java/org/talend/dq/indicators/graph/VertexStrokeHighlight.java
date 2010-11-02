@@ -45,7 +45,7 @@ public final class VertexStrokeHighlight implements VertexStrokeFunction {
             if (pi.isPicked(v))
                 return heavy;
             else {
-                for (Iterator iter = v.getNeighbors().iterator(); iter.hasNext();) {
+                for (Iterator<?> iter = v.getNeighbors().iterator(); iter.hasNext();) {
                     Vertex w = (Vertex) iter.next();
                     if (pi.isPicked(w))
                         return medium;

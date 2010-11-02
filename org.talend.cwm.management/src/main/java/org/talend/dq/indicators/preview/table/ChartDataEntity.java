@@ -221,7 +221,7 @@ public class ChartDataEntity {
             if (null != temp) {
                 int tempType = sqltype;
                 if (temp instanceof TdColumn) {
-                    sqltype = ((TdColumn) temp).getJavaType();
+                    sqltype = ((TdColumn) temp).getSqlDataType().getJavaDataType();
                 } else if (temp instanceof TdXmlElementType) {
                     tempType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) temp).getJavaType());
                 }

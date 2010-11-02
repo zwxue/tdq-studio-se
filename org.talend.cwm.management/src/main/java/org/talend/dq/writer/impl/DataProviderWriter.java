@@ -122,11 +122,6 @@ public class DataProviderWriter extends AElementPersistance {
      */
     @Override
     protected void addResourceContent(ModelElement element) {
-        // ProxyRepositoryViewObject.save((Connection) element);
-        ModelElement tempElement = element;
-        if (element != null && element.eIsProxy()) {
-            tempElement = (ModelElement) EObjectHelper.resolveObject(element);
-        }
 
         EList<EObject> resourceContents = element.eResource().getContents();
 

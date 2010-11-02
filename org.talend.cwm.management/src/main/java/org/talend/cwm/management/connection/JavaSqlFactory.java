@@ -13,7 +13,6 @@
 package org.talend.cwm.management.connection;
 
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
@@ -25,7 +24,6 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * @author scorreia
@@ -35,6 +33,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public final class JavaSqlFactory {
 
+    @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(JavaSqlFactory.class);
 
     private JavaSqlFactory() {
@@ -61,7 +60,6 @@ public final class JavaSqlFactory {
             rc.setOk(false);
         }
         String driverClassName = providerConnection.getDriverClass();
-        Collection<TaggedValue> taggedValues = providerConnection.getTaggedValue();
         Properties props = new Properties();
         props.put(TaggedValueHelper.USER, providerConnection.getUsername());
         props.put(TaggedValueHelper.PASSWORD, providerConnection.getPassword());

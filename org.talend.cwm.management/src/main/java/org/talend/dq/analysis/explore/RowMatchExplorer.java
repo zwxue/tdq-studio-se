@@ -55,7 +55,8 @@ public class RowMatchExplorer extends DataExplorer {
         String tableA = tablea.getName();
         String query = "SELECT A.*" + dbmsLanguage.from();
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
-            Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
+            Table tableb = (Table) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(
+                    0));
             String tableB = tableb.getName();
             EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
             EList<TdColumn> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
@@ -112,7 +113,8 @@ public class RowMatchExplorer extends DataExplorer {
         String tableA = tablea.getName();
         String query = "";
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
-            Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
+            Table tableb = (Table) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(
+                    0));
             String tableB = tableb.getName();
             EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
             EList<TdColumn> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
@@ -190,7 +192,7 @@ public class RowMatchExplorer extends DataExplorer {
     public String getAllRowsStatement() {
         Table tablea = (Table) indicator.getAnalyzedElement();
         String tableA = tablea.getName();
-        Table tableb = (Table) ColumnHelper.getColumnSetOwner(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
+        Table tableb = (Table) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
         String tableB = tableb.getName();
         return "SELECT * " + dbmsLanguage.from() + getFullyQualifiedTableName(tablea) + whereDataFilter(tableA.equals(tableB) ? null : tableA, null); //$NON-NLS-1$
     }

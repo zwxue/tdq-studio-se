@@ -306,9 +306,9 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         props.setProperty(TaggedValueHelper.UNIVERSE, dataProvider.getUniverse() == null ? PluginConstant.EMPTY_STRING
                 : dataProvider.getUniverse());
         props.setProperty(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter(dataProvider));
-        MdmWebserviceConnection mdmConnection = new MdmWebserviceConnection(dataProvider.getPathname(), props);
-        rc.setObject(mdmConnection);
-        rc.setOk(mdmConnection.checkDatabaseConnection().isOk());
+        MdmWebserviceConnection tempMdmConnection = new MdmWebserviceConnection(dataProvider.getPathname(), props);
+        rc.setObject(tempMdmConnection);
+        rc.setOk(tempMdmConnection.checkDatabaseConnection().isOk());
         rc.setMessage(dataProvider.getPathname());
         return rc;
     }

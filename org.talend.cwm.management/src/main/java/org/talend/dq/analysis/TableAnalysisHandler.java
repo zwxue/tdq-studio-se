@@ -20,8 +20,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.DataProviderHelper;
-import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -84,7 +84,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
         if (connection == null) {
             // try to get one
             log.error("Connection has not been set in analysis Context");
-            connection = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(set));
+            connection = ConnectionHelper.getTdDataProvider(PackageHelper.getCatalogOrSchema(set));
             analysis.getContext().setConnection(connection);
             // FIXME connection should be set elsewhere
         }

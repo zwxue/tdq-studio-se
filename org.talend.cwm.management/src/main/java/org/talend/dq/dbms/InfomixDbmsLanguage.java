@@ -21,9 +21,9 @@ import org.talend.utils.ProductVersion;
  */
 public class InfomixDbmsLanguage extends DbmsLanguage {
 
-    static final String REPLACE_COLUMN_ALIASE = "replace_column";
+    final String replaceColumnAliase = "replace_column";
 
-    static final String SOUNDEX_COLUMN_ALIASE = "soundex_column_result";
+    final String soundexColumnAliase = "soundex_column_result";
 
     InfomixDbmsLanguage() {
         super(DbmsLanguage.INFOMIX);
@@ -68,7 +68,7 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
                 + ",'e','a'),'f','a'),'g','a'),'h','a'),'i','a'),'j','a'),'k','a')" //$NON-NLS-1$
                 + ",'l','a'),'m','a'),'n','a'),'o','a'),'p','a'),'q','a'),'r','a')" //$NON-NLS-1$
                 + ",'s','a'),'t','a'),'u','a'),'v','a'),'w','a'),'x','a'),'y','a')" //$NON-NLS-1$
-                + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9') as " + REPLACE_COLUMN_ALIASE; //$NON-NLS-1$ //$NON-NLS-2$
+                + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9') as " + replaceColumnAliase; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override
@@ -79,19 +79,19 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
             final char replacement = replacementChars.charAt(i);
             expression = replaceOneChar(expression, charToReplace, replacement);
         }
-        return expression + " as " + REPLACE_COLUMN_ALIASE;
+        return expression + " as " + replaceColumnAliase;
     }
 
     @Override
     public String fillGenericQueryWithColumnTableAndAlias(String genericQuery, String columns, String table, String groupByAliases) {
-        if (columns.indexOf(this.REPLACE_COLUMN_ALIASE) > -1) {
+        if (columns.indexOf(this.replaceColumnAliase) > -1) {
             String fromCaluse = "(SELECT " + columns + " FROM " + table + ")";
-            return new GenericSQLHandler(genericQuery).replaceColumnTableAlias(this.REPLACE_COLUMN_ALIASE, fromCaluse,
-                    this.REPLACE_COLUMN_ALIASE).getSqlString();
-        } else if (table.indexOf(this.SOUNDEX_COLUMN_ALIASE) > -1) {
+            return new GenericSQLHandler(genericQuery).replaceColumnTableAlias(this.replaceColumnAliase, fromCaluse,
+                    this.replaceColumnAliase).getSqlString();
+        } else if (table.indexOf(this.soundexColumnAliase) > -1) {
             while (genericQuery.toUpperCase().indexOf("SOUNDEX(" + GenericSQLHandler.COLUMN_NAMES + ")") > -1) {
                 genericQuery = genericQuery.toUpperCase().replace("SOUNDEX(" + GenericSQLHandler.COLUMN_NAMES + ")",
-                        this.SOUNDEX_COLUMN_ALIASE);
+                        this.soundexColumnAliase);
             }
         } else {
             groupByAliases = computeAliasesIndex(columns, groupByAliases);
@@ -122,7 +122,7 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
         tableName = "(select "
                 + colName
                 + ",first_char||second_char||rpad(replace_str2,1,'0')||rpad(replace(substring(rpad(replace_str2,100,'0') from 2),substring(rpad(replace_str2,100,'0') from 1 for 1),''),1,'0') as "
-                + this.SOUNDEX_COLUMN_ALIASE
+                + this.soundexColumnAliase
                 + " from (select "
                 + colName
                 + ", first_char,rpad(replace_str,1,'0') as second_char,replace(substring(replace_str from 2),substring(replace_str from 1 for 1),'') as replace_str2 from(select "

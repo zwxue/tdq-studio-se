@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
@@ -183,7 +182,7 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
     protected void deleteRelated(IFile file) {
         Connection dataProvider = findProvider(file).getObject();
 
-        TdSoftwareSystem softwareSystem = DataProviderHelper.getSoftwareSystem(dataProvider);
+        TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(dataProvider);
         EMFSharedResources.getInstance().getSoftwareDeploymentResource().getContents().remove(softwareSystem);
         EMFSharedResources.getInstance().saveSoftwareDeploymentResource();
 

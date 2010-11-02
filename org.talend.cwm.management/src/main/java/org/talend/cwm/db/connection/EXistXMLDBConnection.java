@@ -35,7 +35,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.constants.SoftwareSystemConstants;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
@@ -57,17 +57,17 @@ import orgomg.cwm.foundation.softwaredeployment.Component;
  */
 public class EXistXMLDBConnection implements IXMLDBConnection {
 
-    private static Logger log = Logger.getLogger(EXistXMLDBConnection.class);
+    private static final String XSD_SUFIX = ".xsd"; //$NON-NLS-1$
 
-    private static EXistXMLDBConnection instance = null;
+    private static final String XML_SUFIX = ".xml"; //$NON-NLS-1$
+
+    private static Logger log = Logger.getLogger(EXistXMLDBConnection.class);
 
     List<TdXmlSchema> xmlDocs = null;
 
     private String driverClassName = null;
 
     private String connectionURI = null;
-
-    private Boolean xsdXmlAutoLink = Boolean.TRUE;
 
     public EXistXMLDBConnection(String driverClassName, String connectionURI) {
         this.driverClassName = driverClassName;
@@ -83,7 +83,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         ReturnCode ret = new ReturnCode();
         try {
             // initialize database driver
-            Class cl = Class.forName(driverClassName);
+            Class<?> cl = Class.forName(driverClassName);
 
             // Class cl = Class.forName(driverClassName);
             Database database = (Database) cl.newInstance();
@@ -106,23 +106,23 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
     public java.util.Collection<TdXmlSchema> createConnection() {
         // initialize database driver
         Collection col = null;
-        List<TdXmlSchema> xmlDocs = null;
+        List<TdXmlSchema> tempXmlDocs = null;
         try {
-            Class cl = Class.forName(driverClassName);
+            Class<?> cl = Class.forName(driverClassName);
             Database database = (Database) cl.newInstance();
             DatabaseManager.registerDatabase(database);
 
             // get the collection
             col = DatabaseManager.getCollection(connectionURI);
             col.setProperty(OutputKeys.INDENT, "no");
-            xmlDocs = new ArrayList<TdXmlSchema>();
+            tempXmlDocs = new ArrayList<TdXmlSchema>();
             String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
                     + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
             for (int idx = 0; idx < col.getResourceCount(); idx++) {
                 String resName = col.listResources()[idx];
                 if (resName.endsWith(XML_SUFIX)) {
                     // Adapt to CWM model.
-                    adaptToCWMDocument(xmlDocs, col, resName, techXSDFolderName);
+                    adaptToCWMDocument(tempXmlDocs, col, resName, techXSDFolderName);
                 }
 
             }
@@ -130,8 +130,8 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
             log.error(e);
             return null;
         }
-        this.xmlDocs = xmlDocs;
-        return xmlDocs;
+        this.xmlDocs = tempXmlDocs;
+        return tempXmlDocs;
     }
 
     private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, Collection col, String resName, String providerTechName)
@@ -170,7 +170,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         system.setVersion(parameter.getVersion());
         Component component = orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory.eINSTANCE.createComponent();
         system.getOwnedElement().add(component);
-        DataProviderHelper.setSoftwareSystem(dataProvider, system);
+        ConnectionHelper.setSoftwareSystem(dataProvider, system);
 
     }
 
@@ -198,10 +198,6 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         // DataProviderHelper.addProviderConnection(prov, dataProvider);
     }
 
-    private final static String XSD_SUFIX = ".xsd"; //$NON-NLS-1$
-
-    private final static String XML_SUFIX = ".xml"; //$NON-NLS-1$
-
     /*
      * (non-Javadoc)
      * 
@@ -215,4 +211,5 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         }
         return returnList;
     }
+
 }

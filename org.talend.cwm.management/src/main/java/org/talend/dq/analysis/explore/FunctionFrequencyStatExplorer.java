@@ -61,7 +61,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         String colName = columnName;
         String function = null;
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-        int javaType = column.getJavaType();
+        int javaType = column.getSqlDataType().getJavaDataType();
         if (!Java2SqlType.isNumbericInSQL(javaType)) {
             function = getFunction();
         } else {
@@ -92,7 +92,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         if (DbmsLanguageFactory.isInfomix(dbmsName)) {
             // Handle date type.
             TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-            int javaType = column.getJavaType();
+            int javaType = column.getSqlDataType().getJavaDataType();
             if (Java2SqlType.isDateInSQL(javaType)) {
                 p = Pattern.compile(REGEX_INFOMIX_DATE, Pattern.CASE_INSENSITIVE);
             } else {
@@ -130,7 +130,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         if (indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getPatternFreqIndicator())
                 || indicator.eClass().equals(IndicatorsPackage.eINSTANCE.getPatternLowFreqIndicator())) {
             // MOD zshen for bug 12675 2010-05-12
-            if (Java2SqlType.isNumbericInSQL(column.getJavaType())) {
+            if (Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
                 colName = addFunctionTypeConvert(colName);
             }
             // ~12675

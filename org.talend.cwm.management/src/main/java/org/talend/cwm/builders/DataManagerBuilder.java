@@ -67,4 +67,12 @@ public class DataManagerBuilder extends CwmBuilder {
         return dataMgr;
     }
 
+    public TdDataManager getDataManager() {
+        return dataManager;
+    }
+
+    public TdMachine getMachine() {
+        return machine;
+    }
+
 }

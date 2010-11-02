@@ -38,7 +38,7 @@ import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
@@ -99,7 +99,7 @@ public final class DatabaseContentRetriever {
             String columnName = metaData.getColumnName(i);
             // String columnClassName = metaData.getColumnClassName(i);
             // TODO add other informations
-            TdColumn column = ColumnHelper.createColumn(columnName);
+            TdColumn column = ColumnHelper.createTdColumn(columnName);
             ColumnSetHelper.addColumn(column, columnSet);
         }
 
@@ -460,7 +460,7 @@ public final class DatabaseContentRetriever {
      */
     public static DatabaseConnection getDataProvider(Driver driver, String databaseUrl, Properties driverProperties)
             throws SQLException {
-        DatabaseConnection provider = DataProviderHelper.createDatabaseConnection(null);
+        DatabaseConnection provider = ConnectionHelper.createDatabaseConnection(null);
 
         // MOD xqliu 2009-10-23 bug 5327
         // print driver properties
@@ -805,11 +805,12 @@ public final class DatabaseContentRetriever {
     }
 
     /**
-     * Convert the jdbc nullable short value to the cwm NullableType
+     * Convert the jdbc nullable short value to the cwm NullableType.
      * 
      * @param value the jdbc nullable value
      * @return the NullableType corresponding enum
      */
+
     public static NullableType convertDbNullable(Short value) {
         switch (value) {
         case ResultSetMetaData.columnNoNulls:

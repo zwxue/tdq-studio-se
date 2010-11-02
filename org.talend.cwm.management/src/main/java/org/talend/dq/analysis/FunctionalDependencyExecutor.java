@@ -189,7 +189,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
 
     private String getTableNameFromColumn(TdColumn column) {
 
-        ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+        ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
         if (columnSetOwner == null) {
             log.error("ColumnSet Owner of column " + column.getName() + " is null");
         } else {

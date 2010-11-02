@@ -202,7 +202,7 @@ public class AnalysisBuilder {
         // an element cannot be added if it is not of the same type as other elements (e.g. for multicolumn analysis)
         // an element cannot be added if the associated indicator is not adapted to the type of the element.
         // TODO scorreia use AnalysisType
-        AnalysisType analysisType = this.analysis.getParameters().getAnalysisType();
+        // AnalysisType analysisType = this.analysis.getParameters().getAnalysisType();
         return true;
     }
 

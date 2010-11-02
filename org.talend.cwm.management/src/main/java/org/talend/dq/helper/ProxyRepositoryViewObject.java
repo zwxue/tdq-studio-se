@@ -76,7 +76,7 @@ public final class ProxyRepositoryViewObject {
 
     /**
      * 
-     * DOC yyi Get all metadata connections.modEleToReposObjMap
+     * DOC yyi Get all metadata connections.modEleToReposObjMap.
      * 
      * @return
      */

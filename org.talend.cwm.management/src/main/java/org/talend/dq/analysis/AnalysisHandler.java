@@ -186,7 +186,7 @@ public class AnalysisHandler {
 
         for (ModelElement element : getAnalyzedColumns()) {
             if (element instanceof TdColumn) {
-                ColumnSet columnSet = ColumnHelper.getColumnSetOwner((TdColumn) element);
+                ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) element);
                 if (!existingTables.contains(columnSet)) {
                     existingTables.add(columnSet);
                 }
@@ -210,7 +210,7 @@ public class AnalysisHandler {
 
         for (ModelElement element : getAnalyzedColumns()) {
             if (element instanceof TdColumn && element.eContainer() instanceof Table) {
-                String tableName = ColumnHelper.getColumnSetFullName((TdColumn) element);
+                String tableName = ColumnHelper.getTableFullName((TdColumn) element);
                 if (!existingTables.contains(tableName)) {
                     existingTables.add(tableName);
                 }
@@ -232,7 +232,7 @@ public class AnalysisHandler {
 
         for (ModelElement element : getAnalyzedColumns()) {
             if (element instanceof TdColumn && element.eContainer() instanceof View) {
-                String viewName = ColumnHelper.getColumnSetFullName((TdColumn) element);
+                String viewName = ColumnHelper.getTableFullName((TdColumn) element);
                 if (!existingViews.contains(viewName)) {
                     existingViews.add(viewName);
                 }

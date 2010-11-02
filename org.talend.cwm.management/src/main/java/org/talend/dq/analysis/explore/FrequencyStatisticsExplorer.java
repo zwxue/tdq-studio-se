@@ -37,7 +37,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         String clause = ""; //$NON-NLS-1$
 
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-        int javaType = column.getJavaType();
+        int javaType = column.getSqlDataType().getJavaDataType();
 
         if (Java2SqlType.isTextInSQL(javaType)) {
             clause = getInstantiatedClause();
@@ -232,7 +232,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
     protected String getInstantiatedClause() {
         // get function which convert data into a pattern
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-        int javaType = column.getJavaType();
+        int javaType = column.getSqlDataType().getJavaDataType();
         // MOD mzhao bug 9681 2009-11-09
 
         Object value = null;

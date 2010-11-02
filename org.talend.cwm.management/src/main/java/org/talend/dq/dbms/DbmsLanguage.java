@@ -59,7 +59,7 @@ public class DbmsLanguage {
     private static Logger log = Logger.getLogger(DbmsLanguage.class);
 
     // ADD xqliu 2010-02-25 feature 11201
-    private static final boolean MATCH_DB_VERSION = true;
+    private static boolean matchDbVersion = true;
 
     // TODO scorreia put this into its own class and offer simple methods to replace tokens.
 
@@ -94,6 +94,7 @@ public class DbmsLanguage {
     static final String INFOMIX = SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage();
 
     static final String NETEZZA = SupportDBUrlType.NETEZZADEFAULTURL.getLanguage();
+
     /**
      * Ansi SQL.
      */
@@ -607,7 +608,7 @@ public class DbmsLanguage {
         EList<TdExpression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
 
         // MOD xqliu 2010-02-25 feature 11201
-        TdExpression sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression,
+        TdExpression sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression,
                 this.getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression);
         // ~11201
         if (sqlGenExpr != null) {
@@ -623,7 +624,7 @@ public class DbmsLanguage {
             log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
         }
         // MOD xqliu 2010-02-25 feature 11201
-        return MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression, this
+        return matchDbVersion ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression, this
                 .getDbVersion()) : getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
     }
 
@@ -678,7 +679,7 @@ public class DbmsLanguage {
 
     private List<String> getFunctions(IndicatorDefinition indicatorDefinition, final EList<TdExpression> functions) {
         // MOD xqliu 2010-02-25 feature 11201
-        TdExpression sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, this.dbmsName, functions, this
+        TdExpression sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, this.dbmsName, functions, this
                 .getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, functions);
         // ~11201
         if (sqlGenExpr != null) {
@@ -689,8 +690,8 @@ public class DbmsLanguage {
 
         // else try with default language (ANSI SQL)
         // MOD xqliu 2010-02-25 feature 11201
-        sqlGenExpr = MATCH_DB_VERSION ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions, this
-                .getDbVersion()) : getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions);
+        sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions, this.getDbVersion())
+                : getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions);
         // ~11201
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();
@@ -1291,16 +1292,16 @@ public class DbmsLanguage {
 
     private String getTableName(ModelElement col) {
         TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
-        return (column != null) ? ColumnHelper.getColumnSetFullName(column) : null;
+        return (column != null) ? ColumnHelper.getTableFullName(column) : null;
     }
 
     private ModelElement getTable(ModelElement col) {
         TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
-        return (column != null) ? ColumnHelper.getColumnSetOwner(column) : null;
+        return (column != null) ? ColumnHelper.getColumnOwnerAsColumnSet(column) : null;
     }
 
     /**
-     * DOC jet adapt to {@link GenericSQLHandler}("").createGenericSqlWithRegexFunction() method
+     * DOC jet adapt to {@link GenericSQLHandler}("").createGenericSqlWithRegexFunction() method.
      * <p>
      * 
      * @see GenericSQLHandler

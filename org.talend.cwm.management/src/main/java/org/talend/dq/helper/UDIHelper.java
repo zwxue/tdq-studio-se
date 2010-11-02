@@ -193,7 +193,7 @@ public final class UDIHelper {
     }
 
     /**
-     * yyi 2009-09-22 To check the expression is null, empty or less than 16 characters Feature : 8866
+     * yyi 2009-09-22 To check the expression is null, empty or less than 16 characters Feature : 8866.
      */
     public static boolean isUDIValid(IndicatorDefinition indicatorDefinition) {
 
@@ -310,13 +310,13 @@ public final class UDIHelper {
     }
 
     private static boolean containsJavaUDI(IndicatorDefinition definition) {
-		EList<TaggedValue> tvs = definition.getTaggedValue();
-		for (TaggedValue tv : tvs) {
-			if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
-				return true;
-			}
-		}
-		return false;
+        EList<TaggedValue> tvs = definition.getTaggedValue();
+        for (TaggedValue tv : tvs) {
+            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

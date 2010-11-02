@@ -252,12 +252,14 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 patternData.add(new ArrayList<Object[]>());
                 analyzedDataSet.setPatternData(patternData);
             }
+            Object listObject = patternData.get(AnalyzedDataSetImpl.INVALID_VALUE);
             if (indicator.isInValidRow()) {
-                if (patternData.get(AnalyzedDataSetImpl.INVALID_VALUE) instanceof List<?>) {
-                    valueObjectList = (ArrayList<Object[]>) patternData.get(AnalyzedDataSetImpl.INVALID_VALUE);
+
+                if (listObject instanceof ArrayList<?>) {
+                    valueObjectList = (ArrayList<Object[]>) listObject;
                 }
             } else {
-                valueObjectList = (ArrayList<Object[]>) patternData.get(AnalyzedDataSetImpl.VALID_VALUE);
+                valueObjectList = (ArrayList<Object[]>) listObject;
             }
         } else {
             valueObjectList = analyzedDataSet.getData();

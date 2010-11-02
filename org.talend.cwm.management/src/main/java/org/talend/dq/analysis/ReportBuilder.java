@@ -18,30 +18,29 @@ import org.apache.log4j.Logger;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 
-
 /**
- * DOC huangssssx  class global comment. Detailled comment
- * <br/>
- *
+ * DOC huangssssx class global comment. Detailled comment <br/>
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
- *
+ * 
  */
 public class ReportBuilder {
 
-    private static final String REPORT_NOT_INITIALIZED = "TdReport has not been initialized. Call initializeTdReport() method before.";
+    // private static final String REPORT_NOT_INITIALIZED =
+    // "TdReport has not been initialized. Call initializeTdReport() method before.";
 
     private static Logger log = Logger.getLogger(ReportBuilder.class);
 
     private boolean initialized = false;
-    
+
     private TdReport report;
-    
+
     public boolean initializeTdReport(String reportName) {
         if (initialized) {
             log.warn("TdReport already initialized. ");
             return false;
         }
-        
+
         report = ReportHelper.createReport(reportName);
         // set the creation date
         Date date = new Date(System.currentTimeMillis());
@@ -50,9 +49,9 @@ public class ReportBuilder {
         return initialized;
     }
 
-    
     /**
      * Getter for report.
+     * 
      * @return the report
      */
     public TdReport getReport() {

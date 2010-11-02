@@ -22,7 +22,6 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.DataProviderBuilder;
@@ -41,13 +40,19 @@ import orgomg.cwm.resource.relational.Schema;
  * 
  * This class builds CWM classes from a database connection and offers facilities for serializing data.
  */
+/**
+ * DOC zshen class global comment. Detailled comment
+ */
+/**
+ * DOC zshen class global comment. Detailled comment
+ */
 public class DBConnect {
 
     private static final Class<DBConnect> THAT = DBConnect.class;
 
     private static Logger log = Logger.getLogger(THAT);
 
-    private final EMFUtil emfUtil = EMFSharedResources.getSharedEmfUtil();
+    private final EMFSharedResources eMFSharedResourcesInstance = EMFSharedResources.getInstance();
 
     private final String databaseUrl;
 
@@ -84,7 +89,7 @@ public class DBConnect {
      */
     public DBConnect(DBConnectionParameter connParams) {
         this(connParams.getJdbcUrl(), connParams.getDriverClassName(), connParams.getParameters());
-        this.emfUtil.setUsePlatformRelativePath(true);
+        this.eMFSharedResourcesInstance.setUsePlatformRelativePath(true);
         // ADD xqliu 2010-03-03 feature 11412
         this.dbConnectionParameter = connParams;
     }
@@ -106,7 +111,7 @@ public class DBConnect {
         this.databaseUrl = dbUrl;
         this.driverClass = driverClassName;
         this.connectionProperties = props;
-        this.emfUtil.setUsePlatformRelativePath(false); // use file paths for tests
+        this.eMFSharedResourcesInstance.setUsePlatformRelativePath(false); // use file paths for tests
         try {
             driver = ConnectionUtils.getClassDriver(driverClassName);
             databaseConnection = DatabaseContentRetriever.getDataProvider(driver, databaseUrl, connectionProperties);
@@ -181,7 +186,7 @@ public class DBConnect {
      * @return true if CWM objects have been saved in file.
      */
     boolean saveInFiles() {
-        return emfUtil.save();
+        return eMFSharedResourcesInstance.saveAll();
     }
 
     /**
@@ -193,7 +198,7 @@ public class DBConnect {
      * @return true (as per the general contract of the Collection.add method).
      */
     public boolean storeInResourceSet(EObject eObject, String path) {
-        return emfUtil.addPoolToResourceSet(path, eObject);
+        return eMFSharedResourcesInstance.addPoolToResourceSet(path, eObject);
     }
 
     /**
@@ -410,6 +415,10 @@ public class DBConnect {
      */
     public Connection getConnection() {
         return connection;
+    }
+
+    public DataProviderBuilder getDataProvBuilder() {
+        return dataProvBuilder;
     }
 
 }

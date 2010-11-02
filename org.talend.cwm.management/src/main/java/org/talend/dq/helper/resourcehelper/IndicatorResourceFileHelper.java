@@ -37,7 +37,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC xqliu class global comment. Detailled comment MOD mzhao 13676,split system indicators. 2010-07-08
  */
-public class IndicatorResourceFileHelper extends ResourceFileMap {
+public final class IndicatorResourceFileHelper extends ResourceFileMap {
 
     private static Logger log = Logger.getLogger(IndicatorResourceFileHelper.class);
 

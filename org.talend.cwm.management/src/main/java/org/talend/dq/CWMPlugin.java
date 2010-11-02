@@ -21,7 +21,8 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -56,9 +57,10 @@ public class CWMPlugin extends Plugin {
      * @param cwm
      */
     private void initPreferences(CWMPlugin cwm) {
-        Preferences prefs = cwm.getPluginPreferences();
-        prefs.setDefault(PluginConstant.CONNECTION_TIMEOUT, false);
-        prefs.setDefault(PluginConstant.FILTER_TABLE_VIEW_COLUMN, true);
+        IEclipsePreferences prefs = new DefaultScope().getNode(cwm.getBundle().getSymbolicName());
+        prefs.putBoolean(PluginConstant.CONNECTION_TIMEOUT, false);
+        prefs.putBoolean(PluginConstant.FILTER_TABLE_VIEW_COLUMN, true);
+
     }
 
     /**

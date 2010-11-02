@@ -82,7 +82,7 @@ public final class XMLSchemaBuilder {
         ResourceSet resourceSet = new ResourceSetImpl();
         resourceSet.getResource(URI.createPlatformResourceURI(uri, false), true);
         XSDSchema xsdSchema = null;
-        for (Iterator<Resource> resources = resourceSet.getResources().iterator(); resources.hasNext(); /* no-op */) {
+        for (Iterator<Resource> resources = resourceSet.getResources().iterator(); resources.hasNext();/* no-op */) {
             // Return the first schema object found, which is the main schema
             // loaded from the provided schemaURL
             Resource resource = (Resource) resources.next();

@@ -25,6 +25,8 @@ public final class XQueryExpressionUtil {
 
     private static int startNum = 0;
 
+    private static String whereClause;
+
     private static String columnNodeNameArraystr = null;
 
     private XQueryExpressionUtil() {
@@ -46,6 +48,9 @@ public final class XQueryExpressionUtil {
         beginIndex = xqueryStr.indexOf(",", endIndex) + 1;
         endIndex = xqueryStr.indexOf(",", beginIndex);
         startNum = Integer.parseInt(xqueryStr.substring(beginIndex, endIndex));
+        beginIndex = xqueryStr.indexOf(")", endIndex) + 1;
+        endIndex = xqueryStr.indexOf("return", beginIndex);
+        whereClause = xqueryStr.substring(beginIndex, endIndex);
         beginIndex = xqueryStr.indexOf(" then ", endIndex) + 6;
         endIndex = xqueryStr.indexOf(" else ", beginIndex);
         columnNodeNameArraystr = xqueryStr.substring(beginIndex, endIndex);
@@ -117,6 +122,14 @@ public final class XQueryExpressionUtil {
         if (startNum >= XQueryExpressionUtil.ROWS_PER_PAGE) {
             startNum -= XQueryExpressionUtil.ROWS_PER_PAGE;
         }
+    }
+
+    public static String getWhereClause() {
+        return whereClause;
+    }
+
+    public static void setWhereClause(String whereClause) {
+        XQueryExpressionUtil.whereClause = whereClause;
     }
 
 }

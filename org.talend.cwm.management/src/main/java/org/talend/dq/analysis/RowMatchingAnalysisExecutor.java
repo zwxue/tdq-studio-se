@@ -257,7 +257,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 column = (TdColumn) EObjectHelper.resolveObject(column);
             }
             if (belongToSameSchemata((TdColumn) column)) {
-                ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
+                ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
 
                 if (columnSetOwner == null) {
                     log.error("ColumnSet Owner of column " + column.getName() + " is null");

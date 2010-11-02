@@ -203,6 +203,27 @@ public final class EMFSharedResources {
     }
 
     /**
+     * 
+     * DOC zshen Comment method "setUsePlatformRelativePath".
+     * 
+     * @param usePlatformRelativePath
+     */
+    public void setUsePlatformRelativePath(boolean usePlatformRelativePath) {
+        emfUtil.setUsePlatformRelativePath(usePlatformRelativePath);
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "addPoolToResourceSet".
+     * 
+     * @param eObject
+     * @param path
+     */
+    public boolean addPoolToResourceSet(String path, EObject eObject) {
+        return emfUtil.addPoolToResourceSet(path, eObject);
+    }
+
+    /**
      * Method "getLastErrorMessage".
      * 
      * @return the last error message or null when none exists.

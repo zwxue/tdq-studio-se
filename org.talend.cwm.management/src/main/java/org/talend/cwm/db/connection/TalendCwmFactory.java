@@ -35,7 +35,6 @@ import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
@@ -245,7 +244,7 @@ public final class TalendCwmFactory {
             DatabaseConnection dataProvider = ConnectionHelper.createDatabaseConnection(parameter.getName());
             xmlDBConnection.setSofewareSystem(dataProvider, parameter);
             xmlDBConnection.setProviderConnection(dataProvider, parameter);
-            DataProviderHelper.addXMLDocuments(xmlDBConnection.createConnection(), dataProvider);
+            ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(), dataProvider);
             return dataProvider;
         }
         return null;
@@ -261,10 +260,10 @@ public final class TalendCwmFactory {
         MdmWebserviceConnection mdmConnection = new MdmWebserviceConnection(parameter.getJdbcUrl(), parameter.getParameters());
         ReturnCode rt = mdmConnection.checkDatabaseConnection();
         if (rt.isOk()) {
-            MDMConnection dataProvider = DataProviderHelper.createMDMConnection(parameter.getName());
+            MDMConnection dataProvider = ConnectionHelper.createMDMConnection(parameter.getName());
             mdmConnection.setSofewareSystem(dataProvider, parameter);
             mdmConnection.setProviderConnection(dataProvider, parameter);
-            DataProviderHelper.addXMLDocuments(mdmConnection.createConnection(), dataProvider);
+            ConnectionHelper.addXMLDocuments(mdmConnection.createConnection(), dataProvider);
             dataProvider.setUsername(mdmConnection.getUserName());
             dataProvider.setPassword(mdmConnection.getUserPass());
             // MOD qiongli bug 14469:if don't setLable,it will run ConnectionUtils.fillMdmConnectionInformation(mdmConn)
@@ -331,6 +330,7 @@ public final class TalendCwmFactory {
         return connector.getSchemata();
     }
 
+    @SuppressWarnings("unused")
     private static String getDriverClassName(DBConnectionParameter connectionParams) {
         // TODO scorreia create the utility class for this
         return null;
@@ -407,7 +407,7 @@ public final class TalendCwmFactory {
             // --- now create the lower structure (tables, columns)
             // recreate a connection from the TdProviderConnection
             Connection providerConnection = connector.getDataProvider();
-            TypedReturnCode<java.sql.Connection> rc = JavaSqlFactory.createConnection(connector.getDataProvider());
+            TypedReturnCode<java.sql.Connection> rc = JavaSqlFactory.createConnection((Connection) connector.getDataProvider());
             if (!rc.isOk()) {
                 log.error(rc.getMessage());
                 return;

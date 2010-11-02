@@ -59,4 +59,9 @@ public class EdgeDisplayPredicate implements Predicate {
 
         return builder != null && builder.getEdgeWidth(builder.getEdgeWeight().getNumber(edge).intValue()) > degree;
     }
+
+    public Set<Edge> getEdges() {
+        return edges;
+    }
+
 }

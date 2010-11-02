@@ -18,7 +18,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.DataProviderHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -46,7 +46,7 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
     @Override
     protected Connection getDataManager() {
         Catalog catalog = this.getAnalyzedElements().iterator().next();
-        return catalog != null ? DataProviderHelper.getTdDataProvider(catalog) : null;
+        return catalog != null ? ConnectionHelper.getTdDataProvider(catalog) : null;
     }
 
     @Override

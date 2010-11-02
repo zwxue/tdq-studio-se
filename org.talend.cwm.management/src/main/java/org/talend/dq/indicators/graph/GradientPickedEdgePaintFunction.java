@@ -47,10 +47,8 @@ public class GradientPickedEdgePaintFunction extends GradientEdgePaintFunction {
     }
 
     public Paint getDrawPaint(Edge e) {
-        if (true) { // FIXME scorreia
+        { // FIXME scorreia
             return defaultFunc.getDrawPaint(e);
-        } else {
-            return super.getDrawPaint(e);
         }
     }
 

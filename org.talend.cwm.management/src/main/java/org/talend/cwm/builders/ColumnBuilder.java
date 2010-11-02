@@ -18,7 +18,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.util.TDColumnAttributeHelper;
@@ -34,7 +33,7 @@ import org.talend.utils.sql.metadata.constants.GetColumn;
  */
 public class ColumnBuilder extends CwmBuilder {
 
-    private static Logger log = Logger.getLogger(ColumnBuilder.class);
+    // private static Logger log = Logger.getLogger(ColumnBuilder.class);
 
     /**
      * DOC scorreia ColumnBuilder constructor comment.
@@ -201,6 +200,7 @@ public class ColumnBuilder extends CwmBuilder {
      * @return
      * @throws SQLException
      */
+    @SuppressWarnings("unused")
     private String getComment(String colName, ResultSet columns) throws SQLException {
         String colComment = columns.getString(GetColumn.REMARKS.name());
         if (colComment == null) {

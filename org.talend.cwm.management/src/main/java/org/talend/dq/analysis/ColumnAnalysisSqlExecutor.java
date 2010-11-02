@@ -313,7 +313,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 }
             } else if (dateAggregationType != null && !dateAggregationType.equals(DateGrain.NONE)
             // MOD scorreia 2008-06-23 check column type (robustness against bug 4287)
-                    && Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                    && Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                 // frequencies with date aggregation
                 completedSqlString = getDateAggregatedCompletedStringWithoutAlia(sqlGenericExpression, colName, table,
                         dateAggregationType);
@@ -326,7 +326,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     // done scorreia: get user defined functions for pattern finder
                     // MOD xqliu 2009-07-01 bug 7818
                     // MOD zshen for bug 12675 2010-05-12
-                    if (Java2SqlType.isNumbericInSQL(tdColumn.getJavaType()) || Java2SqlType.isDateInSQL(tdColumn.getJavaType())) {
+                    if (Java2SqlType.isNumbericInSQL(tdColumn.getSqlDataType().getJavaDataType())
+                            || Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                         colName = addFunctionTypeConvert(colName);
                         // ~12675
                     }
@@ -370,7 +371,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                             + indicator.getName() + " cannot be evaluated.");
                 }
                 // need to generate different SQL where clause for each type.
-                int javaType = tdColumn.getJavaType();
+                int javaType = tdColumn.getSqlDataType().getJavaDataType();
                 if (!Java2SqlType.isNumbericInSQL(javaType) && !isFunction(defValue, table)) {
                     defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
@@ -444,7 +445,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
         List<String> duplicatedWhereExpressions = new ArrayList<String>();
         // get the table
-        ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(tdColumn);
+        ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         List<TdColumn> columns = ColumnHelper.getColumns(columnSetOwner.getFeature());
         for (String where : whereExpression) {
             // we expect only 2 table aliases, hence two distinct where clauses.
@@ -548,7 +549,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return
      */
     private String castColumn(Indicator indicator, TdColumn tdColumn, String colName) {
-        int javaType = tdColumn.getJavaType();
+        int javaType = tdColumn.getSqlDataType().getJavaDataType();
         boolean isText = Java2SqlType.isTextInSQL(javaType);
 
         String contentType = tdColumn.getContentType();
@@ -570,68 +571,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     private static final String COMMA = " , "; //$NON-NLS-1$
-
-    /**
-     * DOC scorreia Comment method "getDateAggregatedCompletedString".
-     * 
-     * @param indicator
-     * @param sqlExpression
-     * @param colName
-     * @param table
-     * @param dataFilterExpression
-     * @param dateAggregationType
-     * @deprecated
-     * @return
-     */
-    @SuppressWarnings("fallthrough")
-    private String getDateAggregatedCompletedString(Expression sqlExpression, String colName, String table,
-            DateGrain dateAggregationType) {
-        int nbExtractedColumns = 0;
-        String result = ""; //$NON-NLS-1$
-        String aliases = ""; // used in group by clause in MySQL //$NON-NLS-1$
-        String alias;
-        switch (dateAggregationType) {
-        case DAY:
-            alias = getAlias(colName, DateGrain.DAY);
-            result = dbms().extractDay(colName) + alias + comma(result);
-            aliases = alias + comma(aliases);
-            nbExtractedColumns++;
-        case WEEK:
-            alias = getAlias(colName, DateGrain.WEEK);
-            result = dbms().extractWeek(colName) + alias + comma(result);
-            aliases = alias + comma(aliases);
-            nbExtractedColumns++;
-            // no break
-        case MONTH:
-            alias = getAlias(colName, DateGrain.MONTH);
-            result = dbms().extractMonth(colName) + alias + comma(result);
-            aliases = alias + comma(aliases);
-            nbExtractedColumns++;
-            // no break
-        case QUARTER:
-            alias = getAlias(colName, DateGrain.QUARTER);
-            result = dbms().extractQuarter(colName) + alias + comma(result);
-            aliases = alias + comma(aliases);
-            nbExtractedColumns++;
-            // no break
-        case YEAR:
-            alias = getAlias(colName, DateGrain.YEAR);
-            result = dbms().extractYear(colName) + alias + comma(result);
-            aliases = alias + comma(aliases);
-            nbExtractedColumns++;
-            break;
-        case NONE:
-            result = colName;
-            nbExtractedColumns++;
-            aliases = colName; // bug 5336 fixed aliases must not be empty otherwise the group by clause is empty.
-            break;
-        default:
-            break;
-        }
-        String groupByAliases = dbms().supportAliasesInGroupBy() ? aliases : result;
-        String sql = dbms().fillGenericQueryWithColumnTableAndAlias(sqlExpression.getBody(), result, table, groupByAliases);
-        return sql;
-    }
 
     /**
      * 
@@ -692,15 +631,15 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return sql;
     }
 
-    private String getAlias(String colName, DateGrain dateAggregationType) {
-        if (dbms().supportAliasesInGroupBy()) {
-            // return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
-            // MOD by hcheng for 7338 SQL syntax error if the name of column has invalid char.
-            return " TDAL_" + dateAggregationType.getName() + " "; //$NON-NLS-1$ //$NON-NLS-2$
-        } else {
-            return ""; //$NON-NLS-1$
-        }
-    }
+    // private String getAlias(String colName, DateGrain dateAggregationType) {
+    // if (dbms().supportAliasesInGroupBy()) {
+    // // return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
+    // // MOD by hcheng for 7338 SQL syntax error if the name of column has invalid char.
+    //            return " TDAL_" + dateAggregationType.getName() + " "; //$NON-NLS-1$ //$NON-NLS-2$
+    // } else {
+    //            return ""; //$NON-NLS-1$
+    // }
+    // }
 
     /**
      * Method "unquote" remove surrounding identifier quotes.

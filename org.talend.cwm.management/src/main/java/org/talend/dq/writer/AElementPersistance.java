@@ -13,6 +13,7 @@
 package org.talend.dq.writer;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
@@ -20,7 +21,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -40,6 +40,7 @@ import org.talend.core.model.properties.User;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.properties.PropertiesFactory;
+import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
@@ -211,7 +212,7 @@ public abstract class AElementPersistance {
         property.setStatusCode(status);
         property.setVersion(version);
 
-        EList<Information> informations = property.getInformations();
+        List<Information> informations = ListUtils.castList(Information.class, property.getInformations());
         InformationLevel maxLevel = null;
         for (Information information : informations) {
             int value = information.getLevel().getValue();

@@ -41,7 +41,6 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -56,8 +55,6 @@ import Zql.ParseException;
 public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
 
     private static Logger log = Logger.getLogger(MdmAnalysisSqlExecutor.class);
-
-    private DbmsLanguage dbmsLanguage;
 
     @Override
     protected String createSqlStatement(Analysis analysis) {
