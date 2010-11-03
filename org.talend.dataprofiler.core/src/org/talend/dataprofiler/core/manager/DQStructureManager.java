@@ -119,6 +119,9 @@ public final class DQStructureManager {
 
             }
 
+            IFolder dataProfilingFolder = createNewFolder(project, EResourceConstant.DATA_PROFILING);
+            IFolder analysisFoler = createNewFolder(dataProfilingFolder, EResourceConstant.ANALYSIS);
+            IFolder reportFoler = createNewFolder(dataProfilingFolder, EResourceConstant.REPORTS);
 
             IFolder librariesFoler = createNewFolder(project, EResourceConstant.LIBRARIES);
             IFolder patternFoler = createNewFolder(librariesFoler, EResourceConstant.PATTERNS);

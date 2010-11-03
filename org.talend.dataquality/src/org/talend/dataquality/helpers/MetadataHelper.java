@@ -16,17 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.properties.Project;
-import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Status;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.ColumnHelper;
@@ -36,7 +29,6 @@ import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -324,18 +316,13 @@ public final class MetadataHelper {
 
     @SuppressWarnings("unchecked")
     public static List<Status> getTechnicalStatus() {
-        org.talend.core.model.properties.Project loadProject = null;
-        try {
-            loadProject = loadProject();
-        } catch (Exception e) {
-            log.error(e, e);
-            return null;
-        }
-        if (loadProject == null) {
-            return null;
-        }
+        Project project = ReponsitoryContextBridge.getProject();
 
-        return copyList(loadProject.getTechnicalStatus());
+        if (project != null) {
+            return copyList(project.getTechnicalStatus());
+        } else {
+            return new ArrayList<Status>();
+        }
     }
 
     public static List<String> toArray(List<org.talend.core.model.properties.Status> status) {
@@ -344,19 +331,6 @@ public final class MetadataHelper {
             res.add(s.getLabel());
         }
         return res;
-    }
-
-    private static Project loadProject() throws PersistenceException {
-        IProject rootProject = ResourceManager.getRootProject();
-        IFile talendProjectFile = rootProject.getFile(PROJECT_FILE);
-        if (!talendProjectFile.exists()) {
-            return null;
-        }
-        URI uri = URI.createPlatformResourceURI(talendProjectFile.getFullPath().toString(), false);
-        // EMFSharedResources.getInstance().unloadResource(uri.toString());
-        Resource rs = new EMFUtil().getResourceSet().getResource(uri, true);
-        Project emfProject = (Project) EcoreUtil.getObjectByType(rs.getContents(), PropertiesPackage.eINSTANCE.getProject());
-        return emfProject;
     }
 
     private static List<Status> copyList(List<Status> listOfStatus) {
