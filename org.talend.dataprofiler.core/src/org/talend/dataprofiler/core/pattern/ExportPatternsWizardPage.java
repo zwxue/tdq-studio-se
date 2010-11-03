@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -155,6 +156,7 @@ public class ExportPatternsWizardPage extends WizardPage {
             log.error(e1, e1);
         }
 
+        Control buttonComposite = createSelectionButtons(container);
         Composite monitorComp = new Composite(container, SWT.NONE);
         monitorComp.setLayout(new GridLayout());
         monitorComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
