@@ -129,7 +129,8 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
                     continue;
                 }
                 IFile file = (IFile) resource;
-                if (file.getFileExtension().equals(FactoriesUtil.ANA)) {
+                // MOD yyi 2010-11-04 16236: for split migration task
+                if (null != file.getFileExtension() && file.getFileExtension().equals(FactoriesUtil.ANA)) {
                     URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
                     Resource eResource = EMFSharedResources.getInstance().getResource(uri, true);
                     analyses.add((Analysis) eResource.getContents().get(0));
