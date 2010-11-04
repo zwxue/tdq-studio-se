@@ -1072,14 +1072,17 @@ public final class ConnectionUtils {
                 || (ConnectionHelper.getAllSchemas(conn).isEmpty() && (ConnectionUtils.isMssql(conn)
                         || ConnectionUtils.isPostgresql(conn) || ConnectionUtils.isAs400(conn)))) {
             // ~ 16441
-            saveFlag = true;
             DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
             if (dbConn != null) {
+                saveFlag = true;
                 conn = fillDbConnectionInformation(dbConn);
             } else {
                 MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
                 if (mdmConn != null) {
-                    conn = fillMdmConnectionInformation(mdmConn);
+                    if (mdmConn.getDataPackage().isEmpty()) {
+                        saveFlag = true;
+                        conn = fillMdmConnectionInformation(mdmConn);
+                    }
                 }
             }
         }
@@ -1116,7 +1119,7 @@ public final class ConnectionUtils {
         properties.put(TaggedValueHelper.PASSWORD, mdmConn.getPassword());
         properties.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse());
         MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), properties);
-        ConnectionHelper.addXMLDocuments(mdmWsConn.createConnection(), mdmConn);
+        ConnectionHelper.addXMLDocuments(mdmWsConn.createConnection(mdmConn));
         return mdmConn;
     }
 
@@ -1130,7 +1133,7 @@ public final class ConnectionUtils {
         // fill database structure
         if (DatabaseConstant.XML_EXIST_DRIVER_NAME.equals(dbConn.getDriverClass())) { // xmldb(e.g eXist)
             IXMLDBConnection xmlDBConnection = new EXistXMLDBConnection(dbConn.getDriverClass(), dbConn.getURL());
-            ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(), dbConn);
+            ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(dbConn));
         } else {
             try {
                 boolean noStructureExists = ConnectionHelper.getAllCatalogs(dbConn).isEmpty()

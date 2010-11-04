@@ -244,7 +244,7 @@ public final class TalendCwmFactory {
             DatabaseConnection dataProvider = ConnectionHelper.createDatabaseConnection(parameter.getName());
             xmlDBConnection.setSofewareSystem(dataProvider, parameter);
             xmlDBConnection.setProviderConnection(dataProvider, parameter);
-            ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(), dataProvider);
+            ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(dataProvider));
             return dataProvider;
         }
         return null;
@@ -263,7 +263,7 @@ public final class TalendCwmFactory {
             MDMConnection dataProvider = ConnectionHelper.createMDMConnection(parameter.getName());
             mdmConnection.setSofewareSystem(dataProvider, parameter);
             mdmConnection.setProviderConnection(dataProvider, parameter);
-            ConnectionHelper.addXMLDocuments(mdmConnection.createConnection(), dataProvider);
+            ConnectionHelper.addXMLDocuments(mdmConnection.createConnection(dataProvider));
             dataProvider.setUsername(mdmConnection.getUserName());
             dataProvider.setPassword(mdmConnection.getUserPass());
             // MOD qiongli bug 14469:if don't setLable,it will run ConnectionUtils.fillMdmConnectionInformation(mdmConn)

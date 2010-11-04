@@ -141,7 +141,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         return stub;
     }
 
-    public Collection<TdXmlSchema> createConnection() {
+    public Collection<TdXmlSchema> createConnection(Connection dataProvider) {
         // initialize database driver
         List<TdXmlSchema> xmlDocs = new ArrayList<TdXmlSchema>();
         try {
@@ -156,7 +156,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             for (WSDataModelPK pk : pks) {
                 String filterName = props.getProperty(TaggedValueHelper.DATA_FILTER);
                 if (filterName == null || filterName.equals("") || Arrays.asList(filterName.split(",")).contains((pk.getPk()))) {
-                    adaptToCWMDocument(xmlDocs, stub, pk.getPk(), techXSDFolderName);
+                    adaptToCWMDocument(xmlDocs, stub, pk.getPk(), techXSDFolderName, dataProvider);
                 }
             }
         } catch (Exception e) {
@@ -205,10 +205,12 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
      * @param stub
      * @param resName
      * @param providerTechName
+     * @param dataProvider
      * @throws RemoteException
      * @throws CoreException
      */
-    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort stub, String resName, String providerTechName)
+    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort stub, String resName,
+            String providerTechName, Connection dataProvider)
             throws RemoteException, CoreException {
         // MOD xqliu 2010-10-18 bug 16161
         String resXSD = null;
@@ -245,6 +247,8 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         tdXmlDoc.setName(resName);
         // TODO Specify unique xsd file name.
         tdXmlDoc.setXsdFilePath(XSD_SUFIX + File.separator + xsdFolder.getName() + File.separator + file.getName());
+        tdXmlDoc.getDataManager().add(dataProvider);
+
         xmlDocCollection.add(tdXmlDoc);
     }
 

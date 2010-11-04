@@ -97,10 +97,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         if (editor == null) {
             analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
         } else {
-            editor.doSave(null);
 
             if (editor.isDirty()) {
-                return;
+                editor.doSave(null);
             }
 
             AnalysisEditor anaEditor = (AnalysisEditor) editor;

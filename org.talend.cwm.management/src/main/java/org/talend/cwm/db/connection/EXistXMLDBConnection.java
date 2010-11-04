@@ -101,9 +101,11 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.cwm.db.connection.IXMLDBConnection#createConnection()
+     * @see
+     * org.talend.cwm.db.connection.IXMLDBConnection#createConnection(org.talend.core.model.metadata.builder.connection
+     * .Connection)
      */
-    public java.util.Collection<TdXmlSchema> createConnection() {
+    public java.util.Collection<TdXmlSchema> createConnection(Connection dataProvider) {
         // initialize database driver
         Collection col = null;
         List<TdXmlSchema> tempXmlDocs = null;
@@ -122,7 +124,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
                 String resName = col.listResources()[idx];
                 if (resName.endsWith(XML_SUFIX)) {
                     // Adapt to CWM model.
-                    adaptToCWMDocument(tempXmlDocs, col, resName, techXSDFolderName);
+                    adaptToCWMDocument(tempXmlDocs, col, resName, techXSDFolderName, dataProvider);
                 }
 
             }
@@ -134,7 +136,8 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         return tempXmlDocs;
     }
 
-    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, Collection col, String resName, String providerTechName)
+    private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, Collection col, String resName, String providerTechName,
+            Connection dataProvider)
             throws XMLDBException, CoreException {
         XMLResource resXSD = (XMLResource) col.getResource(StringUtils.removeEnd(resName, XML_SUFIX) + XSD_SUFIX);
         if (resXSD == null) {
@@ -158,6 +161,8 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
         tdXmlDoc.setName(StringUtils.removeEnd(resName, XML_SUFIX));
         // TODO Specify unique xsd file name.
         tdXmlDoc.setXsdFilePath(XSD_SUFIX + File.separator + xsdFolder.getName() + File.separator + file.getName());
+        tdXmlDoc.getDataManager().add(dataProvider);
+
         xmlDocCollection.add(tdXmlDoc);
     }
 

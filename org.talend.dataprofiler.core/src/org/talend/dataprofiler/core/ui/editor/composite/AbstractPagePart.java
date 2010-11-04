@@ -88,8 +88,9 @@ public abstract class AbstractPagePart {
                     .getConnection();
             Connection tdProvider = null;
             if (connection != null) {
-                tdProvider = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+                tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(connection);
             }
+
             if (tdProvider == null) {
                 tdProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
             }

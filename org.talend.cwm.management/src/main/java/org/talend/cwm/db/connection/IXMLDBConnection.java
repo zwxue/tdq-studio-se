@@ -26,7 +26,7 @@ public interface IXMLDBConnection {
 
     public ReturnCode checkDatabaseConnection();
 
-    public Collection<TdXmlSchema> createConnection();
+    public Collection<TdXmlSchema> createConnection(Connection dataProvider);
 
     public void setSofewareSystem(Connection dataProvider, DBConnectionParameter parameter);
 
