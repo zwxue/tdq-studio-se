@@ -76,6 +76,30 @@ public abstract class ResourceFileMap {
     }
 
     /**
+     * DOC zshen Comment method "createResource".
+     * 
+     * @param file
+     * @return
+     */
+    public synchronized Resource getFileResource(IFile file, boolean reload) {
+        Resource res;
+
+        if (exist(file)) {
+            res = registedResourceMap.get(file);
+        } else {
+            URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+            if (reload) {
+                res = EMFSharedResources.getInstance().reloadResource(uri);
+            } else {
+                res = EMFSharedResources.getInstance().getResource(uri, false);
+            }
+            register(file, res);
+        }
+
+        return res;
+    }
+
+    /**
      * DOC bZhou Comment method "delete".
      * 
      * @param ifile

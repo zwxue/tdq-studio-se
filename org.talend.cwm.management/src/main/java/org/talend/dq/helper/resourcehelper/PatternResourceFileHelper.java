@@ -73,7 +73,7 @@ public final class PatternResourceFileHelper extends ResourceFileMap {
         if (checkFile(file)) {
             Pattern pattern = patternsMap.get(file);
             if (pattern == null) {
-                pattern = retirePattern(getFileResource(file));
+                pattern = retirePattern(getFileResource(file, true));
             }
 
             patternsMap.put(file, pattern);
