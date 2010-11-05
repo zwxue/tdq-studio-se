@@ -32,9 +32,6 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.dq.writer.impl.PatternWriter;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * 
@@ -63,11 +60,12 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
             return true;
         }
         URI uri = URI.createFileURI(updateFile.getAbsolutePath());
-        Resource patternResource = EMFSharedResources.getInstance().getResource(uri, true);
+        Resource patternResource = EMFSharedResources.getInstance().reloadResource(uri);
         Pattern thePattern = retirePattern(patternResource);
         for (PatternComponent currentExpression : thePattern.getComponents()) {
             if (currentExpression instanceof RegularExpression) {
-                if (PatternLanguageType.MYSQL.getLiteral().equals(((RegularExpression) currentExpression).getExpressionType())) {
+                if (PatternLanguageType.MYSQL.getLiteral().equals(
+                        ((RegularExpression) currentExpression).getExpression().getLanguage())) {
                     return true;// if the case of Mysql has been added.
                 }
             }
@@ -81,11 +79,11 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
         componentsList.addAll(thePattern.getComponents());
         thePattern.getComponents().clear();
         thePattern.getComponents().addAll(componentsList);
-        PatternWriter writer = ElementWriterFactory.getInstance().createPatternWriter();
-        ReturnCode save = writer.save(thePattern);
+        boolean save = PatternResourceFileHelper.getInstance().save(thePattern);
         PatternResourceFileHelper.getInstance().clear();
-
-        return save.isOk();
+        uri = URI.createFileURI(updateFile.getAbsolutePath());
+        EMFSharedResources.getInstance().reloadResource(uri);
+        return save;
 
     }
 
