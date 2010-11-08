@@ -229,6 +229,39 @@ public class DeleteModelElementConfirmDialog {
     }
 
     /**
+     * DOC bzhou Comment method "showConfirmDialog".
+     * 
+     * @param parentShell
+     * @param obj
+     * @param dependencyElements
+     * @param dialogMessage
+     * @return
+     */
+    public static int showConfirmDialog(Shell parentShell, Object obj, ModelElement[] dependencyElements, String dialogTitle,
+            String dialogMessage) {
+        for (ModelElement element : dependencyElements) {
+            ImpactNode node = new ImpactNode(element);
+            if (!impactNodes.contains(node)) {
+                node.addRequireModelElement(obj);
+                impactNodes.add(node);
+            }
+        }
+
+        ImpactNode[] impactElements = getImpactNodes();
+        if (impactElements.length > 0) {
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage, //$NON-NLS-1$
+                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+            dialog.setContentProvider(new DialogContentProvider(impactElements));
+            dialog.setLabelProvider(getLabelProvider());
+            dialog.setInput(new Object());
+            clear();
+            return dialog.open();
+        }
+
+        return Window.CANCEL;
+    }
+
+    /**
      * DOC rli Comment method "showDialog".
      * 
      * @param parentShell
