@@ -125,7 +125,9 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
         try {
             for (IResource resource : folder.members()) {
                 if (resource.getType() == IResource.FOLDER) {
-                    analyses.addAll(searchAllAnalysis(folder.getFolder(resource.getName())));
+                    if (!resource.getName().startsWith(".svn")) {
+                        analyses.addAll(searchAllAnalysis(folder.getFolder(resource.getName())));
+                    }
                     continue;
                 }
                 IFile file = (IFile) resource;
@@ -133,7 +135,9 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
                 if (null != file.getFileExtension() && file.getFileExtension().equals(FactoriesUtil.ANA)) {
                     URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
                     Resource eResource = EMFSharedResources.getInstance().getResource(uri, true);
-                    analyses.add((Analysis) eResource.getContents().get(0));
+                    if (!eResource.getContents().isEmpty()) {
+                        analyses.add((Analysis) eResource.getContents().get(0));
+                    }
                 }
             }
         } catch (Exception e) {

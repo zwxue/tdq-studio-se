@@ -125,7 +125,7 @@ public class DQRespositoryView extends CommonNavigator {
 
         if (manager.isNeedCreateStructure()) {
             ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(
-                    new RepositoryWorkUnit("Create DQ Repository structure") {
+                    new RepositoryWorkUnit<Object>("Create DQ Repository structure") {
 
                         @Override
                         protected void run() {

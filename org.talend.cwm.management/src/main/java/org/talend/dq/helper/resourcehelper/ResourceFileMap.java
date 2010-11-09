@@ -64,13 +64,19 @@ public abstract class ResourceFileMap {
     public synchronized Resource getFileResource(IFile file) {
         Resource res;
 
+        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+
         if (exist(file)) {
             res = registedResourceMap.get(file);
         } else {
-            URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
             res = EMFSharedResources.getInstance().getResource(uri, true);
-            register(file, res);
         }
+
+        if (res.getContents().isEmpty()) {
+            res = EMFSharedResources.getInstance().reloadResource(uri);
+        }
+
+        register(file, res);
 
         return res;
     }

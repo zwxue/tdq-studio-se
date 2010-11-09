@@ -55,6 +55,8 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.repository.RepositoryWorkUnit;
+import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -258,40 +260,53 @@ public class FileSystemImportWriter implements IImportWriter {
             monitor = new NullProgressMonitor();
         }
 
-        try {
+        final ItemRecord[] fRecords = records;
+        final IProgressMonitor fMonitor = monitor;
 
-            for (ItemRecord record : records) {
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Import TDQ Element") {
 
-                if (monitor.isCanceled()) {
-                    break;
-                }
+            @Override
+            protected void run() {
+                try {
 
-                Map<IPath, IPath> toImportMap = mapping(record);
+                    for (ItemRecord record : fRecords) {
 
-                monitor.subTask("Importing " + record.getName());
+                        if (fMonitor.isCanceled()) {
+                            break;
+                        }
 
-                if (record.isValid()) {
-                    log.info("Importing " + record.getFile().getAbsolutePath());
+                        Map<IPath, IPath> toImportMap = mapping(record);
 
-                    for (IPath resPath : toImportMap.keySet()) {
-                        IPath desPath = toImportMap.get(resPath);
-                        write(resPath, desPath);
+                        fMonitor.subTask("Importing " + record.getName());
+
+                        if (record.isValid()) {
+                            log.info("Importing " + record.getFile().getAbsolutePath());
+
+                            for (IPath resPath : toImportMap.keySet()) {
+                                IPath desPath = toImportMap.get(resPath);
+                                write(resPath, desPath);
+                            }
+
+                        } else {
+                            for (String error : record.getErrors()) {
+                                log.error(error);
+                            }
+                        }
+
+                        fMonitor.worked(1);
                     }
 
-                } else {
-                    for (String error : record.getErrors()) {
-                        log.error(error);
-                    }
-                }
+                    finish(fRecords, fMonitor);
 
-                monitor.worked(1);
+                } catch (Exception e) {
+                    log.error(e, e);
+                }
             }
-
-            finish(records, monitor);
-
-        } catch (Exception e) {
-            log.error(e, e);
-        }
+        };
+        
+        
+        workUnit.setAvoidUnloadResources(Boolean.TRUE);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
     }
 
     /*
@@ -326,6 +341,7 @@ public class FileSystemImportWriter implements IImportWriter {
             }
             FileUtils.deleteDirectory(tempFolder);
         }
+
     }
 
     /*
