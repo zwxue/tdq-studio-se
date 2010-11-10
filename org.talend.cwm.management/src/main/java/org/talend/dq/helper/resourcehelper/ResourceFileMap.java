@@ -85,6 +85,7 @@ public abstract class ResourceFileMap {
      * DOC zshen Comment method "createResource".
      * 
      * @param file
+     * @param reload if the resource have been changed then need reload it to avoid the dirty data.
      * @return
      */
     public synchronized Resource getFileResource(IFile file, boolean reload) {
