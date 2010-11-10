@@ -35,7 +35,9 @@ import org.talend.dq.writer.EMFSharedResources;
 
 /**
  * 
- * DOC zshen class global comment. Detailled comment
+ * DOC zshen class global comment. Detailled comment add a RegularExpression for mysql lanagaue in the
+ * International_phone_number pattern if the pattern is exist and it dont't contain a RegularExpression for mysql
+ * lanagaue
  */
 public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
 
