@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -224,7 +225,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         sql.append(dbms().from());
         // if(CatalogHelper.fromPart.iterator().next())
         ModelElement element = fromPart.iterator().next();
-        Package parentRelation = PackageHelper.getCatalogOrSchema(fromPart.iterator().next());
+        Package parentRelation = PackageHelper.getParentPackage((MetadataTable) fromPart.iterator().next());
         if (parentRelation instanceof Schema) {
             sql.append(dbms().toQualifiedName(null, parentRelation.getName(), element.getName()));
         } else if (parentRelation instanceof Catalog) {

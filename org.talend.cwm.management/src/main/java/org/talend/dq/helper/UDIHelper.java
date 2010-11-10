@@ -281,7 +281,7 @@ public final class UDIHelper {
             if (validateJavaUDI(userJavaClassName, jarPath)) {
                 File file = new File(jarPath);
                 TalendURLClassLoader cl;
-                cl = new TalendURLClassLoader(new URL[] { file.toURL() });
+                cl = new TalendURLClassLoader(new URL[] { file.toURI().toURL() });
                 Class<?> clazz = cl.findClass(userJavaClassName);
                 if (clazz != null) {
                     UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
