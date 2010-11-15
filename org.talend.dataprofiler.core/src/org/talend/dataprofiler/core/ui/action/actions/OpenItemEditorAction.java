@@ -32,10 +32,11 @@ public class OpenItemEditorAction extends Action {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
         this.reposViewObj = reposViewObj;
     }
+
     @Override
     public void run() {
         // Connection editor
-        String key = reposViewObj.getType().getKey();
+        String key = reposViewObj.getRepositoryObjectType().getKey();
         if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
                 || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
             ConnectionItemEditorInput connItemEditorInput = new ConnectionItemEditorInput(reposViewObj);
