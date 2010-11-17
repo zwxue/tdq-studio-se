@@ -67,6 +67,7 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
      */
     JrxmlHandle(IFile file) {
         this.file = file;
+        this.property = PropertyHelper.getProperty(file);
     }
 
     /*

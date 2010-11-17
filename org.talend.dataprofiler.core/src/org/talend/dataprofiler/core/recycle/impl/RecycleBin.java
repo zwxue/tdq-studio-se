@@ -30,12 +30,12 @@ import org.talend.resource.ResourceService;
 /**
  * @author qiongli Recycle bin node
  */
-public class RecycleBin implements IRecycleBin {
+public final class RecycleBin implements IRecycleBin {
 
     /**
-     * DOC bZhou RecycleBin constructor comment.
+     * Use this constructor to implement the single instance of RecycleBin.
      */
-    public RecycleBin() {
+    RecycleBin() {
 
     }
 

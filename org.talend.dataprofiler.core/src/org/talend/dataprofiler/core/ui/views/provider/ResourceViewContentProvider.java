@@ -43,6 +43,7 @@ import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.impl.RecycleBin;
+import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
@@ -69,8 +70,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
     private List<IContainer> needSortContainers;
 
     private boolean timeoutFlag = true;
-
-    private RecycleBin recycleBin = new RecycleBin();
 
     /**
      * DOC rli ResourceViewContentProvider constructor comment.
@@ -125,7 +124,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 log.error(e);
             }
             // MOD qiongli feature 9486
-            folders.add(recycleBin);
+            folders.add(RecycleBinManager.getInstance().getRecycleBin());
             return folders.toArray();
         } else if (element instanceof IFile) {
             IFile file = (IFile) element;
@@ -411,10 +410,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 rbn.setDeletedChildren(ls);
         }
         return ls;
-    }
-
-    public RecycleBin getRecycleBin() {
-        return recycleBin;
     }
 
     /**
