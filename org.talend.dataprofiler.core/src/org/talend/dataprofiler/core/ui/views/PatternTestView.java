@@ -51,7 +51,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -71,6 +70,7 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -146,8 +146,8 @@ public class PatternTestView extends ViewPart {
         data.widthHint = 100;
         // data.heightHint = 100;
         dbCombo.setLayoutData(data);
-        IFolder folder = ResourceManager.getConnectionFolder();
-        listTdDataProviders = DqRepositoryViewService.listTdDataProviders(folder, true);
+        // IFolder folder = ResourceManager.getConnectionFolder();
+        listTdDataProviders = ProxyRepositoryViewObject.getAllDatabaseConnections();
         List<String> items = new ArrayList<String>();
         for (Connection tdDataProvider : listTdDataProviders) {
             items.add(tdDataProvider.getName());
