@@ -304,7 +304,7 @@
          id="javax.servlet"
          download-size="0"
          install-size="0"
-         version="2.5.0.v200806031605"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -453,12 +453,6 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.apache.lucene.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.apache.lucene"
