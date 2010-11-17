@@ -969,7 +969,7 @@
          id="javax.servlet"
          download-size="0"
          install-size="0"
-         version="2.5.0.v200806031605"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -983,7 +983,7 @@
          id="org.apache.lucene"
          download-size="0"
          install-size="0"
-         version="1.9.1.v20080530-1600"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -1172,7 +1172,7 @@
          id="org.apache.lucene.analysis"
          download-size="0"
          install-size="0"
-         version="1.9.1.v20080530-1600"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
