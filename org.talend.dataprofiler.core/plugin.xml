@@ -783,6 +783,7 @@
       <editor
             class="org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownResultEditor"
             default="false"
+            icon="icons/magnifier.png"
             id="org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"
             name="drillDownResultEditor">
       </editor>
