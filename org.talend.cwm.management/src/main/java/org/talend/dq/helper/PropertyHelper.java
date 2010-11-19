@@ -117,7 +117,7 @@ public final class PropertyHelper {
      * @return Null if can't find.
      */
     public static Property getProperty(IFile file) {
-        if (file != null && file.exists()) {
+        if (file != null && (file.exists() || file.getLocation().toFile().exists())) {
 
             if (StringUtils.equalsIgnoreCase(file.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)) {
                 URI propURI = URI.createPlatformResourceURI(file.getFullPath().toOSString(), false);

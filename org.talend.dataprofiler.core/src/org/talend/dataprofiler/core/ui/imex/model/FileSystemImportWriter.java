@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
@@ -50,9 +49,11 @@ import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.RepositoryWorkUnit;
@@ -179,13 +180,14 @@ public class FileSystemImportWriter implements IImportWriter {
         File resFile = resPath.toFile();
         File desFile = desPath.toFile();
 
-        if (desFile.exists()) {
+        boolean isCovered = desFile.exists();
+        if (isCovered) {
             log.warn(desFile.getAbsoluteFile() + " is overwritten!");
         }
 
         FilesUtils.copyFile(resFile, desFile);
 
-        update(desFile);
+        update(desFile, isCovered);
 
     }
 
@@ -193,13 +195,14 @@ public class FileSystemImportWriter implements IImportWriter {
      * DOC bZhou Comment method "update".
      * 
      * @param desFile
+     * @param isCovered
      * 
      * @throws IOException
      * @throws CoreException
      * 
      * @throws Exception
      */
-    private void update(File desFile) throws IOException, CoreException {
+    private void update(File desFile, boolean isCovered) throws IOException, CoreException {
 
         String curProjectLabel = ResourceManager.getRootProjectName();
         if (!StringUtils.equals(projectName, curProjectLabel)) {
@@ -212,24 +215,29 @@ public class FileSystemImportWriter implements IImportWriter {
 
             IFile desIFile = ResourceService.file2IFile(desFile);
 
-            URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
-            Resource resource = EMFSharedResources.getInstance().reloadResource(uri);
+            if (isCovered) {
+                URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
+                EMFSharedResources.getInstance().reloadResource(uri);
+                ResourceFileMap resourceFileMap = ModelElementFileFactory.getResourceFileMap(desIFile);
+                if (resourceFileMap != null) {
+                    resourceFileMap.remove(desIFile);
+                }
+            }
 
             String fileExtension = desIFile.getFileExtension();
             if (fileExtension.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
-                        .getProperty());
+                Property property = PropertyHelper.getProperty(desIFile);
 
                 if (property != null) {
                     User user = ReponsitoryContextBridge.getUser();
                     if (user != null && property.getAuthor() == null) {
                         property.setAuthor(user);
+                        EMFSharedResources.getInstance().saveResource(property.eResource());
                     }
 
                     if (log.isDebugEnabled()) {
                         log.debug("property file for " + desIFile + " = " + property.getLabel());
                     }
-                    EMFSharedResources.getInstance().saveResource(property.eResource());
 
                     Item item = property.getItem();
 
