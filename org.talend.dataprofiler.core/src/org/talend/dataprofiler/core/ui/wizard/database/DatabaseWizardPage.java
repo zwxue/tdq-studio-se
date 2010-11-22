@@ -179,24 +179,46 @@ public class DatabaseWizardPage extends AbstractWizardPage {
 
             public void widgetSelected(SelectionEvent e) {
                 // MOD yyi 2010-05-04 10494
-                if (dbTypeCombo.getText().trim().equals("Generic ODBC")) { //$NON-NLS-1$
-                    updateButtonState();
-                }
-                if (dbTypeCombo.getText().trim().equals("Generic JDBC")) { //$NON-NLS-1$
-                    updateStatus(IStatus.WARNING, UIMessages.MSG_SELECT_GENERIC_JDBC);
-                }
-                if (dbTypeCombo.getText().trim().equals("SQLite3")) { //$NON-NLS-1$
-                    username.setEnabled(false);
-                    passwordText.setEnabled(false);
-                } else {
-                    username.setEnabled(true);
-                    passwordText.setEnabled(true);
-                }
-                String selectedItem = ((Combo) e.getSource()).getText();
-                setDBType(selectedItem);
-                dbTypeSwitchFlag = true;
+                String selectedDBKey = dbTypeCombo.getText().trim();
 
-                rebuildJDBCControls(SupportDBUrlStore.getInstance().getDBUrlType(selectedItem));
+                SupportDBUrlType dbType = SupportDBUrlType.getDBTypeByKey(selectedDBKey);
+                if (dbType == null) {
+                    MessageDialog
+                            .openWarning(
+                                    null,
+                                    DefaultMessagesImpl.getString("DatabaseWizardPage.UnsupportedTitle"), DefaultMessagesImpl.getString("DatabaseWizardPage.UnsupportedDriver")); //$NON-NLS-1$ //$NON-NLS-2$
+                } else {
+
+                    switch (dbType) {
+                    case ODBCDEFAULTURL:
+                        updateButtonState();
+                        break;
+                    case GENERICJDBCDEFAULTURL:
+                        updateStatus(IStatus.WARNING, UIMessages.MSG_SELECT_GENERIC_JDBC);
+                        break;
+                    case SQLITE3DEFAULTURL:
+                        username.setEnabled(false);
+                        passwordText.setEnabled(false);
+                        break;
+                    case NETEZZADEFAULTURL:
+                        MessageDialog.openWarning(null, DefaultMessagesImpl.getString("DatabaseWizardPage.UnsupportedTitle"), //$NON-NLS-1$
+                                DefaultMessagesImpl.getString("DatabaseWizardPage.UnsupportedNetezzaDriver")); //$NON-NLS-1$
+                        dbTypeCombo.setText(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey());
+                        break;
+
+                    default:
+                        username.setEnabled(true);
+                        passwordText.setEnabled(true);
+                        break;
+                    }
+
+                    String selectedItem = ((Combo) e.getSource()).getText();
+                    setDBType(selectedItem);
+                    dbTypeSwitchFlag = true;
+
+                    rebuildJDBCControls(SupportDBUrlStore.getInstance().getDBUrlType(selectedItem));
+                }
+
             }
 
         });

@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.cwm.dburl;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * DOC rli class global comment. Detailled comment <br/>
  * 
@@ -246,5 +248,23 @@ public enum SupportDBUrlType {
 
     public String getLanguage() {
         return language;
+    }
+
+    /**
+     * DOC bZhou Comment method "getDBTypeByKey".
+     * 
+     * @param dbKey
+     * @return
+     */
+    public static SupportDBUrlType getDBTypeByKey(String dbKey) {
+        assert dbKey != null;
+
+        for (SupportDBUrlType type : values()) {
+            if (StringUtils.equals(dbKey, type.getDBKey())) {
+                return type;
+            }
+        }
+
+        return null;
     }
 }

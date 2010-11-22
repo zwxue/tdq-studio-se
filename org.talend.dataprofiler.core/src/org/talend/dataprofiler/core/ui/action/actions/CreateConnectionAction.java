@@ -37,7 +37,7 @@ import org.talend.resource.ResourceService;
  */
 public class CreateConnectionAction extends Action implements ICheatSheetAction {
 
-    private static final int WIDTH = 400;
+    private static final int WIDTH = 550;
 
     private static final int HEIGHT = 350;
 
