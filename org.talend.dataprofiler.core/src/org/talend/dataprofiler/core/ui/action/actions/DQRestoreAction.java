@@ -53,12 +53,12 @@ public class DQRestoreAction extends Action {
         try {
 
             for (Property property : selectedProps) {
+				if (property.eIsProxy()) {
+					property = (Property) EObjectHelper.resolveObject(property);
+				}
                 Item item = property.getItem();
                 if (item instanceof ConnectionItem) {
                     // MOD qiongli 2010-10-14,bug 15587.this property is no longer from file.
-                    if (property.eIsProxy()) {
-                        property = (Property) EObjectHelper.resolveObject(property);
-                    }
                     property.getItem().getState().setDeleted(false);
                     ProxyRepositoryFactory.getInstance().save(property);
                 } else {
