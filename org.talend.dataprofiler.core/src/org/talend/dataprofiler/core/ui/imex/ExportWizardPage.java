@@ -416,10 +416,17 @@ public class ExportWizardPage extends WizardPage {
             }
         });
 
+        final ViewerFilter treeFilter = new TreeFilter();
+
         addRequireBTN.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                if (showSelectBTN.getSelection()) {
+                    repositoryTree.removeFilter(treeFilter);
+                    repositoryTree.expandAll();
+                }
+
                 ItemRecord[] records = getElements();
                 for (ItemRecord record : records) {
                     Map<File, ModelElement> dependencyMap = record.getDependencyMap();
@@ -431,11 +438,13 @@ public class ExportWizardPage extends WizardPage {
                     }
                 }
 
+                if (showSelectBTN.getSelection()) {
+                    repositoryTree.addFilter(treeFilter);
+                }
+
                 checkForErrors();
             }
         });
-
-        final ViewerFilter treeFilter = new TreeFilter();
 
         showSelectBTN.addSelectionListener(new SelectionAdapter() {
 
@@ -451,6 +460,7 @@ public class ExportWizardPage extends WizardPage {
                 repositoryTree.refresh();
             }
         });
+
     }
 
     /**
