@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.TypedListener;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -55,6 +56,7 @@ import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.IndicatorTreeModelBuilder;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * This dialog use to select the indictor object for different columns.
@@ -139,6 +141,11 @@ public class IndicatorSelectDialog extends TrayDialog {
 
                 DataManager connection = ((ColumnMasterDetailsPage) analyEditor.getMasterPage()).getAnalysis().getContext()
                         .getConnection();
+				// MOD qiongli 2010-11-24 bug 14579.
+                if (connection == null && modelElementIndicators.length > 0) {
+                    ModelElement modleElement = modelElementIndicators[0].getModelElement();
+                    connection = ModelElementHelper.getTdDataProvider(modleElement);
+                }
                 this.dbms = DbmsLanguageFactory.createDbmsLanguage(connection);
             }
         }
