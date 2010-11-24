@@ -382,11 +382,14 @@ public class ItemRecord {
 
             for (EResourceConstant constant : EResourceConstant.getTopConstants()) {
                 if (filePath.toString().indexOf(constant.getPath()) > 0) {
+                    String lastSeg = filePath.lastSegment();
                     if (constant == EResourceConstant.METADATA) {
-                        String lastSeg = filePath.lastSegment();
                         return lastSeg.equals(constant.getName()) || lastSeg.equals(EResourceConstant.DB_CONNECTIONS.getName())
                                 || lastSeg.equals(EResourceConstant.MDM_CONNECTIONS.getName());
+                    } else if (constant == EResourceConstant.LIBRARIES) {
+                        return !lastSeg.equals(EResourceConstant.JRXML_TEMPLATE.getName());
                     }
+
                     return true;
                 }
             }

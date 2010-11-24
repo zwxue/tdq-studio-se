@@ -285,7 +285,12 @@ public final class PropertyHelper {
      */
     public static IPath getItemStatePath(Property property) {
         Item item = property.getItem();
-        URI propURI = property.eResource().getURI();
+        URI propURI;
+        if (property.eIsProxy()) {
+            propURI = ((InternalEObject) property).eProxyURI();
+        } else {
+            propURI = property.eResource().getURI();
+        }
 
         String statePathStr = null;
         if (item.getState() != null) {
