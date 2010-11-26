@@ -271,30 +271,6 @@ public final class ProxyRepositoryViewObject {
         return reposViewObjs;
     }
 
-    public static List<IRepositoryViewObject> fetchAllRepositoryViewObjects(Boolean paramBoolean) {
-        ArrayList localArrayList = new ArrayList();
-        localArrayList.addAll(getDBConnectionInstance().fetchRepositoryViewObjects(paramBoolean.booleanValue(), true));
-        localArrayList.addAll(getMDMConnectionInstance().fetchRepositoryViewObjects(paramBoolean.booleanValue(), true));
-        return localArrayList;
-    }
-
-    public static List<IRepositoryViewObject> fetchRepositoryViewObjectsByFolder(boolean paramBoolean,
-            ERepositoryObjectType paramERepositoryObjectType, IPath paramIPath) {
-        if (paramERepositoryObjectType == ERepositoryObjectType.METADATA_CONNECTIONS)
-            return getDBConnectionInstance().fetchRepositoryViewObjectsByFolder(paramBoolean, paramERepositoryObjectType,
-                    paramIPath, true);
-        if (paramERepositoryObjectType == ERepositoryObjectType.METADATA_MDMCONNECTION)
-            return getMDMConnectionInstance().fetchRepositoryViewObjectsByFolder(paramBoolean, paramERepositoryObjectType,
-                    paramIPath, true);
-        return new ArrayList();
-    }
-
-    public static List<IRepositoryViewObject> fetchAllDBRepositoryViewObjects(Boolean paramBoolean) {
-        ArrayList localArrayList = new ArrayList();
-        localArrayList.addAll(getDBConnectionInstance().fetchRepositoryViewObjects(paramBoolean.booleanValue(), true));
-        return localArrayList;
-    }
-
     /**
      * 
      * DOC mzhao Put the connection-uri to map cache so that the resource can be reload by URI.
