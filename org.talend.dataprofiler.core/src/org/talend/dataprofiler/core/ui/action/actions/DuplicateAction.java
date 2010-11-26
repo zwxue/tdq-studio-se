@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -29,7 +27,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -37,7 +34,7 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public class DuplicateAction extends Action {
 
-    private IFile[] files;
+    private Property[] propertyArray = new Property[0];
 
     /**
      * DOC bZhou DuplicateAction constructor comment.
@@ -49,11 +46,13 @@ public class DuplicateAction extends Action {
 
     /**
      * DOC bZhou DuplicateAction constructor comment.
+     * 
+     * @param propertyArray
      */
-    public DuplicateAction(IFile[] files) {
+    public DuplicateAction(Property[] propertyArray) {
         this();
 
-        this.files = files;
+        this.propertyArray = propertyArray;
     }
 
     /*
@@ -64,25 +63,28 @@ public class DuplicateAction extends Action {
     @Override
     public void run() {
         // MOD klliu bug 15530 if you dupcliate the file,then the focus will enter the file
-        IFile duplicateFile = null;
-        for (IFile file : files) {
-            Property property = PropertyHelper.getProperty(file);
-            IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(property);
+        Object duplicateObject = null;
+        for (Property property : propertyArray) {
+            if (property != null) {
+                IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(property);
 
-            if (handle != null) {
+                if (handle != null) {
 
-                ReturnCode rc = handle.validDuplicated();
-                if (rc.isOk()) {
-                    duplicateFile = handle.duplicate();
-                } else {
-                    MessageDialog.openError(null, "Invalid", rc.getMessage());
+                    ReturnCode rc = handle.validDuplicated();
+                    if (rc.isOk()) {
+                        duplicateObject = handle.duplicate();
+                    } else {
+                        MessageDialog.openError(null, "Invalid", rc.getMessage());
+                    }
                 }
             }
         }
 
-        // selectAndReveal(files[0]);
-        selectAndReveal(duplicateFile);
+        if (duplicateObject != null) {
+            selectAndReveal(duplicateObject);
+        }
         CorePlugin.getDefault().refreshWorkSpace();
+        CorePlugin.getDefault().refreshDQView();
     }
 
     /**
@@ -90,14 +92,14 @@ public class DuplicateAction extends Action {
      * 
      * Selects and reveals the newly added resource in all parts of the active workbench window's active page.
      * 
-     * @param resource
+     * @param duplicateObject
      */
-    private void selectAndReveal(IResource resource) {
+    private void selectAndReveal(Object duplicateObject) {
         IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IWorkbenchPage page = workbenchWindow.getActivePage();
         IWorkbenchPart activePart = page.getActivePart();
         if (activePart instanceof ISetSelectionTarget) {
-            ISelection selection = new StructuredSelection(resource);
+            ISelection selection = new StructuredSelection(duplicateObject);
             ((ISetSelectionTarget) activePart).selectReveal(selection);
         }
     }

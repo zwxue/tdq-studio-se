@@ -12,10 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.DuplicateAction;
+import org.talend.dq.helper.PropertyHelper;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -31,13 +37,19 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
         TreeSelection selection = (TreeSelection) this.getContext().getSelection();
         if (!selection.isEmpty()) {
             Object[] objs = selection.toArray();
-            IFile[] files = new IFile[objs.length];
-            for (int i = 0; i < objs.length; i++) {
-                IFile file = (IFile) objs[i];
-                files[i] = file;
+
+            List<Property> propertyList = new ArrayList<Property>();
+
+            for (Object obj : objs) {
+                if (obj instanceof IFile) {
+                    Property property = PropertyHelper.getProperty((IFile) obj);
+                    propertyList.add(property);
+                } else if (obj instanceof IRepositoryViewObject) {
+                    propertyList.add(((IRepositoryViewObject) obj).getProperty());
+                }
             }
 
-            DuplicateAction duplicate = new DuplicateAction(files);
+            DuplicateAction duplicate = new DuplicateAction(propertyList.toArray(new Property[propertyList.size()]));
             menu.add(duplicate);
         }
     }

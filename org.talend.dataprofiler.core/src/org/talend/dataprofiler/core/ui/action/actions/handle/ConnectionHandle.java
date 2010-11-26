@@ -14,13 +14,21 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.dq.helper.PropertyHelper;
+import org.talend.repository.model.ProxyRepositoryFactory;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class ConnectionHandle extends RepositoryViewObjectHandle {
+
+    private static Logger log = Logger.getLogger(ConnectionHandle.class);
 
     /**
      * DOC bZhou ConnectionHandle constructor comment.
@@ -37,7 +45,24 @@ public class ConnectionHandle extends RepositoryViewObjectHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
      */
     public IFile duplicate() {
-        // TODO Auto-generated method stub
+        Property property = getProperty();
+        if (property != null) {
+            try {
+
+                IPath itemStatePath = PropertyHelper.getItemStatePath(property);
+
+                Item copyItem = ProxyRepositoryFactory.getInstance().copy(property.getItem(), itemStatePath);
+
+                ((ConnectionItem) copyItem).getConnection().setName(copyItem.getProperty().getLabel());
+
+                ProxyRepositoryFactory.getInstance().save(copyItem);
+
+            } catch (Exception e) {
+                if (log.isDebugEnabled()) {
+                    log.debug(e, e);
+                }
+            }
+        }
         return null;
     }
 

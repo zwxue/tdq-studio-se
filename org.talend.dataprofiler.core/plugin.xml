@@ -301,10 +301,14 @@
             class="org.talend.dataprofiler.core.ui.action.provider.DuplicateResourceProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.DuplicateResourceProvider">
          <enablement>
-            <and>
+            <or>
                <instanceof
                      value="org.eclipse.core.resources.IFile">
-               </instanceof></and>
+               </instanceof>
+               <instanceof
+                     value="org.talend.core.model.repository.IRepositoryViewObject">
+               </instanceof>
+            </or>
          </enablement>
       </actionProvider>        
       <actionProvider
