@@ -312,7 +312,10 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     protected boolean changeCatalog(String catalogName, Connection connection) {
         try {
-            connection.setCatalog(catalogName);
+            if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection) || ConnectionUtils
+                    .isOdbcProgress(connection))) {
+                connection.setCatalog(catalogName);
+            }
             return true;
         } catch (RuntimeException e) {
             return traceError("Problem when changing trying to set catalog \"" + catalogName

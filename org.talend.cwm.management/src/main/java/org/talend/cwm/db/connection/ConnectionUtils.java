@@ -410,6 +410,17 @@ public final class ConnectionUtils {
         return false;
     }
 
+    public static boolean isOdbcProgress(java.sql.Connection connection) throws SQLException {
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
+                && connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(DatabaseConstant.ODBC_PROGRESS_PRODUCT_NAME) > -1) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * DOC zshen Comment method "isMssql".
      * 

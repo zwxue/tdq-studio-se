@@ -50,4 +50,6 @@ public final class DatabaseConstant {
     public static final String MDM_VERSION = "1.0.0";
 
     public static final String ODBC_INGRES_DRIVER_NAME = "JDBC-ODBC Bridge (CAIIOD";
+
+    public static final String ODBC_PROGRESS_PRODUCT_NAME = "progress";
 }

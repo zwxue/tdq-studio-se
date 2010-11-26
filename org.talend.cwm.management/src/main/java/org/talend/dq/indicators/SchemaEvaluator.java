@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
@@ -88,7 +89,9 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
                 }
             }
             // ~
-            connection.setCatalog(catName);
+            if (!ConnectionUtils.isOdbcProgress(connection)) {
+                connection.setCatalog(catName);
+            }
             evalSchemaIndicLow(null, schemaIndicator, null, schema, ok);
         }
         return ok;

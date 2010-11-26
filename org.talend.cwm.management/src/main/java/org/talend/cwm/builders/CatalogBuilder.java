@@ -244,6 +244,10 @@ public class CatalogBuilder extends CwmBuilder {
             catalogsInitialized = true;
             return;
         }
+        if (ConnectionUtils.isOdbcProgress(connection)) {
+            catalogsInitialized = true;
+            return;
+        }
         ResultSet catalogNames = null;
         try {
             catalogNames = connectionMetadata.getCatalogs();

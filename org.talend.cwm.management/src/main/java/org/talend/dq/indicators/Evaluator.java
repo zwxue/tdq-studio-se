@@ -222,7 +222,9 @@ public abstract class Evaluator<T> {
             return false;
         }
         try {
-            connection.setCatalog(catalogName);
+            if (!ConnectionUtils.isOdbcProgress(connection)) {
+                connection.setCatalog(catalogName);
+            }
             return true;
         } catch (SQLException e) {
             return false;
