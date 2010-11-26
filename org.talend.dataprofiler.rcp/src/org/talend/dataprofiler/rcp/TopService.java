@@ -445,4 +445,9 @@ public class TopService implements ICoreService {
         // I do not know what the method is supposed to be doing to I do nothing.
     }
 
+    public void synchronizeSapLib() {
+        // TODO Auto-generated method stub
+
+    }
+
 }
