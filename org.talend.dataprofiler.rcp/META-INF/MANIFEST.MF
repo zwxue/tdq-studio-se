@@ -25,7 +25,6 @@ Require-Bundle: org.eclipse.ui,
  org.talend.commons,
  org.talend.dataquality,
  org.talend.core.repository,
- org.talend.repository.localprovider,
  org.eclipse.core.resources,
  org.talend.model
 Bundle-ActivationPolicy: lazy

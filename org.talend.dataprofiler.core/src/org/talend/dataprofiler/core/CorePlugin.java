@@ -66,10 +66,11 @@ import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
-import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.model.IRepositoryFactory;
 import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryConstants;
+import org.talend.repository.model.RepositoryFactoryProvider;
 import org.talend.repository.utils.ProjectHelper;
 import org.talend.repository.utils.XmiResourceManager;
 import org.talend.resource.ResourceManager;
@@ -414,7 +415,12 @@ public class CorePlugin extends AbstractUIPlugin {
             ReponsitoryContextBridge.initialized(project.getEmfProject(), user);
         } else { // else project is null, then we are in TOP only
             ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
-            proxyRepository.setRepositoryFactoryFromProvider(LocalRepositoryFactory.getInstance());
+            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local");
+            if (repository == null) {
+                log.fatal("No local Repository found! Probably due to a missing plugin in the product.");
+                return false;
+            }
+            proxyRepository.setRepositoryFactoryFromProvider(repository);
             try {
                 proxyRepository.checkAvailability();
                 proxyRepository.initialize();

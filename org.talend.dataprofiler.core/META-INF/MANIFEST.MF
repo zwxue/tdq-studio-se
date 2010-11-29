@@ -41,8 +41,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.model.migration,
  org.talend.model.edit,
  org.talend.core.repository,
- org.talend.core.runtime,
- org.talend.repository.localprovider
+ org.talend.core.runtime
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.gridviewer,
  org.eclipse.nebula.widgets.grid,
@@ -102,4 +101,3 @@ Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar,
  lib/org.eclipse.nebula.widgets.grid_1.0.0.jar
-Import-Package: org.talend.dataprofiler.core.ui.editor.preview.model
