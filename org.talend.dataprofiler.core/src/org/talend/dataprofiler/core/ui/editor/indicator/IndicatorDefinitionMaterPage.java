@@ -384,6 +384,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             createCategorySection(topComp);
             createDefinitionParametersSection(topComp);
         }
+
+        form.reflow(true);
     }
 
     /**
@@ -392,7 +394,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createDefinitionParametersSection(Composite topComp) {
-        // TODO Auto-generated method stub
         parametersSection = createSection(form, topComp,
                 DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.parameters"), null); //$NON-NLS-1$
 
