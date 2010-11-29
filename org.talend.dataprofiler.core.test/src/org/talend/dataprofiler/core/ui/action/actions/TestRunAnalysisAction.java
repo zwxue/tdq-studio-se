@@ -12,18 +12,22 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swtbot.swt.finder.matchers.WidgetOfType;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.junit.Test;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.test.TDQSWTBotTest;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class TestRunAnalysisAction extends TDQSWTBotTest {
+public class TestRunAnalysisAction {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction#run()}.
@@ -31,23 +35,23 @@ public class TestRunAnalysisAction extends TDQSWTBotTest {
     @Test
     public void testRun() {
 
-        view = bot.viewByTitle("DQ Repository");
-        view.setFocus();
-        SWTBotTree tree = new SWTBotTree(bot.widget(WidgetOfType.widgetOfType(Tree.class), view.getWidget()));
-        tree.setFocus();
-        String str1 = DefaultMessagesImpl.getString("DQStructureManager.data_Profiling");
-        SWTBotTreeItem dpNode = tree.expandNode(str1);
-        dpNode.expand();
-        SWTBotTreeItem anaNode = dpNode.getItems()[0];
-        anaNode.expand();
-        if (anaNode.getItems().length != 0) {
-            SWTBotTreeItem node = anaNode.getItems()[0];
-            node.select();
+        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
+        CommonViewer commonView = findView.getCommonViewer();
+        commonView.expandToLevel(3);
+        Tree tree = commonView.getTree();
+        TreeItem item0 = tree.getItems()[0];
+        TreeItem anaNodes = item0.getItems()[0];
+        if (anaNodes.getItems().length != 0) {
+            TreeItem node = anaNodes.getItems()[0];
+            tree.setSelection(node);
             RunAnalysisAction runAna = new RunAnalysisAction();
+            Object obj = tree.getSelection()[0].getData();
+            assertNotNull(obj);
+            assertTrue(obj instanceof IFile);
+            runAna.setSelectionFile((IFile) obj);
             runAna.run();
-            node.select();
         } else {
-            System.out.println("There is not any available anlysis !");
+            fail("There are not any available analyses !");
         }
     }
 
