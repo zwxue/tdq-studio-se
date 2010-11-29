@@ -124,5 +124,27 @@ public class PartListener implements IPartListener {
         return null;
     }
 
+    /**
+     * MOD yyi 2010-11-29 15686: lock editor.
+     * 
+     * @param editor
+     */
+    public void lockCommonFormEditor(IWorkbenchPart editor) {
+        if (isCommonFormEditor(editor)) {
+            ((CommonFormEditor) editor).lockFormEditor(true);
+        }
+    }
+
+    /**
+     * MOD yyi 2010-11-29 15686: unload editor.
+     * 
+     * @param editor
+     */
+    public void unLockCommonFormEditor(IWorkbenchPart editor) {
+        if (isCommonFormEditor(editor)) {
+            ((CommonFormEditor) editor).lockFormEditor(false);
+        }
+    }
+
     private static final String EXTENSION_NAME = "org.talend.dataprofiler.core.editorPartListener"; //$NON-NLS-1$
 }

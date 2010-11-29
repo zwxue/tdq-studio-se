@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -29,6 +31,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
@@ -252,5 +255,27 @@ public abstract class CommonFormEditor extends FormEditor {
      */
     public TdEditorToolBar getToolBar() {
         return toolBar;
+    }
+
+    /**
+     * DOC yyi Comment method "LockEditor".
+     * 
+     * @param lock
+     */
+    public void lockFormEditor(boolean lock) {
+        if (null != editorBarWrap) {
+            Iterator<ExpandableComposite> it = editorBarWrap.getExpandableComposites().iterator();
+            while (it.hasNext()) {
+                ExpandableComposite composite = it.next();
+                if (composite == null || composite.isDisposed()) {
+                    it.remove();
+                    continue;
+                }
+                composite.getClient().setEnabled(!lock);
+            }
+        }
+        if (null != toolBar) {
+            toolBar.getToolbarControl().setEnabled(!lock);
+        }
     }
 }
