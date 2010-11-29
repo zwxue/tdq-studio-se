@@ -64,7 +64,7 @@ public abstract class EcosystemService {
 
     private static MultiValueMap versionMap = new MultiValueMap();
 
-    private static int TIMEOUT = 10000;
+    private static int TIMEOUT = 1000000;
 
     /**
      * Make sure that the version match x.x.x or x.x.xMx or x.x.xRCx, where x are all digit.
@@ -215,16 +215,21 @@ public abstract class EcosystemService {
     public static List<IEcosCategory> getCategoryList(String version) throws Exception {
 
         String jsonContent = sendGetRequest(CATEGORY_LIST_URL);
-        List<IEcosCategory> categorys = parseJsonObject(jsonContent, IEcosCategory.class);
+        List<EcosCategory> categorys = parseJsonObject(jsonContent, EcosCategory.class);
         if (categorys != null) {
-            for (IEcosCategory category : categorys) {
+            for (EcosCategory category : categorys) {
                 ((EcosCategory) category).setVersion(version);
             }
         } else {
             categorys = Collections.emptyList();
         }
-
-        return categorys;
+        // MOD yyi 2010-11-29 15271: svn project can't load exchange nodes
+        List<IEcosCategory> iCategorys = new ArrayList<IEcosCategory>();
+        for (EcosCategory ecosCategory : categorys) {
+            iCategorys.add(ecosCategory);
+        }
+        // ~15271
+        return iCategorys;
     }
 
     public static List<RevisionInfo> getRevisionList(String category, String version) throws Exception {
