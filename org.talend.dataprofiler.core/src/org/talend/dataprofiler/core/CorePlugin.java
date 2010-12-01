@@ -381,11 +381,17 @@ public class CorePlugin extends AbstractUIPlugin {
                             break;
                         }
                     }
-                } else if (editorInput instanceof SQLEditorInput) {// bug 16394.
+                } else if (editorInput instanceof SQLEditorInput) {// bug 16349.
                     SQLEditorInput sqlEditorInput = (SQLEditorInput) editorInput;
-                    if (sqlEditorInput.getUser().getAlias().getName().equals(property.getLabel())) {
+                    // MOD qiongli 2010-11-26 bug 17009
+                    if (sqlEditorInput.getUser() == null) {
+                        if (sqlEditorInput.getName().equals(property.getLabel())) {
+                            activePage.closeEditor(reference.getEditor(false), false);
+                        }
+                    } else if (sqlEditorInput.getUser().getAlias().getName().equals(property.getLabel())) {
                         activePage.closeEditor(reference.getEditor(false), false);
                     }
+
                 } else if (editorInput instanceof ConnectionItemEditorInput) {
                     ConnectionItemEditorInput connectionInput = (ConnectionItemEditorInput) editorInput;
                     if (property.equals(connectionInput.getReposViewObj().getProperty())) {

@@ -144,10 +144,6 @@ public abstract class ResourceFileMap {
 
             IFile propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
                     ifile.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
-            // MOD qiongli bug 14575.unloadResource for propFile
-            resource = getFileResource(propFile);
-            remove(propFile);
-            EMFSharedResources.getInstance().unloadResource(resource.getURI().toString());
 
             if (propFile.exists()) {
                 propFile.delete(true, new NullProgressMonitor());
