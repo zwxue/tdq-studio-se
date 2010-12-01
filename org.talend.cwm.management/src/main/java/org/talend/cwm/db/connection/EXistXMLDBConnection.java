@@ -194,7 +194,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
             // hcheng encode password here
             String property = props.getProperty(key);
             if (TaggedValueHelper.PASSWORD.equals(key)) {
-                prov.setPassword(property);
+                ConnectionHelper.setPassword(prov, property);
             } else if (TaggedValueHelper.USER.equals(key)) {
                 prov.setUsername(property);
             }

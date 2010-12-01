@@ -537,7 +537,7 @@ public final class DatabaseContentRetriever {
                 // property = "";
             }
             if (TaggedValueHelper.PASSWORD.equals(key)) {
-                prov.setPassword(property);
+                ConnectionHelper.setPassword(prov, property);
             } else if (TaggedValueHelper.USER.equals(key)) {
                 prov.setUsername(property);
             }
