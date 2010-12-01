@@ -21,6 +21,19 @@ import java.util.List;
  */
 public class ListUtils {
 
+    private ListUtils() {
+        // do not use
+    }
+
+    /**
+     * 
+     * zshen Comment method "castList".
+     * 
+     * @param <T>
+     * @param clazz the target class you want to transform.
+     * @param c the source Collection you want to transform.
+     * @return a list which only contain you want getting type of element.
+     */
     public static <T> List<T> castList(Class<? extends T> clazz, Collection<?> c) {
         List<T> r = new ArrayList<T>(c.size());
         for (Object o : c) {

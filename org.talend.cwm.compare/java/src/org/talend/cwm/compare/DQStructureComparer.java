@@ -15,6 +15,8 @@ package org.talend.cwm.compare;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +41,13 @@ import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -52,12 +55,12 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -285,11 +288,37 @@ public final class DQStructureComparer {
         connectionParameters.setDbName(ConnectionUtils.getSID(prevDataProvider));
         connectionParameters.setRetrieveAllMetadata(ConnectionHelper.getRetrieveAllMetadata(prevDataProvider));
         // ~11412
-        // MOD xqliu 2010-03-29 bug 11951
+        // MOD xqliu 2010-03-29 bug 11951 have mod by zshen 2010/11/29
+        IMetadataConnection metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
+                ParameterUtil.toMap(connectionParameters));
+        List<String> packageFilter=ConnectionUtils.getPackageFilter(connectionParameters);
+        Connection conn=null;
         if (mdm) {
-            returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
+            conn = MetadataFillFactory.getMDMInstance().fillUIConnParams(metadataConnection, null);
+            MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, packageFilter);
+            // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
-            returnProvider = ConnectionService.createConnection(connectionParameters);
+            TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(
+                    metadataConnection);
+            Object sqlConnObject = trc.getObject();
+            DatabaseMetaData dbJDBCMetadata = null;
+            if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
+                java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
+                try {
+                    dbJDBCMetadata = ConnectionUtils.getConnectionMetadata(sqlConn);
+                } catch (SQLException e) {
+                    log.error(e, e);
+                }
+            }
+            conn =MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
+            MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
+            MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
+            // returnProvider = ConnectionService.createConnection(connectionParameters);
+        }
+        if (conn == null) {
+            returnProvider.setOk(false);
+        } else {
+            returnProvider.setObject(conn);
         }
         // ~11951
         return returnProvider;

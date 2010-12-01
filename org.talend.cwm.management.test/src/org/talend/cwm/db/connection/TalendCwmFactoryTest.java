@@ -48,7 +48,7 @@ public class TalendCwmFactoryTest {
     private static DBConnectionParameter initDbParameter() {
         DBConnectionParameter dbParameter = new DBConnectionParameter();
         TypedProperties connectionParams = PropertiesLoader.getProperties(TalendCwmFactoryTest.class, "db.properties");
-        dbParameter.setaDDParameter(connectionParams.getProperty("aDDParameter"));
+        dbParameter.setADDParameter(connectionParams.getProperty("aDDParameter"));
         dbParameter.setAuthor(connectionParams.getProperty("author"));
         dbParameter.setDbName("");
         dbParameter.setDriverClassName(connectionParams.getProperty("driver"));

@@ -45,6 +45,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -359,8 +360,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
             // ~ 13406
         }
-        props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse(tdDataProvider2));
-        props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter(tdDataProvider2));
+        if (tdDataProvider2 instanceof MDMConnection) {
+            props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) tdDataProvider2));
+            props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) tdDataProvider2));
+        }
         ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(ConnectionUtils
                 .getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionService.checkConnection(this.urlText
                 .getText(), ConnectionUtils.getDriverClass(tdDataProvider2), props);

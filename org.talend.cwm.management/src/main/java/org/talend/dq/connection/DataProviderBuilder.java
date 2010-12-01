@@ -19,11 +19,11 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.DBConnect;
 import org.talend.cwm.db.connection.TalendCwmFactory;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.exception.TalendException;
-import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;

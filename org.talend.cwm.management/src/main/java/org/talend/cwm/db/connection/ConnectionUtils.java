@@ -50,6 +50,7 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -63,7 +64,6 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
@@ -813,11 +813,11 @@ public final class ConnectionUtils {
     public static String getPassword(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
         if (dbConn != null) {
-            return dbConn.getPassword();
+            return ConnectionHelper.getPassword(dbConn);
         }
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
-            return mdmConn.getPassword();
+            return ConnectionHelper.getPassword(mdmConn);
         }
         return null;
     }
@@ -1169,41 +1169,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC xqliu Comment method "fillConnectionMetadataInformation".
-     * 
-     * @param conn
-     * @return
-     */
-    public static Connection fillConnectionMetadataInformation(Connection conn) {
-        // ADD xqliu 2010-10-13 bug 15756
-        int tSize = conn.getTaggedValue().size();
-        EList<Package> dataPackage = conn.getDataPackage();
-        // ~ 15756
-        Property property = PropertyHelper.getProperty(conn);
-        // fill name and label
-        conn.setName(property.getLabel());
-        conn.setLabel(property.getLabel());
-        // fill metadata
-        MetadataHelper.setAuthor(conn, property.getAuthor().getLogin());
-        MetadataHelper.setDescription(property.getDescription(), conn);
-        String statusCode = property.getStatusCode() == null ? "" : property.getStatusCode();
-        MetadataHelper.setDevStatus(conn, "".equals(statusCode) ? DevelopmentStatus.DRAFT.getLiteral() : statusCode);
-        MetadataHelper.setPurpose(property.getPurpose(), conn);
-        MetadataHelper.setVersion(property.getVersion(), conn);
-        String retrieveAllMetadataStr = MetadataHelper.getRetrieveAllMetadata(conn);
-        // ADD xqliu 2010-10-13 bug 15756
-        if (tSize == 0 && dataPackage.size() == 1 && !"".equals(dataPackage.get(0).getName())) {
-            retrieveAllMetadataStr = "false";
-        }
-        // ~ 15756
-        // MOD klliu bug 15821 retrieveAllMetadataStr for Diff database
-        MetadataHelper.setRetrieveAllMetadata(retrieveAllMetadataStr == null ? "true" : retrieveAllMetadataStr, conn);
-        String schema = MetadataHelper.getOtherParameter(conn);
-        MetadataHelper.setOtherParameter(schema, conn);
-        return conn;
-    }
-
-    /**
      * DOC xqliu Comment method "createConnectionParam".
      * 
      * @param conn
@@ -1267,6 +1232,41 @@ public final class ConnectionUtils {
     }
 
     /**
+     * DOC xqliu Comment method "fillConnectionMetadataInformation".
+     * 
+     * @param conn
+     * @return
+     */
+    public static Connection fillConnectionMetadataInformation(Connection conn) {
+        // ADD xqliu 2010-10-13 bug 15756
+        int tSize = conn.getTaggedValue().size();
+        EList<Package> dataPackage = conn.getDataPackage();
+        // ~ 15756
+        Property property = PropertyHelper.getProperty(conn);
+        // fill name and label
+        conn.setName(property.getLabel());
+        conn.setLabel(property.getLabel());
+        // fill metadata
+        MetadataHelper.setAuthor(conn, property.getAuthor().getLogin());
+        MetadataHelper.setDescription(property.getDescription(), conn);
+        String statusCode = property.getStatusCode() == null ? "" : property.getStatusCode();
+        MetadataHelper.setDevStatus(conn, "".equals(statusCode) ? DevelopmentStatus.DRAFT.getLiteral() : statusCode);
+        MetadataHelper.setPurpose(property.getPurpose(), conn);
+        MetadataHelper.setVersion(property.getVersion(), conn);
+        String retrieveAllMetadataStr = MetadataHelper.getRetrieveAllMetadata(conn);
+        // ADD xqliu 2010-10-13 bug 15756
+        if (tSize == 0 && dataPackage.size() == 1 && !"".equals(dataPackage.get(0).getName())) {
+            retrieveAllMetadataStr = "false";
+        }
+        // ~ 15756
+        // MOD klliu bug 15821 retrieveAllMetadataStr for Diff database
+        MetadataHelper.setRetrieveAllMetadata(retrieveAllMetadataStr == null ? "true" : retrieveAllMetadataStr, conn);
+        String schema = MetadataHelper.getOtherParameter(conn);
+        MetadataHelper.setOtherParameter(schema, conn);
+        return conn;
+    }
+
+    /**
      * DOC xqliu Comment method "createDatabaseVersionString".
      * 
      * @param dbConn
@@ -1324,10 +1324,13 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC zshen Comment method "fillAttributeBetweenConnection".
+     * method "fillAttributeBetweenConnection".
      * 
-     * @param target
-     * @param source
+     * @param target the connection which will be filled attribute.
+     * @param source the connection which will provider attribute.
+     * 
+     * @deprecated the method will be deleted when the connection fetch from
+     * IRepositoryViewObject.getProperty().getItem().getConnection
      */
     public static void fillAttributeBetweenConnection(Connection target, Connection source) {
         if (target == null || source == null) {
@@ -1352,5 +1355,42 @@ public final class ConnectionUtils {
             return null;
         }
         return name;
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "getPackageFilter".
+     * 
+     * @param connectionParam
+     * @return
+     */
+    public static List<String> getPackageFilter(DBConnectionParameter connectionParam) {
+        List<String> packageFilter = null;
+        if (connectionParam.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
+            String dataFilter = connectionParam.getParameters().getProperty(TaggedValueHelper.DATA_FILTER);
+            if (dataFilter != null) {
+                packageFilter = Arrays.asList(dataFilter.split(","));
+            }
+        } else {
+            if (!connectionParam.isRetrieveAllMetadata()) {
+                packageFilter = new ArrayList<String>();
+                String dbName = connectionParam.getDbName();
+                if (connectionParam.getSqlTypeName()
+                        .equalsIgnoreCase(SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL.getDBKey())
+                        || connectionParam.getSqlTypeName().equalsIgnoreCase(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getDBKey())) {
+                    String otherParameter = null; // MOD scorreia 2010-10-20 bug 16562 avoid NPE
+                    if (connectionParam != null && connectionParam.getOtherParameter() != null) {
+                        otherParameter = connectionParam.getOtherParameter().toUpperCase();
+                    }
+                    if (otherParameter != null) {
+                        dbName = otherParameter;
+                    } else {
+                        dbName = connectionParam.getParameters().getProperty(TaggedValueHelper.USER).toUpperCase();
+                    }
+                }
+                packageFilter.add(dbName);
+            }
+        }
+        return packageFilter;
     }
 }

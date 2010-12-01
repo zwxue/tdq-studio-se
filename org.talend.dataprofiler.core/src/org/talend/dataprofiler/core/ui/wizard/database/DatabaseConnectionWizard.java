@@ -12,28 +12,31 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.database;
 
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -41,7 +44,6 @@ import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -70,7 +72,6 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      */
     public DatabaseConnectionWizard(DBConnectionParameter connectionParam) {
         this.connectionParam = connectionParam;
-
     }
 
     /**
@@ -141,16 +142,13 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     }
 
     public ModelElement initCWMResourceBuilder() {
-
         DataProviderBuilder dpBuilder = new DataProviderBuilder();
-
         String driverPath = connectionParam.getDriverPath();
         if (driverPath != null) {
             LinkedList<String> jars = new LinkedList<String>();
             for (String driverpath : driverPath.split(";")) { //$NON-NLS-1$
                 jars.add(driverpath);
             }
-
             // MOD xqliu 2009-12-03 bug 10247
             String jdbcUrl = connectionParam.getJdbcUrl();
             if (jdbcUrl != null && jdbcUrl.length() > 12) {
@@ -161,26 +159,61 @@ public class DatabaseConnectionWizard extends AbstractWizard {
             // ~
         }
 
-        ReturnCode rc = dpBuilder.initializeDataProvider(connectionParam);
-
-        if (rc.isOk()) {
-            // MOD xqliu 2010-10-13 bug 15756
-            DataProvider dataProvider = dpBuilder.getDataProvider();
-            DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
-            if (dbConn != null && dbConn.getDbVersionString() == null) {
-                dbConn.setDbVersionString(ConnectionUtils.createDatabaseVersionString(dbConn));
-                return dbConn;
-            }
-            return dataProvider;
-            // 15756
+        // ReturnCode rc = dpBuilder.initializeDataProvider(connectionParam);
+        //
+        // if (rc.isOk()) {
+        // // MOD xqliu 2010-10-13 bug 15756
+        // DataProvider dataProvider = dpBuilder.getDataProvider();
+        // DatabaseConnection dbConn1 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
+        // if (dbConn1 != null && dbConn1.getDbVersionString() == null) {
+        // dbConn1.setDbVersionString(ConnectionUtils.createDatabaseVersionString(dbConn1));
+        // return dbConn1;
+        // }
+        // return dataProvider;
+        // MOD by zshen use new API to fill connetion and it's construct
+        MetadataFillFactory instance = null;
+        if (connectionParam.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
+            instance = MetadataFillFactory.getMDMInstance();
         } else {
+            instance = MetadataFillFactory.getDBInstance();
+        }
+
+        IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(connectionParam));
+        ReturnCode rc = instance.checkConnection(metaConnection);
+        if (rc.isOk()) {
+            Connection dbConn = instance.fillUIConnParams(metaConnection, null);
+            DatabaseMetaData dbMetadata = null;
+            List<String> packageFilter = ConnectionUtils.getPackageFilter(connectionParam);
+            java.sql.Connection sqlConn = null;
+            try {
+            if (rc instanceof TypedReturnCode) {
+                Object sqlConnObject=((TypedReturnCode) rc).getObject();
+                if(sqlConnObject instanceof java.sql.Connection){
+                    sqlConn = (java.sql.Connection) sqlConnObject;
+                        dbMetadata = ConnectionUtils.getConnectionMetadata(sqlConn);
+                }
+            }
+
+                instance.fillCatalogs(dbConn, dbMetadata, packageFilter);
+                instance.fillSchemas(dbConn, dbMetadata, packageFilter);
+                return dbConn;
+            } catch (SQLException e) {
+                log.error(e, e);
+                // Need to add a dialog for report the reson of error
+            } finally {
+                if (sqlConn != null) {
+                    ConnectionUtils.closeConnection(sqlConn);
+                }
+
+            }
+        } else {
+            // Need to add a dialog for report the reson of error
             MessageDialog
                     .openInformation(
                             getShell(),
                             DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
                                     + rc.getMessage());
         }
-
         return null;
     }
 
@@ -208,25 +241,27 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      */
     @Override
     public void fillMetadataToCWMResource(ModelElement cwmElement) {
-        super.fillMetadataToCWMResource(cwmElement);
-        if (cwmElement instanceof DataProvider) {
-            Connection dataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(cwmElement);
-            if (dataProvider != null) {
-                ConnectionUtils.setServerName(dataProvider, getParameter().getHost());
-                ConnectionUtils.setPort(dataProvider, getParameter().getPort());
-                DatabaseConnection dbConnection = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
-                if (dbConnection != null) {
-                    dbConnection.setDatabaseType(getParameter().getSqlTypeName());
-                }
-                ConnectionUtils.setSID(dataProvider, getParameter().getDbName());
-                // ADD xqliu 2010-03-03 feature 11412
-                ConnectionHelper.setRetrieveAllMetadata(getParameter().isRetrieveAllMetadata(), dataProvider);
-                // ADD klliu 2010-10-11 feature 15821
-                ConnectionHelper.setOtherParameter(getParameter().getOtherParameter(), dataProvider);
-            } else {
-                MessageUI.openError("Connection is null!");
-            }
-        }
+        //MOD by zshen new API have been fill all of those attribute.
+        // super.fillMetadataToCWMResource(cwmElement);
+        // if (cwmElement instanceof DataProvider) {
+        // Connection dataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(cwmElement);
+        // if (dataProvider != null) {
+        // ConnectionUtils.setServerName(dataProvider, getParameter().getHost());
+        // ConnectionUtils.setPort(dataProvider, getParameter().getPort());
+        // DatabaseConnection dbConnection = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(dataProvider);
+        // if (dbConnection != null) {
+        // dbConnection.setDatabaseType(getParameter().getSqlTypeName());
+        // }
+        // ConnectionUtils.setSID(dataProvider, getParameter().getDbName());
+        // // ADD xqliu 2010-03-03 feature 11412
+        // ConnectionHelper.setRetrieveAllMetadata(getParameter().isRetrieveAllMetadata(), dataProvider);
+        // // ADD klliu 2010-10-11 feature 15821
+        // ConnectionHelper.setOtherParameter(getParameter().getOtherParameter(), dataProvider);
+        // } else {
+        // MessageUI.openError("Connection is null!");
+        // }
+        // }
+        //~
     }
 
     private void storeInfoToPerference(ModelElement dataProvider) {
@@ -271,4 +306,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         }
         return super.checkMetadata();
     }
+
+
+
 }

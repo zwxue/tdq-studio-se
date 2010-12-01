@@ -219,17 +219,17 @@ public class DBConnectionParameter extends ConnectionParameter {
      * 
      * @return
      */
-    public String getaDDParameter() {
+    public String getADDParameter() {
         return aDDParameter;
     }
 
     /**
      * 
-     * DOC zshen Comment method "setaDDParameter".
+     * DOC zshen Comment method "setADDParameter".
      * 
      * @param aDDParameter
      */
-    public void setaDDParameter(String aDDParameter) {
+    public void setADDParameter(String aDDParameter) {
         this.aDDParameter = aDDParameter;
     }
 

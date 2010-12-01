@@ -276,6 +276,17 @@ public class DBConnectTest {
         connect.closeConnection();
     }
 
+    /**
+     * Test method for
+     * {@link org.talend.cwm.db.connection.ConnectionUtils#retrieveColumn(org.talend.core.model.metadata.builder.connection.MetadataTable)}
+     * .
+     */
+    @Test
+    public void testRetrieveColumn() {
+        initDBConnect();
+        fail("Not yet implemented");
+    }
+
     private static boolean showUnimplemented = false;
 
     private void fail(String str) {

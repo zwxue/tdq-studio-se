@@ -30,6 +30,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.builders.CatalogBuilder;
 import org.talend.cwm.builders.ColumnBuilder;
 import org.talend.cwm.builders.TableBuilder;

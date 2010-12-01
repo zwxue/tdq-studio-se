@@ -36,12 +36,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
-import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -77,7 +77,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
 
     private String universe = "";
 
-    private String dataFilter;
+    private String dataFilter = "";
 
     private Properties props = null;
 
@@ -90,7 +90,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
     }
 
     /**
-     * init userName, userPass, universe.
+     * init userName, userPass, universe,dataFilter.
      */
     private void initParams() {
         userName = props.getProperty(TaggedValueHelper.USER) == null ? "" : props.getProperty(TaggedValueHelper.USER);
@@ -152,10 +152,8 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             // + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
             String techXSDFolderName = getTechXSDFolderName();
             // ~ 15756
-
             for (WSDataModelPK pk : pks) {
-                String filterName = props.getProperty(TaggedValueHelper.DATA_FILTER);
-                if (filterName == null || filterName.equals("") || Arrays.asList(filterName.split(",")).contains((pk.getPk()))) {
+                if (dataFilter == null || dataFilter.equals("") || Arrays.asList(dataFilter.split(",")).contains((pk.getPk()))) {
                     adaptToCWMDocument(xmlDocs, stub, pk.getPk(), techXSDFolderName, dataProvider);
                 }
             }

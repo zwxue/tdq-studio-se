@@ -25,10 +25,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.management.connection.DatabaseConstant;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;

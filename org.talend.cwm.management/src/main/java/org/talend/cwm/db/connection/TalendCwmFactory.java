@@ -158,7 +158,7 @@ public final class TalendCwmFactory {
             // AdditionalParams
             String additionalParams = ((DatabaseConnection) dataProvider).getAdditionalParams();
             if (additionalParams == null) {
-                ((DatabaseConnection) dataProvider).setAdditionalParams(connector.getDbConnectionParameter().getaDDParameter());
+                ((DatabaseConnection) dataProvider).setAdditionalParams(connector.getDbConnectionParameter().getADDParameter());
             }
             // uischema
             if (edatabasetypeInstance.isNeedSchema()) {
@@ -190,7 +190,7 @@ public final class TalendCwmFactory {
                     break;
                 }
             }
-            // set DbmsId and setProductId
+            // set DbmsId and ProductId
             String mapping = MetadataTalendType.getDefaultDbmsFromProduct(product).getId();
             if (dataProvider instanceof DatabaseConnection) {
                 // add the attribute of productID for TOS

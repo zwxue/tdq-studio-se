@@ -33,6 +33,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.builders.AbstractTableBuilder;
@@ -297,7 +298,24 @@ public final class DqRepositoryViewService {
     public static List<TdColumn> getColumns(Connection dataProvider, ColumnSet columnSet, String columnPattern, boolean loadFromDB)
             throws TalendException {
         if (loadFromDB) {
-            return loadColumns(dataProvider, columnSet, columnPattern);
+            // MOD by zshen use new API to fill Columns
+            List<TdColumn> columnList = new ArrayList<TdColumn>();
+            TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
+            if (!rcConn.isOk()) {
+                log.error(rcConn.getMessage()); // scorreia show error to the user
+                throw new TalendException(rcConn.getMessage());
+            }
+            java.sql.Connection connection = rcConn.getObject();
+            try {
+                columnList = MetadataFillFactory.getDBInstance().fillColumns(columnSet, connection.getMetaData(), null, null);
+            } catch (SQLException e) {
+                log.error(e, e);
+            } finally {
+                ConnectionUtils.closeConnection(connection);
+            }
+            return columnList;
+            // ~
+            // return loadColumns(dataProvider, columnSet, columnPattern);
         } else {
             return ColumnSetHelper.getColumns(columnSet);
         }
@@ -420,7 +438,27 @@ public final class DqRepositoryViewService {
             throws TalendException {
         List<TdTable> tables = new ArrayList<TdTable>();
         // PTODO scorreia check return code
-        loadColumnSets(dataProvider, catalog, schema, tablePattern, RelationalPackage.TD_TABLE, tables);
+        // MOD by zshen use new API to fill tables
+        TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
+        if (!rcConn.isOk()) {
+            log.error(rcConn.getMessage());
+            throw new TalendException(rcConn.getMessage());
+        }
+
+        java.sql.Connection connection = rcConn.getObject();
+        try {
+            if (schema != null) {
+                tables = MetadataFillFactory.getDBInstance().fillTables(schema, connection.getMetaData(), null, tablePattern);
+            } else {
+                tables = MetadataFillFactory.getDBInstance().fillTables(catalog, connection.getMetaData(), null, tablePattern);
+            }
+        } catch (SQLException e) {
+            log.error(e, e);
+        } finally {
+            ConnectionUtils.closeConnection(connection);
+        }
+        // ~
+        // loadColumnSets(dataProvider, catalog, schema, tablePattern, RelationalPackage.TD_TABLE, tables);
         return tables;
     }
 
@@ -429,7 +467,25 @@ public final class DqRepositoryViewService {
         assert schema != null : Messages.getString("DqRepositoryViewService.NoSchemaGiven"); //$NON-NLS-1$
         List<TdView> views = new ArrayList<TdView>();
         // PTODO scorreia check return code
-        loadColumnSets(dataProvider, catalog, schema, viewPattern, RelationalPackage.TD_VIEW, views);
+        TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(dataProvider);
+        if (!rcConn.isOk()) {
+            log.error(rcConn.getMessage());
+            throw new TalendException(rcConn.getMessage());
+        }
+
+        java.sql.Connection connection = rcConn.getObject();
+        try {
+            if (schema != null) {
+                views = MetadataFillFactory.getDBInstance().fillViews(schema, connection.getMetaData(), null, viewPattern);
+            } else {
+                views = MetadataFillFactory.getDBInstance().fillViews(catalog, connection.getMetaData(), null, viewPattern);
+            }
+        } catch (SQLException e) {
+            log.error(e, e);
+        } finally {
+            ConnectionUtils.closeConnection(connection);
+        }
+        // loadColumnSets(dataProvider, catalog, schema, viewPattern, RelationalPackage.TD_VIEW, views);
         return views;
     }
 

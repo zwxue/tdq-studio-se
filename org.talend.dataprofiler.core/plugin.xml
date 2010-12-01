@@ -1287,5 +1287,12 @@
      <resourceChange
            class="org.talend.dataprofiler.core.service.TDQResourceChangeHandler"></resourceChange>
   </extension>
+  <extension
+        id="org.talend.dataprofiler.core.TOPDriverService"
+        name="TOPDriverService"
+        point="org.talend.metadata.managment.DBDriver_extension">
+     <find_driver
+           class="org.talend.dataprofiler.core.service.TOPDriverService"></find_driver>
+  </extension>
 
 </plugin>
