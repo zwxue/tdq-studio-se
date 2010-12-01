@@ -50,8 +50,8 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
      * @param folder
      */
     public AddSqlFileAction(IFolder folder) {
-        setText(DefaultMessagesImpl.getString("AddSqlFileAction.createSQLFile")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
+        this();
+
         this.folder = folder;
     }
 

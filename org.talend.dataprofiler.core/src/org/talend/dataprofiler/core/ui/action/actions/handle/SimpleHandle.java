@@ -76,7 +76,7 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
      */
     public boolean delete() throws Exception {
-        if (file.exists() && isPhysicalDelete()) {
+        if (file.exists() && isPhysicalDelete() && !file.isReadOnly()) {
             file.delete(true, null);
         }
 

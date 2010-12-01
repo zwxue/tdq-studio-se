@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
+import org.talend.dataprofiler.core.sql.ImportSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.sql.RenameFolderAction;
 import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
@@ -48,13 +49,14 @@ public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof IFolder) {
-                IFolder folder = (IFolder) obj;
+                IFolder sqlFileFolder = (IFolder) obj;
 
                 IFolder sourceFolder = ResourceManager.getSourceFileFolder();
-                if (ResourceService.isSubFolder(sourceFolder, folder)) {
-                    menu.add(new AddSqlFileAction((IFolder) obj));
-                    if (folder.getFullPath().segmentCount() > sourceFolder.getFullPath().segmentCount()) {
-                        menu.add(new RenameFolderAction((IFolder) obj));
+                if (ResourceService.isSubFolder(sourceFolder, sqlFileFolder)) {
+                    menu.add(new AddSqlFileAction(sqlFileFolder));
+                    menu.add(new ImportSqlFileAction(sqlFileFolder));
+                    if (sqlFileFolder.getFullPath().segmentCount() > sourceFolder.getFullPath().segmentCount()) {
+                        menu.add(new RenameFolderAction(sqlFileFolder));
                     }
                 }
 
