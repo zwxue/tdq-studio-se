@@ -123,13 +123,14 @@ public class ComparisonTableViewerDNDDecorate {
             }
 
             public boolean doDropValidation(DropTargetEvent event, LocalSelectionTransfer transfer) {
-                if (dragSelectedElement != null) {
+                StructuredSelection selection = (StructuredSelection) transfer.getSelection();
+
+                if (dragSelectedElement != null && selection != null) {
                     return true;
                 }
                 // boolean doDropValidation = super.doDropValidation(event, transfer);
                 boolean doDropValidation = false;
                 // if (doDropValidation) {
-                StructuredSelection selection = (StructuredSelection) transfer.getSelection();
                 switch (validateType) {
                 case COLUMN_VALIDATETYPE:
                     doDropValidation = validateColumnType(selection, targetViewer);
@@ -176,6 +177,10 @@ public class ComparisonTableViewerDNDDecorate {
     // MOD mzhao 2009-09-14 Bug 8839.
     @SuppressWarnings("unchecked")
     private boolean validateColumnType(StructuredSelection selection, TableViewer targetViewer) {
+        if (selection == null) {
+            return false;
+        }
+
         boolean isValidation = true;
         List selectionList = selection.toList();
         if (!allowDuplication) {
