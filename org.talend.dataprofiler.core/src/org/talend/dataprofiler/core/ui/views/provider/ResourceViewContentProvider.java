@@ -293,17 +293,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         if (elements == null) {
             return elements;
         }
-        List<IResource> list = new ArrayList<IResource>();
-        for (Object element : elements) {
-            list.add((IResource) element);
-            // if (element instanceof IFile) {
-            // list.add((IFile) element);
-            // } else {
-            // log.error("The elemnt:" + ((IFolder) element).getFullPath() +
-            // " can't display on the workspace!");
-            // }
-        }
-
+        // MOD qiongli 2010-12-1 bug 15700.sort all Object
+        List<Object> list = Arrays.asList(elements);
         Collections.sort(list, ComparatorsFactory.buildComparator(ComparatorsFactory.FILEMODEL_COMPARATOR_ID));
         return list.toArray();
     }
@@ -358,7 +349,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         } catch (Exception exc) {
             exc.printStackTrace();
         }
-        return ls.toArray();
+        return sort(ls.toArray());
     }
 
     private void removeDelElement(List<Object> list) throws Exception {
