@@ -263,7 +263,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             String key = propertyNames.nextElement().toString();
             String property = propes.getProperty(key);
             if (TaggedValueHelper.PASSWORD.equals(key)) {
-                prov.setPassword(property);
+                ConnectionHelper.setPassword(prov, property);
             } else if (TaggedValueHelper.USER.equals(key)) {
                 prov.setUsername(property);
             }
