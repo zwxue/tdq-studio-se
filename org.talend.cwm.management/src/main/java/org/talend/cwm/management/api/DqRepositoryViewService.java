@@ -447,7 +447,7 @@ public final class DqRepositoryViewService {
         }
 
         java.sql.Connection connection = rcConn.getObject();
-        String[] tableType = new String[] { TableType.TABLE.toString(), TableType.SYNONYM.toString() };
+        String[] tableType = new String[] { TableType.TABLE.toString() };
         try {
 
             if (schema != null) {
