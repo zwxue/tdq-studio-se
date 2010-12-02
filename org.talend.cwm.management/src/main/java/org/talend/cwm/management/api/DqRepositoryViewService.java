@@ -66,6 +66,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.utils.sql.metadata.constants.TableType;
 import org.talend.utils.string.AsciiUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -446,11 +447,15 @@ public final class DqRepositoryViewService {
         }
 
         java.sql.Connection connection = rcConn.getObject();
+        String[] tableType = new String[] { TableType.TABLE.toString(), TableType.SYNONYM.toString() };
         try {
+
             if (schema != null) {
-                tables = MetadataFillFactory.getDBInstance().fillTables(schema, connection.getMetaData(), null, tablePattern);
+                tables = MetadataFillFactory.getDBInstance().fillTables(schema, connection.getMetaData(), null, tablePattern,
+                        tableType);
             } else {
-                tables = MetadataFillFactory.getDBInstance().fillTables(catalog, connection.getMetaData(), null, tablePattern);
+                tables = MetadataFillFactory.getDBInstance().fillTables(catalog, connection.getMetaData(), null, tablePattern,
+                        tableType);
             }
         } catch (SQLException e) {
             log.error(e, e);
