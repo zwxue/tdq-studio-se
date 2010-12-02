@@ -17,6 +17,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
@@ -59,8 +60,12 @@ public class OverviewAnalysisAction extends Action implements ICheatSheetAction 
         packaFilterParameter.setTdDataProvider(ConnectionHelper.getTdDataProvider(packageObjs[0]));
         packaFilterParameter.setPackages(packageObjs);
         Wizard wizard;
+        // MOD qiongli 2010-12-2 bug 16681.add connectionSwitch.
+        Connection connectionSwitch = SwitchHelpers.CONNECTION_SWITCH.doSwitch(packageObjs[0]);
         Catalog catalogSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(packageObjs[0]);
-        if (catalogSwitch != null) {
+        if (connectionSwitch != null) {
+            wizard = WizardFactory.createAnalysisWizard(AnalysisType.CONNECTION, packaFilterParameter);
+        } else if (catalogSwitch != null) {
             wizard = WizardFactory.createAnalysisWizard(AnalysisType.CATALOG, packaFilterParameter);
         } else {
             wizard = WizardFactory.createAnalysisWizard(AnalysisType.SCHEMA, packaFilterParameter);

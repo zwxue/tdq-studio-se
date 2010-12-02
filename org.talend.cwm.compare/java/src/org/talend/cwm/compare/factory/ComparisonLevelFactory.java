@@ -14,6 +14,7 @@ package org.talend.cwm.compare.factory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogSchemaComparisonLevel;
@@ -22,6 +23,7 @@ import org.talend.cwm.compare.factory.comparisonlevel.RepositoryObjectComparison
 import org.talend.cwm.compare.factory.comparisonlevel.SelectedLocalComparison;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -56,6 +58,10 @@ public final class ComparisonLevelFactory {
 
         } else if (selectedObject instanceof IFile) {
             comparisonLevel = new DataProviderComparisonLevel(selectedObject);
+        } else if (selectedObject instanceof Connection) {
+            // MOD qiongli 2010-12-2.bug 16881.
+            IRepositoryViewObject resObject = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) selectedObject);
+            comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
         } else if (selectedObject instanceof Catalog) {
             // MOD mzhao 2009-08-12 If compare the schemas of one catalog for MS
             // SQL Server.

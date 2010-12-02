@@ -54,7 +54,8 @@ public class OverViewAnalysisActionProvider extends AbstractCommonActionProvider
                 Item item = ((IRepositoryViewObject) obj).getProperty().getItem();
                 if (item instanceof ConnectionItem) {
                     Connection connection = ((ConnectionItem) item).getConnection();
-                    packageList.addAll(connection.getDataPackage());
+                    // MOD qionlgi 2010-12-2 bug 16881.
+                    packageList.add(connection);
                 } else {
                     continue;
                 }
