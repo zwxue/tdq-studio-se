@@ -281,6 +281,9 @@ public final class DQStructureComparer {
         connectionParameters.setPurpose(MetadataHelper.getPurpose(prevDataProvider));
         connectionParameters.setStatus(MetadataHelper.getDevStatus(prevDataProvider));
 
+        // MOD qiongli 2010-12-2 bug 16605.setSqlTypeName for connectionParameters.
+        String dbType = ConnectionUtils.getDatabaseType(prevDataProvider);
+        connectionParameters.setSqlTypeName(dbType);
         connectionParameters.setJdbcUrl(urlString);
         connectionParameters.setDriverClassName(driverClassName);
         connectionParameters.setParameters(properties);
