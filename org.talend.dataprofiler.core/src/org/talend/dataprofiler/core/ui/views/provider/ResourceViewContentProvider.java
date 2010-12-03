@@ -341,7 +341,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         Object[] obs = super.getChildren(folder);
         HashSet<Property> delElements = LogicalDeleteFileHandle.getDelPropertyLs();
         if (delElements.size() == 0)
-            return obs;
+            return sort(obs);
         List<Object> abstractLs = Arrays.asList(obs);
         List<Object> ls = new ArrayList<Object>(abstractLs);
         try {
