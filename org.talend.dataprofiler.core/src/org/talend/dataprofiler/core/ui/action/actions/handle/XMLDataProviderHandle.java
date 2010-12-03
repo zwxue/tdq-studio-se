@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -37,16 +36,6 @@ public class XMLDataProviderHandle extends RepositoryViewObjectHandle {
      */
     XMLDataProviderHandle(Property property) {
         super(property);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
-     */
-    public IFile duplicate() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     /*

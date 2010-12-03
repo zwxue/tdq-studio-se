@@ -16,12 +16,12 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.repository.model.ProxyRepositoryFactory;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -45,25 +45,20 @@ public class ConnectionHandle extends RepositoryViewObjectHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
      */
     public IFile duplicate() {
-        Property property = getProperty();
-        if (property != null) {
-            try {
+        IFile dulicatedFile = super.duplicate();
 
-                IPath itemStatePath = PropertyHelper.getItemStatePath(property);
-
-                Item copyItem = ProxyRepositoryFactory.getInstance().copy(property.getItem(), itemStatePath);
-
-                ((ConnectionItem) copyItem).getConnection().setName(copyItem.getProperty().getLabel());
-
-                ProxyRepositoryFactory.getInstance().save(copyItem);
-
-            } catch (Exception e) {
-                if (log.isDebugEnabled()) {
-                    log.debug(e, e);
+        if (dulicatedFile != null) {
+            Property duplicatedProperty = PropertyHelper.getProperty(dulicatedFile);
+            if (duplicatedProperty != null) {
+                Item item = duplicatedProperty.getItem();
+                if (item instanceof ConnectionItem) {
+                    Connection connection = ((ConnectionItem) item).getConnection();
+                    CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connection);
                 }
             }
         }
-        return null;
+
+        return dulicatedFile;
     }
 
     /*

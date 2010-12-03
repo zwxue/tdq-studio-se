@@ -17,6 +17,7 @@ import java.util.List;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
+import org.eclipse.core.resources.IFile;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -99,6 +100,19 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
+     */
+    public IFile duplicate() {
+        if (property != null) {
+            IFile copyFile = new EMFResourceHandle(property).duplicate();
+
+            return copyFile;
+        }
+        return null;
+    }
     /*
      * (non-Javadoc)
      * 

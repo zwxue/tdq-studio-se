@@ -16,14 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -62,9 +59,7 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
                 // Register the Repository view objects by connection to be able to grab the Repository view object
                 // later.
 
-                // MOD zqin 2010-11-26 bug 15728.
-                Item item = reloadItem(reposViewObj);
-                // Item item = reposViewObj.getProperty().getItem();
+                Item item = reposViewObj.getProperty().getItem();
 
                 // MOD scorreia 2010-10-20 avoid several class cast exceptions here
                 if (item instanceof DatabaseConnectionItem) {
@@ -92,16 +87,6 @@ public final class TDQDBConnectionReposViewObjDelegator extends TDQConnectionRep
             log.error(e, e);
         }
         return returnconnList;
-    }
-
-    private Item reloadItem(IRepositoryViewObject reposViewObj) {
-        Resource eResource = reposViewObj.getProperty().eResource();
-        URI uri = eResource.getURI();
-        eResource.unload();
-        Resource itemResource = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager().resourceSet
-                .getResource(uri, true);
-        Item item = ((Property) itemResource.getContents().get(0)).getItem();
-        return item;
     }
 
     /**
