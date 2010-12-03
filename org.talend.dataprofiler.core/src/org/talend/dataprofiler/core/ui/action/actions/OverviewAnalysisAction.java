@@ -57,10 +57,14 @@ public class OverviewAnalysisAction extends Action implements ICheatSheetAction 
     @Override
     public void run() {
         PackagesAnalyisParameter packaFilterParameter = new PackagesAnalyisParameter();
-        packaFilterParameter.setTdDataProvider(ConnectionHelper.getTdDataProvider(packageObjs[0]));
+        // MOD qiongli 2010-12-3 bug 16681.add connectionSwitch.
+        if (packageObjs[0] instanceof Connection) {
+            packaFilterParameter.setTdDataProvider((Connection) packageObjs[0]);
+        } else {
+            packaFilterParameter.setTdDataProvider(ConnectionHelper.getTdDataProvider(packageObjs[0]));
+        }
         packaFilterParameter.setPackages(packageObjs);
         Wizard wizard;
-        // MOD qiongli 2010-12-2 bug 16681.add connectionSwitch.
         Connection connectionSwitch = SwitchHelpers.CONNECTION_SWITCH.doSwitch(packageObjs[0]);
         Catalog catalogSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(packageObjs[0]);
         if (connectionSwitch != null) {
