@@ -81,7 +81,9 @@ public class DatabaseNode extends AbstractNode {
                 _databaseVersion = " [v" + metadata.getJDBCMetaData().getDatabaseMajorVersion() + "." 
                     + metadata.getJDBCMetaData().getDatabaseMinorVersion() + "]";
             } catch (Exception e) {
-                SQLExplorerPlugin.error("Cannot get database version", e);
+                // MOD yyi 17143 2010-12-03 remove the error message of Cannot get database version
+                // SQLExplorerPlugin.error("Cannot get database version", e);
+                // 17143
                 _databaseVersion = " undefined ";
             }
             
