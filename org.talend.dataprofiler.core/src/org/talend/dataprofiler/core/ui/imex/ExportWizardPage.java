@@ -70,6 +70,8 @@ public class ExportWizardPage extends WizardPage {
 
     public static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
+    private final ViewerFilter treeFilter = new TreeFilter();
+
     public ExportWizardPage(String specifiedPath) {
         super(Messages.getString("ExportWizardPage.2")); //$NON-NLS-1$
         setMessage(Messages.getString("ExportWizardPage.3")); //$NON-NLS-1$
@@ -416,15 +418,14 @@ public class ExportWizardPage extends WizardPage {
             }
         });
 
-        final ViewerFilter treeFilter = new TreeFilter();
+
 
         addRequireBTN.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (showSelectBTN.getSelection()) {
-                    repositoryTree.removeFilter(treeFilter);
-                    repositoryTree.expandAll();
+                    filterUncheckedItems(false);
                 }
 
                 ItemRecord[] records = getElements();
@@ -439,7 +440,7 @@ public class ExportWizardPage extends WizardPage {
                 }
 
                 if (showSelectBTN.getSelection()) {
-                    repositoryTree.addFilter(treeFilter);
+                    filterUncheckedItems(true);
                 }
 
                 checkForErrors();
@@ -450,17 +451,21 @@ public class ExportWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (showSelectBTN.getSelection()) {
-                    repositoryTree.addFilter(treeFilter);
-                } else {
-                    repositoryTree.removeFilter(treeFilter);
-                    repositoryTree.expandAll();
-                }
-
-                repositoryTree.refresh();
+                filterUncheckedItems(showSelectBTN.getSelection());
             }
         });
 
+    }
+
+    private void filterUncheckedItems(boolean isFiltered) {
+        if (isFiltered) {
+            repositoryTree.addFilter(treeFilter);
+        } else {
+            ItemRecord[] elements = getElements();
+            repositoryTree.removeFilter(treeFilter);
+            repositoryTree.expandAll();
+            repositoryTree.setCheckedElements(elements);
+        }
     }
 
     /**
