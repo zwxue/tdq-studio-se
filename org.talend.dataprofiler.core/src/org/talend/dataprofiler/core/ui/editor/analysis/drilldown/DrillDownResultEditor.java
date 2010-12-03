@@ -12,11 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis.drilldown;
 
+import java.text.Collator;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 
 import net.sourceforge.sqlexplorer.dataset.actions.ExportCSVAction;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -36,9 +39,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IEditorInput;
@@ -125,6 +131,7 @@ public class DrillDownResultEditor extends EditorPart {
             addTableColumn(ddEditorInput, table);
             table.setLinesVisible(true);
             table.setHeaderVisible(true);
+
             table.setData(ddEditorInput.getDataSet());
             tableView.setLabelProvider(new DrillDownResultLabelProvider());
             tableView.setContentProvider(new DrillDownResultContentProvider());
@@ -203,6 +210,7 @@ public class DrillDownResultEditor extends EditorPart {
         for (String columnElement : columnElementList) {
             TableColumn column = new TableColumn(table, SWT.CENTER);
             column.setText(columnElement);
+            addSorter(table, column);
         }
     }
 
@@ -211,6 +219,67 @@ public class DrillDownResultEditor extends EditorPart {
         // TODO Auto-generated method stub
 
     }
+    
+    private void addSorter(final Table table, final TableColumn column) {
+        column.addListener(SWT.Selection, new Listener() {   
+            boolean isAscend = true;   
+            Collator comparator = Collator.getInstance(Locale.getDefault());   
+           
+            public void handleEvent(Event event) {
+                int columnIndex = getColumnIndex(table, column);   
+                TableItem[] items = table.getItems();   
+                
+                for (int i = 1; i < items.length - 1; i++) {
+                    String value2 = items[i].getText(columnIndex);
+                    for (int j = 0; j < i; j++) {   
+                        String value1 = items[j].getText(columnIndex);
+                        boolean isLessThan=true;
+
+                        if (StringUtils.isNumeric(value2) && StringUtils.isNumeric(value1)) {
+                            isLessThan = Long.valueOf(value2).compareTo(Long.valueOf(value1)) < 0;
+                        } else {
+                            isLessThan = comparator.compare(value2, value1) < 0;
+                        }
+                        if ((isAscend && isLessThan) || (!isAscend && !isLessThan)) {   
+                            String[] values = getTableItemText(table, items[i]);   
+                            Object obj = items[i].getData();   
+                            items[i].dispose();   
+                            TableItem item = new TableItem(table, SWT.NONE, j);   
+                            item.setText(values);   
+                            item.setData(obj);   
+                            items = table.getItems();   
+                            break;   
+                        }   
+                    }   
+                }   
+                
+                table.setSortColumn(column);   
+                table.setSortDirection((isAscend ? SWT.UP : SWT.DOWN));   
+                isAscend = !isAscend;   
+                
+            }   
+        });   
+    }   
+  
+    private int getColumnIndex(Table table, TableColumn column) {
+        TableColumn[] columns = table.getColumns();   
+        for (int i = 0; i < columns.length; i++) {   
+            if (columns[i].equals(column))   
+                return i;   
+        }   
+        return -1;   
+    }   
+  
+    private String[] getTableItemText(Table table, TableItem item) {
+        int count = table.getColumnCount();
+        String[] strs = new String[count];
+        for (int i = 0; i < count; i++) {
+            strs[i] = item.getText(i);
+        }
+        return strs;
+    }
+
+
 
     /**
      * 
