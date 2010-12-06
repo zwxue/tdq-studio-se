@@ -228,8 +228,8 @@ public class DrillDownResultEditor extends EditorPart {
             public void handleEvent(Event event) {
                 int columnIndex = getColumnIndex(table, column);   
                 TableItem[] items = table.getItems();   
-                
-                for (int i = 1; i < items.length - 1; i++) {
+                int length = "...".equals(items[items.length - 1].getText(columnIndex)) ? items.length - 1 : items.length;
+                for (int i = 1; i < length; i++) {
                     String value2 = items[i].getText(columnIndex);
                     for (int j = 0; j < i; j++) {   
                         String value1 = items[j].getText(columnIndex);
