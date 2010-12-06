@@ -141,6 +141,8 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
             MetadataHelper.setAuthor(newObject, author);
         }
 
+        newObject.getClientDependency().addAll(oldObject.getClientDependency());
+
         return newObject;
     }
 
