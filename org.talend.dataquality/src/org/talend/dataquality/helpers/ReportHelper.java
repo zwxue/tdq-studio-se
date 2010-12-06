@@ -573,7 +573,7 @@ public final class ReportHelper {
      */
     public static String getOutputType(Report report) {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.OUTPUT_TYPE_TAG, report.getTaggedValue());
-        if (taggedValue == null) {
+        if (taggedValue == null || taggedValue.getValue() == null) {
             return "pdf";
         }
         return taggedValue.getValue();
