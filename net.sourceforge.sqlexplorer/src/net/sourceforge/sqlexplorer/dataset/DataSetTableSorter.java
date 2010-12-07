@@ -89,14 +89,16 @@ public class DataSetTableSorter implements Comparator {
         Object o2 = m2.getPrettyObjectValue(columnNumber);        
         
         // sort based on null values
-    	if (o1 == null || o2 == null) {
-    		if (o1 == null && o2 != null) {
+        // MOD by zshen to fix a castException for bug 17291
+    	if ("<null>".equals(o1)  || "<null>".equals(o2)) {
+            if ("<null>".equals(o1) && !"<null>".equals(o2)) {
     			result = 1;
-    		} else if (o1 != null && o2 == null) {
+            } else if (!"<null>".equals(o1) && "<null>".equals(o2)) {
     			result = -1;
     		} else {
     			result = 0;
     		}
+            // ~17291
     		
             if (result == 0) {
                 return compareColumnValue(m1, m2, depth + 1);
