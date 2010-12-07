@@ -56,6 +56,10 @@ public final class LogicalDeleteFileHandle {
 
     private static HashSet<Property> delPropertys = null;
 
+    private static boolean isManualRefresh = false;
+
+    private static boolean isFinishScanAllFolders = false;// is it finish to scan all physical file
+
     /**
      * 
      * Get all Children from the static var by 'folderPath',contain file or subFoldern.
@@ -152,7 +156,7 @@ public final class LogicalDeleteFileHandle {
 
     /**
      * 
-     * DOC qiongli Comment method "hasChildDeleted".if has one deleted child at least.
+     * if has one deleted child at least.
      * 
      * @param folder
      * @return
@@ -172,7 +176,7 @@ public final class LogicalDeleteFileHandle {
 
     /**
      * 
-     * DOC qiongli if it's all children are logical deleted. bug 14697,bug 15674
+     * if it's all children are logical deleted. bug 14697,bug 15674
      * 
      * @param folder
      * @return
@@ -227,7 +231,7 @@ public final class LogicalDeleteFileHandle {
 
     /**
      * 
-     * DOC qiongli Comment method "getLogicalDelElemFromFolder".read from file system.
+     * Read from file system.
      * 
      * @param folder
      * @param fileList
@@ -263,14 +267,18 @@ public final class LogicalDeleteFileHandle {
 
     /**
      * 
-     * DOC qiongli Comment method "getDelPropertyLs".Get all logical deleted Property.
+     * Get all logical deleted Property.
      * 
      * @return
      */
     public static HashSet<Property> getDelPropertyLs() {
-
-        if (delPropertys != null)
-            return delPropertys;
+        // MOD qiongli 2010-12-7 bug 16843.if the delPropertys is null or the first time manual refresh dqview,scan all
+        // physical file.
+        if (delPropertys != null) {
+            if (!isManualRefresh || isManualRefresh && isFinishScanAllFolders) {
+                return delPropertys;
+            }
+        }
         delPropertys = new HashSet<Property>();
         IFolder dataProfileFolder = ResourceManager.getDataProfilingFolder();
         IFolder libFolder = ResourceManager.getLibrariesFolder();
@@ -287,7 +295,7 @@ public final class LogicalDeleteFileHandle {
 
     /**
      * 
-     * DOC qiongli Comment method "refreshDelProperty".Add or remove property.
+     * Add or remove property.
      * 
      * @param type
      * @param prop
@@ -312,6 +320,14 @@ public final class LogicalDeleteFileHandle {
         } else if (type == 1) {
             delPropertys.add(prop);
         }
+    }
+
+    public static void setManualRefresh(boolean isManualRefresh) {
+        LogicalDeleteFileHandle.isManualRefresh = isManualRefresh;
+    }
+
+    public static void setFinishScanAllFolders(boolean isFinishScanAllFolders) {
+        LogicalDeleteFileHandle.isFinishScanAllFolders = isFinishScanAllFolders;
     }
 
 }

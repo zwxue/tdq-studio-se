@@ -102,8 +102,13 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
      * add a prop instance to the static var.
      */
     public void handleLogicalDelete(Property prop) {
+        // MOD qiongli 2010-12-6.bug 16843.can not be restored for svn project when it is prox property.
+        if (prop == null)
+            return;
+        if (prop.eIsProxy()) {
+            prop = (Property) EObjectHelper.resolveObject(prop);
+        }
         // MOD qiongli 2010-10-22,bug 16610
-        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
         if (ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(prop) != null) {
             LogicalDeleteFileHandle.refreshDelPropertys(1, prop);
         }

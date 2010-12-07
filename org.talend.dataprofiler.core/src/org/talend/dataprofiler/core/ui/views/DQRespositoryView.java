@@ -74,6 +74,7 @@ import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
+import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
@@ -557,6 +558,9 @@ public class DQRespositoryView extends CommonNavigator {
         @Override
         public void run() {
             ProxyRepositoryManager.getInstance().refresh();
+            // MOD qiongli 2010-12-7 bug 16843.
+            LogicalDeleteFileHandle.setManualRefresh(true);
+            LogicalDeleteFileHandle.setFinishScanAllFolders(false);
             getCommonViewer().refresh();
             super.run();
         }
