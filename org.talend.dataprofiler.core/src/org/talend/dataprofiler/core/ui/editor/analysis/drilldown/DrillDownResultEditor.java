@@ -235,7 +235,8 @@ public class DrillDownResultEditor extends EditorPart {
                         String value1 = items[j].getText(columnIndex);
                         boolean isLessThan=true;
 
-                        if (StringUtils.isNumeric(value2) && StringUtils.isNumeric(value1)) {
+                        if (StringUtils.isNumeric(value2) && StringUtils.isNotEmpty(value2) && StringUtils.isNumeric(value1)
+                                && StringUtils.isNotEmpty(value1)) {
                             isLessThan = Long.valueOf(value2).compareTo(Long.valueOf(value1)) < 0;
                         } else {
                             isLessThan = comparator.compare(value2, value1) < 0;
