@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Distinct Count Indicator</b></em>'. <!--
@@ -228,6 +229,14 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
         this.distinctObjects.clear();
         this.distinctValueCount = DISTINCT_VALUE_COUNT_EDEFAULT;
         return super.reset();
+    }
+
+    @Override
+    public Expression getInstantiatedExpressions(String language) {
+        if ("EXCEL".equals(language)) {
+            language = "Access";
+        }
+        return super.getInstantiatedExpressions(language);
     }
 
 } // DistinctCountIndicatorImpl

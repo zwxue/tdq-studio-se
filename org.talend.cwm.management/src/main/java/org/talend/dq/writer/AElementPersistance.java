@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -333,10 +332,12 @@ public abstract class AElementPersistance {
         } else if (ModelElementIdentifier.isDataProvider(element)) {
             if (element instanceof DatabaseConnection) {
                 item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+                ((ConnectionItem) item).setConnection((DatabaseConnection) element);
             } else if (element instanceof MDMConnection) {
                 item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createMDMConnectionItem();
+                ((ConnectionItem) item).setConnection((MDMConnection) element);
             }
-            ((ConnectionItem) item).setConnection((Connection) element);
+
         } else if (ModelElementIdentifier.isID(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQIndicatorDefinitionItem();
         } else if (ModelElementIdentifier.isPattern(element)) {

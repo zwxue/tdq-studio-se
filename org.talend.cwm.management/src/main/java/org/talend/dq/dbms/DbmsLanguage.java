@@ -607,9 +607,11 @@ public class DbmsLanguage {
     public Expression getSqlExpression(IndicatorDefinition indicatorDefinition) {
         EList<TdExpression> sqlGenericExpression = indicatorDefinition.getSqlGenericExpression();
 
-        // MOD xqliu 2010-02-25 feature 11201
-        TdExpression sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression,
-                this.getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, sqlGenericExpression);
+        // MOD xqliu 2010-02-25 feature 11201 MOD by zshen for bug 10630
+        boolean excelToAccess = "Distinct Count".equals(indicatorDefinition.getName()) && "EXCEL".equals(this.dbmsName);//$NON-NLS-1$//$NON-NLS-2$
+        String dbms = excelToAccess ? "Access" : this.dbmsName;//$NON-NLS-1$
+        TdExpression sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, dbms, sqlGenericExpression,
+                this.getDbVersion()) : getSqlExpression(indicatorDefinition, dbms, sqlGenericExpression);
         // ~11201
         if (sqlGenExpr != null) {
             return sqlGenExpr; // language found
@@ -624,8 +626,8 @@ public class DbmsLanguage {
             log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
         }
         // MOD xqliu 2010-02-25 feature 11201
-        return matchDbVersion ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression, this
-                .getDbVersion()) : getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
+        return matchDbVersion ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression,
+                this.getDbVersion()) : getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
     }
 
     /**
@@ -679,8 +681,8 @@ public class DbmsLanguage {
 
     private List<String> getFunctions(IndicatorDefinition indicatorDefinition, final EList<TdExpression> functions) {
         // MOD xqliu 2010-02-25 feature 11201
-        TdExpression sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, this.dbmsName, functions, this
-                .getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, functions);
+        TdExpression sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, this.dbmsName, functions,
+                this.getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, functions);
         // ~11201
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();

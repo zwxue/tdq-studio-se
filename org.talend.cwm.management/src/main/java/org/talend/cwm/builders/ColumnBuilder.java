@@ -18,10 +18,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.util.TDColumnAttributeHelper;
-import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 
@@ -68,16 +66,21 @@ public class ColumnBuilder extends CwmBuilder {
         List<TdColumn> tableColumns = new ArrayList<TdColumn>();
 
         // --- add columns to table
-        ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
-        while (columns.next()) {
-            TdColumn column = RelationalFactory.eINSTANCE.createTdColumn();
-            if (dbConnection != null) {
-                tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column, (DatabaseConnection) dbConnection));
-            } else {
-                tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column, connection));
-            }
-        }
-        columns.close();
+        MetadataFillFactory.getDBInstance().setLinked(false);
+        tableColumns = MetadataFillFactory.getDBInstance().fillColumns(null, getConnectionMetadata(connection), null);
+        MetadataFillFactory.getDBInstance().setLinked(true);
+        // ResultSet columns = getConnectionMetadata(connection).getColumns(catalogName, schemaPattern, tablePattern,
+        // columnPattern);
+        // while (columns.next()) {
+        // TdColumn column = RelationalFactory.eINSTANCE.createTdColumn();
+        // if (dbConnection != null) {
+        // tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column, (DatabaseConnection)
+        // dbConnection));
+        // } else {
+        // tableColumns.add(TDColumnAttributeHelper.addColumnAttribute(columns, column, connection));
+        // }
+        // }
+        // columns.close();
         return tableColumns;
         // TODO scorreia other informations for columns can be retrieved here
         // get the default value
