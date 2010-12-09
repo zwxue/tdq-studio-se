@@ -27,8 +27,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -133,6 +136,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private ModelElementIndicator[] currentModelElementIndicators;
 
+    private Button storeDataCheck;
+
+    private Section analysisParamSection;
+
     public ColumnSetMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
@@ -225,7 +232,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         createDataFilterSection(form, topComp);
 
-        // createAnalysisParamSection(form, topComp);
+        createAnalysisParamSection(form, topComp);
 
         Composite previewComp = toolkit.createComposite(sForm);
         previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -505,6 +512,33 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
         dataFilterComp.addPropertyChangeListener(this);
         dataFilterSection.setClient(sectionClient);
+    }
+
+    /**
+     * ADD yyi 2010-12-07 17282:create parameter section for storing data control
+     * 
+     * @param form
+     * @param anasisDataComp
+     */
+    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
+        analysisParamSection = createSection(form, anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$ 
+        Composite sectionClient = toolkit.createComposite(analysisParamSection);
+        sectionClient.setLayout(new GridLayout(2, false));
+
+        toolkit.createLabel(sectionClient, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$ 
+        storeDataCheck = new Button(sectionClient, SWT.CHECK | SWT.RIGHT_TO_LEFT);
+        storeDataCheck.setSelection(simpleStatIndicator.isStoreData());
+
+        storeDataCheck.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
+                setDirty(true);
+            }
+        });
+
+        analysisParamSection.setClient(sectionClient);
     }
 
     /**

@@ -352,13 +352,22 @@ public interface IndicatorsPackage extends EPackage {
     int INDICATOR__IN_VALID_ROW = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 11;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INDICATOR__STORE_DATA = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 12;
+
+    /**
      * The number of structural features of the '<em>Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int INDICATOR_FEATURE_COUNT = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 12;
+    int INDICATOR_FEATURE_COUNT = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 13;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.RowCountIndicatorImpl <em>Row Count Indicator</em>}' class.
@@ -648,6 +657,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int ROW_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ROW_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
 
     /**
      * The number of structural features of the '<em>Row Count Indicator</em>' class.
@@ -958,6 +976,15 @@ public interface IndicatorsPackage extends EPackage {
     int SUM_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SUM_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Sum Str</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1262,6 +1289,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int MEAN_INDICATOR__IN_VALID_ROW = SUM_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MEAN_INDICATOR__STORE_DATA = SUM_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Sum Str</b></em>' attribute.
@@ -1580,6 +1616,15 @@ public interface IndicatorsPackage extends EPackage {
     int COMPOSITE_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COMPOSITE_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The number of structural features of the '<em>Composite Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1876,6 +1921,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int RANGE_INDICATOR__IN_VALID_ROW = COMPOSITE_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int RANGE_INDICATOR__STORE_DATA = COMPOSITE_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Lower Value</b></em>' containment reference.
@@ -2212,6 +2266,15 @@ public interface IndicatorsPackage extends EPackage {
     int BOX_INDICATOR__IN_VALID_ROW = COMPOSITE_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BOX_INDICATOR__STORE_DATA = COMPOSITE_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>IQR</b></em>' containment reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2544,6 +2607,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int FREQUENCY_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FREQUENCY_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -2897,6 +2969,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int BLANK_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BLANK_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Blank Count</b></em>' attribute.
@@ -3279,6 +3360,15 @@ public interface IndicatorsPackage extends EPackage {
     int MEDIAN_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MEDIAN_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Median</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3604,6 +3694,15 @@ public interface IndicatorsPackage extends EPackage {
     int VALUE_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALUE_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Value</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3918,6 +4017,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int MIN_VALUE_INDICATOR__IN_VALID_ROW = VALUE_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_VALUE_INDICATOR__STORE_DATA = VALUE_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -4236,6 +4344,15 @@ public interface IndicatorsPackage extends EPackage {
     int MAX_VALUE_INDICATOR__IN_VALID_ROW = VALUE_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_VALUE_INDICATOR__STORE_DATA = VALUE_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Value</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4552,6 +4669,15 @@ public interface IndicatorsPackage extends EPackage {
     int MODE_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MODE_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Mode</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4859,6 +4985,15 @@ public interface IndicatorsPackage extends EPackage {
     int NULL_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int NULL_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The number of structural features of the '<em>Null Count Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5155,6 +5290,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int DISTINCT_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DISTINCT_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
@@ -5464,6 +5608,15 @@ public interface IndicatorsPackage extends EPackage {
     int UNIQUE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int UNIQUE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -5771,6 +5924,15 @@ public interface IndicatorsPackage extends EPackage {
     int DUPLICATE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DUPLICATE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -6076,6 +6238,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int IQR_INDICATOR__IN_VALID_ROW = RANGE_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int IQR_INDICATOR__STORE_DATA = RANGE_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Lower Value</b></em>' containment reference.
@@ -6400,6 +6571,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int TEXT_INDICATOR__IN_VALID_ROW = COMPOSITE_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_INDICATOR__STORE_DATA = COMPOSITE_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Average Length Indicator</b></em>' containment reference.
@@ -6808,6 +6988,15 @@ public interface IndicatorsPackage extends EPackage {
     int LENGTH_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int LENGTH_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7113,6 +7302,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int MIN_LENGTH_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_INDICATOR__STORE_DATA = LENGTH_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -7422,6 +7620,15 @@ public interface IndicatorsPackage extends EPackage {
     int MIN_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = MIN_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_NULL_INDICATOR__STORE_DATA = MIN_LENGTH_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -7727,6 +7934,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int MIN_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = MIN_LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_INDICATOR__STORE_DATA = MIN_LENGTH_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -8036,6 +8252,15 @@ public interface IndicatorsPackage extends EPackage {
     int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = MIN_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MIN_LENGTH_WITH_BLANK_NULL_INDICATOR__STORE_DATA = MIN_LENGTH_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -8341,6 +8566,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int MAX_LENGTH_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_INDICATOR__STORE_DATA = LENGTH_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -8650,6 +8884,15 @@ public interface IndicatorsPackage extends EPackage {
     int MAX_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = MAX_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_NULL_INDICATOR__STORE_DATA = MAX_LENGTH_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -8955,6 +9198,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int MAX_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = MAX_LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_INDICATOR__STORE_DATA = MAX_LENGTH_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -9264,6 +9516,15 @@ public interface IndicatorsPackage extends EPackage {
     int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = MAX_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MAX_LENGTH_WITH_BLANK_NULL_INDICATOR__STORE_DATA = MAX_LENGTH_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -9569,6 +9830,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int AVERAGE_LENGTH_INDICATOR__IN_VALID_ROW = LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVERAGE_LENGTH_INDICATOR__STORE_DATA = LENGTH_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -9887,6 +10157,15 @@ public interface IndicatorsPackage extends EPackage {
     int AVG_LENGTH_WITH_NULL_INDICATOR__IN_VALID_ROW = AVERAGE_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_NULL_INDICATOR__STORE_DATA = AVERAGE_LENGTH_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -10203,6 +10482,15 @@ public interface IndicatorsPackage extends EPackage {
     int AVG_LENGTH_WITH_BLANK_INDICATOR__IN_VALID_ROW = AVERAGE_LENGTH_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_INDICATOR__STORE_DATA = AVERAGE_LENGTH_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -10517,6 +10805,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__IN_VALID_ROW = AVERAGE_LENGTH_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int AVG_LENGTH_WITH_BLANK_NULL_INDICATOR__STORE_DATA = AVERAGE_LENGTH_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -10908,6 +11205,15 @@ public interface IndicatorsPackage extends EPackage {
     int LOWER_QUARTILE_INDICATOR__IN_VALID_ROW = MIN_VALUE_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int LOWER_QUARTILE_INDICATOR__STORE_DATA = MIN_VALUE_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Value</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -11224,6 +11530,15 @@ public interface IndicatorsPackage extends EPackage {
     int UPPER_QUARTILE_INDICATOR__IN_VALID_ROW = MAX_VALUE_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int UPPER_QUARTILE_INDICATOR__STORE_DATA = MAX_VALUE_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Value</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -11538,6 +11853,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int COUNTS_INDICATOR__IN_VALID_ROW = COMPOSITE_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COUNTS_INDICATOR__STORE_DATA = COMPOSITE_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Blank Count Indicator</b></em>' containment reference.
@@ -11929,6 +12253,15 @@ public interface IndicatorsPackage extends EPackage {
     int MATCHING_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCHING_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -12243,6 +12576,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int PATTERN_MATCHING_INDICATOR__IN_VALID_ROW = MATCHING_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_MATCHING_INDICATOR__STORE_DATA = MATCHING_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
@@ -12561,6 +12903,15 @@ public interface IndicatorsPackage extends EPackage {
     int SQL_PATTERN_MATCHING_INDICATOR__IN_VALID_ROW = PATTERN_MATCHING_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SQL_PATTERN_MATCHING_INDICATOR__STORE_DATA = PATTERN_MATCHING_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -12877,6 +13228,15 @@ public interface IndicatorsPackage extends EPackage {
     int REGEXP_MATCHING_INDICATOR__IN_VALID_ROW = PATTERN_MATCHING_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEXP_MATCHING_INDICATOR__STORE_DATA = PATTERN_MATCHING_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Matching Value Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -13191,6 +13551,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -13536,6 +13905,15 @@ public interface IndicatorsPackage extends EPackage {
     int PATTERN_FREQ_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_FREQ_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -13877,6 +14255,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int PATTERN_LOW_FREQ_INDICATOR__IN_VALID_ROW = LOW_FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PATTERN_LOW_FREQ_INDICATOR__STORE_DATA = LOW_FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -14222,6 +14609,15 @@ public interface IndicatorsPackage extends EPackage {
     int DEF_VALUE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DEF_VALUE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Default Val Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -14527,6 +14923,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int SOUNDEX_FREQ_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SOUNDEX_FREQ_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -14881,6 +15286,15 @@ public interface IndicatorsPackage extends EPackage {
     int SOUNDEX_LOW_FREQ_INDICATOR__IN_VALID_ROW = SOUNDEX_FREQ_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SOUNDEX_LOW_FREQ_INDICATOR__STORE_DATA = SOUNDEX_FREQ_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -15233,6 +15647,15 @@ public interface IndicatorsPackage extends EPackage {
     int DATE_PATTERN_FREQ_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_PATTERN_FREQ_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -15574,6 +15997,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int DATE_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -15919,6 +16351,15 @@ public interface IndicatorsPackage extends EPackage {
     int WEEK_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -16260,6 +16701,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int MONTH_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -16605,6 +17055,15 @@ public interface IndicatorsPackage extends EPackage {
     int QUARTER_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -16946,6 +17405,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int YEAR_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -17291,6 +17759,15 @@ public interface IndicatorsPackage extends EPackage {
     int BIN_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -17632,6 +18109,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int DATE_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DATE_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -17977,6 +18463,15 @@ public interface IndicatorsPackage extends EPackage {
     int WEEK_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WEEK_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -18318,6 +18813,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int MONTH_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MONTH_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -18663,6 +19167,15 @@ public interface IndicatorsPackage extends EPackage {
     int QUARTER_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int QUARTER_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -19004,6 +19517,15 @@ public interface IndicatorsPackage extends EPackage {
      * @ordered
      */
     int YEAR_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int YEAR_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
@@ -19349,6 +19871,15 @@ public interface IndicatorsPackage extends EPackage {
     int BIN_LOW_FREQUENCY_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int BIN_LOW_FREQUENCY_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -19632,6 +20163,17 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      */
     EAttribute getIndicator_InValidRow();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.Indicator#isStoreData <em>Store Data</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Store Data</em>'.
+     * @see org.talend.dataquality.indicators.Indicator#isStoreData()
+     * @see #getIndicator()
+     * @generated
+     */
+    EAttribute getIndicator_StoreData();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.RowCountIndicator <em>Row Count Indicator</em>}'.
@@ -21156,6 +21698,14 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EAttribute INDICATOR__IN_VALID_ROW = eINSTANCE.getIndicator_InValidRow();
+
+        /**
+         * The meta object literal for the '<em><b>Store Data</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute INDICATOR__STORE_DATA = eINSTANCE.getIndicator_StoreData();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.RowCountIndicatorImpl <em>Row Count Indicator</em>}' class.

@@ -6,6 +6,7 @@
 package org.talend.dataquality.indicators.columnset.impl;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -627,7 +628,11 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     @Override
     public boolean storeSqlResults(List<Object[]> objects) {
+        if (this.isStoreData()) {
         this.setListRows(objects);
+        } else {
+            this.setListRows(new ArrayList<Object[]>());
+        }
         if (log.isDebugEnabled()) {
             StringBuilder builder = new StringBuilder();
             builder.append("Column set multivalue indicator\n");

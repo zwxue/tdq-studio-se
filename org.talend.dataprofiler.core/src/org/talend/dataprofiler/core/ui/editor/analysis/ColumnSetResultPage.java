@@ -262,67 +262,75 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     private Section createTableSectionPart(Composite parentComp, String title, SimpleStatIndicator ssIndicator) {
         Section columnSetElementSection = this.createSection(form, parentComp, title, null);
         Composite sectionTableComp = toolkit.createComposite(columnSetElementSection);
+        // MOD yyi 2010-12-07 17282:create parameter section for storing data control
+        if (ssIndicator.isStoreData()) {
+            columnSetElementSection.setExpanded(true);
+            columnSetElementSection.setEnabled(true);
 
-        sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        sectionTableComp.setLayout(new GridLayout());
-        // MOD zshen for feature 14000
-        Button filterDataBt = new Button(sectionTableComp, SWT.NONE);
-        filterDataBt.setText(DefaultMessagesImpl.getString("ColumnSetResultPage.filterData"));
-        filterDataBt.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-        filterDataBt.addMouseListener(new MouseListener() {
+            sectionTableComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+            sectionTableComp.setLayout(new GridLayout());
+            // MOD zshen for feature 14000
+            Button filterDataBt = new Button(sectionTableComp, SWT.NONE);
+            filterDataBt.setText(DefaultMessagesImpl.getString("ColumnSetResultPage.filterData"));
+            filterDataBt.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+            filterDataBt.addMouseListener(new MouseListener() {
 
-            public void mouseDoubleClick(MouseEvent e) {
-                // TODO Auto-generated method stub
-            }
-
-            public void mouseDown(MouseEvent e) {
-                List<Indicator> indicatorsList = masterPage.analysis.getResults().getIndicators();
-                SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
-                wizard.setOldTableInputList(ColumnSetResultPage.this.tableFilterResult);
-                WizardDialog dialog = new WizardDialog(null, wizard);
-                dialog.setPageSize(300, 400);
-                wizard.setContainer(dialog);
-                wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));
-                if (WizardDialog.OK == dialog.open()) {
-                    ColumnSetResultPage.this.tableFilterResult = ((SelectPatternsWizard) wizard).getPatternSelectPage()
-                            .getTableInputList();
-
-                    columnsElementViewer.refresh();
+                public void mouseDoubleClick(MouseEvent e) {
+                    // TODO Auto-generated method stub
                 }
+
+                public void mouseDown(MouseEvent e) {
+                    List<Indicator> indicatorsList = masterPage.analysis.getResults().getIndicators();
+                    SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
+                    wizard.setOldTableInputList(ColumnSetResultPage.this.tableFilterResult);
+                    WizardDialog dialog = new WizardDialog(null, wizard);
+                    dialog.setPageSize(300, 400);
+                    wizard.setContainer(dialog);
+                    wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));
+                    if (WizardDialog.OK == dialog.open()) {
+                        ColumnSetResultPage.this.tableFilterResult = ((SelectPatternsWizard) wizard).getPatternSelectPage()
+                                .getTableInputList();
+
+                        columnsElementViewer.refresh();
+                    }
+                }
+
+                public void mouseUp(MouseEvent e) {
+                    // TODO Auto-generated method stub
+
+                }
+
+            });
+
+            columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
+
+            Table table = columnsElementViewer.getTable();
+            table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            List<String> tableColumnNames = ssIndicator.getColumnHeaders();
+            for (String tableColumnName : tableColumnNames) {
+                final TableColumn columnHeader = new TableColumn(table, SWT.NONE);
+                columnHeader.setText(tableColumnName);
             }
-
-            public void mouseUp(MouseEvent e) {
-                // TODO Auto-generated method stub
-
+            table.setLinesVisible(true);
+            table.setHeaderVisible(true);
+            TableSectionViewerProvider provider = new TableSectionViewerProvider();
+            List<Object[]> tableRows = ssIndicator.getListRows();
+            columnsElementViewer.setContentProvider(provider);
+            columnsElementViewer.setLabelProvider(provider);
+            columnsElementViewer.setInput(tableRows);
+            for (int i = 0; i < tableColumnNames.size(); i++) {
+                table.getColumn(i).pack();
             }
+            columnSetElementSection.setClient(sectionTableComp);
+            columnSetElementSection.setExpanded(false);
+            // ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
+            setupTableGridDataLimitedSize(table, tableRows.size());
 
-        });
-
-        columnsElementViewer = new TableViewer(sectionTableComp, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER);
-
-        Table table = columnsElementViewer.getTable();
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        List<String> tableColumnNames = ssIndicator.getColumnHeaders();
-        for (String tableColumnName : tableColumnNames) {
-            final TableColumn columnHeader = new TableColumn(table, SWT.NONE);
-            columnHeader.setText(tableColumnName);
+            addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
+        } else {
+            columnSetElementSection.setExpanded(false);
+            columnSetElementSection.setEnabled(false);
         }
-        table.setLinesVisible(true);
-        table.setHeaderVisible(true);
-        TableSectionViewerProvider provider = new TableSectionViewerProvider();
-        List<Object[]> tableRows = ssIndicator.getListRows();
-        columnsElementViewer.setContentProvider(provider);
-        columnsElementViewer.setLabelProvider(provider);
-        columnsElementViewer.setInput(tableRows);
-        for (int i = 0; i < tableColumnNames.size(); i++) {
-            table.getColumn(i).pack();
-        }
-        columnSetElementSection.setClient(sectionTableComp);
-        columnSetElementSection.setExpanded(false);
-        // ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
-        setupTableGridDataLimitedSize(table, tableRows.size());
-
-        addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
         return columnSetElementSection;
     }
 

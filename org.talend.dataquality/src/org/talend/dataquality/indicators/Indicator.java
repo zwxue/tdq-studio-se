@@ -32,6 +32,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  *   <li>{@link org.talend.dataquality.indicators.Indicator#getMaxNumberRows <em>Max Number Rows</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#isValidRow <em>Valid Row</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.Indicator#isInValidRow <em>In Valid Row</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.Indicator#isStoreData <em>Store Data</em>}</li>
  * </ul>
  * </p>
  *
@@ -331,6 +332,33 @@ public interface Indicator extends ModelElement {
      * @generated
      */
     void setInValidRow(boolean value);
+
+    /**
+     * Returns the value of the '<em><b>Store Data</b></em>' attribute.
+     * The default value is <code>"false"</code>.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Store Data</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Store Data</em>' attribute.
+     * @see #setStoreData(boolean)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getIndicator_StoreData()
+     * @model default="false"
+     * @generated
+     */
+    boolean isStoreData();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.Indicator#isStoreData <em>Store Data</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Store Data</em>' attribute.
+     * @see #isStoreData()
+     * @generated
+     */
+    void setStoreData(boolean value);
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

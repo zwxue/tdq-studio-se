@@ -50,6 +50,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#getMaxNumberRows <em>Max Number Rows</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isValidRow <em>Valid Row</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isInValidRow <em>In Valid Row</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.IndicatorImpl#isStoreData <em>Store Data</em>}</li>
  * </ul>
  * </p>
  *
@@ -250,6 +251,26 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * @ordered
      */
     protected boolean inValidRow = IN_VALID_ROW_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isStoreData()
+     * @generated
+     * @ordered
+     */
+    protected static final boolean STORE_DATA_EDEFAULT = false;
+
+    /**
+     * The cached value of the '{@link #isStoreData() <em>Store Data</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isStoreData()
+     * @generated
+     * @ordered
+     */
+    protected boolean storeData = STORE_DATA_EDEFAULT;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -556,6 +577,27 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public boolean isStoreData() {
+        return storeData;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setStoreData(boolean newStoreData) {
+        boolean oldStoreData = storeData;
+        storeData = newStoreData;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.INDICATOR__STORE_DATA, oldStoreData, storeData));
+    }
+
+    /**
      * <!-- begin-user-doc --> Increments counts for each given data. <!-- end-user-doc -->
      * 
      * @generated NOT
@@ -824,6 +866,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return isValidRow();
             case IndicatorsPackage.INDICATOR__IN_VALID_ROW:
                 return isInValidRow();
+            case IndicatorsPackage.INDICATOR__STORE_DATA:
+                return isStoreData();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -874,6 +918,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             case IndicatorsPackage.INDICATOR__IN_VALID_ROW:
                 setInValidRow((Boolean)newValue);
                 return;
+            case IndicatorsPackage.INDICATOR__STORE_DATA:
+                setStoreData((Boolean)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -921,6 +968,9 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             case IndicatorsPackage.INDICATOR__IN_VALID_ROW:
                 setInValidRow(IN_VALID_ROW_EDEFAULT);
                 return;
+            case IndicatorsPackage.INDICATOR__STORE_DATA:
+                setStoreData(STORE_DATA_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -956,6 +1006,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
                 return validRow != VALID_ROW_EDEFAULT;
             case IndicatorsPackage.INDICATOR__IN_VALID_ROW:
                 return inValidRow != IN_VALID_ROW_EDEFAULT;
+            case IndicatorsPackage.INDICATOR__STORE_DATA:
+                return storeData != STORE_DATA_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -1001,6 +1053,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         result.append(validRow);
         result.append(", inValidRow: ");
         result.append(inValidRow);
+        result.append(", storeData: ");
+        result.append(storeData);
         result.append(')');
         return result.toString();
     }

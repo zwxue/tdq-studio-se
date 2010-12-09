@@ -794,6 +794,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getIndicator_StoreData() {
+        return (EAttribute)indicatorEClass.getEStructuralFeatures().get(12);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1958,6 +1967,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(indicatorEClass, INDICATOR__MAX_NUMBER_ROWS);
         createEAttribute(indicatorEClass, INDICATOR__VALID_ROW);
         createEAttribute(indicatorEClass, INDICATOR__IN_VALID_ROW);
+        createEAttribute(indicatorEClass, INDICATOR__STORE_DATA);
 
         rowCountIndicatorEClass = createEClass(ROW_COUNT_INDICATOR);
 
@@ -2273,6 +2283,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getIndicator_MaxNumberRows(), ecorePackage.getEInt(), "maxNumberRows", null, 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getIndicator_ValidRow(), ecorePackage.getEBoolean(), "validRow", "false", 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getIndicator_InValidRow(), ecorePackage.getEBoolean(), "inValidRow", "false", 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getIndicator_StoreData(), ecorePackage.getEBoolean(), "storeData", "false", 0, 1, Indicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(indicatorEClass, ecorePackage.getEBoolean(), "handle", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, ecorePackage.getEJavaObject(), "data", 0, 1, IS_UNIQUE, IS_ORDERED);

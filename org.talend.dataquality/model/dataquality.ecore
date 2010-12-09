@@ -332,6 +332,8 @@
           <details key="documentation" value="True if the previously handled data is not match with the pattern.False if the indicator not need the parameter."/>
         </eAnnotations>
       </eStructuralFeatures>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="storeData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+          defaultValueLiteral="false"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="RowCountIndicator" eSuperTypes="#//indicators/Indicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="MeanIndicator" eSuperTypes="#//indicators/SumIndicator">
