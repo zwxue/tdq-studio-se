@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -41,6 +42,21 @@ public class XMLDataProviderHandle extends RepositoryViewObjectHandle {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
+     */
+    public IFile duplicate(String newLabel) {
+        Property property = getProperty();
+        if (property != null) {
+            IFile copyFile = new EMFResourceHandle(property).duplicate(newLabel);
+
+            return copyFile;
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
      */
     public boolean delete() throws Exception {
@@ -58,7 +74,7 @@ public class XMLDataProviderHandle extends RepositoryViewObjectHandle {
                     if (tdXmlDocument != null) {
                         // MOD xqliu 2010-08-09 bug 14469
                         IFolder mdmFolder = ResourceManager.getMDMConnectionFolder();
-                        IFolder folder=(IFolder)mdmFolder.getFile(tdXmlDocument.getXsdFilePath()).getParent();
+                        IFolder folder = (IFolder) mdmFolder.getFile(tdXmlDocument.getXsdFilePath()).getParent();
                         folder.delete(true, null);
                         IFolder xsdFolder = mdmFolder.getFolder(".xsd");
                         if (xsdFolder.members().length == 0) {

@@ -41,14 +41,16 @@ public final class EMFSharedResources {
 
     private EMFUtil emfUtil;
 
-    private final XmiResourceManager resourceManager = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
-            .getResourceManager();
+    private XmiResourceManager resourceManager;
 
-    private final ResourceSet resourceSet = resourceManager.resourceSet;
+    private ResourceSet resourceSet;
 
     private Resource softwareDeploymentResource = null;
 
     private EMFSharedResources() {
+        resourceManager = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager();
+        resourceSet = resourceManager.resourceSet;
+
         emfUtil = new EMFUtil();
         emfUtil.setResourceSet(resourceSet);
     }

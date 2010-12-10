@@ -20,20 +20,25 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -61,11 +66,12 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.duplicate.IDuplicateHandle#duplicate()
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
-    public IFile duplicate() {
+    public IFile duplicate(String newLabel) {
         if (modelElement != null) {
             ModelElement newObject = (ModelElement) EMFSharedResources.getInstance().copyEObject(modelElement);
+            newObject.setName(newLabel);
 
             IFolder folder = extractFolder(modelElement);
 
@@ -75,10 +81,24 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
                 AElementPersistance elementWriter = ElementWriterFactory.getInstance().create(modelElement);
 
                 if (elementWriter != null) {
-                    TypedReturnCode<Object> trc = elementWriter.create(newObject, folder);
-                    if (trc.getObject() instanceof IFile) {
-                        return (IFile) trc.getObject();
+                    elementWriter.create(newObject, folder);
+
+                    for (Dependency dependency : modelElement.getClientDependency()) {
+                        for (ModelElement supplyier : dependency.getSupplier()) {
+                            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setUsageDependencyOn(newObject,
+                                    supplyier);
+                            EMFSharedResources.getInstance().saveResource(rc.getObject().eResource());
+                        }
                     }
+
+                    URI uri;
+                    if (newObject.eIsProxy()) {
+                        uri = ((InternalEObject) newObject).eProxyURI();
+                    } else {
+                        uri = newObject.eResource().getURI();
+                    }
+
+                    return ResourceManager.getRoot().getFile(new Path(uri.toPlatformString(false)));
                 }
             }
         }
@@ -134,14 +154,12 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
      * @return
      */
     protected ModelElement update(ModelElement oldObject, ModelElement newObject) {
-        newObject.setName("copy of " + newObject.getName()); //$NON-NLS-1$
-
         String author = ReponsitoryContextBridge.getAuthor();
         if (!StringUtils.isEmpty(author)) {
             MetadataHelper.setAuthor(newObject, author);
         }
 
-        newObject.getClientDependency().addAll(oldObject.getClientDependency());
+        // newObject.getClientDependency().addAll(oldObject.getClientDependency());
 
         return newObject;
     }
@@ -171,5 +189,21 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
      */
     public ReturnCode validDuplicated() {
         return new ReturnCode(true);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
+     */
+    public boolean isExistedLabel(String label) {
+        List<ModelElement> allElement = ResourceFileMap.getAll();
+        for (ModelElement element : allElement) {
+            if (StringUtils.equals(label, element.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

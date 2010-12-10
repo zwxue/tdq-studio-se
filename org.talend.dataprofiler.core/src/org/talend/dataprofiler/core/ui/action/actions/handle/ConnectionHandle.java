@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -28,8 +27,6 @@ import org.talend.dq.helper.PropertyHelper;
  */
 public class ConnectionHandle extends RepositoryViewObjectHandle {
 
-    private static Logger log = Logger.getLogger(ConnectionHandle.class);
-
     /**
      * DOC bZhou ConnectionHandle constructor comment.
      * 
@@ -42,23 +39,20 @@ public class ConnectionHandle extends RepositoryViewObjectHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
-    public IFile duplicate() {
-        IFile dulicatedFile = super.duplicate();
-
-        if (dulicatedFile != null) {
-            Property duplicatedProperty = PropertyHelper.getProperty(dulicatedFile);
-            if (duplicatedProperty != null) {
-                Item item = duplicatedProperty.getItem();
-                if (item instanceof ConnectionItem) {
-                    Connection connection = ((ConnectionItem) item).getConnection();
-                    CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connection);
-                }
+    public IFile duplicate(String newLabel) {
+        Property property = getProperty();
+        if (property != null) {
+            IFile copyFile = new EMFResourceHandle(property).duplicate(newLabel);
+            Item item = PropertyHelper.getProperty(copyFile).getItem();
+            if (item instanceof ConnectionItem) {
+                Connection connection = ((ConnectionItem) item).getConnection();
+                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connection);
             }
+            return copyFile;
         }
-
-        return dulicatedFile;
+        return null;
     }
 
     /*

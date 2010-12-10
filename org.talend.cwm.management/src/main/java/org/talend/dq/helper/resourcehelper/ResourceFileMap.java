@@ -13,6 +13,7 @@
 package org.talend.dq.helper.resourcehelper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,19 @@ public abstract class ResourceFileMap {
 
     public void clear() {
         registedResourceMap.clear();
+    }
+
+    public static List<ModelElement> getAll() {
+        List<ModelElement> all = new ArrayList<ModelElement>();
+
+        all.addAll(AnaResourceFileHelper.getInstance().getAllAnalysis());
+        all.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules());
+        all.addAll(IndicatorResourceFileHelper.getInstance().getAllUDIs());
+        all.addAll(PatternResourceFileHelper.getInstance().getAllPatternes());
+        all.addAll(PrvResourceFileHelper.getInstance().getAllDataProviders());
+        all.addAll(RepResourceFileHelper.getInstance().getAllReports());
+
+        return all;
     }
 
     /**

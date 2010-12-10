@@ -13,9 +13,12 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -62,19 +65,36 @@ public class DuplicateAction extends Action {
      */
     @Override
     public void run() {
-        // MOD klliu bug 15530 if you dupcliate the file,then the focus will enter the file
+
         Object duplicateObject = null;
         for (Property property : propertyArray) {
             if (property != null) {
-                IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(property);
+
+                final IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(property);
 
                 if (handle != null) {
+                    String initLabel = generateInitialLabel(handle);
+                    InputDialog dialog = new InputDialog(null, DefaultMessagesImpl.getString("DuplicateAction.InputDialog"), DefaultMessagesImpl.getString("DuplicateAction.InpurtDesc"), initLabel, //$NON-NLS-1$ //$NON-NLS-2$
+                            new IInputValidator() {
 
-                    ReturnCode rc = handle.validDuplicated();
-                    if (rc.isOk()) {
-                        duplicateObject = handle.duplicate();
-                    } else {
-                        MessageDialog.openError(null, "Invalid", rc.getMessage());
+                                public String isValid(String newText) {
+                                    if (handle.isExistedLabel(newText)) {
+                                        return DefaultMessagesImpl.getString("DuplicateAction.LabelExists"); //$NON-NLS-1$
+                                    }
+
+                                    return null;
+                                }
+                            });
+
+                    if (dialog.open() == Window.OK) {
+                        String newLabel = dialog.getValue();
+
+                        ReturnCode rc = handle.validDuplicated();
+                        if (rc.isOk()) {
+                            duplicateObject = handle.duplicate(newLabel);
+                        } else {
+                            MessageDialog.openError(null, DefaultMessagesImpl.getString("DuplicateAction.InvalidDialog"), rc.getMessage()); //$NON-NLS-1$
+                        }
                     }
                 }
             }
@@ -85,6 +105,30 @@ public class DuplicateAction extends Action {
         }
         CorePlugin.getDefault().refreshWorkSpace();
         CorePlugin.getDefault().refreshDQView();
+    }
+
+    /**
+     * DOC bZhou Comment method "generateInitialLabel".
+     * 
+     * @param handle
+     * @return
+     */
+    private String generateInitialLabel(IDuplicateHandle handle) {
+        String initNameValue = "Copy_of_" + handle.getProperty().getLabel(); //$NON-NLS-1$
+
+        if (!handle.isExistedLabel(initNameValue)) {
+            return initNameValue;
+        } else {
+            char j = 'a';
+            String temp = initNameValue;
+            while (handle.isExistedLabel(temp)) {
+                if (j <= 'z') {
+                    temp = initNameValue + "_" + (j++) + ""; //$NON-NLS-1$ //$NON-NLS-2$
+                }
+
+            }
+            return temp;
+        }
     }
 
     /**

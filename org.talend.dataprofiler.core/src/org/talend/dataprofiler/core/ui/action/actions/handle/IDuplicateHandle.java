@@ -21,13 +21,23 @@ import org.talend.utils.sugars.ReturnCode;
 public interface IDuplicateHandle extends IActionHandle {
 
     /**
+     * DOC bZhou Comment method "isExistedLabel".
+     * 
+     * @param label
+     * @return
+     */
+    public boolean isExistedLabel(String label);
+
+    /**
      * DOC bZhou Comment method "duplicate".
      * 
      * This function is to duplicate an item in tdq reponsitory.
      * 
+     * @param newLabel
+     * 
      * @return
      */
-    public IFile duplicate();
+    public IFile duplicate(String newLabel);
 
     /**
      * DOC bZhou Comment method "validDuplicated".

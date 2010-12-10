@@ -43,6 +43,9 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
             for (Object obj : objs) {
                 if (obj instanceof IFile) {
                     Property property = PropertyHelper.getProperty((IFile) obj);
+                    if (property == null) {
+                        return;
+                    }
                     propertyList.add(property);
                 } else if (obj instanceof IRepositoryViewObject) {
                     propertyList.add(((IRepositoryViewObject) obj).getProperty());

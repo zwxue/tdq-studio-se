@@ -17,7 +17,7 @@ import java.util.List;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
-import org.eclipse.core.resources.IFile;
+import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -45,7 +45,7 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      * @param property
      */
     RepositoryViewObjectHandle(Property property) {
-        if(property.eIsProxy()){
+        if (property.eIsProxy()) {
             property = (Property) EObjectHelper.resolveObject(property);
         }
         this.property = property;
@@ -103,19 +103,6 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
-     */
-    public IFile duplicate() {
-        if (property != null) {
-            IFile copyFile = new EMFResourceHandle(property).duplicate();
-
-            return copyFile;
-        }
-        return null;
-    }
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#getDependencies()
      */
     public List<ModelElement> getDependencies() {
@@ -139,5 +126,21 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      */
     public ReturnCode validDuplicated() {
         return new ReturnCode(true);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
+     */
+    public boolean isExistedLabel(String label) {
+        List<Connection> allMetadataConnections = ProxyRepositoryViewObject.getAllMetadataConnections();
+        for (Connection connection : allMetadataConnections) {
+            if (StringUtils.equals(label, connection.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

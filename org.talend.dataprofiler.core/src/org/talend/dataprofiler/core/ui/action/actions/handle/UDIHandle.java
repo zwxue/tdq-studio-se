@@ -53,11 +53,11 @@ public class UDIHandle extends EMFResourceHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.EMFResourceHandle#duplicate()
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.EMFResourceHandle#duplicate(java.lang.String)
      */
     @Override
-    public IFile duplicate() {
-        IFile duplicatedFile = super.duplicate();
+    public IFile duplicate(String newLabel) {
+        IFile duplicatedFile = super.duplicate(newLabel);
         IndicatorDefinition definition = (IndicatorDefinition) ModelElementFileFactory.getModelElement(duplicatedFile);
         // MOD klliu 2010-09-25 bug 15530 when duplicate the system indicator ,the definition must be reset the category
         // and the label

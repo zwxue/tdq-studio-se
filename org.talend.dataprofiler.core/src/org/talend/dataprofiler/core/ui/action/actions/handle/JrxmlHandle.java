@@ -73,10 +73,12 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate()
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
-    public IFile duplicate() {
-        IFile newFile = SimpleHandle.getNewFile(file);
+    public IFile duplicate(String newLabel) {
+        IPath newFileNamePath = new Path(newLabel).addFileExtension(file.getFileExtension());
+        IFile newFile = file.getParent().getFile(newFileNamePath);
+
         try {
             file.copy(newFile.getFullPath(), true, null);
 
@@ -145,32 +147,32 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
         URI propertiesURI = uri.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
         Resource propertyResource = EMFSharedResources.getInstance().createResource(propertiesURI);
 
-        Property prop = PropertiesFactory.eINSTANCE.createProperty();
-        prop.setId(EcoreUtil.generateUUID());
-        prop.setLabel(StringUtilities.tokenize(targetFile.getName(), ".").get(0));
-        prop.setCreationDate(new Date());
-        prop.setVersion("0.1");
+        Property property = PropertiesFactory.eINSTANCE.createProperty();
+        property.setId(EcoreUtil.generateUUID());
+        property.setLabel(StringUtilities.tokenize(targetFile.getName(), ".").get(0));
+        property.setCreationDate(new Date());
+        property.setVersion("0.1");
 
         TDQJrxmlItem item = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
         item.setFilename(targetFile.getName());
 
-        item.setProperty(prop);
-        prop.setItem(item);
+        item.setProperty(property);
+        property.setItem(item);
 
         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
 
         // set the state path when first create it.
         IPath propPath = new Path(targetFile.getAbsolutePath()).removeLastSegments(1);
-        IPath typedPath = ResourceManager.getRootProject().getFolder(PropertyHelper.getItemTypedPath(prop)).getLocation();
+        IPath typedPath = ResourceManager.getRootProject().getFolder(PropertyHelper.getItemTypedPath(property)).getLocation();
         IPath itemPath = propPath.makeRelativeTo(typedPath);
         itemState.setPath(itemPath.toString());
 
         item.setState(itemState);
 
-        propertyResource.getContents().add(prop);
-        propertyResource.getContents().add(prop.getItem());
-        propertyResource.getContents().add(prop.getItem().getState());
+        propertyResource.getContents().add(property);
+        propertyResource.getContents().add(property.getItem());
+        propertyResource.getContents().add(property.getItem().getState());
 
         EMFSharedResources.getInstance().saveResource(propertyResource);
     }
@@ -200,5 +202,17 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
      */
     public ReturnCode validDuplicated() {
         return new ReturnCode(true);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
+     */
+    public boolean isExistedLabel(String label) {
+        IPath path = file.getLocation();
+        String fileExtension = path.getFileExtension();
+        IPath newPath = path.removeLastSegments(1).append(label).addFileExtension(fileExtension);
+        return newPath.toFile().exists();
     }
 }

@@ -91,9 +91,7 @@ public abstract class AElementPersistance {
                 // trc.setReturnCode("Can't create resource file, file is existed.", false);
             } else {
                 ReturnCode rc = create(element, file);
-                IFile trueFile = ResourceManager.getRoot()
-                        .getFile(new Path(element.eResource().getURI().toPlatformString(false)));
-                trc.setReturnCode(rc.getMessage(), rc.isOk(), trueFile);
+                trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
             }
         }
 
