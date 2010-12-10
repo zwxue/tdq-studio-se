@@ -165,6 +165,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             columnSetMultiIndicator = (ColumnSetMultiValueIndicator) correlationAnalysisHandler.getIndicator();
         }
         initializeIndicator(columnSetMultiIndicator);
+        columnSetMultiIndicator.setStoreData(true);
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             if (tdColumn == null) {
