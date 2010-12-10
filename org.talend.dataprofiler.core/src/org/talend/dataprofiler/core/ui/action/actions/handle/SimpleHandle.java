@@ -15,8 +15,8 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
@@ -55,10 +55,12 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.duplicate.IDuplicateHandle#duplicate()
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
-    public IFile duplicate() {
-        IFile newFile = getNewFile(file);
+    public IFile duplicate(String newLabel) {
+        IPath newFileNamePath = new Path(newLabel).addFileExtension(file.getFileExtension());
+        IFile newFile = file.getParent().getFile(newFileNamePath);
+
         try {
             file.copy(newFile.getFullPath(), true, null);
 
@@ -76,31 +78,11 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
      */
     public boolean delete() throws Exception {
-        if (file.exists() && isPhysicalDelete() && !file.isReadOnly()) {
+        if (file.exists() && isPhysicalDelete()) {
             file.delete(true, null);
         }
 
         return true;
-    }
-
-    /**
-     * DOC bZhou Comment method "getNewFile".
-     * 
-     * @param file
-     * @return
-     */
-    public static IFile getNewFile(IFile file) {
-        IFile newFile = null;
-        int idx = 1;
-        while (true) {
-            final String newFilename = "copy" + idx + "_" + file.getName(); //$NON-NLS-1$
-            newFile = ((IFolder) file.getParent()).getFile(newFilename);
-            if (!newFile.exists()) {
-                break;
-            }
-            idx++;
-        }
-        return newFile;
     }
 
     /*
@@ -138,5 +120,17 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
     public ReturnCode validDuplicated() {
         return new ReturnCode(true);
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
+     */
+    public boolean isExistedLabel(String label) {
+        IPath path = file.getLocation();
+        String fileExtension = path.getFileExtension();
+        IPath newPath = path.removeLastSegments(1).append(label).addFileExtension(fileExtension);
+        return newPath.toFile().exists();
     }
 }
