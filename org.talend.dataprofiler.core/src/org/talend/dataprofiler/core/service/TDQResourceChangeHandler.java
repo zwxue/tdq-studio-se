@@ -21,15 +21,15 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.utils.AbstractResourceChangesService;
+import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
-import org.talend.repository.model.ProxyRepositoryFactory;
-import org.talend.repository.utils.AbstractResourceChangesService;
-import org.talend.repository.utils.XmiResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

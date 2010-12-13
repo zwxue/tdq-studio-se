@@ -20,6 +20,7 @@ import org.eclipse.jface.action.Action;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -27,7 +28,6 @@ import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**

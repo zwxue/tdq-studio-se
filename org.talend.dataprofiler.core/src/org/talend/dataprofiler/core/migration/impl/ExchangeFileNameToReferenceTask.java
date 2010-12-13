@@ -36,11 +36,11 @@ import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.resource.ResourceManager;
 
 /**

@@ -23,11 +23,11 @@ import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.repository.model.ProxyRepositoryFactory;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 

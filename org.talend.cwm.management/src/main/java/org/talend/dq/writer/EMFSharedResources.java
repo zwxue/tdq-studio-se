@@ -26,10 +26,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.repository.model.ProxyRepositoryFactory;
-import org.talend.repository.utils.XmiResourceManager;
 import org.talend.resource.ResourceManager;
 
 /**

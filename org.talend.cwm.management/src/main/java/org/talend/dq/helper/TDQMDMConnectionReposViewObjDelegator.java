@@ -23,7 +23,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 
 /**
  * DOC zshen MDM connection repository view object delegator. use TDQRepositoryViewObjectProxy for high level API calls

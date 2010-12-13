@@ -22,11 +22,11 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
-import org.talend.repository.model.ProxyRepositoryFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
