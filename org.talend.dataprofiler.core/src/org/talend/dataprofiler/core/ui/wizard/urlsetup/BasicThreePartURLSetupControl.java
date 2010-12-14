@@ -528,17 +528,23 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                     connectionParam.setPort(port);
                 }
             });
+
+            // MOD yyi 2010-12-14 16293 Allow Ingres Database input letter as port
+            final boolean ingresdb = isIngres(dbLiteral);
             portText.addKeyListener(new KeyAdapter() {
 
                 public void keyReleased(KeyEvent e) {
-                    Long portValue = null;
-                    try {
-                        portValue = new Long(portText.getText());
-                    } catch (NumberFormatException e1) {
-                        // JUMP
-                    }
-                    if (portValue == null || portValue <= 0) {
-                        portText.setText(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+                    if (!ingresdb) {
+
+                        Long portValue = null;
+                        try {
+                            portValue = new Long(portText.getText());
+                        } catch (NumberFormatException e1) {
+                            // JUMP
+                        }
+                        if (portValue == null || portValue <= 0) {
+                            portText.setText(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+                        }
                     }
                 }
             });
@@ -579,5 +585,15 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
         if (urlText != null) {
             this.urlText.setText(connectionURL);
         }
+    }
+
+    /**
+     * ADD yyi 2010-12-14 check is Ingres DB
+     * 
+     * @param dbName
+     * @return true if the db name is 'Ingres'
+     */
+    private boolean isIngres(String dbName) {
+        return dbName.trim().equals(SupportDBUrlType.INGRESDEFAULTURL.getLanguage());
     }
 }
