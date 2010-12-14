@@ -1316,6 +1316,7 @@ public final class ConnectionUtils {
                                 log.error(e, e);
                             }
                         }
+                        ConnectionUtils.closeConnection(connection);
                     }
                     ProxyRepositoryViewObject.save(tempConnection);
                 }
