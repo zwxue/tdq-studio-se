@@ -54,6 +54,7 @@ import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataprofiler.core.ui.utils.UDIFactory;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -74,6 +75,7 @@ import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -161,7 +163,11 @@ public final class PatternUtilities {
         }
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
-        if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && dbmsLanguage.getRegexp(pattern) == null) {
+        boolean isJavaEngin = ExecutionLanguage.JAVA.equals(analysis.getParameters().getExecutionLanguage());
+        Expression returnExpression = dbmsLanguage.getRegexp(pattern);
+        if (ExpressionType.REGEXP.getLiteral().equals(expressionType)
+                && (returnExpression == null || DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.JAVA.getName(),
+                        returnExpression.getLanguage()) && !isJavaEngin)) {
             // this is when we must tell the user that no regular expression
             // exists for the selected database
             // MessageDialogWithToggle.openInformation(null,
@@ -192,7 +198,9 @@ public final class PatternUtilities {
             }
 
             // MOD xqliu 2010-08-12 bug 14601
-            if (!(isSQLPattern || DefinitionHandler.getInstance().canRunRegularExpressionMatchingIndicator(dbmsLanguage))) {
+            if (!(isSQLPattern
+                    || DefinitionHandler.getInstance().canRunRegularExpressionMatchingIndicator(dbmsLanguage, isJavaEngin,
+ pattern))) {
                 // MessageDialogWithToggle.openInformation(null,
                 //                        DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
                 //                                .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$

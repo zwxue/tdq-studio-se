@@ -532,7 +532,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
         EList<Pattern> patterns = dataValidDomain.getPatterns();
         for (Pattern pattern : patterns) {
-            String regexp = this.dbms().getRegexp(pattern);
+            Expression expression = this.dbms().getRegexp(pattern);
+            String regexp = expression == null ? null : expression.getBody();
             if (regexp != null) {
                 patternStrings.add(regexp);
             }

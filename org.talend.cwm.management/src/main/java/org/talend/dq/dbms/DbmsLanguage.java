@@ -720,7 +720,7 @@ public class DbmsLanguage {
         }
         EList<Pattern> patterns = dataValidDomain.getPatterns();
         for (Pattern pattern : patterns) {
-            return this.getRegexp(pattern);
+            return this.getRegexp(pattern) == null ? null : this.getRegexp(pattern).getBody();
         }
         return null;
     }
@@ -786,17 +786,19 @@ public class DbmsLanguage {
      * @param pattern a pattern
      * @return the body of the regular expression applicable to this dbms or null
      */
-    public String getRegexp(Pattern pattern) {
+    public Expression getRegexp(Pattern pattern) {
+        // MOD by zhsne for bug 17172 2010.12.10
+        Expression expression = null;
         EList<PatternComponent> components = pattern.getComponents();
         for (PatternComponent patternComponent : components) {
             if (patternComponent != null) {
-                Expression expression = this.getExpression(patternComponent);
+                expression = this.getExpression(patternComponent);
                 if (expression != null) {
-                    return expression.getBody();
+                    break;
                 }
             }
         }
-        return null;
+        return expression;
     }
 
     public String getBackSlashForRegex() {

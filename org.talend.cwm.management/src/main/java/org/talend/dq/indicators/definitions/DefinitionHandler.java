@@ -32,6 +32,10 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -484,13 +488,22 @@ public final class DefinitionHandler {
      * @param dbmsLanguage
      * @return
      */
-    public boolean canRunRegularExpressionMatchingIndicator(DbmsLanguage dbmsLanguage) {
-        IndicatorDefinition def = getDefinitionById(REGULAR_EXPRESSION_MATCHING_DEFINITION);
-        EList<TdExpression> sqlGenericExpression = def.getSqlGenericExpression();
-        for (TdExpression exp : sqlGenericExpression) {
-            if (DbmsLanguageFactory.isAllDatabaseType(exp.getLanguage())
-                    || DbmsLanguageFactory.compareDbmsLanguage(dbmsLanguage.getDbmsName(), exp.getLanguage())) {
-                return true;
+    public boolean canRunRegularExpressionMatchingIndicator(DbmsLanguage dbmsLanguage, boolean isJavaEngin, Pattern pattern) {
+
+        EList<PatternComponent> sqlGenericExpression = pattern.getComponents();
+        for (PatternComponent exp : sqlGenericExpression) {
+            String compareLanguage = null;
+            if (!isJavaEngin) {
+                compareLanguage = dbmsLanguage.getDbmsName();
+            } else {
+                compareLanguage = ExecutionLanguage.JAVA.getName();
+            }
+            if (exp instanceof RegularExpression) {
+                String expressionLanguage = ((RegularExpression) exp).getExpression().getLanguage();
+                if (DbmsLanguageFactory.isAllDatabaseType(expressionLanguage)
+                        || DbmsLanguageFactory.compareDbmsLanguage(compareLanguage, expressionLanguage)) {
+                    return true;
+                }
             }
         }
         return false;

@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -53,6 +52,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalInt
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -267,6 +267,8 @@ public class ColumnViewerDND {
                         TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
                         if (trc.isOk()) {
                             ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, trc.getObject());
+                        } else {
+                            MessageUI.openError(trc.getMessage());
                         }
                     } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
                         analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis();
