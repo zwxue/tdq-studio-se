@@ -104,7 +104,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // int totalResultNum = resultSet.getRow();
         // resultSet.beforeFirst();
         // --- for each row
-        int rowNum = 0;
         label: while (resultSet.next()) {
             // --- for each column
             // feature 0010630 zshen: dislodge the Qualifiers from name of the column
@@ -184,7 +183,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     }
                 }
             }
-            rowNum++;
         }
         // --- release resultset
         resultSet.close();
