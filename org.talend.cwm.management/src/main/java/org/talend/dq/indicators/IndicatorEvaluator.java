@@ -76,7 +76,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // create query statement
         // feature 0010630 zshen: Tables are not found when using Excel with ODBC connection
         Statement statement = null;
-        statement = connection.createStatement();
+        statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         // ~10630
         statement.setFetchSize(fetchSize);
         // MOD xqliu 2009-02-09 bug 6237
@@ -104,6 +104,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // int totalResultNum = resultSet.getRow();
         // resultSet.beforeFirst();
         // --- for each row
+        int rowNum = 0;
         label: while (resultSet.next()) {
             // --- for each column
             // feature 0010630 zshen: dislodge the Qualifiers from name of the column
@@ -183,7 +184,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     }
                 }
             }
-
+            rowNum++;
         }
         // --- release resultset
         resultSet.close();

@@ -233,9 +233,6 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
 
     @Override
     public Expression getInstantiatedExpressions(String language) {
-        if ("EXCEL".equals(language)) {
-            language = "Access";
-        }
         return super.getInstantiatedExpressions(language);
     }
 
