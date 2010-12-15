@@ -22,7 +22,7 @@ public class ProxyRepositoryManager {
     }
 
     public void save() {
-        save(Boolean.FALSE);
+        save(Boolean.TRUE);
     }
 
     public void save(boolean avoidUnload) {
