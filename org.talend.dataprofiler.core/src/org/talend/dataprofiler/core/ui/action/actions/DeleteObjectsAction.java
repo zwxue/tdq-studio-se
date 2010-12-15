@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.SelectedResources;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
@@ -89,9 +90,6 @@ public class DeleteObjectsAction extends Action {
                 }
             }
 
-            if (!showConfirmDialog()) {
-                return;
-            }
 
             for (IDeletionHandle handle : handleList) {
 
@@ -101,6 +99,13 @@ public class DeleteObjectsAction extends Action {
                     property = ((RepositoryViewObjectHandle) handle).getRepositoryObject().getProperty();
                 }
                 CorePlugin.getDefault().closeEditorIfOpened(property);
+
+                // MOD qiongli 2010-12-9.only show the dialog only for physical deleting.
+                if (handle.isPhysicalDelete()) {
+                    if (!showConfirmDialog(property.getLabel())) {
+                        continue;
+                    }
+                }
 
                 runStatus = handle.delete();
             }
@@ -164,9 +169,9 @@ public class DeleteObjectsAction extends Action {
      * 
      * @return
      */
-    private boolean showConfirmDialog() {
-        return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForeverTitle"),
-                DefaultMessagesImpl.getString("DeleteObjectsAction.areYouDeleteForever"));
+    private boolean showConfirmDialog(String name) {
+        return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DeleteObjectsAction.deleteForeverTitle"), name
+                + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("DeleteObjectsAction.areYouDeleteForever"));
     }
 
     /**
