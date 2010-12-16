@@ -33,11 +33,8 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -201,11 +198,6 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     @SuppressWarnings("deprecation")
     protected void createCopyedProvider() {
-        if (oldDataProvider.eIsProxy()) {
-            ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
-                    .getResourceManager().resourceSet;
-            oldDataProvider = (Connection) EcoreUtil.resolve(oldDataProvider, resourceSet);
-        }
         IFile selectedFile = WorkspaceUtils.getModelElementResource(oldDataProvider);
         IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
@@ -288,11 +280,6 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
         MatchModel match = null;
         try {
-            if (oldDataProvider.eIsProxy()) {
-                ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
-                        .getResourceManager().resourceSet;
-                oldDataProvider = (Connection) EcoreUtil.resolve(oldDataProvider, resourceSet);
-            }
             match = MatchService.doMatch(oldDataProvider, getSavedReloadObject(), options);
         } catch (InterruptedException e) {
             log.error(e, e);
