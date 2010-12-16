@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChart
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.FrequencyLabelProvider;
 import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -144,8 +145,13 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
             AnalysisResult result = (AnalysisResult) eIndicator.eContainer();
             for (Indicator indi : result.getIndicators()) {
                 ModelElement analyzedElement = indi.getAnalyzedElement();
-                if (indi instanceof RowCountIndicator && analyzedElement == currentAnalyzedElement) {
-                    return true;
+                if (analyzedElement == currentAnalyzedElement) {
+                    if (indi instanceof RowCountIndicator) {
+                        return true;
+                    } else if (indi instanceof CountsIndicator) {
+                        CountsIndicator cindi = (CountsIndicator) indi;
+                        return cindi.getRowCountIndicator() != null;
+                    }
                 }
             }
         }
