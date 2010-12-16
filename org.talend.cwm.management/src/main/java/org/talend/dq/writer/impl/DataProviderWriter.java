@@ -31,7 +31,6 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -81,24 +80,6 @@ public class DataProviderWriter extends AElementPersistance {
             rc.setMessage(e.getMessage());
         }
 
-        return rc;
-    }
-
-    @Override
-    public ReturnCode save(ModelElement element, boolean... withProperty) {
-        // MOD Use super method to create model element without property.
-        if (withProperty != null && withProperty.length > 0 && !withProperty[0]) {
-            return super.save(element, withProperty);
-        }
-        ReturnCode rc = new ReturnCode();
-        Item item = PropertyHelper.getProperty(element).getItem();
-        try {
-            ProxyRepositoryFactory.getInstance().save(item);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
-        }
         return rc;
     }
 
@@ -201,6 +182,6 @@ public class DataProviderWriter extends AElementPersistance {
 
     @Override
     protected void notifyResourceChanges() {
-        ProxyRepositoryManager.getInstance().save(Boolean.FALSE);
+        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
     }
 }

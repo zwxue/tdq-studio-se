@@ -267,13 +267,25 @@ public abstract class AElementPersistance {
     /**
      * DOC bZhou Comment method "save".
      * 
+     * Save a model element and update the related property by default.
+     * 
+     * @param element
+     * @return
+     */
+    public ReturnCode save(ModelElement element) {
+        return save(element, true);
+    }
+
+    /**
+     * DOC bZhou Comment method "save".
+     * 
      * Save a model element and update the related property.
      * 
      * @param element
      * @param withProperty
      * @return
      */
-    public ReturnCode save(ModelElement element, boolean... withProperty) {
+    public ReturnCode save(ModelElement element, boolean withProperty) {
         ReturnCode rc = new ReturnCode();
 
         addDependencies(element);
@@ -282,7 +294,9 @@ public abstract class AElementPersistance {
 
         rc.setOk(util.saveResource(element.eResource()));
 
-        updateProperty(element);
+        if (withProperty) {
+            updateProperty(element);
+        }
 
         if (rc.isOk()) {
             rc.setMessage("save " + element.getName() + " is OK!");
