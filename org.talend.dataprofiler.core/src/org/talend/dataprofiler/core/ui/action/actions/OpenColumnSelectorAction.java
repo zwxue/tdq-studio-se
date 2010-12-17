@@ -108,7 +108,8 @@ public class OpenColumnSelectorAction extends Action implements ICheatSheetActio
                         }
                     }
                 }
-                page1.doSave(null);
+                // MOD qiongli 2010-12-17 bug 17677 .Don't save it in this case.
+                // page1.doSave(null);
                 break;
 
             case AnalysisType.COLUMN_CORRELATION_VALUE:
