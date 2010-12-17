@@ -32,7 +32,7 @@ import org.talend.resource.ResourceManager;
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class TestLogicalDeleteFileHandle {
+public class LogicalDeleteFileHandleTest {
 
 
     /**

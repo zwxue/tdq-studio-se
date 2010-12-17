@@ -35,7 +35,7 @@ import org.talend.dataquality.test.TDQSWTBotTest;
  * DOC qiongli class global comment. Detailled comment
  * 
  */
-public class TestSelectedResources extends TDQSWTBotTest {
+public class SelectedResourcesTest extends TDQSWTBotTest {
 
     private SWTBotTree tree = null;
 

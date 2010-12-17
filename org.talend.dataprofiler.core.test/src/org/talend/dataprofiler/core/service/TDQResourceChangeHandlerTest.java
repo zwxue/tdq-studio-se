@@ -29,7 +29,7 @@ import org.talend.dq.helper.ProxyRepositoryViewObject;
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class TestTDQResourceChangeHandler {
+public class TDQResourceChangeHandlerTest {
 
     private List<IRepositoryViewObject> repsList = null;
 
