@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cheatsheet
-      title="Create a new column comparision analysis">
+      title="Create a new column comparison analysis">
    <intro>
       <description>
           This type of analysis allows you to better examine the quality of data and the relationships between tables by comparing identical columns in different tables or comparing the tables themselves.
