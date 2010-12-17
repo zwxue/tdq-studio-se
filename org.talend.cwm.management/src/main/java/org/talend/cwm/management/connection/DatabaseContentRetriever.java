@@ -194,6 +194,7 @@ public final class DatabaseContentRetriever {
         boolean odbcMssqlFlag = ConnectionUtils.isOdbcMssql(connection);
         boolean postgresqlFlag = ConnectionUtils.isPostgresql(connection);
         boolean odbcProgressFlag = ConnectionUtils.isOdbcProgress(connection);
+        boolean odbcTeradataFlag = ConnectionUtils.isOdbcTeradata(connection);
 
         ResultSet schemas = null;
         try {
@@ -250,7 +251,8 @@ public final class DatabaseContentRetriever {
                         }
                     }
 
-                    if (odbcMssqlFlag || postgresqlFlag || odbcProgressFlag) { // add schema to all catalogs ???
+                    if (odbcMssqlFlag || postgresqlFlag || odbcProgressFlag || odbcTeradataFlag) { // add schema to all
+                                                                                                   // catalogs ???
                         try { // try to get first column
                             schemaName = schemas.getString(1);
                         } catch (Exception e) {
@@ -311,8 +313,8 @@ public final class DatabaseContentRetriever {
             // MOD xqliu 2010-01-18 bug 9840
             // MOD xqliu 2009-10-29 bug 9838
             ResultSet catalogSet = null;
-            if (!(ConnectionUtils.isOdbcOracle(connection) || ConnectionUtils.isOdbcIngres(connection) || ConnectionUtils
-                    .isOdbcProgress(connection))) {
+            if (!(ConnectionUtils.isOdbcOracle(connection) || ConnectionUtils.isOdbcIngres(connection)
+                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection))) {
                 catalogSet = getConnectionMetadata(connection).getCatalogs();
             }
             // ~

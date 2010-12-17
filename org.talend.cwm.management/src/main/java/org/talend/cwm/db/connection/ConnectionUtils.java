@@ -662,6 +662,25 @@ public final class ConnectionUtils {
     }
 
     /**
+     * 
+     * DOC qiongli Comment method "isOdbcOracle".
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isOdbcTeradata(java.sql.Connection connection) throws SQLException {
+        DatabaseMetaData connectionMetadata = getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
+                && connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(DatabaseConstant.ODBC_TERADATA_PRODUCT_NAME) > -1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * DOC xqliu Comment method "isOdbcIngres".
      * 
      * @param connection

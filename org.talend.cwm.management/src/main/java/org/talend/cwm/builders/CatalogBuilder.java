@@ -244,7 +244,7 @@ public class CatalogBuilder extends CwmBuilder {
             catalogsInitialized = true;
             return;
         }
-        if (ConnectionUtils.isOdbcProgress(connection)) {
+        if (ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection)) {
             catalogsInitialized = true;
             return;
         }
