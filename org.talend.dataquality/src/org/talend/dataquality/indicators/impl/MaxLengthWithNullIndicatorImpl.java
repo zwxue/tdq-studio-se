@@ -64,7 +64,8 @@ public class MaxLengthWithNullIndicatorImpl extends MaxLengthIndicatorImpl imple
     public boolean handle(Object data) {
         mustStoreRow = true;
         boolean ok = super.handle(data);
-        if (data == null) {
+        // set max length to 0 when it is not already set and data is null
+        if (length == LENGTH_EDEFAULT && data == null) {
             length = new Long(0);
         }
         return ok;

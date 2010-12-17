@@ -64,11 +64,9 @@ public class MaxLengthWithBlankIndicatorImpl extends MaxLengthIndicatorImpl impl
     public boolean handle(Object data) {
         mustStoreRow = true;
         boolean ok = super.handle(data);
-        if (data != null) {
-            String str = (String) data;
-            if (0 == str.length()) {
-                length = new Long(0);
-            }
+        // handle case when length is not set although data is not null (this means that data is blank)
+        if (length == LENGTH_EDEFAULT && data != null) {
+            length = 0L;
         }
         return ok;
     }

@@ -39,6 +39,20 @@ public class MinLengthWithBlankIndicatorImpl extends MinLengthIndicatorImpl impl
         return IndicatorsPackage.Literals.MIN_LENGTH_WITH_BLANK_INDICATOR;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.MinLengthIndicatorImpl#handle(java.lang.Object)
+     */
+    @Override
+    public boolean handle(Object data) {
+        boolean ok = super.handle(data);
+        if (data != null && ((String) data).trim().length() == 0) {
+            length = 0L;
+        }
+        return ok;
+    }
+
     @Override
     public IndicatorParameters getParameters() {
         parameters = super.getParameters();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="__vI_wJSOEd-TE5ti6XNR2Q" name="Average Length With Null" label="Average Length With Null">
-  <taggedValue xmi:id="__vI_wZSOEd-TE5ti6XNR2Q" tag="Description" value="computes the average length of the field. counting null data in the mean time."/>
+  <taggedValue xmi:id="__vI_wZSOEd-TE5ti6XNR2Q" tag="Description" value="computes the average length of the field, counting null data as zero length values."/>
   <taggedValue xmi:id="__vI_wpSOEd-TE5ti6XNR2Q" tag="Purpose" value="evaluates the average length of the textual record"/>
   <categories href="../../../.Talend.definition#_ccKHERF2Ed2PKb6nEJEvhw"/>
   <sqlGenericExpression xmi:id="__vI_xJSOEd-TE5ti6XNR2Q" body="SELECT SUM(CHAR_LENGTH(&lt;%=__COLUMN_NAMES__%>)), COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>

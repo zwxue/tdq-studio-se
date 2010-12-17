@@ -46,8 +46,8 @@ public interface Indicator extends ModelElement {
      * Returns the value of the '<em><b>Count</b></em>' attribute. The default value is <code>"0"</code>. <!--
      * begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Count</em>' attribute isn't clear, there really should be more of a description
-     * here...
+     * This value is in general the number of rows. But in some indicators (such as the average length indicators), it
+     * counts the number of non-null values.
      * </p>
      * <!-- end-user-doc -->
      * 

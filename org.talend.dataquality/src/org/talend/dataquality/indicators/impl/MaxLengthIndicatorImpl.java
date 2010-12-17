@@ -47,11 +47,10 @@ public class MaxLengthIndicatorImpl extends LengthIndicatorImpl implements MaxLe
         boolean ok = super.handle(data);
         if (data != null) {
             String str = (String) data;
-            if (str.length() > 0 && (length == LENGTH_EDEFAULT || length.intValue() < str.length())) {
+            if (str.length() > 0 && (length == null || length.intValue() < str.length())) {
                 length = Long.valueOf(str.length());
             }
         }
-        // TODO scorreia handle null data
         return ok;
     }
 } // MaxLengthIndicatorImpl

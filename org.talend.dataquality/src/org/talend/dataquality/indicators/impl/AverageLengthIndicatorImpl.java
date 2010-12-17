@@ -5,7 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -90,15 +89,12 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
      * @generated NOT
      */
     public double getAverageLength() {
-        if (getCount() == null) {
-            return 0.0;
-        }
-        if (BigInteger.ZERO.equals(getCount())) {
-            return 0.0;
+        if (getCount() == null || getCount() == 0L) {
+            return 0.0; // TODO should return N/A here
         }
         Double totalLength = getSumLength();
-        if (totalLength == null) {
-            return 0.0;
+        if (totalLength == null) { // should not happen...
+            return Double.NaN;
         }
         return totalLength.doubleValue() / getCount().doubleValue();
     }
@@ -174,28 +170,17 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
      */
     @Override
     public boolean handle(Object data) {
-        boolean ok = super.handle(data);
-        if (data != null) {
+        // override super.handle(data);
+
+        if (data == null) {
+            nullCount++;
+        } else {
+            count++; // count only the non null values
             String str = (String) data;
             sumLength += str.length();
         }
-        // TODO scorreia handle case when data is null and should be replaced by empty string
-        return ok;
+        return true;
     }
-
-    // /*
-    // * (non-Javadoc) ADDED scorreia 2008-04-08 get average length
-    // *
-    // * @see org.talend.dataquality.indicators.impl.LengthIndicatorImpl#getLength()
-    // */
-    // @Override
-    // public int getLength() {
-    // if (count == 0) {
-    // return 0;
-    // }
-    // // else
-    // return (int) (sumLength / count); // CAST in int
-    // }
 
     /*
      * (non-Javadoc)
@@ -214,7 +199,7 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
         // Oracle treats empty strings as null values
         Object lCount = objects.get(0)[1];
         if (lCount == null) {
-            this.setCount(null);
+            this.setCount(COUNT_EDEFAULT);
         } else {
             String c = String.valueOf(lCount);
             this.setCount(Long.valueOf(c));
@@ -222,7 +207,7 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
 
         Object lSum = objects.get(0)[0];
         if (lSum == null) {
-            this.setSumLength(null);
+            this.setSumLength(SUM_LENGTH_EDEFAULT);
         } else {
             String s = String.valueOf(lSum);
             this.setSumLength(Double.valueOf(s));

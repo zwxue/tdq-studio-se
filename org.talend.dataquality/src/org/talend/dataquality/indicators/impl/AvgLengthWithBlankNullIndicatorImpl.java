@@ -5,8 +5,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.List;
-
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -41,33 +39,6 @@ public class AvgLengthWithBlankNullIndicatorImpl extends AverageLengthIndicatorI
         return IndicatorsPackage.Literals.AVG_LENGTH_WITH_BLANK_NULL_INDICATOR;
     }
 
-    @Override
-    public boolean storeSqlResults(List<Object[]> objects) {
-
-        if (!checkResults(objects, 2)) {
-            return false;
-        }
-
-        // http://www.talendforge.org/bugs/view.php?id=4783
-        // Oracle treats empty strings as null values
-        Object lCount = objects.get(0)[1];
-        if (lCount == null) {
-            this.setCount(null);
-        } else {
-            String c = String.valueOf(lCount);
-            this.setCount(Long.valueOf(c));
-        }
-
-        Object lSum = objects.get(0)[0];
-        if (lSum == null) {
-            this.setSumLength(null);
-        } else {
-            String s = String.valueOf(lSum);
-            this.setSumLength(Double.valueOf(s));
-        }
-
-        return true;
-    }
 
     @Override
     public IndicatorParameters getParameters() {
@@ -85,15 +56,27 @@ public class AvgLengthWithBlankNullIndicatorImpl extends AverageLengthIndicatorI
         return parameters;
     }
 
-
-    /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+    /*
+     * (non-Javadoc)
      * 
-     * @generated NOT
+     * @see org.talend.dataquality.indicators.impl.AvgLengthWithBlankIndicatorImpl#handle(java.lang.Object)
      */
     @Override
-    public boolean reset() {
-        this.sumLength = SUM_LENGTH_EDEFAULT;
-        return super.reset();
+    public boolean handle(Object data) {
+        // override super.handle(data);
+
+        count++; // count all rows
+        if (data == null) {
+            nullCount++;
+        } else {
+            // blank strings count as zero length strings
+            if (((String) data).trim().length() > 0) {
+                String str = (String) data;
+                sumLength += str.length();
+            }
+        }
+        return true;
     }
+
+
 } // AvgLengthWithBlankNullIndicatorImpl

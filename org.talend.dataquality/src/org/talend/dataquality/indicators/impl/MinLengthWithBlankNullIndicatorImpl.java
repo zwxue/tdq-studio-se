@@ -66,7 +66,7 @@ public class MinLengthWithBlankNullIndicatorImpl extends MinLengthIndicatorImpl 
         boolean ok = super.handle(data);
         if (data != null) {
             String str = (String) data;
-            if (0 == str.length()) {
+            if (0 == str.trim().length()) {
                 length = new Long(0);
             }
         } else {

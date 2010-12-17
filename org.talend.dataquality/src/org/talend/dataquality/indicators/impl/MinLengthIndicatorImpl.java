@@ -47,11 +47,11 @@ public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLe
         boolean ok = super.handle(data);
         if (data != null) {
             String str = (String) data;
-            if (str.length() > 0 && (length == LENGTH_EDEFAULT || length.intValue() > str.length())) {
-                length = Long.valueOf(str.length());
+            final int strLength = str.length();
+            if (strLength > 0 && (length == LENGTH_EDEFAULT || length.intValue() > strLength)) {
+                length = Long.valueOf(strLength);
             }
         }
-        // TODO scorreia handle null data
         return ok;
     }
 
