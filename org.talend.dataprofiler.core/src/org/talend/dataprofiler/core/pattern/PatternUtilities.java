@@ -164,10 +164,8 @@ public final class PatternUtilities {
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
         boolean isJavaEngin = ExecutionLanguage.JAVA.equals(analysis.getParameters().getExecutionLanguage());
-        Expression returnExpression = dbmsLanguage.getRegexp(pattern);
-        if (ExpressionType.REGEXP.getLiteral().equals(expressionType)
-                && (returnExpression == null || DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.JAVA.getName(),
-                        returnExpression.getLanguage()) && !isJavaEngin)) {
+        Expression returnExpression = dbmsLanguage.getRegexp(pattern, isJavaEngin);
+        if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && returnExpression == null) {
             // this is when we must tell the user that no regular expression
             // exists for the selected database
             // MessageDialogWithToggle.openInformation(null,

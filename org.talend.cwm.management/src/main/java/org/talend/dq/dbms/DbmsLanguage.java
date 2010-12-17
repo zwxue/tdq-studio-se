@@ -28,6 +28,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -720,7 +721,8 @@ public class DbmsLanguage {
         }
         EList<Pattern> patterns = dataValidDomain.getPatterns();
         for (Pattern pattern : patterns) {
-            return this.getRegexp(pattern) == null ? null : this.getRegexp(pattern).getBody();
+            Expression expression = this.getRegexp(pattern, false);
+            return expression == null ? null : expression.getBody();
         }
         return null;
     }
@@ -786,19 +788,21 @@ public class DbmsLanguage {
      * @param pattern a pattern
      * @return the body of the regular expression applicable to this dbms or null
      */
-    public Expression getRegexp(Pattern pattern) {
+    public Expression getRegexp(Pattern pattern, boolean isJavaEngin) {
         // MOD by zhsne for bug 17172 2010.12.10
         Expression expression = null;
         EList<PatternComponent> components = pattern.getComponents();
         for (PatternComponent patternComponent : components) {
             if (patternComponent != null) {
                 expression = this.getExpression(patternComponent);
-                if (expression != null) {
-                    break;
+                if (expression != null
+                        && !(isJavaEngin ^ DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.JAVA.getName(),
+                                expression.getLanguage()))) {
+                    return expression;
                 }
             }
         }
-        return expression;
+        return null;
     }
 
     public String getBackSlashForRegex() {
