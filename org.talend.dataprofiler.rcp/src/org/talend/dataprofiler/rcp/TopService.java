@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.exception.BusinessException;
@@ -448,6 +449,16 @@ public class TopService implements ICoreService {
     public void synchronizeSapLib() {
         // TODO Auto-generated method stub
 
+    }
+
+    public IPreferenceStore getPreferenceStore() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public boolean isOpenedItemInEditor(IRepositoryViewObject object) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }
