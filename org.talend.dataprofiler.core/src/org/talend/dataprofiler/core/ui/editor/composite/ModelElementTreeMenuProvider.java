@@ -353,7 +353,8 @@ public abstract class ModelElementTreeMenuProvider {
                 return;
             }
 
-            CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(), me.getName());
+            // MOD qiongli 2010-12-21 bug 16658.not only openSqlEditor,but also run it.
+            CorePlugin.getDefault().runInDQViewer(dataprovider, expression.getBody(), me.getName());
         }
     }
 
