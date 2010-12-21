@@ -86,7 +86,7 @@ public final class SupportDBUrlStore {
         supportDBUrlMap.put(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey(), SupportDBUrlType.GENERICJDBCDEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.TERADATADEFAULTURL.getDBKey(), SupportDBUrlType.TERADATADEFAULTURL);
         supportDBUrlMap.put(SupportDBUrlType.AS400DEFAULTURL.getDBKey(), SupportDBUrlType.AS400DEFAULTURL);
-        supportDBUrlMap.put(SupportDBUrlType.XML_eXist.getDBKey(), SupportDBUrlType.XML_eXist);
+        // supportDBUrlMap.put(SupportDBUrlType.XML_eXist.getDBKey(), SupportDBUrlType.XML_eXist);
         supportDBUrlMap.put(SupportDBUrlType.MDM.getDBKey(), SupportDBUrlType.MDM);
         supportDBUrlMap.put(SupportDBUrlType.NETEZZADEFAULTURL.getDBKey(), SupportDBUrlType.NETEZZADEFAULTURL);
 
@@ -118,7 +118,7 @@ public final class SupportDBUrlStore {
                 .put(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDbDriver(), SupportDBUrlType.GENERICJDBCDEFAULTURL);
         supportDiverNameDBUrlMap.put(SupportDBUrlType.TERADATADEFAULTURL.getDbDriver(), SupportDBUrlType.TERADATADEFAULTURL);
         supportDiverNameDBUrlMap.put(SupportDBUrlType.AS400DEFAULTURL.getDbDriver(), SupportDBUrlType.AS400DEFAULTURL);
-        supportDiverNameDBUrlMap.put(SupportDBUrlType.XML_eXist.getDbDriver(), SupportDBUrlType.XML_eXist);
+        // supportDiverNameDBUrlMap.put(SupportDBUrlType.XML_eXist.getDbDriver(), SupportDBUrlType.XML_eXist);
         supportDiverNameDBUrlMap.put(SupportDBUrlType.MDM.getDbDriver(), SupportDBUrlType.MDM);
         supportDiverNameDBUrlMap.put(SupportDBUrlType.NETEZZADEFAULTURL.getDbDriver(), SupportDBUrlType.NETEZZADEFAULTURL);
         // ~12313
