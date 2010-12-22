@@ -22,6 +22,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -190,7 +191,11 @@ public final class XMLSchemaBuilder {
     }
 
     public List<TdXmlElementType> getChildren(TdXmlElementType parent) {
-        XSDElementDeclaration xsdElementDeclearation = (XSDElementDeclaration) parent.getXsdElementDeclaration();
+        EObject eObject = parent.getXsdElementDeclaration();
+        XSDElementDeclaration xsdElementDeclearation = null;
+        if (eObject instanceof XSDElementDeclaration) {
+            xsdElementDeclearation = (XSDElementDeclaration) eObject;
+        }
         TdXmlContent createTdXMLContent = XmlFactory.eINSTANCE.createTdXmlContent();
         if (xsdElementDeclearation != null) {
             XSDTypeDefinition xsdTypeDef = xsdElementDeclearation.getTypeDefinition();
@@ -218,7 +223,11 @@ public final class XMLSchemaBuilder {
 
     public ReturnCode isLeafNode(TdXmlElementType element) {
         ReturnCode code = new ReturnCode();
-        XSDElementDeclaration xsdElementDeclearation = (XSDElementDeclaration) element.getXsdElementDeclaration();
+        EObject eObject = element.getXsdElementDeclaration();
+        XSDElementDeclaration xsdElementDeclearation = null;
+        if (eObject instanceof XSDElementDeclaration) {
+            xsdElementDeclearation = (XSDElementDeclaration) eObject;
+        }
         if (xsdElementDeclearation != null) {
             XSDTypeDefinition xsdTypeDef = xsdElementDeclearation.getTypeDefinition();
             if (xsdTypeDef instanceof XSDSimpleTypeDefinition) {

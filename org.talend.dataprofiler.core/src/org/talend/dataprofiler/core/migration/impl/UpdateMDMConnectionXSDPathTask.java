@@ -33,11 +33,11 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
 
     private static Logger log = Logger.getLogger(UpdateMDMConnectionXSDPathTask.class);
 
-    private static final String MIGRATION_FILE_EXT = ".mig";
+    private static final String MIGRATION_FILE_EXT = ".mig";//$NON-NLS-1$ 
 
-    private static final String XED = "<xsdElementDeclaration href=\"";
+    private static final String XED = "<xsdElementDeclaration href=\"";//$NON-NLS-1$ 
 
-    private static final String XSD = ".xsd/";
+    private static final String XSD = ".xsd/";//$NON-NLS-1$ 
 
     /*
      * (non-Javadoc)
@@ -87,8 +87,12 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
         boolean rename = true;
 
         File rawFileMetadata = new File(ResourceManager.getMDMConnectionFolder().getRawLocationURI());
-        final String[] metadataFileExtentionNames = { ".prv" };
+        final String[] metadataFileExtentionNames = { ".prv" };//$NON-NLS-1$ 
 
+        return doUpdate(result, rename, rawFileMetadata, metadataFileExtentionNames);
+    }
+
+    public static boolean doUpdate(boolean result, boolean rename, File rawFileMetadata, final String[] metadataFileExtentionNames) {
         ArrayList<File> fileList = new ArrayList<File>();
         FilesUtils.getAllFilesFromFolder(rawFileMetadata, fileList, new FilenameFilter() {
 

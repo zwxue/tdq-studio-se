@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -45,10 +46,12 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
+import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * 
@@ -95,6 +98,38 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
             }
 
         }
+
+        // ADD xqliu 2010-12-21 bug 17704
+        // copy .xsd folder to new location
+        File srcMdmXsdFolder = getWorkspacePath().append(
+                ExchangeFileNameToReferenceTask.MDM_CONNECTION + IPath.SEPARATOR + ".xsd").toFile();//$NON-NLS-1$ 
+        File tarMdmXsdFolder = getWorkspacePath().append(
+                ERepositoryObjectType.getFolderName(ERepositoryObjectType.METADATA_MDMCONNECTION) + IPath.SEPARATOR + ".xsd")//$NON-NLS-1$ 
+                .toFile();
+        FilesUtils.copyFolder(srcMdmXsdFolder, tarMdmXsdFolder, true, null, null, true, null);
+        // update MDMConnection XSDPath
+        File mdmConnectionFolder = new File(ResourceManager.getMDMConnectionFolder().getRawLocationURI());
+        final String[] metadataFileExtentionNames = { ".item" };//$NON-NLS-1$ 
+        UpdateMDMConnectionXSDPathTask.doUpdate(true, true, mdmConnectionFolder, metadataFileExtentionNames);
+        // reload the mdm connection
+        ArrayList<File> fileList = new ArrayList<File>();
+        FilesUtils.getAllFilesFromFolder(mdmConnectionFolder, fileList, new FilenameFilter() {
+
+            public boolean accept(File dir, String name) {
+                if (name.endsWith("item")) {//$NON-NLS-1$ 
+                    return true;
+                }
+                return false;
+            }
+        });
+        for (File file : fileList) {
+            TypedReturnCode<Connection> findProvider = PrvResourceFileHelper.getInstance().findProvider(
+                    WorkspaceUtils.fileToIFile(file));
+            Connection connection = findProvider.getObject();
+            connection.eResource().unload();
+            EObjectHelper.resolveObject(connection);
+        }
+        // ~ 17704
 
         File tdqMetadataFile = getWorkspacePath().append(OLD_MEATADATA_FOLDER_NAME).toFile();
         if (tdqMetadataFile.exists()) {
