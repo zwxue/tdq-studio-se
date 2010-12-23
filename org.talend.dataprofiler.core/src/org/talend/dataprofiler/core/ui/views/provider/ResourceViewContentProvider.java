@@ -15,13 +15,11 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -59,6 +57,7 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -67,7 +66,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
 
-    private List<IContainer> needSortContainers;
 
     private boolean timeoutFlag = true;
 
@@ -76,11 +74,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      */
     public ResourceViewContentProvider() {
         super();
-        needSortContainers = new ArrayList<IContainer>();
-        needSortContainers.add(ResourceManager.getAnalysisFolder());
-        needSortContainers.add(ResourceManager.getReportsFolder());
-        needSortContainers.add(ResourceManager.getConnectionFolder());
-        needSortContainers.add(ResourceManager.getMDMConnectionFolder());
     }
 
     /*
@@ -177,7 +170,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
                         ERepositoryObjectType.METADATA_CONNECTIONS, path, true);
                 returnList.addAll(getConnectionChildren(conList));
-                for (Object folderResource : Arrays.asList(getChildrenExceptRecBin(folder))) {
+                for (Object folderResource : getChildrenExceptRecBin(folder)) {
                     if (folderResource instanceof IResource && ((IResource) folderResource).getType() == IResource.FOLDER) {
                         returnList.add(folderResource);
                     }
@@ -196,7 +189,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 // // TODO Auto-generated catch block
                 // e.printStackTrace();
                 // }
-                return returnList.toArray();
+                return sort(returnList.toArray());
 
                 // List<IRepositoryViewObject> conList =
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE);
@@ -216,12 +209,12 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
                         ERepositoryObjectType.METADATA_MDMCONNECTION, path, true);
                 returnList.addAll(getConnectionChildren(conList));
-                for (Object folderResource : Arrays.asList(getChildrenExceptRecBin(folder))) {
+                for (Object folderResource : getChildrenExceptRecBin(folder)) {
                     if (folderResource instanceof IResource && ((IResource) folderResource).getType() == IResource.FOLDER) {
                         returnList.add(folderResource);
                     }
                 }
-                return returnList.toArray();
+                return sort(returnList.toArray());
                 // List<IRepositoryViewObject> conList = DQMDMConnectionReposViewObjDelegator.getInstance()
                 // .fetchRepositoryViewObjects(Boolean.TRUE);
 
@@ -239,13 +232,10 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             return getIndicatorsChildren((IndicatorCategory) element);
         } else if (element instanceof RecycleBin) {// MOD qiongli feature 9486
             RecycleBin bin = (RecycleBin) element;
-            return bin.getChildren();
+            return sort(bin.getChildren());
         } else if (element instanceof DQRecycleBinNode) {
             DQRecycleBinNode rbn = (DQRecycleBinNode) element;
-            return getRecBinNodes(rbn).toArray();
-        }
-        if (needSortContainers.contains(element)) {
-            return getChildrenExceptRecBin(element);
+            return sort(getRecBinNodes(rbn).toArray());
         }
         // ~
         return super.getChildren(element);
@@ -288,15 +278,20 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      * @param elements
      * @return
      */
-    @SuppressWarnings("unchecked")
     protected Object[] sort(Object[] elements) {
-        if (elements == null) {
+        if (elements == null || elements.length == 0) {
             return elements;
         }
         // MOD qiongli 2010-12-1 bug 15700.sort all Object
-        List<Object> list = Arrays.asList(elements);
-        Collections.sort(list, ComparatorsFactory.buildComparator(ComparatorsFactory.FILEMODEL_COMPARATOR_ID));
-        return list.toArray();
+        // MOD qiongli 2010-12-21 bug 17738
+        if (elements[0] instanceof ModelElement) {
+            return ComparatorsFactory.sort(elements, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+        } else if (elements[0] instanceof IRepositoryViewObject) {
+            return ComparatorsFactory.sort(elements, ComparatorsFactory.IREPOSITORYVIEWOBJECT_COMPARATOR_ID);
+        } else if (elements[0] instanceof DQRecycleBinNode) {
+            return ComparatorsFactory.sort(elements, ComparatorsFactory.DQRECYCLYBIN_COMPARATOR_ID);
+        }
+        return ComparatorsFactory.sort(elements, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
     }
 
     @Override
