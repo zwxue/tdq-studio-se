@@ -42,17 +42,16 @@ public class AvgLengthWithBlankNullIndicatorImpl extends AverageLengthIndicatorI
 
     @Override
     public IndicatorParameters getParameters() {
-        parameters = super.getParameters();
-        if (parameters == null) {
-            parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        // MOD yyi 2010-12-23 17740:enable thresholds
+        if (parameters != null) {
+            TextParameters textParameters = parameters.getTextParameter();
+            if (textParameters == null) {
+                textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
+            }
+            textParameters.setUseNulls(true);
+            textParameters.setUseBlank(true);
+            parameters.setTextParameter(textParameters);
         }
-        TextParameters textParameters = parameters.getTextParameter();
-        if (textParameters == null) {
-            textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-        }
-        textParameters.setUseNulls(true);
-        textParameters.setUseBlank(true);
-        parameters.setTextParameter(textParameters);
         return parameters;
     }
 

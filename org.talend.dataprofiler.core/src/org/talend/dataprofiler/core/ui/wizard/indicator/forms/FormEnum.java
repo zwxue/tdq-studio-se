@@ -144,8 +144,8 @@ public enum FormEnum {
         case AverageLengthWithBlankIndicatorEnum:
         case AverageLengthWithNullBlankIndicatorEnum:
         case AverageLengthWithNullIndicatorEnum:
-
-            // forms = new FormEnum[] { TextLengthForm, IndicatorThresholdsForm };
+            // MOD yyi 2010-12-23 17740:enable thresholds
+            forms = new FormEnum[] { IndicatorThresholdsForm };
 
             break;
         case FrequencyIndicatorEnum:
