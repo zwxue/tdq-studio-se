@@ -414,14 +414,14 @@ public class CorePlugin extends AbstractUIPlugin {
         Project project = null;
         RepositoryContext repositoryContext = (RepositoryContext) org.talend.core.runtime.CoreRuntimePlugin.getInstance()
                 .getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
-        if (repositoryContext != null) { // 
+        if (repositoryContext != null) {
             project = repositoryContext.getProject();
             User user = repositoryContext.getUser();
 
             ReponsitoryContextBridge.initialized(project.getEmfProject(), user);
         } else { // else project is null, then we are in TOP only
             ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
-            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local");
+            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local");//$NON-NLS-1$
             if (repository == null) {
                 log.fatal("No local Repository found! Probably due to a missing plugin in the product.");
                 return false;
