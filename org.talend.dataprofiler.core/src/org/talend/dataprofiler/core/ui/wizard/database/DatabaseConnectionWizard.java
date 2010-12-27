@@ -25,8 +25,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -190,7 +190,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
                 Object sqlConnObject=((TypedReturnCode) rc).getObject();
                 if(sqlConnObject instanceof java.sql.Connection){
                     sqlConn = (java.sql.Connection) sqlConnObject;
-                        dbMetadata = ConnectionUtils.getConnectionMetadata(sqlConn);
+                        dbMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
                 }
             }
 

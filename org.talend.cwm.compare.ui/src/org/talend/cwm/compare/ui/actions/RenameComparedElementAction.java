@@ -53,12 +53,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.Messages;
-import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -282,7 +281,7 @@ public class RenameComparedElementAction extends Action {
         List<TdColumn> columns = null;
         try {
             columns = DqRepositoryViewService.getColumns(tempReloadProvider, findMatchedColumnSet, null, true);
-        } catch (TalendException e1) {
+        } catch (Exception e1) {
             throw new ReloadCompareException(e1);
         }
 

@@ -25,7 +25,8 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -91,15 +92,15 @@ public class CWMPlugin extends Plugin {
                     // MOD xqliu 2010-08-06 bug 14593
                     // String clearTextUser = ConnectionUtils.getUsername(connection);
                     // String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
-                    String user = ConnectionUtils.getUsernameDefault(connection);
-                    String password = ConnectionUtils.getPasswordDefault(connection);
+                    String user = JavaSqlFactory.getUsernameDefault(connection);
+                    String password = JavaSqlFactory.getPasswordDefault(connection);
                     // ~ 14593
 
                     // MOD scorreia 2010-07-24 set empty string instead of null password so that database xml file is
                     // serialized correctly.
                     assert password != null;
 
-                    String url = ConnectionUtils.getURL(connection);
+                    String url = JavaSqlFactory.getURL(connection);
 
                     User previousUser = new User(user, password);
                     alias.setDefaultUser(previousUser);
@@ -109,7 +110,7 @@ public class CWMPlugin extends Plugin {
                     alias.setUrl(url);
 
                     ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
-                            EDriverName.getId(ConnectionUtils.getDriverClass(connection)));
+                            EDriverName.getId(JavaSqlFactory.getDriverClass(connection)));
 
                     if (manDr != null) {
                         alias.setDriver(manDr);

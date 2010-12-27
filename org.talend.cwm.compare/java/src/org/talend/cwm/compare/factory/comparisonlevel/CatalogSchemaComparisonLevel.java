@@ -27,9 +27,9 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
-import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
@@ -37,7 +37,6 @@ import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.ViewHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
@@ -222,7 +221,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
                 columnSetList.addAll(views);
 
             }
-        } catch (TalendException e1) {
+        } catch (Exception e1) {
             throw new ReloadCompareException(e1);
         }
 

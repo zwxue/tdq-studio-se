@@ -24,6 +24,7 @@ import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -32,7 +33,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -111,10 +111,10 @@ public class DQRepositoryViewContentProvider extends AdapterFactoryContentProvid
 
             } else if (SwitchHelpers.XMLSCHEMA_SWITCH.doSwitch(eParent) != null) {
                 // MOD mzhao feature 10238 xml documents.
-                return DqRepositoryViewService.getXMLElements((TdXmlSchema) eParent).toArray();
+                return org.talend.cwm.db.connection.ConnectionUtils.getXMLElements((TdXmlSchema) eParent).toArray();
             } else if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eParent) != null) {
                 // MOD mzhao xml elements
-                return DqRepositoryViewService.getXMLElements((TdXmlElementType) eParent).toArray();
+                return org.talend.cwm.db.connection.ConnectionUtils.getXMLElements((TdXmlElementType) eParent).toArray();
 
             } else {
                 return FolderNodeHelper.getFolderNodes(eParent);

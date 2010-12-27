@@ -39,10 +39,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
@@ -452,7 +452,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         // MOD mzhao xmldb have no actual connection.
         // TODO Handle details view.
         if (dataProvider != null) {
-            String connectionString = ConnectionUtils.getURL(dataProvider);
+            String connectionString = JavaSqlFactory.getURL(dataProvider);
             newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
         }
         TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(dataProvider);

@@ -284,6 +284,9 @@ public final class PropertyHelper {
      * @return
      */
     public static IPath getItemStatePath(Property property) {
+        if (property.eIsProxy()) {
+            property = (Property) EObjectHelper.resolveObject(property);
+        }
         Item item = property.getItem();
         URI propURI;
         if (property.eIsProxy()) {

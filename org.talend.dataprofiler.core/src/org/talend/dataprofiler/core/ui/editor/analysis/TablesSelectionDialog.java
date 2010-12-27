@@ -45,13 +45,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.ImageLib;
@@ -562,7 +561,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                             tables = setList.toArray(new NamedColumnSet[setList.size()]);
                             // save the Table from db into EMF Object.
                             pckg.getOwnedElement().addAll(setList);
-                        } catch (TalendException e) {
+                        } catch (Exception e) {
                             MessageBoxExceptionHandler.process(e);
                         }
 

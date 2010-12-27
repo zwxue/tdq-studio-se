@@ -23,10 +23,9 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.exception.TalendException;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
@@ -102,7 +101,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                         // ColumnSetHelper.addColumns(columnSet, columns);
                         list.addAll(columns);
                         ProxyRepositoryViewObject.save(conn);
-                    } catch (TalendException e) {
+                    } catch (Exception e) {
                         MessageBoxExceptionHandler.process(e);
                     }
                 }

@@ -51,6 +51,7 @@ import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
@@ -61,7 +62,6 @@ import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -234,7 +234,7 @@ public class CorePlugin extends AbstractUIPlugin {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
                 if (connection != null) {
-                    String userName = ConnectionUtils.getUsernameDefault(connection);
+                    String userName = JavaSqlFactory.getUsernameDefault(connection);
                     SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
                     input.setUser(alias.getUser(userName));
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();

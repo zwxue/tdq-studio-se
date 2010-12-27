@@ -17,11 +17,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.CWMPlugin;
-import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;

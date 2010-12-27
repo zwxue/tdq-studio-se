@@ -44,8 +44,11 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -57,7 +60,6 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.api.ConnectionService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -71,6 +73,7 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.i18n.Messages;
@@ -145,15 +148,13 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
                 ReturnCode code = checkDBConnection();
                 if (code.isOk()) {
-                    MessageDialog
-                            .openInformation(
-                                    null,
-                                    DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openInformation(
+                            null,
+                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
-                    MessageDialog
-                            .openInformation(
-                                    null,
-                                    DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
+                    MessageDialog.openInformation(
+                            null,
+                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
 
@@ -184,11 +185,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         passwordText = new Text(sectionClient, SWT.BORDER | SWT.PASSWORD);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
-        String loginValue = ConnectionUtils.getUsername(connection);
+        String loginValue = JavaSqlFactory.getUsername(connection);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
 
         // MOD scorreia 2009-01-09 handle encrypted password
-        String passwordValue = ConnectionUtils.getPassword(connection);
+        String passwordValue = JavaSqlFactory.getPassword(connection);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
@@ -202,7 +203,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         GridDataFactory.fillDefaults().grab(true, true).applyTo(urlComp);
         urlText = new Text(urlComp, SWT.BORDER | SWT.READ_ONLY);
         GridDataFactory.fillDefaults().hint(100, -1).grab(true, true).applyTo(urlText);
-        String urlValue = ConnectionUtils.getURL(connection);
+        String urlValue = JavaSqlFactory.getURL(connection);
         urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
         // urlText.setEnabled(false);
 
@@ -217,7 +218,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         });
 
-        if (ConnectionUtils.getDriverClass(connection).startsWith("org.sqlite")) { //$NON-NLS-1$
+        if (JavaSqlFactory.getDriverClass(connection).startsWith("org.sqlite")) { //$NON-NLS-1$
             loginText.setEnabled(false);
             passwordText.setEnabled(false);
         }
@@ -298,8 +299,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             String jdbcUrl = connectionParam.getJdbcUrl();
             if (jdbcUrl != null && jdbcUrl.length() > 12) {
                 String name = jdbcUrl.substring(0, 12);
-                ManagedDriver driver = new DataProviderBuilder().buildDriverForSQLExploer(name, connectionParam
-                        .getDriverClassName(), connectionParam.getJdbcUrl(), jars);
+                ManagedDriver driver = new DataProviderBuilder().buildDriverForSQLExploer(name,
+                        connectionParam.getDriverClassName(), connectionParam.getJdbcUrl(), jars);
                 if (connectionParam == null || driver == null || connection == null) {
                     return;
                 }
@@ -349,13 +350,17 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             // MOD xqliu 2010-08-04 bug 13406
             if (ConnectionUtils.isMdmConnection(connection)) {
                 tdDataProvider2 = connection;
-                ConnectionUtils.setURL(tdDataProvider2, this.urlText.getText());
+                JavaSqlFactory.setURL(tdDataProvider2, this.urlText.getText());
             } else {
-                TypedReturnCode<Connection> typedRC = ConnectionService.createConnection(tmpParam);
+
+                IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance().fillUIParams(
+                        ParameterUtil.toMap(tmpParam));
+                TypedReturnCode<?> typedRC = org.talend.core.model.metadata.builder.util.MetadataConnectionUtils
+                        .checkConnection(metadataConnection);
                 if (!typedRC.isOk()) {
                     return typedRC;
                 } else {
-                    tdDataProvider2 = typedRC.getObject();
+                    tdDataProvider2 = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
                 }
             }
             // ~ 13406
@@ -364,9 +369,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) tdDataProvider2));
             props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) tdDataProvider2));
         }
-        ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(ConnectionUtils
-                .getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionService.checkConnection(this.urlText
-                .getText(), ConnectionUtils.getDriverClass(tdDataProvider2), props);
+        ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(
+                JavaSqlFactory
+.getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(
+                this.urlText
+.getText(), JavaSqlFactory.getDriverClass(tdDataProvider2), props);
         // ~
         return returnCode;
     }
@@ -506,9 +513,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         super.saveTextChange();
         ConnectionUtils.setName(connection, nameText.getText());
         PropertyHelper.getProperty(connection).setLabel(nameText.getText());
-        ConnectionUtils.setUsername(connection, loginText.getText());
-        ConnectionUtils.setPassword(connection, passwordText.getText());
-        ConnectionUtils.setURL(connection, urlText.getText());
+        JavaSqlFactory.setUsername(connection, loginText.getText());
+        JavaSqlFactory.setPassword(connection, passwordText.getText());
+        JavaSqlFactory.setURL(connection, urlText.getText());
         // MOD zshen for bug 12327:to save driverClassName.
         if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {
             ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());

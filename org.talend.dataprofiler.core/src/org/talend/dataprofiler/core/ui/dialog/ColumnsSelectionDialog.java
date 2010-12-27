@@ -43,12 +43,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -56,7 +56,6 @@ import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -211,11 +210,11 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (isColumnSet) {
                 modelElements = EObjectHelper.getColumns((ColumnSet) modelElement);
             } else if (isTdXmlSchema) {
-                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
                         .getXMLElements((TdXmlSchema) modelElement));
                 modelElements = children.toArray(new ModelElement[children.size()]);
             } else if (isTdXmlElementType) {
-                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
                         .getXMLElements((TdXmlElementType) modelElement));
                 modelElements = children.toArray(new ModelElement[children.size()]);
             }
@@ -226,11 +225,11 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (isColumnSet) {
                 return meCheckMap.getCheckedModelElements(ColumnSetHelper.getColumns((ColumnSet) modelElement));
             } else if (isTdXmlSchema) {
-                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
                         .getXMLElements((TdXmlSchema) modelElement));
                 return meCheckMap.getCheckedModelElements(children);
             } else if (isTdXmlElementType) {
-                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                List<TdXmlElementType> children = XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
                         .getXMLElements((TdXmlElementType) modelElement));
                 return meCheckMap.getCheckedModelElements(children);
             }
@@ -292,12 +291,14 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         if (columnCheckMap != null) {
             columnCheckMap.clear();
             List<TdXmlElementType> xmlElements = XmlElementHelper
-                    .getLeafNode(DqRepositoryViewService.getXMLElements(xmlDocument));
+.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
+                    .getXMLElements(xmlDocument));
             columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
         } else {
             columnCheckMap = new ModelElementCheckedMapImpl();
             List<TdXmlElementType> xmlElements = XmlElementHelper
-                    .getLeafNode(DqRepositoryViewService.getXMLElements(xmlDocument));
+.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
+                    .getXMLElements(xmlDocument));
             columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
             modelElementCheckedMap.put(key, columnCheckMap);
         }
@@ -315,11 +316,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         ModelElementCheckedMap columnCheckMap = modelElementCheckedMap.get(key);
         if (columnCheckMap != null) {
             columnCheckMap.clear();
-            List<TdXmlElementType> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlElement));
+            List<TdXmlElementType> xmlElements = XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
+                    .getXMLElements(xmlElement));
             columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
         } else {
             columnCheckMap = new ModelElementCheckedMapImpl();
-            List<TdXmlElementType> xmlElements = XmlElementHelper.getLeafNode(DqRepositoryViewService.getXMLElements(xmlElement));
+            List<TdXmlElementType> xmlElements = XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
+                    .getXMLElements(xmlElement));
             columnCheckMap.putAllChecked(xmlElements.toArray(new ModelElement[xmlElements.size()]), checkedFlag);
             modelElementCheckedMap.put(key, columnCheckMap);
         }
@@ -517,10 +520,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (modelElement instanceof ColumnSet) {
                 modelElementList = ColumnSetHelper.getColumns((ColumnSet) modelElement);
             } else if ((modelElement instanceof TdXmlElementType)) {
-                modelElementList = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                modelElementList = XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
                         .getXMLElements((TdXmlElementType) modelElement));
             } else if ((modelElement instanceof TdXmlSchema)) {
-                modelElementList = XmlElementHelper.getLeafNode(DqRepositoryViewService
+                modelElementList = XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
                         .getXMLElements((TdXmlSchema) modelElement));
             }
 
@@ -578,10 +581,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 if (checkedNodes[i] instanceof ColumnSet) {
                     meList.addAll(ColumnSetHelper.getColumns((ColumnSet) checkedNodes[i]));
                 } else if ((checkedNodes[i] instanceof TdXmlElementType)) {
-                    meList.addAll(XmlElementHelper.getLeafNode(DqRepositoryViewService
+                    meList.addAll(XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
                             .getXMLElements((TdXmlElementType) checkedNodes[i])));
                 } else if ((checkedNodes[i] instanceof TdXmlSchema)) {
-                    meList.addAll(XmlElementHelper.getLeafNode(DqRepositoryViewService
+                    meList.addAll(XmlElementHelper.getLeafNode(org.talend.cwm.db.connection.ConnectionUtils
                             .getXMLElements((TdXmlSchema) checkedNodes[i])));
                 }
             }
@@ -666,7 +669,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         // table
                         // ColumnSetHelper.addColumns(columnSet,
                         // columnList);
-                    } catch (TalendException e) {
+                    } catch (Exception e) {
                         MessageBoxExceptionHandler.process(e);
                     }
                     ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
@@ -676,13 +679,14 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             } else {
                 TdXmlSchema xmlDocument = SwitchHelpers.XMLSCHEMA_SWITCH.doSwitch(eObj);
                 if (xmlDocument != null) {
-                    List<ModelElement> xmlElements = DqRepositoryViewService.getXMLElements(xmlDocument);
+                    List<ModelElement> xmlElements = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(xmlDocument);
                     List<TdXmlElementType> leafNodes = XmlElementHelper.getLeafNode(xmlElements);
                     return sort(leafNodes.toArray(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                 } else {
                     TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eObj);
                     if (xmlElement != null) {
-                        List<TdXmlElementType> xmlElements = DqRepositoryViewService.getXMLElements(xmlElement);
+                        List<TdXmlElementType> xmlElements = org.talend.cwm.db.connection.ConnectionUtils
+                                .getXMLElements(xmlElement);
                         List<TdXmlElementType> leafNodes = XmlElementHelper.getLeafNode(xmlElements);
                         return sort(leafNodes.toArray(), ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                     }
@@ -768,8 +772,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 return ComparatorsFactory.sort(children, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
             } else if (parentElement instanceof TdXmlSchema || parentElement instanceof TdXmlElementType) {
                 boolean isXmlDocument = parentElement instanceof TdXmlSchema;
-                List<? extends ModelElement> modelElements = isXmlDocument ? DqRepositoryViewService
-                        .getXMLElements((TdXmlSchema) parentElement) : DqRepositoryViewService
+                List<? extends ModelElement> modelElements = isXmlDocument ? org.talend.cwm.db.connection.ConnectionUtils
+                        .getXMLElements((TdXmlSchema) parentElement) : org.talend.cwm.db.connection.ConnectionUtils
                         .getXMLElements((TdXmlElementType) parentElement);
                 Object[] children = XmlElementHelper.clearLeafNode(modelElements).toArray();
                 if (children != null && children.length > 0) {

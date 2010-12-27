@@ -293,6 +293,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         }
         return ComparatorsFactory.sort(elements, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
     }
+    
 
     @Override
     public boolean hasChildren(Object element) {

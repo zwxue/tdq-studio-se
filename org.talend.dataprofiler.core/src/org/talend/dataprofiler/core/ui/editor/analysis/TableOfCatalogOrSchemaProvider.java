@@ -21,8 +21,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 
 /**

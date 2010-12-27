@@ -28,7 +28,6 @@ import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.db.connection.XQueryExpressionUtil;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.analysis.Analysis;
@@ -116,7 +115,7 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
         TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
                 .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElementList.get(0))));
         // all the column under the parentElement
-        List<TdXmlElementType> columnList = DqRepositoryViewService.getXMLElements(parentElement);
+        List<TdXmlElementType> columnList = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
         List<Map<String, String>> resultSetList = new ArrayList<Map<String, String>>();
         if (analysis.getParameters().isStoreData()) {
             resultSetList = statement.tidyResultSet(columnList.toArray(new ModelElement[columnList.size()]), resultSet);

@@ -15,6 +15,7 @@ package org.talend.dq.indicators;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -23,16 +24,14 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.util.DatabaseConstant;
-import org.talend.cwm.builders.CatalogBuilder;
-import org.talend.cwm.builders.TableBuilder;
-import org.talend.cwm.builders.ViewBuilder;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.TableBuilder;
+import org.talend.core.model.metadata.builder.database.ViewBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.connection.DatabaseContentRetriever;
-import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
@@ -43,6 +42,7 @@ import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
@@ -222,11 +222,13 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         ResultSet idx = null;
         try {
             // MOD xqliu 2009-07-13 bug 7888
-            idx = ConnectionUtils.getConnectionMetadata(getConnection()).getIndexInfo(catalog, schema, table, false, false);
+            idx = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(getConnection()).getIndexInfo(catalog, schema,
+                    table, false, false);
             // ~
         } catch (SQLException e) {
-            log.warn("Exception while getting indexes on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
-                    + e.getLocalizedMessage(), e);
+            log.warn(
+                    "Exception while getting indexes on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
+                            + e.getLocalizedMessage(), e);
             // Oracle increments the number of cursors to close each time a new query is executed after this exception!
             reloadConnectionAfterException(catalog);
         }
@@ -255,11 +257,13 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         ResultSet pk = null;
         try {
             // MOD xqliu 2009-07-13 bug 7888
-            pk = ConnectionUtils.getConnectionMetadata(getConnection()).getPrimaryKeys(catalog, schema, table);
+            pk = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(getConnection()).getPrimaryKeys(catalog, schema,
+                    table);
             // ~
         } catch (SQLException e1) {
-            log.warn("Exception while getting primary keys on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
-                    + e1.getLocalizedMessage(), e1);
+            log.warn(
+                    "Exception while getting primary keys on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
+                            + e1.getLocalizedMessage(), e1);
             reloadConnectionAfterException(catalog);
         }
         if (pk != null) {
@@ -570,9 +574,16 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     public boolean checkCatalog(String catName) {
 
         if (0 == catalogsName.size()) {
-            Collection<Catalog> catalogs = new CatalogBuilder(this.getDataManager()).getCatalogs();
-            for (Catalog tc : catalogs) {
-                catalogsName.add(tc.getName());
+            try {
+                Collection<Catalog> catalogs;
+                catalogs = MetadataFillFactory.getDBInstance()
+                        .fillCatalogs(this.getDataManager(), connection.getMetaData(), null);
+                for (Catalog tc : catalogs) {
+                    catalogsName.add(tc.getName());
+                }
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
 
@@ -592,7 +603,13 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     protected boolean checkSchemaByName(String catName) {
 
         if (0 == schemasName.size()) {
-            Collection<Schema> schemas = new CatalogBuilder(this.getDataManager()).getSchemata();
+            Collection<Schema> schemas = new ArrayList<Schema>();
+            try {
+                schemas = ListUtils.castList(Schema.class,
+                        MetadataFillFactory.getDBInstance().fillSchemas(null, connection.getMetaData(), null));
+            } catch (SQLException e) {
+                log.error(e, e);
+            }
             for (Schema ts : schemas) {
                 schemasName.add(ts.getName());
             }
@@ -618,21 +635,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             if (catalog != null) {
                 try {
                     connection.setCatalog(catalog.getName());
-                    DatabaseContentRetriever.getCatalogs(this.getDataManager());
-                    // MOD xqliu 2010-01-20 bug 9841
-                    List<Schema> schemas = null;
-                    if (connection.getMetaData().getDriverName().equals(DatabaseConstant.MSSQL_DRIVER_NAME_JDBC2_0)) {
-                        schemas = DatabaseContentRetriever.getMSSQLSchemas(connection).get(catalog.getName());
-                    } else if (ConnectionUtils.isPostgresql(connection)) {
-                        schemas = DatabaseContentRetriever.getSchemas(connection).get(null);
-                        // ADD xqliu 2010-05-10 bug 12564
-                        if (schemas == null) {
-                            schemas = DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
-                        }
-                        // ~12564
-                    } else {
-                        schemas = DatabaseContentRetriever.getSchemas(connection).get(catalog.getName());
-                    }
+                    List<Schema> schemas = MetadataFillFactory.getDBInstance().fillSchemaToCatalog(getDataManager(),
+                            connection.getMetaData(), catalog, null);
                     if (schemas != null) {
                         for (Schema tdSchema : schemas) {
                             if (tdSchema.getName().equals(schema.getName()))

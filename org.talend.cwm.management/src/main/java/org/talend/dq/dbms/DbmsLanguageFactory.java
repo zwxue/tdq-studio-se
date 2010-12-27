@@ -17,10 +17,10 @@ import java.sql.SQLException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.dburl.SupportDBUrlStore;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
@@ -191,17 +191,19 @@ public final class DbmsLanguageFactory {
         // MOD xqliu 2009-07-13 bug 7888
         String databaseProductName = null;
         try {
-            databaseProductName = ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductName();
+            databaseProductName = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductName();
             databaseProductName = databaseProductName == null ? "" : databaseProductName; //$NON-NLS-1$
             String databaseProductVersion = null;
             try {
-                databaseProductVersion = ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductVersion();
+                databaseProductVersion = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection)
+                        .getDatabaseProductVersion();
                 databaseProductVersion = databaseProductVersion == null ? "0" : databaseProductVersion;
             } catch (Exception e) {
                 log.warn("Exception when retrieving database product version of " + databaseProductName, e);
             }
             DbmsLanguage dbmsLanguage = createDbmsLanguage(databaseProductName, databaseProductVersion);
-            dbmsLanguage.setDbQuoteString(ConnectionUtils.getConnectionMetadata(connection).getIdentifierQuoteString());
+            dbmsLanguage.setDbQuoteString(org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection)
+                    .getIdentifierQuoteString());
             return dbmsLanguage;
         } catch (SQLException e) {
             log.warn("Exception when retrieving database informations:" + e + ". Creating a default DbmsLanguage.", e);

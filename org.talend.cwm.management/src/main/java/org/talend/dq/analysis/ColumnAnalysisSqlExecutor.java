@@ -267,7 +267,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
         // MOD by zshen: change schemaName of sybase database to Table's owner.
         boolean isSybase = false;
-        if (Arrays.asList(ConnectionUtils.getSybaseDBProductsName()).contains(dbms().getDbmsName())) {
+        if (Arrays.asList(org.talend.utils.sql.ConnectionUtils.getSybaseDBProductsName()).contains(dbms().getDbmsName())) {
             isSybase = true;
         }
         if (isSybase) {
@@ -1327,7 +1327,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         try {
             TypedReturnCode<Connection> typedReturnCode = this.getConnection(cachedAnalysis);
             Connection connection = typedReturnCode.getObject();
-            DatabaseMetaData connectionMetadata = ConnectionUtils.getConnectionMetadata(connection);
+            DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
             if (connectionMetadata.getDriverName() != null
                     && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)) {
                 return false;

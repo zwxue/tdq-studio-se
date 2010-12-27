@@ -22,13 +22,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.db.connection.XQueryExpressionUtil;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.helper.XmlElementHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -173,7 +173,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
                     .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysedElements.get(0))));
             parentAnalyzedElementName = parentElement.getName();
-            List<TdXmlElementType> columnList = DqRepositoryViewService.getXMLElements(parentElement);
+            List<TdXmlElementType> columnList = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
             Iterator<TdXmlElementType> iter = columnList.iterator();
             while (iter.hasNext()) {
                 TdXmlElementType xmlElemenet = iter.next();

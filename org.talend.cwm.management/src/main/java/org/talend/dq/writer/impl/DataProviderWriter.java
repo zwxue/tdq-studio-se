@@ -28,7 +28,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.AElementPersistance;
@@ -92,7 +92,7 @@ public class DataProviderWriter extends AElementPersistance {
     protected void addDependencies(ModelElement element) {
         TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem((Connection) element);
         if (softwareSystem != null) {
-            DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
+            SoftwareSystemManager.saveSoftwareSystem(softwareSystem);
         }
     }
 

@@ -16,10 +16,11 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
-import org.talend.cwm.management.connection.JavaSqlFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -65,7 +66,7 @@ public final class SoftwareSystemManager {
                     softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
                     if (softwareSystem != null) { // store it
                         if (ConnectionHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
-                                DqRepositoryViewService.saveSoftwareSystem(softwareSystem);
+                            saveSoftwareSystem(softwareSystem);
                             }
                         }
                     }
@@ -77,6 +78,17 @@ public final class SoftwareSystemManager {
                     + dataProvider.getName());
         }
         return softwareSystem;
+    }
+
+    /**
+     * DOC scorreia Comment method "saveSoftwareSystem".
+     * 
+     * @param util
+     * @param softwareSystem
+     */
+    public static boolean saveSoftwareSystem(TdSoftwareSystem softwareSystem) {
+        EMFSharedResources util = EMFSharedResources.getInstance();
+        return util.saveSoftwareDeploymentResource(softwareSystem);
     }
 
 }

@@ -15,7 +15,7 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Date;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;

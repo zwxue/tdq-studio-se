@@ -20,10 +20,10 @@ import net.sourceforge.sqlexplorer.dataset.DataSet;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.XmlElementHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
@@ -245,7 +245,8 @@ public class DrillDownEditorInput implements IEditorInput {
             } else if (analysisElement instanceof TdXmlElementType) {
                 TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
                         .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
-                List<TdXmlElementType> xmlElementList = DqRepositoryViewService.getXMLElements(parentElement);
+                List<TdXmlElementType> xmlElementList = org.talend.cwm.db.connection.ConnectionUtils
+                        .getXMLElements(parentElement);
                 offset = xmlElementList.indexOf(analysisElement);
             }
             for (Object[] obj : dataList) {
@@ -278,7 +279,7 @@ public class DrillDownEditorInput implements IEditorInput {
         } else if (analysisElement instanceof TdXmlElementType) {
             TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
                     .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
-            for (TdXmlElementType xmlElement : DqRepositoryViewService.getXMLElements(parentElement)) {
+            for (TdXmlElementType xmlElement : org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement)) {
                 if (!DqRepositoryViewService.hasChildren(xmlElement)) {
                     columnElementList.add(xmlElement.getName());
                 }

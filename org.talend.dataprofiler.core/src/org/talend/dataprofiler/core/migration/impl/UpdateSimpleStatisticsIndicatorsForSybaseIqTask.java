@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;

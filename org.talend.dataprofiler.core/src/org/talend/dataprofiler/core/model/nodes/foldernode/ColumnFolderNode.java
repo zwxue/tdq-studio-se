@@ -17,18 +17,17 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.exception.TalendException;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.CWMPlugin;
-import org.talend.dq.PluginConstant;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
@@ -107,7 +106,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                     MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnFolderNode.warnMsg", COLUMN_MAX)); //$NON-NLS-1$
                     return;
                 }
-            } catch (TalendException e) {
+            } catch (Exception e) {
                 MessageBoxExceptionHandler.process(e);
             }
             // store tables in catalog

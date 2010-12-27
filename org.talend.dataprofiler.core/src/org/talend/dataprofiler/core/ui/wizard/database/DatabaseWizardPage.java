@@ -38,15 +38,14 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.EXistXMLDBConnection;
 import org.talend.cwm.db.connection.IXMLDBConnection;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
-import org.talend.cwm.dburl.SupportDBUrlStore;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.api.ConnectionService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -385,7 +384,8 @@ public class DatabaseWizardPage extends AbstractWizardPage {
             }
             return rc;
         } else {
-            ReturnCode returnCode = ConnectionService.checkConnection(this.connectionParam.getJdbcUrl(), this.connectionParam
+            ReturnCode returnCode = ConnectionUtils.checkConnection(this.connectionParam.getJdbcUrl(),
+                    this.connectionParam
                     .getDriverClassName(), this.connectionParam.getParameters());
             return returnCode;
         }

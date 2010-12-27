@@ -15,7 +15,7 @@ package org.talend.dataprofiler.core.pattern;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 
 /**
  * DOC zqin class global comment. Detailled comment

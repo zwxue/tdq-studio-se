@@ -21,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +29,11 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.ColumnBuilder;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.TableBuilder;
+import org.talend.core.model.metadata.builder.database.ViewBuilder;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
-import org.talend.cwm.builders.CatalogBuilder;
-import org.talend.cwm.builders.ColumnBuilder;
-import org.talend.cwm.builders.TableBuilder;
-import org.talend.cwm.builders.ViewBuilder;
 import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
@@ -55,7 +54,6 @@ import org.talend.utils.sql.metadata.constants.TypeInfoColumns;
 import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.foundation.typemapping.TypeSystem;
 import orgomg.cwm.foundation.typemapping.TypemappingFactory;
-import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.QueryColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 import orgomg.cwm.resource.relational.enumerations.NullableType;
@@ -64,6 +62,7 @@ import orgomg.cwm.resource.relational.enumerations.NullableType;
  * @author scorreia
  * 
  * This utility class creates CWM object from a java.sql classes (e.g. Connection, Driver...)
+ * @deprecated user common metadata filler API.
  */
 public final class DatabaseContentRetriever {
 
@@ -72,18 +71,6 @@ public final class DatabaseContentRetriever {
     private DatabaseContentRetriever() {
     }
 
-    /**
-     * Method "getCatalogs".
-     * 
-     * @param connection the connection
-     * @return a map [name of catalog, catalog]
-     * @throws SQLException
-     */
-    public static Collection<Catalog> getCatalogs(org.talend.core.model.metadata.builder.connection.Connection connection)
-            throws SQLException {
-        CatalogBuilder builder = new CatalogBuilder(connection);
-        return builder.getCatalogs();
-    }
 
     /**
      * DOC scorreia Comment method "getQueryColumnSet".
@@ -486,7 +473,7 @@ public final class DatabaseContentRetriever {
                 if (TaggedValueHelper.PASSWORD.equals(prop.name)) {
                     // MOD scorreia 2010-07-24 store password in data provider
                     String password = prop.value != null ? prop.value : "";
-                    ConnectionUtils.setPassword(provider, password);
+                    JavaSqlFactory.setPassword(provider, password);
                     // ~
                     continue;
                 }
@@ -494,7 +481,7 @@ public final class DatabaseContentRetriever {
                 // MOD scorreia 2010-07-24 store username in data provider
                 if (TaggedValueHelper.USER.equals(prop.name)) {
                     String user = prop.value != null ? prop.value : "";
-                    ConnectionUtils.setUsername(provider, user);
+                    JavaSqlFactory.setUsername(provider, user);
                 }
                 // ~
 
@@ -550,7 +537,7 @@ public final class DatabaseContentRetriever {
     public static TdSoftwareSystem getSoftwareSystem(java.sql.Connection connection) throws SQLException {
         // MOD xqliu 2009-07-13 bug 7888
 
-        DatabaseMetaData databaseMetadata = ConnectionUtils.getConnectionMetadata(connection);
+        DatabaseMetaData databaseMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         // ~
         // --- get informations
         String databaseProductName = null;
@@ -606,7 +593,7 @@ public final class DatabaseContentRetriever {
 
     public static TypeSystem getTypeSystem(java.sql.Connection connection) throws SQLException {
         // MOD xqliu 2009-07-13 bug 7888
-        DatabaseMetaData databaseMetadata = ConnectionUtils.getConnectionMetadata(connection);
+        DatabaseMetaData databaseMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         // ~
         // --- get the types supported by the system
         ResultSet typeInfo = databaseMetadata.getTypeInfo();
@@ -747,7 +734,7 @@ public final class DatabaseContentRetriever {
         assert connection != null : "Connection should not be null in DatabaseContentRetriever.getConnectionMetadata() "
                 + getConnectionInformations(connection);
         // MOD xqliu 2009-07-13 bug 7888
-        return ConnectionUtils.getConnectionMetadata(connection);
+        return org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
     }
 
     // method not used!? TODO remove?

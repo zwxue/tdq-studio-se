@@ -66,14 +66,13 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.dburl.SupportDBUrlStore;
-import org.talend.cwm.exception.TalendException;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
@@ -454,25 +453,28 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         Composite rightComp = new Composite(sumSectionClient, SWT.NONE);
         rightComp.setLayout(new GridLayout());
         GridDataFactory.fillDefaults().grab(true, true).applyTo(rightComp);
-        String connectionStr = ConnectionUtils.getURL(tdDataProvider);
+        String connectionStr = JavaSqlFactory.getURL(tdDataProvider);
         Properties pameterProperties = SupportDBUrlStore.getInstance().getDBPameterProperties(connectionStr);
-        String labelContent = pameterProperties.getProperty(org.talend.dq.PluginConstant.DBTYPE_PROPERTY);
+        String labelContent = pameterProperties
+                .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.DBTYPE_PROPERTY);
         Label leftLabel = new Label(leftComp, SWT.NONE);
         leftLabel
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.DBMS") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        labelContent = pameterProperties.getProperty(org.talend.dq.PluginConstant.HOSTNAME_PROPERTY);
+        labelContent = pameterProperties
+                .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.HOSTNAME_PROPERTY);
         leftLabel
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.server") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        labelContent = pameterProperties.getProperty(org.talend.dq.PluginConstant.PORT_PROPERTY);
+        labelContent = pameterProperties
+                .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.PORT_PROPERTY);
         leftLabel
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
         leftLabel = new Label(leftComp, SWT.NONE);
-        labelContent = ConnectionUtils.getUsername(tdDataProvider);
+        labelContent = JavaSqlFactory.getUsername(tdDataProvider);
         leftLabel
                 .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
@@ -1012,7 +1014,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     tdDataProvider, tdTable, null, true) : ColumnSetHelper.getColumns(tdTable);
 
             new AnalyzeColumnSetAction(columns.toArray(new TdColumn[columns.size()])).run();
-        } catch (TalendException e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }

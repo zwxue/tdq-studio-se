@@ -49,19 +49,20 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
-import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
@@ -139,16 +140,15 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         try {
 
             final EObject alreadySavedModel = ModelUtils.load(selectedFileObject.toString(), resourceSet);
-            TypedReturnCode<Connection> rc = null;
 
             Connection connection = null;
             if (alreadySavedModel instanceof Connection) {
                 connection = (Connection) alreadySavedModel;
             }
-
+            Connection newConn = null;
             if (connection != null) {
-                String dbUrl = ConnectionUtils.getURL(connection);
-                String driverClassName = ConnectionUtils.getDriverClass(connection);
+                String dbUrl = JavaSqlFactory.getURL(connection);
+                String driverClassName = JavaSqlFactory.getDriverClass(connection);
                 EList<EObject> pcObjects = connection.eContents();
                 ListIterator<EObject> liEObject = pcObjects.listIterator();
 
@@ -179,13 +179,19 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 dbcp.setDriverClassName(driverClassName);
                 dbcp.setJdbcUrl(dbUrl);
                 dbcp.setParameters(parameters);
-                rc = ConnectionService.createConnection(dbcp);
+                IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance().fillUIParams(
+                        ParameterUtil.toMap(dbcp));
+                newConn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
             }
-            System.out.println(alreadySavedModel.toString());
+            if (newConn == null) {
+                log.error("Unable to create a new connection: " + connection.getName());
+                return;
+            }
+            // System.out.println(alreadySavedModel.toString());
             IFolder folder = ResourceManager.getConnectionFolder();
             FolderProvider fp = new FolderProvider();
             fp.setFolderResource(folder);
-            IFile file2 = loadDataProviderAndStructureInMemory(rc.getObject(), fp);
+            IFile file2 = loadDataProviderAndStructureInMemory(newConn, fp);
 
             final EObject model2 = ModelUtils.load(file2.toString(), resourceSet);
 

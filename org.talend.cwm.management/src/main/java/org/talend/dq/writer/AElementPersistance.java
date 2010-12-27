@@ -28,6 +28,7 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
@@ -36,7 +37,6 @@ import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dq.helper.ListUtils;
@@ -74,14 +74,14 @@ public abstract class AElementPersistance {
             log.error("Get file extension error");
         } else {
 
-            String fname = DqRepositoryViewService.createLogicalFileName(element, getFileExtension());
+            String fname = createLogicalFileName(element, getFileExtension());
             IFile file = folder.getFile(fname);
 
             if (file.exists()) {
                 // MOD yyi 2009-10-15 Feature: 9524
                 String oriName = element.getName();
                 element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
-                fname = DqRepositoryViewService.createLogicalFileName(element, getFileExtension());
+                fname = createLogicalFileName(element, getFileExtension());
                 file = folder.getFile(fname);
 
                 element.setName(oriName);
@@ -96,6 +96,19 @@ public abstract class AElementPersistance {
         }
 
         return trc;
+    }
+
+    /**
+     * DOC bZhou Comment method "createLogicalFileNmae".
+     * 
+     * @param element
+     * @param extension
+     * @return
+     */
+    public static String createLogicalFileName(ModelElement element, String extension) {
+        return DqRepositoryViewService.createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element)
+                + org.talend.dataquality.PluginConstant.DOT_STRING
+                + extension;
     }
 
     /**

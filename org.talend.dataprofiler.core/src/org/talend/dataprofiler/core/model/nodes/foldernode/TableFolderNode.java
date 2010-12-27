@@ -18,12 +18,11 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.exception.TalendException;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -100,7 +99,7 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
                 ok = columnSets.addAll(DqRepositoryViewService.getTables(provider, schema, null, true));
             }
             return ok;
-        } catch (TalendException e) {
+        } catch (Exception e) {
             MessageBoxExceptionHandler.process(e);
             return false;
         }

@@ -22,9 +22,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.dburl.SupportDBUrlStore;
-import org.talend.cwm.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControl;
 import org.talend.dataprofiler.core.ui.wizard.urlsetup.URLSetupControlFactory;
@@ -71,13 +72,13 @@ public class UrlEditDialog extends TrayDialog {
         if (null != type && PluginConstant.EMPTY_STRING.equals(type)) {
             // MOD mzhao bug 12313, 2010-04-02 There is no dbType in prv files before 4.0 release, here use driver
             // class
-            dbUrlType = SupportDBUrlStore.getInstance().getDBUrlTypeByDriverName(ConnectionUtils.getDriverClass(tdDataProvider));
+            dbUrlType = SupportDBUrlStore.getInstance().getDBUrlTypeByDriverName(JavaSqlFactory.getDriverClass(tdDataProvider));
         } else {
             dbUrlType = SupportDBUrlStore.getInstance().getDBUrlType(type);
         }
         urlSetupControl = URLSetupControlFactory.createEditControl(dbUrlType, comp, tdDataProvider,
                 createConnectionParam(tdDataProvider));
-        urlSetupControl.setConnectionURL(ConnectionUtils.getURL(tdDataProvider));
+        urlSetupControl.setConnectionURL(JavaSqlFactory.getURL(tdDataProvider));
 
         data = new GridData(SWT.FILL, SWT.FILL, true, true);
         this.urlSetupControl.setLayoutData(data);

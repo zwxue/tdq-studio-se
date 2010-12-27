@@ -44,6 +44,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
@@ -268,11 +269,11 @@ public final class DQStructureComparer {
         TypedReturnCode<Connection> returnProvider = new TypedReturnCode<Connection>();
         boolean mdm = ConnectionUtils.isMdmConnection(prevDataProvider);
         // ~11951
-        String urlString = ConnectionUtils.getURL(prevDataProvider);
-        String driverClassName = ConnectionUtils.getDriverClass(prevDataProvider);
+        String urlString = JavaSqlFactory.getURL(prevDataProvider);
+        String driverClassName = JavaSqlFactory.getDriverClass(prevDataProvider);
         Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.USER, ConnectionUtils.getUsername(prevDataProvider));
-        properties.setProperty(TaggedValueHelper.PASSWORD, ConnectionUtils.getPassword(prevDataProvider));
+        properties.setProperty(TaggedValueHelper.USER, JavaSqlFactory.getUsername(prevDataProvider));
+        properties.setProperty(TaggedValueHelper.PASSWORD, JavaSqlFactory.getPassword(prevDataProvider));
         DBConnectionParameter connectionParameters = new DBConnectionParameter();
 
         connectionParameters.setName(prevDataProvider.getName());
@@ -308,7 +309,7 @@ public final class DQStructureComparer {
             if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
                 java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
                 try {
-                    dbJDBCMetadata = ConnectionUtils.getConnectionMetadata(sqlConn);
+                    dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
                 } catch (SQLException e) {
                     log.error(e, e);
                 }

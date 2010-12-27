@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.urlsetup;
 
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.dburl.SupportDBUrlType;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 

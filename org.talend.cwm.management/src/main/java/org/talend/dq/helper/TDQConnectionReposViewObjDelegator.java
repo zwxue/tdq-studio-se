@@ -12,12 +12,16 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.util.Collection;
+
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.management.api.DqRepositoryViewService;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * DOC mzhao This class helps to store the needed save connection object.
@@ -33,7 +37,7 @@ public abstract class TDQConnectionReposViewObjDelegator<T extends Connection> e
     @Override
     protected ReturnCode save(Item item) {
         ConnectionItem connItem = (ConnectionItem) item;
-        return DqRepositoryViewService.saveOpenDataProvider(connItem, false);
+        return saveOpenDataProvider(connItem, false);
     }
 
     @Override
@@ -45,4 +49,28 @@ public abstract class TDQConnectionReposViewObjDelegator<T extends Connection> e
         // connItem.getConnection().getSupplierDependency().addAll(element.getSupplierDependency());
     }
 
+    /**
+     * Method "saveOpenDataProvider" saves a Data provider which has already a resource (has already been saved once).
+     * 
+     * @param dataProvider
+     * @param addPackage decide whether need to add the Package(catalog/schema) element to dataprovider.
+     * @return
+     */
+    public static ReturnCode saveOpenDataProvider(ConnectionItem connItem, boolean addPackage) {
+        Connection conn = connItem.getConnection();
+        assert conn != null;
+        if (addPackage) {
+            // MOD zshen bug 10633: Reload Database List can't display new
+            // Schema in DQ Repository view(Oracle Database)
+            Collection<? extends Package> catalogsorSchemas = ConnectionHelper.getCatalogs(conn);
+            if (catalogsorSchemas.size() == 0) {
+                catalogsorSchemas = ConnectionHelper.getSchema(conn);
+            }
+            conn.getDataPackage().addAll(catalogsorSchemas);
+        }
+
+        ReturnCode rc = new ReturnCode();
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(connItem);
+        return rc;
+    }
 }

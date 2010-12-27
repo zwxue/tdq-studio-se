@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
@@ -22,7 +23,6 @@ import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.PluginConstant;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
