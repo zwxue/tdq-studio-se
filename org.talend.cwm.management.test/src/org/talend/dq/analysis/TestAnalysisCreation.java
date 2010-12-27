@@ -19,11 +19,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -123,8 +123,12 @@ public class TestAnalysisCreation {
         analysisBuilder.setAnalysisConnection(dataManager);
 
         // get a column to analyze
-        ModelElement column;
-        column = getColumn(dataManager);
+        ModelElement column = null;
+        try {
+            column = getColumn(dataManager);
+        } catch (Exception e) {
+            log.error(e, e);
+        }
         Indicator[] indicators = getIndicators(column);
         analysisBuilder.addElementToAnalyze(column, indicators);
 
@@ -135,7 +139,7 @@ public class TestAnalysisCreation {
         // TODO scorreia save domain with analysisbuilder?
         FolderProvider folderProvider = new FolderProvider();
         folderProvider.setFolder(new File(outputFolder));
-        DqRepositoryViewService.saveDomain(dataFilter, folderProvider);
+
 
         // run analysis
         Analysis analysis = analysisBuilder.getAnalysis();
@@ -170,8 +174,13 @@ public class TestAnalysisCreation {
         analysisBuilder.setAnalysisConnection(dataManager);
 
         // get a column to analyze
-        ModelElement column;
-        column = getColumn(dataManager);
+        ModelElement column = null;
+        try {
+            column = getColumn(dataManager);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            log.error(e, e);
+        }
         Indicator[] indicators = getIndicators(column);
         analysisBuilder.addElementToAnalyze(column, indicators);
 
@@ -297,9 +306,9 @@ public class TestAnalysisCreation {
      * 
      * @param dataManager
      * @return
-     * @throws TalendException
+     * @throws Exception
      */
-    private ModelElement getColumn(Connection dataManager) throws TalendException {
+    private ModelElement getColumn(Connection dataManager) throws Exception {
         List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(dataManager.getDataPackage());
         System.out.println("Catalogs: " + tdCatalogs);
         Assert.assertFalse(tdCatalogs.isEmpty());

@@ -19,10 +19,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -111,7 +111,12 @@ public class TestMultiColAnalysisCreation {
         analysisBuilder.setAnalysisConnection(dataManager);
 
         // get a column to analyze
-        List<TdColumn> columns = getColumns(dataManager);
+        List<TdColumn> columns = new ArrayList<TdColumn>();
+        try {
+            columns.addAll(getColumns(dataManager));
+        } catch (Exception e) {
+            log.error(e, e);
+        }
         ColumnSetMultiValueIndicator indicator = getIndicator(columns);
         for (TdColumn tdColumn : columns) {
             analysisBuilder.addElementToAnalyze(tdColumn, indicator);
@@ -229,9 +234,9 @@ public class TestMultiColAnalysisCreation {
      * 
      * @param dataManager
      * @return
-     * @throws TalendException
+     * @throws Exception
      */
-    private List<TdColumn> getColumns(Connection dataManager) throws TalendException {
+    private List<TdColumn> getColumns(Connection dataManager) throws Exception {
         List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(dataManager.getDataPackage());
         Catalog catalog = null;
         for (Catalog tdCatalog : tdCatalogs) {

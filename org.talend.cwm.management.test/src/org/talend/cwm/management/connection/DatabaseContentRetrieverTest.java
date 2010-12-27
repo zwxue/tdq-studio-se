@@ -18,7 +18,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +30,7 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.ViewHelper;
+import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
@@ -39,10 +39,9 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
-import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.typemapping.TypeSystem;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -84,9 +83,10 @@ public class DatabaseContentRetrieverTest {
         dbconnectionParam.setSqlTypeName(sqlTypeName);
         dbconnectionParam.setDriverClassName(driverClassName);
         dbconnectionParam.setParameters(connectionParams);
-        ReturnCode returnCode = dpBuilder.initializeDataProvider(dbconnectionParam);
+        TypedReturnCode<org.talend.core.model.metadata.builder.connection.Connection> returnCode = ConnectionService
+                .createConnection(dbconnectionParam);
         if (returnCode.isOk()) {
-            return (DatabaseConnection) dpBuilder.getDataProvider();
+            return (DatabaseConnection) returnCode.getObject();
         }
 
         // try {
@@ -140,27 +140,7 @@ public class DatabaseContentRetrieverTest {
         return null;
     }
 
-    /**
-     * Test method for
-     * {@link org.talend.cwm.management.connection.DatabaseContentRetriever#getCatalogs(DatabaseConnection)}.
-     */
-    @Test
-    public void testGetCatalogs() {
 
-        try {
-            Collection<Catalog> catalogs = DatabaseContentRetriever.getCatalogs(DBCONNECTION);
-            assertNotNull(catalogs);
-            // assertTrue("We should have a connection", ok);
-            assertFalse("We should have a connection", catalogs.isEmpty());
-            for (Catalog tdCatalog : catalogs) {
-                assertNotNull(tdCatalog);
-                log.info("Catalog: " + tdCatalog.getName());
-            }
-
-        } catch (SQLException e) {
-            fail("Got exception: " + e.getMessage());
-        }
-    }
 
     /**
      * Test method for

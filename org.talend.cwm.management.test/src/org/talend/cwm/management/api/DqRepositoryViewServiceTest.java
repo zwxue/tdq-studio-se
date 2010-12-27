@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 
 /**
  * DOC scorreia class global comment. Detailled comment

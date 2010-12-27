@@ -18,10 +18,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.exception.TalendException;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
-import org.talend.cwm.management.api.DqRepositoryViewService;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -86,7 +85,6 @@ public class TestConnectionAnalysisCreation {
         // TODO scorreia save domain with analysisbuilder?
         FolderProvider folderProvider = new FolderProvider();
         folderProvider.setFolder(new File(outputFolder));
-        DqRepositoryViewService.saveDomain(dataFilter, folderProvider);
 
         // run analysis
         Analysis analysis = analysisBuilder.getAnalysis();
@@ -154,9 +152,9 @@ public class TestConnectionAnalysisCreation {
      * 
      * @param dataManager
      * @return
-     * @throws TalendException
+     * @throws Exception
      */
-    private static ModelElement getColumn(Connection dataManager) throws TalendException {
+    private static ModelElement getColumn(Connection dataManager) throws Exception {
         List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(dataManager.getDataPackage());
         System.out.println("Catalogs: " + tdCatalogs);
         Assert.assertFalse(tdCatalogs.isEmpty());
