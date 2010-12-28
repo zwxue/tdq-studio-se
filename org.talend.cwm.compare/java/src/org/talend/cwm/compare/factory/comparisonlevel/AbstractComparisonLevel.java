@@ -44,11 +44,13 @@ import org.talend.cwm.compare.factory.update.AddTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.objectmodel.core.util.CoreSwitch;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -59,6 +61,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
 public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     private static Logger log = Logger.getLogger(AbstractComparisonLevel.class);
+
+    protected static final boolean CASE_INSENSTIVE = true;
 
     protected DiffSwitch<ModelElementChangeRightTarget> addModelSwitch;
 
@@ -156,7 +160,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         if (!isValid()) {
             return null;
         }
-        oldDataProvider = findDataProvider();
+        oldDataProvider = upperCaseConnection(findDataProvider());
         if (oldDataProvider == null) {
             return null;
         }
@@ -174,7 +178,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         if (!isValid()) {
             return;
         }
-        oldDataProvider = findDataProvider();
+        oldDataProvider = upperCaseConnection(findDataProvider());
         if (oldDataProvider == null) {
             return;
         }
@@ -189,8 +193,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         // editor.
 
         Object needReloadObject = dbFolderNode == null ? selectedObj : dbFolderNode;
-        DQStructureComparer.openDiffCompareEditor(getLeftResource(), getRightResource(), options, guiHandler, DQStructureComparer
-                .getDiffResourceFile(), oldDataProvider.getName(), needReloadObject, false);
+        DQStructureComparer.openDiffCompareEditor(getLeftResource(), getRightResource(), options, guiHandler,
+                DQStructureComparer.getDiffResourceFile(), oldDataProvider.getName(), needReloadObject, false);
 
         // testInit();
 
@@ -220,11 +224,11 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         if (!returnProvider.isOk()) {
             throw new ReloadCompareException(returnProvider.getMessage());
         }
-        tempReloadProvider = returnProvider.getObject();
+        tempReloadProvider = upperCaseConnection(returnProvider.getObject());
         tempReloadProvider.setComponent(oldDataProvider.getComponent());
         // MOD mzhao bug:9012 2009-09-08
-        ElementWriterFactory.getInstance().createDataProviderWriter().create(tempReloadProvider,
-                tempConnectionFile.getFullPath(), false);
+        ElementWriterFactory.getInstance().createDataProviderWriter()
+                .create(tempReloadProvider, tempConnectionFile.getFullPath(), false);
         tempReloadProvider.setComponent(null);
         oldDataProvider.getComponent();
     }
@@ -367,4 +371,41 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         }
     }
 
+    protected Resource upperCaseResource(Resource res) {
+        if (CASE_INSENSTIVE) {
+            EList<EObject> contents = res.getContents();
+            for (EObject eo : contents) {
+                upperCase(eo);
+            }
+        }
+        return res;
+    }
+
+    private Connection upperCaseConnection(Connection connection) {
+        if (CASE_INSENSTIVE) {
+            EList<ModelElement> ownedElement = connection.getOwnedElement();
+            for (ModelElement me : ownedElement) {
+                upperCase(me);
+            }
+        }
+        return connection;
+    }
+
+    private void upperCase(EObject eObject) {
+        Package pckg = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObject);
+        ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObject);
+        TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(eObject);
+        if (column != null) {
+            column.setName(column.getName() == null ? "" : column.getName().toUpperCase());
+            column.setLabel(column.getLabel() == null ? "" : column.getLabel().toUpperCase());
+            column.getSqlDataType().setName(
+                    column.getSqlDataType().getName() == null ? "" : column.getSqlDataType().getName().toUpperCase());
+            column.setContentType(column.getContentType() == null ? "" : column.getContentType().toUpperCase());
+            column.setSourceType(column.getSourceType() == null ? "" : column.getSourceType().toUpperCase());
+        } else if (pckg != null) {
+            pckg.setName(pckg.getName() == null ? "" : pckg.getName().toUpperCase());
+        } else if (columnSet != null) {
+            columnSet.setName(columnSet.getName() == null ? "" : columnSet.getName().toUpperCase());
+        }
+    }
 }

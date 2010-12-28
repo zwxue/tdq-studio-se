@@ -207,7 +207,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 			leftResource.getContents().add(column);
 		}
 		EMFSharedResources.getInstance().saveResource(leftResource);
-		return leftResource;
+        return upperCaseResource(leftResource);
 	}
 
 	@Override
@@ -241,7 +241,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 			rightResource.getContents().add(column);
 		}
 		EMFSharedResources.getInstance().saveResource(rightResource);
-		return rightResource;
+        return upperCaseResource(rightResource);
 	}
 
 	@Override

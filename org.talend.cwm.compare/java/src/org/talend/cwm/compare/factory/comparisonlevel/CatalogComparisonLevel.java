@@ -59,7 +59,7 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
             leftResource.getContents().add(schema);
         }
         EMFSharedResources.getInstance().saveResource(leftResource);
-        return leftResource;
+        return upperCaseResource(leftResource);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CatalogComparisonLevel extends AbstractComparisonLevel {
             rightResource.getContents().add(schema);
         }
         EMFSharedResources.getInstance().saveResource(rightResource);
-        return rightResource;
+        return upperCaseResource(rightResource);
     }
 
     private List<Schema> reloadElementOfPackage(Package toReloadObj) throws ReloadCompareException {

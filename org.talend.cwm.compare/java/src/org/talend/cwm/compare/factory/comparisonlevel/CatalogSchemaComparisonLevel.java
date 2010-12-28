@@ -149,7 +149,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         }
         // }
         EMFSharedResources.getInstance().saveResource(leftResource);
-        return leftResource;
+        return upperCaseResource(leftResource);
     }
 
     @Override
@@ -179,7 +179,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         }
 
         EMFSharedResources.getInstance().saveResource(rightResource);
-        return rightResource;
+        return upperCaseResource(rightResource);
     }
 
     /**

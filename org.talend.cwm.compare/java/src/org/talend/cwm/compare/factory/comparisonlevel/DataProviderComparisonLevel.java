@@ -95,7 +95,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         }
         // }
         EMFSharedResources.getInstance().saveResource(leftResource);
-        return leftResource;
+        return upperCaseResource(leftResource);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         }
         // }
         EMFSharedResources.getInstance().saveResource(reloadResource);
-        return reloadResource;
+        return upperCaseResource(reloadResource);
     }
 
     @Override
