@@ -25,7 +25,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.factory.ModelElementFileFactory;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.ext.FrequencyExt;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -263,19 +262,33 @@ public final class ComparatorsFactory {
     /**
      * DOC zshen ComparatorsFactory class global comment. Detailled comment
      */
-    static class IRepositoryViewObjectComparator implements Comparator<IRepositoryViewObject> {
+    static class IRepositoryViewObjectComparator implements Comparator<Object> {
 
         /*
          * (non-Javadoc)
          * 
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
-        public int compare(IRepositoryViewObject o1, IRepositoryViewObject o2) {
 
-            return PropertyHelper.retrieveElement(o1.getProperty().getItem()).getName().compareTo(
-                    PropertyHelper.retrieveElement(o2.getProperty().getItem()).getName());
+        // MOD qiongli 2010-12-28 bug 17922.handle folder under connection.
+        public int compare(Object o1, Object o2) {
+            if (o1 == null || o2 == null) {
+                return 0;
+            }
+            String name1 = null;
+            String name2 = null;
+            if (o1 instanceof IRepositoryViewObject) {
+                name1 = ((IRepositoryViewObject) o1).getLabel();
+            } else if (o1 instanceof IResource) {
+                name1 = ((IResource) o1).getName();
+            }
+            if (o2 instanceof IRepositoryViewObject) {
+                name2 = ((IRepositoryViewObject) o2).getLabel();
+            } else if (o2 instanceof IResource) {
+                name2 = ((IResource) o2).getName();
+            }
+            return name1.compareTo(name2);
         }
-
     }
 
     /**

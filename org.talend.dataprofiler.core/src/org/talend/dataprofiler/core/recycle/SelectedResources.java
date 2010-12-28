@@ -116,11 +116,15 @@ public class SelectedResources {
             // MOD qiongli bug 15587:if it is a folder under metadata,get the property by IRepositoryViewObject
             IPath path = folder.getFullPath();
             List<IRepositoryViewObject> conList = null;
-            if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
+            boolean hasChild = true;
+            if (folder.members().length == 0) {
+                hasChild = false;
+            }
+            if (hasChild && ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
                 path = path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
                 conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
                         ERepositoryObjectType.METADATA_CONNECTIONS, path, true);
-            } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
+            } else if (hasChild && ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
                 path = path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
                 conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
                         ERepositoryObjectType.METADATA_MDMCONNECTION, path, true);
