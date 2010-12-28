@@ -67,7 +67,7 @@ public class NewUDIndicatorWizardPage2 extends AbstractWizardPage {
         comboLang.setItems(types);
         comboLang.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         if (types.length > 0 && language == null) {
-            language = PatternLanguageType.ALL_DATABASE_TYPE.getLiteral();
+            language = PatternLanguageType.Default.getLiteral();
         }
         comboLang.setText(PatternLanguageType.findNameByLanguage(language));
 

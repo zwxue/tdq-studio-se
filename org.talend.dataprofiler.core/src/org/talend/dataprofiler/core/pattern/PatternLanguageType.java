@@ -16,13 +16,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC zqin class global comment. Detailled comment
  */
 public enum PatternLanguageType {
 
-    ALL_DATABASE_TYPE(0, "ALL_DATABASE_TYPE", "SQL", PatternToExcelEnum.AllDBRegexp), //$NON-NLS-1$ //$NON-NLS-2$
+    Default(0, DefaultMessagesImpl.getString("PatternLanguageType.Default"), "SQL", PatternToExcelEnum.AllDBRegexp), //$NON-NLS-1$ //$NON-NLS-2$
     MYSQL(
           1,
           SupportDBUrlType.MYSQLDEFAULTURL.getLanguage(),
