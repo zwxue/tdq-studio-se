@@ -672,7 +672,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             rc.setReturnCode(Messages.getString("Evaluator.NoConnectionFoundInMetadata"), false);
             return rc;
         }
-        if (ProxyRepositoryViewObject.getRepositoryViewObject((Connection) dataprovider) == null) {
+        if (ProxyRepositoryViewObject.getRepositoryViewObject((Connection) dataprovider) == null
+                && ProxyRepositoryViewObject.getAllMetadataConnections().size() > 0) {
             rc.setReturnCode(Messages.getString("Evaluator.NoConnectionFoundInMetadata", dataprovider.getName()), false);
             return rc;
         }
