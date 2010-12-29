@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
@@ -63,6 +64,17 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
     public void addPages() {
         analysisMetadataWizardPage = new TableAnalysisMetadataWizardPage();
         this.addPage(analysisMetadataWizardPage);
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.core.model.properties.Item)
+     */
+    @Override
+    public void openEditor(Item item) {
+        // TODO Auto-generated method stub
+
     }
     
     

@@ -60,8 +60,9 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 
 /**
@@ -71,7 +72,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
 
     private static Logger log = Logger.getLogger(ModelElementIndicatorImpl.class);
 
-    private ModelElement modelElement;
+    private IRepositoryNode repositoryNode;
 
     private final List<IndicatorEnum> countsEnumChildren = Arrays.asList(IndicatorEnum.CountsIndicatorEnum.getChildren());
 
@@ -91,8 +92,8 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     public ModelElementIndicatorImpl() {
     }
 
-    public ModelElementIndicatorImpl(ModelElement modelElement) {
-        this.modelElement = modelElement;
+    public ModelElementIndicatorImpl(RepositoryNode reposNode) {
+        this.repositoryNode = reposNode;
     }
 
     public boolean contains(IndicatorEnum indicatorEnum) {
@@ -612,15 +613,15 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         return patternIndicators.toArray(new Indicator[patternIndicators.size()]);
     }
 
-    public ModelElement getModelElement() {
-        return this.modelElement;
+    public IRepositoryNode getModelElementRepositoryNode() {
+        return this.repositoryNode;
     }
 
-    protected void setModelElement(ModelElement modelElement) {
-        this.modelElement = modelElement;
+    protected void setModelElement(IRepositoryNode reposViewObj) {
+        this.repositoryNode = reposViewObj;
     }
 
     public String getElementName() {
-        return getModelElement().getName();
+        return getModelElementRepositoryNode().getObject().getProperty().getLabel();
     }
 }

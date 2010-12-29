@@ -85,6 +85,7 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -643,10 +644,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     remainDBTypeListCM.remove(languageName);
                 }
                 if (remainDBTypeListCM.size() == 0) {
-                    MessageDialog
-                            .openWarning(
-                                    null,
-                                    DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openWarning(
+                            null,
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
                     return;
                 }
 
@@ -1018,10 +1018,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     remainDBTypeListAF.remove(languageName);
                 }
                 if (remainDBTypeListAF.size() == 0) {
-                    MessageDialog
-                            .openWarning(
-                                    null,
-                                    DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openWarning(
+                            null,
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
                     return;
                 }
 
@@ -1754,15 +1753,21 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
+        // MOD klliu 2010-12-10
         if (editor.getEditorInput() instanceof IndicatorEditorInput) {
             IndicatorEditorInput editorInput = (IndicatorEditorInput) editor.getEditorInput();
             return editorInput.getIndicatorDefinition();
         } else if (editor.getEditorInput() instanceof FileEditorInput) {
             FileEditorInput editorInput = (FileEditorInput) editor.getEditorInput();
             return IndicatorResourceFileHelper.getInstance().findIndDefinition(editorInput.getFile());
-        } else {
-            return null;
+        } else if (editor.getEditorInput() instanceof IndicatorDefinitionItemEditorInput) {
+            IndicatorDefinitionItemEditorInput editorInput = (IndicatorDefinitionItemEditorInput) editor.getEditorInput();
+
+            TDQIndicatorDefinitionItem tdqIndicatorDefinitionItem = editorInput.getTDQIndicatorDefinitionItem();
+            IndicatorDefinition indicatorDefinition = tdqIndicatorDefinitionItem.getIndicatorDefinition();
+            return indicatorDefinition;
         }
+        return null;
     }
 
     /*
@@ -1835,8 +1840,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (isNewTaggedValue) {
                 TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(PluginConstant.CLASS_NAME_TEXT,
                         ((Text) javaUIDCombo.getData(PluginConstant.CLASS_NAME_TEXT)).getText());
-                TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(PluginConstant.JAR_FILE_PATH, ((Text) javaUIDCombo
-                        .getData(PluginConstant.JAR_FILE_PATH)).getText());
+                TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(PluginConstant.JAR_FILE_PATH,
+                        ((Text) javaUIDCombo.getData(PluginConstant.JAR_FILE_PATH)).getText());
                 definition.getTaggedValue().add(classNameTV);
                 definition.getTaggedValue().add(jarPathTV);
             }

@@ -39,7 +39,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -112,12 +111,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
-        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-
-        this.pattern = PatternResourceFileHelper.getInstance().findPattern(input.getFile());
-
+        PatternItemEditorInput input = (PatternItemEditorInput) editor.getEditorInput();
+        this.pattern = input.getTDQPatternItem().getPattern();
         this.currentModelElement = pattern;
-
         return pattern;
     }
 

@@ -12,18 +12,42 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedTableActionProvider;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedTableAnalysisAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateTableAnalysisAction;
+import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class CreateTableAnalysis extends AbstractPredefinedTableActionProvider {
 
+    private ModelElement modelElement;
+
     @Override
     protected AbstractPredefinedTableAnalysisAction getAction() {
-        return new CreateTableAnalysisAction();
+        return modelElement == null ? null : new CreateTableAnalysisAction();
     }
 
+    @Override
+    public void init(ICommonActionExtensionSite site) {
+        if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
+            StructuredSelection selection = (StructuredSelection) site.getStructuredViewer().getSelection();
+            Object fe = selection.getFirstElement();
+            if (fe instanceof IRepositoryNode) {
+                IRepositoryViewObject object = ((IRepositoryNode) fe).getObject();
+                if (object instanceof TdTableRepositoryObject) {
+                    TdTableRepositoryObject tableObject = (TdTableRepositoryObject) object;
+                    modelElement = tableObject.getTdTable();
+                }
+            }
+        }
+        super.init(site);
+    }
 }

@@ -13,6 +13,7 @@
 
 package org.talend.cwm.compare.ui.actions.provider;
 
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;

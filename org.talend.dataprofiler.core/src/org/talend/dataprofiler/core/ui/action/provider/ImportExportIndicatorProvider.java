@@ -17,6 +17,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.ExportIndicatorDefinitionAction;
 import org.talend.dataprofiler.core.ui.action.actions.ImportIndicatorDefinitionAction;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -38,17 +41,17 @@ public class ImportExportIndicatorProvider extends AbstractCommonActionProvider 
         // MOD xqliu 2010-09-21 bug 15269
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         Object firstElement = currentSelection.getFirstElement();
-        if (firstElement instanceof IFolder) {
-            String sysIndicatorFolderPath = ResourceManager.getSystemIndicatorFolder().getFullPath().toOSString();
-            String selectedFolderPath = ((IFolder) firstElement).getFullPath().toOSString();
-            if (selectedFolderPath.startsWith(sysIndicatorFolderPath)) {
-                menu.add(new ImportIndicatorDefinitionAction());
-                menu.add(new ExportIndicatorDefinitionAction());
-            } else {
-                // don't create any menu
+        if (firstElement instanceof RepositoryNode) {
+            RepositoryNode node = (RepositoryNode) firstElement;
+            if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
+                IFolder folder = WorkbenchUtils.getFolder(node);
+                String sysIndicatorFolderPath = ResourceManager.getSystemIndicatorFolder().getFullPath().toOSString();
+                String selectedFolderPath = folder.getFullPath().toOSString();
+                if (selectedFolderPath.startsWith(sysIndicatorFolderPath)) {
+                    menu.add(new ImportIndicatorDefinitionAction());
+                    menu.add(new ExportIndicatorDefinitionAction());
+                }
             }
-        } else {
-            // don't create any menu
         }
         // ~ 15269
     }

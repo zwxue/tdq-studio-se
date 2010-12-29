@@ -22,13 +22,13 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -38,10 +38,8 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.ColumnSet;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -69,48 +67,64 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         this.selection = selection;
     }
 
-    protected TdColumn[] getColumns() {
-        Object obj = getSelection().getFirstElement();
-
-        if (obj instanceof TdColumn) {
-            TdColumn[] column = new TdColumn[getSelection().size()];
+    protected IRepositoryNode[] getColumns() {
+        IRepositoryNode obj = (IRepositoryNode) getSelection().getFirstElement();
+        IRepositoryViewObject reposObject = obj.getObject();
+        if (reposObject instanceof MetadataColumnRepositoryObject) {
+            IRepositoryNode[] column = new IRepositoryNode[getSelection().size()];
 
             for (int i = 0; i < getSelection().size(); i++) {
-                column[i] = (TdColumn) getSelection().toArray()[i];
+                column[i] = (IRepositoryNode) getSelection().toArray()[i];
             }
 
             return column;
         }
 
-        if (obj instanceof ColumnSet) {
+        if (reposObject instanceof MetadataTableRepositoryObject) {
 
-            List<TdColumn> list = new ArrayList<TdColumn>();
+            List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
             Object[] selections = getSelection().toArray();
             for (Object currentObj : selections) {
-                ColumnSet columnSet = (ColumnSet) currentObj;
-
-                if (ColumnSetHelper.getColumns(columnSet).size() > 0) {
-                    list.addAll(ColumnSetHelper.getColumns(columnSet));
+                IRepositoryNode columnSet = (IRepositoryNode) currentObj;
+                IRepositoryViewObject columnSetObj = columnSet.getObject();
+                TdTable table = (TdTable) ((MetadataTableRepositoryObject) columnSetObj).getTable();
+                if (ColumnSetHelper.getColumns(table).size() > 0) {
+                    // Get column children of one selected column set.
+                    list.addAll(columnSet.getChildren().get(0).getChildren());
                 } else {
-                    Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-                    Connection conn = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
 
-                    try {
-                        List<TdColumn> columns = DqRepositoryViewService.getColumns(conn, columnSet, null, true);
-                        // MOD scorreia 2009-01-29 columns are stored in the table
-                        // ColumnSetHelper.addColumns(columnSet, columns);
-                        list.addAll(columns);
-                        ProxyRepositoryViewObject.save(conn);
-                    } catch (Exception e) {
-                        MessageBoxExceptionHandler.process(e);
-                    }
+                    // FIXME_15750 If the columns are not being loaded, the tree viewer of dq repository should
+                    // reconstructed at first, then populate it.
+                    //
+                    // Connection conn = ((ConnectionItem)
+                    // columnSet.getObject().getProperty().getItem()).getConnection();
+                    // try {
+                    // List<TdColumn> columns = DqRepositoryViewService.getColumns(conn, columnSet, null, true);
+                    // // MOD scorreia 2009-01-29 columns are stored in the table
+                    // // ColumnSetHelper.addColumns(columnSet, columns);
+                    // list.addAll(columns);
+                    // ProxyRepositoryViewObject.save(conn);
+                    // } catch (TalendException e) {
+                    // MessageBoxExceptionHandler.process(e);
+                    // }
+
+// Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
+                    // Connection conn = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
+                    //
+                    // try {
+                    // List<TdColumn> columns = DqRepositoryViewService.getColumns(conn, columnSet, null, true);
+                    // // MOD scorreia 2009-01-29 columns are stored in the table
+                    // // ColumnSetHelper.addColumns(columnSet, columns);
+                    // list.addAll(columns);
+                    // ProxyRepositoryViewObject.save(conn);
+                    // } catch (Exception e) {
+                    // MessageBoxExceptionHandler.process(e);
+                    // }
+
                 }
             }
-
-
-            return list.toArray(new TdColumn[list.size()]);
+            return list.toArray(new IRepositoryNode[list.size()]);
         }
-
         return null;
     }
 
@@ -155,8 +169,8 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         ExecutionLanguage language = ExecutionLanguage.get(getMasterPage().getExecCombo().getText());
         for (int i = 0; i < getColumns().length; i++) {
 
-            TdColumn column = getColumns()[i];
-            ColumnIndicator columnIndicator = ModelElementIndicatorHelper.createColumnIndicator(column);
+            IRepositoryNode columnNode = getColumns()[i];
+            ColumnIndicator columnIndicator = ModelElementIndicatorHelper.createColumnIndicator(columnNode);
 
             for (IndicatorEnum oneEnum : allowedEnum) {
                 columnIndicator.addTempIndicatorEnum(oneEnum);
@@ -164,6 +178,8 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                     for (IndicatorEnum childEnum : oneEnum.getChildren()) {
                         // MOD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose by
                         // user.
+                        TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject())
+.getTdColumn();
                         if (ModelElementIndicatorRule.patternRule(childEnum, column, language)) {
                             columnIndicator.addTempIndicatorEnum(childEnum);
                         }

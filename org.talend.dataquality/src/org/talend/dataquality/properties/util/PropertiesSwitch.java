@@ -10,11 +10,15 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.talend.core.model.properties.Item;
-
 import org.talend.core.model.properties.TDQItem;
 import org.talend.dataquality.properties.*;
+import org.talend.dataquality.properties.PropertiesPackage;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
 
 /**
  * <!-- begin-user-doc -->
@@ -130,11 +134,29 @@ public class PropertiesSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case PropertiesPackage.TDQ_FILE_ITEM: {
+                TDQFileItem tdqFileItem = (TDQFileItem)theEObject;
+                T result = caseTDQFileItem(tdqFileItem);
+                if (result == null) result = caseTDQItem(tdqFileItem);
+                if (result == null) result = caseItem(tdqFileItem);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             case PropertiesPackage.TDQ_JRXML_ITEM: {
                 TDQJrxmlItem tdqJrxmlItem = (TDQJrxmlItem)theEObject;
                 T result = caseTDQJrxmlItem(tdqJrxmlItem);
+                if (result == null) result = caseTDQFileItem(tdqJrxmlItem);
                 if (result == null) result = caseTDQItem(tdqJrxmlItem);
                 if (result == null) result = caseItem(tdqJrxmlItem);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case PropertiesPackage.TDQ_SOURCE_FILE_ITEM: {
+                TDQSourceFileItem tdqSourceFileItem = (TDQSourceFileItem)theEObject;
+                T result = caseTDQSourceFileItem(tdqSourceFileItem);
+                if (result == null) result = caseTDQFileItem(tdqSourceFileItem);
+                if (result == null) result = caseTDQItem(tdqSourceFileItem);
+                if (result == null) result = caseItem(tdqSourceFileItem);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -233,6 +255,21 @@ public class PropertiesSwitch<T> {
     }
 
     /**
+     * Returns the result of interpreting the object as an instance of '<em>TDQ File Item</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>TDQ File Item</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseTDQFileItem(TDQFileItem object) {
+        return null;
+    }
+
+    /**
      * Returns the result of interpreting the object as an instance of '<em>TDQ Jrxml Item</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
@@ -244,6 +281,21 @@ public class PropertiesSwitch<T> {
      * @generated
      */
     public T caseTDQJrxmlItem(TDQJrxmlItem object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>TDQ Source File Item</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>TDQ Source File Item</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseTDQSourceFileItem(TDQSourceFileItem object) {
         return null;
     }
 

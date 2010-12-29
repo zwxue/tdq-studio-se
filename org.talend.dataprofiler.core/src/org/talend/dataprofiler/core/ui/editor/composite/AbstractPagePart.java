@@ -26,6 +26,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -37,6 +38,8 @@ import org.talend.dataprofiler.core.ui.action.actions.ChangeConnectionAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
@@ -127,12 +130,13 @@ public abstract class AbstractPagePart {
             if (dataManager == null) {
                 if (tree.getData() instanceof AnalysisColumnNominalIntervalTreeViewer) {
                     AnalysisColumnNominalIntervalTreeViewer treeViewer = (AnalysisColumnNominalIntervalTreeViewer) tree.getData();
-                    TdColumn column = treeViewer.getColumnSetMultiValueList().get(0);
-                    dataManager = ConnectionHelper.getTdDataProvider(column);
+                    RepositoryNode repositoryNode = treeViewer.getColumnSetMultiValueList().get(0);
+                    dataManager = ((ConnectionItem) repositoryNode.getObject().getProperty().getItem()).getConnection();
+                    // dataManager = ConnectionHelper.getTdDataProvider(repositoryNode);
                 } else if (tree.getData() instanceof AnalysisColumnSetTreeViewer) {
                     AnalysisColumnSetTreeViewer treeViewer = (AnalysisColumnSetTreeViewer) tree.getData();
-                    TdColumn column = treeViewer.getColumnSetMultiValueList().get(0);
-                    dataManager = ConnectionHelper.getTdDataProvider(column);
+                    IRepositoryNode reposNode = treeViewer.getColumnSetMultiValueList().get(0);
+                    dataManager = ((ConnectionItem) reposNode.getObject().getProperty().getItem()).getConnection();
                 }
             }
             setConnectionState(masterPage, dataManager);

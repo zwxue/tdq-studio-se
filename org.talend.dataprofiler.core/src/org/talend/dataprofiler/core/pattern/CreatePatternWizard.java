@@ -14,9 +14,12 @@ package org.talend.dataprofiler.core.pattern;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -169,5 +172,11 @@ public class CreatePatternWizard extends AbstractWizard {
 
     public PatternBuilder getPatternBuilder() {
         return patternBuilder;
+    }
+
+    @Override
+    public void openEditor(Item item) {
+        PatternItemEditorInput analysisEditorInput = new PatternItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(analysisEditorInput, PatternEditor.class.getName());
     }
 }

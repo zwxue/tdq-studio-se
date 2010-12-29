@@ -53,12 +53,14 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnDependencyMasterDetailsPage;
@@ -68,6 +70,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -83,7 +86,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private ScrolledForm form = null;
 
-    private List<TdColumn> columnListA;
+    private List<RepositoryNode> columnListA;
 
     // MOD mzhao 2009-06-17 feature 5887
     private SelectionListener selectionListener = null;
@@ -100,7 +103,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     // right position.
     private List<TableViewer> tableViewerPosStack = null;
 
-    private List<TdColumn> columnListB;
+    private List<RepositoryNode> columnListB;
 
     private Section columnsComparisonSection = null;
 
@@ -126,8 +129,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     private Button columnReverseButtion;
 
-    public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp, List<TdColumn> columnSetA,
-            List<TdColumn> columnSetB, String mainTitle, String description, boolean showCheckButton, boolean allowColumnDupcation) {
+    public AnalysisColumnCompareTreeViewer(AbstractAnalysisMetadataPage masterPage, Composite topComp,
+            List<RepositoryNode> columnSetA, List<RepositoryNode> columnSetB, String mainTitle, String description,
+            boolean showCheckButton, boolean allowColumnDupcation) {
         this.masterPage = masterPage;
         this.analysis = masterPage.getAnalysis();
         form = masterPage.getScrolledForm();
@@ -135,8 +139,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
 
-        columnListA = new ArrayList<TdColumn>();
-        columnListB = new ArrayList<TdColumn>();
+        columnListA = new ArrayList<RepositoryNode>();
+        columnListB = new ArrayList<RepositoryNode>();
         tableViewerPosStack = new ArrayList<TableViewer>();
 
         columnListA.addAll(columnSetA);
@@ -155,8 +159,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         form = masterPage.getScrolledForm();
         toolkit = masterPage.getEditor().getToolkit();
         this.parentComp = topComp;
-        columnListA = new ArrayList<TdColumn>();
-        columnListB = new ArrayList<TdColumn>();
+        columnListA = new ArrayList<RepositoryNode>();
+        columnListB = new ArrayList<RepositoryNode>();
         tableViewerPosStack = new ArrayList<TableViewer>();
         this.showCheckButton = true;
         this.allowColumnDupcation = allowColumnDupcation;
@@ -165,9 +169,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         if (analysis.getResults().getIndicators().size() > 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
-            columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
+
+            for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
+                columnListA.add(DQStructureManager.getInstance().createColumnNode(tdColumn, null));
+            }
+            for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
+                columnListB.add(DQStructureManager.getInstance().createColumnNode(tdColumn, null));
+            }
             // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
-            columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
 
         }
         createAnalyzedColumnSetsSection(mainTitle, description);
@@ -216,42 +225,42 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         // ~
         // !MOD mzhao 2010-03-08,Feature 11387. Add reverse action to make it easy for columns comparing on opposite
         // way.
-		// MOD qiongli 2010-6-10,bug 13600:remove "reverse columns" button for
-		// ColumnSet comparison analysis.
-		if (masterPage instanceof ColumnDependencyMasterDetailsPage) {
-			columnReverseButtion = new Button(compareToplevelComp, SWT.NONE);
-			// GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(compareToplevelComp);
-			columnReverseButtion.setText("Reverse columns");
-			columnReverseButtion.addMouseListener(new MouseListener() {
+        // MOD qiongli 2010-6-10,bug 13600:remove "reverse columns" button for
+        // ColumnSet comparison analysis.
+        if (masterPage instanceof ColumnDependencyMasterDetailsPage) {
+            columnReverseButtion = new Button(compareToplevelComp, SWT.NONE);
+            // GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(compareToplevelComp);
+            columnReverseButtion.setText("Reverse columns");
+            columnReverseButtion.addMouseListener(new MouseListener() {
 
-				public void mouseDoubleClick(MouseEvent e) {
+                public void mouseDoubleClick(MouseEvent e) {
 
-				}
+                }
 
-				public void mouseDown(MouseEvent e) {
-					handleColumnReverseAction();
-				}
+                public void mouseDown(MouseEvent e) {
+                    handleColumnReverseAction();
+                }
 
-				public void mouseUp(MouseEvent e) {
+                public void mouseUp(MouseEvent e) {
 
-				}
+                }
 
-			});
-			columnReverseButtion.addKeyListener(new KeyListener() {
+            });
+            columnReverseButtion.addKeyListener(new KeyListener() {
 
-				public void keyPressed(KeyEvent e) {
-					if (e.keyCode == 13) {
-						handleColumnReverseAction();
-					}
-				}
+                public void keyPressed(KeyEvent e) {
+                    if (e.keyCode == 13) {
+                        handleColumnReverseAction();
+                    }
+                }
 
-				public void keyReleased(KeyEvent e) {
+                public void keyReleased(KeyEvent e) {
 
-				}
+                }
 
-			});
-		}
-		// ~
+            });
+        }
+        // ~
 
         SashForm sashForm = new SashForm(sectionClient, SWT.NULL);
         sashForm.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -267,14 +276,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         Composite leftComp = toolkit.createComposite(sashForm);
         leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         leftComp.setLayout(new GridLayout());
-        leftTable = this.createSectionPart(leftComp, columnListA, DefaultMessagesImpl
-                .getString("ColumnsComparisonMasterDetailsPage.leftColumns"), hyperlinkTextLeft); //$NON-NLS-1$ 
+        leftTable = this.createSectionPart(leftComp, columnListA,
+                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.leftColumns"), hyperlinkTextLeft); //$NON-NLS-1$ 
 
         Composite rightComp = toolkit.createComposite(sashForm);
         rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         rightComp.setLayout(new GridLayout());
-        rightTable = this.createSectionPart(rightComp, columnListB, DefaultMessagesImpl
-                .getString("ColumnsComparisonMasterDetailsPage.rightColumns"), hyperlinkTextRight); //$NON-NLS-1$ 
+        rightTable = this.createSectionPart(rightComp, columnListB,
+                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.rightColumns"), hyperlinkTextRight); //$NON-NLS-1$ 
         // MOD mzhao 2009-05-05 bug:6587.
         updateBindConnection(masterPage, tableViewerPosStack);
         columnsComparisonSection.setClient(sectionClient);
@@ -288,7 +297,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         leftTable.refresh();
     }
 
-    private TableViewer createSectionPart(Composite parentComp, final List<TdColumn> columnList, String title,
+    private TableViewer createSectionPart(Composite parentComp, final List<RepositoryNode> columnList, String title,
             String hyperlinkText) {
         Section columnSetElementSection = masterPage.createSection(form, parentComp, title, null);
         Composite sectionComp = toolkit.createComposite(columnSetElementSection);
@@ -306,8 +315,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         // ~
         // DragAndDropDecorate decorate = new DragAndDropDecorate();
         // decorate.toDecorateDragAndDrop(columnsElementViewer);
-        ComparisonTableViewerDNDDecorate dndDecorate = new ComparisonTableViewerDNDDecorate(this, masterPage, tableViewerPosStack,
-                allowColumnDupcation);
+        ComparisonTableViewerDNDDecorate dndDecorate = new ComparisonTableViewerDNDDecorate(this, masterPage,
+                tableViewerPosStack, allowColumnDupcation);
         dndDecorate.installDND(columnsElementViewer, true, ComparisonTableViewerDNDDecorate.COLUMN_VALIDATETYPE);
 
         Composite buttonsComp = toolkit.createComposite(columsComp, SWT.NULL);
@@ -379,7 +388,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         });
         this.enabledButtons(new Button[] { delButton, moveUpButton, moveDownButton }, false);
-        final List<TdColumn> columnsOfSectionPart = columnList;
+        final List<RepositoryNode> columnsOfSectionPart = columnList;
         selectColumnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
             public void linkActivated(HyperlinkEvent e) {
@@ -400,15 +409,17 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * MOD mzhao 2009-02-03,remove the first parameter, extract it to class property filed for the convenience of
      * invoking this method from cheat sheets.
      */
-    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<TdColumn> columnsOfSectionPart) {
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(masterPage, null, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, //$NON-NLS-1$
+    public void openColumnsSelectionDialog(TableViewer columnsElementViewer, List<RepositoryNode> columnsOfSectionPart) {
+        RepositoryNode connNode = (RepositoryNode) masterPage.getConnCombo().getData(
+                String.valueOf(masterPage.getConnCombo().getSelectionIndex()));
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(masterPage, null,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnsOfSectionPart, connNode,//$NON-NLS-1$
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
-            List<TdColumn> columnSet = new ArrayList<TdColumn>();
+            List<RepositoryNode> columnSet = new ArrayList<RepositoryNode>();
             for (Object obj : columns) {
-                columnSet.add((TdColumn) obj);
+                columnSet.add((RepositoryNode) obj);
             }
             columnsElementViewer.setInput(columnSet);
             columnsOfSectionPart.clear();
@@ -419,8 +430,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                     column = (TdColumn) EObjectHelper.resolveObject(column);
                 }
                 String tableName = ColumnHelper.getColumnOwnerAsColumnSet(column).getName();
-                columnsElementViewer.getTable().getColumn(0).setText(
-                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
+                columnsElementViewer.getTable().getColumn(0)
+                        .setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.elements", tableName)); //$NON-NLS-1$
             }
             updateBindConnection(masterPage, tableViewerPosStack);
         }
@@ -432,7 +443,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * @param columnList
      * @param columnsElementViewer
      */
-    private void moveElement(List<TdColumn> columnList, TableViewer columnsElementViewer, boolean isDown) {
+    private void moveElement(List<RepositoryNode> columnList, TableViewer columnsElementViewer, boolean isDown) {
         // Object firstElement = ((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement();
         // int index = columnList.indexOf(firstElement);
         // if (isDown) {
@@ -451,7 +462,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         Object[] elementArray = ((IStructuredSelection) columnsElementViewer.getSelection()).toArray();
         if (isDown) {
             for (int i = elementArray.length - 1; i >= 0; i--) {
-                TdColumn currentElement = (TdColumn) elementArray[i];
+                RepositoryNode currentElement = (RepositoryNode) elementArray[i];
                 int index = columnList.indexOf(currentElement);
                 if ((index + 1) < columnList.size()) {
                     columnList.remove(currentElement);
@@ -462,7 +473,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             }
         } else {
             for (int i = 0; i < elementArray.length; i++) {
-                TdColumn currentElement = (TdColumn) elementArray[i];
+                RepositoryNode currentElement = (RepositoryNode) elementArray[i];
                 int index = columnList.indexOf(currentElement);
                 if ((index - 1) >= 0) {
                     columnList.remove(currentElement);
@@ -483,7 +494,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      * @param columnsElementViewer
      * @param asc
      */
-    private void sortElement(List<TdColumn> columnList, TableViewer columnsElementViewer) {
+    private void sortElement(List<RepositoryNode> columnList, TableViewer columnsElementViewer) {
         Collections.sort(columnList, new CaseInsensitiveComparator());
         columnsElementViewer.setInput(columnList);
     }
@@ -506,19 +517,25 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     /**
      * DOC rli Comment method "setColumnAB".
      */
-    public void setColumnABForMatchingIndicator(RowMatchingIndicator rowMatchingIndicator, List<TdColumn> columnsA,
-            List<TdColumn> columnsB) {
+    public void setColumnABForMatchingIndicator(RowMatchingIndicator rowMatchingIndicator, List<RepositoryNode> columnsA,
+            List<RepositoryNode> columnsB) {
         if (columnsA.size() != 0) {
             ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) columnsA.get(0));
             rowMatchingIndicator.setAnalyzedElement(columnSetOwner);
         }
         rowMatchingIndicator.getColumnSetA().clear();
-        rowMatchingIndicator.getColumnSetA().addAll(columnsA);
+        for (RepositoryNode reposNode : columnsA) {
+            rowMatchingIndicator.getColumnSetA().add(
+                    (TdColumn) ((MetadataColumnRepositoryObject) reposNode.getObject()).getTdColumn());
+        }
         rowMatchingIndicator.getColumnSetB().clear();
-        rowMatchingIndicator.getColumnSetB().addAll(columnsB);
+        for (RepositoryNode reposNode : columnsB) {
+            rowMatchingIndicator.getColumnSetB().add(
+                    (TdColumn) ((MetadataColumnRepositoryObject) reposNode.getObject()).getTdColumn());
+        }
     }
 
-    private TableViewer createTreeViewer(final List<TdColumn> columnList, Composite columsComp) {
+    private TableViewer createTreeViewer(final List<RepositoryNode> columnList, Composite columsComp) {
         TableViewer columnsElementViewer = new TableViewer(columsComp, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
 
         Table table = columnsElementViewer.getTable();
@@ -532,13 +549,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         columnHeader.setWidth(260);
         columnHeader.setAlignment(SWT.CENTER);
         if (columnList.size() > 0) {
-            TdColumn column = (TdColumn) columnList.get(0);
-            if (column != null && column.eIsProxy()) {
-                columnList.remove(column);
-                column = (TdColumn) EObjectHelper.resolveObject(column);
-                columnList.add(column);
-            }
-            String tableName = ColumnHelper.getColumnOwnerAsColumnSet(column).getName();
+            RepositoryNode column = (RepositoryNode) columnList.get(0);
+            MetadataColumnRepositoryObject colObject = (MetadataColumnRepositoryObject) column.getObject();
+            String tableName = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) colObject.getTdColumn()).getName();
             columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
         }
 
@@ -550,7 +563,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     }
 
-    private void createTableViewerMenu(final TableViewer columnsElementViewer, final List<TdColumn> columnList,
+    private void createTableViewerMenu(final TableViewer columnsElementViewer, final List<RepositoryNode> columnList,
             final Button[] buttons) {
         Table table = columnsElementViewer.getTable();
 
@@ -633,14 +646,13 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         @SuppressWarnings("unchecked")
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        	//MOD qiongli the oldInput be used when open a editor
-        	if (oldInput != null && newInput != null) {
+            // MOD qiongli the oldInput be used when open a editor
+            if (oldInput != null && newInput != null) {
                 if (!((List) newInput).isEmpty()) {
                     masterPage.setDirty(true);
                 }
             }
         }
-        
 
         public Image getImage(Object element) {
             if (element instanceof TdColumn) {
@@ -678,41 +690,48 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     public void updateModelViewer() {
         if (analysis.getResults().getIndicators().size() != 0) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
-			// MOD qiongli bug 0012766,2010-6-8,to the instance of
-			// ColumnDependencyIndicator and update view
-			if (indicators.get(0) instanceof ColumnDependencyIndicator) {
-				columnListA.clear();
-				columnListB.clear();
-				ColumnDependencyIndicator cdi = null;
-				for (int i = 0; i < indicators.size(); i++) {
-					cdi = (ColumnDependencyIndicator) indicators.get(i);
-					columnListA.add(cdi.getColumnA());
-					columnListB.add(cdi.getColumnB());
-				}
-				tableViewerPosStack.get(0).setInput(columnListA);
-				tableViewerPosStack.get(1).setInput(columnListB);
-			} else {
-				RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators
-						.get(0);
-				columnListA.clear();
-				columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
-				tableViewerPosStack.get(0).setInput(columnListA);
-				columnListB.clear();
-				columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
-				tableViewerPosStack.get(1).setInput(columnListB);
-			}
-			
+            // MOD qiongli bug 0012766,2010-6-8,to the instance of
+            // ColumnDependencyIndicator and update view
+            if (indicators.get(0) instanceof ColumnDependencyIndicator) {
+                columnListA.clear();
+                columnListB.clear();
+                ColumnDependencyIndicator cdi = null;
+                for (int i = 0; i < indicators.size(); i++) {
+                    cdi = (ColumnDependencyIndicator) indicators.get(i);
+                    columnListA.add(DQStructureManager.getInstance().createColumnNode(cdi.getColumnA(), null));
+                    columnListB.add(DQStructureManager.getInstance().createColumnNode(cdi.getColumnB(), null));
+                }
+                tableViewerPosStack.get(0).setInput(columnListA);
+                tableViewerPosStack.get(1).setInput(columnListB);
+            } else {
+                RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
+                columnListA.clear();
+                // columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
+
+                for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
+                    columnListA.add(DQStructureManager.getInstance().createColumnNode(tdColumn, null));
+                }
+
+                tableViewerPosStack.get(0).setInput(columnListA);
+                columnListB.clear();
+                // columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
+                for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
+                    columnListB.add(DQStructureManager.getInstance().createColumnNode(tdColumn, null));
+                }
+                tableViewerPosStack.get(1).setInput(columnListB);
+            }
+
         } else {
             // MOD mzhao bug 12766, 2010-04-22 refresh the viewer.
-        	columnListA.clear();
-        	columnListB.clear();
-			// MOD qiongli 2010-6-8, bug 13595
-			// tableViewerPosStack.get(0).setInput(null);
-			// tableViewerPosStack.get(1).setInput(null);
-			tableViewerPosStack.get(0).setInput(columnListA);
-			tableViewerPosStack.get(1).setInput(columnListB);
-			// ~
-		}
+            columnListA.clear();
+            columnListB.clear();
+            // MOD qiongli 2010-6-8, bug 13595
+            // tableViewerPosStack.get(0).setInput(null);
+            // tableViewerPosStack.get(1).setInput(null);
+            tableViewerPosStack.get(0).setInput(columnListA);
+            tableViewerPosStack.get(1).setInput(columnListB);
+            // ~
+        }
 
     }
 
@@ -724,11 +743,11 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         return checkComputeButton;
     }
 
-    public List<TdColumn> getColumnListA() {
+    public List<RepositoryNode> getColumnListA() {
         return columnListA;
     }
 
-    public List<TdColumn> getColumnListB() {
+    public List<RepositoryNode> getColumnListB() {
         return columnListB;
     }
 
@@ -743,7 +762,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         if (columnListA != null && columnListA.size() > 0) {
             int idx = 0;
             List<Integer> needToReverseIndex = new ArrayList<Integer>();
-            for (TdColumn column : columnListA) {
+            for (RepositoryNode column : columnListA) {
                 if (canReverse(column, columnListB.get(idx))) {
                     needToReverseIndex.add(idx);
                 }
@@ -762,10 +781,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     }
 
-    private Boolean canReverse(TdColumn colA, TdColumn colB) {
+    private Boolean canReverse(RepositoryNode colA, RepositoryNode colB) {
         int idx = 0;
-        for (TdColumn col : columnListA) {
-            if (col == colB) {
+        for (RepositoryNode col : columnListA) {
+            if (col.getObject().getId() == colB.getObject().getId()) {
                 // if ((idx > columnListB.size() - 1) || (columnListB.get(idx) == colA)) {
                 // return false;
                 // } else {

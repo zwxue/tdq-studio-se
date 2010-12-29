@@ -12,10 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.action.actions.OpenIndicatorDefinitionAction;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -33,16 +39,22 @@ public class IndicatorDefinitionActionProvider extends AbstractCommonActionProvi
         if (!isShowMenu()) {
             return;
         }
-        TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
-        IndicatorDefinition[] definitiones = new IndicatorDefinition[currentSelection.size()];
-        Object[] objs = currentSelection.toArray();
 
-        for (int i = 0; i < objs.length; i++) {
-            if (objs[i] instanceof IndicatorDefinition) {
-                definitiones[i] = (IndicatorDefinition) objs[i];
+        TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
+        List<IndicatorDefinition> list = new ArrayList<IndicatorDefinition>();
+        Object[] objs = currentSelection.toArray();
+        for (Object obj : objs) {
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) obj;
+                if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.equals(node.getContentType())) {
+                    TDQIndicatorDefinitionItem item = (TDQIndicatorDefinitionItem) node.getObject().getProperty().getItem();
+                    list.add(item.getIndicatorDefinition());
+                }
             }
         }
 
-        menu.add(new OpenIndicatorDefinitionAction(definitiones));
+        if (!list.isEmpty()) {
+            menu.add(new OpenIndicatorDefinitionAction(list.toArray(new IndicatorDefinition[list.size()])));
+        }
     }
 }

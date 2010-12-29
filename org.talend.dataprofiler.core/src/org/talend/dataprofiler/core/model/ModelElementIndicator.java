@@ -15,7 +15,7 @@ package org.talend.dataprofiler.core.model;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC xqliu  class global comment. Detailled comment
@@ -56,7 +56,7 @@ public interface ModelElementIndicator {
 
     public abstract Indicator[] getPatternIndicators();
 
-    public ModelElement getModelElement();
+    public IRepositoryNode getModelElementRepositoryNode();
 
     public int getJavaType();
 

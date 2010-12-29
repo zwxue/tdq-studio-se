@@ -14,7 +14,7 @@ package org.talend.cwm.compare.i18n;
 
 import java.util.ResourceBundle;
 
-import org.talend.dataprofiler.core.i18n.MessagesCore;
+import org.talend.cwm.i18n.MessagesCore;
 
 /**
  * DOC scorreia class global comment. Detailled comment

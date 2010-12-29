@@ -77,6 +77,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
      */
     @Override
     public IStatus handleDrop(CommonDropAdapter aDropAdapter, DropTargetEvent aDropTargetEvent, Object target) {
+        // FIXME_15750 Handle drag and drop events in case of repository node object.
         // alwaysOverwrite = false;
         if (aDropAdapter.getCurrentTarget() == null || aDropTargetEvent.data == null) {
             return Status.CANCEL_STATUS;
@@ -110,7 +111,8 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                         anaList.add(findAnalysis);
                     }
                 }
-                ReportHelper.addAnalyses(anaList, findReport);
+                // FIXME_15750 wrap analysis to item here.
+                // ReportHelper.addAnalyses(anaList, findReport);
                 RepResourceFileHelper.getInstance().save(findReport);
             }
         } else if (resources != null && (target instanceof IFolder)) { // && dropSql

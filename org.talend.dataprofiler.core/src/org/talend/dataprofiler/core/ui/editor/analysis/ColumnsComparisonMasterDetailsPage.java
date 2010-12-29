@@ -31,6 +31,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
@@ -52,6 +53,7 @@ import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -252,10 +254,12 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 anaColumnCompareViewer.getColumnListA());
         Connection tdDataProvider = null;
         for (int i = 0; i < anaColumnCompareViewer.getColumnListA().size(); i++) {
-            analysedElements.add(anaColumnCompareViewer.getColumnListA().get(i));
+            analysedElements.add(((MetadataColumnRepositoryObject) anaColumnCompareViewer.getColumnListA().get(i).getObject())
+                    .getTdColumn());
         }
         for (int i = 0; i < anaColumnCompareViewer.getColumnListB().size(); i++) {
-            analysedElements.add(anaColumnCompareViewer.getColumnListB().get(i));
+            analysedElements.add(((MetadataColumnRepositoryObject) anaColumnCompareViewer.getColumnListB().get(i).getObject())
+                    .getTdColumn());
         }
         if (analysedElements.size() > 0) {
             tdDataProvider = ConnectionHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
@@ -312,17 +316,23 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage"), false); //$NON-NLS-1$
         }
 
+        List<TdColumn> columnAList = new ArrayList<TdColumn>();
+        List<TdColumn> columnBList = new ArrayList<TdColumn>();
+        for (RepositoryNode rd : anaColumnCompareViewer.getColumnListA()) {
+            columnAList.add((TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+        }
+        for (RepositoryNode rd : anaColumnCompareViewer.getColumnListB()) {
+            columnBList.add((TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+        }
         if (anaColumnCompareViewer.getColumnListA().size() > 0) {
-
-            if (!ColumnHelper.isFromSameTable(anaColumnCompareViewer.getColumnListA())
-                    || !ColumnHelper.isFromSameTable(anaColumnCompareViewer.getColumnListB())) {
+            if (!ColumnHelper.isFromSameTable(columnAList) || !ColumnHelper.isFromSameTable(columnBList)) {
                 return new ReturnCode(
                         DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameElementMessage"), false); //$NON-NLS-1$
             }
 
             for (int i = 0; i < anaColumnCompareViewer.getColumnListA().size(); i++) {
-                TdColumn columnA = anaColumnCompareViewer.getColumnListA().get(i);
-                TdColumn columnB = anaColumnCompareViewer.getColumnListB().get(i);
+                TdColumn columnA = columnAList.get(i);
+                TdColumn columnB = columnBList.get(i);
 
                 ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(columnA);
                 ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(columnB);
@@ -340,8 +350,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             }
 
             List<TdColumn> allColumns = new ArrayList<TdColumn>();
-            allColumns.addAll(anaColumnCompareViewer.getColumnListA());
-            allColumns.addAll(anaColumnCompareViewer.getColumnListB());
+            allColumns.addAll(columnAList);
+            allColumns.addAll(columnBList);
 
             // MOD scorreia 2009-05-25 allow to compare elements from the same
             // table

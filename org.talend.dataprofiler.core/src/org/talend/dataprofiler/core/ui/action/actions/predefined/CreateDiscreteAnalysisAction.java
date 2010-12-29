@@ -13,11 +13,13 @@
 package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.wizard.WizardDialog;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -52,7 +54,8 @@ public class CreateDiscreteAnalysisAction extends AbstractPredefinedAnalysisActi
     @Override
     protected boolean isAllowed() {
 
-        for (TdColumn column : getColumns()) {
+        for (IRepositoryNode repositoryNode : getColumns()) {
+            TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
             if (!Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
                 return false;
             }

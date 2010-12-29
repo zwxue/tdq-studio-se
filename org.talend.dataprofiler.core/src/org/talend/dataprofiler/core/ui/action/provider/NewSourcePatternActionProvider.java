@@ -25,7 +25,10 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.pattern.actions.ExportPatternsAction;
 import org.talend.dataprofiler.core.pattern.actions.ImportPatternsAction;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -53,33 +56,37 @@ public class NewSourcePatternActionProvider extends AbstractCommonActionProvider
         List<IFile> selectedFiles = new ArrayList<IFile>();
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
-            if (obj instanceof IFolder) {
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) obj;
+                if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
+                    try {
+                        IFolder folder = WorkbenchUtils.getFolder(node);
+                        ExpressionType type = null;
 
-                try {
-                    IFolder folder = (IFolder) obj;
-                    ExpressionType type = null;
+                        if (ResourceService.isSubFolder(ResourceManager.getPatternRegexFolder(), folder)) {
+                            type = ExpressionType.REGEXP;
+                        } else if (ResourceService.isSubFolder(ResourceManager.getPatternSQLFolder(), folder)) {
+                            type = ExpressionType.SQL_LIKE;
+                        }
 
-                    if (ResourceService.isSubFolder(ResourceManager.getPatternRegexFolder(), folder)) {
-                        type = ExpressionType.REGEXP;
-                    } else if (ResourceService.isSubFolder(ResourceManager.getPatternSQLFolder(), folder)) {
-                        type = ExpressionType.SQL_LIKE;
+                        if (type != null) {
+                            menu.add(new CreatePatternAction(folder, type));
+                            menu.add(new ImportPatternsAction(folder, type));
+                            menu.add(new ExportPatternsAction(folder, false));
+                            menu.add(new ExportPatternsAction(folder, true));
+                        }
+                    } catch (Exception e) {
+                        log.error(e, e);
                     }
+                }
 
-                    if (type != null) {
-                        menu.add(new CreatePatternAction((IFolder) obj, type));
-                        menu.add(new ImportPatternsAction((IFolder) obj, type));
-                        menu.add(new ExportPatternsAction((IFolder) obj, false));
-                        menu.add(new ExportPatternsAction((IFolder) obj, true));
-                    }
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
-            } else if (obj instanceof IFile) {
-                IFile file = (IFile) obj;
-                if (EXTENSION_PATTERN.equalsIgnoreCase(file.getFileExtension())) {
-                    // menu.add(new RenameSqlFileAction((IFile) obj));
-                }
             }
+            // else if (obj instanceof IFile) {
+            // IFile file = (IFile) obj;
+            // if (EXTENSION_PATTERN.equalsIgnoreCase(file.getFileExtension())) {
+            // // menu.add(new RenameSqlFileAction((IFile) obj));
+            // }
+            // }
         }
         boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
         if (!isSelectFile && !selectedFiles.isEmpty()) {

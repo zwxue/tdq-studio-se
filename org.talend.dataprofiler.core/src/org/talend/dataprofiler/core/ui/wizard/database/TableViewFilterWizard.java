@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.database;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
@@ -144,5 +145,11 @@ public class TableViewFilterWizard extends AbstractWizard {
         this.tdDataProvider = ConnectionHelper.getTdDataProvider(this.packageObj);
         this.oldTableFilter = ColumnSetHelper.getTableFilter(packageObj);
         this.oldViewFilter = ColumnSetHelper.getViewFilter(packageObj);
+    }
+
+    @Override
+    public void openEditor(Item item) {
+        // TODO Auto-generated method stub
+
     }
 }

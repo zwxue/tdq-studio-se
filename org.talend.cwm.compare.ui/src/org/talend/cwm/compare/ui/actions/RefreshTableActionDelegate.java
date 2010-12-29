@@ -15,6 +15,7 @@ package org.talend.cwm.compare.ui.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IObjectActionDelegate;
 
+
 /**
  * DOC scorreia class global comment. Detailled comment
  */

@@ -15,14 +15,11 @@ package org.talend.dataprofiler.core.ui.wizard;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
-import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -47,19 +44,16 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
     public boolean performFinish() {
         ReturnCode checkResult = checkMetadata();
         if (checkResult.isOk()) {
-            ModelElement cwnElement = initCWMResourceBuilder();
-            if (cwnElement != null) {
-                fillMetadataToCWMResource(cwnElement);
-                TypedReturnCode<Object> csResult = createAndSaveCWMFile(cwnElement);
+            // MOD mzhao feature 15750 Use repository object represent ModelElement.
+            ModelElement modelElement = initCWMResourceBuilder();
+            if (modelElement != null) {
+                fillMetadataToCWMResource(modelElement);
+                // Save the repository objects.
+                TypedReturnCode<Object> csResult = createAndSaveCWMFile(modelElement);
                 if (csResult.isOk()) {
                     Object savedObj = csResult.getObject();
-                    if (savedObj instanceof IRepositoryViewObject) {
-                        ConnectionItemEditorInput connItemEditorInput = new ConnectionItemEditorInput(
-                                (IRepositoryViewObject) savedObj);
-                        CorePlugin.getDefault().openEditor(connItemEditorInput, ConnectionEditor.class.getName());
-                    } else if (savedObj instanceof IFile) {
-                        IFile file = (IFile) csResult.getObject();
-                        CorePlugin.getDefault().openEditor(file, getEditorName());
+                    if (savedObj instanceof Item) {
+                        openEditor((Item) savedObj);
                     }
                     CorePlugin.getDefault().refreshWorkSpace();
                     CorePlugin.getDefault().refreshDQView();
@@ -75,6 +69,8 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
 
         return false;
     }
+
+    public abstract void openEditor(Item item);
 
     public ReturnCode checkMetadata() {
         String elementName = getParameter().getName();

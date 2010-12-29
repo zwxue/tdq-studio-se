@@ -18,6 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -37,6 +38,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -88,7 +90,8 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
      */
     @Override
     protected boolean isAllowed() {
-        for (TdColumn column : getColumns()) {
+        for (IRepositoryNode repositoryNode : getColumns()) {
+            TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
             if (!Java2SqlType.isDateInSQL(column.getSqlDataType().getJavaDataType())) {
                 return false;
             }

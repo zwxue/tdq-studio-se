@@ -14,7 +14,10 @@ package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
+import org.talend.core.model.properties.Item;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -51,7 +54,6 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
         if (analysisInitialized) {
             return analysisBuilder.getAnalysis();
         }
-
         return null;
     }
 
@@ -81,5 +83,11 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
 
     public AnalysisBuilder getAnalysisBuilder() {
         return analysisBuilder;
+    }
+
+    @Override
+    public void openEditor(Item item) {
+        AnalysisItemEditorInput analysisEditorInput = new AnalysisItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(analysisEditorInput, AnalysisEditor.class.getName());
     }
 }

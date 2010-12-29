@@ -15,6 +15,7 @@ package org.talend.cwm.compare.ui.dialog;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 
 
+
 /**
  * DOC rli  class global comment. Detailled comment
  */

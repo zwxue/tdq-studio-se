@@ -7,7 +7,6 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
- org.apache.log4j,
  org.talend.sqltools,
  org.talend.utils,
  net.sourceforge.sqlexplorer,
@@ -36,11 +35,42 @@ Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.talend.core.runtime,
  org.talend.metadata.managment
 Bundle-Vendor: .Talend SA.
-Export-Package: org.talend.cwm.db.connection,
+ org.talend.dq.writer,
+ org.talend.dq.writer.impl
+Bundle-ClassPath: .,
+ lib/commons-discovery-0.2.jar,
+ lib/mdm_webservice.jar,
+ lib/mail.jar
+Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.talend.dq.CWMPlugin
+Export-Package: com.sun.mail.handlers,
+ com.sun.mail.iap,
+ com.sun.mail.imap,
+ com.sun.mail.imap.protocol,
+ com.sun.mail.pop3,
+ com.sun.mail.smtp,
+ com.sun.mail.util,
+ javax.mail,
+ javax.mail.event,
+ javax.mail.internet,
+ javax.mail.search,
+ javax.mail.util,
+ org.apache.commons.discovery,
+ org.apache.commons.discovery.ant,
+ org.apache.commons.discovery.jdk,
+ org.apache.commons.discovery.log,
+ org.apache.commons.discovery.resource,
+ org.apache.commons.discovery.resource.classes,
+ org.apache.commons.discovery.resource.names,
+ org.apache.commons.discovery.tools,
+ org.talend.cwm.db.connection,
  org.talend.cwm.dependencies,
  org.talend.cwm.exception,
  org.talend.cwm.management.api,
  org.talend.cwm.management.connection,
+ org.talend.cwm.management.i18n,
  org.talend.dq,
  org.talend.dq.analysis,
  org.talend.dq.analysis.category,
@@ -61,15 +91,14 @@ Export-Package: org.talend.cwm.db.connection,
  org.talend.dq.nodes.analysis,
  org.talend.dq.nodes.foldernode,
  org.talend.dq.nodes.indicator,
+ org.talend.dq.nodes.indicator.impl,
  org.talend.dq.nodes.indicator.type,
  org.talend.dq.pattern,
+ org.talend.dq.sql.converters,
  org.talend.dq.writer,
- org.talend.dq.writer.impl
-Bundle-ClassPath: .,
- lib/commons-discovery-0.2.jar,
- lib/mdm_webservice.jar,
- lib/mail.jar
-Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.talend.dq.CWMPlugin
+ org.talend.dq.writer.impl,
+ org.talend.mdm.test,
+ org.talend.mdm.test.benchmark,
+ org.talend.mdm.test.util,
+ org.talend.mdm.webservice
+

@@ -38,6 +38,7 @@ public class UDIndicatorBuilder {
 
         this.indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         indicatorDefinition.setName(udiName);
+        indicatorDefinition.setLabel(udiName);
         IndicatorCategory udiCategory = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
         if (udiCategory != null && !indicatorDefinition.getCategories().contains(udiCategory)) {
             indicatorDefinition.getCategories().add(udiCategory);

@@ -44,9 +44,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -58,6 +58,7 @@ import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -549,17 +550,20 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     }
 
     @Override
-    public boolean canDrop(ModelElement modelElement) {
+    public boolean canDrop(IRepositoryNode modelElement) {
         return true;
     }
 
     @Override
-    public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
+    public void dropModelElements(List<? extends IRepositoryNode> modelElements, int index) {
         List<TdColumn> columns = new ArrayList<TdColumn>();
-        for (ModelElement element : modelElements) {
-            TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-            if (column != null) {
-                columns.add(column);
+        for (IRepositoryNode repNode : modelElements) {
+            if (repNode.getObject() instanceof MetadataColumnRepositoryObject) {
+
+                TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repNode.getObject()).getTdColumn();
+                if (column != null) {
+                    columns.add(column);
+                }
             }
         }
 

@@ -17,7 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionException;
@@ -35,22 +37,48 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
+import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.VersionUtils;
 import org.talend.core.context.Context;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ByteArray;
+import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Project;
+import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -119,39 +147,65 @@ public final class DQStructureManager {
 
             }
 
-            // Don't remove the following code, each folder is created by the createNewFolder method
-            IFolder dataProfilingFolder = createNewFolder(project, EResourceConstant.DATA_PROFILING);
-            IFolder analysisFoler = createNewFolder(dataProfilingFolder, EResourceConstant.ANALYSIS);
-            IFolder reportFoler = createNewFolder(dataProfilingFolder, EResourceConstant.REPORTS);
-
-            IFolder librariesFoler = createNewFolder(project, EResourceConstant.LIBRARIES);
-            IFolder patternFoler = createNewFolder(librariesFoler, EResourceConstant.PATTERNS);
-            IFolder patternRegexFoler = createNewFolder(patternFoler, EResourceConstant.PATTERN_REGEX);
-            IFolder patternSQLFoler = createNewFolder(patternFoler, EResourceConstant.PATTERN_SQL);
-            IFolder sourceFileFoler = createNewFolder(librariesFoler, EResourceConstant.SOURCE_FILES);
-            IFolder rulesFoler = createNewFolder(librariesFoler, EResourceConstant.RULES);
-            IFolder rulesSQLFoler = createNewFolder(rulesFoler, EResourceConstant.RULES_SQL);
-            IFolder exchangeFoler = createNewFolder(librariesFoler, EResourceConstant.EXCHANGE);
-            IFolder indicatorFoler = createNewFolder(librariesFoler, EResourceConstant.INDICATORS);
-            IFolder udiFoler = createNewFolder(indicatorFoler, EResourceConstant.USER_DEFINED_INDICATORS);
-            IFolder jrxmlFolder = createNewFolder(librariesFoler, EResourceConstant.JRXML_TEMPLATE);
-            IFolder systemIndicatorFoler = createNewFolder(indicatorFoler, EResourceConstant.SYSTEM_INDICATORS);
-
-            if (!project.getFolder(EResourceConstant.DB_CONNECTIONS.getPath()).exists()) {
-                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
-                        EResourceConstant.DB_CONNECTIONS.getName());
+            Folder patternRegexFoler = null;
+            if (!project.getFolder(EResourceConstant.PATTERN_REGEX.getPath()).exists()) {
+                patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_REGEX,
+                        Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
+            } else {
+                FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                        ProjectManager.getInstance().getCurrentProject(), ERepositoryObjectType.TDQ_PATTERN_REGEX, Path.EMPTY);
+                patternRegexFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_PATTERN_REGEX);
             }
 
-            if (!project.getFolder(EResourceConstant.MDM_CONNECTIONS.getPath()).exists()) {
-                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
-                        EResourceConstant.MDM_CONNECTIONS.getName());
+            Folder patternSQLFoler = null;
+            if (!project.getFolder(EResourceConstant.PATTERN_SQL.getPath()).exists()) {
+                patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_SQL,
+                        Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
+            } else {
+                FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                        ProjectManager.getInstance().getCurrentProject(), ERepositoryObjectType.TDQ_PATTERN_SQL, Path.EMPTY);
+                patternSQLFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_PATTERN_SQL);
             }
 
-            copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null);
-            copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null);
-            copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null);
-            copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null);
-            copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null);
+            Folder sourceFileFoler = null;
+            if (!project.getFolder(EResourceConstant.SOURCE_FILES.getPath()).exists()) {
+                sourceFileFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_SOURCE_FILES,
+                        Path.EMPTY, EResourceConstant.SOURCE_FILES.getName());
+            } else {
+                FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                        ProjectManager.getInstance().getCurrentProject(), ERepositoryObjectType.TDQ_SOURCE_FILES, Path.EMPTY);
+                sourceFileFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_SOURCE_FILES);
+            }
+
+            Folder rulesSQLFoler = null;
+            if (!project.getFolder(EResourceConstant.RULES_SQL.getPath()).exists()) {
+                rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES_SQL,
+                        Path.EMPTY, EResourceConstant.RULES_SQL.getName());
+            } else {
+                FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                        ProjectManager.getInstance().getCurrentProject(), ERepositoryObjectType.TDQ_RULES_SQL, Path.EMPTY);
+                rulesSQLFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
+            }
+
+            Folder systemIndicatorFoler = null;
+            if (!project.getFolder(EResourceConstant.SYSTEM_INDICATORS.getPath()).exists()) {
+                systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(
+                        ERepositoryObjectType.TDQ_SYSTEM_INDICATORS, Path.EMPTY, EResourceConstant.REPORTS.getName());
+            } else {
+                FolderItem folderItem = ProxyRepositoryFactory.getInstance()
+                        .getFolderItem(ProjectManager.getInstance().getCurrentProject(),
+                                ERepositoryObjectType.TDQ_SYSTEM_INDICATORS, Path.EMPTY);
+                systemIndicatorFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+            }
+
+            // use the tos create folder API
+            copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null,
+                    ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+            copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
+            copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILES);
+            copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
+
 
             WorkspaceVersionHelper.storeVersion();
 
@@ -161,6 +215,166 @@ public final class DQStructureManager {
             ExceptionHandler.process(ex);
             ProxyRepositoryManager.getInstance().save();
         }
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "copyFilesToFolder".
+     * 
+     * @param plugin
+     * @param srcPath
+     * @param recurse
+     * @param desFolder
+     * @param suffix
+     * @param type
+     * @throws IOException
+     * @throws CoreException
+     */
+    public void copyFilesToFolder(Plugin plugin, String srcPath, boolean recurse, Folder desFolder, String suffix,
+            ERepositoryObjectType type) throws IOException, CoreException {
+        if (plugin == null) {
+            return;
+        }
+
+        IProject project = ResourceManager.getRootProject();
+        Enumeration paths = null;
+        paths = plugin.getBundle().getEntryPaths(srcPath);
+        if (paths == null) {
+            return;
+        }
+
+        while (paths.hasMoreElements()) {
+            String nextElement = (String) paths.nextElement();
+            String currentPath = "/" + nextElement; //$NON-NLS-1$
+            URL resourceURL = plugin.getBundle().getEntry(currentPath);
+            URL fileURL = null;
+            File file = null;
+            try {
+                fileURL = FileLocator.toFileURL(resourceURL);
+                file = new File(fileURL.getFile());
+                if (file.isDirectory() && recurse) {
+                    if (file.getName().startsWith(".")) { //$NON-NLS-1$
+                        continue;
+                    }
+                    Folder folder = null;
+                    if (!project.getFolder(file.getName()).exists()) {
+                        folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
+                    } else {
+                        IPath fullPath = new Path(file.getPath());
+                        int count = fullPath.segmentCount();
+                        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                                ProjectManager.getInstance().getCurrentProject(), type, fullPath.removeFirstSegments(count - 1));
+
+                        if (folderItem == null) {
+                            folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
+                        } else {
+                            folder = new Folder(folderItem.getProperty(), type);
+                        }
+                    }
+                    copyFilesToFolder(plugin, currentPath, recurse, folder, suffix, type);
+                    continue;
+                }
+
+                if (suffix != null && !file.getName().endsWith(suffix)) {
+                    continue;
+                }
+
+                String fileName = new Path(fileURL.getPath()).lastSegment();
+                InputStream openStream = null;
+                openStream = fileURL.openStream();
+                String folderName = null;
+                if (type.equals(ERepositoryObjectType.TDQ_RULES_SQL)) {
+                    folderName = ERepositoryObjectType.getFolderName(type);
+                } else if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILES)) {
+                    folderName = ERepositoryObjectType.getFolderName(type);
+                } else {
+                    folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel();
+                }
+                IFolder folder = project.getFolder(folderName);
+                if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILES)) {
+                    int segmentCount = folder.getFullPath().segmentCount();
+                    String name = file.getName();
+                    int indexOf = name.indexOf(".");
+                    String label = name.substring(0, indexOf);
+                    String extendtion = name.substring(indexOf + 1);
+                    createSourceFileItem(file, Path.EMPTY, label, extendtion);
+                } else {
+                    copyFileToFolder(openStream, fileName, folder);
+                }
+            } catch (IOException e) {
+                log.error(e, e);
+            } catch (PersistenceException e) {
+                log.error(e, e);
+            }
+        }
+
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "copyFileToFolder".
+     * 
+     * @param inputStream
+     * @param fileName
+     * @param folder
+     * @throws CoreException
+     * @throws IOException
+     */
+    private void copyFileToFolder(InputStream inputStream, String fileName, IFolder folder) throws CoreException, IOException {
+        if (inputStream == null) {
+            return;
+        }
+        IFile element = folder.getFile(fileName);
+        if (!element.exists()) {
+
+            element.create(inputStream, false, null);
+            ModelElement modelElement = ModelElementFileFactory.getModelElement(element);
+            if (modelElement != null) {
+                AElementPersistance writer = ElementWriterFactory.getInstance().create(element.getFileExtension());
+                if (writer != null) {
+                    writer.create(modelElement, folder);
+                }
+            }
+        }
+
+    }
+
+    private TDQSourceFileItem createSourceFileItem(File initFile, IPath path, String label, String extension) {
+
+        Property property = PropertiesFactory.eINSTANCE.createProperty();
+        // property.setAuthor(((RepositoryContext)
+        // CorePlugin.getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
+        property.setVersion(VersionUtils.DEFAULT_VERSION);
+        property.setStatusCode(""); //$NON-NLS-1$
+        property.setLabel(label);
+
+        TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
+                .createTDQSourceFileItem();
+        sourceFileItem.setProperty(property);
+        sourceFileItem.setName(label);
+        sourceFileItem.setExtension(extension);
+
+        ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
+        try {
+            byteArray.setInnerContentFromFile(initFile);
+        } catch (IOException e) {
+            ExceptionHandler.process(e);
+        }
+        // String routineContent = new String(byteArray.getInnerContent());
+        // byteArray.setInnerContent(routineContent.getBytes());
+        sourceFileItem.setContent(byteArray);
+        IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
+        try {
+            property.setId(repositoryFactory.getNextId());
+            // repositoryFactory.createParentFoldersRecursively(ERepositoryObjectType.getItemType(sourceFileItem),
+            // path);
+            repositoryFactory.create(sourceFileItem, path);
+        } catch (PersistenceException e) {
+            ExceptionHandler.process(e);
+        }
+
+        return sourceFileItem;
+
     }
 
     /**
@@ -225,11 +439,11 @@ public final class DQStructureManager {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                CreateProjectOperation createProjOp = new CreateProjectOperation(description, DefaultMessagesImpl
-                        .getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
+                CreateProjectOperation createProjOp = new CreateProjectOperation(description,
+                        DefaultMessagesImpl.getString("DQStructureManager.createDataProfile")); //$NON-NLS-1$
                 try {
-                    PlatformUI.getWorkbench().getOperationSupport().getOperationHistory().execute(createProjOp, monitor,
-                            WorkspaceUndoUtil.getUIInfoAdapter(null));
+                    PlatformUI.getWorkbench().getOperationSupport().getOperationHistory()
+                            .execute(createProjOp, monitor, WorkspaceUndoUtil.getUIInfoAdapter(null));
                 } catch (ExecutionException e) {
                     throw new InvocationTargetException(e);
                 }
@@ -258,6 +472,7 @@ public final class DQStructureManager {
      * @param constant
      * @return
      * @throws CoreException
+     * @deprecated
      */
     public IFolder createNewFolder(IContainer parent, EResourceConstant constant) throws CoreException {
         return createNewFolder(parent, constant.getName());
@@ -270,6 +485,7 @@ public final class DQStructureManager {
      * @param folderName
      * @return
      * @throws CoreException
+     * @deprecated
      */
     public IFolder createNewFolder(IContainer parent, String folderName) throws CoreException {
         IFolder desFolder = null;
@@ -348,29 +564,109 @@ public final class DQStructureManager {
 
     }
 
-    private void copyFileToFolder(InputStream inputStream, String fileName, IFolder folder) throws CoreException {
-        if (inputStream == null) {
-            return;
-        }
-
-        IFile file = folder.getFile(fileName);
-        if (!file.exists()) {
-            file.create(inputStream, false, null);
-
-            ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
-            if (modelElement != null) {
-                AElementPersistance writer = ElementWriterFactory.getInstance().create(file.getFileExtension());
-                if (writer != null) {
-                    writer.createProperty(modelElement);
-                }
-            }
-        }
-
-    }
+    // private void copyFileToFolder(InputStream inputStream, String fileName, IFolder folder) throws CoreException {
+    // if (inputStream == null) {
+    // return;
+    // }
+    //
+    // IFile file = folder.getFile(fileName);
+    // if (!file.exists()) {
+    // file.create(inputStream, false, null);
+    //
+    // ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
+    // if (modelElement != null) {
+    // AElementPersistance writer = ElementWriterFactory.getInstance().create(file.getFileExtension());
+    // if (writer != null) {
+    // writer.createProperty(modelElement);
+    // }
+    // }
+    // }
+    //
+    // }
 
     public boolean isPathValid(IPath path, String label) {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
         IFolder newFolder = folder.getFolder(label);
         return !newFolder.exists();
+    }
+
+    /**
+     * ADD mzhao 15750 , build dq metadata tree, get connection root node.
+     */
+
+    public List<IRepositoryNode> getConnectionRepositoryNodes() {
+        RepositoryNode node = getRootNode();
+        List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
+        if (node != null) {
+            List<IRepositoryNode> childrens = node.getChildren();
+            for (IRepositoryNode subNode : childrens) {
+                boolean equals = subNode.getLabel().equals("Db Connections");
+                if (equals) {
+                    connNodes.addAll(subNode.getChildren());
+                }
+            }
+        }
+        return connNodes;
+    }
+
+    /**
+     * DOC klliu Comment method "getRootNode".
+     * 
+     * @return
+     */
+    private RepositoryNode getRootNode() {
+        RepositoryNode node = null;
+        CommonViewer commonViewer = getDQCommonViewer();
+        TreeItem[] items = commonViewer.getTree().getItems();
+        for (TreeItem item : items) {
+            String text = item.getText();
+            if (text.equals(EResourceConstant.METADATA.getName())) {
+                node = (RepositoryNode) item.getData();
+            }
+        }
+        return node;
+    }
+
+    /**
+     * DOC klliu 15750 Comment method "getDQRespositoryView".
+     * 
+     * @return
+     */
+    private CommonViewer getDQCommonViewer() {
+        IViewPart part = null;
+        CommonViewer commonViewer = null;
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow != null) {
+            IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+            if (activePage != null) {
+                part = activePage.findView(DQRespositoryView.ID);
+
+                if (part == null) {
+                    try {
+                        part = activePage.showView(DQRespositoryView.ID);
+                    } catch (Exception e) {
+                        ExceptionHandler.process(e);
+                    }
+                }
+            }
+            DQRespositoryView dqView = (DQRespositoryView) part;
+            commonViewer = dqView.getCommonViewer();
+        }
+        return commonViewer;
+    }
+
+    /**
+     * 
+     * DOC mzhao Create repository node by column.
+     * 
+     * @param tdColumn
+     * @return
+     */
+    public RepositoryNode createColumnNode(TdColumn tdColumn, RepositoryNode parent) {
+        Connection conn = ConnectionHelper.getConnection(tdColumn);
+        Property property = PropertyHelper.getProperty(conn);
+        IRepositoryViewObject connReposViewObject = new RepositoryViewObject(property);
+        MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(connReposViewObject, tdColumn);
+        return new RepositoryNode(metadataColumn, parent, ENodeType.REPOSITORY_ELEMENT);
     }
 }

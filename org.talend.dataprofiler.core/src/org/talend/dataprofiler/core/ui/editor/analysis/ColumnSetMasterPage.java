@@ -27,11 +27,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -47,16 +44,17 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
@@ -85,6 +83,8 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -136,10 +136,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private ModelElementIndicator[] currentModelElementIndicators;
 
-    private Button storeDataCheck;
-
-    private Section analysisParamSection;
-
     public ColumnSetMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
@@ -184,7 +180,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, tdColumn);
 
-            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(element);
+            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
+                    .createColumnNode(tdColumn, null));
             Collection<Indicator> indicatorList = columnSetAnalysisHandler.getRegexMathingIndicators(element);
             currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
             meIndicatorList.add(currentIndicator);
@@ -232,7 +229,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         createDataFilterSection(form, topComp);
 
-        createAnalysisParamSection(form, topComp);
+        // createAnalysisParamSection(form, topComp);
 
         Composite previewComp = toolkit.createComposite(sForm);
         previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -315,14 +312,15 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * 
      */
     public void openColumnsSelectionDialog() {
-        List<TdColumn> columnList = treeViewer.getColumnSetMultiValueList();
+        List<IRepositoryNode> columnList = treeViewer.getColumnSetMultiValueList();
         if (columnList == null) {
-            columnList = new ArrayList<TdColumn>();
+            columnList = new ArrayList<IRepositoryNode>();
         }
+        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
                 this,
                 null,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, connNode, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
@@ -515,33 +513,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * ADD yyi 2010-12-07 17282:create parameter section for storing data control
-     * 
-     * @param form
-     * @param anasisDataComp
-     */
-    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisParamSection = createSection(form, anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$ 
-        Composite sectionClient = toolkit.createComposite(analysisParamSection);
-        sectionClient.setLayout(new GridLayout(2, false));
-
-        toolkit.createLabel(sectionClient, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$ 
-        storeDataCheck = new Button(sectionClient, SWT.CHECK | SWT.RIGHT_TO_LEFT);
-        storeDataCheck.setSelection(simpleStatIndicator.isStoreData());
-
-        storeDataCheck.addSelectionListener(new SelectionAdapter() {
-
-            public void widgetSelected(SelectionEvent e) {
-                simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
-                setDirty(true);
-            }
-        });
-
-        analysisParamSection.setClient(sectionClient);
-    }
-
-    /**
      * @param outputFolder
      * @throws DataprofilerCoreException
      */
@@ -558,17 +529,24 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         columnSetAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 
         // save analysis
-        List<TdColumn> columnList = treeViewer.getColumnSetMultiValueList();
+        List<IRepositoryNode> repositoryNodes = treeViewer.getColumnSetMultiValueList();
 
         Connection tdProvider = null;
-        if (columnList != null && columnList.size() != 0) {
-            tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
+        if (repositoryNodes != null && repositoryNodes.size() != 0) {
+            ConnectionItem item = (ConnectionItem) repositoryNodes.get(0).getObject().getProperty().getItem();
+            tdProvider = item.getConnection();
             if (tdProvider.eIsProxy()) {
                 // Resolve the connection again
                 tdProvider = ((ConnectionItem) ProxyRepositoryViewObject.getRepositoryViewObject(tdProvider).getProperty()
                         .getItem()).getConnection();
             }
             analysis.getContext().setConnection(tdProvider);
+
+            List<TdColumn> columnList = new ArrayList<TdColumn>();
+            for (IRepositoryNode rd : repositoryNodes) {
+                columnList.add(
+(TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            }
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
             columnSetAnalysisHandler.addIndicator(columnList, simpleStatIndicator);
             // ~ MOD mzhao feature 13040. 2010-05-21
@@ -579,7 +557,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                     Indicator[] inds = modelElementInd.getPatternIndicators();
                     for (Indicator ind : inds) {
                         if (ind instanceof RegexpMatchingIndicator) {
-                            ind.setAnalyzedElement(modelElementInd.getModelElement());
+                            ind.setAnalyzedElement(((MetadataColumnRepositoryObject) modelElementInd
+                                    .getModelElementRepositoryNode().getObject()).getTdColumn());
                             allMatchIndicator.getCompositeRegexMatchingIndicators().add((RegexpMatchingIndicator) ind);
                         }
                     }
@@ -684,10 +663,13 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     @Override
     protected ReturnCode canSave() {
         String message = null;
-        List<TdColumn> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
-
+        List<IRepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        for (IRepositoryNode rd : columnSetMultiValueList) {
+            columnList.add((TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+        }
         if (!columnSetMultiValueList.isEmpty()) {
-            if (!ColumnHelper.isFromSameTable(columnSetMultiValueList)) {
+            if (!ColumnHelper.isFromSameTable(columnList)) {
                 message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
             }
         }
@@ -701,7 +683,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     protected ReturnCode canRun() {
-        List<TdColumn> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        List<IRepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnSetMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
         }

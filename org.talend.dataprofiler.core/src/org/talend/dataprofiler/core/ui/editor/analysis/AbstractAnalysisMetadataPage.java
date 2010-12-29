@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -23,22 +23,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
-import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -70,11 +71,17 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
-        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-
-        currentModelElement = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
-        analysis = (Analysis) currentModelElement;
-
+        // MOD klliu 2010-12-10
+        IEditorInput editorInput = editor.getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) editorInput;
+            TDQAnalysisItem tdqAnalysisItem = fileEditorInput.getTDQAnalysisItem();
+            analysis = tdqAnalysisItem.getAnalysis();
+        } else if (editorInput instanceof FileEditorInput) {
+            FileEditorInput input = (FileEditorInput) editorInput;
+            currentModelElement = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
+            analysis = (Analysis) currentModelElement;
+        }
         return analysis;
     }
 
@@ -171,20 +178,17 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // // MOD qiongli bug 14891 2010-9-20,Add MDM connections
         // Collection<Connection> mdmConne = ProxyRepositoryViewObject.getAllMDMConnections(true);
         // connections.addAll(mdmConne);
-        Collection<Connection> connections = ProxyRepositoryViewObject.getAllMetadataConnections(true);
+        List<IRepositoryNode> allConnectionReposNodes = DQStructureManager.getInstance().getConnectionRepositoryNodes();
         // ~ 15685
         // ~ 14549
 
         int index = 0;
         connCombo.removeAll();
-        for (Connection prov : connections) {
-            if (prov.eResource() == null) {
-                prov = (Connection) EObjectHelper.resolveObject(prov);
-            }
-            connCombo.add(prov.getName(), index);
+        for (IRepositoryNode repNode : allConnectionReposNodes) {
+            connCombo.add(repNode.getObject().getProperty().getLabel(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
-            connCombo.setData(prov.getName(), index);
-            connCombo.setData(index + "", prov); //$NON-NLS-1$
+            connCombo.setData(repNode.getObject().getProperty().getLabel(), index);
+            connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;
         }
         if (index > 0) {

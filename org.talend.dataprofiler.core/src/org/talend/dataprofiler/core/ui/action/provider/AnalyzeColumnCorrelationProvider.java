@@ -12,11 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import java.util.List;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnCorrelationAction;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -57,11 +63,33 @@ public class AnalyzeColumnCorrelationProvider extends AbstractCommonActionProvid
         if (!isShowMenu()) {
             return;
         }
+        boolean showMenu = true;
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
-
-        analyzeColumnCorrAction.setColumnSelection(currentSelection);
-
-        menu.add(analyzeColumnCorrAction);
+        List list = currentSelection.toList();
+        for (Object obj : list) {
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) obj;
+                if (ENodeType.TDQ_REPOSITORY_ELEMENT.equals(node.getType())) {
+                    IRepositoryViewObject viewObject = node.getObject();
+                    if (viewObject instanceof MetadataColumnRepositoryObject) {
+                        showMenu = true;
+                    } else {
+                        showMenu = false;
+                        break;
+                    }
+                } else {
+                    showMenu = false;
+                    break;
+                }
+            } else {
+                showMenu = false;
+                break;
+            }
+        }
+        if (showMenu) {
+            analyzeColumnCorrAction.setColumnSelection(currentSelection);
+            menu.add(analyzeColumnCorrAction);
+        }
     }
 
 }

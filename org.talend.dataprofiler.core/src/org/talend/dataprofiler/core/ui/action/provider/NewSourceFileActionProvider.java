@@ -18,13 +18,20 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
 import org.talend.dataprofiler.core.sql.ImportSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.sql.RenameFolderAction;
 import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -48,29 +55,38 @@ public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
         List<IFile> selectedFiles = new ArrayList<IFile>();
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
-            if (obj instanceof IFolder) {
-                IFolder sqlFileFolder = (IFolder) obj;
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) obj;
+                if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
+                    IFolder folder = WorkbenchUtils.getFolder(node);
 
-                IFolder sourceFolder = ResourceManager.getSourceFileFolder();
-                if (ResourceService.isSubFolder(sourceFolder, sqlFileFolder)) {
-                    menu.add(new AddSqlFileAction(sqlFileFolder));
-                    menu.add(new ImportSqlFileAction(sqlFileFolder));
-                    if (sqlFileFolder.getFullPath().segmentCount() > sourceFolder.getFullPath().segmentCount()) {
-                        menu.add(new RenameFolderAction(sqlFileFolder));
+                    IFolder sourceFolder = ResourceManager.getSourceFileFolder();
+                    if (ResourceService.isSubFolder(sourceFolder, folder)) {
+                        menu.add(new AddSqlFileAction((IFolder) obj));
+                        if (folder.getFullPath().segmentCount() > sourceFolder.getFullPath().segmentCount()) {
+                            menu.add(new RenameFolderAction((IFolder) obj));
+                        }
+                    }
+
+                } else if (ENodeType.REPOSITORY_ELEMENT.equals(node.getType())
+                        || ENodeType.TDQ_REPOSITORY_ELEMENT.equals(node.getType())) {
+                    IRepositoryViewObject viewObject = node.getObject();
+                    if (ERepositoryObjectType.TDQ_SOURCE_FILES.equals(viewObject.getRepositoryObjectType())) {
+                        TDQSourceFileItem sfItem = (TDQSourceFileItem) viewObject.getProperty().getItem();
+                        IPath append = WorkbenchUtils.getFilePath(node);
+                        IFile file = ResourceManager.getRootProject().getFile(append);
+                        if (file != null) {
+                            menu.add(new RenameSqlFileAction(file));
+                        }
                     }
                 }
-
-            } else if (obj instanceof IFile) {
-                IFile file = (IFile) obj;
-                if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$
-                    menu.add(new RenameSqlFileAction((IFile) obj));
-                }
+            }
+            boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
+            if (!isSelectFile && !selectedFiles.isEmpty()) {
+                menu.add(new OpenSqlFileAction(selectedFiles));
             }
         }
-        boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
-        if (!isSelectFile && !selectedFiles.isEmpty()) {
-            menu.add(new OpenSqlFileAction(selectedFiles));
-        }
+
     }
 
     /**
@@ -84,12 +100,12 @@ public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
         boolean isSelectFile = false;
         Iterator iterator = treeSelection.iterator();
         while (iterator.hasNext()) {
-            Object obj = iterator.next();
-            if (obj instanceof IFile) {
-                IFile file = (IFile) obj;
-                if ("sql".equalsIgnoreCase(file.getFileExtension())) { //$NON-NLS-1$
-                    selectedFiles.add(file);
-                }
+            RepositoryNode node = (RepositoryNode) iterator.next();
+            IRepositoryViewObject viewObject = node.getObject();
+            if (ERepositoryObjectType.TDQ_SOURCE_FILES.equals(viewObject.getRepositoryObjectType())) {
+                IPath append = WorkbenchUtils.getFilePath(node);
+                IFile file = ResourceManager.getRootProject().getFile(append);
+                selectedFiles.add(file);
             } else {
                 isSelectFile = true;
                 break;

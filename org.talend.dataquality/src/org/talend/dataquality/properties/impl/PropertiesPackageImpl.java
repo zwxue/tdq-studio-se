@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.properties.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -35,10 +36,12 @@ import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.PropertiesPackage;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 import org.talend.dataquality.rules.RulesPackage;
@@ -47,52 +50,60 @@ import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
- * 
  * @generated
  */
 public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPackage {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private EClass tdqAnalysisItemEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private EClass tdqReportItemEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private EClass tdqIndicatorDefinitionItemEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private EClass tdqBusinessRuleItemEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private EClass tdqPatternItemEClass = null;
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass tdqFileItemEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
     private EClass tdqJrxmlItemEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass tdqSourceFileItemEClass = null;
 
     /**
      * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
@@ -113,7 +124,6 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private static boolean isInited = false;
@@ -121,24 +131,20 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
      * 
-     * <p>
-     * This method is used to initialize {@link PropertiesPackage#eINSTANCE} when that field is accessed. Clients should
-     * not invoke it directly. Instead, they should simply access that field to obtain the package. <!-- begin-user-doc
+     * <p>This method is used to initialize {@link PropertiesPackage#eINSTANCE} when that field is accessed.
+     * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @see #eNS_URI
      * @see #createPackageContents()
      * @see #initializePackageContents()
      * @generated
      */
     public static PropertiesPackage init() {
-        if (isInited)
-            return (PropertiesPackage) EPackage.Registry.INSTANCE.getEPackage(PropertiesPackage.eNS_URI);
+        if (isInited) return (PropertiesPackage)EPackage.Registry.INSTANCE.getEPackage(PropertiesPackage.eNS_URI);
 
         // Obtain or create and register package
-        PropertiesPackageImpl thePropertiesPackage = (PropertiesPackageImpl) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof PropertiesPackageImpl ? EPackage.Registry.INSTANCE
-                .get(eNS_URI)
-                : new PropertiesPackageImpl());
+        PropertiesPackageImpl thePropertiesPackage = (PropertiesPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof PropertiesPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new PropertiesPackageImpl());
 
         isInited = true;
 
@@ -146,45 +152,19 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         org.talend.core.model.properties.PropertiesPackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
-        AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
-        CategoryPackageImpl theCategoryPackage = (CategoryPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(CategoryPackage.eNS_URI) instanceof CategoryPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(CategoryPackage.eNS_URI) : CategoryPackage.eINSTANCE);
-        ReportsPackageImpl theReportsPackage = (ReportsPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(ReportsPackage.eNS_URI) instanceof ReportsPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(ReportsPackage.eNS_URI) : ReportsPackage.eINSTANCE);
-        IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
-        SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(SchemaPackage.eNS_URI)
-                : SchemaPackage.eINSTANCE);
-        DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
-        IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
-        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
-        ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
-        DomainPackageImpl theDomainPackage = (DomainPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(DomainPackage.eNS_URI)
-                : DomainPackage.eINSTANCE);
-        PatternPackageImpl thePatternPackage = (PatternPackageImpl) (EPackage.Registry.INSTANCE
-                .getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
-        SQLPackageImpl theSQLPackage = (SQLPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(SQLPackage.eNS_URI)
-                : SQLPackage.eINSTANCE);
-        RulesPackageImpl theRulesPackage = (RulesPackageImpl) (EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE
-                .getEPackage(RulesPackage.eNS_URI)
-                : RulesPackage.eINSTANCE);
+        AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
+        CategoryPackageImpl theCategoryPackage = (CategoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) instanceof CategoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) : CategoryPackage.eINSTANCE);
+        ReportsPackageImpl theReportsPackage = (ReportsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI) instanceof ReportsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ReportsPackage.eNS_URI) : ReportsPackage.eINSTANCE);
+        IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
+        SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
+        DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
+        IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
+        ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
+        ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
+        DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
+        PatternPackageImpl thePatternPackage = (PatternPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) instanceof PatternPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI) : PatternPackage.eINSTANCE);
+        SQLPackageImpl theSQLPackage = (SQLPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) instanceof SQLPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SQLPackage.eNS_URI) : SQLPackage.eINSTANCE);
+        RulesPackageImpl theRulesPackage = (RulesPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) instanceof RulesPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI) : RulesPackage.eINSTANCE);
 
         // Create package meta-data objects
         thePropertiesPackage.createPackageContents();
@@ -221,6 +201,7 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         // Mark meta-data to indicate it can't be changed
         thePropertiesPackage.freeze();
 
+  
         // Update the registry and return the package
         EPackage.Registry.INSTANCE.put(PropertiesPackage.eNS_URI, thePropertiesPackage);
         return thePropertiesPackage;
@@ -228,7 +209,6 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EClass getTDQAnalysisItem() {
@@ -237,16 +217,14 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EReference getTDQAnalysisItem_Analysis() {
-        return (EReference) tdqAnalysisItemEClass.getEStructuralFeatures().get(0);
+        return (EReference)tdqAnalysisItemEClass.getEStructuralFeatures().get(0);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EClass getTDQReportItem() {
@@ -255,16 +233,14 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EReference getTDQReportItem_Report() {
-        return (EReference) tdqReportItemEClass.getEStructuralFeatures().get(0);
+        return (EReference)tdqReportItemEClass.getEStructuralFeatures().get(0);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EClass getTDQIndicatorDefinitionItem() {
@@ -273,16 +249,14 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EReference getTDQIndicatorDefinitionItem_IndicatorDefinition() {
-        return (EReference) tdqIndicatorDefinitionItemEClass.getEStructuralFeatures().get(0);
+        return (EReference)tdqIndicatorDefinitionItemEClass.getEStructuralFeatures().get(0);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EClass getTDQBusinessRuleItem() {
@@ -291,16 +265,14 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EReference getTDQBusinessRuleItem_Dqrule() {
-        return (EReference) tdqBusinessRuleItemEClass.getEStructuralFeatures().get(0);
+        return (EReference)tdqBusinessRuleItemEClass.getEStructuralFeatures().get(0);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EClass getTDQPatternItem() {
@@ -309,16 +281,51 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EReference getTDQPatternItem_Pattern() {
-        return (EReference) tdqPatternItemEClass.getEStructuralFeatures().get(0);
+        return (EReference)tdqPatternItemEClass.getEStructuralFeatures().get(0);
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getTDQFileItem() {
+        return tdqFileItemEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTDQFileItem_Name() {
+        return (EAttribute)tdqFileItemEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTDQFileItem_Extension() {
+        return (EAttribute)tdqFileItemEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getTDQFileItem_Content() {
+        return (EReference)tdqFileItemEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
     public EClass getTDQJrxmlItem() {
@@ -326,30 +333,36 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-    public PropertiesFactory getPropertiesFactory() {
-        return (PropertiesFactory) getEFactoryInstance();
+    public EClass getTDQSourceFileItem() {
+        return tdqSourceFileItemEClass;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * @generated
+     */
+    public PropertiesFactory getPropertiesFactory() {
+        return (PropertiesFactory)getEFactoryInstance();
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     private boolean isCreated = false;
 
     /**
-     * Creates the meta-model objects for the package. This method is guarded to have no affect on any invocation but
-     * its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * Creates the meta-model objects for the package.  This method is
+     * guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void createPackageContents() {
-        if (isCreated)
-            return;
+        if (isCreated) return;
         isCreated = true;
 
         // Create classes and their features
@@ -368,25 +381,30 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         tdqPatternItemEClass = createEClass(TDQ_PATTERN_ITEM);
         createEReference(tdqPatternItemEClass, TDQ_PATTERN_ITEM__PATTERN);
 
+        tdqFileItemEClass = createEClass(TDQ_FILE_ITEM);
+        createEAttribute(tdqFileItemEClass, TDQ_FILE_ITEM__NAME);
+        createEAttribute(tdqFileItemEClass, TDQ_FILE_ITEM__EXTENSION);
+        createEReference(tdqFileItemEClass, TDQ_FILE_ITEM__CONTENT);
+
         tdqJrxmlItemEClass = createEClass(TDQ_JRXML_ITEM);
+
+        tdqSourceFileItemEClass = createEClass(TDQ_SOURCE_FILE_ITEM);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     private boolean isInitialized = false;
 
     /**
-     * Complete the initialization of the package and its meta-model. This method is guarded to have no affect on any
-     * invocation but its first. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * Complete the initialization of the package and its meta-model.  This
+     * method is guarded to have no affect on any invocation but its first.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void initializePackageContents() {
-        if (isInitialized)
-            return;
+        if (isInitialized) return;
         isInitialized = true;
 
         // Initialize package
@@ -395,15 +413,12 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         setNsURI(eNS_URI);
 
         // Obtain other dependent packages
-        org.talend.core.model.properties.PropertiesPackage thePropertiesPackage_1 = (org.talend.core.model.properties.PropertiesPackage) EPackage.Registry.INSTANCE
-                .getEPackage(org.talend.core.model.properties.PropertiesPackage.eNS_URI);
-        AnalysisPackage theAnalysisPackage = (AnalysisPackage) EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
-        InformationreportingPackage theInformationreportingPackage = (InformationreportingPackage) EPackage.Registry.INSTANCE
-                .getEPackage(InformationreportingPackage.eNS_URI);
-        DefinitionPackage theDefinitionPackage = (DefinitionPackage) EPackage.Registry.INSTANCE
-                .getEPackage(DefinitionPackage.eNS_URI);
-        RulesPackage theRulesPackage = (RulesPackage) EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI);
-        PatternPackage thePatternPackage = (PatternPackage) EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI);
+        org.talend.core.model.properties.PropertiesPackage thePropertiesPackage_1 = (org.talend.core.model.properties.PropertiesPackage)EPackage.Registry.INSTANCE.getEPackage(org.talend.core.model.properties.PropertiesPackage.eNS_URI);
+        AnalysisPackage theAnalysisPackage = (AnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
+        InformationreportingPackage theInformationreportingPackage = (InformationreportingPackage)EPackage.Registry.INSTANCE.getEPackage(InformationreportingPackage.eNS_URI);
+        DefinitionPackage theDefinitionPackage = (DefinitionPackage)EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI);
+        RulesPackage theRulesPackage = (RulesPackage)EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI);
+        PatternPackage thePatternPackage = (PatternPackage)EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI);
 
         // Create type parameters
 
@@ -415,41 +430,34 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         tdqIndicatorDefinitionItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
         tdqBusinessRuleItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
         tdqPatternItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
-        tdqJrxmlItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
+        tdqFileItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
+        tdqJrxmlItemEClass.getESuperTypes().add(this.getTDQFileItem());
+        tdqSourceFileItemEClass.getESuperTypes().add(this.getTDQFileItem());
 
         // Initialize classes and features; add operations and parameters
-        initEClass(tdqAnalysisItemEClass, TDQAnalysisItem.class, "TDQAnalysisItem", !IS_ABSTRACT, !IS_INTERFACE,
-                IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getTDQAnalysisItem_Analysis(), theAnalysisPackage.getAnalysis(), null, "analysis", null, 0, 1,
-                TDQAnalysisItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-                !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(tdqAnalysisItemEClass, TDQAnalysisItem.class, "TDQAnalysisItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getTDQAnalysisItem_Analysis(), theAnalysisPackage.getAnalysis(), null, "analysis", null, 0, 1, TDQAnalysisItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(tdqReportItemEClass, TDQReportItem.class, "TDQReportItem", !IS_ABSTRACT, !IS_INTERFACE,
-                IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getTDQReportItem_Report(), theInformationreportingPackage.getReport(), null, "report", null, 0, 1,
-                TDQReportItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-                !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(tdqReportItemEClass, TDQReportItem.class, "TDQReportItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getTDQReportItem_Report(), theInformationreportingPackage.getReport(), null, "report", null, 0, 1, TDQReportItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(tdqIndicatorDefinitionItemEClass, TDQIndicatorDefinitionItem.class, "TDQIndicatorDefinitionItem",
-                !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getTDQIndicatorDefinitionItem_IndicatorDefinition(), theDefinitionPackage.getIndicatorDefinition(), null,
-                "indicatorDefinition", null, 0, 1, TDQIndicatorDefinitionItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-                !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(tdqIndicatorDefinitionItemEClass, TDQIndicatorDefinitionItem.class, "TDQIndicatorDefinitionItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getTDQIndicatorDefinitionItem_IndicatorDefinition(), theDefinitionPackage.getIndicatorDefinition(), null, "indicatorDefinition", null, 0, 1, TDQIndicatorDefinitionItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(tdqBusinessRuleItemEClass, TDQBusinessRuleItem.class, "TDQBusinessRuleItem", !IS_ABSTRACT, !IS_INTERFACE,
-                IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getTDQBusinessRuleItem_Dqrule(), theRulesPackage.getDQRule(), null, "dqrule", null, 0, 1,
-                TDQBusinessRuleItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-                !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(tdqBusinessRuleItemEClass, TDQBusinessRuleItem.class, "TDQBusinessRuleItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getTDQBusinessRuleItem_Dqrule(), theRulesPackage.getDQRule(), null, "dqrule", null, 0, 1, TDQBusinessRuleItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(tdqPatternItemEClass, TDQPatternItem.class, "TDQPatternItem", !IS_ABSTRACT, !IS_INTERFACE,
-                IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getTDQPatternItem_Pattern(), thePatternPackage.getPattern(), null, "pattern", null, 0, 1,
-                TDQPatternItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-                !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEClass(tdqPatternItemEClass, TDQPatternItem.class, "TDQPatternItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getTDQPatternItem_Pattern(), thePatternPackage.getPattern(), null, "pattern", null, 0, 1, TDQPatternItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(tdqJrxmlItemEClass, TDQJrxmlItem.class, "TDQJrxmlItem", !IS_ABSTRACT, !IS_INTERFACE,
-                IS_GENERATED_INSTANCE_CLASS);
+        initEClass(tdqFileItemEClass, TDQFileItem.class, "TDQFileItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getTDQFileItem_Name(), ecorePackage.getEString(), "name", null, 0, 1, TDQFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTDQFileItem_Extension(), ecorePackage.getEString(), "extension", null, 0, 1, TDQFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTDQFileItem_Content(), thePropertiesPackage_1.getByteArray(), null, "content", null, 0, 1, TDQFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(tdqJrxmlItemEClass, TDQJrxmlItem.class, "TDQJrxmlItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(tdqSourceFileItemEClass, TDQSourceFileItem.class, "TDQSourceFileItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Create resource
         createResource(eNS_URI);

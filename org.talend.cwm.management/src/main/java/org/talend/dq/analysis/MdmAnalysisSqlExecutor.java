@@ -19,11 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.rpc.ServiceException;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
+import org.osgi.framework.ServiceException;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.exception.AnalysisExecutionException;
@@ -264,11 +263,12 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         if (log.isInfoEnabled()) {
             log.info("Computing indicator: " + indicator.getName());
         }
-        List<Object[]> myResultSet = executeQuery(xmlDocument, connection, queryStmt);
-
         // give result to indicator so that it handles the results
         boolean ret = false;
         try {
+
+            List<Object[]> myResultSet = executeQuery(xmlDocument, connection, queryStmt);
+
             ret = indicator.storeSqlResults(myResultSet);
         } catch (Exception e) {
             throw new RemoteException(e.toString());
@@ -285,9 +285,10 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @return
      * @throws ServiceException
      * @throws RemoteException
+     * @throws javax.xml.rpc.ServiceException
      */
     protected List<Object[]> executeQuery(TdXmlSchema xmlDocument, MdmWebserviceConnection connection, String queryStmt)
-            throws RemoteException, ServiceException {
+            throws RemoteException, ServiceException, javax.xml.rpc.ServiceException {
         // create query statement
         MdmStatement statement = connection.createStatement();
         // statement.setFetchSize(fetchSize);

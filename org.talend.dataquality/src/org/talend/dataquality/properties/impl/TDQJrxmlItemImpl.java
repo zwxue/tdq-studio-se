@@ -8,7 +8,6 @@ package org.talend.dataquality.properties.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.talend.core.model.properties.impl.TDQItemImpl;
 import org.talend.dataquality.properties.PropertiesPackage;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 
@@ -21,7 +20,7 @@ import org.talend.dataquality.properties.TDQJrxmlItem;
  *
  * @generated
  */
-public class TDQJrxmlItemImpl extends TDQItemImpl implements TDQJrxmlItem {
+public class TDQJrxmlItemImpl extends TDQFileItemImpl implements TDQJrxmlItem {
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

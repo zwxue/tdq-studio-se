@@ -19,6 +19,9 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.CreateUDIAction;
 import org.talend.dataprofiler.core.ui.action.actions.ExportUDIAction;
 import org.talend.dataprofiler.core.ui.action.actions.ImportUDIAction;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -39,17 +42,20 @@ public class UDIActionProvider extends AbstractCommonActionProvider {
 
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
-            if (obj instanceof IFolder) {
-                try {
-                    IFolder folder = (IFolder) obj;
-                    if (ResourceService.isSubFolder(ResourceManager.getUDIFolder(), folder)) {
-                        menu.add(new CreateUDIAction(folder));
-                        menu.add(new ImportUDIAction(folder));
-                        menu.add(new ExportUDIAction(folder, false));
-                        menu.add(new ExportUDIAction(folder, true));
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) obj;
+                if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
+                    IFolder folder = WorkbenchUtils.getFolder(node);
+                    try {
+                        if (ResourceService.isSubFolder(ResourceManager.getUDIFolder(), folder)) {
+                            menu.add(new CreateUDIAction(folder));
+                            menu.add(new ImportUDIAction(folder));
+                            menu.add(new ExportUDIAction(folder, false));
+                            menu.add(new ExportUDIAction(folder, true));
+                        }
+                    } catch (Exception e) {
+                        log.error(e, e);
                     }
-                } catch (Exception e) {
-                    log.error(e, e);
                 }
             }
         }

@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -26,6 +27,7 @@ import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvi
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -58,7 +60,8 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
     protected boolean preDo() {
         List<TdColumn> tempList = new ArrayList<TdColumn>();
 
-        for (TdColumn column : getColumns()) {
+        for (IRepositoryNode repositoryNode : getColumns()) {
+            TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
             if (!Java2SqlType.isTextInSQL(column.getSqlDataType().getJavaDataType())) {
                 tempList.add(column);
             }

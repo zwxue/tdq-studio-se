@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model.impl;
 
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * This class can store the all the Indicators of one TdColumn, and provide the method to access all indicator.
@@ -21,13 +23,13 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
  */
 public class ColumnIndicatorImpl extends ModelElementIndicatorImpl implements ColumnIndicator {
 
-    public ColumnIndicatorImpl(TdColumn tdColumn) {
+    public ColumnIndicatorImpl(IRepositoryNode reposNode) {
         super();
-        this.setModelElement(tdColumn);
+        this.setModelElement(reposNode);
     }
 
     public TdColumn getTdColumn() {
-        return (TdColumn) this.getModelElement();
+        return (TdColumn) ((MetadataColumnRepositoryObject) this.getModelElementRepositoryNode().getObject()).getTdColumn();
     }
 
     public int getJavaType() {

@@ -154,7 +154,8 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
         property.setVersion("0.1");
 
         TDQJrxmlItem item = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
-        item.setFilename(targetFile.getName());
+        // item.setFilename(targetFile.getName());
+        item.setName(targetFile.getName());
 
         item.setProperty(property);
         property.setItem(item);

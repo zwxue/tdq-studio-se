@@ -52,7 +52,10 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -61,6 +64,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
@@ -83,6 +87,8 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -166,7 +172,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             if (tdColumn == null && xmlElement == null) {
                 continue;
             }
-            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(element);
+            // MOD mzhao feature 15750, The column is recompute from the file, here create a new repository view object.
+
+            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
+                    .createColumnNode(tdColumn, null));
             DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
             Collection<Indicator> indicatorList = analysisHandler.getIndicators(element);
@@ -225,8 +234,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisColumnSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.analyzeColumn"), null); //$NON-NLS-1$
+        analysisColumnSection = createSection(form, anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analyzeColumn"), null); //$NON-NLS-1$
 
         Composite topComp = toolkit.createComposite(analysisColumnSection);
         topComp.setLayout(new GridLayout());
@@ -234,8 +243,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         createConnBindWidget(topComp);
         // ~
 
-        Hyperlink clmnBtn = toolkit.createHyperlink(topComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
+        Hyperlink clmnBtn = toolkit.createHyperlink(topComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -245,8 +254,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         });
 
-        Hyperlink indcBtn = toolkit.createHyperlink(topComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.selectIndicator"), SWT.NONE); //$NON-NLS-1$
+        Hyperlink indcBtn = toolkit.createHyperlink(topComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectIndicator"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(indcBtn);
         indcBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -331,13 +340,16 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      */
     public void openColumnsSelectionDialog() {
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
-        List<ModelElement> modelElementList = new ArrayList<ModelElement>();
+        List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-            modelElementList.add(modelElementIndicator.getModelElement());
+            reposViewObjList.add(modelElementIndicator.getModelElementRepositoryNode());
         }
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(this, null, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.columnSelection"), modelElementList, DefaultMessagesImpl //$NON-NLS-1$
-                .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
+        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
+                this,
+                null,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), reposViewObjList, connNode, DefaultMessagesImpl //$NON-NLS-1$
+                        .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] modelElements = dialog.getResult();
             treeViewer.setInput(modelElements);
@@ -395,8 +407,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
         refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
         refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
+        final Label message = toolkit.createLabel(sectionClient,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
@@ -419,8 +431,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
 
                 if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null, DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
+                    boolean returnCode = MessageDialog.openConfirm(null,
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("ColumnMasterDetailsPage.RunOrSeeSampleData")); //$NON-NLS-1$
 
                     if (returnCode) {
@@ -525,8 +537,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @param anasisDataComp
      */
     void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisParamSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        analysisParamSection = createSection(form, anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
 
         sectionClient.setLayout(new GridLayout(2, false));
@@ -611,8 +623,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         javaEnginSection.setLayout(gridLayout);
         checkSection.setLayout(gridLayout);
         numberSection.setLayout(gridLayout);
-        toolkit.createLabel(checkSection, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
+        toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
         drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);
         drillDownCheck.setSelection(true);
         drillDownCheck.setSelection(anaParameters.isStoreData());
@@ -624,8 +635,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             }
 
         });
-        Label maxNumLabel = toolkit.createLabel(numberSection, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.maxNumberLabel"));
+        Label maxNumLabel = toolkit.createLabel(numberSection,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"));
         maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
         maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
         maxNumText.addModifyListener(new ModifyListener() {
@@ -635,9 +646,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 if (stringUtil.isANum(textContent)) {
                     setDirty(true);
                 } else {
-                    MessageDialog.openWarning(e.display.getActiveShell(), DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.warningMessageTitle"), DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.integerConvertWarning"));
+                    MessageDialog.openWarning(e.display.getActiveShell(),
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warningMessageTitle"),
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.integerConvertWarning"));
                     maxNumText.setText(textContent.substring(0, textContent.length() - 1));
                 }
 
@@ -699,19 +710,26 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             analysis.getContext().setConnection(tdProvider);
 
             for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-                analysisHandler.addIndicator(modelElementIndicator.getModelElement(), modelElementIndicator.getIndicators());
-                DataminingType type = MetadataHelper.getDataminingType(modelElementIndicator.getModelElement());
+                IRepositoryViewObject reposObject = modelElementIndicator.getModelElementRepositoryNode().getObject();
+                ModelElement modelEle = null;
+                if (reposObject instanceof MetadataColumnRepositoryObject) {
+                    modelEle = ((MetadataColumnRepositoryObject) reposObject).getTdColumn();
+                } else if (reposObject instanceof MetadataXmlElementTypeRepositoryObject) {
+                    modelEle = ((MetadataXmlElementTypeRepositoryObject) reposObject).getTdXmlElementType();
+                }
+                analysisHandler.addIndicator(modelEle, modelElementIndicator.getIndicators());
+                DataminingType type = MetadataHelper.getDataminingType(modelEle);
                 if (type == null) {
                     type = MetadataHelper.getDefaultDataminingType(modelElementIndicator.getJavaType());
                 }
-                analysisHandler.setDatamingType(type.getLiteral(), modelElementIndicator.getModelElement());
+                analysisHandler.setDatamingType(type.getLiteral(), modelEle);
             }
         } else {
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
         }
         // if (providerList.size() != 0) {
-        //           
+        //
         // }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
         // boolean modifiedResourcesSaved =
@@ -866,7 +884,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
 
         for (ModelElementIndicator modelElementIndicator : treeViewer.getModelElementIndicator()) {
-            analyzedElement.add(modelElementIndicator.getModelElement());
+            IRepositoryViewObject modelElementRepositoryObj = modelElementIndicator.getModelElementRepositoryNode().getObject();
+            if (modelElementRepositoryObj instanceof MetadataColumnRepositoryObject) {
+                analyzedElement.add(((MetadataColumnRepositoryObject) modelElementRepositoryObj).getTdColumn());
+            }
         }
 
         if (!analyzedElement.isEmpty()) {

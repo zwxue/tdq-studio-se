@@ -12,24 +12,43 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedActionProvider;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateSummaryAnalysisAction;
+import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
 public class CreateSummaryStatisticsAnalysis extends AbstractPredefinedActionProvider {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedActionProvider#getAction()
-     */
+    private ModelElement modelElement;
+
+    @Override
+    public void init(ICommonActionExtensionSite site) {
+        if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
+            StructuredSelection selection = (StructuredSelection) site.getStructuredViewer().getSelection();
+            Object fe = selection.getFirstElement();
+            if (fe instanceof IRepositoryNode) {
+                IRepositoryViewObject object = ((IRepositoryNode) fe).getObject();
+                if (object instanceof MetadataColumnRepositoryObject) {
+                    MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) object;
+                    modelElement = columnObject.getTdColumn();
+                }
+            }
+        }
+        super.init(site);
+    }
+
     @Override
     protected AbstractPredefinedAnalysisAction getAction() {
-        // TODO Auto-generated method stub
-        return new CreateSummaryAnalysisAction();
+        return modelElement == null ? null : new CreateSummaryAnalysisAction();
     }
 
 }

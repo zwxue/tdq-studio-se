@@ -71,6 +71,15 @@ public interface PropertiesFactory extends EFactory {
     TDQPatternItem createTDQPatternItem();
 
     /**
+     * Returns a new object of class '<em>TDQ File Item</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>TDQ File Item</em>'.
+     * @generated
+     */
+    TDQFileItem createTDQFileItem();
+
+    /**
      * Returns a new object of class '<em>TDQ Jrxml Item</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -78,6 +87,15 @@ public interface PropertiesFactory extends EFactory {
      * @generated
      */
     TDQJrxmlItem createTDQJrxmlItem();
+
+    /**
+     * Returns a new object of class '<em>TDQ Source File Item</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>TDQ Source File Item</em>'.
+     * @generated
+     */
+    TDQSourceFileItem createTDQSourceFileItem();
 
     /**
      * Returns the package supported by this factory.

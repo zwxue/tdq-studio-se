@@ -197,11 +197,11 @@ public final class LogicalDeleteFileHandle {
         if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
             path = path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
             conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                    ERepositoryObjectType.METADATA_CONNECTIONS, path, true);
+                    ERepositoryObjectType.METADATA_CONNECTIONS, path, true, null);
         } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
             path = path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
             conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                    ERepositoryObjectType.METADATA_MDMCONNECTION, path, true);
+                    ERepositoryObjectType.METADATA_MDMCONNECTION, path, true, null);
         }
         if (conList != null) {
             for (IRepositoryViewObject repViewObj : conList) {

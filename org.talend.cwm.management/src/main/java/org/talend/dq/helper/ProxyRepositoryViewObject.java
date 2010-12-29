@@ -15,8 +15,11 @@ package org.talend.dq.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -25,7 +28,10 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -34,20 +40,94 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public final class ProxyRepositoryViewObject {
 
+    private static Logger log = Logger.getLogger(ProxyRepositoryViewObject.class);
+
     private ProxyRepositoryViewObject() {
 
     }
 
     public static List<IRepositoryViewObject> fetchRepositoryViewObjectsByFolder(boolean reload, ERepositoryObjectType itemType,
-            IPath path, boolean withDelete) {
-
+            IPath path, boolean withDelete, RepositoryNode node) {
         if (itemType == ERepositoryObjectType.METADATA_CONNECTIONS) {
             return getDBConnectionInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path, withDelete);
         } else if (itemType == ERepositoryObjectType.METADATA_MDMCONNECTION) {
             return getMDMConnectionInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path, withDelete);
+        } else if (itemType == ERepositoryObjectType.TDQ_ANALYSIS) {
+            return getAnalysisInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path, withDelete);
+        } else if (itemType == ERepositoryObjectType.TDQ_REPORTS) {
+            return getReportInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path, withDelete);
+        } else if (EResourceConstant.SYSTEM_INDICATORS.getName().equals(node.getParent().getObject().getLabel())) {
+            return getIndicatorInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path, withDelete);
+        } else if (EResourceConstant.USER_DEFINED_INDICATORS.getName().equals(node.getObject().getLabel())) {
+            return getIndicatorInstance().fetchRepositoryViewObjectsByFolder(reload, itemType, path, withDelete);
         }
         return new ArrayList<IRepositoryViewObject>();
 
+    }
+
+    public static RepositoryNode fetchRepositoryNodeByFolder(boolean reload, ERepositoryObjectType itemType, IPath path,
+            boolean withDelete, RepositoryNode node) {
+        try {
+            if (EResourceConstant.PATTERNS.getName().equals(node.getParent().getObject().getLabel())) {
+                RootContainer<String, IRepositoryViewObject> patterns = ProxyRepositoryFactory.getInstance()
+                        .getPatterns(itemType);
+                return getPatternsInstance().fetchRepositoryNodeByFolder(patterns, itemType, node);
+            } else if (itemType == ERepositoryObjectType.TDQ_RULES_SQL) {
+
+                RootContainer<String, IRepositoryViewObject> rules = ProxyRepositoryFactory.getInstance().getRules(itemType);
+
+                return getRuelesInstance().fetchRepositoryNodeByFolder(rules, itemType, node);
+            } else if (itemType == ERepositoryObjectType.TDQ_JRXMLTEMPLATE) {
+                RootContainer<String, IRepositoryViewObject> jrxmlTemplates = ProxyRepositoryFactory.getInstance()
+                        .getJrxmlTemplates(itemType);
+                return getJrxmlTemplateInstance().fetchRepositoryNodeByFolder(jrxmlTemplates, itemType, node);
+            } else if (itemType == ERepositoryObjectType.TDQ_SOURCE_FILES) {
+                RootContainer<String, IRepositoryViewObject> sourceFiles = ProxyRepositoryFactory.getInstance().getSourceFiles(itemType);
+                return getJrxmlTemplateInstance().fetchRepositoryNodeByFolder(sourceFiles, itemType, node);
+            } else if (itemType == ERepositoryObjectType.TDQ_REPORT_ELEMENT) {
+                RootContainer<String, IRepositoryViewObject> report = ProxyRepositoryFactory.getInstance().getReport();
+                return getReportInstance().fetchRepositoryNodeByFolder(report, itemType, node);
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        return node;
+
+    }
+
+    /**
+     * ss DOC klliu Comment method "getIndicatorInstance".
+     * 
+     * @return
+     */
+    private static TDQIndicatorsReposViewObjDelegator getIndicatorInstance() {
+        // TODO Auto-generated method stub
+        return TDQIndicatorsReposViewObjDelegator.getInstance();
+    }
+
+    /**
+     * DOC klliu Comment method "getReportInstance".
+     * 
+     * @return
+     */
+    private static TDQReportReposViewObjDelegator getReportInstance() {
+        return TDQReportReposViewObjDelegator.getInstance();
+    }
+
+    private static TDQRulessReposViewObjDelegator getRuelesInstance() {
+        return TDQRulessReposViewObjDelegator.getInstance();
+    }
+
+    private static TDQPatternsReposViewObjDelegator getPatternsInstance() {
+        return TDQPatternsReposViewObjDelegator.getInstance();
+    }
+
+    private static TDQJrxmlTemplateReposViewObjDelegator getJrxmlTemplateInstance() {
+        return TDQJrxmlTemplateReposViewObjDelegator.getInstance();
+    }
+
+    private static TDQAnalysisReposViewObjDelegator getAnalysisInstance() {
+        return TDQAnalysisReposViewObjDelegator.getInstance();
     }
 
     private static TDQDBConnectionReposViewObjDelegator getDBConnectionInstance() {

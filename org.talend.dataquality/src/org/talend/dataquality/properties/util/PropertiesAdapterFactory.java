@@ -13,6 +13,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.talend.core.model.properties.FileItem;
 import org.talend.core.model.properties.Item;
 
 import org.talend.core.model.properties.TDQItem;
@@ -95,8 +96,16 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
                 return createTDQPatternItemAdapter();
             }
             @Override
+            public Adapter caseTDQFileItem(TDQFileItem object) {
+                return createTDQFileItemAdapter();
+            }
+            @Override
             public Adapter caseTDQJrxmlItem(TDQJrxmlItem object) {
                 return createTDQJrxmlItemAdapter();
+            }
+            @Override
+            public Adapter caseTDQSourceFileItem(TDQSourceFileItem object) {
+                return createTDQSourceFileItemAdapter();
             }
             @Override
             public Adapter caseItem(Item object) {
@@ -211,6 +220,20 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
     }
 
     /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TDQFileItem <em>TDQ File Item</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.properties.TDQFileItem
+     * @generated
+     */
+    public Adapter createTDQFileItemAdapter() {
+        return null;
+    }
+
+    /**
      * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TDQJrxmlItem <em>TDQ Jrxml Item</em>}'.
      * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
@@ -221,6 +244,20 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createTDQJrxmlItemAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TDQSourceFileItem <em>TDQ Source File Item</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.properties.TDQSourceFileItem
+     * @generated
+     */
+    public Adapter createTDQSourceFileItemAdapter() {
         return null;
     }
 

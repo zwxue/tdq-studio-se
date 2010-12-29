@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
@@ -189,5 +190,16 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
     @Override
     protected NamedColumnSetAnalysisParameter getParameter() {
         return (NamedColumnSetAnalysisParameter) super.getParameter();
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.core.model.properties.Item)
+     */
+    @Override
+    public void openEditor(Item item) {
+        // TODO Auto-generated method stub
+
     }
 }

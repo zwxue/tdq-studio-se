@@ -39,10 +39,12 @@ public abstract class AbstractPredefinedActionProvider extends AbstractCommonAct
             return;
         }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
-        action.setSelection(currentSelection);
+        if (action != null) {
+            action.setSelection(currentSelection);
 
-        if (action.isAllowed()) {
-            menu.add(action);
+            if (action.isAllowed()) {
+                menu.add(action);
+            }
         }
     }
 

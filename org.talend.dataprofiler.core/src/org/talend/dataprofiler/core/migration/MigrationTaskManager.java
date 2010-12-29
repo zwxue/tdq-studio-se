@@ -226,7 +226,7 @@ public final class MigrationTaskManager {
      */
     public static void doMigrationTask(final List<IMigrationTask> tasks) {
 
-        if (!tasks.isEmpty()) {
+        if (!tasks.isEmpty() && false) {
             IRunnableWithProgress op = new IRunnableWithProgress() {
 
                 /*

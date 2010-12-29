@@ -13,9 +13,15 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -32,10 +38,20 @@ public class RunAnalysisActionProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
+        // Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+        // if (obj instanceof IFile) {
+        // runAnalysisAction = new RunAnalysisAction();
+        // runAnalysisAction.setSelectionFile((IFile) obj);
+        // menu.add(runAnalysisAction);
+        // }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
-        if (obj instanceof IFile) {
+        RepositoryNode node = (RepositoryNode) obj;
+        IPath append = WorkbenchUtils.getFilePath(node);
+        Item item = node.getObject().getProperty().getItem();
+        if (item instanceof TDQAnalysisItem) {
+            IFile file = ResourceManager.getRootProject().getFile(append);
             runAnalysisAction = new RunAnalysisAction();
-            runAnalysisAction.setSelectionFile((IFile) obj);
+            runAnalysisAction.setSelectionFile(file);
             menu.add(runAnalysisAction);
         }
 

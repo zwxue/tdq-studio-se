@@ -12,16 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.core.model.properties.Property;
-import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.DuplicateAction;
-import org.talend.dq.helper.PropertyHelper;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -34,26 +36,46 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
+        // DOC MOD klliu 2010-12-09 feature15750
         TreeSelection selection = (TreeSelection) this.getContext().getSelection();
-        if (!selection.isEmpty()) {
-            Object[] objs = selection.toArray();
-
-            List<Property> propertyList = new ArrayList<Property>();
-
-            for (Object obj : objs) {
-                if (obj instanceof IFile) {
-                    Property property = PropertyHelper.getProperty((IFile) obj);
-                    if (property == null) {
-                        return;
-                    }
-                    propertyList.add(property);
-                } else if (obj instanceof IRepositoryViewObject) {
-                    propertyList.add(((IRepositoryViewObject) obj).getProperty());
+        RepositoryNode firstElement = (RepositoryNode) selection.getFirstElement();
+        if (firstElement.getType().equals(ENodeType.REPOSITORY_ELEMENT)) {
+            if (!selection.isEmpty()) {
+                Object[] objs = selection.toArray();
+                IFile[] files = new IFile[objs.length];
+                for (int i = 0; i < objs.length; i++) {
+                    Object obj = objs[i];
+                    RepositoryNode node = (RepositoryNode) obj;
+                    Item item = node.getObject().getProperty().getItem();
+                    EClass eClass = item.eClass();
+                    IPath folderPath = WorkbenchUtils.getPath(node);
+                    String name = node
+                            .getObject()
+                            .getLabel()
+                            .concat("_")
+                            .concat(node.getObject().getProperty().getVersion())
+                            .concat(".")
+                            .concat(WorkbenchUtils.getItemExtendtion(item != null ? eClass.getClassifierID() : node.getObject()
+                                    .getProperty().getItem().eClass().getClassifierID()));
+                    IPath append = folderPath.append(new Path(name));
+                    IFile file = ResourceManager.getRootProject().getFile(append);
+                    files[i] = file;
                 }
+                DuplicateAction duplicate = new DuplicateAction();
+                menu.add(duplicate);
             }
-
-            DuplicateAction duplicate = new DuplicateAction(propertyList.toArray(new Property[propertyList.size()]));
-            menu.add(duplicate);
         }
     }
+
+    // if (!selection.isEmpty()) {
+    // Object[] objs = selection.toArray();
+    // IFile[] files = new IFile[objs.length];
+    // for (int i = 0; i < objs.length; i++) {
+    // IFile file = (IFile) objs[i];
+    // files[i] = file;
+    // }
+    //
+    // DuplicateAction duplicate = new DuplicateAction(files);
+    // menu.add(duplicate);
+    // }
 }

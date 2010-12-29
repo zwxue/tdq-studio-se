@@ -19,6 +19,9 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -52,14 +55,24 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
         }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
 
-        if (obj instanceof IFolder) {
-            IFolder folder = (IFolder) obj;
-
-            if (ResourceService.isSubFolder(ResourceManager.getConnectionFolder(), folder)
-                    || ResourceService.isSubFolder(ResourceManager.getMDMConnectionFolder(), folder)) {
-                CreateConnectionAction createConnectionAction = new CreateConnectionAction(folder);
-                menu.add(createConnectionAction);
+        if (obj instanceof RepositoryNode) {
+            RepositoryNode node = (RepositoryNode) obj;
+            if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
+                IFolder ifolder = WorkbenchUtils.getFolder(node);
+                if (ifolder != null
+                        && (ResourceService.isSubFolder(ResourceManager.getConnectionFolder(), ifolder) || ResourceService
+                                .isSubFolder(ResourceManager.getMDMConnectionFolder(), ifolder))) {
+                    CreateConnectionAction createConnectionAction = new CreateConnectionAction(ifolder);
+                    menu.add(createConnectionAction);
+                }
                 // menu.insertBefore("group.edit", createConnectionAction);
+                // IFolder ifolder = WorkbenchUtils.folder2IFolder(folder);
+                // if (ResourceService.isSubFolder(ResourceManager.getConnectionFolder(), ifolder)
+                // || ResourceService.isSubFolder(ResourceManager.getMDMConnectionFolder(), ifolder)) {
+                // CreateConnectionAction createConnectionAction = new CreateConnectionAction(ifolder);
+                // menu.add(createConnectionAction);
+                // // menu.insertBefore("group.edit", createConnectionAction);
+                // }
             }
         }
     }

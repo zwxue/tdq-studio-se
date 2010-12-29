@@ -20,7 +20,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -58,12 +58,12 @@ public class AnalyzeColumnAction extends Action {
             if (editor != null) {
                 ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
                 if (!this.selection.isEmpty()) {
-                    TdColumn[] columns = new TdColumn[selection.size()];
+                    MetadataColumnRepositoryObject[] columns = new MetadataColumnRepositoryObject[selection.size()];
                     Iterator it = this.selection.iterator();
 
                     int i = 0;
                     while (it.hasNext()) {
-                        columns[i] = (TdColumn) it.next();
+                        columns[i] = (MetadataColumnRepositoryObject) it.next();
                         i++;
                     }
                     page.getTreeViewer().setInput(columns);

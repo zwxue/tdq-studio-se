@@ -33,7 +33,7 @@ public interface ICWMResouceAdapter {
     /**
      * DOC bzhou Comment method "initCWMResourceBuilder".
      * 
-     * initialized instance of CWM resource object.
+     * initialized instance of CWM resource object. <br>
      * 
      * @return
      */
@@ -42,18 +42,18 @@ public interface ICWMResouceAdapter {
     /**
      * DOC bzhou Comment method "fillMetadataToCWMResource".
      * 
-     * add metadata information to CWM resource object.
+     * add metadata information to CWM resource object. <br>
      * 
-     * @param cwmElement
+     * @param repositoryObject
      */
-    public void fillMetadataToCWMResource(ModelElement cwmElement);
+    public void fillMetadataToCWMResource(ModelElement repositoryObject);
 
     /**
      * DOC bzhou Comment method "createCWMResourceFile".
      * 
-     * create file resource and store the CWM object.
+     * create file resource and store the CWM object. <br>
      * 
      * @return
      */
-    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement);
+    public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement repositoryObject);
 }

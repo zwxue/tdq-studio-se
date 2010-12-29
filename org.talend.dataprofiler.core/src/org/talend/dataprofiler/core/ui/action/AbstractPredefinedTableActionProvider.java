@@ -16,7 +16,10 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -40,11 +43,18 @@ public abstract class AbstractPredefinedTableActionProvider extends AbstractComm
             return;
         }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
-        action.setSelection(currentSelection);
+        Object fe = currentSelection.getFirstElement();
+        if (fe instanceof IRepositoryNode) {
+            IRepositoryViewObject object = ((IRepositoryNode) fe).getObject();
+            if (object instanceof TdTableRepositoryObject) {
+                action.setSelection(currentSelection);
 
-        if (action.isAllowed()) {
-            menu.add(action);
+                if (action.isAllowed()) {
+                    menu.add(action);
+                }
+            }
         }
+
     }
 
     protected abstract AbstractPredefinedTableAnalysisAction getAction();

@@ -31,10 +31,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -42,6 +42,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.analysis.Analysis;
@@ -59,6 +60,8 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -80,7 +83,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     protected static final int WIDTH1_CELL = 75;
 
-    public abstract boolean canDrop(ModelElement modelElement);
+    public abstract boolean canDrop(IRepositoryNode reposNode);
 
     protected Tree tree;
 
@@ -422,18 +425,19 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
     }
 
-    public void dropModelElements(List<? extends ModelElement> modelElements, int index) {
-        int size = modelElements.size();
+    public void dropModelElements(List<? extends IRepositoryNode> repositoryNode, int index) {
+        int size = repositoryNode.size();
         ModelElementIndicator[] meIndicators = new ModelElementIndicator[size];
         for (int i = 0; i < size; i++) {
-            ModelElement modelElement = modelElements.get(i);
-            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
-            if (tdColumn != null) {
-                meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(tdColumn);
+            IRepositoryNode repNode = repositoryNode.get(i);
+            IRepositoryViewObject repViewObj = repNode.getObject();
+            // TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(repViewObj);
+            if (repViewObj != null && repViewObj instanceof MetadataColumnRepositoryObject) {
+                meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(repNode);
             } else {
-                TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
-                if (xmlElement != null) {
-                    meIndicators[i] = ModelElementIndicatorHelper.createXmlElementIndicator(xmlElement);
+                // TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(repViewObj);
+                if (repViewObj != null) {
+                    meIndicators[i] = ModelElementIndicatorHelper.createXmlElementIndicator(repNode);
                 }
             }
         }
@@ -443,30 +447,38 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     public abstract void addElements(final ModelElementIndicator[] elements);
 
     public void setInput(Object[] objs) {
+        if (objs == null || objs.length == 0) {
+            return;
+        }
+        List<RepositoryNode> reposList = new ArrayList<RepositoryNode>();
+        for (Object obj : objs) {
+            if (obj instanceof DBColumnRepNode) {
+                reposList.add((RepositoryNode) obj);
+            }
+        }
+        if (reposList.size() == 0) {
+            return;
+        }
         boolean isMdm = false;
         if (objs != null && objs.length != 0) {
-            isMdm = objs[0] instanceof TdXmlElementType;
-            if (!(objs[0] instanceof TdColumn || isMdm)) {
+            isMdm = objs[0] instanceof MetadataXmlElementTypeRepositoryObject;
+            // if (!(objs[0] instanceof MetadataColumnRepositoryObject || isMdm)) {
+            if (!(reposList.get(0) instanceof DBColumnRepNode || isMdm)) {
                 return;
             }
         }
 
-        List<ModelElement> modelElementList = new ArrayList<ModelElement>();
-        for (Object obj : objs) {
-            modelElementList.add((ModelElement) obj);
-        }
         List<ModelElementIndicator> modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-            if (modelElementList.contains(modelElementIndicator.getModelElement())) {
+            if (reposList.contains(modelElementIndicator.getModelElementRepositoryNode())) {
                 modelElementIndicatorList.add(modelElementIndicator);
-                modelElementList.remove(modelElementIndicator.getModelElement());
+                reposList.remove(modelElementIndicator.getModelElementRepositoryNode());
             }
         }
 
-        for (ModelElement modelElement : modelElementList) {
-            ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper
-                    .createXmlElementIndicator((TdXmlElementType) modelElement) : ModelElementIndicatorHelper
-                    .createColumnIndicator((TdColumn) modelElement);
+        for (RepositoryNode repObj : reposList) {
+            ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper.createXmlElementIndicator(repObj)
+                    : ModelElementIndicatorHelper.createColumnIndicator(repObj);
             modelElementIndicatorList.add(temp);
         }
         this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList

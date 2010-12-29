@@ -6,8 +6,6 @@
  */
 package org.talend.dataquality.properties;
 
-import org.talend.core.model.properties.TDQItem;
-
 
 /**
  * <!-- begin-user-doc -->
@@ -19,5 +17,5 @@ import org.talend.core.model.properties.TDQItem;
  * @model
  * @generated
  */
-public interface TDQJrxmlItem extends TDQItem {
+public interface TDQJrxmlItem extends TDQFileItem {
 } // TDQJrxmlItem

@@ -12,14 +12,22 @@
 // ============================================================================
 package org.talend.cwm.compare.ui.actions.provider;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.SelectedComparisonAction;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
+
 
 /**
  * 
@@ -42,7 +50,11 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
         // remove the "Database Compare" menu when the object is a mdm connection
         while (iter.hasNext()) {
             Object obj = iter.next();
-            if (ConnectionUtils.isMdmConnection(obj)) {
+            if (obj instanceof RepositoryNode) {
+                if (ConnectionUtils.isMdmConnection(((RepositoryNode) obj).getObject())) {
+                    return;
+                }
+            } else {
                 return;
             }
         }
@@ -50,11 +62,27 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
         if (treeSelection == null) {
             return;
         }
+
+        Object firstElement = treeSelection.getFirstElement();
+        RepositoryNode rNode = (RepositoryNode) firstElement;
+        IFolder folder = WorkbenchUtils.getFolder(rNode);
+        IFolder metadataFolder = ResourceManager.getMetadataFolder();
+        if (!folder.getFullPath().toOSString().startsWith(metadataFolder.getFullPath().toOSString())) {
+            return;
+        }
+
         Object[] selectedObj = treeSelection.toArray();
         if (selectedObj.length < 2) {
             return;
         }
-        selectionCompareAction.refreshSelectedObj(selectedObj[0], selectedObj[1]);
+
+        List<IRepositoryViewObject> objects = new ArrayList<IRepositoryViewObject>();
+        for (Object obj : selectedObj) {
+            RepositoryNode node = (RepositoryNode) obj;
+            objects.add(node.getObject());
+        }
+
+        selectionCompareAction.refreshSelectedObj(objects.get(0), objects.get(1));
         menu.add(selectionCompareAction);
 
     }

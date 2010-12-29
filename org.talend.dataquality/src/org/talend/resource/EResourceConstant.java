@@ -33,7 +33,6 @@ import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
-import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.util.PropertiesSwitch;
@@ -63,6 +62,7 @@ public enum EResourceConstant {
     INDICATORS("Indicators", "TDQ_Libraries/Indicators", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY),
     PATTERNS("Patterns", "TDQ_Libraries/Patterns", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
+
     RULES("Rules", "TDQ_Libraries/Rules", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY),
     USER_DEFINED_INDICATORS(
@@ -70,9 +70,64 @@ public enum EResourceConstant {
                             "TDQ_Libraries/Indicators/User Defined Indicators",
                             ResourceConstant.READONLY),
     SYSTEM_INDICATORS("System Indicators", "TDQ_Libraries/Indicators/System Indicators", ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_ADVANCED_STATISTICS(
+                                          "Advanced Statistics",
+                                          "TDQ_Libraries/Indicators/System Indicators/Advanced Statistics",
+                                          ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_BUSINESS_RULES(
+                                     "Business Rules",
+                                     "TDQ_Libraries/Indicators/System Indicators/Business Rules",
+                                     ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_CORRELATION(
+                                  "Correlation",
+                                  "TDQ_Libraries/Indicators/System Indicators/Correlation",
+                                  ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY(
+                                            "Functional Dependency",
+                                            "TDQ_Libraries/Indicators/System Indicators/Functional Dependency",
+                                            ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_OVERVIEW("Overview", "TDQ_Libraries/Indicators/System Indicators/Overview", ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_PATTERN_FINDER(
+                                     "Pattern Finder",
+                                     "TDQ_Libraries/Indicators/System Indicators/Pattern Finder",
+                                     ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_PATTERN_MATCHING(
+                                       "Pattern Matching",
+                                       "TDQ_Libraries/Indicators/System Indicators/Pattern Matching",
+                                       ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_ROW_COMPARISON(
+                                     "Row Comparison",
+                                     "TDQ_Libraries/Indicators/System Indicators/Row Comparison",
+                                     ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_SIMPLE_STATISTICS(
+                                        "Simple Statistics",
+                                        "TDQ_Libraries/Indicators/System Indicators/Simple Statistics",
+                                        ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_SOUNDEX("Soundex", "TDQ_Libraries/Indicators/System Indicators/Soundex", ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_SUMMARY_STATISTICS(
+                                         "Summary Statistics",
+                                         "TDQ_Libraries/Indicators/System Indicators/Summary Statistics",
+                                         ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_TEXT_STATISTICS(
+                                      "Text Statistics",
+                                      "TDQ_Libraries/Indicators/System Indicators/Text Statistics",
+                                      ResourceConstant.READONLY),
     PATTERN_REGEX("Regex", "TDQ_Libraries/Patterns/Regex", ResourceConstant.READONLY),
+
+    PATTERN_REGEX_CODE("code", "TDQ_Libraries/Patterns/Regex/code", ResourceConstant.READONLY),
+    PATTERN_REGEX_PHONE("phone", "TDQ_Libraries/Patterns//phone", ResourceConstant.READONLY),
+    PATTERN_REGEX_ADDRESS("address", "TDQ_Libraries/Patterns/Regex/address", ResourceConstant.READONLY),
+    PATTERN_REGEX_TEXT("text", "TDQ_Libraries/Patterns/Regex/text", ResourceConstant.READONLY),
+    PATTERN_REGEX_CUSTOMER("customer", "TDQ_Libraries/Patterns/Regex/customer", ResourceConstant.READONLY),
+    PATTERN_REGEX_INTERNET("internet", "TDQ_Libraries/Patterns/Regex/internet", ResourceConstant.READONLY),
+    PATTERN_REGEX_COLOR("color", "TDQ_Libraries/Patterns/Regex/color", ResourceConstant.READONLY),
+    PATTERN_REGEX_DATE("date", "TDQ_Libraries/Patterns/Regex/date", ResourceConstant.READONLY),
+    PATTERN_REGEX_NUMBER("number", "TDQ_Libraries/Patterns/Regex/number", ResourceConstant.READONLY),
     PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY),
+    PATTERN_SQL_INTERNET("internet", "TDQ_Libraries/Patterns/SQL/internet", ResourceConstant.READONLY),
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY),
+    RULES_SQL_INTERNET("internet", "TDQ_Libraries/Rules/SQL/internet", ResourceConstant.READONLY),
+
     DB_CONNECTIONS("connections", "metadata/connections", ResourceConstant.READONLY),
     MDM_CONNECTIONS("MDMconnections", "metadata/MDMconnections", ResourceConstant.READONLY),
     REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY);
@@ -259,11 +314,6 @@ public enum EResourceConstant {
             @Override
             public Object caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
                 return INDICATORS;
-            }
-
-            @Override
-            public Object caseTDQJrxmlItem(TDQJrxmlItem object) {
-                return JRXML_TEMPLATE;
             }
 
             @Override

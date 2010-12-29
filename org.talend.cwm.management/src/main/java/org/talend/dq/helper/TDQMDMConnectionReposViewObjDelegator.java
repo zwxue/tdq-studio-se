@@ -79,4 +79,16 @@ public final class TDQMDMConnectionReposViewObjDelegator extends TDQConnectionRe
         return connList;
     }
 
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dq.helper.AbstractDQRepositoryViewObjectDelegator#fetchRepositoryViewObjectsLower(boolean,
+     * org.talend.core.model.repository.ERepositoryObjectType)
+     */
+    @Override
+    protected List<IRepositoryViewObject> fetchRepositoryViewObjectsLower(boolean withDelete, ERepositoryObjectType type) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

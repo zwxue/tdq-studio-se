@@ -37,7 +37,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -62,6 +65,8 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -295,7 +300,7 @@ public class ColumnViewerDND {
 
             event.detail = DND.DROP_NONE;
             StructuredSelection structuredSelection = (StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
-            Object firstElement = structuredSelection.getFirstElement();
+            RepositoryNode firstElement = (RepositoryNode) structuredSelection.getFirstElement();
             // MOD mzhao 9848 2010-01-14, Allowing drag table.
             // Make sure the selected elements are the same type.
             Iterator it = structuredSelection.iterator();
@@ -310,15 +315,15 @@ public class ColumnViewerDND {
 
             Tree tree = (Tree) ((DropTarget) event.widget).getControl();
             AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
-            if (firstElement instanceof TdColumn) {
-                TdColumn column = (TdColumn) firstElement;
-                if (viewer != null && viewer.canDrop(column)) {
+            IRepositoryViewObject repViewObj = firstElement.getObject();
+
+            if (repViewObj instanceof MetadataColumnRepositoryObject) {
+                if (viewer != null && viewer.canDrop(firstElement)) {
                     event.detail = DND.DROP_MOVE;
                 }
 
-            } else if (firstElement instanceof TdTable) {
-                TdTable table = (TdTable) firstElement;
-                if (viewer != null && viewer.canDrop(table)) {
+            } else if (repViewObj instanceof MetadataTableRepositoryObject) {
+                if (viewer != null && viewer.canDrop(firstElement)) {
                     event.detail = DND.DROP_MOVE;
                 }
             }
@@ -339,31 +344,35 @@ public class ColumnViewerDND {
 
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
-            List<TdColumn> selectedColumn = new ArrayList<TdColumn>();
+            List<IRepositoryNode> selectedColumn = new ArrayList<IRepositoryNode>();
 
             while (it.hasNext()) {
                 // MOD mzhao 9848 2010-01-14, Allowing drag table.
-                Object next = it.next();
-                if (next instanceof TdTable) {
-                    List<TdColumn> columns = ColumnSetHelper.getColumns((TdTable) next);
+                RepositoryNode next = (RepositoryNode) it.next();
+                IRepositoryViewObject repViewObj = next.getObject();
+                if (repViewObj instanceof MetadataTableRepositoryObject) {
+                    // Get column nodes.
+                    List<IRepositoryNode> columns = next.getChildren().get(0).getChildren();
                     if (isAnalysisColumnTreeViewer) {
                         for (ModelElementIndicator modelElementIndicator : ((AnalysisColumnTreeViewer) viewer)
                                 .getModelElementIndicator()) {
-                            if (columns.contains(modelElementIndicator.getModelElement())) {
-                                columns.remove(modelElementIndicator.getModelElement());
+                            // FIXME_15750 Caution: DONT use repository instance for comparison.
+                            if (columns.contains(modelElementIndicator.getModelElementRepositoryNode())) {
+                                columns.remove(modelElementIndicator.getModelElementRepositoryNode());
                             }
                         }
                     } else if (isAnalysisColumnNominalIntervalTreeViewer) {
-                        List<TdColumn> oriColumns = ((AnalysisColumnNominalIntervalTreeViewer) viewer)
+                        List<RepositoryNode> oriColumns = ((AnalysisColumnNominalIntervalTreeViewer) viewer)
                                 .getColumnSetMultiValueList();
-                        for (TdColumn column : oriColumns) {
+                        // FIXME_15750 Caution: DONT use repository instance for comparison.
+                        for (RepositoryNode column : oriColumns) {
                             if (columns.contains(column)) {
                                 columns.remove(column);
                             }
                         }
                     } else if (isAnalysisColumnSetTreeViewer) {
-                        List<TdColumn> oriColumns = ((AnalysisColumnSetTreeViewer) viewer).getColumnSetMultiValueList();
-                        for (TdColumn column : oriColumns) {
+                        List<IRepositoryNode> oriColumns = ((AnalysisColumnSetTreeViewer) viewer).getColumnSetMultiValueList();
+                        for (IRepositoryNode column : oriColumns) {
                             if (columns.contains(column)) {
                                 columns.remove(column);
                             }
@@ -371,7 +380,7 @@ public class ColumnViewerDND {
                     }
                     selectedColumn.addAll(columns);
                 } else {
-                    TdColumn column = (TdColumn) next;
+                    RepositoryNode column = (RepositoryNode) next;
                     selectedColumn.add(column);
                 }
 
@@ -416,10 +425,11 @@ public class ColumnViewerDND {
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
 
             event.detail = DND.DROP_NONE;
-            Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
-
-            if (firstElement instanceof TdXmlElementType) {
-                TdXmlElementType xmlElement = (TdXmlElementType) firstElement;
+            RepositoryNode firstElement = (RepositoryNode) ((StructuredSelection) LocalSelectionTransfer.getTransfer()
+                    .getSelection()).getFirstElement();
+            IRepositoryViewObject repViewObj = firstElement.getObject();
+            if (repViewObj instanceof MetadataXmlElementTypeRepositoryObject) {
+                RepositoryNode xmlElement = (RepositoryNode) firstElement;
 
                 Tree tree = (Tree) ((DropTarget) event.widget).getControl();
                 AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
@@ -440,10 +450,10 @@ public class ColumnViewerDND {
 
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
-            List<TdXmlElementType> selectedXmlElement = new ArrayList<TdXmlElementType>();
+            List<RepositoryNode> selectedXmlElement = new ArrayList<RepositoryNode>();
 
             while (it.hasNext()) {
-                TdXmlElementType xmlElement = (TdXmlElementType) it.next();
+                RepositoryNode xmlElement = (RepositoryNode) it.next();
                 selectedXmlElement.add(xmlElement);
             }
 
@@ -624,15 +634,13 @@ public class ColumnViewerDND {
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
 
             event.detail = DND.DROP_NONE;
-            Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
-
-            if (firstElement instanceof TdColumn) {
+            IRepositoryNode firstElement = (RepositoryNode)((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
+            IRepositoryViewObject repViewObj = firstElement.getObject();
+            if (repViewObj instanceof MetadataColumnRepositoryObject) {
                 TdColumn column = (TdColumn) firstElement;
-
                 Table table = (Table) ((DropTarget) event.widget).getControl();
                 AbstractColumnDropTree viewer = (AbstractColumnDropTree) table.getData();
-
-                if (viewer != null && viewer.canDrop(column)) {
+                if (viewer != null && viewer.canDrop(firstElement)) {
                     event.detail = DND.DROP_MOVE;
                 }
 
@@ -648,10 +656,9 @@ public class ColumnViewerDND {
 
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
-            List<TdColumn> selectedColumn = new ArrayList<TdColumn>();
-
+            List<RepositoryNode> selectedColumn = new ArrayList<RepositoryNode>();
             if (it.hasNext()) {
-                TdColumn column = (TdColumn) it.next();
+                RepositoryNode column = (RepositoryNode) it.next();
                 selectedColumn.add(column);
                 viewer.dropModelElements(selectedColumn, index);
             }

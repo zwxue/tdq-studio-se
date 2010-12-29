@@ -49,11 +49,17 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.helper.XmlElementHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
@@ -84,6 +90,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -433,7 +440,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
                 // for presentation
             }
-            DataminingType dataminingType = MetadataHelper.getDataminingType(meIndicator.getModelElement());
+
+            IRepositoryViewObject repViewObj = meIndicator.getModelElementRepositoryNode().getObject();
+            final MetadataColumn metadataColumn = ((MetadataColumnRepositoryObject) repViewObj).getTdColumn();
+            DataminingType dataminingType = MetadataHelper.getDataminingType(metadataColumn);
 
             if (dataminingType == null) {
                 combo.select(0);
@@ -443,7 +453,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             combo.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
-                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), meIndicator.getModelElement());
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), (TdColumn) metadataColumn);
                     setDirty(true);
                 }
 
@@ -596,7 +606,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
             typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";
         } else if (meIndicator instanceof XmlElementIndicator) {
-            typeName = ((TdXmlElementType) meIndicator.getModelElement()).getJavaType();
+            typeName = ((TdXmlElementType) meIndicator.getModelElementRepositoryNode()).getJavaType();
         }
         return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
                 + PluginConstant.PARENTHESIS_RIGHT : "null";
@@ -687,7 +697,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         String expressContent = null;
         IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
         ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-        ModelElement me = meIndicator.getModelElement();
+        IRepositoryViewObject reposViewObj = meIndicator.getModelElementRepositoryNode().getObject();
+        ModelElement me = ((MetadataColumnRepositoryObject) reposViewObj).getTdColumn();
         Connection dataprovider = ModelElementHelper.getTdDataProvider(me);
         DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
         Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
@@ -800,9 +811,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     @Override
-    public boolean canDrop(ModelElement modelElement) {
+    public boolean canDrop(IRepositoryNode metadataRepositoryNode) {
+        IRepositoryViewObject metadataRepObject = metadataRepositoryNode.getObject();
+        ConnectionItem connItem = (ConnectionItem) metadataRepObject.getProperty().getItem();
         // MOD qiongli 2010-8-19,bug 14436:could not come from diffrent connection
-        Connection tdProvider = ModelElementHelper.getTdDataProvider(modelElement);
+        Connection tdProvider = connItem.getConnection();
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null
@@ -816,17 +829,23 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         List<ModelElement> existModelElements = new ArrayList<ModelElement>();
         for (ModelElementIndicator modelElementIndicator : this.getModelElementIndicator()) {
-            existModelElements.add(modelElementIndicator.getModelElement());
+            IRepositoryViewObject reposViewObj = modelElementIndicator.getModelElementRepositoryNode().getObject();
+            ModelElement me = ((MetadataColumnRepositoryObject) reposViewObj).getTdColumn();
+
+            existModelElements.add(me);
         }
         // MOD mzhao 9848 2010-01-14, allowing to drag and drop table.
-        if (modelElement instanceof TdTable) {
-            return !existModelElements.containsAll(ColumnSetHelper.getColumns((TdTable) modelElement));
+        if (metadataRepObject instanceof MetadataTableRepositoryObject) {
+            MetadataTableRepositoryObject tableRepObject = (MetadataTableRepositoryObject) metadataRepObject;
+            return !existModelElements.containsAll(ColumnSetHelper.getColumns((TdTable) tableRepObject.getTable()));
         }
-        if (existModelElements.contains(modelElement)) {
-            return false;
+        if (metadataRepObject instanceof MetadataColumnRepositoryObject) {
+            if (existModelElements.contains(((MetadataColumnRepositoryObject) metadataRepObject).getTdColumn())) {
+                return false;
+            }
         }
-        if (modelElement instanceof TdXmlElementType) {
-            return XmlElementHelper.isLeafNode((TdXmlElementType) modelElement);
+        if (metadataRepObject instanceof MetadataXmlElementTypeRepositoryObject) {
+            return !metadataRepositoryNode.hasChildren();
         }
         return true;
     }
@@ -837,7 +856,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     class AnalysisColumnColumnMenuProvider extends ModelElementTreeMenuProvider {
 
         /**
-         * DOC yyi ColumnModelElementTreeMenuProvider constructor comment.
+         * DOC yyi ColumnModelElementTreeMenuProvider constructor comment. true *
          * 
          * @param tree
          */

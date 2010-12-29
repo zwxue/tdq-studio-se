@@ -12,17 +12,19 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
 import org.talend.dataprofiler.core.model.impl.XmlElementIndicatorImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 
 
 /**
@@ -33,21 +35,21 @@ public final class ModelElementIndicatorHelper {
     private ModelElementIndicatorHelper() {
     }
 
-    public static final ModelElementIndicator createModelElementIndicator(ModelElement modelElement) {
-        if (modelElement instanceof TdColumn) {
-            return createColumnIndicator((TdColumn) modelElement);
-        } else if (modelElement instanceof TdXmlElementType) {
-            return createXmlElementIndicator((TdXmlElementType) modelElement);
+    public static final ModelElementIndicator createModelElementIndicator(RepositoryNode repositoryObject) {
+        if (repositoryObject.getObject() instanceof MetadataColumnRepositoryObject) {
+            return createColumnIndicator(repositoryObject);
+        } else if (repositoryObject.getObject() instanceof MetadataXmlElementTypeRepositoryObject) {
+            return createXmlElementIndicator(repositoryObject);
         }
         return null;
     }
 
-    public static final ColumnIndicator createColumnIndicator(TdColumn tdColumn) {
-        return new ColumnIndicatorImpl(tdColumn);
+    public static final ColumnIndicator createColumnIndicator(IRepositoryNode repositoryNode) {
+        return new ColumnIndicatorImpl(repositoryNode);
     }
 
-    public static final XmlElementIndicator createXmlElementIndicator(TdXmlElementType tdXMLElement) {
-        return new XmlElementIndicatorImpl(tdXMLElement);
+    public static final XmlElementIndicator createXmlElementIndicator(IRepositoryNode reposObj) {
+        return new XmlElementIndicatorImpl(reposObj);
     }
 
     public static final ColumnIndicator switchColumnIndicator(IndicatorUnit indicatorUnit) {
@@ -79,7 +81,11 @@ public final class ModelElementIndicatorHelper {
     }
 
     public static final Connection getTdDataProvider(ModelElementIndicator indicator) {
-        return ModelElementHelper.getTdDataProvider(indicator.getModelElement());
+        Item connItem = indicator.getModelElementRepositoryNode().getObject().getProperty().getItem();
+        if (connItem instanceof ConnectionItem) {
+            return ((ConnectionItem) connItem).getConnection();
+        }
+        return null;
     }
 
 }

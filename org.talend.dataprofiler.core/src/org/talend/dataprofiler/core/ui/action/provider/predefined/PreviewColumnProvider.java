@@ -12,11 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -29,15 +34,23 @@ public class PreviewColumnProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
+
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
-
+        List<TdColumn> list = new ArrayList<TdColumn>();
         Object[] selectedObjs = treeSelection.toArray();
-        TdColumn[] columns = new TdColumn[selectedObjs.length];
-
-        for (int i = 0; i < selectedObjs.length; i++) {
-            columns[i] = (TdColumn) selectedObjs[i];
+        for (Object obj : selectedObjs) {
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) obj;
+                if (node.getObject() instanceof MetadataColumnRepositoryObject) {
+                    MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
+                    list.add((TdColumn) columnObject.getTdColumn());
+                }
+            }
         }
-        PreviewColumnAction action = new PreviewColumnAction(columns);
-        menu.add(action);
+
+        if (!list.isEmpty()) {
+            PreviewColumnAction action = new PreviewColumnAction(list.toArray(new TdColumn[list.size()]));
+            menu.add(action);
+        }
     }
 }

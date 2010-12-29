@@ -14,12 +14,12 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
-import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -36,6 +37,13 @@ import org.talend.top.repository.ProxyRepositoryManager;
  * 
  */
 public class CreateNewAnalysisAction extends Action implements ICheatSheetAction {
+
+    public IPath path;
+
+    public RepositoryNode node;
+
+    private IFolder folder;
+    String defaultLabel;
 
     public CreateNewAnalysisAction() {
         super(DefaultMessagesImpl.getString("CreateNewAnalysisAction.newAnalysis")); //$NON-NLS-1$
@@ -47,7 +55,20 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         this.folder = folder;
     }
 
-    private IFolder folder;
+    /**
+     * DOC klliu CreateNewAnalysisAction constructor comment.
+     * 
+     * @param path2
+     * @param node
+     */
+    public CreateNewAnalysisAction(IPath path, RepositoryNode node) {
+        this();
+        this.path = path;
+        this.node = node;
+
+    }
+
+
 
     /*
      * (non-Javadoc)
@@ -56,11 +77,19 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
      */
     @Override
     public void run() {
-        FolderProvider currentFolderProvider = new FolderProvider();
-        currentFolderProvider.setFolderResource(folder);
+        // FolderProvider currentFolderProvider = new FolderProvider();
+        // currentFolderProvider.setFolderResource(folder);
+        //
+        // CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard();
+        // wizard.setCurrentFolderProvider(currentFolderProvider);
+        // wizard.setForcePreviousAndNextButtons(true);
+        // WizardDialog dialog = new OpeningHelpWizardDialog(null, wizard, null);
+        // wizard.setContainer(dialog);
+        // if (WizardDialog.OK == dialog.open())
+        // ProxyRepositoryManager.getInstance().save();
 
-        CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard();
-        wizard.setCurrentFolderProvider(currentFolderProvider);
+        // DOC MOD klliu define the path and node
+        CreateNewAnalysisWizard wizard = WizardFactory.createNewAnalysisWizard(path, node);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new OpeningHelpWizardDialog(null, wizard, null);
         wizard.setContainer(dialog);

@@ -12,59 +12,40 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.actions.OpenFileAction;
-import org.eclipse.ui.navigator.ICommonActionConstants;
-import org.eclipse.ui.navigator.ICommonActionExtensionSite;
-import org.eclipse.ui.navigator.ICommonMenuConstants;
-import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.TDQItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
+import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
 public class OpenResourceProvider extends AbstractCommonActionProvider {
 
-    private OpenFileAction openFileAction;
+    private OpenItemEditorAction openFileAction;
 
-    private ICommonViewerWorkbenchSite viewSite = null;
-
-    private boolean contribute = false;
-
-    public void init(ICommonActionExtensionSite aConfig) {
-        if (aConfig.getViewSite() instanceof ICommonViewerWorkbenchSite) {
-            viewSite = (ICommonViewerWorkbenchSite) aConfig.getViewSite();
-            openFileAction = new OpenFileAction(viewSite.getPage());
-            contribute = true;
-        }
-    }
 
     public void fillContextMenu(IMenuManager aMenu) {
 
-        if (!contribute || getContext().getSelection().isEmpty()) {
-            return;
-        }
-
-        IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
-
-        openFileAction.selectionChanged(selection);
-        if (openFileAction.isEnabled()) {
-            aMenu.insertAfter(ICommonMenuConstants.GROUP_OPEN, openFileAction);
-        }
-    }
-
-    public void fillActionBars(IActionBars theActionBars) {
-        if (!contribute) {
-            return;
-        }
-        IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
-        if (selection.size() == 1 && selection.getFirstElement() instanceof IFile) {
-            openFileAction.selectionChanged(selection);
-            theActionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, openFileAction);
+        // DOC MOD klliu 2010-12-09 feature15750
+        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+        RepositoryNode node = (RepositoryNode) obj;
+        Item item = node.getObject().getProperty().getItem();
+        if (!(item instanceof TDQReportItem || item instanceof TDQSourceFileItem)
+                && (item instanceof TDQItem || item instanceof ConnectionItem)
+                && !(node.getObject() instanceof MetadataCatalogRepositoryObject || node.getObject() instanceof MetadataSchemaRepositoryObject)) {
+            IRepositoryViewObject object = node.getObject();
+            openFileAction = new OpenItemEditorAction(object);
+            aMenu.add(openFileAction);
         }
 
     }
-
 }

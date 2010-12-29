@@ -13,7 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.connection;
 
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 
 /**
@@ -24,22 +24,19 @@ public class ConnectionItemEditorInput extends AbstractItemEditorInput {
 
     private ConnectionItem connectionItem = null;
 
-    private IRepositoryViewObject reposViewObj = null;
-
-    public ConnectionItemEditorInput(IRepositoryViewObject reposViewObj) {
-        super(reposViewObj);
-        connectionItem = (ConnectionItem) reposViewObj.getProperty().getItem();
-        this.reposViewObj = reposViewObj;
+    public ConnectionItemEditorInput(Item connItem) {
+        super(connItem);
+        connectionItem = (ConnectionItem) connItem;
     }
 
     @Override
     public String getName() {
-        return connectionItem.getConnection().getName();
+        return getPath() + connectionItem.getConnection().getName();
     }
 
     @Override
     public String getToolTipText() {
-        return connectionItem.getConnection().getName();
+        return getPath() + connectionItem.getConnection().getName();
     }
 
     /**
@@ -52,14 +49,5 @@ public class ConnectionItemEditorInput extends AbstractItemEditorInput {
         return connectionItem;
     }
 
-    /**
-     * 
-     * DOC qiongli Comment method "getReposViewObj".
-     * 
-     * @return
-     */
-    public IRepositoryViewObject getReposViewObj() {
-        return this.reposViewObj;
-    }
 
 }

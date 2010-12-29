@@ -47,7 +47,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -125,8 +124,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
-        FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-        this.currentModelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(input.getFile());
+        BusinessRuleItemEditorInput input = (BusinessRuleItemEditorInput) editor.getEditorInput();
+        this.currentModelElement = input.getTDQBusinessRuleItem().getDqrule();
         whereRule = (WhereRule) this.currentModelElement;
         return whereRule;
     }

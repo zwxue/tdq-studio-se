@@ -41,7 +41,8 @@ public class ImportRemotePatternActionProvider extends AbstractCommonActionProvi
         List<IEcosComponent> selectedComponents = new ArrayList<IEcosComponent>();
 
         for (Object obj : currentSelection.toArray()) {
-            selectedComponents.add((IEcosComponent) obj);
+            // DOC MOD klliu 2010-12-15 feature 15750 need to add the remote IEcosComponent
+            // selectedComponents.add((IEcosComponent) obj);
         }
 
         ImportRemotePatternAction importAction = new ImportRemotePatternAction(selectedComponents

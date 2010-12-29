@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -31,7 +30,7 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -40,12 +39,12 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * @author rli
  * 
  */
-public class DBTablesViewLabelProvider extends AdapterFactoryLabelProvider {
+public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
 
     private static Logger log = Logger.getLogger(DBTablesViewLabelProvider.class);
 
     public DBTablesViewLabelProvider() {
-        super(MNComposedAdapterFactory.getAdapterFactory());
+        super();
     }
 
     /*

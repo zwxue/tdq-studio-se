@@ -29,8 +29,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -54,6 +55,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -228,7 +230,8 @@ public abstract class ModelElementTreeMenuProvider {
                     TreeItem treeItem = selection[0];
                     ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem
                             .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
-                    ModelElement me = meIndicator.getModelElement();
+                    IRepositoryNode rd = meIndicator.getModelElementRepositoryNode();
+                    ModelElement me = ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn();
                     ModelElement ana = getAnalysis2();
                     ana.setName(me.getName());
                     if (me instanceof ModelElement) {
@@ -322,7 +325,8 @@ public abstract class ModelElementTreeMenuProvider {
         for (int i = 0; i < items.length; i++) {
             ModelElementIndicator meIndicator = (ModelElementIndicator) items[i]
                     .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
-            ModelElement me = meIndicator.getModelElement();
+            ModelElement me = ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode().getObject())
+                    .getTdColumn();
             mes[i] = me;
         }
 
@@ -340,8 +344,9 @@ public abstract class ModelElementTreeMenuProvider {
         for (TreeItem item : selection) {
             ModelElementIndicator meIndicator = (ModelElementIndicator) item
                     .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
-            ModelElement me = meIndicator.getModelElement();
-            Connection dataprovider = ModelElementHelper.getTdDataProvider(me);
+            ConnectionItem connItem = (ConnectionItem) meIndicator.getModelElementRepositoryNode().getObject().getProperty()
+                    .getItem();
+            Connection dataprovider = connItem.getConnection();
             IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY);
             DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
             Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
@@ -353,8 +358,8 @@ public abstract class ModelElementTreeMenuProvider {
                 return;
             }
 
-            // MOD qiongli 2010-12-21 bug 16658.not only openSqlEditor,but also run it.
-            CorePlugin.getDefault().runInDQViewer(dataprovider, expression.getBody(), me.getName());
+            CorePlugin.getDefault().openInSqlEditor(dataprovider, expression.getBody(),
+                    meIndicator.getModelElementRepositoryNode().getObject().getProperty().getLabel());
         }
     }
 
@@ -371,7 +376,8 @@ public abstract class ModelElementTreeMenuProvider {
             try {
                 ModelElementIndicator meIndicator = (ModelElementIndicator) selection[0]
                         .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
-                ModelElement me = meIndicator.getModelElement();
+                ModelElement me = ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode().getObject())
+                        .getTdColumn();
 
                 dqview.showSelectedElements(me);
 

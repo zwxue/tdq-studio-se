@@ -380,14 +380,14 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_PATTERN_ITEM_FEATURE_COUNT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM_FEATURE_COUNT + 1;
 
     /**
-     * The meta object id for the '{@link org.talend.dataquality.properties.impl.TDQJrxmlItemImpl <em>TDQ Jrxml Item</em>}' class.
+     * The meta object id for the '{@link org.talend.dataquality.properties.impl.TDQFileItemImpl <em>TDQ File Item</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.talend.dataquality.properties.impl.TDQJrxmlItemImpl
-     * @see org.talend.dataquality.properties.impl.PropertiesPackageImpl#getTDQJrxmlItem()
+     * @see org.talend.dataquality.properties.impl.TDQFileItemImpl
+     * @see org.talend.dataquality.properties.impl.PropertiesPackageImpl#getTDQFileItem()
      * @generated
      */
-    int TDQ_JRXML_ITEM = 5;
+    int TDQ_FILE_ITEM = 5;
 
     /**
      * The feature id for the '<em><b>Property</b></em>' reference.
@@ -396,7 +396,7 @@ public interface PropertiesPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TDQ_JRXML_ITEM__PROPERTY = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PROPERTY;
+    int TDQ_FILE_ITEM__PROPERTY = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PROPERTY;
 
     /**
      * The feature id for the '<em><b>State</b></em>' reference.
@@ -405,7 +405,7 @@ public interface PropertiesPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TDQ_JRXML_ITEM__STATE = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__STATE;
+    int TDQ_FILE_ITEM__STATE = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__STATE;
 
     /**
      * The feature id for the '<em><b>Parent</b></em>' reference.
@@ -414,7 +414,7 @@ public interface PropertiesPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TDQ_JRXML_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
+    int TDQ_FILE_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
@@ -423,7 +423,116 @@ public interface PropertiesPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TDQ_JRXML_ITEM__FILENAME = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILENAME;
+    int TDQ_FILE_ITEM__FILENAME = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILENAME;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_FILE_ITEM__NAME = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_FILE_ITEM__EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM_FEATURE_COUNT + 1;
+
+    /**
+     * The feature id for the '<em><b>Content</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_FILE_ITEM__CONTENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM_FEATURE_COUNT + 2;
+
+    /**
+     * The number of structural features of the '<em>TDQ File Item</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_FILE_ITEM_FEATURE_COUNT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM_FEATURE_COUNT + 3;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.properties.impl.TDQJrxmlItemImpl <em>TDQ Jrxml Item</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.properties.impl.TDQJrxmlItemImpl
+     * @see org.talend.dataquality.properties.impl.PropertiesPackageImpl#getTDQJrxmlItem()
+     * @generated
+     */
+    int TDQ_JRXML_ITEM = 6;
+
+    /**
+     * The feature id for the '<em><b>Property</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__PROPERTY = TDQ_FILE_ITEM__PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>State</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__STATE = TDQ_FILE_ITEM__STATE;
+
+    /**
+     * The feature id for the '<em><b>Parent</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__PARENT = TDQ_FILE_ITEM__PARENT;
+
+    /**
+     * The feature id for the '<em><b>Filename</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__FILENAME = TDQ_FILE_ITEM__FILENAME;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__NAME = TDQ_FILE_ITEM__NAME;
+
+    /**
+     * The feature id for the '<em><b>Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__EXTENSION = TDQ_FILE_ITEM__EXTENSION;
+
+    /**
+     * The feature id for the '<em><b>Content</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__CONTENT = TDQ_FILE_ITEM__CONTENT;
 
     /**
      * The number of structural features of the '<em>TDQ Jrxml Item</em>' class.
@@ -432,8 +541,89 @@ public interface PropertiesPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int TDQ_JRXML_ITEM_FEATURE_COUNT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM_FEATURE_COUNT + 0;
+    int TDQ_JRXML_ITEM_FEATURE_COUNT = TDQ_FILE_ITEM_FEATURE_COUNT + 0;
 
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.properties.impl.TDQSourceFileItemImpl <em>TDQ Source File Item</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.properties.impl.TDQSourceFileItemImpl
+     * @see org.talend.dataquality.properties.impl.PropertiesPackageImpl#getTDQSourceFileItem()
+     * @generated
+     */
+    int TDQ_SOURCE_FILE_ITEM = 7;
+
+    /**
+     * The feature id for the '<em><b>Property</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__PROPERTY = TDQ_FILE_ITEM__PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>State</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__STATE = TDQ_FILE_ITEM__STATE;
+
+    /**
+     * The feature id for the '<em><b>Parent</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__PARENT = TDQ_FILE_ITEM__PARENT;
+
+    /**
+     * The feature id for the '<em><b>Filename</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__FILENAME = TDQ_FILE_ITEM__FILENAME;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__NAME = TDQ_FILE_ITEM__NAME;
+
+    /**
+     * The feature id for the '<em><b>Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__EXTENSION = TDQ_FILE_ITEM__EXTENSION;
+
+    /**
+     * The feature id for the '<em><b>Content</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__CONTENT = TDQ_FILE_ITEM__CONTENT;
+
+    /**
+     * The number of structural features of the '<em>TDQ Source File Item</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM_FEATURE_COUNT = TDQ_FILE_ITEM_FEATURE_COUNT + 0;
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.properties.TDQAnalysisItem <em>TDQ Analysis Item</em>}'.
@@ -541,6 +731,49 @@ public interface PropertiesPackage extends EPackage {
     EReference getTDQPatternItem_Pattern();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.properties.TDQFileItem <em>TDQ File Item</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>TDQ File Item</em>'.
+     * @see org.talend.dataquality.properties.TDQFileItem
+     * @generated
+     */
+    EClass getTDQFileItem();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.properties.TDQFileItem#getName <em>Name</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Name</em>'.
+     * @see org.talend.dataquality.properties.TDQFileItem#getName()
+     * @see #getTDQFileItem()
+     * @generated
+     */
+    EAttribute getTDQFileItem_Name();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.properties.TDQFileItem#getExtension <em>Extension</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Extension</em>'.
+     * @see org.talend.dataquality.properties.TDQFileItem#getExtension()
+     * @see #getTDQFileItem()
+     * @generated
+     */
+    EAttribute getTDQFileItem_Extension();
+
+    /**
+     * Returns the meta object for the reference '{@link org.talend.dataquality.properties.TDQFileItem#getContent <em>Content</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Content</em>'.
+     * @see org.talend.dataquality.properties.TDQFileItem#getContent()
+     * @see #getTDQFileItem()
+     * @generated
+     */
+    EReference getTDQFileItem_Content();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.properties.TDQJrxmlItem <em>TDQ Jrxml Item</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -549,6 +782,16 @@ public interface PropertiesPackage extends EPackage {
      * @generated
      */
     EClass getTDQJrxmlItem();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.properties.TDQSourceFileItem <em>TDQ Source File Item</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>TDQ Source File Item</em>'.
+     * @see org.talend.dataquality.properties.TDQSourceFileItem
+     * @generated
+     */
+    EClass getTDQSourceFileItem();
 
     /**
      * Returns the factory that creates the instances of the model.
@@ -663,6 +906,40 @@ public interface PropertiesPackage extends EPackage {
         EReference TDQ_PATTERN_ITEM__PATTERN = eINSTANCE.getTDQPatternItem_Pattern();
 
         /**
+         * The meta object literal for the '{@link org.talend.dataquality.properties.impl.TDQFileItemImpl <em>TDQ File Item</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.properties.impl.TDQFileItemImpl
+         * @see org.talend.dataquality.properties.impl.PropertiesPackageImpl#getTDQFileItem()
+         * @generated
+         */
+        EClass TDQ_FILE_ITEM = eINSTANCE.getTDQFileItem();
+
+        /**
+         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TDQ_FILE_ITEM__NAME = eINSTANCE.getTDQFileItem_Name();
+
+        /**
+         * The meta object literal for the '<em><b>Extension</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TDQ_FILE_ITEM__EXTENSION = eINSTANCE.getTDQFileItem_Extension();
+
+        /**
+         * The meta object literal for the '<em><b>Content</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TDQ_FILE_ITEM__CONTENT = eINSTANCE.getTDQFileItem_Content();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.properties.impl.TDQJrxmlItemImpl <em>TDQ Jrxml Item</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -671,6 +948,16 @@ public interface PropertiesPackage extends EPackage {
          * @generated
          */
         EClass TDQ_JRXML_ITEM = eINSTANCE.getTDQJrxmlItem();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.properties.impl.TDQSourceFileItemImpl <em>TDQ Source File Item</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.properties.impl.TDQSourceFileItemImpl
+         * @see org.talend.dataquality.properties.impl.PropertiesPackageImpl#getTDQSourceFileItem()
+         * @generated
+         */
+        EClass TDQ_SOURCE_FILE_ITEM = eINSTANCE.getTDQSourceFileItem();
 
     }
 

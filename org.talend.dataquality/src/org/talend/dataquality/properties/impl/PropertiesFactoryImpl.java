@@ -65,7 +65,9 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
             case PropertiesPackage.TDQ_INDICATOR_DEFINITION_ITEM: return createTDQIndicatorDefinitionItem();
             case PropertiesPackage.TDQ_BUSINESS_RULE_ITEM: return createTDQBusinessRuleItem();
             case PropertiesPackage.TDQ_PATTERN_ITEM: return createTDQPatternItem();
+            case PropertiesPackage.TDQ_FILE_ITEM: return createTDQFileItem();
             case PropertiesPackage.TDQ_JRXML_ITEM: return createTDQJrxmlItem();
+            case PropertiesPackage.TDQ_SOURCE_FILE_ITEM: return createTDQSourceFileItem();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -126,9 +128,29 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
      * <!-- end-user-doc -->
      * @generated
      */
+    public TDQFileItem createTDQFileItem() {
+        TDQFileItemImpl tdqFileItem = new TDQFileItemImpl();
+        return tdqFileItem;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public TDQJrxmlItem createTDQJrxmlItem() {
         TDQJrxmlItemImpl tdqJrxmlItem = new TDQJrxmlItemImpl();
         return tdqJrxmlItem;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public TDQSourceFileItem createTDQSourceFileItem() {
+        TDQSourceFileItemImpl tdqSourceFileItem = new TDQSourceFileItemImpl();
+        return tdqSourceFileItem;
     }
 
     /**

@@ -15,10 +15,12 @@ package org.talend.dataprofiler.core.ui.action.provider.predefined;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedActionProvider;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.RunConnAnalysisAction;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -46,8 +48,11 @@ public class RunConnAnalysis extends AbstractPredefinedActionProvider {
         if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
             StructuredSelection selection = (StructuredSelection) site.getStructuredViewer().getSelection();
             Object fe = selection.getFirstElement();
-            if (fe instanceof IRepositoryViewObject) {
-                reposViewObj = (IRepositoryViewObject) fe;
+            if (fe instanceof IRepositoryNode) {
+                IRepositoryViewObject object = ((IRepositoryNode) fe).getObject();
+                if (object.getProperty().getItem() instanceof ConnectionItem) {
+                    reposViewObj = object;
+                }
             }
         }
         super.init(site);
@@ -60,6 +65,6 @@ public class RunConnAnalysis extends AbstractPredefinedActionProvider {
      */
     @Override
     protected AbstractPredefinedAnalysisAction getAction() {
-        return new RunConnAnalysisAction(reposViewObj);
+        return reposViewObj == null ? null : new RunConnAnalysisAction(reposViewObj);
     }
 }

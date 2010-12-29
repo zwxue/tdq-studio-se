@@ -287,7 +287,7 @@ public final class ImportFactory {
 
         IFile pfile = selectionFolder.getFile(fname);
 
-        ElementWriterFactory.getInstance().createPatternWriter().create(pattern, pfile);
+        ElementWriterFactory.getInstance().createPatternWriter().create(pattern, selectionFolder);
 
         return ResourceManager.getPatternFolder().getLocationURI().relativize(selectionFolder.getLocationURI()).toString();
     }
@@ -564,7 +564,7 @@ public final class ImportFactory {
 
         IFile pfile = selectionFolder.getFile(fname);
 
-        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(id, pfile);
+        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(id, selectionFolder);
     }
 
     /**

@@ -40,6 +40,7 @@ public abstract class ResourceFileMap {
 
     protected Map<IFile, Resource> registedResourceMap = new HashMap<IFile, Resource>();
 
+    @Deprecated
     public void register(IFile fileString, Resource resource) {
         registedResourceMap.put(fileString, resource);
     }
@@ -156,8 +157,8 @@ public abstract class ResourceFileMap {
             }
             ifile.delete(true, new NullProgressMonitor());
 
-            IFile propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-                    ifile.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
+            IFile propFile = ResourcesPlugin.getWorkspace().getRoot()
+                    .getFile(ifile.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
 
             if (propFile.exists()) {
                 propFile.delete(true, new NullProgressMonitor());

@@ -13,7 +13,9 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.DQRestoreAction;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * @author qiongli
@@ -33,8 +35,13 @@ public class RestoreActionProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
-    	restoreAction = new DQRestoreAction();
-        menu.add(restoreAction);
+        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+        if (obj instanceof IRepositoryNode) {
+            IRepositoryNode node = (IRepositoryNode) obj;
+            if (node.getObject().isDeleted()) {
+                restoreAction = new DQRestoreAction();
+                menu.add(restoreAction);
+            }
+        }
     }
-
 }

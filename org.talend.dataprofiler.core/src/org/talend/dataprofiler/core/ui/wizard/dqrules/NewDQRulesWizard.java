@@ -14,10 +14,13 @@ package org.talend.dataprofiler.core.ui.wizard.dqrules;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
+import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.WhereRule;
@@ -128,5 +131,11 @@ public class NewDQRulesWizard extends AbstractWizard {
             }
         }
         return false;
+    }
+
+    @Override
+    public void openEditor(Item item) {
+        BusinessRuleItemEditorInput dqRuleEditorInput = new BusinessRuleItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(dqRuleEditorInput, DQRuleEditor.class.getName());
     }
 }

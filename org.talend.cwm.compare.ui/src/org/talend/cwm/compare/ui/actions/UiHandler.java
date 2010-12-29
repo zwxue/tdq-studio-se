@@ -16,12 +16,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.editor.ModelElementCompareEditorLauncher;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -30,47 +30,38 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class UiHandler implements IUIHandler {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.talend.cwm.compare.factory.IUIHandler#popComparisonUI(org.eclipse
-	 * .core.runtime.IPath)
-	 */
-	public void popComparisonUI(final IPath diffResourcePath, String dbName,
-			Object selectedObject, boolean compareEachOther)
-			throws ReloadCompareException {
-			new ModelElementCompareEditorLauncher(dbName, selectedObject,
-				compareEachOther)
-					.open(
-				diffResourcePath);
-		
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.talend.cwm.compare.factory.IUIHandler#popRemoveElement(org.talend
-	 * .cwm.softwaredeployment.TdDataProvider)
-	 */
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.cwm.compare.factory.IUIHandler#popComparisonUI(org.eclipse.core.runtime.IPath, java.lang.String,
+     * java.lang.Object, boolean)
+     */
+    public void popComparisonUI(IPath diffResourcePath, String dbName, Object selectedObject, boolean compareEachOther)
+            throws ReloadCompareException {
+        // TODO Auto-generated method stub
+        new ModelElementCompareEditorLauncher(dbName, selectedObject, compareEachOther).open(diffResourcePath);
+
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see
+     * org.talend.cwm.compare.factory.IUIHandler#popRemoveElement(org.talend.core.model.metadata.builder.connection.
+     * Connection)
+     */
     public void popRemoveElement(final Connection provider) {
-		// TODO Auto-generated method stub
-		final Display display = PlatformUI.getWorkbench().getDisplay();
-		display.asyncExec(new Runnable() {
+        // TODO Auto-generated method stub
+        final Display display = PlatformUI.getWorkbench().getDisplay();
+        display.asyncExec(new Runnable() {
 
-			public void run() {
-				String titleMessage = DefaultMessagesImpl
-						.getString("DeleteModelElementConfirmDialog.confirmElementDelete"); //$NON-NLS-1$
-				DeleteModelElementConfirmDialog
-						.showElementImpactDialog(
-								new Shell(display),
-								new ModelElement[] { provider },
-								titleMessage,
-								Messages
-										.getString("UiHandler.followingAnalysisBeImpact")); //$NON-NLS-1$
-			}
-		});
-	}
+            public void run() {
+                String titleMessage = DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmElementDelete"); //$NON-NLS-1$
+                DeleteModelElementConfirmDialog.showElementImpactDialog(new Shell(display), new ModelElement[] { provider },
+                        titleMessage, Messages.getString("UiHandler.followingAnalysisBeImpact")); //$NON-NLS-1$
+            }
+        });
+    }
 
 }

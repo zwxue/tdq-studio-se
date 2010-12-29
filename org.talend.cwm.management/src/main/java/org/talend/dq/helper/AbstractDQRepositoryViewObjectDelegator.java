@@ -24,12 +24,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.data.container.Container;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -226,10 +229,16 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
     public List<IRepositoryViewObject> fetchRepositoryViewObjectsByFolder(boolean reload, ERepositoryObjectType itemType,
             IPath path, boolean withDelete) {
         if (reload) {
-            fetchRepositoryViewObjectsLower(withDelete);
+            if (itemType == ERepositoryObjectType.METADATA_CONNECTIONS || itemType == ERepositoryObjectType.TDQ_REPORTS
+                    || itemType == ERepositoryObjectType.METADATA_MDMCONNECTION || itemType == ERepositoryObjectType.TDQ_ANALYSIS) {
+                return fetchRepositoryViewObjectsLower(withDelete);
+            } else {
+                return fetchRepositoryViewObjectsLower(withDelete, itemType);
+            }
         }
-        List<IRepositoryViewObject> folderRepositoryObjectList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(
-                itemType, path);
+        List<IRepositoryViewObject> folderRepositoryObjectList = null;
+
+        folderRepositoryObjectList = ProxyRepositoryFactory.getInstance().getMetadataByFolder(itemType, path);
         List<IRepositoryViewObject> returnList = new ArrayList<IRepositoryViewObject>();
         for (IRepositoryViewObject newRepositoryObject : folderRepositoryObjectList) {
             IRepositoryViewObject tempRepositoryViewObject = this.getReposViewObjByProperty(newRepositoryObject.getProperty());
@@ -243,4 +252,54 @@ public abstract class AbstractDQRepositoryViewObjectDelegator<T extends ModelEle
 
     protected abstract List<IRepositoryViewObject> fetchRepositoryViewObjectsLower(boolean withDelete);
 
+    protected abstract List<IRepositoryViewObject> fetchRepositoryViewObjectsLower(boolean withDelete, ERepositoryObjectType type);
+
+    public List<String> fetchRepositoryViewObjectsFolder(boolean withDelete, ERepositoryObjectType type) {
+        List<String> patternsFolderList = new ArrayList<String>();
+        try {
+            List<String> all = ProxyRepositoryFactory.getInstance().getFolders(type);
+            patternsFolderList.clear();
+            patternsFolderList.addAll(all);
+
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        return patternsFolderList;
+    }
+
+    /**
+     * DOC klliu Comment method "fetchRepositoryNodeByFolder".
+     * 
+     * @param patterns
+     * @param itemType
+     * @param node
+     * @return
+     */
+    public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType itemType, RepositoryNode node) {
+        // RepositoryNode parent = node;
+        // for (Object object : patterns.getSubContainer()) {
+        // Container container = (Container) object;
+        // Object property = container.getProperty();
+        // Folder folder = new Folder(((Property) property), itemType);
+        // RepositoryNode childNodeFolder = new RepositoryNode(folder, parent, ENodeType.SIMPLE_FOLDER);
+        // parent.getChildren().add(childNodeFolder);
+        // fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
+        // }
+        // // not folder or folders have no subFolder
+        // for (Object obj : patterns.getMembers()) {
+        // RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
+        // if (!viewObject.isDeleted()) {
+        // if (node instanceof ReportFolderRepNode) {
+        // ReportRepNode repNode = new ReportRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+        // viewObject.setRepositoryNode(repNode);
+        // parent.getChildren().add(repNode);
+        //
+        // } else {
+        // RepositoryNode elementNode = new RepositoryNode(viewObject, parent, ENodeType.REPOSITORY_ELEMENT);
+        // parent.getChildren().add(elementNode);
+        // }
+        // }
+        // }
+        return null;// parent;
+    }
 }

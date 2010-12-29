@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -20,6 +21,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.XSDDataTypeConvertor;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -36,8 +38,6 @@ public final class ModelElementIndicatorRule {
     public static boolean match(IIndicatorNode node, ModelElementIndicator meIndicator, ExecutionLanguage language) {
 
         IndicatorEnum indicatorType = node.getIndicatorEnum();
-        ModelElement me = meIndicator.getModelElement();
-
         if (indicatorType == null) {
 
             for (IIndicatorNode one : node.getChildren()) {
@@ -48,8 +48,9 @@ public final class ModelElementIndicatorRule {
 
             return false;
         }
+        IRepositoryNode rd = meIndicator.getModelElementRepositoryNode();
 
-        return patternRule(indicatorType, me, language);
+        return patternRule(indicatorType, ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn(), language);
     }
 
     public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me, ExecutionLanguage language) {

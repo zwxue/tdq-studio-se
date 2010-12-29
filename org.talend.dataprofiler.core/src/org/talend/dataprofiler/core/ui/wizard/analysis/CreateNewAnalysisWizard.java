@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * @author zqin
@@ -32,6 +34,9 @@ public class CreateNewAnalysisWizard extends Wizard {
 
     private FolderProvider currentFolderProvider;
 
+    private IPath path;
+
+    private RepositoryNode node;
     public FolderProvider getCurrentFolderProvider() {
         return currentFolderProvider;
     }
@@ -42,6 +47,18 @@ public class CreateNewAnalysisWizard extends Wizard {
 
     public CreateNewAnalysisWizard() {
         setWindowTitle(DefaultMessagesImpl.getString("CreateNewAnalysisWizard.createNewAnalysis")); //$NON-NLS-1$
+    }
+
+    /**
+     * DOC klliu CreateNewAnalysisWizard constructor comment.
+     * 
+     * @param path
+     * @param node
+     */
+    public CreateNewAnalysisWizard(IPath path, RepositoryNode node) {
+        setWindowTitle(DefaultMessagesImpl.getString("CreateNewAnalysisWizard.createNewAnalysis")); //$NON-NLS-1$
+        this.path = path;
+        this.node = node;
     }
 
     /*

@@ -394,7 +394,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
                 } else if (editorInput instanceof ConnectionItemEditorInput) {
                     ConnectionItemEditorInput connectionInput = (ConnectionItemEditorInput) editorInput;
-                    if (property.equals(connectionInput.getReposViewObj().getProperty())) {
+                    if (property.equals(connectionInput.getItem().getProperty())) {
                         activePage.closeEditor(reference.getEditor(false), false);
                         // break;
                     }

@@ -15,8 +15,10 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.dataprofiler.core.ui.action.actions.ColumnFilterAction;
-import orgomg.cwm.resource.relational.NamedColumnSet;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -35,9 +37,18 @@ public class ColumnFilterProvider extends AbstractCommonActionProvider {
             return;
         }
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
-        if (currentSelection.getFirstElement() instanceof NamedColumnSet) {
-            ColumnFilterAction ecfAction = new ColumnFilterAction((NamedColumnSet) currentSelection.getFirstElement());
-            menu.add(ecfAction);
+        Object firstElement = currentSelection.getFirstElement();
+        if (firstElement instanceof RepositoryNode) {
+            RepositoryNode node = (RepositoryNode) firstElement;
+            if (node.getObject() instanceof TdTableRepositoryObject) {
+                TdTableRepositoryObject tableObject = (TdTableRepositoryObject) node.getObject();
+                ColumnFilterAction ecfAction = new ColumnFilterAction(tableObject.getTdTable());
+                menu.add(ecfAction);
+            } else if (node.getObject() instanceof TdViewRepositoryObject) {
+                TdViewRepositoryObject viewObject = (TdViewRepositoryObject) node.getObject();
+                ColumnFilterAction ecfAction = new ColumnFilterAction(viewObject.getTdView());
+                menu.add(ecfAction);
+            }
         }
     }
 

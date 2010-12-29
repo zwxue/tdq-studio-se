@@ -18,6 +18,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -44,15 +47,13 @@ public class DQRulesActionProvider extends AbstractCommonActionProvider {
 
         if (treeSelection.size() == 1) {
             Object obj = treeSelection.getFirstElement();
-            if (obj instanceof IFolder) {
-                try {
-                    IFolder folder = (IFolder) obj;
-
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) obj;
+                if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
+                    IFolder folder = WorkbenchUtils.getFolder(node);
                     if (ResourceService.isSubFolder(ResourceManager.getRulesSQLFolder(), folder)) {
                         menu.add(new CreateDQRulesAction(folder));
                     }
-                } catch (Exception e) {
-                    log.error(e, e);
                 }
             }
         }

@@ -132,87 +132,13 @@
 <!-- Resource Content--> 
    <extension  
          point="org.eclipse.ui.navigator.navigatorContent">
-		<commonFilter
-            id="org.eclipse.ui.navigator.resources.filters.htmlFolder"
-            name="%commonFilter.name.htmlFolder"
-            description="%commonFilter.description.htmlfolder"
-            activeByDefault="true"
-            >
-         <filterExpression>
-         	<and>
-	            <adapt type="org.eclipse.core.resources.IFolder">
-            		<test property="org.eclipse.core.resources.name" value="*.html_files"/>
-            	</adapt>	            
-	        </and>
-         </filterExpression>
-      </commonFilter>
-      <navigatorContent
-            activeByDefault="true"
-            contentProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider"
-            id="org.talend.dataprofiler.core.DQContent.emfContent"
-            labelProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider"
-            name="%navigatorContent.name.DQContent"
-            priority="normal">
-           <triggerPoints> 
-             <or>
-                <and> 
-                   <instanceof value="org.eclipse.core.resources.IResource"/> 
-                   <or>
-                       <test 
-                         forcePluginActivation="true" 
-                         property="org.eclipse.core.resources.extension" 
-                         value="prv"/> 
-                        <test
-                              forcePluginActivation="true"
-                              property="org.eclipse.core.resources.extension"
-                              value="ana">
-                        </test>
-                   </or>
-                </and>                 
-                 <instanceof value="org.talend.dq.nodes.foldernode.IFolderNode"/>
-                 <instanceof
-                       value="org.eclipse.emf.ecore.EObject">
-                 </instanceof>
-                 <instanceof
-                       value="org.talend.dataprofiler.core.recycle.IRecycleBin">
-                 </instanceof>
-                 <instanceof
-                       value="org.talend.core.model.repository.IRepositoryViewObject">
-                 </instanceof>
-             </or>
-           </triggerPoints> 
-           <possibleChildren> 
-              <or> 
-                <instanceof value="org.eclipse.emf.ecore.resource.Resource"/>
-                <instanceof value="org.eclipse.emf.ecore.EObject"/>
-                <instanceof
-                      value="org.talend.dataprofiler.ecos.model.IEcosComponent">
-                </instanceof>
-                <instanceof
-                      value="org.talend.dataprofiler.ecos.model.IEcosCategory">
-                </instanceof>
-                <instanceof
-                      value="java.lang.String">
-                </instanceof>  
-                <instanceof
-                      value="org.talend.dataprofiler.core.recycle.IRecycleBin">
-                </instanceof>
-                <instanceof
-                      value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
-                </instanceof>
-                <instanceof
-                      value="org.talend.core.model.repository.IRepositoryViewObject">
-                </instanceof> 
-              </or> 
-           </possibleChildren>   
-      </navigatorContent>    
       
       <navigatorContent
             name="%navigatorContent.name.DQResource"
-            priority="low"
+            priority="high"
             activeByDefault="true"
 			            contentProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider"
-            			labelProvider="org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider"			
+            			labelProvider="org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider"			
             id="org.talend.dataprofiler.core.DQContent.resourceContent">
          <enablement>
             <or>
@@ -222,6 +148,9 @@
                <instanceof
                      value="org.eclipse.core.resources.IResource">
                </instanceof>
+               <instanceof
+                     value="org.talend.repository.model.IRepositoryNode">
+               </instanceof>
             </or>
          </enablement>
         <dropAssistant
@@ -230,6 +159,9 @@
            <possibleDropTargets> 
             <and>
 	            <instanceof value="org.eclipse.core.resources.IResource"/>
+             <instanceof
+                   value="org.talend.repository.model.IRepositoryNode">
+             </instanceof>
             </and>
            </possibleDropTargets>
         </dropAssistant>   
@@ -239,11 +171,16 @@
             	id="org.talend.dataprofiler.core.ui.action.provider.NewConnectionActionProvider"> 
         	<enablement> 
         			<or>
-						<adapt type="org.eclipse.core.resources.IResource" />	 
-						<adapt type="java.util.Collection"> 
-							<count value="0" />
-						</adapt>
-					</or>
+              <adapt
+                    type="org.talend.repository.model.RepositoryNode">
+              </adapt>
+              <adapt
+                    type="java.util.Collection">
+                 <count
+                       value="0">
+                 </count>
+              </adapt>
+           </or>
 	         </enablement>
 		</actionProvider>
       <actionProvider
@@ -251,7 +188,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.NewAnalysisActionProvider">
             <enablement> 
         			<or>
-						<adapt type="org.eclipse.core.resources.IResource" />	 
+						<adapt type="org.talend.dq.repository.node.AnalysisFolderRepNode" />	 
 						<adapt type="java.util.Collection"> 
 							<count value="0" />
 						</adapt>
@@ -263,7 +200,7 @@
 				class="org.talend.dataprofiler.core.ui.action.provider.OpenResourceProvider">
 			<enablement>
     <instanceof
-          value="org.eclipse.core.resources.IFile">
+          value="org.talend.repository.model.IRepositoryNode">
     </instanceof>
 			</enablement>
 		</actionProvider>      
@@ -272,8 +209,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.RunAnalysisActionProvider">
          <enablement>
             <and>
-	            <instanceof value="org.eclipse.core.resources.IFile"/>
-            	<test property="org.eclipse.core.resources.name" value="*.ana"/>	            
+	            <instanceof value="org.talend.repository.model.RepositoryNode"/>
 	        </and>
          </enablement>
       </actionProvider> 
@@ -283,16 +219,7 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.eclipse.core.resources.IFile">
-               </instanceof>
-               <instanceof
-                     value="org.talend.core.model.repository.IRepositoryViewObject">
-               </instanceof>
-               <instanceof
-                     value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
-               </instanceof>
-               <instanceof
-                     value="org.eclipse.core.resources.IFolder">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </or>
          </enablement>
@@ -303,7 +230,7 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.eclipse.core.resources.IFile">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
                <instanceof
                      value="org.talend.core.model.repository.IRepositoryViewObject">
@@ -316,7 +243,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnProvider">
          <enablement>
             <and>
-	            <instanceof value="org.talend.cwm.relational.TdColumn"/>           
+	            <instanceof value="org.talend.repository.model.RepositoryNode"/>           
 	        </and>
          </enablement>
       </actionProvider> 
@@ -327,7 +254,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider">
          <enablement>
             <and>
-	            <instanceof value="org.talend.cwm.relational.TdColumn"/>           
+	            <instanceof value="org.talend.repository.model.RepositoryNode"/>           
 	        </and>
          </enablement>
       </actionProvider>       
@@ -336,11 +263,9 @@
             id="org.talend.dataprofiler.core.ui.action.provider.OverViewAnalysisActionProvider">
          <enablement>
             <or>
-	            <instanceof value="orgomg.cwm.resource.relational.Catalog"/>           
-	            <instanceof value="orgomg.cwm.resource.relational.Schema"/>
-             <instanceof
-                   value="org.talend.core.model.repository.IRepositoryViewObject">
-             </instanceof>
+               <instanceof
+                     value="org.talend.repository.model.RepositoryNode">
+               </instanceof>
 	        </or>
          </enablement>
       </actionProvider>       
@@ -349,7 +274,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.RemoveAnalysisActionProvider">
          <enablement>
             <and>
-	            <instanceof value="org.talend.dataquality.analysis.Analysis"/>
+	            <instanceof value="org.talend.repository.model.RepositoryNode"/>
 	        </and>
          </enablement>
       </actionProvider>
@@ -359,7 +284,7 @@
          <enablement>
             <or>
                <adapt
-                     type="org.eclipse.core.resources.IResource">
+                     type="org.talend.repository.model.RepositoryNode">
                </adapt>
                <adapt
                      type="java.util.Collection">
@@ -376,7 +301,7 @@
           <enablement>
              <or>
                 <adapt
-                      type="org.eclipse.core.resources.IResource">
+                      type="org.talend.repository.model.IRepositoryNode">
                 </adapt>
                 <adapt
                       type="java.util.Collection">
@@ -393,7 +318,7 @@
          <enablement>
             <or>
                <adapt
-                     type="org.eclipse.core.resources.IResource">
+                     type="org.talend.repository.model.IRepositoryNode">
                </adapt>
                <adapt
                      type="java.util.Collection">
@@ -410,7 +335,7 @@
          <enablement>
             <or>
                <adapt
-                     type="org.eclipse.core.resources.IResource">
+                     type="org.talend.repository.model.IRepositoryNode">
                </adapt>
                <adapt
                      type="java.util.Collection">
@@ -425,15 +350,11 @@
             class="org.talend.dataprofiler.core.ui.action.provider.CreateUserFolderProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.CreateUserFolderProvider">
          <enablement>
-               <adapt
-                     type="org.eclipse.core.resources.IFolder">
-                  <not>
-                     <test
-                           property="org.eclipse.core.resources.name"
-                           value="Patterns">
-                     </test>
-                  </not>
-               </adapt>
+            <and>
+               <instanceof
+                     value="org.talend.repository.model.IRepositoryNode">
+               </instanceof>
+            </and>
          </enablement>
       </actionProvider>
       <actionProvider
@@ -441,7 +362,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.ImportRemotePatternActionProvider">
          <enablement>
             <adapt
-                  type="org.talend.dataprofiler.ecos.model.IEcosComponent">
+                  type="org.talend.dataprofiler.core.ui.views.node.exchange.ExchangeFolderRepNode">
             </adapt>
          </enablement>
       </actionProvider>
@@ -451,7 +372,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.cwm.relational.TdColumn">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -462,7 +383,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.cwm.relational.TdColumn">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -473,7 +394,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.cwm.relational.TdColumn">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -484,7 +405,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.cwm.relational.TdTable">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -495,7 +416,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.cwm.relational.TdColumn">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -506,10 +427,7 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.cwm.relational.TdTable">
-               </instanceof>
-               <instanceof
-                     value="org.talend.cwm.relational.TdView">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </or>
          </enablement>
@@ -520,7 +438,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.cwm.relational.TdColumn">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -531,13 +449,7 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.cwm.relational.TdTable">
-               </instanceof>
-               <instanceof
-                     value="org.talend.cwm.relational.TdView">
-               </instanceof>
-               <instanceof
-                     value="org.talend.cwm.relational.TdColumn">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </or>
          </enablement>
@@ -548,19 +460,8 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.eclipse.core.resources.IFile">
-               </instanceof>
-               <or>
-                  <test
-                        property="org.eclipse.core.resources.name"
-                        value="*.prv">
-                  </test>
-                  <test
-                        forcePluginActivation="true"
-                        property="org.eclipse.core.resources.name"
-                        value="*.item">
-                  </test>
-               </or></and>
+                     value="org.talend.repository.model.RepositoryNode">
+               </instanceof></and>
          </enablement>
       </actionProvider>
       <actionProvider
@@ -569,7 +470,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.cwm.relational.TdTable">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -580,7 +481,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.cwm.relational.TdView">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -590,7 +491,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewColumnProvider">
          <enablement>
             <instanceof
-                  value="org.talend.cwm.relational.TdColumn">
+                  value="org.talend.repository.model.RepositoryNode">
             </instanceof>
          </enablement>
       </actionProvider>
@@ -600,7 +501,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="orgomg.cwm.resource.relational.NamedColumnSet">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </and>
          </enablement>
@@ -611,10 +512,7 @@
          <enablement>
             <or>
                <instanceof
-                     value="orgomg.cwm.resource.relational.Catalog">
-               </instanceof>
-               <instanceof
-                     value="orgomg.cwm.resource.relational.Schema">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </or>
          </enablement>
@@ -624,7 +522,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.IndicatorDefinitionActionProvider">
          <enablement>
             <instanceof
-                  value="org.talend.dataquality.indicators.definition.IndicatorDefinition">
+                  value="oorg.talend.repository.model.RepositoryNode">
             </instanceof>
          </enablement>
       </actionProvider> 
@@ -635,22 +533,8 @@
          <enablement>
             <or>
                <instanceof
-                     value="orgomg.cwm.objectmodel.core.ModelElement">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
-               <and>
-                  <instanceof
-                        value="org.eclipse.core.resources.IFile">
-                  </instanceof>
-                  <or>
-                     <test
-                           property="org.eclipse.core.resources.name"
-                           value="*.rep">
-                     </test>
-                     <test
-                           property="org.eclipse.core.resources.name"
-                           value="*.ana">
-                     </test>
-                  </or></and>
             </or>
          </enablement>
       </actionProvider>
@@ -658,7 +542,7 @@
              class="org.talend.dataprofiler.core.ui.action.provider.ImportExportIndicatorProvider">
           <enablement>
              <instanceof
-                   value="org.talend.dataprofiler.core.model.nodes.foldernode.IndicatorFolderNode">
+                   value="org.talend.repository.model.RepositoryNode">
              </instanceof>
           </enablement>
        </actionProvider>
@@ -667,7 +551,7 @@
              id="org.talend.dataprofiler.core.ui.action.provider.RestoreActionProvider">
           <enablement>
              <instanceof
-                   value="org.talend.dataprofiler.core.recycle.DQRecycleBinNode">
+                   value="org.talend.repository.model.RepositoryNode">
              </instanceof>
           </enablement>
        </actionProvider>
@@ -675,9 +559,25 @@
              class="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider"
              id="org.talend.dataprofiler.core.ui.action.provider.OpenItemEditorProvider">
           <enablement>
+             <and>
+                <instanceof
+                      value="org.talend.repository.model.RepositoryNode">
+                </instanceof>
+             </and>
+          </enablement>
+       </actionProvider>
+       <actionProvider
+             class="org.talend.dataprofiler.core.ui.action.provider.CreateNewRepositoryNodeFolder"
+             id="org.talend.dataprofiler.core.ui.action.provider.CreateNewRepositoryNodeFolder">
+          <enablement>
              <instanceof
-                   value="org.talend.core.model.repository.IRepositoryViewObject">
+                   value="org.talend.dataprofiler.core.ui.views.node.analysis.AnalysisFolderRepNode">
              </instanceof>
+             <or>
+                <instanceof
+                      value="org.talend.dataprofiler.core.ui.views.node.analysis.ReportFolderRepNode">
+                </instanceof>
+             </or>
           </enablement>
        </actionProvider>
   </extension>

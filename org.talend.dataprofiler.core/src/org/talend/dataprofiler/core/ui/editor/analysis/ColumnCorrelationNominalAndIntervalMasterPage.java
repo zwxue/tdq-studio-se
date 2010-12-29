@@ -52,8 +52,9 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
@@ -83,6 +84,7 @@ import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -304,14 +306,15 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * 
      */
     public void openColumnsSelectionDialog() {
-        List<TdColumn> columnList = treeViewer.getColumnSetMultiValueList();
+        List<RepositoryNode> columnList = treeViewer.getColumnSetMultiValueList();
         if (columnList == null) {
-            columnList = new ArrayList<TdColumn>();
+            columnList = new ArrayList<RepositoryNode>();
         }
+        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
                 this,
-                null,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
+                getEditor().getActiveEditor().getSite().getShell(),
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, connNode, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
@@ -572,14 +575,21 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         correlationAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 
         // save analysis
-        List<TdColumn> columnList = treeViewer.getColumnSetMultiValueList();
+        List<RepositoryNode> repositoryNodeList = treeViewer.getColumnSetMultiValueList();
 
         Connection tdProvider = null;
-        if (columnList != null && columnList.size() != 0) {
-            tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
+        if (repositoryNodeList != null && repositoryNodeList.size() != 0) {
+            tdProvider = ((ConnectionItem) repositoryNodeList.get(0).getObject().getProperty().getItem()).getConnection();
+            // tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
             analysis.getContext().setConnection(tdProvider);
-            columnSetMultiIndicator.getAnalyzedColumns().addAll(columnList);
-            correlationAnalysisHandler.addIndicator(columnList, columnSetMultiIndicator);
+
+            List<TdColumn> columnLst = new ArrayList<TdColumn>();
+            for (RepositoryNode repNode : repositoryNodeList) {
+                columnLst.add((TdColumn) ((MetadataColumnRepositoryObject) repNode.getObject()).getTdColumn());
+            }
+
+            columnSetMultiIndicator.getAnalyzedColumns().addAll(columnLst);
+            correlationAnalysisHandler.addIndicator(columnLst, columnSetMultiIndicator);
         } else {
             analysis.getContext().setConnection(null);
             analysis.getResults().getIndicators().clear();
@@ -691,20 +701,20 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     @Override
     protected ReturnCode canSave() {
         String message = null;
-        List<TdColumn> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        List<RepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
 
         if (!columnSetMultiValueList.isEmpty()) {
             // MOD qiongli 2010-8-19.bug 14436.move some codes to the method of 'canDrop()', which judge to come
             // from same table
-            List<TdColumn> columns = treeViewer.getColumnSetMultiValueList();
+            List<RepositoryNode> columnsNode = treeViewer.getColumnSetMultiValueList();
 
             if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()
                     || ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
-                message = verifyColumn(columns, columnSetMultiIndicator.eClass());
+                message = verifyColumn(columnsNode, columnSetMultiIndicator.eClass());
 
             } else if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
-                for (int i = 0; i < columns.size(); i++) {
-                    TdColumn tdColumn = (TdColumn) columns.get(i);
+                for (int i = 0; i < columnsNode.size(); i++) {
+                    TdColumn tdColumn = (TdColumn) columnsNode.get(i);
 
                     if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
                         message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
@@ -728,14 +738,15 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * @param className
      * @return
      */
-    private String verifyColumn(List<TdColumn> columns, EClass className) {
+    private String verifyColumn(List<RepositoryNode> columns, EClass className) {
         List<TdColumn> invalidCols = new ArrayList<TdColumn>();
         List<TdColumn> nominalCols = new ArrayList<TdColumn>();
         List<TdColumn> intervalCols = new ArrayList<TdColumn>();
         String message = null;
 
         for (int i = 0; i < columns.size(); i++) {
-            TdColumn tdColumn = (TdColumn) columns.get(i);
+            RepositoryNode tdColumnNode = (RepositoryNode) columns.get(i);
+            TdColumn tdColumn = (TdColumn) ((MetadataColumnRepositoryObject) tdColumnNode.getObject()).getTdColumn();
             if (className == ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator()) {
                 if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                     invalidCols.add(tdColumn);
@@ -771,7 +782,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     @Override
     protected ReturnCode canRun() {
-        List<TdColumn> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        List<RepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl
                     .getString("ColumnCorrelationNominalAndIntervalMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$

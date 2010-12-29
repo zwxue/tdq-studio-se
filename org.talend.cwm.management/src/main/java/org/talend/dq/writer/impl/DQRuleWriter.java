@@ -12,8 +12,12 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Item;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -53,6 +57,13 @@ public class DQRuleWriter extends AElementPersistance {
 
     }
 
+    public void addResourceContent(Resource resource, DQRule element) {
+        if (resource != null) {
+            EList<EObject> resourceContents = resource.getContents();
+            resourceContents.addAll(element.getDescription());
+            resource.getContents().add(element);
+        }
+    }
     /*
      * (non-Javadoc)
      * 

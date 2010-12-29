@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
@@ -37,8 +39,18 @@ import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.PropertiesFactory;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
@@ -47,6 +59,7 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -74,24 +87,46 @@ public abstract class AElementPersistance {
             log.error("Get file extension error");
         } else {
 
-            String fname = createLogicalFileName(element, getFileExtension());
-            IFile file = folder.getFile(fname);
+            IPath itemPath = folder.getFullPath();
+            // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()\
+            int segmentCount = itemPath.segmentCount();
+            Property property = initProperty(element);
+            Item item = property.getItem();
+            try {
+                if (item instanceof TDQBusinessRuleItem) {
+                    ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(segmentCount - 1));
+                } else if (item instanceof ConnectionItem) {
+                    ProxyRepositoryFactory.getInstance().create(item, Path.EMPTY);
+                } else {
+                    ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(segmentCount - 2));
+                }
+                trc.setObject(item);
+                trc.setOk(Boolean.TRUE);
+            } catch (PersistenceException e) {
+                trc.setMessage(e.getMessage());
+                trc.setOk(Boolean.FALSE);
+                log.error(e, e);
 
-            if (file.exists()) {
-                // MOD yyi 2009-10-15 Feature: 9524
-                String oriName = element.getName();
-                element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
-                fname = createLogicalFileName(element, getFileExtension());
-                file = folder.getFile(fname);
+                String fname = createLogicalFileName(element, getFileExtension());
+                IFile file = folder.getFile(fname);
 
-                element.setName(oriName);
-                ReturnCode rc = create(element, file);
-                trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
+                if (file.exists()) {
+                    // MOD yyi 2009-10-15 Feature: 9524
+                    String oriName = element.getName();
+                    element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+                    fname = createLogicalFileName(element, getFileExtension());
+                    file = folder.getFile(fname);
 
-                // trc.setReturnCode("Can't create resource file, file is existed.", false);
-            } else {
-                ReturnCode rc = create(element, file);
-                trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
+                    element.setName(oriName);
+                    ReturnCode rc = create(element, file);
+                    trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
+
+                    // trc.setReturnCode("Can't create resource file, file is existed.", false);
+                } else {
+                    ReturnCode rc = create(element, file);
+                    trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
+
+                }
             }
         }
 
@@ -107,8 +142,7 @@ public abstract class AElementPersistance {
      */
     public static String createLogicalFileName(ModelElement element, String extension) {
         return DqRepositoryViewService.createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element)
-                + org.talend.dataquality.PluginConstant.DOT_STRING
-                + extension;
+                + org.talend.dataquality.PluginConstant.DOT_STRING + extension;
     }
 
     /**
@@ -321,6 +355,23 @@ public abstract class AElementPersistance {
         return rc;
     }
 
+    public ReturnCode save(ModelElement element, boolean... withProperty) {
+        // MOD Use super method to create model element without property.
+        if (withProperty != null && withProperty.length > 0 && !withProperty[0]) {
+            return saveWithoutProperty(element, withProperty);
+        }
+        ReturnCode rc = new ReturnCode();
+        Item item = PropertyHelper.getProperty(element).getItem();
+        try {
+            ProxyRepositoryFactory.getInstance().save(item);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
+    }
+
     protected abstract void notifyResourceChanges();
 
     /**
@@ -352,8 +403,10 @@ public abstract class AElementPersistance {
         // MOD mzhao feature 13114, 2010-05-19 distinguish tdq items.
         if (ModelElementIdentifier.isAnalysis(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+            ((TDQAnalysisItem) item).setAnalysis((Analysis) element);
         } else if (ModelElementIdentifier.isDQRule(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
+            ((TDQBusinessRuleItem) item).setDqrule((DQRule) element);
         } else if (ModelElementIdentifier.isDataProvider(element)) {
             if (element instanceof DatabaseConnection) {
                 item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
@@ -362,13 +415,16 @@ public abstract class AElementPersistance {
                 item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createMDMConnectionItem();
                 ((ConnectionItem) item).setConnection((MDMConnection) element);
             }
-
+            ((ConnectionItem) item).setConnection((Connection) element);
         } else if (ModelElementIdentifier.isID(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQIndicatorDefinitionItem();
+            ((TDQIndicatorDefinitionItem) item).setIndicatorDefinition((IndicatorDefinition) element);
         } else if (ModelElementIdentifier.isPattern(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQPatternItem();
+            ((TDQPatternItem) item).setPattern((Pattern) element);
         } else if (ModelElementIdentifier.isReport(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQReportItem();
+            ((TDQReportItem) item).setReport((Report) element);
         } else {
             item = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createTDQItem();
         }
@@ -429,4 +485,24 @@ public abstract class AElementPersistance {
      */
     protected abstract String getFileExtension();
 
+    public ReturnCode saveWithoutProperty(ModelElement element, boolean... withProperty) {
+        ReturnCode rc = new ReturnCode();
+
+        addDependencies(element);
+
+        addResourceContent(element);
+
+        rc.setOk(util.saveResource(element.eResource()));
+
+        updateProperty(element);
+
+        if (rc.isOk()) {
+            rc.setMessage("save " + element.getName() + " is OK!");
+            notifyResourceChanges();
+        } else {
+            rc.setMessage(util.getLastErrorMessage());
+        }
+
+        return rc;
+    }
 }

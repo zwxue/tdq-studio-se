@@ -15,11 +15,14 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
+import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -162,5 +165,11 @@ public class NewUDIndicatorWizard extends AbstractWizard {
             }
         }
         return false;
+    }
+
+    @Override
+    public void openEditor(Item item) {
+        IndicatorDefinitionItemEditorInput udiEditorInput = new IndicatorDefinitionItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(udiEditorInput, IndicatorEditor.class.getName());
     }
 }

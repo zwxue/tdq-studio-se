@@ -30,13 +30,15 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataquality.exception.DataprofilerCoreException;
@@ -51,6 +53,7 @@ import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -79,9 +82,9 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         this.columnsComparisonSection = columnsComparisonSection;
     }
 
-    List<TdColumn> columnListA = null;
+    List<RepositoryNode> columnListA = null;
 
-    List<TdColumn> columnListB = null;
+    List<RepositoryNode> columnListB = null;
 
     DataFilterComp dataFilterComp;
 
@@ -221,28 +224,33 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     protected void saveAnalysis() throws DataprofilerCoreException {
         getAnalysisHandler().clearAnalysis();
 
-        List<TdColumn> columnListAA = anaColumnCompareViewer.getColumnListA();
-        List<TdColumn> columnListBB = anaColumnCompareViewer.getColumnListB();
+        List<RepositoryNode> columnListAANode = anaColumnCompareViewer.getColumnListA();
+        List<RepositoryNode> columnListBBNode = anaColumnCompareViewer.getColumnListB();
 
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(this.analysis);
         Connection tdDataProvider = null;
 
-        for (int i = 0; i < columnListAA.size(); i++) {
-            if (columnListBB.size() > i) {
+        for (int i = 0; i < columnListAANode.size(); i++) {
+            if (columnListBBNode.size() > i) {
                 ColumnDependencyIndicator indicator = ColumnsetFactory.eINSTANCE.createColumnDependencyIndicator();
-                indicator.setColumnA(columnListAA.get(i));
-                indicator.setColumnB(columnListBB.get(i));
+                TdColumn columnA = (TdColumn) ((MetadataColumnRepositoryObject) columnListAANode.get(i).getObject())
+                        .getTdColumn();
+                TdColumn columnB = (TdColumn) ((MetadataColumnRepositoryObject) columnListBBNode.get(i).getObject())
+                        .getTdColumn();
+                indicator.setColumnA(columnA);
+                indicator.setColumnB(columnB);
                 indicator.setIndicatorDefinition(DefinitionHandler.getInstance().getFDRuleDefaultIndicatorDefinition());
                 analysis.getResults().getIndicators().add(indicator);
-                anaBuilder.addElementToAnalyze(columnListAA.get(i), indicator);
+                anaBuilder.addElementToAnalyze(columnA, indicator);
                 // ADD this line qiongli 2010-6-8
-                anaBuilder.addElementToAnalyze(columnListBB.get(i), indicator);
+                anaBuilder.addElementToAnalyze(columnB, indicator);
             }
         }
 
-        if (columnListAA.size() > 0) {
-            tdDataProvider = ConnectionHelper.getTdDataProvider(columnListAA.get(0));
+        if (columnListAANode.size() > 0) {
+
+            tdDataProvider = ((ConnectionItem) columnListAANode.get(0).getObject().getProperty().getItem()).getConnection();
             // MOD qiongli bug 14437:Add dependency
             analysis.getContext().setConnection(tdDataProvider);
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
@@ -283,24 +291,24 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         }
     }
 
-    private List<TdColumn> getColumnLeftSet() {
+    private List<RepositoryNode> getColumnLeftSet() {
         return getColumnSet(ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR__COLUMN_A);
     }
 
-    private List<TdColumn> getColumnRightSet() {
+    private List<RepositoryNode> getColumnRightSet() {
         return getColumnSet(ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR__COLUMN_B);
     }
 
-    private List<TdColumn> getColumnSet(EReference reference) {
-        List<TdColumn> columns = new ArrayList<TdColumn>();
+    private List<RepositoryNode> getColumnSet(EReference reference) {
+        List<RepositoryNode> columns = new ArrayList<RepositoryNode>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            columns.add((TdColumn) indicator.eGet(reference));
+            columns.add(DQStructureManager.getInstance().createColumnNode((TdColumn) indicator.eGet(reference), null));
         }
         return columns;
     }
 
-    private ReturnCode validator(List<TdColumn> columnASet, List<TdColumn> columnBSet) {
+    private ReturnCode validator(List<RepositoryNode> columnASet, List<RepositoryNode> columnBSet) {
 
         if (columnASet.size() == 0 || columnBSet.size() == 0) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.columnsBlankMessag"), false); //$NON-NLS-1$
@@ -311,11 +319,13 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         }
 
         for (int i = 0; i < columnASet.size(); i++) {
-            TdColumn columnA = columnASet.get(i);
-            TdColumn columnB = columnBSet.get(i);
+            RepositoryNode columnANode = columnASet.get(i);
+            RepositoryNode columnBNode = columnBSet.get(i);
 
-            ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(columnA);
-            ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(columnB);
+            ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) ((MetadataColumnRepositoryObject) columnANode
+                    .getObject()).getTdColumn());
+            ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) ((MetadataColumnRepositoryObject) columnBNode
+                    .getObject()).getTdColumn());
 
 // int typeA = ((TdColumn) columnA).getJavaType();
             // int typeB = ((TdColumn) columnB).getJavaType();

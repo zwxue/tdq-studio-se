@@ -15,7 +15,7 @@ package org.talend.dataprofiler.core.ui.editor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
-import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.properties.Item;
 
 /**
  * 
@@ -23,10 +23,11 @@ import org.talend.core.model.repository.IRepositoryViewObject;
  */
 public class AbstractItemEditorInput implements IEditorInput {
 
-    protected IRepositoryViewObject reposViewObj = null;
+    protected Item item = null;
 
-    public AbstractItemEditorInput(IRepositoryViewObject reposViewObj) {
-        this.reposViewObj = reposViewObj;
+    public AbstractItemEditorInput(Item tdqItem) {
+        this.item = tdqItem;
+
     }
     public boolean exists() {
         return false;
@@ -37,7 +38,7 @@ public class AbstractItemEditorInput implements IEditorInput {
     }
 
     public String getName() {
-        return reposViewObj.getLabel();
+        return item.getProperty().getLabel();
     }
 
     public IPersistableElement getPersistable() {
@@ -45,13 +46,16 @@ public class AbstractItemEditorInput implements IEditorInput {
     }
 
     public String getToolTipText() {
-        return reposViewObj.getLabel();
+        return item.getProperty().getLabel();
     }
 
     public Object getAdapter(Class adapter) {
         return null;
     }
 
+    public String getPath() {
+        return item.getState().getPath() + "/";
+    }
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -59,12 +63,12 @@ public class AbstractItemEditorInput implements IEditorInput {
         }
         if (obj instanceof AbstractItemEditorInput) {
             AbstractItemEditorInput other = (AbstractItemEditorInput) obj;
-            return reposViewObj.getLabel().equals(other.reposViewObj.getLabel());
+            return item.getProperty().getLabel().equals(other.item.getProperty().getLabel());
         }
         return false;
     }
 
-    public IRepositoryViewObject getRepositoryViewObject() {
-        return reposViewObj;
+    public Item getItem() {
+        return item;
     }
 }

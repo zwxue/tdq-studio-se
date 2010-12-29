@@ -63,6 +63,7 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
 
     protected TdTable[] getTables() {
         Object obj = getSelection().getFirstElement();
+
         if (obj instanceof TdTable) {
             TdTable[] table = new TdTable[getSelection().size()];
             for (int i = 0; i < getSelection().size(); i++) {

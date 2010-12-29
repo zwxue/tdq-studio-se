@@ -42,9 +42,11 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -139,8 +141,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                 }
             } else {
-                IFile afile = ((FileEditorInput) anaEditor.getEditorInput()).getFile();
-                analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
+                // IFile afile = ((FileEditorInput) anaEditor.getEditorInput()).getFile();
+                // analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
+                analysis = ((TDQAnalysisItem) ((AnalysisItemEditorInput) anaEditor.getEditorInput()).getItem()).getAnalysis();
                 IFormPage activePageInstance = anaEditor.getActivePageInstance();
                 if (activePageInstance instanceof IRuningStatusListener) {
                     listener = (IRuningStatusListener) activePageInstance;

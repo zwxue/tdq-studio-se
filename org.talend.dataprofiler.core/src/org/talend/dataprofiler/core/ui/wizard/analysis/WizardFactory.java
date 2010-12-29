@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.pattern.CreatePatternWizard;
@@ -43,6 +44,7 @@ import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.analysis.parameters.PatternParameter;
 import org.talend.dq.analysis.parameters.SqlFileParameter;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * @author zqin
@@ -139,6 +141,17 @@ public final class WizardFactory {
     }
 
     /**
+     * DOC klliu Comment method "createNewAnalysisWizard".
+     * 
+     * @param path
+     * @param node
+     * @return
+     */
+    public static CreateNewAnalysisWizard createNewAnalysisWizard(IPath path, RepositoryNode node) {
+        return new CreateNewAnalysisWizard(path, node);
+    }
+
+    /**
      * 
      * DOC xqliu Comment method "createNewDQRuleWizard".
      * 
@@ -187,4 +200,5 @@ public final class WizardFactory {
 
         return new DatabaseConnectionWizard(connectionParam);
     }
+
 }

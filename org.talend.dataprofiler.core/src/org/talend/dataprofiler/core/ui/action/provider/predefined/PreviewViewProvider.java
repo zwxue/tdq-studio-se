@@ -14,9 +14,10 @@ package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.cwm.relational.TdView;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewViewAction;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -42,8 +43,14 @@ public class PreviewViewProvider extends AbstractCommonActionProvider {
             return;
         }
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
-        TdView view = (TdView) treeSelection.getFirstElement();
-        PreviewViewAction action = new PreviewViewAction(view);
-        menu.add(action);
+        Object firstElement = treeSelection.getFirstElement();
+        if (firstElement instanceof RepositoryNode) {
+            RepositoryNode node = (RepositoryNode) firstElement;
+            if (node.getObject() instanceof TdViewRepositoryObject) {
+                TdViewRepositoryObject viewObject = (TdViewRepositoryObject) node.getObject();
+                PreviewViewAction action = new PreviewViewAction(viewObject.getTdView());
+                menu.add(action);
+            }
+        }
     }
 }

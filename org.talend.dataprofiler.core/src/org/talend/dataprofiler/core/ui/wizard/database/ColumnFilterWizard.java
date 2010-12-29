@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.database;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -137,5 +138,10 @@ public class ColumnFilterWizard extends AbstractWizard {
         this.packageObj = ColumnSetHelper.getParentCatalogOrSchema(this.namedColumnSet);
         this.tdDataProvider = ConnectionHelper.getTdDataProvider(this.packageObj);
         this.oldColumnFilter = ColumnHelper.getColumnFilter(namedColumnSet);
+    }
+
+    @Override
+    public void openEditor(Item item) {
+
     }
 }
