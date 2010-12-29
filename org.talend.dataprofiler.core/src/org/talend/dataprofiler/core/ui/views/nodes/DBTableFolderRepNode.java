@@ -39,6 +39,7 @@ import orgomg.cwm.resource.relational.Schema;
 public class DBTableFolderRepNode extends RepositoryNode {
 
     private static Logger log = Logger.getLogger(DBTableFolderRepNode.class);
+
     private IRepositoryViewObject viewObject;
 
     private Catalog catalog;
@@ -88,24 +89,28 @@ public class DBTableFolderRepNode extends RepositoryNode {
             item = (ConnectionItem) viewObject.getProperty().getItem();
             connection = item.getConnection();
         }
-        EList<ModelElement> ownedElement = catalog.getOwnedElement();
-        if (ownedElement.size() <= 0) {
+        EList<ModelElement> ownedElement = null;
+        if (catalog != null) {
+            ownedElement = catalog.getOwnedElement();
+        }
+
+        if (ownedElement != null && ownedElement.size() <= 0) {
             try {
                 if (catalog != null) {
                     tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
                 } else if (schema != null) {
                     tables = DqRepositoryViewService.getTables(connection, schema, null, true);
                 }
+                for (ModelElement element : ownedElement) {
+                    if (element instanceof TdTable) {
+                        TdTable table = (TdTable) element;
+                        tables.add(table);
+                    }
+                }
             } catch (Exception e) {
                 log.error(e, e);
             }
         } else {
-            for (ModelElement element : ownedElement) {
-                if (element instanceof TdTable) {
-                    TdTable table = (TdTable) element;
-                    tables.add(table);
-                }
-            }
             if (tables.size() <= 0) {
                 try {
                     if (catalog != null) {

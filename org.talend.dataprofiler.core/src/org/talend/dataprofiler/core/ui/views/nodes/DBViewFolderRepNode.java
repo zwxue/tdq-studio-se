@@ -88,20 +88,27 @@ public class DBViewFolderRepNode extends RepositoryNode {
             item = (ConnectionItem) viewObject.getProperty().getItem();
             connection = item.getConnection();
         }
-        EList<ModelElement> ownedElement = catalog.getOwnedElement();
-        if (ownedElement.size() <= 0) {
+        EList<ModelElement> ownedElement = null;
+        if (catalog != null) {
+            ownedElement = catalog.getOwnedElement();
+        }
+
+        if (ownedElement != null && ownedElement.size() <= 0) {
             views = getViews(new ArrayList<TdView>());
-        } else {
             for (ModelElement element : ownedElement) {
                 if (element instanceof TdView) {
                     TdView view = (TdView) element;
                     views.add(view);
                 }
             }
+
+        } else {
             if (views.size() <= 0) {
                 views = getViews(new ArrayList<TdView>());
             }
+
         }
+
         createTableRepositoryNode(views, node);
     }
 
@@ -141,7 +148,7 @@ public class DBViewFolderRepNode extends RepositoryNode {
             // create a node for ui
             DBViewRepNode viewNode = new DBViewRepNode(metadataView, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
             viewNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
-            viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
+            viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_VIEW);
 
             metadataView.setRepositoryNode(viewNode);
             node.add(viewNode);
