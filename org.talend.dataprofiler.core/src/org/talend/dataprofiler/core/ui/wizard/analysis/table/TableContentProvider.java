@@ -15,13 +15,15 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -29,7 +31,7 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableContentProvider extends DQRepositoryViewContentProvider {
+public class TableContentProvider extends ResourceViewContentProvider {
 
     private static Logger log = Logger.getLogger(TableContentProvider.class);
 
@@ -49,7 +51,11 @@ public class TableContentProvider extends DQRepositoryViewContentProvider {
             }
             if (container.equals(ResourceManager.getConnectionFolder())) {
 
-                members = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
+                try {
+                    members = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
+                } catch (PersistenceException e) {
+                    log.error(e);
+                }
                 ComparatorsFactory.sort(members, ComparatorsFactory.IREPOSITORYVIEWOBJECT_COMPARATOR_ID);
             }
             return members;

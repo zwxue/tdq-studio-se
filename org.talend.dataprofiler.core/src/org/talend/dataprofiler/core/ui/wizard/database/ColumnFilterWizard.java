@@ -22,8 +22,8 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -115,7 +115,7 @@ public class ColumnFilterWizard extends AbstractWizard {
         String columnFilter = this.columnFilterWizardPage.getColumnFilterText().getText();
         if (!this.getOldColumnFilter().equals(columnFilter)) {
             ColumnHelper.setColumnFilter(columnFilter, namedColumnSet);
-            return ProxyRepositoryViewObject.save(tdDataProvider).isOk();
+            return ElementWriterFactory.getInstance().createDataProviderWriter().save(tdDataProvider).isOk();
         }
 
         return true;

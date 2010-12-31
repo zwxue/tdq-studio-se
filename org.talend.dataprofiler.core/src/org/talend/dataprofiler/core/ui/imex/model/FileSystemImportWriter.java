@@ -35,15 +35,11 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
-import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.IMigrationTask;
@@ -53,7 +49,6 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
@@ -243,10 +238,10 @@ public class FileSystemImportWriter implements IImportWriter {
 
                     EResourceConstant typedConstant = EResourceConstant.getTypedConstant(item);
                     if (typedConstant == EResourceConstant.DB_CONNECTIONS || typedConstant == EResourceConstant.MDM_CONNECTIONS) {
-                        Connection connection = ((ConnectionItem) property.getItem()).getConnection();
+                        // Connection connection = ((ConnectionItem) property.getItem()).getConnection();
 
-                        IRepositoryViewObject object = new RepositoryViewObject(property);
-                        ProxyRepositoryViewObject.registerReposViewObj(connection, object);
+                        // IRepositoryViewObject object = new RepositoryViewObject(property);
+                        // ProxyRepositoryViewObject.registerReposViewObj(connection, object);
                     }
                 } else {
                     log.error("Loading property error: " + desIFile.getFullPath().toString());

@@ -16,25 +16,26 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC mzhao class global comment. Catalog content provider.
  */
-public class CatalogContentProvider extends AdapterFactoryContentProvider {
+public class CatalogContentProvider extends ResourceViewContentProvider {
 
     private static Logger log = Logger.getLogger(CatalogContentProvider.class);
 
     public CatalogContentProvider() {
-        super(MNComposedAdapterFactory.getAdapterFactory());
+        // super(MNComposedAdapterFactory.getAdapterFactory());
         // TODO Auto-generated constructor stub
     }
 
@@ -49,7 +50,12 @@ public class CatalogContentProvider extends AdapterFactoryContentProvider {
             try {
                 Object[] members = ((IContainer) parentElement).members();
                 if (parentElement.equals(ResourceManager.getConnectionFolder())) {
-                    members = ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
+                    try {
+                        members = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS)
+                                .toArray();
+                    } catch (PersistenceException e) {
+                        log.error(e, e);
+                    }
                 }
                 return members;
             } catch (CoreException e) {

@@ -28,6 +28,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -37,7 +38,6 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -67,11 +67,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             return true;
         }
         // else compare
-        if (ProxyRepositoryViewObject.areSame(dataprovider, dp)) {
-            return true;
-        }
-        // else
-        return false;
+        return ResourceHelper.areSame(dataprovider, dp);
     }
 
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {

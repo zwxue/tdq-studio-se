@@ -13,8 +13,6 @@
 package org.talend.cwm.compare.factory;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.ecore.EObject;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogSchemaComparisonLevel;
@@ -22,12 +20,10 @@ import org.talend.cwm.compare.factory.comparisonlevel.DataProviderComparisonLeve
 import org.talend.cwm.compare.factory.comparisonlevel.RepositoryObjectComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.SelectedLocalComparison;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
-import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
-import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
-import orgomg.cwm.objectmodel.core.Package;
+import org.talend.dq.nodes.DBColumnFolderRepNode;
+import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBViewFolderRepNode;
 import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * This factory use to create the <code>IComparisonLevel</code> object.
@@ -43,26 +39,29 @@ public final class ComparisonLevelFactory {
     public static IComparisonLevel creatComparisonLevel(Object selectedObject) {
         IComparisonLevel comparisonLevel = null;
 
-        if (selectedObject instanceof AbstractDatabaseFolderNode) {
+        if (selectedObject instanceof DBTableFolderRepNode) {
             // MOD mzhao FolderNode param need to pass for later reloading from this folder.
-            AbstractDatabaseFolderNode dbFolderNode = (AbstractDatabaseFolderNode) selectedObject;
-            EObject parentEObject = (EObject) dbFolderNode.getParent();
-            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch(parentEObject);
-            if (ctatlogSwtich != null) {
+            DBTableFolderRepNode dbFolderNode = (DBTableFolderRepNode) selectedObject;
                 comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
-            }
-            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(parentEObject);
-            if (columnSet != null) {
-                comparisonLevel = new TableViewComparisonLevel(dbFolderNode);
-            }
+
+        } else if (selectedObject instanceof DBViewFolderRepNode) {
+            DBViewFolderRepNode dbFolderNode = (DBViewFolderRepNode) selectedObject;
+            comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
+        } else if (selectedObject instanceof DBColumnFolderRepNode) {
+            DBColumnFolderRepNode dbFolderNode = (DBColumnFolderRepNode) selectedObject;
+
+            comparisonLevel = new TableViewComparisonLevel(dbFolderNode);
 
         } else if (selectedObject instanceof IFile) {
             comparisonLevel = new DataProviderComparisonLevel(selectedObject);
-        } else if (selectedObject instanceof Connection) {
-            // MOD qiongli 2010-12-2.bug 16881.
-            IRepositoryViewObject resObject = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) selectedObject);
-            comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
-        } else if (selectedObject instanceof Catalog) {
+        }
+        // else if (selectedObject instanceof Connection) {
+        // // MOD qiongli 2010-12-2.bug 16881.
+        // IRepositoryViewObject resObject = ProxyRepositoryViewObject.getRepositoryViewObject((Connection)
+        // selectedObject);
+        // comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
+        // }
+        else if (selectedObject instanceof Catalog) {
             // MOD mzhao 2009-08-12 If compare the schemas of one catalog for MS
             // SQL Server.
             comparisonLevel = new CatalogComparisonLevel((Catalog) selectedObject);

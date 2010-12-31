@@ -81,9 +81,9 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.TableAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -236,8 +236,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     void createAnalysisTablesSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisTableSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("TableMasterDetailsPage.analyzeTable"), null); //$NON-NLS-1$
+        analysisTableSection = createSection(form, anasisDataComp,
+                DefaultMessagesImpl.getString("TableMasterDetailsPage.analyzeTable"), null); //$NON-NLS-1$
 
         Composite topComp = toolkit.createComposite(analysisTableSection);
         topComp.setLayout(new GridLayout());
@@ -331,9 +331,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         for (TableIndicator tableIndicator : tableIndicators) {
             setList.add(tableIndicator.getColumnSet());
         }
-        TablesSelectionDialog dialog = new TablesSelectionDialog(this, null, DefaultMessagesImpl
-                .getString("TableMasterDetailsPage.tableSelection"), setList, DefaultMessagesImpl //$NON-NLS-1$
-                .getString("TableMasterDetailsPage.tableSelections")); //$NON-NLS-1$
+        TablesSelectionDialog dialog = new TablesSelectionDialog(this, null,
+                DefaultMessagesImpl.getString("TableMasterDetailsPage.tableSelection"), setList, DefaultMessagesImpl //$NON-NLS-1$
+                        .getString("TableMasterDetailsPage.tableSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] tables = dialog.getResult();
             treeViewer.setInput(tables);
@@ -407,8 +407,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
         refreshBtn.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
         refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient, DefaultMessagesImpl
-                .getString("TableMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
+        final Label message = toolkit.createLabel(sectionClient,
+                DefaultMessagesImpl.getString("TableMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
@@ -431,8 +431,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
 
                 if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null, DefaultMessagesImpl
-                            .getString("TableMasterDetailsPage.string0"), //$NON-NLS-1$
+                    boolean returnCode = MessageDialog.openConfirm(null,
+                            DefaultMessagesImpl.getString("TableMasterDetailsPage.string0"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("TableMasterDetailsPage.string1")); //$NON-NLS-1$
 
                     if (returnCode) {
@@ -631,8 +631,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
-                ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ProxyRepositoryViewObject.save(tdProvider);
+                // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(tdProvider);
             }
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + urlString + " successful"); //$NON-NLS-1$ //$NON-NLS-2$

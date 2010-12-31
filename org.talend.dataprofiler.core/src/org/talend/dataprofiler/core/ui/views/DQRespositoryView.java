@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.views;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,7 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
@@ -91,17 +90,16 @@ import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.RepositoryWorkUnit;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * @author rli
@@ -181,14 +179,11 @@ public class DQRespositoryView extends CommonNavigator {
         // initialized drivers in sql explorer.
         SQLExplorerPlugin.getDefault().initAllDrivers();
 
-        // Loading repository view objects (metadata ...)
-        // DQConnectionReposViewObjDelegator.getInstance().fetchRepositoryViewObjectsWithFolder(Boolean.TRUE);
-        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-        // initialized connections in sql explorer.
-        Collection<Connection> providers = ProxyRepositoryViewObject.getAllDatabaseConnections();
-        for (DataProvider provider : providers) {
-            CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(provider);
-        }
+        List<IRepositoryNode> connNodes = DQStructureManager.getInstance().getConnectionRepositoryNodes();
+        for (IRepositoryNode connRepNode : connNodes) {
+            ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
+            CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connItem.getConnection());
+         }
 
         IFile defFile = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);
         if (!defFile.exists()) {

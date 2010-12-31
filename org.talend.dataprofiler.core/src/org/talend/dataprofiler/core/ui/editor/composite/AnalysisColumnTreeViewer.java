@@ -59,6 +59,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeR
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
@@ -89,7 +90,6 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -819,7 +819,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null
-                && !ProxyRepositoryViewObject.areSame(tdProvider, this.getAnalysis().getContext().getConnection())) {
+                && !ResourceHelper.areSame(tdProvider, this.getAnalysis().getContext().getConnection())) {
             return false;
         }
         // MOD mzhao, 2010-07-23 bug 14014: If the editor is dirty, save it firstly before drag and drop an elements.

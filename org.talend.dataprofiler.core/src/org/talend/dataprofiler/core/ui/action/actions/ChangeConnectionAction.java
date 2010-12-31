@@ -54,9 +54,9 @@ import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -215,7 +215,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
             // Add new dependencies.
             if (isExistSynedElement) {
                 DependenciesHandler.getInstance().setDependencyOn(synAnalysis, newDataProvider);
-                ProxyRepositoryViewObject.save(newDataProvider);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(newDataProvider);
             }
             // Refresh analysis editor viewer.
             AnaResourceFileHelper.getInstance().save(synAnalysis);
@@ -283,7 +283,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         List<ModelElement> tempList = new ArrayList<ModelElement>();
         tempList.add(oldDataProvider);
         DependenciesHandler.getInstance().removeDependenciesBetweenModels(synAnalysis, tempList);
-        ProxyRepositoryViewObject.save(oldDataProvider);
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(oldDataProvider);
         // Synchronize analysis result.
         EList<Indicator> indcList = synAnalysis.getResults().getIndicators();
         Indicator[] copiedIndArray = new Indicator[indcList.size()];

@@ -29,9 +29,9 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -125,7 +125,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         TypedReturnCode<Object> saveCWMFile = super.createAndSaveCWMFile(analysis);
 
         if (saveCWMFile.isOk() && connection != null) {
-            ProxyRepositoryViewObject.save((Connection) connection);
+            ElementWriterFactory.getInstance().createDataProviderWriter().save((Connection) connection);
         }
 
         return saveCWMFile;

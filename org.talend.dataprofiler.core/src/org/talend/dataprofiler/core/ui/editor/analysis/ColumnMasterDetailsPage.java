@@ -84,9 +84,9 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -757,8 +757,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
-                ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ProxyRepositoryViewObject.save(tdProvider);
+                // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(tdProvider);
             }
             // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true
             // );

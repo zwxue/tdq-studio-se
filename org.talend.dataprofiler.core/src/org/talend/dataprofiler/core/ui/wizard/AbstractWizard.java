@@ -14,17 +14,21 @@ package org.talend.dataprofiler.core.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.wizard.Wizard;
+import org.jfree.util.Log;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -92,7 +96,15 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                 modelElements.addAll(PatternResourceFileHelper.getInstance().getAllPatternes(folderResource));
                 break;
             case CONNECTION:
-                modelElements.addAll(ProxyRepositoryViewObject.getAllMetadataConnections());
+                List<Connection> conns = new ArrayList<Connection>();
+                try {
+                    for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                        conns.add(connItem.getConnection());
+                    }
+                } catch (PersistenceException e) {
+                    Log.error(e, e);
+                }
+                modelElements.addAll(conns);
                 break;
             case DQRULE:
                 modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules(folderResource));
@@ -109,7 +121,9 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     String theElementName = element.getName();
                     if (theElementName == null) {
                         if (element instanceof Connection) {
-                            theElementName = ProxyRepositoryViewObject.getRepositoryViewObject((Connection) element).getLabel();
+                            // FIXME Use another way to get repository object label.
+                            // theElementName = ProxyRepositoryViewObject.getRepositoryViewObject((Connection)
+                            // element).getLabel();
                         }
                     }
 

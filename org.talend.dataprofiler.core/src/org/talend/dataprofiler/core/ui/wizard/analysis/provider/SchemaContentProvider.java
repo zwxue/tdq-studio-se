@@ -16,13 +16,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -30,12 +30,12 @@ import orgomg.cwm.resource.relational.Schema;
  * 
  * DOC mzhao class global comment. This class provide schema content provider.
  */
-public class SchemaContentProvider extends AdapterFactoryContentProvider {
+public class SchemaContentProvider extends ResourceViewContentProvider {
 
     private static Logger log = Logger.getLogger(SchemaContentProvider.class);
 
     public SchemaContentProvider() {
-        super(MNComposedAdapterFactory.getAdapterFactory());
+        // super(MNComposedAdapterFactory.getAdapterFactory());
     }
 
     /*
@@ -48,16 +48,18 @@ public class SchemaContentProvider extends AdapterFactoryContentProvider {
         if (parentElement instanceof IContainer) {
             IContainer container = (IContainer) parentElement;
             IResource[] members = null;
-            if (ResourceManager.getConnectionFolder().equals(container)) {
-                return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
-            } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
-            }
             try {
+                if (ResourceManager.getConnectionFolder().equals(container)) {
+                    return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
+                } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
+                    return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION).toArray();
+                }
 
                 members = container.members();
             } catch (CoreException e) {
                 log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+            } catch (Exception e) {
+                log.error(e, e);
             }
             return members;
         } else if (parentElement instanceof IRepositoryViewObject) {

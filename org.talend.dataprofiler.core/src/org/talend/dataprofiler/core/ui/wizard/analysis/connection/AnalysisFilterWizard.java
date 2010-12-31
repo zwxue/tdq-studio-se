@@ -26,8 +26,8 @@ import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -62,8 +62,8 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
 
         // MOD by hcheng for 7173:Broken dependency between analyses and connection
         if (saveCWMFile.isOk()) {
-            ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-            ProxyRepositoryViewObject.save((Connection) connection);
+            // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
+            ElementWriterFactory.getInstance().createDataProviderWriter().save((Connection) connection);
         }
 
         return saveCWMFile;

@@ -19,11 +19,13 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -32,7 +34,6 @@ import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -186,7 +187,14 @@ public final class ModelElementFileFactory {
 
         Collection<Pattern> allPatternes = PatternResourceFileHelper.getInstance().getAllPatternes();
 
-        Collection<Connection> allDataProviders = ProxyRepositoryViewObject.getAllMetadataConnections();
+        Collection<Connection> allDataProviders = new ArrayList<Connection>();
+        try {
+            for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                allDataProviders.add(connItem.getConnection());
+            }
+        } catch (PersistenceException e) {
+
+        }
 
         Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
 

@@ -27,10 +27,10 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -122,12 +122,14 @@ public class SelectedResources {
             }
             if (hasChild && ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
                 path = path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
-                conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                        ERepositoryObjectType.METADATA_CONNECTIONS, path, true, null);
+                // conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
+                // ERepositoryObjectType.METADATA_CONNECTIONS, path, true, null);
+                conList = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS);
             } else if (hasChild && ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
                 path = path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
-                conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                        ERepositoryObjectType.METADATA_MDMCONNECTION, path, true, null);
+                // conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
+                // ERepositoryObjectType.METADATA_MDMCONNECTION, path, true, null);
+                conList = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION);
             }
             if (conList != null) {
                 for (IRepositoryViewObject repViewObj : conList) {

@@ -32,8 +32,8 @@ import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeR
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.ui.views.nodes.RecycleBinRepNode;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
+import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;

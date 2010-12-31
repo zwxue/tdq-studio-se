@@ -37,11 +37,11 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
-import org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.DBTableRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.DBViewRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.MDMSchemaRepNode;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 

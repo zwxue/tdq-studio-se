@@ -12,7 +12,17 @@
 // ============================================================================
 package org.talend.commons.emf;
 
-import org.talend.core.repository.utils.AbstractDQModelService;
+import org.eclipse.emf.ecore.EObject;
+import org.talend.core.AbstractDQModelService;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQJrxmlItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 
 
 /**
@@ -29,4 +39,55 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
     public void initTDQEMFResource() {
         EMFUtil.initialize();
     }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.core.ITDQItemService#getTDQRepObjType(org.talend.core.model.properties.Item)
+     */
+    public ERepositoryObjectType getTDQRepObjType(Item item) {
+        return (ERepositoryObjectType) new org.talend.dataquality.properties.util.PropertiesSwitch() {
+
+            // MOD mzhao feature 13114, 2010-05-19
+            @Override
+            public Object caseTDQAnalysisItem(TDQAnalysisItem object) {
+                return ERepositoryObjectType.TDQ_ANALYSIS;
+            }
+
+            @Override
+            public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
+                return ERepositoryObjectType.TDQ_RULES;
+            }
+
+            @Override
+            public Object caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
+                return ERepositoryObjectType.TDQ_INDICATORS;
+            }
+
+            @Override
+            public Object caseTDQPatternItem(TDQPatternItem object) {
+                return ERepositoryObjectType.TDQ_PATTERNS;
+            }
+
+            @Override
+            public Object caseTDQReportItem(TDQReportItem object) {
+                return ERepositoryObjectType.TDQ_REPORTS;
+            }
+
+            @Override
+            public Object caseTDQJrxmlItem(TDQJrxmlItem object) {
+                return ERepositoryObjectType.TDQ_JRXMLTEMPLATE;
+            }
+
+            @Override
+            public Object caseTDQSourceFileItem(TDQSourceFileItem object) {
+                return ERepositoryObjectType.TDQ_SOURCE_FILES;
+            }
+
+            public Object defaultCase(EObject object) {
+                return null;
+            }
+        }.doSwitch(item);
+    }
+
 }

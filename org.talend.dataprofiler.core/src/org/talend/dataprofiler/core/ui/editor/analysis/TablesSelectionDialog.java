@@ -44,9 +44,12 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
@@ -64,9 +67,9 @@ import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.filters.TypedViewerFilter;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
-import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewContentProvider;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -78,13 +81,9 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC xqliu class global comment. Detailled comment
  */
 public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
-
     private static Logger log = Logger.getLogger(TablesSelectionDialog.class);
-
     private Map<PackageKey, TableCheckedMap> packageCheckedMap;
-
     private IFolder metadataFolder = ResourceManager.getMetadataFolder();
-
     public TablesSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
             List<NamedColumnSet> setList, String message) {
         super(metadataFormPage, parent, message);
@@ -458,7 +457,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     /**
      * DOC xqliu TablesSelectionDialog class global comment. Detailled comment
      */
-    class DBTreeViewContentProvider extends DQRepositoryViewContentProvider {
+    class DBTreeViewContentProvider extends ResourceViewContentProvider {
 
         /**
          * DOC xqliu DBTreeViewContentProvider constructor comment.
@@ -481,10 +480,15 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 if (container.equals(ResourceManager.getConnectionFolder())) {
                     ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
                 }
-                if (ResourceManager.getConnectionFolder().equals(container)) {
-                    return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(true, true).toArray();
-                } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                    return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(true, true).toArray();
+                try {
+                    if (ResourceManager.getConnectionFolder().equals(container)) {
+                        return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
+                    } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
+                        return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION)
+                                .toArray();
+                    }
+                } catch (PersistenceException e) {
+                    log.error(e, e);
                 }
                 return members;
             } else if (parentElement instanceof Schema) {
@@ -512,7 +516,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                     Connection conn = ConnectionHelper.getTdDataProvider(packageValue);
                     // IFile findCorrespondingFile =
                     // PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
-                    return ProxyRepositoryViewObject.getRepositoryViewObject(conn);
+                    // return ProxyRepositoryViewObject.getRepositoryViewObject(conn);
+                    return conn;
                 }
             } else if (element instanceof IFolderNode) {
                 return ((IFolderNode) element).getParent();
@@ -565,7 +570,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                             MessageBoxExceptionHandler.process(e);
                         }
 
-                        ProxyRepositoryViewObject.save(provider);
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(provider);
                     }
                     return sort(tables, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
                 }

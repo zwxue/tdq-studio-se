@@ -30,8 +30,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.jfree.util.Log;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.FolderProvider;
@@ -40,7 +45,6 @@ import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -368,7 +372,15 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
                 modelElements.addAll(PatternResourceFileHelper.getInstance().getAllPatternes(folderResource));
                 break;
             case CONNECTION:
-                modelElements.addAll(ProxyRepositoryViewObject.getAllMetadataConnections());
+                List<Connection> conns = new ArrayList<Connection>();
+                try {
+                    for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                        conns.add(connItem.getConnection());
+                    }
+                } catch (PersistenceException e) {
+                    Log.error(e, e);
+                }
+                modelElements.addAll(conns);
                 break;
             case DQRULE:
                 modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules(folderResource));

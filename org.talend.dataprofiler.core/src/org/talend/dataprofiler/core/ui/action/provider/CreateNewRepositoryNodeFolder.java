@@ -17,7 +17,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.CreateRepositoryNodeAction;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.dataprofiler.core.ui.views.nodes.ExchangeFolderRepNode;
+import org.talend.dq.nodes.ExchangeFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 

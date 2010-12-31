@@ -428,13 +428,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.talend.libraries"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.talend.libraries.jdbc.jtds"
          download-size="0"
          install-size="0"

@@ -29,8 +29,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -113,7 +113,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
             // MOD scorreia 2009-01-29 columns are stored in the table
             // ColumnSetHelper.addColumns(columnSet, columnList);
             this.setChildren(columnList.toArray());
-            ProxyRepositoryViewObject.save(conn);
+            ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
         }
         super.loadChildren();
         // ~

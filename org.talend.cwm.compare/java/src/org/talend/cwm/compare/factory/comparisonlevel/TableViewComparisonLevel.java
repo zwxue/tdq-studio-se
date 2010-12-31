@@ -47,7 +47,7 @@ import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
+import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -68,7 +68,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 	private static final List<TdColumn> EMPTY_COLUMN_LIST = Collections
 			.emptyList();
 
-	public TableViewComparisonLevel(AbstractDatabaseFolderNode dbFolderNode) {
+    public TableViewComparisonLevel(DBColumnFolderRepNode dbFolderNode) {
 		super(dbFolderNode);
 	}
 

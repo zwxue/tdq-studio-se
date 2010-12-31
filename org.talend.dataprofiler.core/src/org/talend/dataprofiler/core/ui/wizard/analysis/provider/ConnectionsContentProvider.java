@@ -16,9 +16,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.talend.dataprofiler.core.ui.views.provider.MNComposedAdapterFactory;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -26,7 +27,7 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  * @author zqin
  * 
  */
-public class ConnectionsContentProvider extends AdapterFactoryContentProvider {
+public class ConnectionsContentProvider extends ResourceViewContentProvider {
 
     private static Logger log = Logger.getLogger(ConnectionsContentProvider.class);
 
@@ -34,7 +35,7 @@ public class ConnectionsContentProvider extends AdapterFactoryContentProvider {
      * @param adapterFactory
      */
     public ConnectionsContentProvider() {
-        super(MNComposedAdapterFactory.getAdapterFactory());
+        // super(MNComposedAdapterFactory.getAdapterFactory());
     }
 
     /*
@@ -47,10 +48,14 @@ public class ConnectionsContentProvider extends AdapterFactoryContentProvider {
         if (parentElement instanceof IContainer) {
             IContainer container = (IContainer) parentElement;
             IResource[] members = null;
-            if (ResourceManager.getConnectionFolder().equals(container)) {
-                return ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
-            } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                return ProxyRepositoryViewObject.fetchAllMDMRepositoryViewObjects(Boolean.FALSE, Boolean.TRUE).toArray();
+            try {
+                if (ResourceManager.getConnectionFolder().equals(container)) {
+                    return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
+                } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
+                    return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
+                }
+            } catch (PersistenceException e) {
+                log.error(e, e);
             }
             try {
 

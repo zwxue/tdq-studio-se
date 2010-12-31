@@ -79,7 +79,7 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
@@ -822,16 +822,16 @@ public final class ConnectionUtils {
 		DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH
 				.doSwitch(conn);
 		if (dbConn != null) {
-			ProxyRepositoryViewObject.getRepositoryViewObject(conn)
-					.getProperty().setLabel(name);
+            // ProxyRepositoryViewObject.getRepositoryViewObject(conn)
+            // .getProperty().setLabel(name);
 			dbConn.setName(name);
 			dbConn.setLabel(name);
 		}
 		MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH
 				.doSwitch(conn);
 		if (mdmConn != null) {
-			ProxyRepositoryViewObject.getRepositoryViewObject(mdmConn)
-					.getProperty().setLabel(name);
+            // ProxyRepositoryViewObject.getRepositoryViewObject(mdmConn)
+            // .getProperty().setLabel(name);
 			mdmConn.setName(name);
 			mdmConn.setLabel(name);
 		}
@@ -1019,7 +1019,7 @@ public final class ConnectionUtils {
 			}
 		}
 		if (saveFlag) {
-			ProxyRepositoryViewObject.save(conn);
+            ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
 		}
 		return conn;
 	}
@@ -1271,7 +1271,7 @@ public final class ConnectionUtils {
 						}
 						ConnectionUtils.closeConnection(connection);
 					}
-					ProxyRepositoryViewObject.save(tempConnection);
+                    ElementWriterFactory.getInstance().createDataProviderWriter().save(tempConnection);
 				}
 			}
 		}
@@ -1373,7 +1373,7 @@ public final class ConnectionUtils {
             elements = xmlScheBuilder.getRootElements(document);
             document.getOwnedElement().addAll(elements);
             Connection conn = (Connection) document.getDataManager().get(0);
-            ProxyRepositoryViewObject.save(conn);
+            ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
         }
         return elements;
     }
@@ -1386,7 +1386,7 @@ public final class ConnectionUtils {
             XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
             elements = xmlScheBuilder.getChildren(element);
             Connection conn = (Connection) element.getOwnedDocument().getDataManager().get(0);
-            ProxyRepositoryViewObject.save(conn);
+            ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
 
         } else {
             elements = xmlContent.getXmlElements();

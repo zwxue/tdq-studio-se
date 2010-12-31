@@ -27,16 +27,17 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.StringUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -194,14 +195,21 @@ public final class LogicalDeleteFileHandle {
         }
         IPath path = folder.getFullPath();
         List<IRepositoryViewObject> conList = null;
-        if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
-            path = path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
-            conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                    ERepositoryObjectType.METADATA_CONNECTIONS, path, true, null);
-        } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
-            path = path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
-            conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                    ERepositoryObjectType.METADATA_MDMCONNECTION, path, true, null);
+        try {
+            if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(path)) {
+                path = path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
+
+                // conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
+                // ERepositoryObjectType.METADATA_CONNECTIONS, path, true, null);
+                conList = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS);
+            } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(path)) {
+                path = path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
+                conList = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION);
+                // conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
+                // ERepositoryObjectType.METADATA_MDMCONNECTION, path, true, null);
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
         }
         if (conList != null) {
             for (IRepositoryViewObject repViewObj : conList) {

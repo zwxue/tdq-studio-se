@@ -23,12 +23,12 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZQuery;
 import org.talend.utils.sugars.ReturnCode;
@@ -56,10 +56,8 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
             dataprovider = dp;
             return true;
         }
-        if (ProxyRepositoryViewObject.areSame(dataprovider, dp)) {
-            return true;
-        }
-        return false;
+        // else compare
+        return ResourceHelper.areSame(dataprovider, dp);
     }
 
     @Override

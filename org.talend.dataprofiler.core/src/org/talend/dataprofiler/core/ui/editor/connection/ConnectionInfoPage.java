@@ -52,7 +52,6 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -75,7 +74,7 @@ import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.i18n.Messages;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -119,7 +118,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         } else if (editorInput instanceof FileEditorInput) {
             Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
             String fileLabel = proty.getLabel();
-            Item item = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(proty).getProperty().getItem();
+            Item item = proty.getItem();
             if (item instanceof ConnectionItem) {
                 connection = ((ConnectionItem) item).getConnection();
             }
@@ -469,12 +468,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     private void reloadDataProvider() {
 
-        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-        final IRepositoryViewObject reposViewObj = ProxyRepositoryViewObject.getRepositoryViewObject(connection);
+        // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
+        // final IRepositoryViewObject reposViewObj = ProxyRepositoryViewObject.getRepositoryViewObject(connection);
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reposViewObj);
+                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(connection);
                 Display.getDefault().asyncExec(new Runnable() {
 
                     public void run() {
@@ -527,7 +526,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (connection != null && connection.eIsProxy()) {
             connection = (Connection) EObjectHelper.resolveObject(connection);
         }
-        ReturnCode returnCode = ProxyRepositoryViewObject.save(connection);
+        ReturnCode returnCode = ElementWriterFactory.getInstance().createDataProviderWriter().save(connection);
         if (returnCode.isOk()) {
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$

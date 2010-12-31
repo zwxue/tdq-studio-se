@@ -39,9 +39,10 @@ import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
-import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -58,14 +59,13 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     private boolean isCompareView;
 
-    public CatalogSchemaComparisonLevel(AbstractDatabaseFolderNode dbFolderNode) {
+    public CatalogSchemaComparisonLevel(RepositoryNode dbFolderNode) {
         super(dbFolderNode);
-        int folderNodeType = dbFolderNode.getFolderNodeType();
-        if (folderNodeType == IFolderNode.TABLEFOLDER_NODE_TYPE) {
+        if (dbFolderNode instanceof DBTableFolderRepNode) {
             isCompareTabel = true;
         }
 
-        if (folderNodeType == IFolderNode.VIEWFOLDER_NODE_TYPE) {
+        if (dbFolderNode instanceof DBViewFolderRepNode) {
             isCompareView = true;
         }
     }

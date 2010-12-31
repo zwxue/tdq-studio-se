@@ -78,11 +78,12 @@ import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -537,8 +538,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             tdProvider = item.getConnection();
             if (tdProvider.eIsProxy()) {
                 // Resolve the connection again
-                tdProvider = ((ConnectionItem) ProxyRepositoryViewObject.getRepositoryViewObject(tdProvider).getProperty()
-                        .getItem()).getConnection();
+                tdProvider = (Connection) EObjectHelper.resolveObject(tdProvider);
             }
             analysis.getContext().setConnection(tdProvider);
 
@@ -583,8 +583,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
         if (saved.isOk()) {
             if (tdProvider != null) {
-                ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ProxyRepositoryViewObject.save(tdProvider);
+                // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
+
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(tdProvider);
             }
 
             if (log.isDebugEnabled()) {

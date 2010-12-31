@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -31,6 +30,7 @@ import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -50,21 +50,21 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
 
     private IFolder metadataFolder = ResourceManager.getMetadataFolder();
 
-    public AnalysisDPSelectionPage(String labText, AdapterFactoryContentProvider contentProvider) {
+    public AnalysisDPSelectionPage(String labText, ResourceViewContentProvider contentProvider) {
         init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    public AnalysisDPSelectionPage(String title, String message, String labText, AdapterFactoryContentProvider contentProvider) {
+    public AnalysisDPSelectionPage(String title, String message, String labText, ResourceViewContentProvider contentProvider) {
         init(title, message, contentProvider, labText);
     }
 
-    public AnalysisDPSelectionPage(String title, String message, String labText, AdapterFactoryContentProvider contentProvider,
+    public AnalysisDPSelectionPage(String title, String message, String labText, ResourceViewContentProvider contentProvider,
             boolean multiSelect) {
         init(title, message, contentProvider, labText);
         this.multiSelect = multiSelect;
     }
 
-    private void init(String title, String message, AdapterFactoryContentProvider contentProvider, String labText) {
+    private void init(String title, String message, ResourceViewContentProvider contentProvider, String labText) {
         setTitle(title); //$NON-NLS-1$
         setMessage(message); //$NON-NLS-1$
         setPageComplete(false);

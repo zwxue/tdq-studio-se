@@ -16,15 +16,15 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
-import org.talend.dataprofiler.core.ui.views.nodes.AnalysisRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.IndicatorDefinitionRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.JrxmlTempleteRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.MDMConnectionRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.PatternRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.ReportRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.RuleRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.IndicatorDefinitionRepNode;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.PatternRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**

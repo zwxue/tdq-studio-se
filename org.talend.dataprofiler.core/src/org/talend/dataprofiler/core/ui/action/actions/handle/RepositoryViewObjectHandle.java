@@ -12,12 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -26,7 +28,6 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -34,7 +35,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, IDeletionHandle {
-
     private Property property;
 
     private IRepositoryViewObject repositoryObject;
@@ -48,8 +48,7 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         if (property.eIsProxy()) {
             property = (Property) EObjectHelper.resolveObject(property);
         }
-        this.property = property;
-        repositoryObject = ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(property);
+        this.repositoryObject = repositoryObject;
     }
 
     /*
@@ -134,9 +133,13 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
      */
     public boolean isExistedLabel(String label) {
-        List<Connection> allMetadataConnections = ProxyRepositoryViewObject.getAllMetadataConnections();
-        for (Connection connection : allMetadataConnections) {
-            if (StringUtils.equals(label, connection.getName())) {
+        List<ConnectionItem> allMetadataConnectionsItem = new ArrayList<ConnectionItem>();
+        try {
+            allMetadataConnectionsItem = ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem();
+        } catch (PersistenceException e) {
+        }
+        for (ConnectionItem connectionItem : allMetadataConnectionsItem) {
+            if (StringUtils.equals(label, connectionItem.getConnection().getName())) {
                 return true;
             }
         }

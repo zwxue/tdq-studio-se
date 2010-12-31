@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
@@ -43,6 +45,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.jfree.util.Log;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
@@ -52,6 +55,7 @@ import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
@@ -70,7 +74,6 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.CWMPlugin;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.ResourceManager;
@@ -220,7 +223,20 @@ public class CorePlugin extends AbstractUIPlugin {
         Alias alias = aliasManager.getAlias(tdDataProvider.getName());
 
         if (alias == null) {
-            Collection<Connection> allDataProviders = ProxyRepositoryViewObject.getAllDatabaseConnections();
+            Collection<Connection> allDataProviders = new ArrayList<Connection>();
+            
+            List<Connection> conns = new ArrayList<Connection>();
+            try {
+                for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                    conns.add(connItem.getConnection());
+                }
+            } catch (PersistenceException e) {
+                Log.error(e, e);
+            }
+            allDataProviders.addAll(conns);
+            
+            
+            
             for (Connection dataProvider : allDataProviders) {
                 // MOD xqliu 2010-10-13 bug 15756
                 // if (dataProvider.getId().equals(tdDataProvider.getId())) {
@@ -411,6 +427,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * 
      */
     public boolean initProxyRepository() {
+
         Project project = null;
         RepositoryContext repositoryContext = (RepositoryContext) org.talend.core.runtime.CoreRuntimePlugin.getInstance()
                 .getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);

@@ -51,11 +51,13 @@ import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
@@ -70,7 +72,7 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -98,7 +100,7 @@ public class PatternTestView extends ViewPart {
 
     Composite butPane;
 
-    List<Connection> listTdDataProviders = new ArrayList<Connection>();
+    List<IRepositoryNode> listTdDataProviders = new ArrayList<IRepositoryNode>();
 
     private Button saveButton;
 
@@ -147,10 +149,13 @@ public class PatternTestView extends ViewPart {
         // data.heightHint = 100;
         dbCombo.setLayoutData(data);
         // IFolder folder = ResourceManager.getConnectionFolder();
-        listTdDataProviders = ProxyRepositoryViewObject.getAllDatabaseConnections();
+
+        listTdDataProviders = DQStructureManager.getInstance().getConnectionRepositoryNodes();
+
         List<String> items = new ArrayList<String>();
-        for (Connection tdDataProvider : listTdDataProviders) {
-            items.add(tdDataProvider.getName());
+        for (IRepositoryNode connRepNode : listTdDataProviders) {
+            ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
+            items.add(connItem.getConnection().getName());
         }
         if (!items.isEmpty()) {
             dbCombo.setItems(items.toArray(new String[0]));
@@ -319,7 +324,9 @@ public class PatternTestView extends ViewPart {
      * Test the text by the regular text of regularText.
      */
     private void testRegularText() {
-        for (Connection tddataprovider : listTdDataProviders) {
+        for (IRepositoryNode connRepNode : listTdDataProviders) {
+            ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
+            Connection tddataprovider = connItem.getConnection();
             if (tddataprovider.getName().equals(dbCombo.getText())) {
                 DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
                 String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText
@@ -476,7 +483,9 @@ public class PatternTestView extends ViewPart {
      * @return
      */
     private DbmsLanguage getDbmsLanguage() {
-        for (Connection tddataprovider : listTdDataProviders) {
+        for (IRepositoryNode connRepNode : listTdDataProviders) {
+            ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
+            Connection tddataprovider = connItem.getConnection();
             if (tddataprovider.getName().equals(dbCombo.getText())) {
                 return DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
             }

@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.context.Context;
@@ -33,24 +32,23 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
-import org.talend.dataprofiler.core.ui.views.nodes.AnalysisFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.AnalysisRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.DBConnectionFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.ExchangeFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.IndicatorFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.JrxmlTempFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.MDMConnectionFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.PatternRegexFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.PatternSqlFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.ReportFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.RulesFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.SourceFileFolderRepNode;
-import org.talend.dataprofiler.core.ui.views.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
+import org.talend.dq.nodes.AnalysisFolderRepNode;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.ExchangeFolderRepNode;
+import org.talend.dq.nodes.IndicatorFolderRepNode;
+import org.talend.dq.nodes.JrxmlTempFolderRepNode;
+import org.talend.dq.nodes.MDMConnectionFolderRepNode;
+import org.talend.dq.nodes.PatternRegexFolderRepNode;
+import org.talend.dq.nodes.PatternSqlFolderRepNode;
+import org.talend.dq.nodes.ReportFolderRepNode;
+import org.talend.dq.nodes.RulesFolderRepNode;
+import org.talend.dq.nodes.SourceFileFolderRepNode;
+import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -424,92 +422,6 @@ public final class RepositoryNodeBuilder {
         return null;
     }
 
-    // /**
-    // * DOC klliu Comment method "createRepositoryNodeTdXmlSchema".
-    // *
-    // * @param node
-    // * @param viewObject
-    // * @param tdXmlSchema
-    // */
-    // public void createRepositoryNodeTdXmlSchema(RepositoryNode node, IRepositoryViewObject viewObject,
-    // TdXmlSchemaImpl tdXmlSchema) {
-    // MetadataXmlSchemaRepositoryObject metadataXmlSchema = new MetadataXmlSchemaRepositoryObject(viewObject,
-    // tdXmlSchema);
-    // RepositoryNode xmlSchemaNode = new RepositoryNode(metadataXmlSchema, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // xmlSchemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_SCHEMA);
-    // xmlSchemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
-    // metadataXmlSchema.setRepositoryNode(xmlSchemaNode);
-    // node.getChildren().add(xmlSchemaNode);
-    // }
-
-    // /**
-    // * DOC klliu Comment method "createRepositoryNodeCatalog".
-    // *
-    // * @param node
-    // * @param viewObject
-    // * @param catalog
-    // */
-    // public void createRepositoryNodeCatalog(RepositoryNode node, IRepositoryViewObject viewObject,
-    // orgomg.cwm.resource.relational.Catalog catalog) {
-    // MetadataCatalogRepositoryObject metadataCatalog = new MetadataCatalogRepositoryObject(viewObject, catalog);
-    // RepositoryNode catalogNode = new DBCatalogRepNode(metadataCatalog, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
-    // catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
-    // metadataCatalog.setRepositoryNode(catalogNode);
-    // node.getChildren().add(catalogNode);
-    // }
-    //
-    // /**
-    // * DOC klliu Comment method "createRepositoryNodeSchema".
-    // *
-    // * @param node
-    // * @param viewObject
-    // * @param schema
-    // */
-    // public void createRepositoryNodeSchema(RepositoryNode node, IRepositoryViewObject viewObject,
-    // orgomg.cwm.resource.relational.Schema schema) {
-    // MetadataSchemaRepositoryObject metadataSchema = new MetadataSchemaRepositoryObject(viewObject, schema);
-    // RepositoryNode schemaNode = new DBSchemaRepNode(metadataSchema, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
-    // schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
-    // metadataSchema.setRepositoryNode(schemaNode);
-    // node.getChildren().add(schemaNode);
-    // }
-
-    /**
-     * DOC klliu Comment method "createRepositoryNodeViewObjects".
-     * 
-     * @param node
-     * @param path
-     * @param repositoryObjectType
-     * @param withDelete
-     * @return
-     */
-    public List<IRepositoryNode> createRepositoryNodeViewObjects(RepositoryNode node, IPath path,
-            ERepositoryObjectType repositoryObjectType, boolean withDelete) {
-        List<IRepositoryViewObject> conList = ProxyRepositoryViewObject.fetchRepositoryViewObjectsByFolder(true,
-                repositoryObjectType, null, withDelete, node);
-        List<IRepositoryNode> repositoryNodes = getRepositoryViewObjectChildren(conList, node, withDelete);
-        node.getChildren().addAll(repositoryNodes);
-        return repositoryNodes;
-    }
-
-    /**
-     * 
-     * DOC klliu Comment method "createRepositoryNode".
-     * 
-     * @param node
-     * @param path
-     * @param repositoryObjectType
-     * @param withDelete
-     * @return
-     */
-    public IRepositoryNode createRepositoryNode(RepositoryNode node, IPath path, ERepositoryObjectType repositoryObjectType,
-            boolean withDelete) {
-        ProxyRepositoryViewObject.fetchRepositoryNodeByFolder(true, repositoryObjectType, null, withDelete, node);
-
-        return node;
-    }
 
     /**
      * DOC klliu Comment method "createSystemFolder".

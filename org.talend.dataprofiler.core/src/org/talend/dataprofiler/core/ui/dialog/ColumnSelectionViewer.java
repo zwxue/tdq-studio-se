@@ -19,7 +19,7 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.views.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
 
 /**
  * DOC zqin class global comment. Detailled comment

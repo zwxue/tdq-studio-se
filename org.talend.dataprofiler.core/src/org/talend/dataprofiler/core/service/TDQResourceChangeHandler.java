@@ -44,7 +44,6 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryViewObject;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
@@ -72,7 +71,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         for (EObject eObject : toBeUnloadedResource.getContents()) {
             // try {
             if (eObject instanceof DatabaseConnection) {
-                ProxyRepositoryViewObject.registerURI((DatabaseConnection) eObject, toBeUnloadedResource.getURI());
+                // ProxyRepositoryViewObject.registerURI((DatabaseConnection) eObject, toBeUnloadedResource.getURI());
                 // if (xmiResourceManager != null) {
                 // try {
                 // xmiResourceManager.saveResource(toBeUnloadedResource);
@@ -83,7 +82,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 // }
             } else if (eObject instanceof MDMConnection) {
 
-                ProxyRepositoryViewObject.registerURI((MDMConnection) eObject, toBeUnloadedResource.getURI());
+                // ProxyRepositoryViewObject.registerURI((MDMConnection) eObject, toBeUnloadedResource.getURI());
                 if (xmiResourceManager != null) {
                     try {
                         xmiResourceManager.saveResource(toBeUnloadedResource);
@@ -130,8 +129,8 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             prop = (Property) EObjectHelper.resolveObject(prop);
         }
         // MOD qiongli 2010-10-22,bug 16610
-        ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-        if (ProxyRepositoryViewObject.getRepositoryViewObjectByProperty(prop) != null) {
+        // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
+        if (prop != null) {
             LogicalDeleteFileHandle.refreshDelPropertys(1, prop);
         }
     }
