@@ -204,6 +204,7 @@ public final class FactoriesUtil {
         org.talend.dataquality.expressions.ExpressionsPackage.eINSTANCE.getEFactoryInstance();
         org.talend.dataquality.reports.ReportsPackage.eINSTANCE.getEFactoryInstance();
         DefinitionPackage.eINSTANCE.getEFactoryInstance();
+        org.talend.dataquality.properties.PropertiesPackage.eINSTANCE.getEFactoryInstance();
 
         // CWM generated packages
         // TODO scorreia add other packages

@@ -80,7 +80,7 @@ public final class EMFUtil {
     /**
      * Method "initialize" initializes EMF factories, packages and file extensions.
      */
-    private static void initialize() {
+    public static void initialize() {
         // Initialize the enterprise factories
         FactoriesUtil.initializeAllFactories();
 

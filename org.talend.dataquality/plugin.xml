@@ -102,5 +102,11 @@
             type="rules">
       </parser>
    </extension>
+   <extension
+         point="org.talend.core.repository.dq_EMFModel_provider">
+      <dqEMFModel
+            class="org.talend.commons.emf.InitialDQModelPackagesService">
+      </dqEMFModel>
+   </extension>
 
 </plugin>
