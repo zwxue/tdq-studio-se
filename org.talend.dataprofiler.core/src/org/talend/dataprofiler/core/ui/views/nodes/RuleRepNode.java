@@ -19,7 +19,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu  class global comment. Detailled comment
  */
-public class RuleRepNOde extends RepositoryNode {
+public class RuleRepNode extends RepositoryNode {
 
     /**
      * DOC klliu RuleRepNOde constructor comment.
@@ -27,7 +27,7 @@ public class RuleRepNOde extends RepositoryNode {
      * @param parent
      * @param type
      */
-    public RuleRepNOde(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
+    public RuleRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         // TODO Auto-generated constructor stub
     }

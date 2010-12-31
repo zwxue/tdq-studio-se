@@ -21,7 +21,7 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class RulesSubFolderRepNode extends RepositoryNode {
 
-    private static Logger log = Logger.getLogger(RulesFolderRepNode.class);
+    private static Logger log = Logger.getLogger(RulesSubFolderRepNode.class);
 
     /**
      * DOC klliu RulesSubFolderRepNode constructor comment.
@@ -32,34 +32,5 @@ public class RulesSubFolderRepNode extends RepositoryNode {
      */
     public RulesSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
-
-    // @Override
-    // public List<IRepositoryNode> getChildren() {
-    // RepositoryNode parent = new RepositoryNode(null, null, null);
-    // ERepositoryObjectType contentType = this.getContentType();
-    // if (contentType != null) {
-    // try {
-    // List<IRepositoryViewObject> all = ProxyRepositoryFactory.getInstance().getAll(getContentType());
-    // for (IRepositoryViewObject reposViewObj : all) {
-    // Item item = reposViewObj.getProperty().getItem();
-    //
-    // if ((item instanceof FolderItem)) {
-    // RulesSubFolderRepNode childNodeFolder = new RulesSubFolderRepNode(reposViewObj, parent,
-    // ENodeType.SIMPLE_FOLDER);
-    // reposViewObj.setRepositoryNode(childNodeFolder);
-    // parent.getChildren().add(childNodeFolder);
-    // } else {
-    // RuleRepNOde repNode = new RuleRepNOde(reposViewObj, parent, ENodeType.REPOSITORY_ELEMENT);
-    // reposViewObj.setRepositoryNode(repNode);
-    // parent.getChildren().add(repNode);
-    // }
-    // }
-    // } catch (PersistenceException e) {
-    // log.error(e, e);
-    // }
-    // }
-    // return parent.getChildren();
-    // }
 }

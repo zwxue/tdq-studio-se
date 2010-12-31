@@ -27,9 +27,8 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class RulesFolderRepNode extends RepositoryNode {
 
@@ -37,18 +36,18 @@ public class RulesFolderRepNode extends RepositoryNode {
 
     /**
      * DOC klliu RulesFolderRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
     public RulesFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(null, null, null);
+        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
         ERepositoryObjectType contentType = this.getContentType();
         try {
 
@@ -81,7 +80,7 @@ public class RulesFolderRepNode extends RepositoryNode {
         for (Object obj : patterns.getMembers()) {
             RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
             if (!viewObject.isDeleted()) {
-                RuleRepNOde repNode = new RuleRepNOde(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+                RuleRepNode repNode = new RuleRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
                 viewObject.setRepositoryNode(repNode);
                 parent.getChildren().add(repNode);
 

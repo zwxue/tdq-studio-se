@@ -32,7 +32,7 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class SourceFileFolderRepNode extends RepositoryNode {
 
-    private static Logger log = Logger.getLogger(JrxmlTempFolderRepNode.class);
+    private static Logger log = Logger.getLogger(SourceFileFolderRepNode.class);
 
     /**
      * DOC klliu SourceFileFolderRepNode constructor comment.
@@ -43,12 +43,11 @@ public class SourceFileFolderRepNode extends RepositoryNode {
      */
     public SourceFileFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(null, null, null);
+        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
         ERepositoryObjectType contentType = this.getContentType();
         try {
             RootContainer<String, IRepositoryViewObject> sourceFiles = ProxyRepositoryFactory.getInstance().getSourceFiles(

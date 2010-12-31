@@ -14,15 +14,17 @@ package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
-import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.dataprofiler.core.ui.views.nodes.AnalysisRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.IndicatorDefinitionRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.JrxmlTempleteRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.MDMConnectionRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.PatternRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.ReportRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.RuleRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.SourceFileRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -32,20 +34,26 @@ public class OpenResourceProvider extends AbstractCommonActionProvider {
 
     private OpenItemEditorAction openFileAction;
 
-
     public void fillContextMenu(IMenuManager aMenu) {
-
         // DOC MOD klliu 2010-12-09 feature15750
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
-        Item item = node.getObject().getProperty().getItem();
-        if (!(item instanceof TDQReportItem || item instanceof TDQSourceFileItem)
-                && (item instanceof TDQItem || item instanceof ConnectionItem)
-                && !(node.getObject() instanceof MetadataCatalogRepositoryObject || node.getObject() instanceof MetadataSchemaRepositoryObject)) {
+        if (shouldShowOpenMenu(node)) {
             IRepositoryViewObject object = node.getObject();
             openFileAction = new OpenItemEditorAction(object);
             aMenu.add(openFileAction);
         }
+    }
 
+    /**
+     * DOC xqliu Comment method "shouldShowOpenMenu".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean shouldShowOpenMenu(RepositoryNode node) {
+        return node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof IndicatorDefinitionRepNode
+                || node instanceof PatternRepNode || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode
+                || node instanceof RuleRepNode || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode;
     }
 }

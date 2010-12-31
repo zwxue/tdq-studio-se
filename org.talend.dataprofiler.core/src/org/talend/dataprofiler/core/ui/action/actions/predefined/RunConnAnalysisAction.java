@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -60,8 +61,8 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected WizardDialog getPredefinedDialog() {
         AnalysisFilterParameter connectionParams = new AnalysisFilterParameter();
+        reposViewObj = ((IRepositoryNode) getSelection().getFirstElement()).getObject();
 
-        reposViewObj = (IRepositoryViewObject) getSelection().getFirstElement();
         // TypedReturnCode<Connection> tdProvider = PrvResourceFileHelper.getInstance().findProvider(reposViewObj);
         Connection conn = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
         connectionParams.setTdDataProvider(conn);

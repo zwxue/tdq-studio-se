@@ -37,6 +37,7 @@ import org.talend.dataprofiler.core.ui.views.nodes.AnalysisFolderRepNode;
 import org.talend.dataprofiler.core.ui.views.nodes.AnalysisRepNode;
 import org.talend.dataprofiler.core.ui.views.nodes.DBConnectionFolderRepNode;
 import org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.views.nodes.IndicatorFolderRepNode;
 import org.talend.dataprofiler.core.ui.views.nodes.JrxmlTempFolderRepNode;
 import org.talend.dataprofiler.core.ui.views.nodes.MDMConnectionFolderRepNode;
@@ -552,7 +553,6 @@ public final class RepositoryNodeBuilder {
             folder.setRepositoryNode(userDefFolderNode);
             node.getChildren().add(userDefFolderNode);
             return userDefFolderNode;
-
         case JRXML_TEMPLATE:
             JrxmlTempFolderRepNode jrxmlFolderNode = new JrxmlTempFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(jrxmlFolderNode);
@@ -588,6 +588,11 @@ public final class RepositoryNodeBuilder {
             folder.setRepositoryNode(mdmFolder);
             node.getChildren().add(mdmFolder);
             return mdmFolder;
+        case EXCHANGE:
+            ExchangeFolderRepNode exchangeFolder = new ExchangeFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            folder.setRepositoryNode(exchangeFolder);
+            node.getChildren().add(exchangeFolder);
+            return exchangeFolder;
         default:
             subFolderNode = new RepositoryNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(subFolderNode);

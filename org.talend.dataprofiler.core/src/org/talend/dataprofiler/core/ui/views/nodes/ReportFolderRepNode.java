@@ -42,12 +42,11 @@ public class ReportFolderRepNode extends RepositoryNode {
      */
     public ReportFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(null, null, null);
+        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
         ERepositoryObjectType contentType = this.getContentType();
         if (contentType != null) {
             try {

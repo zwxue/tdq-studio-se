@@ -65,6 +65,9 @@ public final class WorkbenchUtils {
         if (node.isBin()) {
             return new Path(""); //$NON-NLS-1$
         }
+        if (node.getType() == null) {
+            return null;
+        }
         switch (node.getType()) {
         case SYSTEM_FOLDER:
             ERepositoryObjectType contentType = node.getContentType();

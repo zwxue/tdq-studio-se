@@ -27,9 +27,8 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class PatternSqlFolderRepNode extends RepositoryNode {
 
@@ -37,18 +36,18 @@ public class PatternSqlFolderRepNode extends RepositoryNode {
 
     /**
      * DOC klliu PatternSqlRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
     public PatternSqlFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(null, null, null);
+        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
         ERepositoryObjectType contentType = this.getContentType();
         try {
             RootContainer<String, IRepositoryViewObject> patterns = ProxyRepositoryFactory.getInstance().getPatterns(contentType);
@@ -72,8 +71,7 @@ public class PatternSqlFolderRepNode extends RepositoryNode {
                 itemType = parentItemType;
             }
             Folder folder = new Folder(((Property) property), itemType);
-            PatternSqlSubFolderRepNode childNodeFolder = new PatternSqlSubFolderRepNode(folder, parent,
-                    ENodeType.SIMPLE_FOLDER);
+            PatternSqlSubFolderRepNode childNodeFolder = new PatternSqlSubFolderRepNode(folder, parent, ENodeType.SIMPLE_FOLDER);
             parent.getChildren().add(childNodeFolder);
             fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
         }

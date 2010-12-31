@@ -31,26 +31,29 @@ import org.talend.repository.model.RepositoryNode;
  * DOC klliu class global comment. Detailled comment
  */
 public class AnalysisFolderRepNode extends RepositoryNode {
+
     private static Logger log = Logger.getLogger(AnalysisFolderRepNode.class);
+
     /**
      * DOC klliu AnalysisFolderRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
-     * @throws PersistenceException 
+     * @throws PersistenceException
      */
-    public AnalysisFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type)  {
+    public AnalysisFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
     }
+
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(null, null, null);
+        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
         ERepositoryObjectType contentType = this.getContentType();
         if (contentType != null) {
             try {
                 RootContainer<String, IRepositoryViewObject> analysis = ProxyRepositoryFactory.getInstance().getAnalysis();
-            
+
                 fetchRepositoryNodeByFolder(analysis, contentType, fetchNodeByFolder);
             } catch (PersistenceException e) {
                 log.error(e, e);
@@ -58,9 +61,10 @@ public class AnalysisFolderRepNode extends RepositoryNode {
         }
         return fetchNodeByFolder.getChildren();
     }
+
     public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,
             RepositoryNode node) {
-        
+
         RepositoryNode parent = node;
         for (Object object : patterns.getSubContainer()) {
             Container container = (Container) object;

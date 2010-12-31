@@ -46,7 +46,7 @@ public class IndicatorFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(null, null, null);
+        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
         ERepositoryObjectType contentType = this.getContentType();
         if (contentType != null) {
             try {
@@ -59,6 +59,7 @@ public class IndicatorFolderRepNode extends RepositoryNode {
         }
         return fetchNodeByFolder.getChildren();
     }
+
     public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,
             RepositoryNode node) {
         RepositoryNode parent = node;
@@ -69,7 +70,7 @@ public class IndicatorFolderRepNode extends RepositoryNode {
             ERepositoryObjectType itemType = ERepositoryObjectType.getTypeFromKey(property.getLabel());
             Folder folder = new Folder(((Property) property), itemType);
 
-            SysIndicatorSubFolderRepNode childNodeFolder = new SysIndicatorSubFolderRepNode(folder, parent,
+            SysIndicatorFolderRepNode childNodeFolder = new SysIndicatorFolderRepNode(folder, parent,
                     ENodeType.SYSTEM_FOLDER);
             parent.getChildren().add(childNodeFolder);
         }

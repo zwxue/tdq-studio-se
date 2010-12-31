@@ -47,7 +47,7 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(null, null, null);
+        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
         ERepositoryObjectType contentType = this.getContentType();
         ProjectManager pManager = ProjectManager.getInstance();
         Container container = null;

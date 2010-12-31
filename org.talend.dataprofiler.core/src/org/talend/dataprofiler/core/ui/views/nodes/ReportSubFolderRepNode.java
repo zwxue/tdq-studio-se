@@ -15,21 +15,20 @@ package org.talend.dataprofiler.core.ui.views.nodes;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class ReportSubFolderRepNode extends RepositoryNode {
 
     /**
      * DOC klliu ReportSubFolderRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
     public ReportSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
 }

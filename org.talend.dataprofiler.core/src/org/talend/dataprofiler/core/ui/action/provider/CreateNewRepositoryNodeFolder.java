@@ -17,6 +17,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.CreateRepositoryNodeAction;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.nodes.ExchangeFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 
@@ -37,7 +38,8 @@ public class CreateNewRepositoryNodeFolder extends AbstractCommonActionProvider 
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
         if (node.getParent() != null) {
-            if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
+            if (!(node instanceof ExchangeFolderRepNode)
+                    && (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType()))) {
                 currentSelection = WorkbenchUtils.getFolder(node);
                 CreateRepositoryNodeAction createSubFolderAction = new CreateRepositoryNodeAction(currentSelection);
                 menu.add(createSubFolderAction);

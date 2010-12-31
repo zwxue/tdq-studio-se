@@ -27,25 +27,16 @@
          <enablement>
           <or>
             <instanceof
-                     value="org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode">
+                     value="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode">
             </instanceof>
-            <and>
-               <instanceof
-                     value="org.eclipse.core.resources.IFile">
-               </instanceof>
-                <or>
-                   <test
-                         property="org.eclipse.core.resources.name"
-                         value="*.prv">
-                   </test>
-                   <test
-                         property="org.eclipse.core.resources.name"
-                         value="*.item">
-                   </test>
-                </or>
-             </and>
             <instanceof
-                  value="org.talend.core.model.repository.IRepositoryViewObject">
+                  value="org.talend.dataprofiler.core.ui.views.nodes.DBTableFolderRepNode">
+            </instanceof>
+            <instanceof
+                  value="org.talend.dataprofiler.core.ui.views.nodes.DBViewFolderRepNode">
+            </instanceof>
+            <instanceof
+                  value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnFolderRepNode">
             </instanceof>
            </or>
          </enablement>
@@ -56,25 +47,16 @@
          <enablement>
           <or>
             <instanceof
-                     value="org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode">
+                     value="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode">
             </instanceof>
-            <and>
-               <instanceof
-                     value="org.eclipse.core.resources.IFile">
-               </instanceof>
-                <or>
-                   <test
-                         property="org.eclipse.core.resources.name"
-                         value="*.prv">
-                   </test>
-                   <test
-                         property="org.eclipse.core.resources.name"
-                         value="*.item">
-                   </test>
-                </or>
-             </and>
             <instanceof
-                  value="org.talend.core.model.repository.IRepositoryViewObject">
+                  value="org.talend.dataprofiler.core.ui.views.nodes.DBTableFolderRepNode">
+            </instanceof>
+            <instanceof
+                  value="org.talend.dataprofiler.core.ui.views.nodes.DBViewFolderRepNode">
+            </instanceof>
+            <instanceof
+                  value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnFolderRepNode">
             </instanceof>
            </or>
          </enablement>

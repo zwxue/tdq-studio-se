@@ -12,16 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.nodes;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.properties.FolderItem;
-import org.talend.core.model.properties.Item;
-import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 
@@ -39,35 +31,34 @@ public class SourceFileSubFolderNode extends RepositoryNode {
      */
     public SourceFileSubFolderNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
-    @Override
-    public List<IRepositoryNode> getChildren() {
-        RepositoryNode parent = new RepositoryNode(null, null, null);
-        ERepositoryObjectType contentType = this.getContentType();
-        if (contentType != null) {
-            try {
-                List<IRepositoryViewObject> all = ProxyRepositoryFactory.getInstance().getAll(getContentType());
-                for (IRepositoryViewObject reposViewObj : all) {
-                    Item item = reposViewObj.getProperty().getItem();
-
-                    if ((item instanceof FolderItem)) {
-                        SourceFileSubFolderNode childNodeFolder = new SourceFileSubFolderNode(reposViewObj, parent,
-                                ENodeType.SIMPLE_FOLDER);
-                        reposViewObj.setRepositoryNode(childNodeFolder);
-                        parent.getChildren().add(childNodeFolder);
-                    } else {
-                        SourceFileRepNode repNode = new SourceFileRepNode(reposViewObj, parent, ENodeType.REPOSITORY_ELEMENT);
-                        reposViewObj.setRepositoryNode(repNode);
-                        parent.getChildren().add(repNode);
-                    }
-                }
-            } catch (PersistenceException e) {
-                log.error(e, e);
-            }
-        }
-        return parent.getChildren();
-    }
+    // @Override
+    // public List<IRepositoryNode> getChildren() {
+    // RepositoryNode parent = new RepositoryNode(null, null, null);
+    // ERepositoryObjectType contentType = this.getContentType();
+    // if (contentType != null) {
+    // try {
+    // List<IRepositoryViewObject> all = ProxyRepositoryFactory.getInstance().getAll(getContentType());
+    // for (IRepositoryViewObject reposViewObj : all) {
+    // Item item = reposViewObj.getProperty().getItem();
+    //
+    // if ((item instanceof FolderItem)) {
+    // SourceFileSubFolderNode childNodeFolder = new SourceFileSubFolderNode(reposViewObj, parent,
+    // ENodeType.SIMPLE_FOLDER);
+    // reposViewObj.setRepositoryNode(childNodeFolder);
+    // parent.getChildren().add(childNodeFolder);
+    // } else {
+    // SourceFileRepNode repNode = new SourceFileRepNode(reposViewObj, parent, ENodeType.REPOSITORY_ELEMENT);
+    // reposViewObj.setRepositoryNode(repNode);
+    // parent.getChildren().add(repNode);
+    // }
+    // }
+    // } catch (PersistenceException e) {
+    // log.error(e, e);
+    // }
+    // }
+    // return parent.getChildren();
+    // }
 
 }

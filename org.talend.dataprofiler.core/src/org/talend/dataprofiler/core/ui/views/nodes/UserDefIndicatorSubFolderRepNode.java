@@ -29,7 +29,6 @@ public class UserDefIndicatorSubFolderRepNode extends RepositoryNode {
      */
     public UserDefIndicatorSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
 }

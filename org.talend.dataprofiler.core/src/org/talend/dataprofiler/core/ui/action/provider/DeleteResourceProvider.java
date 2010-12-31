@@ -12,17 +12,22 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataprofiler.core.ui.views.nodes.DBCatalogRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.DBColumnFolderRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.DBSchemaRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.DBTableFolderRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.DBTableRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.DBViewFolderRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.DBViewRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.MDMSchemaRepNode;
+import org.talend.dataprofiler.core.ui.views.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.EResourceConstant;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -41,26 +46,60 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         if (obj instanceof IRepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;
             if (!node.getType().equals(ENodeType.SYSTEM_FOLDER)) {
-                if (!isSystemIndicator(node)) {
+                if (shouldShowDeleteMenu(node)) {
                     menu.add(new DeleteObjectsAction());
                 }
             }
         }
     }
 
-    private boolean isSystemIndicator(RepositoryNode node) {
-        switch (node.getType()) {
-        case SYSTEM_FOLDER:
-        case SIMPLE_FOLDER:
-            IFolder ifolder = WorkbenchUtils.getFolder(node);
-            return ifolder.getFullPath().toOSString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
-        case TDQ_REPOSITORY_ELEMENT:
-        case REPOSITORY_ELEMENT:
-            Item item = node.getObject().getProperty().getItem();
-            return item instanceof TDQIndicatorDefinitionItem;
-
-        }
-        return false;
+    /**
+     * DOC xqliu Comment method "shouldShowDeleteMenu".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean shouldShowDeleteMenu(RepositoryNode node) {
+        return !isSystemFolder(node) && !isVirturalNode(node);
     }
+
+    /**
+     * DOC xqliu Comment method "isSystemFolder".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean isSystemFolder(RepositoryNode node) {
+        return ENodeType.SYSTEM_FOLDER.equals(node.getType());
+    }
+
+    /**
+     * DOC xqliu Comment method "isVirturalNode".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean isVirturalNode(RepositoryNode node) {
+        return node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode || node instanceof DBTableFolderRepNode
+                || node instanceof DBViewFolderRepNode || node instanceof DBTableRepNode || node instanceof DBViewRepNode
+                || node instanceof DBColumnFolderRepNode || node instanceof DBColumnRepNode || node instanceof MDMSchemaRepNode
+                || node instanceof MDMXmlElementRepNode;
+    }
+
+    // private boolean isSystemIndicator(RepositoryNode node) {
+    // switch (node.getType()) {
+    // case SYSTEM_FOLDER:
+    // case SIMPLE_FOLDER:
+    // IFolder ifolder = WorkbenchUtils.getFolder(node);
+    // return ifolder.getFullPath().toOSString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
+    // case TDQ_REPOSITORY_ELEMENT:
+    // case REPOSITORY_ELEMENT:
+    // Item item = node.getObject().getProperty().getItem();
+    // return item instanceof TDQIndicatorDefinitionItem;
+    // default:
+    //
+    // }
+    // return false;
+    // }
 
 }
