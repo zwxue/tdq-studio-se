@@ -172,16 +172,16 @@
         	<enablement> 
         			<or>
               <adapt
-                    type="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionFolderRepNode">
+                    type="org.talend.dq.nodes.DBConnectionFolderRepNode">
               </adapt>
               <adapt
-                    type="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionSubFolderRepNode">
+                    type="org.talend.dq.nodes.DBConnectionSubFolderRepNode">
               </adapt>
               <adapt
-                    type="org.talend.dataprofiler.core.ui.views.nodes.MDMConnectionFolderRepNode">
+                    type="org.talend.dq.nodes.MDMConnectionFolderRepNode">
               </adapt>
               <adapt
-                    type="org.talend.dataprofiler.core.ui.views.nodes.MDMConnectionSubFolderRepNode">
+                    type="org.talend.dq.nodes.MDMConnectionSubFolderRepNode">
               </adapt>
               <adapt
                     type="java.util.Collection">
@@ -197,9 +197,9 @@
             id="org.talend.dataprofiler.core.ui.action.provider.NewAnalysisActionProvider">
             <enablement> 
         			<or>
-						<adapt type="org.talend.dataprofiler.core.ui.views.nodes.AnalysisFolderRepNode" />
+						<adapt type="org.talend.dq.nodes.AnalysisFolderRepNode" />
       <adapt
-            type="org.talend.dataprofiler.core.ui.views.nodes.AnalysisSubFolderRepNode">
+            type="org.talend.dq.nodes.AnalysisSubFolderRepNode">
       </adapt>	 
 						<adapt type="java.util.Collection"> 
 							<count value="0" />
@@ -221,7 +221,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.RunAnalysisActionProvider">
          <enablement>
             <and>
-	            <instanceof value="org.talend.dataprofiler.core.ui.views.nodes.AnalysisRepNode"/>
+	            <instanceof value="org.talend.dq.nodes.AnalysisRepNode"/>
 	        </and>
          </enablement>
       </actionProvider> 
@@ -251,7 +251,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnProvider">
          <enablement>
             <and>
-	            <instanceof value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode"/>           
+	            <instanceof value="org.talend.dq.nodes.DBColumnRepNode"/>           
 	        </and>
          </enablement>
       </actionProvider> 
@@ -262,7 +262,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnCorrelationProvider">
          <enablement>
             <and>
-	            <instanceof value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode"/>           
+	            <instanceof value="org.talend.dq.nodes.DBColumnRepNode"/>           
 	        </and>
          </enablement>
       </actionProvider>       
@@ -272,13 +272,13 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBCatalogRepNode">
+                     value="org.talend.dq.nodes.DBCatalogRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBSchemaRepNode">
+                     value="org.talend.dq.nodes.DBSchemaRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode">
+                     value="org.talend.dq.nodes.DBConnectionRepNode">
                </instanceof>
 	        </or>
          </enablement>
@@ -288,7 +288,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.RemoveAnalysisActionProvider">
          <enablement>
             <and>
-	            <instanceof value="org.talend.dataprofiler.core.ui.views.nodes.AnalysisRepNode"/>
+	            <instanceof value="org.talend.dq.nodes.AnalysisRepNode"/>
 	        </and>
          </enablement>
       </actionProvider>
@@ -298,10 +298,10 @@
          <enablement>
             <or>
                <adapt
-                     type="org.talend.dataprofiler.core.ui.views.nodes.RulesFolderRepNode">
+                     type="org.talend.dq.nodes.RulesFolderRepNode">
                </adapt>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.RulesSubFolderRepNode">
+                     value="org.talend.dq.nodes.RulesSubFolderRepNode">
                </instanceof>
                <adapt
                      type="java.util.Collection">
@@ -318,10 +318,10 @@
           <enablement>
              <or>
                 <adapt
-                      type="org.talend.dataprofiler.core.ui.views.nodes.UserDefIndicatorFolderRepNode">
+                      type="org.talend.dq.nodes.UserDefIndicatorFolderRepNode">
                 </adapt>
                 <adapt
-                      type="org.talend.dataprofiler.core.ui.views.nodes.UserDefIndicatorSubFolderRepNode">
+                      type="org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode">
                 </adapt>
                 <adapt
                       type="java.util.Collection">
@@ -338,10 +338,10 @@
          <enablement>
             <or>
                <adapt
-                     type="org.talend.dataprofiler.core.ui.views.nodes.SourceFileFolderRepNode">
+                     type="org.talend.dq.nodes.SourceFileFolderRepNode">
                </adapt>
                <adapt
-                     type="org.talend.dataprofiler.core.ui.views.nodes.SourceFileSubFolderNode">
+                     type="org.talend.dq.nodes.SourceFileSubFolderNode">
                </adapt>
                <adapt
                      type="java.util.Collection">
@@ -358,16 +358,16 @@
          <enablement>
             <or>
                <adapt
-                     type="org.talend.dataprofiler.core.ui.views.nodes.PatternRegexFolderRepNode">
+                     type="org.talend.dq.nodes.PatternRegexFolderRepNode">
                </adapt>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.PatternRegexSubFolderRepNode">
+                     value="org.talend.dq.nodes.PatternRegexSubFolderRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.PatternSqlFolderRepNode">
+                     value="org.talend.dq.nodes.PatternSqlFolderRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.PatternSqlSubFolderRepNode">
+                     value="org.talend.dq.nodes.PatternSqlSubFolderRepNode">
                </instanceof>
                <adapt
                      type="java.util.Collection">
@@ -394,7 +394,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.ImportRemotePatternActionProvider">
          <enablement>
             <adapt
-                  type="org.talend.dataprofiler.core.ui.views.nodes.ExchangeFolderRepNode">
+                  type="org.talend.dq.nodes.ExchangeFolderRepNode">
             </adapt>
          </enablement>
       </actionProvider>
@@ -404,7 +404,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode">
+                     value="org.talend.dq.nodes.DBColumnRepNode">
                </instanceof>
             </and>
          </enablement>
@@ -415,7 +415,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode">
+                     value="org.talend.dq.nodes.DBColumnRepNode">
                </instanceof>
             </and>
          </enablement>
@@ -426,7 +426,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode">
+                     value="org.talend.dq.nodes.DBColumnRepNode">
                </instanceof>
             </and>
          </enablement>
@@ -437,7 +437,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBTableRepNode">
+                     value="org.talend.dq.nodes.DBTableRepNode">
                </instanceof>
             </and>
          </enablement>
@@ -448,7 +448,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode">
+                     value="org.talend.dq.nodes.DBColumnRepNode">
                </instanceof>
             </and>
          </enablement>
@@ -459,10 +459,10 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBTableRepNode">
+                     value="org.talend.dq.nodes.DBTableRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBViewRepNode">
+                     value="org.talend.dq.nodes.DBViewRepNode">
                </instanceof>
             </or>
          </enablement>
@@ -473,7 +473,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode">
+                     value="org.talend.dq.nodes.DBColumnRepNode">
                </instanceof>
             </and>
          </enablement>
@@ -484,13 +484,13 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBTableRepNode">
+                     value="org.talend.dq.nodes.DBTableRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBViewRepNode">
+                     value="org.talend.dq.nodes.DBViewRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode">
+                     value="org.talend.dq.nodes.DBColumnRepNode">
                </instanceof>
             </or>
          </enablement>
@@ -501,7 +501,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode">
+                     value="org.talend.dq.nodes.DBConnectionRepNode">
                </instanceof></and>
          </enablement>
       </actionProvider>
@@ -511,7 +511,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBTableRepNode">
+                     value="org.talend.dq.nodes.DBTableRepNode">
                </instanceof>
             </and>
          </enablement>
@@ -522,7 +522,7 @@
          <enablement>
             <and>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBViewRepNode">
+                     value="org.talend.dq.nodes.DBViewRepNode">
                </instanceof>
             </and>
          </enablement>
@@ -532,7 +532,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewColumnProvider">
          <enablement>
             <instanceof
-                  value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnRepNode">
+                  value="org.talend.dq.nodes.DBColumnRepNode">
             </instanceof>
          </enablement>
       </actionProvider>
@@ -542,10 +542,10 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBTableRepNode">
+                     value="org.talend.dq.nodes.DBTableRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBViewRepNode">
+                     value="org.talend.dq.nodes.DBViewRepNode">
                </instanceof>
             </or>
          </enablement>
@@ -556,10 +556,10 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBCatalogRepNode">
+                     value="org.talend.dq.nodes.DBCatalogRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBSchemaRepNode">
+                     value="org.talend.dq.nodes.DBSchemaRepNode">
                </instanceof>
             </or>
          </enablement>
@@ -569,7 +569,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.IndicatorDefinitionActionProvider">
          <enablement>
             <instanceof
-                  value="org.talend.dataprofiler.core.ui.views.nodes.IndicatorDefinitionRepNode">
+                  value="org.talend.dq.nodes.IndicatorDefinitionRepNode">
             </instanceof>
          </enablement>
       </actionProvider> 
@@ -580,16 +580,16 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.AnalysisRepNode">
+                     value="org.talend.dq.nodes.AnalysisRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.ReportRepNode">
+                     value="org.talend.dq.nodes.ReportRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode">
+                     value="org.talend.dq.nodes.DBConnectionRepNode">
                </instanceof>
                <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.MDMConnectionRepNode">
+                     value="org.talend.dq.nodes.MDMConnectionRepNode">
                </instanceof>
             </or>
          </enablement>
@@ -599,10 +599,10 @@
           <enablement>
              <or>
                 <instanceof
-                      value="org.talend.dataprofiler.core.ui.views.nodes.UserDefIndicatorFolderRepNode">
+                      value="org.talend.dq.nodes.UserDefIndicatorFolderRepNode">
                 </instanceof>
                 <instanceof
-                      value="org.talend.dataprofiler.core.ui.views.nodes.UserDefIndicatorSubFolderRepNode">
+                      value="org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode">
                 </instanceof>
              </or>
           </enablement>
