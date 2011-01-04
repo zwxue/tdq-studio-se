@@ -27,16 +27,16 @@
          <enablement>
           <or>
             <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode">
+                     value="org.talend.dq.nodes.DBConnectionRepNode">
             </instanceof>
             <instanceof
-                  value="org.talend.dataprofiler.core.ui.views.nodes.DBTableFolderRepNode">
+                  value="org.talend.dq.nodes.DBTableFolderRepNode">
             </instanceof>
             <instanceof
-                  value="org.talend.dataprofiler.core.ui.views.nodes.DBViewFolderRepNode">
+                  value="org.talend.dq.nodes.DBViewFolderRepNode">
             </instanceof>
             <instanceof
-                  value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnFolderRepNode">
+                  value="org.talend.dq.nodes.DBColumnFolderRepNode">
             </instanceof>
            </or>
          </enablement>
@@ -47,16 +47,16 @@
          <enablement>
           <or>
             <instanceof
-                     value="org.talend.dataprofiler.core.ui.views.nodes.DBConnectionRepNode">
+                     value="org.talend.dq.nodes.DBConnectionRepNode">
             </instanceof>
             <instanceof
-                  value="org.talend.dataprofiler.core.ui.views.nodes.DBTableFolderRepNode">
+                  value="org.talend.dq.nodes.DBTableFolderRepNode">
             </instanceof>
             <instanceof
-                  value="org.talend.dataprofiler.core.ui.views.nodes.DBViewFolderRepNode">
+                  value="org.talend.dq.nodes.DBViewFolderRepNode">
             </instanceof>
             <instanceof
-                  value="org.talend.dataprofiler.core.ui.views.nodes.DBColumnFolderRepNode">
+                  value="org.talend.dq.nodes.DBColumnFolderRepNode">
             </instanceof>
            </or>
          </enablement>
