@@ -231,7 +231,7 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.talend.repository.model.IRepositoryNode">
+                     value="org.talend.repository.model.RepositoryNode">
                </instanceof>
             </or>
          </enablement>
@@ -344,10 +344,7 @@
                      type="org.talend.dq.nodes.SourceFileSubFolderNode">
                </adapt>
                <adapt
-                     type="java.util.Collection">
-                  <count
-                        value="0">
-                  </count>
+                     type="org.talend.dq.nodes.SourceFileRepNode">
                </adapt>
             </or>
          </enablement>
@@ -622,7 +619,7 @@
           <enablement>
              <and>
                 <instanceof
-                      value="org.talend.repository.model.IRepositoryNode">
+                      value="org.talend.repository.model.RepositoryNode">
                 </instanceof>
              </and>
           </enablement>

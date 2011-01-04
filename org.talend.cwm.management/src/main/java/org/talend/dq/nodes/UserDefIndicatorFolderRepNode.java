@@ -75,7 +75,7 @@ public class UserDefIndicatorFolderRepNode extends RepositoryNode {
             Folder folder = new Folder(((Property) property), itemType);
 
             UserDefIndicatorSubFolderRepNode childNodeFolder = new UserDefIndicatorSubFolderRepNode(folder, parent,
-                    ENodeType.SYSTEM_FOLDER);
+                    ENodeType.SIMPLE_FOLDER);
             parent.getChildren().add(childNodeFolder);
         }
         // not folder or folders have no subFolder

@@ -12,9 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -25,9 +29,10 @@ import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -43,12 +48,10 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
             return;
         }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
-        if (obj instanceof IRepositoryNode) {
+        if (obj instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;
-            if (!node.getType().equals(ENodeType.SYSTEM_FOLDER)) {
-                if (shouldShowDeleteMenu(node)) {
-                    menu.add(new DeleteObjectsAction());
-                }
+            if (shouldShowDeleteMenu(node)) {
+                menu.add(new DeleteObjectsAction());
             }
         }
     }
@@ -60,7 +63,7 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
      * @return
      */
     private boolean shouldShowDeleteMenu(RepositoryNode node) {
-        return !isSystemFolder(node) && !isVirturalNode(node);
+        return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node);
     }
 
     /**
@@ -86,20 +89,24 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
                 || node instanceof MDMXmlElementRepNode;
     }
 
-    // private boolean isSystemIndicator(RepositoryNode node) {
-    // switch (node.getType()) {
-    // case SYSTEM_FOLDER:
-    // case SIMPLE_FOLDER:
-    // IFolder ifolder = WorkbenchUtils.getFolder(node);
-    // return ifolder.getFullPath().toOSString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
-    // case TDQ_REPOSITORY_ELEMENT:
-    // case REPOSITORY_ELEMENT:
-    // Item item = node.getObject().getProperty().getItem();
-    // return item instanceof TDQIndicatorDefinitionItem;
-    // default:
-    //
-    // }
-    // return false;
-    // }
+    /**
+     * DOC xqliu Comment method "isSystemIndicator".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean isSystemIndicator(RepositoryNode node) {
+        switch (node.getType()) {
+        case TDQ_REPOSITORY_ELEMENT:
+        case REPOSITORY_ELEMENT:
+            Item item = node.getObject().getProperty().getItem();
+            IFolder folder = WorkbenchUtils.getFolder(node);
+            return item instanceof TDQIndicatorDefinitionItem
+                    && ResourceService.isSubFolder(ResourceManager.getSystemIndicatorFolder(), folder);
+        default:
+
+        }
+        return false;
+    }
 
 }

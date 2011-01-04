@@ -20,6 +20,7 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.nodes.ExchangeFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -38,7 +39,9 @@ public class CreateNewRepositoryNodeFolder extends AbstractCommonActionProvider 
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
         if (node.getParent() != null) {
-            if (!(node instanceof ExchangeFolderRepNode)
+            IFolder folder = WorkbenchUtils.getFolder(node);
+            if (!(node instanceof ExchangeFolderRepNode) && !ResourceManager.getRulesFolder().equals(folder)
+                    && !ResourceManager.getPatternFolder().equals(folder) && !ResourceManager.getIndicatorFolder().equals(folder)
                     && (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType()))) {
                 currentSelection = WorkbenchUtils.getFolder(node);
                 CreateRepositoryNodeAction createSubFolderAction = new CreateRepositoryNodeAction(currentSelection);
@@ -47,5 +50,4 @@ public class CreateNewRepositoryNodeFolder extends AbstractCommonActionProvider 
         }
 
     }
-
 }
