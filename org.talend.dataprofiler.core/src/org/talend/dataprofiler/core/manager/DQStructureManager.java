@@ -206,7 +206,6 @@ public final class DQStructureManager {
             copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILES);
             copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
 
-
             WorkspaceVersionHelper.storeVersion();
 
             ResourceService.refreshStructure();
@@ -609,6 +608,20 @@ public final class DQStructureManager {
         return connNodes;
     }
 
+    public IRepositoryNode getConnectionRepositoryNode(String name) {
+        List<IRepositoryNode> connections = getConnectionRepositoryNodes();
+        if (connections != null && connections.size() > 0) {
+
+            for (IRepositoryNode conn : connections) {
+                boolean equals = conn.getObject().getLabel().equals(name);
+                if (equals) {
+                    return conn;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * DOC klliu Comment method "getRootNode".
      * 
@@ -617,12 +630,15 @@ public final class DQStructureManager {
     private RepositoryNode getRootNode() {
         RepositoryNode node = null;
         CommonViewer commonViewer = getDQCommonViewer();
-        TreeItem[] items = commonViewer.getTree().getItems();
-        for (TreeItem item : items) {
-            String text = item.getText();
-            if (text.equals(EResourceConstant.METADATA.getName())) {
-                node = (RepositoryNode) item.getData();
+        if (commonViewer != null) {
+            TreeItem[] items = commonViewer.getTree().getItems();
+            for (TreeItem item : items) {
+                String text = item.getText();
+                if (text.equals(EResourceConstant.METADATA.getName())) {
+                    node = (RepositoryNode) item.getData();
+                }
             }
+
         }
         return node;
     }
@@ -640,17 +656,12 @@ public final class DQStructureManager {
             IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
             if (activePage != null) {
                 part = activePage.findView(DQRespositoryView.ID);
-
                 if (part == null) {
-                    try {
-                        part = activePage.showView(DQRespositoryView.ID);
-                    } catch (Exception e) {
-                        ExceptionHandler.process(e);
-                    }
+                    return null;
                 }
+                DQRespositoryView dqView = (DQRespositoryView) part;
+                commonViewer = dqView.getCommonViewer();
             }
-            DQRespositoryView dqView = (DQRespositoryView) part;
-            commonViewer = dqView.getCommonViewer();
         }
         return commonViewer;
     }
