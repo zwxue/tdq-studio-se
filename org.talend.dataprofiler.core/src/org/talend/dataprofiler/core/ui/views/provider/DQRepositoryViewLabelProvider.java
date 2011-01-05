@@ -12,40 +12,19 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdView;
-import org.talend.cwm.xml.TdXmlElementType;
-import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
-import org.talend.dataprofiler.core.recycle.IRecycleBin;
-import org.talend.dataprofiler.ecos.model.IEcosCategory;
-import org.talend.dataprofiler.ecos.model.IEcosComponent;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
-import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -57,11 +36,10 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
-import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.resource.EResourceConstant;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
@@ -75,68 +53,71 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
     public Image getImage(Object element) {
 
-        if (element instanceof IFolderNode) {
-            return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-        } else if (element instanceof TdColumn) {
-            if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
-                // get the icon for primary key
-                return ImageLib.getImage(ImageLib.PK_COLUMN);
-            }
-        } else if (element instanceof IEcosComponent) {
-            return ImageLib.getImage(ImageLib.EXCHANGE);
-        } else if (element instanceof IEcosCategory) {
-            return ImageLib.getImage(ImageLib.EXCHANGE);
-        } else if (element instanceof IndicatorCategory) {
-            return ImageLib.getImage(ImageLib.IND_CATEGORY);
-        } else if (element instanceof IndicatorDefinition) {
-            return ImageLib.getImage(ImageLib.IND_DEFINITION);
-        } else if (element instanceof TdView) {
-            return ImageLib.getImage(ImageLib.VIEW);
-        } else if (element instanceof TdXmlSchema) {
-            return ImageLib.getImage(ImageLib.XML_DOC);
-        } else if (element instanceof TdXmlElementType) {
-            return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
-        } else if (element instanceof IRecycleBin) {
-            return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
-        } else
-        // MOD qiongli
-        if (element instanceof DQRecycleBinNode) {
-            DQRecycleBinNode rbn = (DQRecycleBinNode) element;
-            Object obj = rbn.getObject();
-            // MOD qiongli 2010-10-8,bug 15674
-            if (obj instanceof Property) {
-                Property property = (Property) obj;
-                Item item = property.getItem();
-                if (item instanceof TDQAnalysisItem) {
-                    IFile file = PropertyHelper.getItemFile(property);
-                    Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
-                    ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
-                    analysisHandler.setAnalysis(analysis);
-                    if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
-                        if (!analysisHandler.getResultMetadata().isLastRunOk()) {
-                            return ImageLib.createErrorIcon(ImageLib.ANALYSIS_OBJECT).createImage();
-                        } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
-                            return ImageLib.createInvalidIcon(ImageLib.ANALYSIS_OBJECT).createImage();
-                        }
-                    }
-                    return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
-                } else if (item instanceof TDQReportItem) {
-                    return ImageLib.getImage(ImageLib.REPORT_OBJECT);
-                } else if (item instanceof TDQPatternItem) {
-                    return ImageLib.getImage(ImageLib.PATTERN_REG);
-                } else if (item instanceof TDQBusinessRuleItem) {
-                    return ImageLib.getImage(ImageLib.DQ_RULE);
-                } else if (item instanceof TDQIndicatorDefinitionItem) {
-                    return ImageLib.getImage(ImageLib.IND_DEFINITION);
-                } else if (item instanceof MDMConnectionItem) {
-                    return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-                } else if (item instanceof ConnectionItem) {
-                    return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-                }
-            } else if (obj instanceof IFolder) {
-                return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-            }
-        } else if (element instanceof IRepositoryNode) {
+        // if (element instanceof IFolderNode) {
+        // return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+        // } else if (element instanceof TdColumn) {
+        // if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
+        // // get the icon for primary key
+        // return ImageLib.getImage(ImageLib.PK_COLUMN);
+        // }
+        // } else if (element instanceof IEcosComponent) {
+        // return ImageLib.getImage(ImageLib.EXCHANGE);
+        // } else if (element instanceof IEcosCategory) {
+        // return ImageLib.getImage(ImageLib.EXCHANGE);
+        // } else if (element instanceof IndicatorCategory) {
+        // return ImageLib.getImage(ImageLib.IND_CATEGORY);
+        // } else if (element instanceof IndicatorDefinition) {
+        // return ImageLib.getImage(ImageLib.IND_DEFINITION);
+        // } else if (element instanceof TdView) {
+        // return ImageLib.getImage(ImageLib.VIEW);
+        // } else if (element instanceof TdXmlSchema) {
+        // return ImageLib.getImage(ImageLib.XML_DOC);
+        // } else if (element instanceof TdXmlElementType) {
+        // return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
+        // } else if (element instanceof IRecycleBin) {
+        // return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
+        // } else
+        // // MOD qiongli
+        // if (element instanceof DQRecycleBinNode) {
+        // DQRecycleBinNode rbn = (DQRecycleBinNode) element;
+        // Object obj = rbn.getObject();
+        // // MOD qiongli 2010-10-8,bug 15674
+        // if (obj instanceof Property) {
+        // Property property = (Property) obj;
+        // Item item = property.getItem();
+        // if (item instanceof TDQAnalysisItem) {
+        // IFile file = PropertyHelper.getItemFile(property);
+        // Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
+        // ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
+        // analysisHandler.setAnalysis(analysis);
+        // if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
+        // if (!analysisHandler.getResultMetadata().isLastRunOk()) {
+        // return ImageLib.createErrorIcon(ImageLib.ANALYSIS_OBJECT).createImage();
+        // } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
+        // return ImageLib.createInvalidIcon(ImageLib.ANALYSIS_OBJECT).createImage();
+        // }
+        // }
+        // return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+        // } else if (item instanceof TDQReportItem) {
+        // return ImageLib.getImage(ImageLib.REPORT_OBJECT);
+        // } else if (item instanceof TDQPatternItem) {
+        // return ImageLib.getImage(ImageLib.PATTERN_REG);
+        // } else if (item instanceof TDQBusinessRuleItem) {
+        // return ImageLib.getImage(ImageLib.DQ_RULE);
+        // } else if (item instanceof TDQIndicatorDefinitionItem) {
+        // return ImageLib.getImage(ImageLib.IND_DEFINITION);
+        // } else if (item instanceof MDMConnectionItem) {
+        // return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+        // } else if (item instanceof ConnectionItem) {
+        // return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+        // }
+        // } else if (obj instanceof IFolder) {
+        // return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+        // }
+        // } else if (element instanceof MDMConnection) {
+        // return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+        // } else
+        if (element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
             IRepositoryViewObject viewObject = node.getObject();
             ENodeType type = node.getType();
@@ -199,8 +180,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 }
             }
-        } else if (element instanceof MDMConnection) {
-            return ImageLib.getImage(ImageLib.MDM_CONNECTION);
         }
         // ~
 
@@ -208,10 +187,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
     }
 
     public String getText(Object element) {
-        String tableOwner = null;
-        if (element instanceof ModelElement) {
-            tableOwner = ColumnSetHelper.getTableOwner((ModelElement) element);
-        }
+        // String tableOwner = null;
+        // if (element instanceof ModelElement) {
+        // tableOwner = ColumnSetHelper.getTableOwner((ModelElement) element);
+        // }
         // if (element instanceof AbstractFolderNode) {
         // if (((IFolderNode) element).getChildren() != null) {
         //                return ((IFolderNode) element).getName() + "(" + ((IFolderNode) element).getChildren().length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -284,6 +263,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return ((DBViewFolderRepNode) node).getNodeName();
             } else if (node instanceof DBColumnFolderRepNode) {
                 return ((DBColumnFolderRepNode) node).getNodeName();
+            } else if (node instanceof SourceFileRepNode) {
+                return ((SourceFileRepNode) node).getLabel();
             }
             return node.getObject().getLabel();
         }

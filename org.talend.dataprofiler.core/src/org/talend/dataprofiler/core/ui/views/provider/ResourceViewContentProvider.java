@@ -120,12 +120,13 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (element instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) element;
                 IRepositoryViewObject viewObject = node.getObject();
-                if (viewObject.getLabel().equals(EResourceConstant.DATA_PROFILING.getName())) {
+                String label = viewObject == null ? null : viewObject.getLabel();
+                if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
                     List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                     resContants.add(EResourceConstant.ANALYSIS);
                     resContants.add(EResourceConstant.REPORTS);
                     instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (viewObject.getLabel().equals(EResourceConstant.LIBRARIES.getName())) {
+                } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
                     List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                     resContants.add(EResourceConstant.EXCHANGE);
                     resContants.add(EResourceConstant.INDICATORS);
@@ -134,19 +135,19 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     resContants.add(EResourceConstant.RULES);
                     resContants.add(EResourceConstant.SOURCE_FILES);
                     instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (viewObject.getLabel().equals(EResourceConstant.INDICATORS.getName())) {
+                } else if (EResourceConstant.INDICATORS.getName().equals(label)) {
                     List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                     resContants.add(EResourceConstant.SYSTEM_INDICATORS);
                     resContants.add(EResourceConstant.USER_DEFINED_INDICATORS);
                     instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (viewObject.getLabel().equals(EResourceConstant.PATTERNS.getName())) {
+                } else if (EResourceConstant.PATTERNS.getName().equals(label)) {
                     List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                     resContants.add(EResourceConstant.PATTERN_REGEX);
                     resContants.add(EResourceConstant.PATTERN_SQL);
                     instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (viewObject.getLabel().equals(EResourceConstant.RULES.getName())) {
+                } else if (EResourceConstant.RULES.getName().equals(label)) {
                     instance.createRepositoryNodeSystemFolder(folderHelper, node, EResourceConstant.RULES_SQL);
-                } else if (viewObject.getLabel().equals(EResourceConstant.METADATA.getName())) {
+                } else if (EResourceConstant.METADATA.getName().equals(label)) {
                     List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                     resContants.add(EResourceConstant.DB_CONNECTIONS);
                     resContants.add(EResourceConstant.MDM_CONNECTIONS);

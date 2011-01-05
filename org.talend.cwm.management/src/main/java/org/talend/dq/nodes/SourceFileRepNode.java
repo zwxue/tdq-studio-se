@@ -13,6 +13,7 @@
 package org.talend.dq.nodes;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.repository.model.RepositoryNode;
 
 
@@ -29,7 +30,10 @@ public class SourceFileRepNode extends RepositoryNode {
      */
     public SourceFileRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
+    public String getLabel() {
+        TDQSourceFileItem item = (TDQSourceFileItem) this.getObject().getProperty().getItem();
+        return item.getName() + "." + item.getExtension();
+    }
 }

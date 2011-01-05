@@ -22,8 +22,8 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -47,41 +47,25 @@ public class SourceFileFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
-        ERepositoryObjectType contentType = this.getContentType();
         try {
-            RootContainer<String, IRepositoryViewObject> sourceFiles = ProxyRepositoryFactory.getInstance().getSourceFiles(
-                    contentType);
-            fetchRepositoryNodeByFolder(sourceFiles, contentType, fetchNodeByFolder);
+            RootContainer<String, IRepositoryViewObject> sourceFiles = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+            // sub folders
+            for (Container<String, IRepositoryViewObject> container : sourceFiles.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_SOURCE_FILES);
+                super.getChildren().add(new SourceFileSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER));
+            }
+            // source files
+            for (IRepositoryViewObject viewObject : sourceFiles.getMembers()) {
+                if (!viewObject.isDeleted()) {
+                    SourceFileRepNode repNode = new SourceFileRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    viewObject.setRepositoryNode(repNode);
+                    super.getChildren().add(repNode);
+                }
+            }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-
-        return fetchNodeByFolder.getChildren();
-    }
-
-    public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,
-            RepositoryNode node) {
-        RepositoryNode parent = node;
-        for (Object object : patterns.getSubContainer()) {
-            Container container = (Container) object;
-            Property property = (Property) container.getProperty();
-            // Item item = property.getItem();
-            ERepositoryObjectType itemType = ERepositoryObjectType.getTypeFromKey(property.getLabel());
-            Folder folder = new Folder(((Property) property), itemType);
-            SourceFileSubFolderNode childNodeFolder = new SourceFileSubFolderNode(folder, parent, ENodeType.SIMPLE_FOLDER);
-            parent.getChildren().add(childNodeFolder);
-        }
-        // not folder or folders have no subFolder
-        for (Object obj : patterns.getMembers()) {
-            RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
-            if (!viewObject.isDeleted()) {
-                SourceFileRepNode repNode = new SourceFileRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-                viewObject.setRepositoryNode(repNode);
-                parent.getChildren().add(repNode);
-
-            }
-        }
-        return parent;
+        return super.getChildren();
     }
 }

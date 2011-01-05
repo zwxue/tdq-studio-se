@@ -25,6 +25,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -59,29 +60,7 @@ public final class WorkbenchUtils {
     }
 
     public static IPath getPath(RepositoryNode node) {
-        if (node == null) {
-            return null;
-        }
-        if (node.isBin()) {
-            return new Path(""); //$NON-NLS-1$
-        }
-        if (node.getType() == null) {
-            return null;
-        }
-        switch (node.getType()) {
-        case SYSTEM_FOLDER:
-            ERepositoryObjectType contentType = node.getContentType();
-            if (contentType == null) {
-                Item item = node.getObject().getProperty().getItem();
-                contentType = ERepositoryObjectType.getItemType(item);
-            }
-            return new Path(ERepositoryObjectType.getFolderName(contentType)); //$NON-NLS-1$
-        case SIMPLE_FOLDER:
-            String label = node.getObject().getProperty().getLabel();
-            return getPath(node.getParent()).append(label);
-        default:
-        }
-        return getPath(node.getParent());
+        return RepositoryNodeHelper.getPath(node);
     }
 
     public static IPath getPath(RepositoryViewObject viewObject) {

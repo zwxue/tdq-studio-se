@@ -140,6 +140,36 @@ public final class ResourceService {
     }
 
     /**
+     * DOC xqliu Comment method "isSubFolder".
+     * 
+     * @param parentPath
+     * @param subPath
+     * @return
+     */
+    public static boolean isSubFolder(IPath parentPath, IPath subPath) {
+        return isSubFolder(parentPath, subPath, true);
+    }
+
+    /**
+     * DOC xqliu Comment method "isSubFolder".
+     * 
+     * @param parentPath
+     * @param subPath
+     * @param true2SamePath
+     * @return
+     */
+    public static boolean isSubFolder(IPath parentPath, IPath subPath, boolean true2SamePath) {
+        assert parentPath != null;
+        assert subPath != null;
+
+        if (parentPath.toOSString().equals(subPath.toOSString())) {
+            return true2SamePath;
+        }
+
+        return parentPath.isPrefixOf(subPath);
+    }
+
+    /**
      * DOC bZhou Comment method "isSubFolder".
      * 
      * @param parentFolder

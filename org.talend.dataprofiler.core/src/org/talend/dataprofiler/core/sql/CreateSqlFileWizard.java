@@ -13,15 +13,23 @@
 package org.talend.dataprofiler.core.sql;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.VersionUtils;
+import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.properties.ByteArray;
+import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.analysis.parameters.SqlFileParameter;
-import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -69,17 +77,46 @@ public class CreateSqlFileWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-        IPath absolutePath = new Path(parameter.getFolderProvider().getFolder().getAbsolutePath());
-        String portableString = absolutePath.append(parameter.getFileName()).addFileExtension("sql").toPortableString(); //$NON-NLS-1$
-        sqlFile = new File(portableString);
+        IPath path = WorkspaceUtils.fileToIFile(new File(parameter.getFolderProvider().getFolder().getPath())).getFullPath()
+                .makeRelativeTo(ResourceManager.getSourceFileFolder().getFullPath());
+
+        Property property = PropertiesFactory.eINSTANCE.createProperty();
+        property.setVersion(VersionUtils.DEFAULT_VERSION);
+        property.setStatusCode(""); //$NON-NLS-1$
+        property.setLabel(parameter.getFileName());
+
+        TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
+                .createTDQSourceFileItem();
+        sourceFileItem.setProperty(property);
+        sourceFileItem.setName(parameter.getFileName());
+        sourceFileItem.setExtension("sql"); //$NON-NLS-1$
+        // set empty content
+        ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
+        byteArray.setInnerContent("".getBytes()); //$NON-NLS-1$
+        sourceFileItem.setContent(byteArray);
+        
+        IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
         try {
-            sqlFile.createNewFile();
-            ProxyRepositoryManager.getInstance().save();
+            property.setId(repositoryFactory.getNextId());
+            repositoryFactory.create(sourceFileItem, path);
+            this.sqlFile = getCreatedSqlFile(sourceFileItem, path);
             return true;
-        } catch (IOException e) {
-            log.error(e, e);
+        } catch (PersistenceException e) {
+            ExceptionHandler.process(e);
         }
         return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "getCreatedSqlFile".
+     * 
+     * @param sourceFileItem
+     * @param path
+     * @return
+     */
+    private File getCreatedSqlFile(TDQSourceFileItem sourceFileItem, IPath path) {
+        return ResourceManager.getSourceFileFolder().getRawLocation().append(path)
+                .append(sourceFileItem.getName() + "_0.1." + sourceFileItem.getExtension()).toFile(); //$NON-NLS-1$
     }
 
     /**

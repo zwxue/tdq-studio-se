@@ -16,8 +16,6 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
@@ -27,6 +25,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
@@ -80,16 +79,17 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
         WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), fileWizard);
         fileWizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
-            try {
-                folder.refreshLocal(IResource.DEPTH_INFINITE, null);
-            } catch (CoreException e) {
-                log.error(e, e);
-            }
+            // try {
+            // folder.refreshLocal(IResource.DEPTH_INFINITE, null);
+            // } catch (CoreException e) {
+            // log.error(e, e);
+            // }
 
             try {
-                ap
-                        .openEditor(new SQLEditorInput(fileWizard.getSqlFile()),
-                                "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
+                CorePlugin.getDefault().refreshWorkSpace();
+                CorePlugin.getDefault().refreshDQView();
+
+                ap.openEditor(new SQLEditorInput(fileWizard.getSqlFile()), "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
             } catch (PartInitException e) {
                 log.error(e, e);
             }
