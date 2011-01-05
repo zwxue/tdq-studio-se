@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 
@@ -47,8 +48,8 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
 
     public String getColumnText(Object element, int columnIndex) {
         String text = PluginConstant.EMPTY_STRING;
-        if (element instanceof SchemaIndicator) {
-            SchemaIndicator indicator = (SchemaIndicator) element;
+        if (element instanceof OverviewIndUIElement) {
+            SchemaIndicator indicator = (SchemaIndicator) ((OverviewIndUIElement) element).getOverviewIndicator();
             switch (columnIndex) {
             case 0:
                 text = indicator.getAnalyzedElement().getName();
@@ -61,16 +62,16 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
             }
             return getOtherColumnText(columnIndex, indicator);
         }
-
         return text;
     }
 
     protected abstract String getOtherColumnText(int columnIndex, SchemaIndicator schemaIndicator);
 
     public Image getColumnImage(Object element, int columnIndex) {
-        if (element instanceof SchemaIndicator && !(element instanceof CatalogIndicator) && columnIndex == 0) {
+        if (((OverviewIndUIElement) element).getOverviewIndicator() instanceof SchemaIndicator
+                && !(element instanceof CatalogIndicator) && columnIndex == 0) {
             return CWMImageEnum.Schema.getImg();
-        } else if (element instanceof CatalogIndicator && columnIndex == 0) {
+        } else if (((OverviewIndUIElement) element).getOverviewIndicator() instanceof CatalogIndicator && columnIndex == 0) {
             return CWMImageEnum.Catalog.getImg();
         } else {
             return null;
@@ -85,8 +86,8 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
     }
 
     public Color getBackground(Object element, int columnIndex) {
-        if (element instanceof SchemaIndicator) {
-            SchemaIndicator indicator = (SchemaIndicator) element;
+        if (element instanceof OverviewIndUIElement) {
+            SchemaIndicator indicator = (SchemaIndicator) ((OverviewIndUIElement) element).getOverviewIndicator();
             if (indicator.getTableRowCount() == 0) {
                 return zeroRowColor;
             }

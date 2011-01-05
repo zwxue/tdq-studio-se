@@ -79,6 +79,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataprofiler.core.model.SqlExplorerBridge;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
@@ -217,7 +218,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         public void selectionChanged(SelectionChangedEvent event) {
             StructuredSelection selection = (StructuredSelection) event.getSelection();
-            currentSelectionSchemaIndicator = (SchemaIndicator) selection.getFirstElement();
+            OverviewIndUIElement firstElement = (OverviewIndUIElement) selection.getFirstElement();
+            currentSelectionSchemaIndicator = (SchemaIndicator) firstElement.getOverviewIndicator();
             if (currentSelectionSchemaIndicator == null) {
                 return;
             }
@@ -339,8 +341,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     private void createAnalysisParamSection(Composite topComp) {
-        analysisParamSection = createSection(form, topComp, DefaultMessagesImpl
-                .getString("ConnectionMasterDetailsPage.analysisParameter")); //$NON-NLS-1$
+        analysisParamSection = createSection(form, topComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisParameter")); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(2, false));
         Label tableFilterLabel = new Label(sectionClient, SWT.None);
@@ -421,8 +423,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     private void createAnalysisSummarySection(Composite topComp) {
-        summarySection = this.createSection(form, topComp, DefaultMessagesImpl
-                .getString("ConnectionMasterDetailsPage.analysisSummary")); //$NON-NLS-1$
+        summarySection = this.createSection(form, topComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisSummary")); //$NON-NLS-1$
         sumSectionClient = toolkit.createComposite(summarySection);
         sumSectionClient.setLayout(new GridLayout(2, false));
         refreshSumSection();
@@ -539,8 +541,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private AbstractStatisticalViewerProvider provider;
 
     private void createStatisticalSection(Composite topComp) {
-        statisticalSection = this.createSection(form, topComp, DefaultMessagesImpl
-                .getString("ConnectionMasterDetailsPage.statisticalinformations"), null); //$NON-NLS-1$
+        statisticalSection = this.createSection(form, topComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.statisticalinformations"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
         sectionClient.setLayout(new GridLayout());
 
@@ -637,7 +639,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * DOC qzhang Comment method "doSetInput".
      */
     public void doSetInput() {
-        List<CatalogIndicator> indicatorList = null;
+        List<OverviewIndUIElement> indicatorList = null;
         if (this.analysis.getResults().getIndicators().size() > 0) {
             indicatorList = getCatalogIndicators();
             if (indicatorList.size() == 0) {
@@ -652,7 +654,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 // ~
             }
         } else {
-            indicatorList = new ArrayList<CatalogIndicator>();
+            indicatorList = new ArrayList<OverviewIndUIElement>();
         }
     }
 
@@ -661,7 +663,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * 
      * @return
      */
-    protected abstract List<CatalogIndicator> getCatalogIndicators();
+    protected abstract List<OverviewIndUIElement> getCatalogIndicators();
 
     protected abstract List<SchemaIndicator> getSchemaIndicators();
 
@@ -916,7 +918,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         tableOfCatalogOrSchemaViewer.getTable().setMenu(null);
         tableOfCatalogOrSchemaViewer.setInput(indicatorTableList);
         List<ViewIndicator> indicatorViewList = (List<ViewIndicator>) schemaIndicator.getViewIndicators();
-        viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
+
+        viewOfCatalogOrSchemaViewer.setInput(wapperInput(indicatorViewList));
         // MOD xqliu 2009-11-05 bug 9521
         tableAndViewComposite.pack();
         statisticalSection.pack();
@@ -924,6 +927,16 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // ~
         form.reflow(true);
 
+    }
+
+    /**
+     * DOC klliu Comment method "wapperInput".
+     * 
+     * @param indicatorViewList
+     * @return
+     */
+    private OverviewIndUIElement wapperInput(List<ViewIndicator> indicatorViewList) {
+        return null;
     }
 
     private void createSorterColumns(final TableViewer tableViewer, String[] columnTexts, ViewerSorter[][] sorters,

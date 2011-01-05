@@ -12,19 +12,24 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.schema;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.SchemaContentProvider;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
-import orgomg.cwm.objectmodel.core.Package;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -62,13 +67,16 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
             public void selectionChanged(SelectionChangedEvent event) {
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 PackagesAnalyisParameter schemaPanameter = (PackagesAnalyisParameter) getConnectionParams();
-                if (object instanceof Schema) {
-                    Schema schema = (Schema) object;
+                List<RepositoryNode> nodes = new ArrayList<RepositoryNode>();
+                if (object instanceof RepositoryNode) {
+                    DBSchemaRepNode catalogNode = (DBSchemaRepNode) object;
+                    Schema schema = ((MetadataSchemaRepositoryObject) catalogNode.getObject()).getSchema();
                     Connection tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
                             .doSwitch(schema));
+                    nodes.add(catalogNode);
                     if (tdProvider != null && schemaPanameter != null) {
                         schemaPanameter.setTdDataProvider(tdProvider);
-                        schemaPanameter.setPackages(new Package[] { SwitchHelpers.PACKAGE_SWITCH.doSwitch(schema) });
+                        schemaPanameter.setPackages(nodes);
                     }
                     setPageComplete(true);
                 } else {

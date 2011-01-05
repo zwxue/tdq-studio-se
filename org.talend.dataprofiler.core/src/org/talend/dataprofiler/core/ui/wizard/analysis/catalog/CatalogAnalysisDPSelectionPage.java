@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.catalog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -19,13 +22,15 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.CatalogContentProvider;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
-import orgomg.cwm.objectmodel.core.Package;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Catalog;
 
 /**
@@ -73,14 +78,17 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 try {
                     Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                     PackagesAnalyisParameter catalogPanameter = (PackagesAnalyisParameter) getConnectionParams();
-                    if (object instanceof Catalog) {
-                        Catalog catalog = (Catalog) object;
+                    List<RepositoryNode> nodes = new ArrayList<RepositoryNode>();
+                    if (object instanceof RepositoryNode) {
+                        DBCatalogRepNode catalogNode = (DBCatalogRepNode) object;
+                        Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
                         Connection tdProvider = ConnectionHelper
                                 .getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
                                 .doSwitch(catalog));
+                        nodes.add(catalogNode);
                         if (tdProvider != null && catalogPanameter != null) {
                             catalogPanameter.setTdDataProvider(tdProvider);
-                            catalogPanameter.setPackages(new Package[] { SwitchHelpers.PACKAGE_SWITCH.doSwitch(catalog) });
+                            catalogPanameter.setPackages(nodes);
                         }
                         setPageComplete(true);
                     } else {

@@ -180,10 +180,12 @@ public class DQRespositoryView extends CommonNavigator {
         SQLExplorerPlugin.getDefault().initAllDrivers();
 
         List<IRepositoryNode> connNodes = DQStructureManager.getInstance().getConnectionRepositoryNodes();
-        for (IRepositoryNode connRepNode : connNodes) {
-            ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
-            CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connItem.getConnection());
-         }
+        if (connNodes != null && connNodes.size() > 0) {
+            for (IRepositoryNode connRepNode : connNodes) {
+                ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
+                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connItem.getConnection());
+            }
+        }
 
         IFile defFile = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);
         if (!defFile.exists()) {
@@ -332,8 +334,8 @@ public class DQRespositoryView extends CommonNavigator {
                                 indicatorDefinition.getLabel());
                         IndicatorEditorInput input = new IndicatorEditorInput(indicatorDefinition);
                         try {
-                            CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,
-                                    IndicatorEditor.class.getName());
+                            CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                                    .openEditor(input, IndicatorEditor.class.getName());
                         } catch (PartInitException e1) {
                             log.error(e1, e1);
                         }

@@ -19,8 +19,8 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -50,7 +50,7 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
     }
 
     @Override
-    protected List<CatalogIndicator> getCatalogIndicators() {
+    protected List<OverviewIndUIElement> getCatalogIndicators() {
         return Collections.emptyList();
     }
 

@@ -26,6 +26,7 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -88,6 +89,8 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
     @Override
     public void openEditor(Item item) {
         AnalysisItemEditorInput analysisEditorInput = new AnalysisItemEditorInput(item);
+        DBConnectionRepNode connectionRepNode = getParameter().getConnectionRepNode();
+        analysisEditorInput.setConnectionNode(connectionRepNode);
         CorePlugin.getDefault().openEditor(analysisEditorInput, AnalysisEditor.class.getName());
     }
 }

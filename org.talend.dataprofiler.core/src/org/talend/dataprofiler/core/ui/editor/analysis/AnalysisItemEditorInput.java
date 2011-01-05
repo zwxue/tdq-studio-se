@@ -15,14 +15,24 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.nodes.DBConnectionRepNode;
 
 /**
  * DOC klliu Analysis editor input
  */
 public class AnalysisItemEditorInput extends AbstractItemEditorInput {
 
-
     private TDQAnalysisItem item = null;
+
+    private DBConnectionRepNode connectionNode;
+
+    public DBConnectionRepNode getConnectionNode() {
+        return this.connectionNode;
+    }
+
+    public void setConnectionNode(DBConnectionRepNode connectionNode) {
+        this.connectionNode = connectionNode;
+    }
 
     /**
      * DOC klliu AnalysisItemEditorInput constructor comment.

@@ -18,10 +18,15 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ResourceHelper;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -67,13 +72,24 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getCatalogIndicators()
      */
     @Override
-    protected List<CatalogIndicator> getCatalogIndicators() {
+    protected List<OverviewIndUIElement> getCatalogIndicators() {
+        List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         catalogIndicatorList.clear();
+        RepositoryNode connNode = getCurrentRepNodeOnUI();
         for (Indicator indicator : indicators) {
-            catalogIndicatorList.add((CatalogIndicator) indicator);
+            for (IRepositoryNode catalogNode : connNode.getChildren()) {
+                if (ResourceHelper.getUUID(((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog()).equals(
+                        indicator.getAnalyzedElement())) {
+                    OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+                    cataUIEle.setNode(catalogNode);
+                    cataUIEle.setOverviewIndicator(indicator);
+                    cataUIEleList.add(cataUIEle);
+                    break;
+                }
+            }
         }
-        return catalogIndicatorList;
+        return cataUIEleList;
     }
 
     /*

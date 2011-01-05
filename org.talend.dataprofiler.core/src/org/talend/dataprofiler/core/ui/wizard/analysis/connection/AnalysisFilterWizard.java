@@ -15,8 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.connection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
@@ -29,7 +28,6 @@ import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -55,15 +53,17 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
     @Override
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
-        DataManager connection = analysis.getContext().getConnection();
-        DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
-
+        // DOC klliu feature 15750 connection property define
+        // DataManager connection = analysis.getContext().getConnection();
+        // DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+        ConnectionItem connectionItem = (ConnectionItem) getParameter().getConnectionRepNode().getObject().getProperty()
+                .getItem();
         TypedReturnCode<Object> saveCWMFile = super.createAndSaveCWMFile(analysis);
 
         // MOD by hcheng for 7173:Broken dependency between analyses and connection
         if (saveCWMFile.isOk()) {
             // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-            ElementWriterFactory.getInstance().createDataProviderWriter().save((Connection) connection);
+            ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
         }
 
         return saveCWMFile;

@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 
 /**
@@ -47,13 +48,15 @@ public class ViewOfCatalogOrSchemaProvider extends LabelProvider implements ITab
     public String getColumnText(Object element, int columnIndex) {
         String text = PluginConstant.EMPTY_STRING;
         if (element instanceof ViewIndicator) {
-            ViewIndicator indicator = (ViewIndicator) element;
+            OverviewIndUIElement indicatorUIEle = (OverviewIndUIElement) element;
             switch (columnIndex) {
             case 0:
-                text = indicator.getTableName();
+                text = indicatorUIEle.getNode().getLabel();
                 return text;
             case 1:
-                text = PluginConstant.EMPTY_STRING + indicator.getRowCount();
+                if (element instanceof ViewIndicator) {
+                    text = PluginConstant.EMPTY_STRING + ((ViewIndicator) indicatorUIEle).getRowCount();
+                }
                 return text;
             default:
                 break;

@@ -39,7 +39,9 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -85,6 +87,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         return analysis;
     }
 
+    protected RepositoryNode getCurrentRepNodeOnUI() {
+        // MOD klliu 2010-12-10
+        DBConnectionRepNode connectionNode = null;
+        IEditorInput editorInput = getEditor().getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) editorInput;
+            connectionNode = fileEditorInput.getConnectionNode();
+        }
+        return connectionNode;
+    }
     @Override
     public void doSave(IProgressMonitor monitor) {
         ReturnCode rc = canSave();

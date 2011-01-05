@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.connection;
 import java.util.List;
 
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
@@ -24,6 +25,7 @@ import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -53,7 +55,7 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
 
         addPage(new AnalysisMetadataWizardPage());
 
-        if (getParameter().getTdDataProvider() == null) {
+        if (getParameter().getConnectionRepNode() == null) {
             dpSelectionPage = new ConnAnalysisDPSelectionPage();
             addPage(dpSelectionPage);
         }
@@ -67,9 +69,10 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
 
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
         if (getAnalysisBuilder() != null) {
-            Connection tdProvider = getParameter().getTdDataProvider();
+            DBConnectionRepNode connectionRepNode = getParameter().getConnectionRepNode();
+            ConnectionItem item = (ConnectionItem) connectionRepNode.getObject().getProperty().getItem();
+            Connection tdProvider = item.getConnection();
             getAnalysisBuilder().setAnalysisConnection(tdProvider);
-
             ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
             // MOD xqliu 2009-1-21 feature 4715
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
@@ -93,4 +96,35 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
         }
         return analysis;
     }
+    // @Override
+    // public ModelElement initCWMResourceBuilder() {
+    //
+    // Analysis analysis = (Analysis) super.initCWMResourceBuilder();
+    // if (getAnalysisBuilder() != null) {
+    // Connection tdProvider = getParameter().getTdDataProvider();
+    // getAnalysisBuilder().setAnalysisConnection(tdProvider);
+    //
+    // ConnectionIndicator indicator = SchemaFactory.eINSTANCE.createConnectionIndicator();
+    // // MOD xqliu 2009-1-21 feature 4715
+    // DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
+    // indicator.setAnalyzedElement(tdProvider);
+    // List<Schema> tdSchemas = ConnectionHelper.getSchema(tdProvider);
+    // if (tdSchemas.size() != 0) {
+    // addSchemaIndicator(tdSchemas, indicator);
+    // }
+    // List<Catalog> tdCatalogs = ConnectionHelper.getCatalogs(tdProvider);
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
+    // // MOD xqliu 2009-1-21 feature 4715
+    // DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);
+    // createCatalogIndicator.setAnalyzedElement(tdCatalog);
+    // // MOD xqliu 2009-11-30 bug 9114
+    // indicator.addCatalogIndicator(createCatalogIndicator);
+    // // ~
+    // addSchemaIndicator(CatalogHelper.getSchemas(tdCatalog), indicator);
+    // }
+    // getAnalysisBuilder().addElementToAnalyze(tdProvider, indicator);
+    // }
+    // return analysis;
+    // }
 }

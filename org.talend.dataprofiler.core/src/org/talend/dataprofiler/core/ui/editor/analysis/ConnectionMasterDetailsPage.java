@@ -12,15 +12,29 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ResourceHelper;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.model.IProxyRepositoryService;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -30,16 +44,42 @@ import orgomg.cwm.resource.relational.Catalog;
  */
 public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
 
+    private DBConnectionRepNode connectionNode;
+
     public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+
     }
 
+    // protected void fillDataProvider() {
+    // EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
+    // tdDataProvider = null;
+    // if (analysedElements.size() > 0) {
+    // tdDataProvider = (Connection) analysedElements.get(0);
+    // }
+    // }
     protected void fillDataProvider() {
-        EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
-        tdDataProvider = null;
-        if (analysedElements.size() > 0) {
-            tdDataProvider = (Connection) analysedElements.get(0);
+        connectionNode = (DBConnectionRepNode) getCurrentRepNodeOnUI();
+        if (connectionNode != null) {
+            IProxyRepositoryFactory factory = ((IProxyRepositoryService) GlobalServiceRegister.getDefault().getService(
+                    IProxyRepositoryService.class)).getProxyRepositoryFactory();
+            IRepositoryViewObject lastVersion = null;
+            try {
+                lastVersion = factory.getLastVersion(connectionNode.getObject().getId());
+            } catch (PersistenceException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            ConnectionItem item = (ConnectionItem) connectionNode.getObject().getProperty().getItem();
+            tdDataProvider = item.getConnection();
+        } else {
+            EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
+            tdDataProvider = null;
+            if (analysedElements.size() > 0) {
+                tdDataProvider = (Connection) analysedElements.get(0);
+            }
         }
+
     }
 
     protected List<Catalog> getCatalogs() {
@@ -47,14 +87,34 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         return catalogs;
     }
 
-    public List<CatalogIndicator> getCatalogIndicators() {
-        ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
-        return conIndicator.getCatalogIndicators();
-    }
-
     public List<SchemaIndicator> getSchemaIndicators() {
         ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
         return conIndicator.getSchemaIndicators();
+    }
+
+    public List<OverviewIndUIElement> getCatalogIndicators() {
+        ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
+        EList<CatalogIndicator> catalogIndicators = conIndicator.getCatalogIndicators();
+        List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
+        RepositoryNode connNode = getCurrentRepNodeOnUI();
+        for (Indicator indicator : catalogIndicators) {
+            for (IRepositoryNode catalogNode : connNode.getChildren()) {
+                Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
+                String uuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+                boolean equals = ResourceHelper.getUUID(catalog).equals(uuid);
+                if (equals) {
+                    OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+                    cataUIEle.setNode(catalogNode);
+                    cataUIEle.setOverviewIndicator(indicator);
+                    cataUIEleList.add(cataUIEle);
+                    break;
+                }
+            }
+        }
+
+        return cataUIEleList;
+        // ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
+        // return conIndicator.getCatalogIndicators();
     }
 
 }
