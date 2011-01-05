@@ -12,9 +12,13 @@
 // ============================================================================
 package org.talend.dq.analysis.parameters;
 
+import java.util.List;
+
 import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -40,8 +44,28 @@ public class ConnectionParameter {
 
     private EParameterType paramType;
 
+    private DBConnectionRepNode connectionRepNode;
+
+    public DBConnectionRepNode getConnectionRepNode() {
+        return this.connectionRepNode;
+    }
+
+    public void setConnectionRepNode(DBConnectionRepNode connectionRepNode) {
+        this.connectionRepNode = connectionRepNode;
+    }
+
     public ConnectionParameter(EParameterType paramType) {
         this.paramType = paramType;
+    }
+
+    private List<RepositoryNode> packages;
+
+    public List<RepositoryNode> getPackages() {
+        return packages;
+    }
+
+    public void setPackages(List<RepositoryNode> nodes) {
+        this.packages = packages;
     }
 
     public EParameterType getParamType() {

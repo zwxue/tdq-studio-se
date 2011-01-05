@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.analysis.parameters;
 
-import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * The schema/catalog's analyis parameter.
@@ -21,12 +20,5 @@ public class PackagesAnalyisParameter extends AnalysisFilterParameter {
 
     private Package[] packages;
 
-    public Package[] getPackages() {
-        return packages;
-    }
-
-    public void setPackages(Package[] packages) {
-        this.packages = packages;
-    }
 
 }

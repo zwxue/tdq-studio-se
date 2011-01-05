@@ -505,4 +505,6 @@ public abstract class AElementPersistance {
 
         return rc;
     }
+
+    public abstract ReturnCode save(Item item);
 }

@@ -28,6 +28,8 @@ public class AnalysisFilterParameter extends AnalysisParameter {
 
     private Connection tdDataProvider;
 
+
+
     /**
      * Getter for tableFilter.
      * 

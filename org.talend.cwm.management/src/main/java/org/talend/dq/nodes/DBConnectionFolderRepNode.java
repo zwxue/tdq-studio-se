@@ -53,7 +53,7 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
         Container container = null;
         try {
             container = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory()
-                    .getMetadataConnection(pManager.getCurrentProject());
+                    .getMetadataConnection(pManager.getCurrentProject(), true);
             fetchRepositoryNodeByFolder(container, contentType, fetchNodeByFolder);
         } catch (PersistenceException e) {
             log.error(e, e);
@@ -82,10 +82,10 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
         }
         // not folder or folders have no subFolder
         for (Object obj : patterns.getMembers()) {
-            RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
+            RepositoryViewObject viewObject = (RepositoryViewObject) obj;
             if (!viewObject.isDeleted()) {
                 DBConnectionRepNode repNode = new DBConnectionRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-                viewObject.setRepositoryNode(repNode);
+                // viewObject.setRepositoryNode(repNode);
                 parent.getChildren().add(repNode);
 
             }

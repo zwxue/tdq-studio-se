@@ -82,7 +82,7 @@ public class AnalysisFolderRepNode extends RepositoryNode {
         }
         // not folder or folders have no subFolder
         for (Object obj : patterns.getMembers()) {
-            RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
+            RepositoryViewObject viewObject = (RepositoryViewObject) obj;
             if (!viewObject.isDeleted()) {
                 AnalysisRepNode repNode = new AnalysisRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
                 viewObject.setRepositoryNode(repNode);

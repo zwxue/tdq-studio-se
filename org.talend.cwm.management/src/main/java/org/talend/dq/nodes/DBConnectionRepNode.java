@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -26,7 +27,6 @@ import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
-
 
 /**
  * DOC klliu Database connection repository node displayed on repository view (UI).
@@ -52,8 +52,8 @@ public class DBConnectionRepNode extends RepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         // Retrieve catalogs/schemes.
-        EList<Package> dataPackage = ((ConnectionItem) getObject().getProperty().getItem()).getConnection()
-                .getDataPackage();
+        Connection connection = ((ConnectionItem) getObject().getProperty().getItem()).getConnection();
+        EList<Package> dataPackage = connection.getDataPackage();
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
             if (pack instanceof Schema) {
