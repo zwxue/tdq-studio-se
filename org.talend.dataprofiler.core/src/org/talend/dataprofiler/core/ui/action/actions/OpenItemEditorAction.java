@@ -15,15 +15,18 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
@@ -36,8 +39,15 @@ import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisParameters;
+import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC mzhao Open TDQ items editor action.
@@ -70,6 +80,21 @@ public class OpenItemEditorAction extends Action {
             editorID = ConnectionEditor.class.getName();
         } else if (ERepositoryObjectType.TDQ_ANALYSIS.getKey().equals(key)) {
             editorInput = new AnalysisItemEditorInput(item);
+            Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
+            AnalysisParameters parameters = analysis.getParameters();
+            AnalysisType analysisType = parameters.getAnalysisType();
+            boolean equals = analysisType.equals(AnalysisType.CONNECTION);
+            if (equals) {
+                EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+                Connection conn = null;
+                if (analysedElements.size() > 0) {
+                    conn = (Connection) analysedElements.get(0);
+                }
+                // FIXME User UUID to find the right conn repository node.
+                String label = conn.getLabel();
+                IRepositoryNode connectionRepositoryNode = DQStructureManager.getInstance().getConnectionRepositoryNode(label);
+                ((AnalysisItemEditorInput) editorInput).setConnectionNode((DBConnectionRepNode) connectionRepositoryNode);
+            }
             editorID = AnalysisEditor.class.getName();
         } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
             editorInput = new IndicatorDefinitionItemEditorInput(item);
