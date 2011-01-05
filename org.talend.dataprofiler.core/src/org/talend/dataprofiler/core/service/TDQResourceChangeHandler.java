@@ -83,14 +83,14 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             } else if (eObject instanceof MDMConnection) {
 
                 // ProxyRepositoryViewObject.registerURI((MDMConnection) eObject, toBeUnloadedResource.getURI());
-                if (xmiResourceManager != null) {
-                    try {
-                        xmiResourceManager.saveResource(toBeUnloadedResource);
-                    } catch (PersistenceException e) {
-                        log.error(e, e);
-                    }
-
-                }
+                // if (xmiResourceManager != null) {
+                // try {
+                // xmiResourceManager.saveResource(toBeUnloadedResource);
+                // } catch (PersistenceException e) {
+                // log.error(e, e);
+                // }
+                //
+                // }
             }
 
             // } catch (PersistenceException e) {
@@ -208,7 +208,8 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                         .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_PATTERN_ELEMENT, false,
                                 fileExtension);
                 Pattern pattern = ((TDQPatternItem) item).getPattern();
-                PatternWriter createPatternWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createPatternWriter();
+                PatternWriter createPatternWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance()
+                        .createPatternWriter();
                 createPatternWriter.addResourceContent(itemResource, pattern);
                 // createPatternWriter.addDependencies(pattern);
                 break;
