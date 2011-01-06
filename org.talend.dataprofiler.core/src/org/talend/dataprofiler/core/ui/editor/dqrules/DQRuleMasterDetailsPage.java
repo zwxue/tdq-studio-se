@@ -42,11 +42,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -124,8 +126,14 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
-        BusinessRuleItemEditorInput input = (BusinessRuleItemEditorInput) editor.getEditorInput();
-        this.currentModelElement = input.getTDQBusinessRuleItem().getDqrule();
+        IEditorInput editorInput = editor.getEditorInput();
+        if (editorInput instanceof FileEditorInput) {
+            FileEditorInput input = (FileEditorInput) editor.getEditorInput();
+            this.currentModelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(input.getFile());
+        } else if (editorInput instanceof BusinessRuleItemEditorInput) {
+            BusinessRuleItemEditorInput input = (BusinessRuleItemEditorInput) editor.getEditorInput();
+            this.currentModelElement = input.getTDQBusinessRuleItem().getDqrule();
+        }
         whereRule = (WhereRule) this.currentModelElement;
         return whereRule;
     }

@@ -29,7 +29,7 @@ public class DQRuleEditor extends CommonFormEditor {
 
     private IFormPage masterPage;
 
-    private final static String ID = "DQRuleEditor.masterPage";//$NON-NLS-1$
+    private static final String ID = "DQRuleEditor.masterPage";//$NON-NLS-1$
 
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;

@@ -29,7 +29,5 @@ public class RuleRepNode extends RepositoryNode {
      */
     public RuleRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
-
 }

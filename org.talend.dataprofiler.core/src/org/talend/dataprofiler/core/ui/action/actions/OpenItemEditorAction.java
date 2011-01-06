@@ -106,7 +106,8 @@ public class OpenItemEditorAction extends Action {
             editorInput = new PatternItemEditorInput(item);
             editorID = PatternEditor.class.getName();
         } else if (ERepositoryObjectType.TDQ_JRXMLTEMPLATE.getKey().equals(key)
-                || ERepositoryObjectType.TDQ_SOURCE_FILES.getKey().equals(key)) {
+                || ERepositoryObjectType.TDQ_SOURCE_FILES.getKey().equals(key)
+                || ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key)) {
             IPath append = WorkbenchUtils.getFilePath((RepositoryNode) reposViewObj.getRepositoryNode());
             fileEditorInput = ResourceManager.getRootProject().getFile(append);
         }

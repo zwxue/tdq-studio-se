@@ -154,10 +154,8 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         Resource itemResource = null;
         try {
             switch (classID) {
-
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_ANALYSIS_ITEM:
                 fileExtension = FileConstants.ANA_EXTENSION;
-
                 itemResource = ProxyRepositoryFactory
                         .getInstance()
                         .getRepositoryFactoryFromProvider()
@@ -219,7 +217,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                         .getInstance()
                         .getRepositoryFactoryFromProvider()
                         .getResourceManager()
-                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_RULES, false,
+                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_RULES_SQL, false,
                                 fileExtension);
                 DQRule dqrule = ((TDQBusinessRuleItem) item).getDqrule();
                 DQRuleWriter createdRuleWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createdRuleWriter();
@@ -246,6 +244,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                                 fileExtension);
                 itemResource.getContents().add(((TDQFileItem) item).getContent());
                 break;
+            default:
             }
 
         } catch (PersistenceException e) {

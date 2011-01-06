@@ -25,6 +25,7 @@ import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -33,9 +34,13 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.IndicatorDefinitionRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
+import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -265,6 +270,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return ((DBColumnFolderRepNode) node).getNodeName();
             } else if (node instanceof SourceFileRepNode) {
                 return ((SourceFileRepNode) node).getLabel();
+            }
+            if (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof IndicatorDefinitionRepNode
+                    || node instanceof PatternRepNode || node instanceof RuleRepNode) {
+                return node.getObject().getLabel() + " " + node.getObject().getVersion();
             }
             return node.getObject().getLabel();
         }

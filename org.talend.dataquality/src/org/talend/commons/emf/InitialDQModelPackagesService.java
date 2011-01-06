@@ -56,7 +56,7 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
 
             @Override
             public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
-                return ERepositoryObjectType.TDQ_RULES;
+                return ERepositoryObjectType.TDQ_RULES_SQL;
             }
 
             @Override

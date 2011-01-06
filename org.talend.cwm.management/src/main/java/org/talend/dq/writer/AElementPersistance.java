@@ -32,10 +32,12 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
+import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
@@ -48,6 +50,7 @@ import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
@@ -71,8 +74,6 @@ public abstract class AElementPersistance {
     protected EMFSharedResources util = EMFSharedResources.getInstance();
 
     /**
-     * DOC bZhou Comment method "create".
-     * 
      * Persist an element in the specified folder, the file name is created logically by the name of this element.
      * 
      * @param element
@@ -89,17 +90,18 @@ public abstract class AElementPersistance {
 
             IPath itemPath = folder.getFullPath();
             // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()\
-            int segmentCount = itemPath.segmentCount();
+            // int segmentCount = itemPath.segmentCount();
             Property property = initProperty(element);
             Item item = property.getItem();
             try {
-                if (item instanceof TDQBusinessRuleItem) {
-                    ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(segmentCount - 1));
-                } else if (item instanceof ConnectionItem) {
-                    ProxyRepositoryFactory.getInstance().create(item, Path.EMPTY);
-                } else {
-                    ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(segmentCount - 2));
-                }
+                // if (item instanceof TDQBusinessRuleItem) {
+                // ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(segmentCount - 1));
+                // } else if (item instanceof ConnectionItem) {
+                // ProxyRepositoryFactory.getInstance().create(item, Path.EMPTY);
+                // } else {
+                // ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(segmentCount - 2));
+                // }
+                ProxyRepositoryFactory.getInstance().create(item, getRelativePath(item, itemPath));
                 trc.setObject(item);
                 trc.setOk(Boolean.TRUE);
             } catch (PersistenceException e) {
@@ -131,6 +133,34 @@ public abstract class AElementPersistance {
         }
 
         return trc;
+    }
+
+    /**
+     * DOC xqliu Comment method "getRelativePath".
+     * 
+     * @param item
+     * @param itemPath
+     * @return
+     */
+    private IPath getRelativePath(Item item, IPath itemPath) {
+        if (item instanceof TDQAnalysisItem) {
+            return itemPath.makeRelativeTo(ResourceManager.getAnalysisFolder().getFullPath());
+        } else if (item instanceof TDQReportItem) {
+            return itemPath.makeRelativeTo(ResourceManager.getReportsFolder().getFullPath());
+        } else if (item instanceof TDQJrxmlItem) {
+            return itemPath.makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath());
+        } else if (item instanceof TDQPatternItem) {
+            return itemPath.makeRelativeTo(ResourceManager.getPatternFolder().getFullPath());
+        } else if (item instanceof TDQPatternItem) {
+            return itemPath.makeRelativeTo(ResourceManager.getPatternFolder().getFullPath());
+        } else if (item instanceof TDQBusinessRuleItem) {
+            return itemPath.makeRelativeTo(ResourceManager.getRulesSQLFolder().getFullPath());
+        } else if (item instanceof DatabaseConnectionItem) {
+            return itemPath.makeRelativeTo(ResourceManager.getTDQConnectionFolder().getFullPath());
+        } else if (item instanceof MDMConnectionItem) {
+            return itemPath.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
+        }
+        return Path.EMPTY;
     }
 
     /**
