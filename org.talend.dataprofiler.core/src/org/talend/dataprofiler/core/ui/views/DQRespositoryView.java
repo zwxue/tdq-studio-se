@@ -96,6 +96,7 @@ import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -342,6 +343,11 @@ public class DQRespositoryView extends CommonNavigator {
                     }
                     if (obj instanceof IRepositoryViewObject) {
                         OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject) obj);
+                        openItemEditorAction.run();
+                    }
+                    if (obj instanceof RepositoryNode) {
+                        IRepositoryViewObject viewObject = ((RepositoryNode) obj).getObject();
+                        OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(viewObject);
                         openItemEditorAction.run();
                     }
                 }
