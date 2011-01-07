@@ -63,6 +63,7 @@ import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -116,6 +117,8 @@ public class PatternTestView extends ViewPart {
 
     private PatternMasterDetailsPage editorPage;
 
+    private boolean isJavaEngine = false;
+
     @Override
     public void createPartControl(final Composite parent) {
         ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL);
@@ -134,14 +137,38 @@ public class PatternTestView extends ViewPart {
         composite.setLayout(layout);
         Composite coboCom = new Composite(composite, SWT.NONE);
         layout = new GridLayout();
-        layout.numColumns = 2;
+        layout.numColumns = 3;
         coboCom.setLayout(layout);
         GridData data = new GridData();
         data.horizontalAlignment = GridData.CENTER;
         coboCom.setLayoutData(data);
-        Label dbLabel = new Label(coboCom, SWT.NONE);
-        dbLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Connections")); //$NON-NLS-1$
-        dbLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.databaseExecuted")); //$NON-NLS-1$
+        // MOD qiongli feature 16799: Add java in Pattern Test View
+        Button buttonJava = new Button(coboCom, SWT.RADIO);
+        buttonJava.setText(ExecutionLanguage.JAVA.getLiteral());
+        data = new GridData();
+        data.widthHint = 120;
+        buttonJava.setLayoutData(data);
+        buttonJava.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                isJavaEngine = true;
+                sqlButton.setEnabled(false);
+            }
+
+        });
+        Button buttonSql = new Button(coboCom, SWT.RADIO);
+        buttonSql.setText(DefaultMessagesImpl.getString("PatternTestView.Connections"));
+        buttonSql.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                isJavaEngine = false;
+                sqlButton.setEnabled(true);
+            }
+
+        });//$NON-NLS-1$
+        buttonSql.setSelection(true);
         dbCombo = new CCombo(coboCom, SWT.DROP_DOWN | SWT.BORDER);
         dbCombo.setEditable(false);
         data = new GridData();
@@ -324,42 +351,61 @@ public class PatternTestView extends ViewPart {
      * Test the text by the regular text of regularText.
      */
     private void testRegularText() {
-        for (IRepositoryNode connRepNode : listTdDataProviders) {
-            ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
-            Connection tddataprovider = connItem.getConnection();
-            if (tddataprovider.getName().equals(dbCombo.getText())) {
-                DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
-                String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText
-                        .getText());
-                TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(tddataprovider);
-                try {
-                    if (!rcConn.isOk()) {
-                        throw new DataprofilerCoreException(rcConn.getMessage());
-                    }
-                    java.sql.Connection connection = rcConn.getObject();
-                    Statement createStatement = connection.createStatement();
-                    ResultSet resultSet = createStatement.executeQuery(selectRegexpTestString);
-                    while (resultSet.next()) {
-                        String okString = resultSet.getString(1);
-                        if ("1".equalsIgnoreCase(okString)) { //$NON-NLS-1$
-                            emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
-                            resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
-                            return;
+        // MOD qiongli 2011-1-7.Add java in Pattern Test View
+        if (isJavaEngine) {
+            String regexStr = regularText.getText();
+            if (regexStr.length() >= 2) {
+                regexStr = regexStr.substring(1, regexStr.length() - 1);
+            }
+            boolean flag = java.util.regex.Pattern.matches(regexStr, testText.getText());
+            if (flag) {
+                emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
+                resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
+                return;
+            } else {
+                emoticonLabel.setImage(ImageLib.getImage(ImageLib.EXCLAMATION));
+                resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.nonMatch")); //$NON-NLS-1$
+                return;
+            }
+        } else {
+            for (IRepositoryNode connRepNode : listTdDataProviders) {
+                ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
+                Connection tddataprovider = connItem.getConnection();
+                if (tddataprovider.getName().equals(dbCombo.getText())) {
+                    DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
+                    String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
+                            regularText.getText());
+                    TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(tddataprovider);
+                    try {
+                        if (!rcConn.isOk()) {
+                            throw new DataprofilerCoreException(rcConn.getMessage());
                         }
+                        java.sql.Connection connection = rcConn.getObject();
+                        Statement createStatement = connection.createStatement();
+                        ResultSet resultSet = createStatement.executeQuery(selectRegexpTestString);
+                        while (resultSet.next()) {
+                            String okString = resultSet.getString(1);
+                            if ("1".equalsIgnoreCase(okString)) { //$NON-NLS-1$
+                                emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
+                                resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
+                                return;
+                            }
+                        }
+                        emoticonLabel.setImage(ImageLib.getImage(ImageLib.EXCLAMATION));
+                        resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.nonMatch")); //$NON-NLS-1$
+                        return;
+                    } catch (Exception exception) {
+                        log.error(exception, exception);
+                        MessageBoxExceptionHandler.process(exception, new Shell());
+                        emoticonLabel.setImage(null);
+                        return;
+                    } finally {
+                        ConnectionUtils.closeConnection(rcConn.getObject());
                     }
-                    emoticonLabel.setImage(ImageLib.getImage(ImageLib.EXCLAMATION));
-                    resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.nonMatch")); //$NON-NLS-1$
-                    return;
-                } catch (Exception exception) {
-                    log.error(exception, exception);
-                    MessageBoxExceptionHandler.process(exception, new Shell());
-                    emoticonLabel.setImage(null);
-                    return;
-                } finally {
-                    ConnectionUtils.closeConnection(rcConn.getObject());
                 }
             }
         }
+
         MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED); //$NON-NLS-1$
     }
 
@@ -430,7 +476,13 @@ public class PatternTestView extends ViewPart {
         if (pattern != null) {
             String expressionLanguage = this.regularExpression.getExpression().getLanguage();
             DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
-            if (dbmsLanguage != null && (!dbmsLanguage.getDbmsName().equalsIgnoreCase(expressionLanguage))) {
+            // MOD qiongli 2011-1-7 featrue 16799.
+            boolean isLanguageMatched = false;
+            if (isJavaEngine && expressionLanguage.equals(ExecutionLanguage.JAVA.getLiteral()) || dbmsLanguage != null
+                    && (dbmsLanguage.getDbmsName().equalsIgnoreCase(expressionLanguage))) {
+                isLanguageMatched = true;
+            }
+            if (!isLanguageMatched) {
                 String messageInfo = DefaultMessagesImpl
                         .getString(
                                 "PatternTestView.modifiedTheRegularExpression", expressionLanguage, dbmsLanguage.getDbmsName(), expressionLanguage, expressionLanguage, dbmsLanguage.getDbmsName()); //$NON-NLS-1$
@@ -483,6 +535,10 @@ public class PatternTestView extends ViewPart {
      * @return
      */
     private DbmsLanguage getDbmsLanguage() {
+        // MOD qiongli 2011-1-7
+        if (isJavaEngine) {
+            return null;
+        }
         for (IRepositoryNode connRepNode : listTdDataProviders) {
             ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
             Connection tddataprovider = connItem.getConnection();
