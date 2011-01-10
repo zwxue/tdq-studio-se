@@ -22,8 +22,10 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.application.IActionBarConfigurer;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.service.ICorePerlService;
 import org.talend.core.ui.branding.IActionBarHelper;
 import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.repository.model.IRepositoryNode;
@@ -154,8 +156,12 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * @see org.talend.core.ui.branding.IBrandingConfiguration#getAvailableLanguages()
      */
     public String[] getAvailableLanguages() {
-        String[] languages = { ECodeLanguage.JAVA.getName(), ECodeLanguage.PERL.getName() };
-
+        String[] languages;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ICorePerlService.class)) {
+            languages = new String[] { ECodeLanguage.JAVA.getName(), ECodeLanguage.PERL.getName() };
+        } else {
+            languages = new String[] { ECodeLanguage.JAVA.getName() };
+        }
         return languages;
     }
 
