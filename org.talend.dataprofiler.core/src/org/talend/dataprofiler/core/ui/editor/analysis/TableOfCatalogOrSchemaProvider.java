@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 
 /**
@@ -46,8 +47,8 @@ public class TableOfCatalogOrSchemaProvider extends LabelProvider implements ITa
 
     public String getColumnText(Object element, int columnIndex) {
         String text = PluginConstant.EMPTY_STRING;
-        if (element instanceof TableIndicator) {
-            TableIndicator indicator = (TableIndicator) element;
+        if (element instanceof OverviewIndUIElement) {
+            TableIndicator indicator = (TableIndicator) ((OverviewIndUIElement) element).getOverviewIndicator();
             switch (columnIndex) {
             case 0:
                 text = indicator.getTableName();
@@ -65,6 +66,9 @@ public class TableOfCatalogOrSchemaProvider extends LabelProvider implements ITa
                 break;
             }
         }
+        // if (element instanceof TableIndicator) {
+        //
+        // }
 
         return text;
     }

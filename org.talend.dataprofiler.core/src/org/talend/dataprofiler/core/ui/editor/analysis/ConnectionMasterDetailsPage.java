@@ -100,8 +100,10 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         for (Indicator indicator : catalogIndicators) {
             for (IRepositoryNode catalogNode : connNode.getChildren()) {
                 Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
-                String uuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
-                boolean equals = ResourceHelper.getUUID(catalog).equals(uuid);
+                String connUuid = ResourceHelper.getUUID(catalog);
+                String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+
+                boolean equals = connUuid.equals(anaUuid);
                 if (equals) {
                     OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
                     cataUIEle.setNode(catalogNode);

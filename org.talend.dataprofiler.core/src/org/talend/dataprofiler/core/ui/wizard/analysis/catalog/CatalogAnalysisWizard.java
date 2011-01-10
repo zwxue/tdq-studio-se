@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.catalog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
@@ -28,7 +25,7 @@ import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -49,7 +46,7 @@ public class CatalogAnalysisWizard extends AnalysisFilterWizard {
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
 
-        if (getParameter().getTdDataProvider() == null) {
+        if (getParameter().getConnectionRepNode() == null) {
             addPage(new CatalogAnalysisDPSelectionPage());
         }
 
@@ -66,30 +63,22 @@ public class CatalogAnalysisWizard extends AnalysisFilterWizard {
             DBConnectionRepNode connectionRepNode = getParameter().getConnectionRepNode();
             ConnectionItem item = (ConnectionItem) connectionRepNode.getObject().getProperty().getItem();
             Connection tdProvider = item.getConnection();
-            // Connection tdProvider = packageParameter.getTdDataProvider();
             getAnalysisBuilder().setAnalysisConnection(tdProvider);
             Indicator[] indicators = new Indicator[packageParameter.getPackages().size()];
-            List<ModelElement> element = new ArrayList<ModelElement>();
+            ModelElement[] modelElement = new ModelElement[packageParameter.getPackages().size()];
             int i = 0;
-            for (RepositoryNode node : packageParameter.getPackages()) {
+            for (IRepositoryNode node : packageParameter.getPackages()) {
                 CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
                 // MOD xqliu 2009-1-21 feature 4715
                 DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);
                 Catalog catalog = ((MetadataCatalogRepositoryObject) node.getObject()).getCatalog();
-                element.add(catalog);
+                modelElement[i] = catalog;
                 createCatalogIndicator.setAnalyzedElement(catalog);
                 indicators[i] = createCatalogIndicator;
                 i++;
             }
-            // for (Package tdCatalog : packageParameter.getPackages()) {
-            // CatalogIndicator createCatalogIndicator = SchemaFactory.eINSTANCE.createCatalogIndicator();
-            // // MOD xqliu 2009-1-21 feature 4715
-            // DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createCatalogIndicator);
-            // createCatalogIndicator.setAnalyzedElement(tdCatalog);
-            // indicators[i] = createCatalogIndicator;
-            // i++;
-            // }
-            getAnalysisBuilder().addElementsToAnalyze((ModelElement[]) element.toArray(), indicators);
+
+            getAnalysisBuilder().addElementsToAnalyze(modelElement, indicators);
         }
         return analysis;
     }

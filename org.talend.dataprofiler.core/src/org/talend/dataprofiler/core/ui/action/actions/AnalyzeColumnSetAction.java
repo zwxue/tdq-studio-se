@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -26,6 +27,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC yyi class global comment. Detailled comment
@@ -36,6 +38,7 @@ public class AnalyzeColumnSetAction extends Action {
 
     TdColumn[] columns;
 
+    IRepositoryNode nodeColumns;
     boolean needselection = true;
 
     public AnalyzeColumnSetAction() {
@@ -50,6 +53,12 @@ public class AnalyzeColumnSetAction extends Action {
         this.columns = columns;
     }
 
+    public AnalyzeColumnSetAction(IRepositoryNode columns) {
+        super("Analyze Column Set"); //$NON-NLS-1$
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
+        needselection = false;
+        this.nodeColumns = columns;
+    }
     /*
      * (non-Javadoc)
      * 
@@ -74,8 +83,10 @@ public class AnalyzeColumnSetAction extends Action {
                         i++;
                     }
                     page.getTreeViewer().setInput(tdColumns);
-                } else if (!this.needselection && null != this.columns) {
-                    page.getTreeViewer().setInput(this.columns);
+                } else if (!this.needselection && null != this.nodeColumns) {
+                    IRepositoryNode columnFolder = nodeColumns.getChildren().get(0);
+                    List<IRepositoryNode> column = columnFolder.getChildren();
+                    page.getTreeViewer().setInput(column.toArray());
                     page.doSave(null);
                 }
             }

@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -40,7 +40,7 @@ public class OverViewAnalysisActionProvider extends AbstractCommonActionProvider
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         List list = currentSelection.toList();
         // DOC MOD klliu 2010-12-14 feature 15750 for overview catalog or schema analysis.
-        List<RepositoryNode> packageList = new ArrayList<RepositoryNode>();
+        List<IRepositoryNode> packageList = new ArrayList<IRepositoryNode>();
         boolean showMenu = false;
         // for (Object obj : list) {
         // // MOD by zshen for 14891: use same repository API with TOS to persistent metadata
@@ -60,8 +60,8 @@ public class OverViewAnalysisActionProvider extends AbstractCommonActionProvider
         // }
         // }
         for (Object obj : list) {
-            if (obj instanceof RepositoryNode) {
-                RepositoryNode node = (RepositoryNode) obj;
+            if (obj instanceof IRepositoryNode) {
+                IRepositoryNode node = (IRepositoryNode) obj;
                 packageList.add(node);
                 showMenu = true;
             }

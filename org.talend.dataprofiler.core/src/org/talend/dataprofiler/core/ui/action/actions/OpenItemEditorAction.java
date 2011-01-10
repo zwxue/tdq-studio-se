@@ -24,6 +24,8 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -48,6 +50,8 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC mzhao Open TDQ items editor action.
@@ -83,18 +87,19 @@ public class OpenItemEditorAction extends Action {
             Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
             AnalysisParameters parameters = analysis.getParameters();
             AnalysisType analysisType = parameters.getAnalysisType();
-            boolean equals = analysisType.equals(AnalysisType.CONNECTION);
-            if (equals) {
+            // boolean equals = analysisType.equals(AnalysisType.CONNECTION);
+            // if (equals) {
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 Connection conn = null;
                 if (analysedElements.size() > 0) {
-                    conn = (Connection) analysedElements.get(0);
+                    ModelElement modelElement = analysedElements.get(0);
+                    conn = retiveConnections(modelElement);
                 }
                 // FIXME User UUID to find the right conn repository node.
                 String label = conn.getLabel();
                 IRepositoryNode connectionRepositoryNode = DQStructureManager.getInstance().getConnectionRepositoryNode(label);
                 ((AnalysisItemEditorInput) editorInput).setConnectionNode((DBConnectionRepNode) connectionRepositoryNode);
-            }
+            // }
             editorID = AnalysisEditor.class.getName();
         } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
             editorInput = new IndicatorDefinitionItemEditorInput(item);
@@ -123,5 +128,25 @@ public class OpenItemEditorAction extends Action {
             }
         }
 
+    }
+
+    /**
+     * DOC klliu Comment method "retiveConnections".
+     * 
+     * @param modelElement
+     * @return
+     */
+    private Connection retiveConnections(ModelElement modelElement) {
+        Connection conn = SwitchHelpers.CONNECTION_SWITCH.doSwitch(modelElement);
+        if (conn == null) {
+            Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(modelElement);
+            Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(modelElement);
+            if (catalog != null) {
+                return conn = ConnectionHelper.getConnection(catalog);
+            } else if (schema != null) {
+                return conn = ConnectionHelper.getConnection(schema);
+            }
+        }
+        return conn;
     }
 }

@@ -29,7 +29,7 @@ import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -75,7 +75,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
             Indicator[] indicators = new Indicator[packageParameter.getPackages().size()];
             List<ModelElement> element = new ArrayList<ModelElement>();
             int i = 0;
-            for (RepositoryNode node : packageParameter.getPackages()) {
+            for (IRepositoryNode node : packageParameter.getPackages()) {
                 SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
                 DBSchemaRepNode catalogNode = (DBSchemaRepNode) node;
                 Schema schema = ((MetadataSchemaRepositoryObject) catalogNode.getObject()).getSchema();

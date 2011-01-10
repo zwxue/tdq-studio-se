@@ -29,7 +29,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.SchemaContentProvider;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.nodes.DBSchemaRepNode;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -67,8 +67,8 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
             public void selectionChanged(SelectionChangedEvent event) {
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 PackagesAnalyisParameter schemaPanameter = (PackagesAnalyisParameter) getConnectionParams();
-                List<RepositoryNode> nodes = new ArrayList<RepositoryNode>();
-                if (object instanceof RepositoryNode) {
+                List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+                if (object instanceof IRepositoryNode) {
                     DBSchemaRepNode catalogNode = (DBSchemaRepNode) object;
                     Schema schema = ((MetadataSchemaRepositoryObject) catalogNode.getObject()).getSchema();
                     Connection tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH

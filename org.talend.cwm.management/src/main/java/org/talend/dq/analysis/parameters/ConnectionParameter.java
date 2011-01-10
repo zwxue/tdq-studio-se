@@ -18,7 +18,7 @@ import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -58,14 +58,14 @@ public class ConnectionParameter {
         this.paramType = paramType;
     }
 
-    private List<RepositoryNode> packages;
+    private List<IRepositoryNode> packages;
 
-    public List<RepositoryNode> getPackages() {
+    public List<IRepositoryNode> getPackages() {
         return packages;
     }
 
-    public void setPackages(List<RepositoryNode> nodes) {
-        this.packages = packages;
+    public void setPackages(List<IRepositoryNode> nodes) {
+        this.packages = nodes;
     }
 
     public EParameterType getParamType() {

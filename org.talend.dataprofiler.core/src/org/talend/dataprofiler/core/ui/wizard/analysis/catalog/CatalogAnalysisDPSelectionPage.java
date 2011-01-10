@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.CatalogContentProvider;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -78,7 +79,7 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 try {
                     Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                     PackagesAnalyisParameter catalogPanameter = (PackagesAnalyisParameter) getConnectionParams();
-                    List<RepositoryNode> nodes = new ArrayList<RepositoryNode>();
+                    List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
                     if (object instanceof RepositoryNode) {
                         DBCatalogRepNode catalogNode = (DBCatalogRepNode) object;
                         Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();

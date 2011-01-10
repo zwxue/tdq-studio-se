@@ -61,6 +61,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -299,13 +300,13 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     public void setInput(Object[] objs) {
         if (objs != null && objs.length != 0) {
-            if (!(objs[0] instanceof TdColumn)) {
+            if (!(objs[0] instanceof DBColumnRepNode)) {
                 return;
             }
         }
-        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        List<DBColumnRepNode> columnList = new ArrayList<DBColumnRepNode>();
         for (Object obj : objs) {
-            columnList.add((TdColumn) obj);
+            columnList.add((DBColumnRepNode) obj);
         }
         // MOD yyi 2010-05-13 12828
         Collections.reverse(columnList);

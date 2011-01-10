@@ -66,18 +66,16 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataprofiler.core.model.SqlExplorerBridge;
@@ -95,6 +93,8 @@ import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -219,11 +219,12 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         public void selectionChanged(SelectionChangedEvent event) {
             StructuredSelection selection = (StructuredSelection) event.getSelection();
             OverviewIndUIElement firstElement = (OverviewIndUIElement) selection.getFirstElement();
+            IRepositoryNode node = firstElement.getNode();
             currentSelectionSchemaIndicator = (SchemaIndicator) firstElement.getOverviewIndicator();
             if (currentSelectionSchemaIndicator == null) {
                 return;
             }
-            displayTableAndViewComp(currentSelectionSchemaIndicator);
+            displayTableAndViewComp(currentSelectionSchemaIndicator, node);
         }
     }
 
@@ -792,9 +793,19 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     }
 
-    protected void displayTableAndViewComp(final SchemaIndicator schemaIndicator) {
+    /**
+     * 
+     * DOC klliu Comment method "displayTableAndViewComp".
+     * 
+     * @param schemaIndicator
+     * @param parentNode
+     */
+    protected void displayTableAndViewComp(final SchemaIndicator schemaIndicator, final IRepositoryNode parentNode) {
         tableAndViewComposite.setVisible(true);
-        List<TableIndicator> indicatorTableList = (List<TableIndicator>) schemaIndicator.getTableIndicators();
+        // DOC wapperInput retrun OverViewUIElement
+
+        EList<TableIndicator> indicatorTableList = (EList<TableIndicator>) schemaIndicator.getTableIndicators();
+        List<OverviewIndUIElement> tableElements = wapperInput(indicatorTableList, parentNode);
         if (tableOfCatalogOrSchemaViewer == null) {
             tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
                     | SWT.SINGLE);
@@ -876,8 +887,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
                 public void widgetSelected(SelectionEvent e) {
                     TableItem tableItem = cursor.getRow();
-                    runTableAnalysis(tableItem.getText(0));
+                    OverviewIndUIElement data = (OverviewIndUIElement) tableItem.getData();
+                    runTableAnalysis(data);
                 }
+
 
             });
 
@@ -899,7 +912,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     }
                 }
             });
-
             viewOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
                     | SWT.FULL_SELECTION);
             Table tableCatalogOrSchemaView = viewOfCatalogOrSchemaViewer.getTable();
@@ -916,10 +928,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             viewOfCatalogOrSchemaViewer.setContentProvider(viewProvider);
         }
         tableOfCatalogOrSchemaViewer.getTable().setMenu(null);
-        tableOfCatalogOrSchemaViewer.setInput(indicatorTableList);
+        tableOfCatalogOrSchemaViewer.setInput(tableElements);
         List<ViewIndicator> indicatorViewList = (List<ViewIndicator>) schemaIndicator.getViewIndicators();
 
-        viewOfCatalogOrSchemaViewer.setInput(wapperInput(indicatorViewList));
+        viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
         // MOD xqliu 2009-11-05 bug 9521
         tableAndViewComposite.pack();
         statisticalSection.pack();
@@ -932,12 +944,175 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     /**
      * DOC klliu Comment method "wapperInput".
      * 
-     * @param indicatorViewList
+     * @param indicatorTableList
+     * @param parentNode
      * @return
      */
-    private OverviewIndUIElement wapperInput(List<ViewIndicator> indicatorViewList) {
-        return null;
+    private List<OverviewIndUIElement> wapperInput(EList<TableIndicator> indicatorTableList, IRepositoryNode parentNode) {
+        List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
+        List<IRepositoryNode> children = parentNode.getChildren();
+        for (TableIndicator indicator : indicatorTableList) {
+            for (IRepositoryNode folderNode : children) {
+                if (folderNode instanceof DBTableFolderRepNode) {
+                    List<IRepositoryNode> tableNodes = folderNode.getChildren();
+                    for (IRepositoryNode tableNode : tableNodes) {
+                        MetadataTable table = ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
+                        String name = table.getName();
+                        String tableName = indicator.getTableName();
+                        // String connUuid = ResourceHelper.getUUID(table);
+                        // String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+
+                        boolean equals = name.equals(tableName);
+                        if (equals) {
+                            OverviewIndUIElement tableUIEle = new OverviewIndUIElement();
+                            tableUIEle.setNode(tableNode);
+                            tableUIEle.setOverviewIndicator(indicator);
+                            cataUIEleList.add(tableUIEle);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return cataUIEleList;
     }
+
+    // protected void displayTableAndViewComp(final SchemaIndicator schemaIndicator) {
+    // tableAndViewComposite.setVisible(true);
+    // List<TableIndicator> indicatorTableList = (List<TableIndicator>) schemaIndicator.getTableIndicators();
+    // if (tableOfCatalogOrSchemaViewer == null) {
+    // tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
+    // | SWT.SINGLE);
+    // final Table catalogOrSchemaTable = tableOfCatalogOrSchemaViewer.getTable();
+    // catalogOrSchemaTable.setHeaderVisible(true);
+    // catalogOrSchemaTable.setLinesVisible(true);
+    // GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+    // layoutData.heightHint = 150;
+    // catalogOrSchemaTable.setLayoutData(layoutData);
+    // String[] columnTexts = new String[] {
+    //                    DefaultMessagesImpl.getString("AbstractFilterMetadataPage.Table"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.rows"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.keys"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.indexes") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    // createSorterColumns(tableOfCatalogOrSchemaViewer, columnTexts, tableSorters, COLUMN_TABLE_WIDTH);
+    // TableOfCatalogOrSchemaProvider providerTable = new TableOfCatalogOrSchemaProvider();
+    // tableOfCatalogOrSchemaViewer.setLabelProvider(providerTable);
+    // tableOfCatalogOrSchemaViewer.setContentProvider(providerTable);
+    //
+    // final TableCursor cursor = new TableCursor(catalogOrSchemaTable, SWT.NONE);
+    // cursor.setBackground(catalogOrSchemaTable.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION));
+    // cursor.setForeground(catalogOrSchemaTable.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
+    // cursor.setLayout(new FillLayout());
+    // // cursor.setVisible(true);
+    // final Menu menu = new Menu(catalogOrSchemaTable);
+    // MenuItem keyitem = new MenuItem(menu, SWT.PUSH);
+    //            keyitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewKeys")); //$NON-NLS-1$
+    // keyitem.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
+    //
+    // final Menu menu1 = new Menu(catalogOrSchemaTable);
+    // MenuItem indexitem = new MenuItem(menu1, SWT.PUSH);
+    //            indexitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewIndexes")); //$NON-NLS-1$
+    // indexitem.setImage(ImageLib.getImage(ImageLib.INDEX_VIEW));
+    //
+    // final Menu menu2 = new Menu(catalogOrSchemaTable);
+    // MenuItem tableAnalysisitem = new MenuItem(menu2, SWT.PUSH);
+    //            tableAnalysisitem.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
+    // tableAnalysisitem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
+    //
+    // // catalogOrSchemaTable.setMenu(menu);
+    // keyitem.addSelectionListener(new SelectionAdapter() {
+    //
+    // public void widgetSelected(SelectionEvent e) {
+    // TableItem tableItem = cursor.getRow();
+    // String tableName = tableItem.getText(0);
+    // Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+    // // MOD qiongli bug 13093,2010-7-2
+    // if (currentCatalogIndicator != null)
+    // parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
+    //
+    // TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
+    //                            tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
+    //
+    // if (!findSqlExplorerTableNode.isOk()) {
+    // // log.error(findSqlExplorerTableNode.getMessage());
+    // }
+    // }
+    //
+    // });
+    //
+    // indexitem.addSelectionListener(new SelectionAdapter() {
+    //
+    // public void widgetSelected(SelectionEvent e) {
+    // TableItem tableItem = cursor.getRow();
+    // String tableName = tableItem.getText(0);
+    // Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+    // // MOD qiongli bug 13093,2010-7-2
+    // if (currentCatalogIndicator != null)
+    // parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
+    //
+    // TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
+    //                            tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
+    //
+    // if (!findSqlExplorerTableNode.isOk()) {
+    // // log.error(findSqlExplorerTableNode.getMessage());
+    // }
+    // }
+    //
+    // });
+    //
+    // tableAnalysisitem.addSelectionListener(new SelectionAdapter() {
+    //
+    // public void widgetSelected(SelectionEvent e) {
+    // TableItem tableItem = cursor.getRow();
+    // runTableAnalysis(tableItem.getText(0));
+    // }
+    //
+    // });
+    //
+    // cursor.addMenuDetectListener(new MenuDetectListener() {
+    //
+    // public void menuDetected(MenuDetectEvent e) {
+    // int column = cursor.getColumn();
+    // if (column == TABLE_COLUMN_INDEX) {
+    // cursor.setMenu(menu2);
+    // menu2.setVisible(true);
+    // } else if (column == VIEW_COLUMN_INDEXES) {
+    // cursor.setMenu(menu1);
+    // menu1.setVisible(true);
+    // } else if (column == VIEW_COLUMN_INDEX) {
+    // cursor.setMenu(menu);
+    // menu.setVisible(true);
+    // } else {
+    // cursor.setMenu(null);
+    // }
+    // }
+    // });
+    // viewOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
+    // | SWT.FULL_SELECTION);
+    // Table tableCatalogOrSchemaView = viewOfCatalogOrSchemaViewer.getTable();
+    // tableCatalogOrSchemaView.setHeaderVisible(true);
+    // tableCatalogOrSchemaView.setLinesVisible(true);
+    // layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+    // layoutData.heightHint = 150;
+    // tableCatalogOrSchemaView.setLayoutData(layoutData);
+    // columnTexts = new String[] {
+    //                    DefaultMessagesImpl.getString("AbstractFilterMetadataPage.view"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.rows") }; //$NON-NLS-1$ //$NON-NLS-2$
+    // createSorterColumns(viewOfCatalogOrSchemaViewer, columnTexts, viewSorters, COLUMN_VIEW_WIDTH);
+    // ViewOfCatalogOrSchemaProvider viewProvider = new ViewOfCatalogOrSchemaProvider();
+    // viewOfCatalogOrSchemaViewer.setLabelProvider(viewProvider);
+    // viewOfCatalogOrSchemaViewer.setContentProvider(viewProvider);
+    // }
+    // tableOfCatalogOrSchemaViewer.getTable().setMenu(null);
+    // tableOfCatalogOrSchemaViewer.setInput(indicatorTableList);
+    // List<ViewIndicator> indicatorViewList = (List<ViewIndicator>) schemaIndicator.getViewIndicators();
+    //
+    // viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
+    // // MOD xqliu 2009-11-05 bug 9521
+    // tableAndViewComposite.pack();
+    // statisticalSection.pack();
+    // statisticalSection.layout();
+    // // ~
+    // form.reflow(true);
+    //
+    // }
 
     private void createSorterColumns(final TableViewer tableViewer, String[] columnTexts, ViewerSorter[][] sorters,
             int columnWidth) {
@@ -1010,28 +1185,33 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         super.dispose();
     }
 
+    private void runTableAnalysis(OverviewIndUIElement data) {
+
+        new AnalyzeColumnSetAction(data.getNode()).run();
+    }
     /**
      * DOC yyi Comment method "runTableAnalysis".
      * 
      * @param tableName
      */
-    protected void runTableAnalysis(String tableName) {
-        Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
-        TdTable tdTable = getTable(parentPack, tableName);
-        if (null == tdTable) {
-            FolderNodeHelper.getTableFolderNode(parentPack).loadChildren();
-            tdTable = getTable(parentPack, tableName);
-        }
-        try {
-            List<TdColumn> columns = 0 == ColumnSetHelper.getColumns(tdTable).size() ? DqRepositoryViewService.getColumns(
-                    tdDataProvider, tdTable, null, true) : ColumnSetHelper.getColumns(tdTable);
-
-            new AnalyzeColumnSetAction(columns.toArray(new TdColumn[columns.size()])).run();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
-    }
+    // protected void runTableAnalysis(String tableName) {
+    //
+    // Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+    // TdTable tdTable = getTable(parentPack, tableName);
+    // if (null == tdTable) {
+    // FolderNodeHelper.getTableFolderNode(parentPack).loadChildren();
+    // tdTable = getTable(parentPack, tableName);
+    // }
+    // try {
+    // List<TdColumn> columns = 0 == ColumnSetHelper.getColumns(tdTable).size() ? DqRepositoryViewService.getColumns(
+    // tdDataProvider, tdTable, null, true) : ColumnSetHelper.getColumns(tdTable);
+    //
+    // new AnalyzeColumnSetAction(columns.toArray(new TdColumn[columns.size()])).run();
+    // } catch (Exception e) {
+    // log.error(e.getMessage());
+    // e.printStackTrace();
+    // }
+    // }
 
     protected void createContextMenuFor(final StructuredViewer viewer) {
         final MenuManager contextMenu = new MenuManager("#PopUp");
@@ -1040,11 +1220,19 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         contextMenu.addMenuListener(new IMenuListener() {
 
             public void menuAboutToShow(IMenuManager mgr) {
-                Object obj = ((StructuredSelection) viewer.getSelection()).getFirstElement();
-                if (obj instanceof SchemaIndicator) {
-                    SchemaIndicator schemaIndicator = (SchemaIndicator) obj;
-                    contextMenu.add(new OverviewAnalysisAction(new Package[] { (Package) schemaIndicator.getAnalyzedElement() }));
+                Object overviewObject = ((StructuredSelection) viewer.getSelection()).getFirstElement();
+                if (overviewObject instanceof OverviewIndUIElement) {
+                    OverviewIndUIElement overview = (OverviewIndUIElement) overviewObject;
+                    IRepositoryNode node = overview.getNode();
+                    List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+                    nodes.add(node);
+                    contextMenu.add(new OverviewAnalysisAction(nodes));
                 }
+                // if (obj instanceof SchemaIndicator) {
+                // SchemaIndicator schemaIndicator = (SchemaIndicator) obj;
+                // contextMenu.add(new OverviewAnalysisAction(new Package[] { (Package)
+                // schemaIndicator.getAnalyzedElement() }));
+                // }
             }
         });
         Menu menu = contextMenu.createContextMenu(viewer.getControl());

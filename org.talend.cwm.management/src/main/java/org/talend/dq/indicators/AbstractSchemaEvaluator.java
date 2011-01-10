@@ -31,6 +31,7 @@ import org.talend.core.model.metadata.builder.database.TableBuilder;
 import org.talend.core.model.metadata.builder.database.ViewBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
@@ -573,16 +574,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     public boolean checkCatalog(String catName) {
 
         if (0 == catalogsName.size()) {
-            try {
-                Collection<Catalog> catalogs;
-                catalogs = MetadataFillFactory.getDBInstance()
-                        .fillCatalogs(this.getDataManager(), connection.getMetaData(), null);
-                for (Catalog tc : catalogs) {
-                    catalogsName.add(tc.getName());
-                }
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            Collection<Catalog> catalogs = ConnectionHelper.getAllCatalogs(getDataManager());
+            for (Catalog tc : catalogs) {
+                catalogsName.add(tc.getName());
             }
         }
 

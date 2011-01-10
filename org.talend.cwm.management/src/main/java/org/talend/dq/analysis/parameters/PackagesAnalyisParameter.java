@@ -18,7 +18,4 @@ package org.talend.dq.analysis.parameters;
  */
 public class PackagesAnalyisParameter extends AnalysisFilterParameter {
 
-    private Package[] packages;
-
-
 }

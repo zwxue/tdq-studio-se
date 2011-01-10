@@ -79,8 +79,10 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
         RepositoryNode connNode = getCurrentRepNodeOnUI();
         for (Indicator indicator : indicators) {
             for (IRepositoryNode catalogNode : connNode.getChildren()) {
-                if (ResourceHelper.getUUID(((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog()).equals(
-                        indicator.getAnalyzedElement())) {
+                String nodeUuid = ResourceHelper
+                        .getUUID(((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog());
+                String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+                if (nodeUuid.equals(anaUuid)) {
                     OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
                     cataUIEle.setNode(catalogNode);
                     cataUIEle.setOverviewIndicator(indicator);
@@ -92,6 +94,14 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
         return cataUIEleList;
     }
 
+    // protected List<CatalogIndicator> getCatalogIndicators() {
+    // EList<Indicator> indicators = analysis.getResults().getIndicators();
+    // catalogIndicatorList.clear();
+    // for (Indicator indicator : indicators) {
+    // catalogIndicatorList.add((CatalogIndicator) indicator);
+    // }
+    // return catalogIndicatorList;
+    // }
     /*
      * (non-Javadoc)
      * 
