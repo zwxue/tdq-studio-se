@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.IMetadataXmlElementType;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
@@ -124,7 +125,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
                     List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                     resContants.add(EResourceConstant.ANALYSIS);
+                    if (!ReponsitoryContextBridge.isDefautProject()) {
                     resContants.add(EResourceConstant.REPORTS);
+                    }
                     instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                 } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
                     List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();

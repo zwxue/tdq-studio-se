@@ -45,6 +45,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.context.Context;
@@ -147,64 +148,68 @@ public final class DQStructureManager {
 
             }
 
-            Folder patternRegexFoler = null;
-            if (!project.getFolder(EResourceConstant.PATTERN_REGEX.getPath()).exists()) {
-                patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_REGEX,
+            if (!project.getFolder(EResourceConstant.DB_CONNECTIONS.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                        EResourceConstant.DB_CONNECTIONS.getName());
+            }
+
+            if (!project.getFolder(EResourceConstant.MDM_CONNECTIONS.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                        EResourceConstant.MDM_CONNECTIONS.getName());
+            }
+
+            ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING,
+                    Path.EMPTY, EResourceConstant.ANALYSIS.getName());
+
+            if (!ReponsitoryContextBridge.isDefautProject()) {
+                Folder reportFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING,
+                        Path.EMPTY, EResourceConstant.REPORTS.getName());
+            }
+
+            Folder patternFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
+                    Path.EMPTY, EResourceConstant.PATTERNS.getName());
+
+
+            Folder rulesFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
+                    Path.EMPTY,
+                    EResourceConstant.RULES.getName());
+            Folder rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
+                    EResourceConstant.RULES_SQL.getName());
+
+            Folder exchangeFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
+                    Path.EMPTY, EResourceConstant.EXCHANGE.getName());
+
+            Folder indicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
+                    Path.EMPTY, EResourceConstant.INDICATORS.getName());
+            Folder systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATORS,
+                    Path.EMPTY, EResourceConstant.SYSTEM_INDICATORS.getName());
+
+            Folder udiFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATORS,
+                    Path.EMPTY, EResourceConstant.USER_DEFINED_INDICATORS.getName());
+
+            Folder jrxmlFolder = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
+                    Path.EMPTY, EResourceConstant.JRXML_TEMPLATE.getName());
+
+            Folder patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERNS,
                         Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
-            } else {
-                FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                        ProjectManager.getInstance().getCurrentProject(), ERepositoryObjectType.TDQ_PATTERN_REGEX, Path.EMPTY);
-                patternRegexFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            }
 
-            Folder patternSQLFoler = null;
-            if (!project.getFolder(EResourceConstant.PATTERN_SQL.getPath()).exists()) {
-                patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_SQL,
+            Folder patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERNS,
                         Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
-            } else {
-                FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                        ProjectManager.getInstance().getCurrentProject(), ERepositoryObjectType.TDQ_PATTERN_SQL, Path.EMPTY);
-                patternSQLFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_PATTERN_SQL);
-            }
 
-            Folder sourceFileFoler = null;
-            if (!project.getFolder(EResourceConstant.SOURCE_FILES.getPath()).exists()) {
-                sourceFileFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_SOURCE_FILES,
+            Folder sourceFileFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                         Path.EMPTY, EResourceConstant.SOURCE_FILES.getName());
-            } else {
-                FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                        ProjectManager.getInstance().getCurrentProject(), ERepositoryObjectType.TDQ_SOURCE_FILES, Path.EMPTY);
-                sourceFileFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_SOURCE_FILES);
-            }
 
-            Folder rulesSQLFoler = null;
-            if (!project.getFolder(EResourceConstant.RULES_SQL.getPath()).exists()) {
-                rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES_SQL,
-                        Path.EMPTY, EResourceConstant.RULES_SQL.getName());
-            } else {
-                FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                        ProjectManager.getInstance().getCurrentProject(), ERepositoryObjectType.TDQ_RULES_SQL, Path.EMPTY);
-                rulesSQLFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
-            }
 
-            Folder systemIndicatorFoler = null;
-            if (!project.getFolder(EResourceConstant.SYSTEM_INDICATORS.getPath()).exists()) {
-                systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(
-                        ERepositoryObjectType.TDQ_SYSTEM_INDICATORS, Path.EMPTY, EResourceConstant.REPORTS.getName());
-            } else {
-                FolderItem folderItem = ProxyRepositoryFactory.getInstance()
-                        .getFolderItem(ProjectManager.getInstance().getCurrentProject(),
-                                ERepositoryObjectType.TDQ_SYSTEM_INDICATORS, Path.EMPTY);
-                systemIndicatorFoler = new Folder(folderItem.getProperty(), ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
-            }
 
             // use the tos create folder API
-            copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null,
-                    ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+            // copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null,
+            // ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
             copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
-            copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILES);
-            copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
+            // copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null,
+            // ERepositoryObjectType.TDQ_PATTERN_SQL);
+            // copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null,
+            // ERepositoryObjectType.TDQ_SOURCE_FILES);
+            // copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
 
             WorkspaceVersionHelper.storeVersion();
 
@@ -244,12 +249,16 @@ public final class DQStructureManager {
 
         while (paths.hasMoreElements()) {
             String nextElement = (String) paths.nextElement();
+            if (nextElement.indexOf("patterns/data") > 0) {
+                System.out.print("");
+            }
             String currentPath = "/" + nextElement; //$NON-NLS-1$
             URL resourceURL = plugin.getBundle().getEntry(currentPath);
             URL fileURL = null;
             File file = null;
             try {
                 fileURL = FileLocator.toFileURL(resourceURL);
+                System.out.println(fileURL);
                 file = new File(fileURL.getFile());
                 if (file.isDirectory() && recurse) {
                     if (file.getName().startsWith(".")) { //$NON-NLS-1$
@@ -282,12 +291,19 @@ public final class DQStructureManager {
                 InputStream openStream = null;
                 openStream = fileURL.openStream();
                 String folderName = null;
+
+                if (type.equals(ERepositoryObjectType.TDQ_PATTERNS)) {
+                    folderName = ERepositoryObjectType.getFolderName(type);
+                }
                 if (type.equals(ERepositoryObjectType.TDQ_RULES_SQL)) {
                     folderName = ERepositoryObjectType.getFolderName(type);
                 } else if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILES)) {
                     folderName = ERepositoryObjectType.getFolderName(type);
                 } else {
                     folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel();
+                }
+                if (folderName.equals("date")) {
+                    continue;
                 }
                 IFolder folder = project.getFolder(folderName);
                 if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILES)) {
