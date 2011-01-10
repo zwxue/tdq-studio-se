@@ -16,23 +16,26 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.properties.FolderItem;
-import org.talend.core.model.properties.Item;
+import org.talend.commons.utils.data.container.Container;
+import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * DOC xqliu class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment: system indicator folder repository node
  */
 public class SysIndicatorFolderRepNode extends RepositoryNode {
 
     private static Logger log = Logger.getLogger(SysIndicatorFolderRepNode.class);
 
     /**
-     * DOC klliu SysIndicatorSubFolderRepNode constructor comment.
+     * DOC klliu IndicatorFolderRepNode constructor comment.
      * 
      * @param object
      * @param parent
@@ -44,40 +47,65 @@ public class SysIndicatorFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode parent = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
-        ERepositoryObjectType contentType = this.getContentType();
-        if (contentType != null) {
-            try {
-                List<IRepositoryViewObject> all = ProxyRepositoryFactory.getInstance().getAll(getContentType());
-                for (IRepositoryViewObject reposViewObj : all) {
-                    Item item = reposViewObj.getProperty().getItem();
-                    if (item instanceof FolderItem) {
-                        IRepositoryNode childNodeFolder = isSystemFolder(item) ? new SysIndicatorFolderRepNode(reposViewObj,
-                                parent, ENodeType.SYSTEM_FOLDER) : new SysIndicatorSubFolderRepNode(reposViewObj, parent,
-                                ENodeType.SIMPLE_FOLDER);
-                        reposViewObj.setRepositoryNode(childNodeFolder);
-                        parent.getChildren().add(childNodeFolder);
-                    } else {
-                        IndicatorDefinitionRepNode repNode = new IndicatorDefinitionRepNode(reposViewObj, parent,
-                                ENodeType.REPOSITORY_ELEMENT);
-                        reposViewObj.setRepositoryNode(repNode);
-                        parent.getChildren().add(repNode);
-                    }
-                }
-            } catch (PersistenceException e) {
-                log.error(e, e);
+        try {
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+            // sub folders
+            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(),
+                        getSystemIndicatorFolderRepositoryType(container.getLabel()));
+                super.getChildren().add(new SysIndicatorFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER));
             }
+            // rule files
+            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+                if (!viewObject.isDeleted()) {
+                    ERepositoryObjectType repositoryObjectType = viewObject.getRepositoryObjectType();
+                    SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
+                            ENodeType.REPOSITORY_ELEMENT);
+                    viewObject.setRepositoryNode(repNode);
+                    super.getChildren().add(repNode);
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
         }
-        return parent.getChildren();
+        return super.getChildren();
     }
 
     /**
-     * DOC xqliu Comment method "isSystemFolder".
+     * DOC xqliu Comment method "getSystemIndicatorFolderRepositoryType".
      * 
-     * @param item
+     * @param label
      * @return
      */
-    private boolean isSystemFolder(Item item) {
-        return false;
+    private ERepositoryObjectType getSystemIndicatorFolderRepositoryType(String label) {
+        if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_ADVANCED_STATISTICS).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_ADVANCED_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_BUSINESS_RULES).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_BUSINESS_RULES;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_CORRELATION).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_CORRELATION;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY).endsWith(
+                label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_ROW_COMPARISON).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_ROW_COMPARISON;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_SIMPLE_STATISTICS).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_SIMPLE_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_SOUNDEX).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_SOUNDEX;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_SUMMARY_STATISTICS)
+                .endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_SUMMARY_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS;
+        }
+        return null;
     }
 }

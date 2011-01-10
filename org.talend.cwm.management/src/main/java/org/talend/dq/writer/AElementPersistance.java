@@ -32,12 +32,10 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Information;
 import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
-import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
@@ -50,10 +48,10 @@ import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
-import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
@@ -87,21 +85,11 @@ public abstract class AElementPersistance {
             trc.setMessage("File extension is null.");
             log.error("Get file extension error");
         } else {
-
             IPath itemPath = folder.getFullPath();
-            // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()\
-            // int segmentCount = itemPath.segmentCount();
             Property property = initProperty(element);
             Item item = property.getItem();
             try {
-                // if (item instanceof TDQBusinessRuleItem) {
-                // ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(segmentCount - 1));
-                // } else if (item instanceof ConnectionItem) {
-                // ProxyRepositoryFactory.getInstance().create(item, Path.EMPTY);
-                // } else {
-                // ProxyRepositoryFactory.getInstance().create(item, itemPath.removeFirstSegments(segmentCount - 2));
-                // }
-                ProxyRepositoryFactory.getInstance().create(item, getRelativePath(item, itemPath));
+                ProxyRepositoryFactory.getInstance().create(item, getPath(element, itemPath));
                 trc.setObject(item);
                 trc.setOk(Boolean.TRUE);
             } catch (PersistenceException e) {
@@ -122,45 +110,42 @@ public abstract class AElementPersistance {
                     element.setName(oriName);
                     ReturnCode rc = create(element, file);
                     trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
-
-                    // trc.setReturnCode("Can't create resource file, file is existed.", false);
                 } else {
                     ReturnCode rc = create(element, file);
                     trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
-
                 }
             }
         }
-
         return trc;
     }
 
     /**
-     * DOC xqliu Comment method "getRelativePath".
+     * DOC xqliu Comment method "getPath".
      * 
-     * @param item
+     * @param element
      * @param itemPath
      * @return
      */
-    private IPath getRelativePath(Item item, IPath itemPath) {
-        if (item instanceof TDQAnalysisItem) {
-            return itemPath.makeRelativeTo(ResourceManager.getAnalysisFolder().getFullPath());
-        } else if (item instanceof TDQReportItem) {
-            return itemPath.makeRelativeTo(ResourceManager.getReportsFolder().getFullPath());
-        } else if (item instanceof TDQJrxmlItem) {
-            return itemPath.makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath());
-        } else if (item instanceof TDQPatternItem) {
-            return itemPath.makeRelativeTo(ResourceManager.getPatternFolder().getFullPath());
-        } else if (item instanceof TDQPatternItem) {
-            return itemPath.makeRelativeTo(ResourceManager.getPatternFolder().getFullPath());
-        } else if (item instanceof TDQBusinessRuleItem) {
-            return itemPath.makeRelativeTo(ResourceManager.getRulesSQLFolder().getFullPath());
-        } else if (item instanceof DatabaseConnectionItem) {
-            return itemPath.makeRelativeTo(ResourceManager.getTDQConnectionFolder().getFullPath());
-        } else if (item instanceof MDMConnectionItem) {
-            return itemPath.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
+    private IPath getPath(ModelElement element, IPath itemPath) {
+        IPath path = new Path("");
+        if (element instanceof DatabaseConnection) { // database connection
+            path = itemPath.makeRelativeTo(ResourceManager.getTDQConnectionFolder().getFullPath());
+        } else if (element instanceof MDMConnection) { // mdm connection
+            path = itemPath.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
+        } else if (element instanceof Analysis) { // analysis
+            path = itemPath.makeRelativeTo(ResourceManager.getAnalysisFolder().getFullPath());
+        } else if (element instanceof Report) { // report
+            path = itemPath.makeRelativeTo(ResourceManager.getReportsFolder().getFullPath());
+        } else if (element instanceof IndicatorDefinition) {
+            if (element instanceof WhereRule) { // dqrule
+                path = itemPath.makeRelativeTo(ResourceManager.getRulesSQLFolder().getFullPath());
+            } else { // indicator definition
+                path = itemPath.makeRelativeTo(ResourceManager.getIndicatorFolder().getFullPath());
+            }
+        } else if (element instanceof Pattern) { // pattern
+            path = itemPath.makeRelativeTo(ResourceManager.getPatternFolder().getFullPath());
         }
-        return Path.EMPTY;
+        return path;
     }
 
     /**
@@ -275,7 +260,6 @@ public abstract class AElementPersistance {
     }
 
     private void setPropertyMetadata(ModelElement modelElement, Property property) {
-
         String purpose = MetadataHelper.getPurpose(modelElement);
         String description = MetadataHelper.getDescription(modelElement);
         String version = MetadataHelper.getVersion(modelElement);

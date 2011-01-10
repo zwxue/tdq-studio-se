@@ -81,7 +81,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 //
                 // }
             } else if (eObject instanceof MDMConnection) {
-
                 // ProxyRepositoryViewObject.registerURI((MDMConnection) eObject, toBeUnloadedResource.getURI());
                 // if (xmiResourceManager != null) {
                 // try {
@@ -92,7 +91,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 //
                 // }
             }
-
             // } catch (PersistenceException e) {
             // log.error(e, e);
             // }
@@ -115,7 +113,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
         // TODO Handle element deletion from resource, resource delete.
         return super.handleResourceChange(modelElement);
-
     }
 
     /**
@@ -156,69 +153,57 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             switch (classID) {
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_ANALYSIS_ITEM:
                 fileExtension = FileConstants.ANA_EXTENSION;
-                itemResource = ProxyRepositoryFactory
-                        .getInstance()
-                        .getRepositoryFactoryFromProvider()
-                        .getResourceManager()
-                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT, false,
-                                fileExtension);
+                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                        ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT, false, fileExtension);
 
                 AnalysisWriter createAnalysisWrite = org.talend.dq.writer.impl.ElementWriterFactory.getInstance()
                         .createAnalysisWrite();
                 Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
                 createAnalysisWrite.addResourceContent(itemResource, analysis);
                 createAnalysisWrite.addDependencies(analysis);
+
                 break;
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_REPORT_ITEM:
                 fileExtension = FileConstants.REP_EXTENSION;
-                itemResource = ProxyRepositoryFactory
-                        .getInstance()
-                        .getRepositoryFactoryFromProvider()
-                        .getResourceManager()
-                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_REPORT_ELEMENT, false,
-                                fileExtension);
+                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                        ERepositoryObjectType.TDQ_REPORT_ELEMENT, false, fileExtension);
+
                 ReportWriter createReportWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance()
                         .createReportWriter();
                 Report report = ((TDQReportItem) item).getReport();
                 createReportWriter.addResourceContent(itemResource, report);
                 createReportWriter.addDependencies(report);
+
                 break;
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_INDICATOR_DEFINITION_ITEM:
                 fileExtension = FileConstants.DEF_EXTENSION;
-                itemResource = ProxyRepositoryFactory
-                        .getInstance()
-                        .getRepositoryFactoryFromProvider()
-                        .getResourceManager()
-                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_INDICATOR_ELEMENT, false,
-                                fileExtension);
+                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                        ERepositoryObjectType.TDQ_INDICATOR_ELEMENT, false, fileExtension);
+
                 IndicatorDefinition indicatorDefinition = ((TDQIndicatorDefinitionItem) item).getIndicatorDefinition();
                 IndicatorDefinitionWriter createIndicatorDefinitionWriter = org.talend.dq.writer.impl.ElementWriterFactory
                         .getInstance().createIndicatorDefinitionWriter();
                 createIndicatorDefinitionWriter.addResourceContent(itemResource, indicatorDefinition);
                 // createIndicatorDefinitionWriter.addDependencies(indicatorDefinition);
+
                 break;
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_PATTERN_ITEM:
                 fileExtension = FileConstants.PAT_EXTENSION;
-                itemResource = ProxyRepositoryFactory
-                        .getInstance()
-                        .getRepositoryFactoryFromProvider()
-                        .getResourceManager()
-                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_PATTERN_ELEMENT, false,
-                                fileExtension);
+                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                        ERepositoryObjectType.TDQ_PATTERN_ELEMENT, false, fileExtension);
+
                 Pattern pattern = ((TDQPatternItem) item).getPattern();
                 PatternWriter createPatternWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance()
                         .createPatternWriter();
                 createPatternWriter.addResourceContent(itemResource, pattern);
                 // createPatternWriter.addDependencies(pattern);
+
                 break;
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_BUSINESS_RULE_ITEM:
                 fileExtension = FileConstants.RULE_EXTENSION;
-                itemResource = ProxyRepositoryFactory
-                        .getInstance()
-                        .getRepositoryFactoryFromProvider()
-                        .getResourceManager()
-                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_RULES_SQL, false,
-                                fileExtension);
+                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                        ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT, false, fileExtension);
+
                 DQRule dqrule = ((TDQBusinessRuleItem) item).getDqrule();
                 DQRuleWriter createdRuleWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createdRuleWriter();
                 createdRuleWriter.addResourceContent(itemResource, dqrule);
@@ -226,30 +211,23 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 break;
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_JRXML_ITEM:
                 fileExtension = FileConstants.JRXML_EXTENSION;
-                itemResource = ProxyRepositoryFactory
-                        .getInstance()
-                        .getRepositoryFactoryFromProvider()
-                        .getResourceManager()
-                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_JRXMLTEMPLATE, true,
-                                fileExtension);
+                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                        ERepositoryObjectType.TDQ_JRAXML_ELEMENT, true, fileExtension);
                 itemResource.getContents().add(((TDQFileItem) item).getContent());
+
                 break;
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_SOURCE_FILE_ITEM:
                 fileExtension = FileConstants.SQL_EXTENSION;
-                itemResource = ProxyRepositoryFactory
-                        .getInstance()
-                        .getRepositoryFactoryFromProvider()
-                        .getResourceManager()
-                        .createItemResourceWithExtension(project, item, path, ERepositoryObjectType.TDQ_SOURCE_FILES, true,
-                                fileExtension);
+                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                        ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT, true, fileExtension);
                 itemResource.getContents().add(((TDQFileItem) item).getContent());
+
                 break;
             default:
             }
 
         } catch (PersistenceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
         return itemResource;
     }

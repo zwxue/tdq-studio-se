@@ -51,37 +51,37 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
             // MOD mzhao feature 13114, 2010-05-19
             @Override
             public Object caseTDQAnalysisItem(TDQAnalysisItem object) {
-                return ERepositoryObjectType.TDQ_ANALYSIS;
+                return ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT;
             }
 
             @Override
             public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
-                return ERepositoryObjectType.TDQ_RULES_SQL;
+                return ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT;
             }
 
             @Override
             public Object caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
-                return ERepositoryObjectType.TDQ_INDICATORS;
+                return ERepositoryObjectType.TDQ_INDICATOR_ELEMENT;
             }
 
             @Override
             public Object caseTDQPatternItem(TDQPatternItem object) {
-                return ERepositoryObjectType.TDQ_PATTERNS;
+                return ERepositoryObjectType.TDQ_PATTERN_ELEMENT;
             }
 
             @Override
             public Object caseTDQReportItem(TDQReportItem object) {
-                return ERepositoryObjectType.TDQ_REPORTS;
+                return ERepositoryObjectType.TDQ_REPORT_ELEMENT;
             }
 
             @Override
             public Object caseTDQJrxmlItem(TDQJrxmlItem object) {
-                return ERepositoryObjectType.TDQ_JRXMLTEMPLATE;
+                return ERepositoryObjectType.TDQ_JRAXML_ELEMENT;
             }
 
             @Override
             public Object caseTDQSourceFileItem(TDQSourceFileItem object) {
-                return ERepositoryObjectType.TDQ_SOURCE_FILES;
+                return ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT;
             }
 
             public Object defaultCase(EObject object) {

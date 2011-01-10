@@ -19,7 +19,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu  class global comment. Detailled comment
  */
-public class IndicatorDefinitionRepNode extends RepositoryNode {
+public class SysIndicatorDefinitionRepNode extends RepositoryNode {
 
     /**
      * DOC klliu IndicatorDefinitionRepNode constructor comment.
@@ -27,8 +27,7 @@ public class IndicatorDefinitionRepNode extends RepositoryNode {
      * @param parent
      * @param type
      */
-    public IndicatorDefinitionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
+    public SysIndicatorDefinitionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
     }
-
 }

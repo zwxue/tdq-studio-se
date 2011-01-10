@@ -21,6 +21,7 @@ import org.talend.dq.nodes.ExchangeFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -42,6 +43,7 @@ public class CreateNewRepositoryNodeFolder extends AbstractCommonActionProvider 
             IFolder folder = WorkbenchUtils.getFolder(node);
             if (!(node instanceof ExchangeFolderRepNode) && !ResourceManager.getRulesFolder().equals(folder)
                     && !ResourceManager.getPatternFolder().equals(folder) && !ResourceManager.getIndicatorFolder().equals(folder)
+                    && !ResourceService.isSubFolder(ResourceManager.getSystemIndicatorFolder(), folder)
                     && (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType()))) {
                 currentSelection = WorkbenchUtils.getFolder(node);
                 CreateRepositoryNodeAction createSubFolderAction = new CreateRepositoryNodeAction(currentSelection);

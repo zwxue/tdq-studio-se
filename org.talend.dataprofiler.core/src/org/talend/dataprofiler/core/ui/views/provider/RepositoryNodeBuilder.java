@@ -35,12 +35,13 @@ import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.category.CategoryHandler;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.ExchangeFolderRepNode;
-import org.talend.dq.nodes.IndicatorFolderRepNode;
+import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
@@ -69,288 +70,6 @@ public final class RepositoryNodeBuilder {
 
     }
 
-    // /**
-    // * Create TdColumnRepositoryNode under ColumnFolderNodeRepositoryNode.
-    // *
-    // * @param node parent ColumnFolderNodeRepositoryNode
-    // * @param tdqFolder parent ColumnFolderNodeViewObject
-    // */
-    // public void createRepositoryNodeTdColumn(RepositoryNode node, TDQFolderObject tdqFolder) {
-    // // ((TDQFolderObject) tdqFolder).getFolderNode().loadChildren();
-    // // Object[] children = tdqFolder.getFolderNode().getChildren();
-    // // for (Object obj : children) {
-    // // if (obj instanceof TdColumn) {
-    // // TdColumn tdColumn = (TdColumn) obj;
-    // // MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(tdqFolder.getViewObject(),
-    // // tdColumn);
-    // // tdqFolder.getChildren().add(metadataColumn);
-    // // metadataColumn.setId(tdColumn.getName());
-    // // metadataColumn.setLabel(tdColumn.getName());
-    // // RepositoryNode columnNode = new RepositoryNode(metadataColumn, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
-    // // columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
-    // // metadataColumn.setRepositoryNode(columnNode);
-    // // node.getChildren().add(columnNode);
-    // // }
-    // // }
-    // }
-    //
-    // /**
-    // * Create TdViewRepositoryNode under ViewFolderNodeRepositoryNode.
-    // *
-    // * @param node parent ViewFolderNodeRepositoryNode
-    // * @param tdqFolder parent ViewFolderNodeViewObject
-    // */
-    // public void createRepositoryNodeTdView(RepositoryNode node, TDQFolderObject tdqFolder) {
-    // // tdqFolder.getFolderNode().loadChildren();
-    // // Object[] children = tdqFolder.getFolderNode().getChildren();
-    // // if (children != null) {
-    // // for (Object obj : children) {
-    // // if (obj instanceof TdView) {
-    // // TdView tdView = (TdView) obj;
-    // // tdView.setTableType("VIEW");
-    // // TdViewRepositoryObject metadataView = new TdViewRepositoryObject(tdqFolder.getViewObject(), tdView);
-    // // tdqFolder.getChildren().add(metadataView);
-    // // metadataView.setTableName(tdView.getName());
-    // // metadataView.setLabel(tdView.getName());
-    // // metadataView.setId(tdView.getName());
-    // // RepositoryNode viewNode = new RepositoryNode(metadataView, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // viewNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
-    // // viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
-    // // metadataView.setRepositoryNode(viewNode);
-    // // node.getChildren().add(viewNode);
-    // // }
-    // // }
-    // // }
-    // }
-    //
-    // /**
-    // * Create TdTableRepositoryNode under TableFolderNodeRepositoryNode.
-    // *
-    // * @param node parent TableFolderNodeRepositoryNode
-    // * @param tdqFolder parent TableFolderNodeViewObject
-    // */
-    // public void createRepositoryNodeTdTable(RepositoryNode node, TDQFolderObject tdqFolder) {
-    // // tdqFolder.getFolderNode().loadChildren();
-    // // Object[] children = tdqFolder.getFolderNode().getChildren();
-    // // if (children != null) {
-    // // for (Object obj : children) {
-    // // if (obj instanceof TdTable) {
-    // // TdTable tdTable = (TdTable) obj;
-    // // tdTable.setTableType("TABLE");
-    // // TdTableRepositoryObject metadataTable = new TdTableRepositoryObject(tdqFolder.getViewObject(), tdTable);
-    // // tdqFolder.getChildren().add(metadataTable);
-    // // metadataTable.setTableName(tdTable.getName());
-    // // metadataTable.setLabel(tdTable.getName());
-    // // metadataTable.setId(tdTable.getName());
-    // // RepositoryNode tableNode = new RepositoryNode(metadataTable, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
-    // // tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
-    // // metadataTable.setRepositoryNode(tableNode);
-    // // node.getChildren().add(tableNode);
-    // // }
-    // // }
-    // // }
-    // }
-    //
-    // /**
-    // * Create ColumnFolderNodeRepositoryNode under TdViewRepositoryNode.
-    // *
-    // * @param node parent TdViewRepositoryNode
-    // * @param metadataView parent TdViewViewObject
-    // */
-    // public void createRepositoryNodeColumnFolderNode(RepositoryNode node, TdViewRepositoryObject metadataView) {
-    // // TDQFolderObject tdqColumnFolder = new TDQFolderObject(metadataView.getViewObject(),
-    // // ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // metadataView.getChildren().add(tdqColumnFolder);
-    // // ColumnFolderNode columnFolderNode = new ColumnFolderNode();
-    // // columnFolderNode.setParent(metadataView.getTdView());
-    // // tdqColumnFolder.setFolderNode(columnFolderNode);
-    // // tdqColumnFolder.setFolderType(ETDQFolderType.COLUMN_FOLDER);
-    // // RepositoryNode columnNode = new RepositoryNode(tdqColumnFolder, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // tdqColumnFolder.setRepositoryNode(columnNode);
-    // // node.getChildren().add(columnNode);
-    // }
-    //
-    // /**
-    // * Create ColumnFolderNodeRepositoryNode under TdTableRepositoryNode.
-    // *
-    // * @param node parent TdTableRepositoryNode
-    // * @param metadataTable parent TdTableViewObject
-    // */
-    // public void createRepositoryNodeColumnFolderNode(RepositoryNode node, TdTableRepositoryObject metadataTable) {
-    // // TDQFolderObject tdqColumnFolder = new TDQFolderObject(metadataTable.getViewObject(),
-    // // ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // metadataTable.getChildren().add(tdqColumnFolder);
-    // // ColumnFolderNode columnFolderNode = new ColumnFolderNode();
-    // // columnFolderNode.setParent(metadataTable.getTdTable());
-    // // tdqColumnFolder.setFolderNode(columnFolderNode);
-    // // tdqColumnFolder.setFolderType(ETDQFolderType.COLUMN_FOLDER);
-    // // RepositoryNode columnNode = new RepositoryNode(tdqColumnFolder, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // tdqColumnFolder.setRepositoryNode(columnNode);
-    // // node.getChildren().add(columnNode);
-    // }
-    //
-    // /**
-    // * Create ViewFolderNodeRepositoryNode under CatalogRepositoryNode.
-    // *
-    // * @param node parent RepositoryNode
-    // * @param metadataCatalog parent CatalogViewObject
-    // */
-    // public void createRepositoryNodeViewFolderNode(RepositoryNode node, MetadataCatalogRepositoryObject
-    // metadataCatalog) {
-    // // TDQFolderObject tdqViewFolder = new TDQFolderObject(metadataCatalog.getViewObject(),
-    // // ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // metadataCatalog.getChildren().add(tdqViewFolder);
-    // // ViewFolderNode viewFolderNode = new ViewFolderNode();
-    // // viewFolderNode.setParent(metadataCatalog.getCatalog());
-    // // tdqViewFolder.setFolderNode(viewFolderNode);
-    // // tdqViewFolder.setFolderType(ETDQFolderType.VIEW_FOLDER);
-    // // RepositoryNode viewNode = new RepositoryNode(tdqViewFolder, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // viewNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // tdqViewFolder.setRepositoryNode(viewNode);
-    // // node.getChildren().add(viewNode);
-    // }
-    //
-    // /**
-    // * Create TableFolderNodeRepositoryNode under CatalogRepositoryNode.
-    // *
-    // * @param node parent RepositoryNode
-    // * @param metadataCatalog parent CatalogViewObject
-    // */
-    // public void createRepositoryNodeTableFolderNode(RepositoryNode node, MetadataCatalogRepositoryObject
-    // metadataCatalog) {
-    // // TDQFolderObject tdqTableFolder = new TDQFolderObject(metadataCatalog.getViewObject(),
-    // // ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // metadataCatalog.getChildren().add(tdqTableFolder);
-    // // TableFolderNode tableFolderNode = new TableFolderNode();
-    // // tableFolderNode.setParent(metadataCatalog.getCatalog());
-    // // tdqTableFolder.setFolderNode(tableFolderNode);
-    // // tdqTableFolder.setFolderType(ETDQFolderType.TABLE_FOLDER);
-    // // RepositoryNode tableNode = new RepositoryNode(tdqTableFolder, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // tdqTableFolder.setRepositoryNode(tableNode);
-    // // node.getChildren().add(tableNode);
-    // }
-
-    // /**
-    // * Create SchemaRepositoryNode under CatalogRepositoryNode.
-    // *
-    // * @param node parent CatalogRepositoryNode
-    // * @param metadataCatalog parent CatalogViewObject
-    // * @param schema the schema should to be added under the catalog
-    // */
-    // public void createRepositoryNodeSchema(RepositoryNode node, MetadataCatalogRepositoryObject metadataCatalog,
-    // Schema schema) {
-    // MetadataSchemaRepositoryObject metadataSchema = new
-    // MetadataSchemaRepositoryObject(metadataCatalog.getViewObject(),
-    // schema);
-    // metadataCatalog.getChildren().add(metadataSchema);
-    // RepositoryNode schemaNode = new RepositoryNode(metadataSchema, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
-    // schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
-    // metadataSchema.setRepositoryNode(schemaNode);
-    // node.getChildren().add(schemaNode);
-    // }
-    //
-    // /**
-    // * Create ViewFolderNodeRepositoryNode under SchemaRepositoryNode.
-    // *
-    // * @param node parent SchemaRepositoryNode
-    // * @param metadataSchema parent SchemaViewObject
-    // */
-    // public void createRepositoryNodeViewFolderNode(RepositoryNode node, MetadataSchemaRepositoryObject
-    // metadataSchema) {
-    // // TDQFolderObject tdqViewFolder = new TDQFolderObject(metadataSchema.getViewObject(),
-    // // ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // metadataSchema.getChildren().add(tdqViewFolder);
-    // // ViewFolderNode viewFolderNode = new ViewFolderNode();
-    // // viewFolderNode.setParent(metadataSchema.getSchema());
-    // // tdqViewFolder.setFolderNode(viewFolderNode);
-    // // tdqViewFolder.setFolderType(ETDQFolderType.VIEW_FOLDER);
-    // // RepositoryNode viewNode = new RepositoryNode(tdqViewFolder, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // viewNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // tdqViewFolder.setRepositoryNode(viewNode);
-    // // node.getChildren().add(viewNode);
-    // }
-    //
-    // /**
-    // * Create TableFolderNodeRepositoryNode under SchemaRepositoryNode.
-    // *
-    // * @param node parent SchemaRepositoryNode
-    // * @param metadataSchema parent SchemaViewObject
-    // */
-    // public void createRepositoryNodeTableFolderNode(RepositoryNode node, MetadataSchemaRepositoryObject
-    // metadataSchema) {
-    // // TDQFolderObject tdqTableFolder = new TDQFolderObject(metadataSchema.getViewObject(),
-    // // ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // metadataSchema.getChildren().add(tdqTableFolder);
-    // // TableFolderNode tableFolderNode = new TableFolderNode();
-    // // tableFolderNode.setParent(metadataSchema.getSchema());
-    // // tdqTableFolder.setFolderNode(tableFolderNode);
-    // // tdqTableFolder.setFolderType(ETDQFolderType.TABLE_FOLDER);
-    // // RepositoryNode tableNode = new RepositoryNode(tdqTableFolder, node, ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // // tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_FOLDER_NODE);
-    // // tdqTableFolder.setRepositoryNode(tableNode);
-    // // node.getChildren().add(tableNode);
-    // }
-
-    // /**
-    // * Create TdXmlElementTypeRepositoryNode under TdXmlElementTypeRepositoryNode.
-    // *
-    // * @param node parent TdXmlElementTypeRepositoryNode
-    // * @param metadataXmlElementTypeParent parent TdXmlElementTypeViewObject
-    // */
-    // public void createRepositoryNodeTdXmlElementTypeSub(RepositoryNode node,
-    // MetadataXmlElementTypeRepositoryObject metadataXmlElementTypeParent) {
-    // TdXmlElementType tdXmlElementTypeParent = metadataXmlElementTypeParent.getTdXmlElementType();
-    // List<TdXmlElementType> xmlElements = DqRepositoryViewService.getXMLElements(tdXmlElementTypeParent);
-    // for (TdXmlElementType tdXmlElementType : xmlElements) {
-    // MetadataXmlElementTypeRepositoryObject metadataXmlElementType = new MetadataXmlElementTypeRepositoryObject(
-    // metadataXmlElementTypeParent.getViewObject(), tdXmlElementType);
-    // metadataXmlElementTypeParent.getChildren().add(metadataXmlElementType);
-    // RepositoryNode xmlElementTypeNode = new RepositoryNode(metadataXmlElementType, node,
-    // ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // xmlElementTypeNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_CONCEPT);
-    // xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
-    // metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
-    // node.getChildren().add(xmlElementTypeNode);
-    // }
-    // }
-    //
-    // /**
-    // * Create TdXmlElementTypeRepositoryNode under TdXmlSchemaRepositoryNode.
-    // *
-    // * @param node parent TdXmlSchemaRepositoryNode
-    // * @param metadataXmlSchema parent TdXmlSchemaViewObject
-    // */
-    // public void createRepositoryNodeTdXmlElementType(RepositoryNode node, MetadataXmlSchemaRepositoryObject
-    // metadataXmlSchema) {
-    // TdXmlSchema tdXmlSchema = metadataXmlSchema.getTdXmlSchema();
-    // List<ModelElement> xmlElements = DqRepositoryViewService.getXMLElements(tdXmlSchema);
-    // for (ModelElement mElement : xmlElements) {
-    // if (mElement instanceof TdXmlElementType) {
-    // MetadataXmlElementTypeRepositoryObject metadataXmlElementType = new MetadataXmlElementTypeRepositoryObject(
-    // metadataXmlSchema.getViewObject(), (TdXmlElementType) mElement);
-    // metadataXmlSchema.getChildren().add(metadataXmlElementType);
-    // RepositoryNode xmlElementTypeNode = new RepositoryNode(metadataXmlElementType, node,
-    // ENodeType.TDQ_REPOSITORY_ELEMENT);
-    // xmlElementTypeNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
-    // xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
-    // metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
-    // node.getChildren().add(xmlElementTypeNode);
-    // }
-    // }
-    // }
-
     /**
      * DOC klliu Comment method "retrieveRepObjectType".
      * 
@@ -358,70 +77,8 @@ public final class RepositoryNodeBuilder {
      * @return
      */
     public ERepositoryObjectType retrieveRepObjectTypeByPath(String path) {
-        if (EResourceConstant.DATA_PROFILING.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_DATA_PROFILING;
-        } else if (EResourceConstant.ANALYSIS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_ANALYSIS;
-        } else if (EResourceConstant.REPORTS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_REPORTS;
-        } else if (EResourceConstant.LIBRARIES.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_LIBRARIES;
-        } else if (EResourceConstant.EXCHANGE.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_EXCHANGE;
-        } else if (EResourceConstant.INDICATORS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_INDICATORS;
-        } else if (EResourceConstant.SYSTEM_INDICATORS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_SYSTEM_INDICATORS;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_ADVANCED_STATISTICS.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_ADVANCED_STATISTICS;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_BUSINESS_RULES.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_BUSINESS_RULES;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_CORRELATION.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_CORRELATION;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_OVERVIEW.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_PATTERN_FINDER.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_PATTERN_MATCHING.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_ROW_COMPARISON.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_ROW_COMPARISON;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_SIMPLE_STATISTICS.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_SIMPLE_STATISTICS;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_SOUNDEX.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_SOUNDEX;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_SUMMARY_STATISTICS.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_SUMMARY_STATISTICS;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_TEXT_STATISTICS.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS;
-        } else if (EResourceConstant.USER_DEFINED_INDICATORS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
-        } else if (EResourceConstant.JRXML_TEMPLATE.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_JRXMLTEMPLATE;
-        } else if (EResourceConstant.PATTERNS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_PATTERNS;
-        } else if (EResourceConstant.PATTERN_REGEX.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_PATTERN_REGEX;
-        } else if (EResourceConstant.PATTERN_SQL.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_PATTERN_SQL;
-        } else if (EResourceConstant.RULES.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_RULES;
-        } else if (EResourceConstant.RULES_SQL.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_RULES_SQL;
-        } else if (EResourceConstant.SOURCE_FILES.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_SOURCE_FILES;
-        } else if (EResourceConstant.METADATA.getPath().equals(path)) {
-            return ERepositoryObjectType.METADATA;
-        } else if (EResourceConstant.DB_CONNECTIONS.getPath().equals(path)) {
-            return ERepositoryObjectType.METADATA_CONNECTIONS;
-        } else if (EResourceConstant.MDM_CONNECTIONS.getPath().equals(path)) {
-            return ERepositoryObjectType.METADATA_MDMCONNECTION;
-        }
-        return null;
+        return RepositoryNodeHelper.retrieveRepObjectTypeByPath(path);
     }
-
 
     /**
      * DOC klliu Comment method "createSystemFolder".
@@ -439,7 +96,6 @@ public final class RepositoryNodeBuilder {
             FolderItem folder2 = folderHelper.getFolder(resConstant.getPath());
             folder = new Folder(folder2.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
         } else {
-            // folder = new Folder(resConstant.getName(), resConstant.getName());
             folder = ProxyRepositoryFactory.getInstance().createFolder(retrieveRepObjectTypeByPath(resConstant.getPath()),
                     Path.EMPTY, resConstant.getName());
         }
@@ -455,16 +111,16 @@ public final class RepositoryNodeBuilder {
             node.getChildren().add(repFolderNode);
             return repFolderNode;
         case SYSTEM_INDICATORS:
-            IndicatorFolderRepNode systemIndicatorFolderNode = new IndicatorFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            SysIndicatorFolderRepNode systemIndicatorFolderNode = new SysIndicatorFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(systemIndicatorFolderNode);
             node.getChildren().add(systemIndicatorFolderNode);
             return systemIndicatorFolderNode;
         case USER_DEFINED_INDICATORS:
-            UserDefIndicatorFolderRepNode userDefFolderNode = new UserDefIndicatorFolderRepNode(folder, node,
+            UserDefIndicatorFolderRepNode userDefIndicatorFolderNode = new UserDefIndicatorFolderRepNode(folder, node,
                     ENodeType.SYSTEM_FOLDER);
-            folder.setRepositoryNode(userDefFolderNode);
-            node.getChildren().add(userDefFolderNode);
-            return userDefFolderNode;
+            folder.setRepositoryNode(userDefIndicatorFolderNode);
+            node.getChildren().add(userDefIndicatorFolderNode);
+            return userDefIndicatorFolderNode;
         case JRXML_TEMPLATE:
             JrxmlTempFolderRepNode jrxmlFolderNode = new JrxmlTempFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(jrxmlFolderNode);

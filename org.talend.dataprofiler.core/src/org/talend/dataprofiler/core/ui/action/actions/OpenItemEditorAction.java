@@ -99,15 +99,17 @@ public class OpenItemEditorAction extends Action {
         } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
             editorInput = new IndicatorDefinitionItemEditorInput(item);
             editorID = IndicatorEditor.class.getName();
-        } else if (ERepositoryObjectType.TDQ_RULES.getKey().equals(key)) {
+        } else if (ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT.getKey().equals(key)) {
             editorInput = new BusinessRuleItemEditorInput(item);
             editorID = DQRuleEditor.class.getName();
-        } else if (ERepositoryObjectType.TDQ_PATTERNS.getKey().equals(key)) {
+        } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
             editorInput = new PatternItemEditorInput(item);
             editorID = PatternEditor.class.getName();
-        } else if (ERepositoryObjectType.TDQ_JRXMLTEMPLATE.getKey().equals(key)
-                || ERepositoryObjectType.TDQ_SOURCE_FILES.getKey().equals(key)
-                || ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key)) {
+        } else /*
+                * if (ERepositoryObjectType.TDQ_JRXMLTEMPLATE.getKey().equals(key) ||
+                * ERepositoryObjectType.TDQ_SOURCE_FILES.getKey().equals(key) ||
+                * ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key))
+                */ {
             IPath append = WorkbenchUtils.getFilePath((RepositoryNode) reposViewObj.getRepositoryNode());
             fileEditorInput = ResourceManager.getRootProject().getFile(append);
         }

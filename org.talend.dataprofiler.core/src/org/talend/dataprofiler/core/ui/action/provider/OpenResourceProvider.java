@@ -18,7 +18,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.dq.nodes.IndicatorDefinitionRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternRepNode;
@@ -51,7 +51,7 @@ public class OpenResourceProvider extends AbstractCommonActionProvider {
      * @return
      */
     private boolean shouldShowOpenMenu(RepositoryNode node) {
-        return node instanceof AnalysisRepNode || node instanceof IndicatorDefinitionRepNode || node instanceof PatternRepNode
+        return node instanceof AnalysisRepNode || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                 || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode || node instanceof RuleRepNode
                 || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode;
     }

@@ -43,7 +43,7 @@ import org.talend.resource.ResourceManager;
 import common.Logger;
 
 /**
- * DOC klliu Reconstructure the ResourceViewContentProvider for using DI's API
+ * DOC klliu Reconstructure the ResourceViewContentProvider for using DI's API.
  */
 public class ResourceViewContentProvider extends WorkbenchContentProvider {
 

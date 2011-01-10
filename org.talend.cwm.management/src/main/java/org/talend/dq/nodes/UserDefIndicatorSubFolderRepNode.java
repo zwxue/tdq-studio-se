@@ -15,11 +15,10 @@ package org.talend.dq.nodes;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment: user defined indicator sub folder repository node
  */
-public class UserDefIndicatorSubFolderRepNode extends RepositoryNode {
+public class UserDefIndicatorSubFolderRepNode extends UserDefIndicatorFolderRepNode {
 
     /**
      * DOC klliu UserDefIndicatorSubFolderRepNode constructor comment.
@@ -30,5 +29,4 @@ public class UserDefIndicatorSubFolderRepNode extends RepositoryNode {
     public UserDefIndicatorSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
     }
-
 }

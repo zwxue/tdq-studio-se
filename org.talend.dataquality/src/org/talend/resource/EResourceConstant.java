@@ -50,9 +50,7 @@ public enum EResourceConstant {
     OLD_METADATA("TDQ_Metadata", "TDQ_Metadata", ResourceConstant.READONLY),
     OLD_DB_CONNECTIONS("DB Connections", "TDQ_Metadata/DB Connections", ResourceConstant.READONLY),
     OLD_MDM_CONNECTIONS("MDM Connections", "TDQ_Metadata/MDM Connections", ResourceConstant.READONLY),
-
     FOLDER("", ""),
-
     DATA_PROFILING("TDQ_Data Profiling", "TDQ_Data Profiling", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     LIBRARIES("TDQ_Libraries", "TDQ_Libraries", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     METADATA("metadata", "metadata", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
@@ -60,11 +58,6 @@ public enum EResourceConstant {
     REPORTS("Reports", "TDQ_Data Profiling/Reports", ResourceConstant.READONLY),
     EXCHANGE("Exchange", "TDQ_Libraries/Exchange", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     INDICATORS("Indicators", "TDQ_Libraries/Indicators", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
-    JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY),
-    PATTERNS("Patterns", "TDQ_Libraries/Patterns", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
-
-    RULES("Rules", "TDQ_Libraries/Rules", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
-    SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY),
     USER_DEFINED_INDICATORS(
                             "User Defined Indicators",
                             "TDQ_Libraries/Indicators/User Defined Indicators",
@@ -112,22 +105,13 @@ public enum EResourceConstant {
                                       "Text Statistics",
                                       "TDQ_Libraries/Indicators/System Indicators/Text Statistics",
                                       ResourceConstant.READONLY),
+    JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY),
+    PATTERNS("Patterns", "TDQ_Libraries/Patterns", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     PATTERN_REGEX("Regex", "TDQ_Libraries/Patterns/Regex", ResourceConstant.READONLY),
-
-    PATTERN_REGEX_CODE("code", "TDQ_Libraries/Patterns/Regex/code", ResourceConstant.READONLY),
-    PATTERN_REGEX_PHONE("phone", "TDQ_Libraries/Patterns//phone", ResourceConstant.READONLY),
-    PATTERN_REGEX_ADDRESS("address", "TDQ_Libraries/Patterns/Regex/address", ResourceConstant.READONLY),
-    PATTERN_REGEX_TEXT("text", "TDQ_Libraries/Patterns/Regex/text", ResourceConstant.READONLY),
-    PATTERN_REGEX_CUSTOMER("customer", "TDQ_Libraries/Patterns/Regex/customer", ResourceConstant.READONLY),
-    PATTERN_REGEX_INTERNET("internet", "TDQ_Libraries/Patterns/Regex/internet", ResourceConstant.READONLY),
-    PATTERN_REGEX_COLOR("color", "TDQ_Libraries/Patterns/Regex/color", ResourceConstant.READONLY),
-    PATTERN_REGEX_DATE("date", "TDQ_Libraries/Patterns/Regex/date", ResourceConstant.READONLY),
-    PATTERN_REGEX_NUMBER("number", "TDQ_Libraries/Patterns/Regex/number", ResourceConstant.READONLY),
     PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY),
-    PATTERN_SQL_INTERNET("internet", "TDQ_Libraries/Patterns/SQL/internet", ResourceConstant.READONLY),
+    RULES("Rules", "TDQ_Libraries/Rules", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER),
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY),
-    RULES_SQL_INTERNET("internet", "TDQ_Libraries/Rules/SQL/internet", ResourceConstant.READONLY),
-
+    SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY),
     DB_CONNECTIONS("connections", "metadata/connections", ResourceConstant.READONLY),
     MDM_CONNECTIONS("MDMconnections", "metadata/MDMconnections", ResourceConstant.READONLY),
     REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY);

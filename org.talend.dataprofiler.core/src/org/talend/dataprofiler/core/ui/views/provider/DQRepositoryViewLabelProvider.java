@@ -34,7 +34,7 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
-import org.talend.dq.nodes.IndicatorDefinitionRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRepNode;
@@ -271,7 +271,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             } else if (node instanceof SourceFileRepNode) {
                 return ((SourceFileRepNode) node).getLabel();
             }
-            if (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof IndicatorDefinitionRepNode
+            if (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof SysIndicatorDefinitionRepNode
                     || node instanceof PatternRepNode || node instanceof RuleRepNode) {
                 return node.getObject().getLabel() + " " + node.getObject().getVersion();
             }

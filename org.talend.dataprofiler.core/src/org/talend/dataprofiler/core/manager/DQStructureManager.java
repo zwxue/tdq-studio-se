@@ -291,7 +291,6 @@ public final class DQStructureManager {
                 }
                 IFolder folder = project.getFolder(folderName);
                 if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILES)) {
-                    int segmentCount = folder.getFullPath().segmentCount();
                     String name = file.getName();
                     int indexOf = name.indexOf(".");
                     String label = name.substring(0, indexOf);
@@ -306,7 +305,6 @@ public final class DQStructureManager {
                 log.error(e, e);
             }
         }
-
     }
 
     /**
@@ -325,7 +323,6 @@ public final class DQStructureManager {
         }
         IFile element = folder.getFile(fileName);
         if (!element.exists()) {
-
             element.create(inputStream, false, null);
             ModelElement modelElement = ModelElementFileFactory.getModelElement(element);
             if (modelElement != null) {
@@ -335,14 +332,10 @@ public final class DQStructureManager {
                 }
             }
         }
-
     }
 
     private TDQSourceFileItem createSourceFileItem(File initFile, IPath path, String label, String extension) {
-
         Property property = PropertiesFactory.eINSTANCE.createProperty();
-        // property.setAuthor(((RepositoryContext)
-        // CorePlugin.getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
         property.setVersion(VersionUtils.DEFAULT_VERSION);
         property.setStatusCode(""); //$NON-NLS-1$
         property.setLabel(label);
@@ -359,21 +352,15 @@ public final class DQStructureManager {
         } catch (IOException e) {
             ExceptionHandler.process(e);
         }
-        // String routineContent = new String(byteArray.getInnerContent());
-        // byteArray.setInnerContent(routineContent.getBytes());
         sourceFileItem.setContent(byteArray);
         IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
         try {
             property.setId(repositoryFactory.getNextId());
-            // repositoryFactory.createParentFoldersRecursively(ERepositoryObjectType.getItemType(sourceFileItem),
-            // path);
             repositoryFactory.create(sourceFileItem, path);
         } catch (PersistenceException e) {
             ExceptionHandler.process(e);
         }
-
         return sourceFileItem;
-
     }
 
     /**
@@ -427,10 +414,6 @@ public final class DQStructureManager {
         // get a project handle
         final IProject newProjectHandle = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 
-        // final IJavaProject javaProjHandle =
-        // JavaCore.create(newProjectHandle);
-        // get a project descriptor
-
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
 
@@ -458,9 +441,6 @@ public final class DQStructureManager {
         if (!newProjectHandle.exists()) {
             ProgressUI.popProgressDialog(op);
         }
-        // newProjectHandle.setPersistentProperty(PROJECT_TDQ_KEY, PROJECT_TDQ_PROPERTY);
-        // TdqPropertieManager.getInstance().addFolderProperties(newProjectHandle, PROJECT_TDQ_KEY,
-        // PROJECT_TDQ_PROPERTY);
         return newProjectHandle;
     }
 
@@ -562,26 +542,6 @@ public final class DQStructureManager {
         }
 
     }
-
-    // private void copyFileToFolder(InputStream inputStream, String fileName, IFolder folder) throws CoreException {
-    // if (inputStream == null) {
-    // return;
-    // }
-    //
-    // IFile file = folder.getFile(fileName);
-    // if (!file.exists()) {
-    // file.create(inputStream, false, null);
-    //
-    // ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
-    // if (modelElement != null) {
-    // AElementPersistance writer = ElementWriterFactory.getInstance().create(file.getFileExtension());
-    // if (writer != null) {
-    // writer.createProperty(modelElement);
-    // }
-    // }
-    // }
-    //
-    // }
 
     public boolean isPathValid(IPath path, String label) {
         IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);

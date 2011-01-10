@@ -108,9 +108,8 @@ public class CreatePatternWizard extends AbstractWizard {
 
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         Pattern pattern = (Pattern) cwmElement;
-        IFolder folderResource = parameter.getFolderProvider().getFolderResource();
-
-        return ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folderResource);
+        IFolder folder = parameter.getFolderProvider().getFolderResource();
+        return ElementWriterFactory.getInstance().createPatternWriter().create(pattern, folder);
     }
 
     public ModelElement initCWMResourceBuilder() {
@@ -166,7 +165,6 @@ public class CreatePatternWizard extends AbstractWizard {
 
     @Override
     protected ResourceFileMap getResourceFileMap() {
-        // TODO Auto-generated method stub
         return null;
     }
 
