@@ -141,9 +141,13 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                 }
             } else {
-                // IFile afile = ((FileEditorInput) anaEditor.getEditorInput()).getFile();
-                // analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
-                analysis = ((TDQAnalysisItem) ((AnalysisItemEditorInput) anaEditor.getEditorInput()).getItem()).getAnalysis();
+                IEditorInput editorInput = anaEditor.getEditorInput();
+                if (editorInput instanceof FileEditorInput) {
+                    IFile afile = ((FileEditorInput) editorInput).getFile();
+                    analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
+                } else if (editorInput instanceof AnalysisItemEditorInput) {
+                    analysis = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem()).getAnalysis();
+                }
                 IFormPage activePageInstance = anaEditor.getActivePageInstance();
                 if (activePageInstance instanceof IRuningStatusListener) {
                     listener = (IRuningStatusListener) activePageInstance;

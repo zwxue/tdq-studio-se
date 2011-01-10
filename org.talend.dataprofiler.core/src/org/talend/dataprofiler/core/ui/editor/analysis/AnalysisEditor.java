@@ -14,10 +14,13 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
@@ -28,6 +31,7 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -157,21 +161,26 @@ public class AnalysisEditor extends CommonFormEditor {
 
     protected void translateInput(IEditorInput input) {
         // MOD klliu 2010-12-10
-        AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) input;
-        TDQAnalysisItem tdqAnalysisItem = fileEditorInput.getTDQAnalysisItem();
-        // IFile file = fileEditorInput.getFile();
-        // if (FactoriesUtil.isAnalysisFile(file.getFileExtension())) {
-        Analysis findAnalysis = tdqAnalysisItem.getAnalysis();
-        // Analysis findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
-            if (findAnalysis != null) {
-                analysisType = findAnalysis.getParameters().getAnalysisType();
-            } else {
-
-            log.error("Could not find an analysis in file: " + tdqAnalysisItem.getProperty().getLabel());
+        Analysis findAnalysis = null;
+        String label = "";
+        if (input instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) input;
+            TDQAnalysisItem tdqAnalysisItem = fileEditorInput.getTDQAnalysisItem();
+            findAnalysis = tdqAnalysisItem.getAnalysis();
+            label = tdqAnalysisItem.getProperty().getLabel();
+        } else if (input instanceof FileEditorInput) {
+            FileEditorInput fileEditorInput = (FileEditorInput) input;
+            IFile file = fileEditorInput.getFile();
+            label = file.getFullPath().toString();
+            if (FactoriesUtil.isAnalysisFile(file.getFileExtension())) {
+                findAnalysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
             }
-        // } else {
-        // log.error("Given file does is not an analysis file: " + file.getFullPath());
-        // }
+        }
+        if (findAnalysis != null) {
+            analysisType = findAnalysis.getParameters().getAnalysisType();
+        } else {
+            log.error("Could not find an analysis in file: " + label);
+        }
     }
 
     @Override
