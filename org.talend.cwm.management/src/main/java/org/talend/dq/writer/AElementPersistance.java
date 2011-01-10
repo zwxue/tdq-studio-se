@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -266,7 +267,7 @@ public abstract class AElementPersistance {
         String status = MetadataHelper.getDevStatus(modelElement);
 
         property.setId(EcoreUtil.generateUUID());
-        property.setLabel(modelElement.getName());
+        property.setLabel(WorkspaceUtils.normalize(modelElement.getName()));
         property.setPurpose(purpose);
         property.setDescription(description);
         property.setStatusCode(status);
@@ -282,6 +283,7 @@ public abstract class AElementPersistance {
         }
         property.setMaxInformationLevel(maxLevel);
     }
+
 
     /**
      * DOC bZhou Comment method "saveProperty".

@@ -20,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.talend.utils.string.AsciiUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -62,5 +63,10 @@ public final class WorkspaceUtils {
             resourceFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(platformResourcePath.toString()));
         }
         return resourceFile;
+    }
+
+    public static String normalize(String pathName) {
+        return pathName == null ? pathName : AsciiUtils.replaceCharacters(pathName, "/: \\", "____");
+
     }
 }

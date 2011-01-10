@@ -22,7 +22,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
-import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -51,7 +51,7 @@ public class MDMConnectionFolderRepNode extends RepositoryNode {
         ERepositoryObjectType contentType = this.getContentType();
         Container container = null;
         try {
-            container = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory().getMetadataMDM();
+            container = ProxyRepositoryFactory.getInstance().getMetadataMDM();
             fetchRepositoryNodeByFolder(container, contentType, fetchNodeByFolder);
         } catch (PersistenceException e) {
             log.error(e, e);
