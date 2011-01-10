@@ -23,6 +23,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.talend.core.language.ECodeLanguage;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.ui.branding.IActionBarHelper;
 import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.repository.model.IRepositoryNode;
@@ -78,7 +79,6 @@ public class TOPConfiguration implements IBrandingConfiguration {
     public List<IRepositoryNode> getHiddenRepositoryCategory(IRepositoryNode parent) {
 
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-
 
         return nodes;
     }
@@ -147,9 +147,6 @@ public class TOPConfiguration implements IBrandingConfiguration {
     public String[] getAvailableComponents() {
         return null;
     }
-
-
-
 
     /*
      * (non-Javadoc)
@@ -250,5 +247,15 @@ public class TOPConfiguration implements IBrandingConfiguration {
      */
     public void setUseProductRegistration(boolean useProductRegistration) {
         this.useProductRegistration = useProductRegistration;
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.core.ui.branding.IBrandingConfiguration#getJobDesignName()
+     */
+    public String getJobDesignName() {
+        // TODO Auto-generated method stub
+        return ERepositoryObjectType.PROCESS.name();
     }
 }
