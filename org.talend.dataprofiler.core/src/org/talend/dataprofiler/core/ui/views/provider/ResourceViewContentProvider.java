@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.IMetadataXmlElementType;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.properties.FolderItem;
@@ -154,6 +155,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                     resContants.add(EResourceConstant.DB_CONNECTIONS);
                     resContants.add(EResourceConstant.MDM_CONNECTIONS);
+                    if (!PluginChecker.isOnlyTopLoaded()) {
+                        resContants.add(EResourceConstant.FILEDELIMITED);
+                    }
                     instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                 } else if (node instanceof RecycleBinRepNode) {
                     // TODO get deleted node !

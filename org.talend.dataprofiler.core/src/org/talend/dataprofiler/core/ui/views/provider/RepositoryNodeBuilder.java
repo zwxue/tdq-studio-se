@@ -40,8 +40,8 @@ import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.ExchangeFolderRepNode;
-import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
@@ -49,6 +49,7 @@ import org.talend.dq.nodes.PatternSqlFolderRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.RulesFolderRepNode;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
+import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -156,6 +157,11 @@ public final class RepositoryNodeBuilder {
             folder.setRepositoryNode(mdmFolder);
             node.getChildren().add(mdmFolder);
             return mdmFolder;
+        case FILEDELIMITED:
+            DFConnectionFolderRepNode dfmFolder = new DFConnectionFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            folder.setRepositoryNode(dfmFolder);
+            node.getChildren().add(dfmFolder);
+            return dfmFolder;
         case EXCHANGE:
             ExchangeFolderRepNode exchangeFolder = new ExchangeFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(exchangeFolder);

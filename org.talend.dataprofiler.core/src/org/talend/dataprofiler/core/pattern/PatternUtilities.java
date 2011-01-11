@@ -40,7 +40,9 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
@@ -74,6 +76,7 @@ import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -184,21 +187,26 @@ public final class PatternUtilities {
         if (dm != null) {
             TypedReturnCode<java.sql.Connection> trc = JavaSqlFactory.createConnection((Connection) dm);
 
+            // MOD qiongli 2011-1-10 feature 16796
+            boolean isDelimitedFileConnection = ConnectionUtils.isDelimitedFileConnection((DataProvider) dm);
             if (trc != null) {
                 java.sql.Connection conn = trc.getObject();
-
-                try {
-                    SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
-                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
-                } catch (SQLException e) {
-                    log.error(e, e);
+                if (isDelimitedFileConnection) {
+                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage((DelimitedFileConnection) dm);
+                } else {
+                    try {
+                        SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
+                        dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
+                    } catch (SQLException e) {
+                        log.error(e, e);
+                    }
                 }
             }
 
             // MOD xqliu 2010-08-12 bug 14601
             if (!(isSQLPattern
                     || DefinitionHandler.getInstance().canRunRegularExpressionMatchingIndicator(dbmsLanguage, isJavaEngin,
- pattern))) {
+                            pattern) || isDelimitedFileConnection)) {
                 // MessageDialogWithToggle.openInformation(null,
                 //                        DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
                 //                                .getString("PatternUtilities.couldnotSetIndicator")); //$NON-NLS-1$

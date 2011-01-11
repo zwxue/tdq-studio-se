@@ -125,6 +125,8 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.METADATA_CONNECTIONS;
         } else if (EResourceConstant.MDM_CONNECTIONS.getPath().equals(path)) {
             return ERepositoryObjectType.METADATA_MDMCONNECTION;
+        } else if (EResourceConstant.FILEDELIMITED.getPath().equals(path)) {
+            return ERepositoryObjectType.METADATA_FILE_DELIMITED;
         }
         return null;
     }

@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.DelimitedFileConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -34,7 +35,9 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
-import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.dq.nodes.DFColumnFolderRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRepNode;
@@ -42,6 +45,7 @@ import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.resource.EResourceConstant;
@@ -137,6 +141,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.CONNECTION);
                 } else if (viewObject.getLabel().equals(EResourceConstant.MDM_CONNECTIONS.getName())) {
                     return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                } else if (viewObject.getLabel().equals(EResourceConstant.FILEDELIMITED.getName())) {
+                    return ImageLib.getImage(ImageLib.FILE_DELIMITED);
                 } else if (viewObject.getLabel().equals(EResourceConstant.LIBRARIES.getName())) {
                     return ImageLib.getImage(ImageLib.LIBRARIES);
                 } else if (viewObject.getLabel().equals(EResourceConstant.EXCHANGE.getName())) {
@@ -151,6 +157,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (item instanceof MDMConnectionItem) {
                     return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                } else if (item instanceof DelimitedFileConnectionItem) {
+                    return ImageLib.getImage(ImageLib.FILE_DELIMITED);
                 } else if (item instanceof TDQAnalysisItem) {
                     return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
                 } else if (item instanceof TDQReportItem) {
@@ -171,17 +179,17 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 } else if (node instanceof DBViewFolderRepNode) {
                     return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-                } else if (node instanceof DBTableRepNode) {
+                } else if (node instanceof DBTableRepNode || node instanceof DFTableRepNode) {
                     return ImageLib.getImage(ImageLib.TABLE);
                 } else if (node instanceof DBViewRepNode) {
                     return ImageLib.getImage(ImageLib.VIEW);
-                } else if (node instanceof DBColumnRepNode) {
+                } else if (node instanceof DBColumnRepNode || node instanceof DFColumnRepNode) {
                     return ImageLib.getImage(ImageLib.TD_COLUMN);
                 } else if (node instanceof MDMSchemaRepNode) {
                     return ImageLib.getImage(ImageLib.XML_DOC);
                 } else if (node instanceof MDMXmlElementRepNode) {
                     return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
-                } else if (node instanceof DBColumnFolderRepNode) {
+                } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
                     return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 }
             }
@@ -266,8 +274,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return ((DBTableFolderRepNode) node).getNodeName();
             } else if (node instanceof DBViewFolderRepNode) {
                 return ((DBViewFolderRepNode) node).getNodeName();
-            } else if (node instanceof DBColumnFolderRepNode) {
-                return ((DBColumnFolderRepNode) node).getNodeName();
+            } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
+                return DefaultMessagesImpl.getString("ColumnFolderNode.columns");
             } else if (node instanceof SourceFileRepNode) {
                 return ((SourceFileRepNode) node).getLabel();
             }

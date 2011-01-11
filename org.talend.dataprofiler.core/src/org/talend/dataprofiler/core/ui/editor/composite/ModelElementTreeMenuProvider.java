@@ -36,6 +36,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
@@ -87,22 +88,25 @@ public abstract class ModelElementTreeMenuProvider {
         Menu menu = new Menu(tree);
 
         if (isSelectedColumn(tree.getSelection())) {
-            MenuItem previewMenuItem = new MenuItem(menu, SWT.CASCADE);
-            previewMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.previewDQElement")); //$NON-NLS-1$
-            previewMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-            previewMenuItem.addSelectionListener(new SelectionAdapter() {
+            if (!isMetadataColumnSelected(tree.getSelection())) {
+                MenuItem previewMenuItem = new MenuItem(menu, SWT.CASCADE);
+                previewMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.previewDQElement")); //$NON-NLS-1$
+                previewMenuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+                previewMenuItem.addSelectionListener(new SelectionAdapter() {
 
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected (org.eclipse .swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    previewSelectedElements(tree);
-                }
+                    /*
+                     * (non-Javadoc)
+                     * 
+                     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected (org.eclipse
+                     * .swt.events.SelectionEvent)
+                     */
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        previewSelectedElements(tree);
+                    }
 
-            });
+                });
+            }
 
             if (isColumnSetMenu) {
                 MenuItem createColumnAnalysisMenuItem = new MenuItem(menu, SWT.CASCADE);
@@ -135,7 +139,8 @@ public abstract class ModelElementTreeMenuProvider {
             });
         }
 
-        if (isSelectedIndicator(tree.getSelection()) && !isMdmSelected(tree.getSelection())) {
+        if (isSelectedIndicator(tree.getSelection()) && !isMdmSelected(tree.getSelection())
+                && !isMetadataColumnIndicatorSelected(tree.getSelection())) {
             // MOD 2009-01-04 mzhao
             MenuItem showQueryMenuItem = new MenuItem(menu, SWT.CASCADE);
             showQueryMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.viewQuery")); //$NON-NLS-1$
@@ -487,6 +492,42 @@ public abstract class ModelElementTreeMenuProvider {
                     return iu.isXmlElement();
                 }
             }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * DOC qiongli:if the selected item is MetadaColumn.
+     * 
+     * @param items
+     * @return
+     */
+    private boolean isMetadataColumnSelected(TreeItem[] items) {
+        for (TreeItem item : items) {
+            Object data = item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
+            if (data != null && data instanceof DelimitedFileIndicator) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "isMetadataColumnIndicatorSelected".
+     * 
+     * @param items
+     * @return
+     */
+    private boolean isMetadataColumnIndicatorSelected(TreeItem[] items) {
+        for (TreeItem item : items) {
+            Object dataIndicator = item.getData(AnalysisColumnTreeViewer.INDICATOR_UNIT_KEY);
+            if (dataIndicator != null && dataIndicator instanceof IndicatorUnit) {
+                IndicatorUnit iu = (IndicatorUnit) dataIndicator;
+                return iu.isMetadataColumn();
+            }
+
         }
         return false;
     }

@@ -51,6 +51,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -70,8 +71,10 @@ import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
+import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -92,6 +95,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -423,6 +427,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 connection = tdDataProvider;
             }
         }
+        // change to java engine for delimited file connection
+        if (connection != null && (connection instanceof DelimitedFileConnection)) {
+            masterPage.changeStateForDelimitedFile();
+        }
     }
 
     private void addItemElements(final ModelElementIndicator[] elements) {
@@ -444,6 +452,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             IRepositoryViewObject repViewObj = meIndicator.getModelElementRepositoryNode().getObject();
             final MetadataColumn metadataColumn = ((MetadataColumnRepositoryObject) repViewObj).getTdColumn();
             DataminingType dataminingType = MetadataHelper.getDataminingType(metadataColumn);
+            // MOD qiongli 2010-11-15 feature 16796
+            if (meIndicator instanceof DelimitedFileIndicator) {
+                dataminingType = MetadataHelper.getDefaultDataminingType(meIndicator.getJavaType());
+            }
 
             if (dataminingType == null) {
                 combo.select(0);
@@ -607,6 +619,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";
         } else if (meIndicator instanceof XmlElementIndicator) {
             typeName = ((TdXmlElementType) meIndicator.getModelElementRepositoryNode()).getJavaType();
+        } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
+            MetadataColumn mColumn = ((DelimitedFileIndicatorImpl) meIndicator).getMetadataColumn();
+            typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());
         }
         return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
                 + PluginConstant.PARENTHESIS_RIGHT : "null";

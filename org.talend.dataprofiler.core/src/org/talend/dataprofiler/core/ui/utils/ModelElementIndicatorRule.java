@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -23,6 +24,7 @@ import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sql.XSDDataTypeConvertor;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -56,14 +58,17 @@ public final class ModelElementIndicatorRule {
     public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me, ExecutionLanguage language) {
 
         int javaType = 0;
+        boolean isDeliFileColumn = !(me instanceof TdColumn) && me instanceof MetadataColumn;
         if (me instanceof TdColumn) {
             // javaType = ((TdColumn) me).getJavaType();
             javaType = ((TdColumn) me).getSqlDataType().getJavaDataType();
         } else if (me instanceof TdXmlElementType) {
             javaType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) me).getJavaType());
+        } else if (isDeliFileColumn) {
+            javaType = TalendTypeConvert.convertToJDBCType(((MetadataColumn) me).getTalendType());
         }
         DataminingType dataminingType = MetadataHelper.getDataminingType(me);
-        if (dataminingType == null) {
+        if (dataminingType == null || isDeliFileColumn) {
             dataminingType = MetadataHelper.getDefaultDataminingType(javaType);
         }
 

@@ -29,6 +29,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -116,11 +118,13 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
             return new ReturnCode(Boolean.TRUE);
         }
 
-        if (analyzedElements.get(0) instanceof TdXmlElementType) {
+        // MOD qiongli 2011-1-10,feature 16796.
+        if (analyzedElements.get(0) instanceof TdXmlElementType || oldDataProvider instanceof DelimitedFileConnection) {
             MessageDialog.openInformation(shell, DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"),
                     "Can't change this connection!");
             return new ReturnCode(Boolean.FALSE);
         }
+
 
         // Open synchronized dialog.
         boolean retCode = MessageDialog.openQuestion(shell, DefaultMessagesImpl
@@ -134,6 +138,11 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 anaEleSynDialog = new AnalyzedColumnSetsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
             } else if (analyzedElements.get(0) instanceof Package) {
                 anaEleSynDialog = new AnalyzedPackageSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
+            } else if (analyzedElements.get(0) instanceof MetadataColumn) {
+                // MOD qiongli 2010-11-8 feature 16796
+                MessageDialog.openInformation(shell, DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"),
+                        "Can't change this connection!");
+                return new ReturnCode(Boolean.FALSE);
             }
 
             final List<SynTreeModel> treeModelLs = anaEleSynDialog.getSynInputModel();

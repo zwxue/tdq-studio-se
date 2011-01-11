@@ -1,0 +1,91 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2010 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dq.nodes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
+
+/**
+ * DOC qiongli class global comment. Detailled comment
+ */
+public class DFColumnFolderRepNode extends RepositoryNode {
+
+    private IRepositoryViewObject object;
+
+    private EList<MetadataColumn> columns;
+
+    private MetadataTable mTable;
+
+    /**
+     * DOC qiongli DFColumnFolderRepNode constructor comment.
+     * 
+     * @param object
+     * @param parent
+     * @param type
+     */
+    public DFColumnFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
+        super(object, parent, type);
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren() {
+        List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
+        List<MetadataColumn> mdColumns = new ArrayList<MetadataColumn>();
+        IRepositoryViewObject meataColumnSetObject = this.getObject();
+        if (meataColumnSetObject instanceof MetadataTableRepositoryObject) {
+            MetadataTableRepositoryObject mTableRepositoryObject = (MetadataTableRepositoryObject) meataColumnSetObject;
+            object = mTableRepositoryObject;
+            mTable = mTableRepositoryObject.getTable();
+            columns = mTable.getColumns();
+        }
+        if (columns != null && columns.size() > 0) {
+            for (MetadataColumn mec : columns) {
+                mdColumns.add(mec);
+            }
+        }
+        createMdcolumnsNode(mdColumns, repsNodes);
+
+        return repsNodes;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "createTdcolumnsNode".
+     * 
+     * @param tdcolumns
+     * @param repsNodes
+     */
+    private void createMdcolumnsNode(List<MetadataColumn> mdColumns, List<IRepositoryNode> repsNodes) {
+        for (MetadataColumn mdColumn : mdColumns) {
+            MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(object, mdColumn);
+            metadataColumn.setId(mdColumn.getLabel());
+            metadataColumn.setLabel(mdColumn.getLabel());
+            DFColumnRepNode columnNode = new DFColumnRepNode(metadataColumn, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
+            columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
+            metadataColumn.setRepositoryNode(columnNode);
+            repsNodes.add(columnNode);
+        }
+    }
+
+}

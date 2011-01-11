@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.DelimitedFileConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
@@ -114,6 +115,7 @@ public enum EResourceConstant {
     SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY),
     DB_CONNECTIONS("connections", "metadata/connections", ResourceConstant.READONLY),
     MDM_CONNECTIONS("MDMconnections", "metadata/MDMconnections", ResourceConstant.READONLY),
+    FILEDELIMITED("fileDelimited", "metadata/fileDelimited", ResourceConstant.READONLY),
     REPORTING_DB("TDQ_reporting_db", "REPORTING_DB", ResourceConstant.READONLY);
 
     private String name;
@@ -270,6 +272,11 @@ public enum EResourceConstant {
                 @Override
                 public Object caseFolderItem(FolderItem object) {
                     return FOLDER;
+                }
+
+                @Override
+                public Object caseDelimitedFileConnectionItem(DelimitedFileConnectionItem object) {
+                    return FILEDELIMITED;
                 }
 
             }.doSwitch(item);

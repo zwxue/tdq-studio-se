@@ -365,9 +365,9 @@ public final class DependenciesHandler {
                     ModelElement modelElement = supplier.get(0);
                     if (modelElement != null) {
                         if (modelElement instanceof Connection) {
-                            if (modelElement.equals(connection)) {
+                            // if (modelElement.equals(connection)) {
                                 realDependency.add(dependency);
-                            }
+                            // }
                         } else {
                             realDependency.add(dependency);
                         }

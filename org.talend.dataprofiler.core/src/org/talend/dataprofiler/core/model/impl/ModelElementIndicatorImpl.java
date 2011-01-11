@@ -622,6 +622,6 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     }
 
     public String getElementName() {
-        return getModelElementRepositoryNode().getObject().getProperty().getLabel();
+        return getModelElementRepositoryNode().getObject().getLabel();
     }
 }

@@ -123,8 +123,4 @@ public class DBColumnFolderRepNode extends RepositoryNode {
             repsNodes.add(columnNode);
         }
     }
-
-    public String getNodeName() {
-        return "Columns";
-    }
 }

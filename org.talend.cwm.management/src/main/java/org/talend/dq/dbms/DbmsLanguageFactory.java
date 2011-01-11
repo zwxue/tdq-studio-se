@@ -25,6 +25,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.utils.ProductVersion;
@@ -62,6 +63,8 @@ public final class DbmsLanguageFactory {
 
         TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
         boolean isMdm = ConnectionUtils.isMdmConnection(dataprovider);
+        // MOD qiongli 2011-1-11 feature 16796.handle the delimited file
+        boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataprovider);
         if (softwareSystem != null || isMdm) {
             final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : softwareSystem.getSubtype();
             if (log.isDebugEnabled()) {
@@ -71,6 +74,8 @@ public final class DbmsLanguageFactory {
                 String version = isMdm ? DatabaseConstant.MDM_VERSION : softwareSystem.getVersion();
                 dbmsLanguage = createDbmsLanguage(dbmsSubtype, version);
             }
+        } else if (isDelimitedFile) {
+            dbmsLanguage = createDbmsLanguage(DbmsLanguage.DELIMITEDFILE, PluginConstant.EMPTY_STRING);
         }
         String identifierQuoteString = ConnectionHelper.getIdentifierQuoteString(dataprovider);
         if (identifierQuoteString == null || identifierQuoteString.length() == 0) {
@@ -124,6 +129,9 @@ public final class DbmsLanguageFactory {
         }
         if (isMdm(dbmsSubtype)) {
             return new MdmDbmsLanguage(dbmsSubtype, dbVersion);
+        }
+        if (isDelimitedFile(dbmsSubtype)) {
+            return new DelimitedFileLanguage(dbmsSubtype, dbVersion);
         }
         // MOD zshen fixed bug 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
         if (isInfomix(dbmsSubtype)) {
@@ -253,6 +261,10 @@ public final class DbmsLanguageFactory {
 
     private static boolean isMdm(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.MDM, dbms);
+    }
+
+    private static boolean isDelimitedFile(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.DELIMITEDFILE, dbms);
     }
 
     // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler

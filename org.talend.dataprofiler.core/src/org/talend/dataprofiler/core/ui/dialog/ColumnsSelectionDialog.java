@@ -41,6 +41,8 @@ import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvide
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -134,7 +136,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 setOutput(event.getElement());
                 RepositoryNode selectedNode = (RepositoryNode) event.getElement();
                 if (selectedNode instanceof DBTableRepNode || selectedNode instanceof DBViewRepNode
-                        || selectedNode instanceof MDMSchemaRepNode) {
+                        || selectedNode instanceof MDMSchemaRepNode || selectedNode instanceof DFTableRepNode) {
                     handleTreeElementsChecked(selectedNode, event.getChecked());
                 }
             }
@@ -270,7 +272,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         @Override
         public Object[] getChildren(Object parentElement) {
             // Table || view node
-            if (parentElement instanceof DBTableRepNode || parentElement instanceof DBViewRepNode) {
+            if (parentElement instanceof DBTableRepNode || parentElement instanceof DBViewRepNode
+                    || parentElement instanceof DFTableRepNode) {
                 IRepositoryNode repoNode = (IRepositoryNode) parentElement;
                 return repoNode.getChildren().get(0).getChildren().toArray();
             }
@@ -278,7 +281,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             // IRepositoryNode repoNode = (IRepositoryNode) parentElement;
             // return repoNode.getChildren().toArray();
             // }
-            if (parentElement instanceof DBColumnRepNode) {
+            if (parentElement instanceof DBColumnRepNode || parentElement instanceof DFColumnRepNode) {
                 return new Object[] { parentElement };
             }
 
@@ -357,7 +360,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (element instanceof RepositoryNode) {
                 RepositoryNode repoNode = (RepositoryNode) element;
                 if (repoNode instanceof DBTableRepNode || repoNode instanceof DBViewRepNode
-                        || repoNode instanceof MDMSchemaRepNode) {
+                        || repoNode instanceof MDMSchemaRepNode || repoNode instanceof DFTableRepNode) {
                     return Boolean.FALSE;
                 }
                 return repoNode.hasChildren();

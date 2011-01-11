@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -128,5 +129,9 @@ public class IndicatorUnit {
 
     public boolean isXmlElement() {
         return this.modelElementIndicator instanceof XmlElementIndicator;
+    }
+
+    public boolean isMetadataColumn() {
+        return this.modelElementIndicator instanceof DelimitedFileIndicator;
     }
 }

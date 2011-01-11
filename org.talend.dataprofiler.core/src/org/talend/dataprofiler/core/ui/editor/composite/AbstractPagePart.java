@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -38,6 +39,7 @@ import org.talend.dataprofiler.core.ui.action.actions.ChangeConnectionAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -180,6 +182,11 @@ public abstract class AbstractPagePart {
         if (dataManager != null) {
 
             Object value = masterPage.getConnCombo().getData(dataManager.getName());
+            // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
+            if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(dataManager) != null) {
+                Property prop = PropertyHelper.getProperty((Connection) dataManager);
+                value = masterPage.getConnCombo().getData(prop.getLabel());
+            }
             Integer index = 0;
             if (value != null && value instanceof Integer) {
                 index = (Integer) value;

@@ -96,6 +96,8 @@ public class DbmsLanguage {
 
     static final String NETEZZA = SupportDBUrlType.NETEZZADEFAULTURL.getLanguage();
 
+    static final String DELIMITEDFILE = SupportDBUrlType.DELIMITEDFILE.getLanguage();
+
     /**
      * Ansi SQL.
      */

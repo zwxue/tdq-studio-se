@@ -39,6 +39,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -534,7 +535,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                                 && !(indicatorNode.getIndicatorInstance() instanceof DatePatternFreqIndicator)
                                 && null != indicatorNode.getIndicatorInstance().getIndicatorDefinition()
                                 && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null
-                                && !indicatorNode.hasChildren()) {
+                                && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)) {
                             checkButton.setEnabled(false);
                         }
                         // ~

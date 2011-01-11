@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.CatalogHelper;
@@ -194,8 +195,11 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         if (log.isInfoEnabled()) {
             if (SoftwaredeploymentPackage.eINSTANCE.getDataProvider().isInstance(connection)) {
                 boolean isMDM = connection instanceof MDMConnection;
+                boolean isDelimitedFile = connection instanceof DelimitedFileConnection;
                 log.info("Connection to "
-                        + (isMDM ? ((MDMConnection) connection).getPathname() : ((DatabaseConnection) connection).getURL()));
+                        + (isMDM ? ((MDMConnection) connection).getPathname()
+                                : isDelimitedFile ? ((DelimitedFileConnection) connection).getPathname()
+                                        : ((DatabaseConnection) connection).getURL()));
             }
         }
         AnalysisResult results = analysis.getResults();

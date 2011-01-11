@@ -54,6 +54,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
@@ -169,13 +170,22 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(element);
-            if (tdColumn == null && xmlElement == null) {
+
+            // MOD qiongli 2011-1-10,16796:delimitefile
+            MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
+            if (tdColumn == null && xmlElement == null && mdColumn == null) {
                 continue;
             }
             // MOD mzhao feature 15750, The column is recompute from the file, here create a new repository view object.
 
-            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
-                    .recursiveFind(tdColumn));
+            if (tdColumn == null && mdColumn != null) {
+                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(DQStructureManager.getInstance()
+                        .createColumnNode(mdColumn, null));
+            } else {
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
+                        .recursiveFind(tdColumn));
+            }
+
             DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
             Collection<Indicator> indicatorList = analysisHandler.getIndicators(element);
@@ -953,6 +963,20 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     i++;
                 }
             }
+        }
+    }
+
+    /**
+     * 
+     * DOC qiongli make the cause text and the language commbo disabled.
+     */
+    public void changeStateForDelimitedFile() {
+        if (execCombo != null) {
+            chageExecuteLanguageToJava();
+            execCombo.setEnabled(false);
+        }
+        if (dataFilterComp != null) {
+            dataFilterComp.getDataFilterText().setEnabled(false);
         }
     }
 

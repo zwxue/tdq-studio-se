@@ -20,7 +20,11 @@ import net.sourceforge.sqlexplorer.dataset.DataSet;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.XmlElementHelper;
@@ -267,9 +271,10 @@ public class DrillDownEditorInput implements IEditorInput {
         ModelElement analysisElement = indicator.getAnalyzedElement();
         String menuType = this.getMenuType();
         List<String> columnElementList = new ArrayList<String>();
+        // MOD qiongli 2011-1-9 feature 16796
         if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALUE_TYPE)) {
 
-            columnElementList.add(indicator.getAnalyzedElement().getName());
+            columnElementList.add(ModelElementHelper.getName(indicator.getAnalyzedElement()));
         } else if (analysisElement instanceof TdColumn) {
             for (TdColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
                     .eContainer()))) {
@@ -283,6 +288,11 @@ public class DrillDownEditorInput implements IEditorInput {
                 if (!DqRepositoryViewService.hasChildren(xmlElement)) {
                     columnElementList.add(xmlElement.getName());
                 }
+            }
+        } else if (analysisElement instanceof MetadataColumn) {
+            MetadataTable mTable = (MetadataTable) ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
+            for (MetadataColumn mColumn : mTable.getColumns()) {
+                columnElementList.add(mColumn.getLabel());
             }
         }
         return columnElementList;

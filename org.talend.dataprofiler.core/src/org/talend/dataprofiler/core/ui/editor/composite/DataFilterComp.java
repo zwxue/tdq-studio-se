@@ -81,4 +81,14 @@ public class DataFilterComp extends AbstractPagePart {
         // TODO Auto-generated method stub
 
     }
+
+    /**
+     * 
+     * DOC qiongli Comment method "getDataFilterText".
+     * 
+     * @return
+     */
+    public Text getDataFilterText() {
+        return this.dataFilterText;
+    }
 }

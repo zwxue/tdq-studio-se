@@ -463,4 +463,25 @@ public final class ResourceManager {
     public static IPath getRootFolderLocation() {
         return ResourcesPlugin.getWorkspace().getRoot().getLocation();
     }
+
+    /**
+     * 
+     * DOC qiongli Comment method "isFileDelimitedFolder".
+     * 
+     * @param resource
+     * @return
+     */
+    public static boolean isFileDelimitedFolder(IResource resource) {
+        return isOneFolder(resource, EResourceConstant.FILEDELIMITED);
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "getFileDelimitedFolder".
+     * 
+     * @return
+     */
+    public static IFolder getFileDelimitedFolder() {
+        return getOneFolder(EResourceConstant.FILEDELIMITED);
+    }
 }

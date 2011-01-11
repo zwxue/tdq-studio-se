@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.markers.MarkerViewUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.TdResourceModel;
 import org.talend.dataprofiler.core.ui.dialog.TdTaskPropertiesDialog;
@@ -70,6 +71,11 @@ public class TdAddTaskAction extends Action {
 
             } else if (navObj instanceof ModelElement) {
                 modelElement = (ModelElement) navObj;
+                // MOD qiongli 2011-1-10 feature 16796.for DelimitedFile ModelElement.
+                if (modelElement.getName() == null) {
+                    modelElement.setName(ModelElementHelper.getName(modelElement));
+                }
+
                 file = WorkspaceUtils.getModelElementResource(modelElement);
 
             }

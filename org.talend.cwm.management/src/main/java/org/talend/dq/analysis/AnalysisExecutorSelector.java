@@ -94,9 +94,13 @@ public final class AnalysisExecutorSelector {
      */
     private static AnalysisExecutor getModelElementAnalysisExecutor(Analysis analysis, ExecutionLanguage executionEngine) {
         boolean mdm = ConnectionUtils.isMdmConnection((DataProvider) analysis.getContext().getConnection());
+        // MOD qiongli 2010-11-9 feature 16796
+        boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection((DataProvider) analysis.getContext().getConnection());
         boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
         if (mdm) {
             return sql ? new MdmAnalysisSqlExecutor() : new MdmAnalysisExecutor();
+        } else if (isDelimitedFile) {
+            return new DelimitedFileAnalysisExecutor();
         } else {
             return sql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
         }

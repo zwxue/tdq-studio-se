@@ -59,6 +59,8 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -432,7 +434,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             IRepositoryNode repNode = repositoryNode.get(i);
             IRepositoryViewObject repViewObj = repNode.getObject();
             // TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(repViewObj);
-            if (repViewObj != null && repViewObj instanceof MetadataColumnRepositoryObject) {
+            if (repNode instanceof DFColumnRepNode) {
+                meIndicators[i] = ModelElementIndicatorHelper.createDFColumnIndicator(repNode);
+            } else if (repViewObj != null && repViewObj instanceof MetadataColumnRepositoryObject) {
                 meIndicators[i] = ModelElementIndicatorHelper.createColumnIndicator(repNode);
             } else {
                 // TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(repViewObj);
@@ -452,7 +456,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         List<RepositoryNode> reposList = new ArrayList<RepositoryNode>();
         for (Object obj : objs) {
-            if (obj instanceof DBColumnRepNode) {
+            if (obj instanceof DBColumnRepNode || obj instanceof DFColumnRepNode) {
                 reposList.add((RepositoryNode) obj);
             }
         }
@@ -460,13 +464,16 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             return;
         }
         boolean isMdm = false;
+        // MOD qiongli 2011-1-7 feature 16796.
+        boolean isDelimitedFile = false;
         if (objs != null && objs.length != 0) {
             isMdm = objs[0] instanceof MetadataXmlElementTypeRepositoryObject;
-            // if (!(objs[0] instanceof MetadataColumnRepositoryObject || isMdm)) {
-            if (!(reposList.get(0) instanceof DBColumnRepNode || isMdm)) {
+            isDelimitedFile = objs[0] instanceof DFTableRepNode;
+            if (!(reposList.get(0) instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
                 return;
             }
         }
+
 
         List<ModelElementIndicator> modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
@@ -478,7 +485,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
         for (RepositoryNode repObj : reposList) {
             ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper.createXmlElementIndicator(repObj)
-                    : ModelElementIndicatorHelper.createColumnIndicator(repObj);
+                    : isDelimitedFile ? ModelElementIndicatorHelper.createDFColumnIndicator(repObj) : ModelElementIndicatorHelper
+                            .createColumnIndicator(repObj);
             modelElementIndicatorList.add(temp);
         }
         this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList

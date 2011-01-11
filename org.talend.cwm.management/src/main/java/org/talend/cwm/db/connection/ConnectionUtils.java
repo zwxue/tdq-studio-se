@@ -48,6 +48,7 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -536,6 +537,17 @@ public final class ConnectionUtils {
 	public static boolean isMdmConnection(DataProvider dataprovider) {
 		return dataprovider instanceof MDMConnection;
 	}
+
+    /**
+     * 
+     * DOC qiongli Comment method "isDelimitedFileConnection".
+     * 
+     * @param dataprovider
+     * @return
+     */
+    public static boolean isDelimitedFileConnection(DataProvider dataprovider) {
+        return dataprovider instanceof DelimitedFileConnection;
+    }
 
 	/**
 	 * DOC xqliu Comment method "isMdmConnection".

@@ -51,6 +51,7 @@ import org.talend.commons.utils.VersionUtils;
 import org.talend.core.context.Context;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -59,6 +60,7 @@ import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
@@ -84,11 +86,14 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -581,7 +586,12 @@ public final class DQStructureManager {
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                boolean equals = subNode.getLabel().equals("Db Connections");// FIXME klliu, DONT use labels here!!!
+                boolean equals = subNode.getLabel().equals("Db Connections") || subNode.getLabel().equals("File delimited");// FIXME
+                                                                                                                            // klliu,
+                                                                                                                            // DONT
+                                                                                                                            // use
+                                                                                                                            // labels
+                                                                                                                            // here!!!
                 if (equals) {
                     connNodes.addAll(subNode.getChildren());
                 }
@@ -728,5 +738,13 @@ public final class DQStructureManager {
             }
         }
         return null;
+    }
+
+    public RepositoryNode createColumnNode(MetadataColumn mdColumn, RepositoryNode parent) {
+        Connection conn = ConnectionHelper.getTdDataProvider(mdColumn);
+        Property property = PropertyHelper.getProperty(conn);
+        IRepositoryViewObject connReposViewObject = new RepositoryViewObject(property);
+        MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(connReposViewObject, mdColumn);
+        return new DFColumnRepNode(metadataColumn, parent, ENodeType.REPOSITORY_ELEMENT);
     }
 }

@@ -27,6 +27,10 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.DFColumnFolderRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -63,7 +67,7 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
      * @return
      */
     private boolean shouldShowDeleteMenu(RepositoryNode node) {
-        return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node);
+        return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node) && !isDelimitedFile(node);
     }
 
     /**
@@ -86,7 +90,8 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         return node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode || node instanceof DBTableFolderRepNode
                 || node instanceof DBViewFolderRepNode || node instanceof DBTableRepNode || node instanceof DBViewRepNode
                 || node instanceof DBColumnFolderRepNode || node instanceof DBColumnRepNode || node instanceof MDMSchemaRepNode
-                || node instanceof MDMXmlElementRepNode;
+                || node instanceof MDMXmlElementRepNode || node instanceof DFTableRepNode
+                || node instanceof DFColumnFolderRepNode || node instanceof DFColumnRepNode;
     }
 
     /**
@@ -105,6 +110,20 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
                     && ResourceService.isSubFolder(ResourceManager.getSystemIndicatorFolder(), folder);
         default:
 
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "isDelimitedFile".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean isDelimitedFile(RepositoryNode node) {
+        if (node instanceof DFConnectionRepNode) {
+            return true;
         }
         return false;
     }

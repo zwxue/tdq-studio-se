@@ -18,9 +18,11 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
+import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
 import org.talend.dataprofiler.core.model.impl.XmlElementIndicatorImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.repository.model.IRepositoryNode;
@@ -50,6 +52,10 @@ public final class ModelElementIndicatorHelper {
 
     public static final XmlElementIndicator createXmlElementIndicator(IRepositoryNode reposObj) {
         return new XmlElementIndicatorImpl(reposObj);
+    }
+
+    public static final DelimitedFileIndicator createDFColumnIndicator(IRepositoryNode reposObj) {
+        return new DelimitedFileIndicatorImpl(reposObj);
     }
 
     public static final ColumnIndicator switchColumnIndicator(IndicatorUnit indicatorUnit) {

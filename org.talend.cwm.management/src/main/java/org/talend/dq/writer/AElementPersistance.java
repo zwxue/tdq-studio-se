@@ -41,6 +41,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -267,7 +268,10 @@ public abstract class AElementPersistance {
         String status = MetadataHelper.getDevStatus(modelElement);
 
         property.setId(EcoreUtil.generateUUID());
-        property.setLabel(WorkspaceUtils.normalize(modelElement.getName()));
+        // MOD qiongli 2011-1-7 delimitedfile connection dosen't use modelElement.getName().
+        if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(modelElement) == null) {
+            property.setLabel(WorkspaceUtils.normalize(modelElement.getName()));
+        }
         property.setPurpose(purpose);
         property.setDescription(description);
         property.setStatusCode(status);

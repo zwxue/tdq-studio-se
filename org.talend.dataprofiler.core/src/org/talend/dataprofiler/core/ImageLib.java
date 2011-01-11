@@ -194,6 +194,8 @@ public final class ImageLib {
 
     public static final String ICON_ADD_VAR = "add_ovr.gif";
 
+    public static final String FILE_DELIMITED = "filedelimited.gif";
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */

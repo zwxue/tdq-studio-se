@@ -74,6 +74,7 @@ public final class ChartTableFactory {
         final boolean isJAVALanguage = ExecutionLanguage.JAVA == currentEngine;
         final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
         final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
+        final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
 
         final Table table = tbViewer.getTable();
 
@@ -195,7 +196,7 @@ public final class ChartTableFactory {
                                 });
                             }
                         }
-                        if (PluginChecker.isTDCPLoaded() && !isMDMAnalysis) {
+                        if (PluginChecker.isTDCPLoaded() && !isMDMAnalysis && !isDelimitedFileAnalysis) {
                             final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault()
                                     .getService(IJobService.class);
                             if (service != null) {
