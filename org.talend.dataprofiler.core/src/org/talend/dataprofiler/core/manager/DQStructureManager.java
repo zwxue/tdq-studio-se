@@ -260,16 +260,12 @@ public final class DQStructureManager {
 
         while (paths.hasMoreElements()) {
             String nextElement = (String) paths.nextElement();
-            if (nextElement.indexOf("patterns/data") > 0) {
-                System.out.print("");
-            }
             String currentPath = "/" + nextElement; //$NON-NLS-1$
             URL resourceURL = plugin.getBundle().getEntry(currentPath);
             URL fileURL = null;
             File file = null;
             try {
                 fileURL = FileLocator.toFileURL(resourceURL);
-                System.out.println(fileURL);
                 file = new File(fileURL.getFile());
                 if (file.isDirectory() && recurse) {
                     if (file.getName().startsWith(".")) { //$NON-NLS-1$

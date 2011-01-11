@@ -160,7 +160,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private void setDefaultIndDef(Indicator[] indicators) {
         for (int i = 0; i < indicators.length; i++) {
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicators[i])) {
-                log.error("Could not set the definition of the given indicator :" + indicators[i].getName());
+                log.error(DefaultMessagesImpl.getString("TableIndicator.couldnotSetDef") + indicators[i].getName());
             }
         }
     }

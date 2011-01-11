@@ -168,9 +168,11 @@ public abstract class AbstractPagePart {
             }
             Connection tdProvider = null;
             Object input = columnsElementViewer.getInput();
+
             List<DBColumnRepNode> columnSet = (List<DBColumnRepNode>) input;
             if (columnSet != null && columnSet.size() != 0) {
                 TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) columnSet.get(0).getObject()).getTdColumn();
+
                 if (column != null && column.eIsProxy()) {
                     column = (TdColumn) EObjectHelper.resolveObject(column);
                 }

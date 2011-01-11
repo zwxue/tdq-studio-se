@@ -71,7 +71,6 @@ import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
-import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -421,16 +420,19 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             Object[] columns = dialog.getResult();
             List<RepositoryNode> columnSet = new ArrayList<RepositoryNode>();
             for (Object obj : columns) {
-                if (!(obj instanceof DBTableRepNode)) {
+                if (obj instanceof DBColumnRepNode) {
                     columnSet.add((RepositoryNode) obj);
                 }
             }
             columnsElementViewer.setInput(columnSet);
             columnsOfSectionPart.clear();
             columnsOfSectionPart.addAll(columnSet);
-            if (columnSet.size() != 0) {
-                MetadataColumnRepositoryObject colObject = (MetadataColumnRepositoryObject) columnSet.get(0).getObject();
-                TdColumn column = (TdColumn) colObject.getTdColumn();
+            if (columnSet.size() != 0 && columnSet.get(0).getObject() instanceof MetadataColumnRepositoryObject) {
+                RepositoryNode node = columnSet.get(0);
+
+                MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
+                TdColumn column = ((TdColumn) columnObject.getTdColumn());
+
                 if (column != null && column.eIsProxy()) {
                     column = (TdColumn) EObjectHelper.resolveObject(column);
                 }
@@ -524,8 +526,11 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
      */
     public void setColumnABForMatchingIndicator(RowMatchingIndicator rowMatchingIndicator, List<RepositoryNode> columnsA,
             List<RepositoryNode> columnsB) {
-        if (columnsA.size() != 0) {
-            ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) columnsA.get(0));
+        if (columnsA.size() != 0 && columnsA.get(0).getObject() instanceof MetadataColumnRepositoryObject) {
+            RepositoryNode node = columnsA.get(0);
+            MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
+            TdColumn column = ((TdColumn) columnObject.getTdColumn());
+            ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
             rowMatchingIndicator.setAnalyzedElement(columnSetOwner);
         }
         rowMatchingIndicator.getColumnSetA().clear();
@@ -624,7 +629,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
         if (selection.length == 1) {
             try {
-                TdColumn column = (TdColumn) selection[0].getData();
+                DBColumnRepNode column = (DBColumnRepNode) selection[0].getData();
                 dqview.showSelectedElements(column);
             } catch (Exception e) {
                 log.error(e, e);
@@ -653,14 +658,16 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             // MOD qiongli the oldInput be used when open a editor
             if (oldInput != null && newInput != null) {
-                if (!((List) newInput).isEmpty()) {
+                if (!((List<?>) newInput).isEmpty()) {
                     masterPage.setDirty(true);
                 }
             }
         }
 
         public Image getImage(Object element) {
-            if (element instanceof DBColumnRepNode) {
+            if (element instanceof RepositoryNode
+                    && ((RepositoryNode) element).getObject() instanceof MetadataColumnRepositoryObject) {
+
                 return ImageLib.getImage(ImageLib.TD_COLUMN);
             }
             return null;
