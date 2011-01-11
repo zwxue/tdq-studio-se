@@ -34,7 +34,6 @@ public class DBTableRepNode extends RepositoryNode {
      */
     public DBTableRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
     /*

@@ -14,7 +14,9 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -22,6 +24,10 @@ import org.talend.repository.model.RepositoryNode;
  * DOC klliu Database column repository node displayed on repository view (UI).
  */
 public class DBColumnRepNode extends RepositoryNode {
+
+    private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
+
+    private TdColumn tdColumn;
 
     /**
      * DOC klliu DBColumnRepNode constructor comment.
@@ -31,7 +37,16 @@ public class DBColumnRepNode extends RepositoryNode {
      */
     public DBColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
+        metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
+        tdColumn = (TdColumn) metadataColumnRepositoryObject.getTdColumn();
+    }
+
+    public MetadataColumnRepositoryObject getMetadataColumnRepositoryObject() {
+        return this.metadataColumnRepositoryObject;
+    }
+
+    public TdColumn getTdColumn() {
+        return this.tdColumn;
     }
 
     /*
@@ -41,7 +56,7 @@ public class DBColumnRepNode extends RepositoryNode {
      */
     @Override
     public List<IRepositoryNode> getChildren() {
-        // TODO Auto-generated method stub
         return super.getChildren();
     }
+
 }

@@ -75,7 +75,9 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -461,16 +463,12 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     public void setInput(Object[] objs) {
-        if (objs != null && objs.length != 0) {
-            if (!(objs[0] instanceof TdColumn)) {
-                return;
-            }
+        // MOD xqliu 2011-01-11 bug 15750
+        if (!RepositoryNodeHelper.hasColumnNode(objs)) {
+            return;
         }
-        List<TdColumn> columnList = new ArrayList<TdColumn>();
-        for (Object obj : objs) {
-            columnList.add((TdColumn) obj);
-        }
-        this.setElements(columnList);
+        List<DBColumnRepNode> columnNodeList = RepositoryNodeHelper.getColumnNodeList(objs);
+        this.setElements(columnNodeList);
     }
 
     public void setElements(final Object columnNodes) {
@@ -479,10 +477,36 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         tree.setData(this);
         // MOD mzhao bug 8282 2009-7-31 Clear column cache.
         columnSetMultiValueList.clear();
-        addItemElements((List<IRepositoryNode>) columnNodes, 0);
+        addItemElements(getColumnNodes(columnNodes), 0);
         // addItemElements(columns);
         // MOD mzhao 2009-05-05 bug 6587.
         updateBindConnection(masterPage, tree);
+    }
+
+    /**
+     * DOC xqliu Comment method "getColumnNodes".
+     * 
+     * @param columnNodes
+     * @return
+     */
+    private List<IRepositoryNode> getColumnNodes(Object columnNodes) {
+        List<IRepositoryNode> result = new ArrayList<IRepositoryNode>();
+        List<DBColumnRepNode> columnNodeList = null;
+        List<TdColumn> columnList = null;
+        if (columnNodes instanceof Object[]) {
+            columnNodeList = RepositoryNodeHelper.getColumnNodeList((Object[]) columnNodes);
+            columnList = RepositoryNodeHelper.getTdColumnList((Object[]) columnNodes);
+        } else if (columnNodes instanceof List) {
+            columnNodeList = RepositoryNodeHelper.getColumnNodeList(((List) columnNodes).toArray());
+            columnList = RepositoryNodeHelper.getTdColumnList(((List) columnNodes).toArray());
+        }
+        if (columnNodeList != null) {
+            result.addAll(columnNodeList);
+        }
+        if (columnList != null) {
+            result.addAll(columns2Nodes(columnList));
+        }
+        return result;
     }
 
     private void addItemElements(final List<IRepositoryNode> columns, int index) {
@@ -520,7 +544,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             }
             MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), column);
             /**
-             * 
              * DOC zhaoxinyi AnalysisColumnNominalIntervalTreeViewer class global comment. Detailled comment
              */
             class Selection extends SelectionAdapter {
@@ -789,5 +812,18 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     @Override
     protected void setElements(ModelElementIndicator[] modelElementIndicator) {
 
+    }
+
+    public static DBColumnRepNode column2Node(TdColumn tdColumn) {
+        // TODO please complete this function or use other function instead
+        return null;
+    }
+
+    public static List<DBColumnRepNode> columns2Nodes(List<TdColumn> tdColumns) {
+        List<DBColumnRepNode> nodes = new ArrayList<DBColumnRepNode>();
+        for (TdColumn tdColumn : tdColumns) {
+            nodes.add(column2Node(tdColumn));
+        }
+        return nodes;
     }
 }

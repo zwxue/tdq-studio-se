@@ -12,27 +12,32 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.cwm.relational.TdColumn;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * Helper class for RepositoryNode.
  */
 public final class RepositoryNodeHelper {
 
     private RepositoryNodeHelper() {
     }
 
-    /**
-     * DOC xqliu Comment method "getPath".
-     * 
-     * @param node
-     * @return
-     */
     public static IPath getPath(RepositoryNode node) {
         if (node == null) {
             return null;
@@ -59,12 +64,6 @@ public final class RepositoryNodeHelper {
         return getPath(node.getParent());
     }
 
-    /**
-     * DOC xqliu Comment method "retrieveRepObjectTypeByPath".
-     * 
-     * @param path
-     * @return
-     */
     public static ERepositoryObjectType retrieveRepObjectTypeByPath(String path) {
         if (EResourceConstant.DATA_PROFILING.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_DATA_PROFILING;
@@ -128,5 +127,173 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.METADATA_MDMCONNECTION;
         }
         return null;
+    }
+
+    public static List<DBColumnRepNode> getColumnNodeList(Object[] objs) {
+        List<DBColumnRepNode> nodeList = new ArrayList<DBColumnRepNode>();
+        for (Object obj : objs) {
+            if (obj != null && obj instanceof DBColumnRepNode) {
+                nodeList.add((DBColumnRepNode) obj);
+            }
+        }
+        return nodeList;
+    }
+
+    public static boolean hasColumnNode(Object[] objs) {
+        if (objs != null && objs.length > 0) {
+            for (Object obj : objs) {
+                if (obj != null && obj instanceof DBColumnRepNode) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static List<DBTableRepNode> getTableNodeList(Object[] objs) {
+        List<DBTableRepNode> nodeList = new ArrayList<DBTableRepNode>();
+        for (Object obj : objs) {
+            if (obj != null && obj instanceof DBTableRepNode) {
+                nodeList.add((DBTableRepNode) obj);
+            }
+        }
+        return nodeList;
+    }
+
+    public static boolean hasTableNode(Object[] objs) {
+        if (objs != null && objs.length > 0) {
+            for (Object obj : objs) {
+                if (obj != null && obj instanceof DBTableRepNode) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static List<DBViewRepNode> getViewNodeList(Object[] objs) {
+        List<DBViewRepNode> nodeList = new ArrayList<DBViewRepNode>();
+        for (Object obj : objs) {
+            if (obj != null && obj instanceof DBViewRepNode) {
+                nodeList.add((DBViewRepNode) obj);
+            }
+        }
+        return nodeList;
+    }
+
+    public static boolean hasViewNode(Object[] objs) {
+        if (objs != null && objs.length > 0) {
+            for (Object obj : objs) {
+                if (obj != null && obj instanceof DBViewRepNode) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static List<DBSchemaRepNode> getSchemaNodeList(Object[] objs) {
+        List<DBSchemaRepNode> nodeList = new ArrayList<DBSchemaRepNode>();
+        for (Object obj : objs) {
+            if (obj != null && obj instanceof DBSchemaRepNode) {
+                nodeList.add((DBSchemaRepNode) obj);
+            }
+        }
+        return nodeList;
+    }
+
+    public static boolean hasSchemaNode(Object[] objs) {
+        if (objs != null && objs.length > 0) {
+            for (Object obj : objs) {
+                if (obj != null && obj instanceof DBSchemaRepNode) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static List<DBCatalogRepNode> getCatalogNodeList(Object[] objs) {
+        List<DBCatalogRepNode> nodeList = new ArrayList<DBCatalogRepNode>();
+        for (Object obj : objs) {
+            if (obj != null && obj instanceof DBCatalogRepNode) {
+                nodeList.add((DBCatalogRepNode) obj);
+            }
+        }
+        return nodeList;
+    }
+
+    public static boolean hasCatalogNode(Object[] objs) {
+        if (objs != null && objs.length > 0) {
+            for (Object obj : objs) {
+                if (obj != null && obj instanceof DBCatalogRepNode) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static List<DBConnectionRepNode> getDbConnectionNodeList(Object[] objs) {
+        List<DBConnectionRepNode> nodeList = new ArrayList<DBConnectionRepNode>();
+        for (Object obj : objs) {
+            if (obj != null && obj instanceof DBConnectionRepNode) {
+                nodeList.add((DBConnectionRepNode) obj);
+            }
+        }
+        return nodeList;
+    }
+
+    public static boolean hasDbConnectionNode(Object[] objs) {
+        if (objs != null && objs.length > 0) {
+            for (Object obj : objs) {
+                if (obj != null && obj instanceof DBConnectionRepNode) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static List<MDMConnectionRepNode> getMdmConnectionNodeList(Object[] objs) {
+        List<MDMConnectionRepNode> nodeList = new ArrayList<MDMConnectionRepNode>();
+        for (Object obj : objs) {
+            if (obj != null && obj instanceof MDMConnectionRepNode) {
+                nodeList.add((MDMConnectionRepNode) obj);
+            }
+        }
+        return nodeList;
+    }
+
+    public static boolean hasMdmConnectionNode(Object[] objs) {
+        if (objs != null && objs.length > 0) {
+            for (Object obj : objs) {
+                if (obj != null && obj instanceof MDMConnectionRepNode) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static List<TdColumn> getTdColumnList(Object[] objs) {
+        List<TdColumn> list = new ArrayList<TdColumn>();
+        for (Object obj : objs) {
+            if (obj != null && obj instanceof TdColumn) {
+                list.add((TdColumn) obj);
+            }
+        }
+        return list;
+    }
+
+    public static boolean hasTdColumn(Object[] objs) {
+        if (objs != null && objs.length > 0) {
+            for (Object obj : objs) {
+                if (obj != null && obj instanceof TdColumn) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

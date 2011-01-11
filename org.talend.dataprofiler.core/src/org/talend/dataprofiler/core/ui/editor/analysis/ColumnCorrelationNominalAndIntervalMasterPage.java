@@ -80,9 +80,11 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
@@ -313,7 +315,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
                 this,
-                getEditor().getActiveEditor().getSite().getShell(),
+                /* getEditor().getActiveEditor().getSite().getShell() */null,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), columnList, connNode, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
@@ -706,21 +708,30 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         if (!columnSetMultiValueList.isEmpty()) {
             // MOD qiongli 2010-8-19.bug 14436.move some codes to the method of 'canDrop()', which judge to come
             // from same table
-            List<RepositoryNode> columnsNode = treeViewer.getColumnSetMultiValueList();
+            List<RepositoryNode> nodes = treeViewer.getColumnSetMultiValueList();
 
             if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()
                     || ColumnsetPackage.eINSTANCE.getMinMaxDateIndicator() == columnSetMultiIndicator.eClass()) {
-                message = verifyColumn(columnsNode, columnSetMultiIndicator.eClass());
+                message = verifyColumn(nodes, columnSetMultiIndicator.eClass());
 
             } else if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
-                for (int i = 0; i < columnsNode.size(); i++) {
-                    TdColumn tdColumn = (TdColumn) columnsNode.get(i);
+                List<DBColumnRepNode> columnNodes = RepositoryNodeHelper.getColumnNodeList(nodes.toArray());
+                for (DBColumnRepNode columNode : columnNodes) {
+                    TdColumn tdColumn = columNode.getTdColumn();
 
                     if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
                         message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
                         break;
                     }
                 }
+                // for (int i = 0; i < nodes.size(); i++) {
+                // TdColumn tdColumn = (TdColumn) nodes.get(i);
+                //
+                // if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
+                //                        message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
+                // break;
+                // }
+                // }
             }
         }
         if (message == null) {
