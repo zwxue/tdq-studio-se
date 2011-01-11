@@ -28,7 +28,7 @@
    <requires>
       <import plugin="org.talend.utils"/>
       <import plugin="org.apache.log4j" version="1.2.15" match="greaterOrEqual"/>
-      <import plugin="org.talend.libraries.apache" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.talend.libraries.apache"/>
       <import plugin="org.talend.libraries.jdbc.jtds"/>
       <import plugin="org.talend.libraries.jdbc.mysql"/>
       <import plugin="org.talend.libraries.jdbc.oracle"/>
@@ -453,9 +453,15 @@
          version="0.0.0"
          unpack="false"/>
 
-
    <plugin
          id="org.apache.lucene"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.libraries.apache"
          download-size="0"
          install-size="0"
          version="0.0.0"
