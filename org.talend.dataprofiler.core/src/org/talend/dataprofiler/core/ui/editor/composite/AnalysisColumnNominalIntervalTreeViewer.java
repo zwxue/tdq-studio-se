@@ -62,6 +62,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -464,11 +465,15 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     public void setInput(Object[] objs) {
         // MOD xqliu 2011-01-11 bug 15750
-        if (!RepositoryNodeHelper.hasColumnNode(objs)) {
+        // if (!RepositoryNodeHelper.hasColumnNode(objs) && !RepositoryNodeHelper.hasTdColumn(objs)) {
+        // return;
+        // }
+        // List<DBColumnRepNode> columnNodeList = RepositoryNodeHelper.getColumnNodeList(objs);
+        List<IRepositoryNode> columnNodes = this.getColumnNodes(objs);
+        if (columnNodes.size() == 0) {
             return;
         }
-        List<DBColumnRepNode> columnNodeList = RepositoryNodeHelper.getColumnNodeList(objs);
-        this.setElements(columnNodeList);
+        this.setElements(columnNodes);
     }
 
     public void setElements(final Object columnNodes) {
@@ -814,15 +819,13 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     }
 
-    public static DBColumnRepNode column2Node(TdColumn tdColumn) {
-        // TODO please complete this function or use other function instead
-        return null;
-    }
-
     public static List<DBColumnRepNode> columns2Nodes(List<TdColumn> tdColumns) {
         List<DBColumnRepNode> nodes = new ArrayList<DBColumnRepNode>();
         for (TdColumn tdColumn : tdColumns) {
-            nodes.add(column2Node(tdColumn));
+            RepositoryNode repNode = DQStructureManager.getInstance().recursiveFind(tdColumn);
+            if (repNode != null && repNode instanceof DBColumnRepNode) {
+                nodes.add((DBColumnRepNode) repNode);
+            }
         }
         return nodes;
     }

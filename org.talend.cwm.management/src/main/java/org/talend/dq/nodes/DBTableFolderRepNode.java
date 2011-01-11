@@ -85,6 +85,7 @@ public class DBTableFolderRepNode extends RepositoryNode {
         try {
             if (metadataObject instanceof MetadataCatalogRepositoryObject) {
                 viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
+                connection = ((ConnectionItem) viewObject.getProperty().getItem()).getConnection();
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
                 tables = PackageHelper.getTables(catalog);
                 if (tables.isEmpty()) {
@@ -92,6 +93,7 @@ public class DBTableFolderRepNode extends RepositoryNode {
                 }
             } else {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
+                connection = ((ConnectionItem) viewObject.getProperty().getItem()).getConnection();
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
                 tables = PackageHelper.getTables(schema);
                 if (tables.isEmpty()) {
