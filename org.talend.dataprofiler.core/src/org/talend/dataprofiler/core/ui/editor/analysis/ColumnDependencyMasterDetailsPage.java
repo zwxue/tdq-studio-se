@@ -34,7 +34,7 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -57,7 +57,6 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
-import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * This is a Master Detail Page for <a href="http://www.talendforge.org/bugs/view.php?id=8134">Functional Dependency
@@ -321,16 +320,21 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         for (int i = 0; i < columnASet.size(); i++) {
             RepositoryNode columnANode = columnASet.get(i);
             RepositoryNode columnBNode = columnBSet.get(i);
+            TdColumn tdColumn = (TdColumn) ((MetadataColumnRepositoryObject) columnANode.getObject()).getTdColumn();
+            TdColumn tdColumn2 = (TdColumn) ((MetadataColumnRepositoryObject) columnBNode.getObject()).getTdColumn();
+            String uuid = ResourceHelper.getUUID(tdColumn);
+            String uuid1 = ResourceHelper.getUUID(tdColumn2);
+            // ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) ((MetadataColumnRepositoryObject)
+            // columnANode
+            // .getObject()).getTdColumn());
+            // ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) ((MetadataColumnRepositoryObject)
+            // columnBNode
+            // .getObject()).getTdColumn());
 
-            ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) ((MetadataColumnRepositoryObject) columnANode
-                    .getObject()).getTdColumn());
-            ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) ((MetadataColumnRepositoryObject) columnBNode
-                    .getObject()).getTdColumn());
-
-// int typeA = ((TdColumn) columnA).getJavaType();
+            // int typeA = ((TdColumn) columnA).getJavaType();
             // int typeB = ((TdColumn) columnB).getJavaType();
 
-            if (ownerA != ownerB) {
+            if (!uuid.equals(uuid1)) {
                 // must come from one table
                 return new ReturnCode(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.tableMessage"), false); //$NON-NLS-1$
             }

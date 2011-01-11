@@ -31,6 +31,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -44,6 +45,7 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -128,6 +130,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         // When user checks a checkbox in the tree, check all its children
         getTreeViewer().addCheckStateListener(new ICheckStateListener() {
+
             public void checkStateChanged(CheckStateChangedEvent event) {
                 ColumnSelectionViewer columnViewer = (ColumnSelectionViewer) event.getSource();
                 TreePath treePath = new TreePath(new Object[] { event.getElement() });
@@ -143,6 +146,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         });
 
         getTableViewer().addCheckStateListener(new ICheckStateListener() {
+
             public void checkStateChanged(CheckStateChangedEvent event) {
                 handleTableElementsChecked((RepositoryNode) event.getElement(), event.getChecked());
             }
@@ -181,14 +185,18 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      */
     private void handleTreeElementsChecked(RepositoryNode repNode, Boolean checkedFlag) {
         if (checkedFlag) {
-            modelElementCheckedMap.put(repNode, repNode.getChildren());
+            List<IRepositoryNode> children = repNode.getChildren();
+            for (IRepositoryNode colFolderNode : children) {
+                for (IRepositoryNode colNode : colFolderNode.getChildren()) {
+                    modelElementCheckedMap.put(repNode, colNode);
+                }
+            }
+
         } else {
             modelElementCheckedMap.remove(repNode);
         }
         getTableViewer().setAllChecked(checkedFlag);
     }
-
-
 
     /*
      * (non-Javadoc)
@@ -242,8 +250,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         }
     }
 
-
-
     @SuppressWarnings("unchecked")
     protected void computeResult() {
         List<RepositoryNode> allCheckedElements = new ArrayList<RepositoryNode>();
@@ -253,16 +259,20 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             // Parent
             allCheckedElements.add(repNode);
             // Children
-            allCheckedElements.addAll((List<RepositoryNode>) modelElementCheckedMap.get(repNode));
+            List<RepositoryNode> columnFolder = (List<RepositoryNode>) modelElementCheckedMap.get(repNode);
+            for (RepositoryNode column : columnFolder) {
+                allCheckedElements.add(column);
+            }
         }
         setResult(allCheckedElements);
     }
 
     protected void okPressed() {
         super.okPressed();
+        ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
         this.modelElementCheckedMap = null;
     }
-
 
     /**
      * @author rli
@@ -296,7 +306,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             }
             return super.getParent(element);
         }
-
 
         public boolean hasChildren(Object element) {
             return Boolean.FALSE;
@@ -354,7 +363,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             }
             return super.getParent(element);
         }
-
 
         public boolean hasChildren(Object element) {
             if (element instanceof RepositoryNode) {

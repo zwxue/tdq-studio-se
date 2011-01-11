@@ -70,6 +70,8 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -419,13 +421,16 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             Object[] columns = dialog.getResult();
             List<RepositoryNode> columnSet = new ArrayList<RepositoryNode>();
             for (Object obj : columns) {
-                columnSet.add((RepositoryNode) obj);
+                if (!(obj instanceof DBTableRepNode)) {
+                    columnSet.add((RepositoryNode) obj);
+                }
             }
             columnsElementViewer.setInput(columnSet);
             columnsOfSectionPart.clear();
             columnsOfSectionPart.addAll(columnSet);
             if (columnSet.size() != 0) {
-                TdColumn column = (TdColumn) columnSet.get(0);
+                MetadataColumnRepositoryObject colObject = (MetadataColumnRepositoryObject) columnSet.get(0).getObject();
+                TdColumn column = (TdColumn) colObject.getTdColumn();
                 if (column != null && column.eIsProxy()) {
                     column = (TdColumn) EObjectHelper.resolveObject(column);
                 }
@@ -655,15 +660,19 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         }
 
         public Image getImage(Object element) {
-            if (element instanceof TdColumn) {
+            if (element instanceof DBColumnRepNode) {
                 return ImageLib.getImage(ImageLib.TD_COLUMN);
             }
             return null;
         }
 
         public String getText(Object element) {
-            if (element instanceof TdColumn) {
-                return ((TdColumn) element).getName();
+
+            if (element instanceof DBColumnRepNode) {
+
+                TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) (((DBColumnRepNode) element).getObject()))
+                        .getTdColumn();
+                return column.getName();
             }
             return PluginConstant.EMPTY_STRING;
         }

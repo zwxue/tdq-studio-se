@@ -300,16 +300,16 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     public void setInput(Object[] objs) {
         if (objs != null && objs.length != 0) {
-            if (!(objs[0] instanceof DBColumnRepNode)) {
-                return;
+            List<DBColumnRepNode> columnList = new ArrayList<DBColumnRepNode>();
+            for (Object obj : objs) {
+                if (obj instanceof DBColumnRepNode) {
+                    columnList.add((DBColumnRepNode) obj);
+                }
+
             }
+            // MOD yyi 2010-05-13 12828
+            Collections.reverse(columnList);
         }
-        List<DBColumnRepNode> columnList = new ArrayList<DBColumnRepNode>();
-        for (Object obj : objs) {
-            columnList.add((DBColumnRepNode) obj);
-        }
-        // MOD yyi 2010-05-13 12828
-        Collections.reverse(columnList);
         // ~
         super.setInput(objs);
     }

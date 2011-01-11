@@ -741,7 +741,7 @@ public final class DQStructureManager {
     }
 
     public RepositoryNode createColumnNode(MetadataColumn mdColumn, RepositoryNode parent) {
-        Connection conn = ConnectionHelper.getTdDataProvider(mdColumn);
+        Connection conn = ConnectionHelper.getTdDataProvider((TdColumn) mdColumn);
         Property property = PropertyHelper.getProperty(conn);
         IRepositoryViewObject connReposViewObject = new RepositoryViewObject(property);
         MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(connReposViewObject, mdColumn);

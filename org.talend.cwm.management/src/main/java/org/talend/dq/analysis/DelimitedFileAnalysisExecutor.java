@@ -20,6 +20,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
@@ -55,7 +56,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
         eval.setMonitor(getMonitor());
         for (Indicator indicator : indicators) {
             assert indicator != null;
-            MetadataColumn mColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
+            MetadataColumn mColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
             if (mColumn == null) {
                 continue;
             }
@@ -109,7 +110,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
         analysisHandler.setAnalysis(analysis);
 
         for (ModelElement node : context.getAnalysedElements()) {
-            MetadataColumn column = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(node);
+            MetadataColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
 
             // --- Check that each analyzed element has at least one indicator
             if (analysisHandler.getIndicators(column).size() == 0) {
@@ -118,7 +119,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
             }
 
             // --- get the data provider
-            Connection dp = ConnectionHelper.getTdDataProvider(column);
+            Connection dp = ConnectionHelper.getTdDataProvider((TdColumn) column);
             if (!isAccessWith(dp)) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
                         column.getName(), dataprovider.getName());

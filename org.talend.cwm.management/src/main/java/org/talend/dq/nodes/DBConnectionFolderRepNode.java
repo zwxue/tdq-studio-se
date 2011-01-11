@@ -85,7 +85,7 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
             RepositoryViewObject viewObject = (RepositoryViewObject) obj;
             if (!viewObject.isDeleted()) {
                 DBConnectionRepNode repNode = new DBConnectionRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-                // viewObject.setRepositoryNode(repNode);
+                viewObject.setRepositoryNode(repNode);
                 parent.getChildren().add(repNode);
 
             }

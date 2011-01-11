@@ -18,6 +18,10 @@ import java.util.List;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -60,7 +64,8 @@ public class OverViewAnalysisActionProvider extends AbstractCommonActionProvider
         // }
         // }
         for (Object obj : list) {
-            if (obj instanceof IRepositoryNode) {
+            if (obj instanceof DBConnectionRepNode || obj instanceof DBCatalogRepNode || obj instanceof DBSchemaRepNode
+                    || obj instanceof DBTableRepNode) {
                 IRepositoryNode node = (IRepositoryNode) obj;
                 packageList.add(node);
                 showMenu = true;

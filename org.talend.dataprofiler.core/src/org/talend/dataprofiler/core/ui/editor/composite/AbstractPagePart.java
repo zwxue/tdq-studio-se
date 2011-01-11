@@ -25,6 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -40,6 +41,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -166,9 +168,9 @@ public abstract class AbstractPagePart {
             }
             Connection tdProvider = null;
             Object input = columnsElementViewer.getInput();
-            List<TdColumn> columnSet = (List<TdColumn>) input;
+            List<DBColumnRepNode> columnSet = (List<DBColumnRepNode>) input;
             if (columnSet != null && columnSet.size() != 0) {
-                TdColumn column = columnSet.get(0);
+                TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) columnSet.get(0).getObject()).getTdColumn();
                 if (column != null && column.eIsProxy()) {
                     column = (TdColumn) EObjectHelper.resolveObject(column);
                 }

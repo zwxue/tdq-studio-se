@@ -57,9 +57,9 @@ public class DBConnectionRepNode extends RepositoryNode {
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
             if (pack instanceof Schema) {
-                return createRepositoryNodeSchema();
+                return createRepositoryNodeSchema(dataPackage);
             } else if (pack instanceof Catalog) {
-                return createRepositoryNodeCatalog();
+                return createRepositoryNodeCatalog(dataPackage);
             }
         }
         return new ArrayList<IRepositoryNode>();
@@ -73,9 +73,10 @@ public class DBConnectionRepNode extends RepositoryNode {
      * @param viewObject
      * @param schema
      */
-    private List<IRepositoryNode> createRepositoryNodeSchema() {
+    private List<IRepositoryNode> createRepositoryNodeSchema(EList<Package> dataPackage) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-        EList<Package> dataPackage = ((ConnectionItem) getObject().getProperty().getItem()).getConnection().getDataPackage();
+        // EList<Package> dataPackage= ((ConnectionItem)
+        // getObject().getProperty().getItem()).getConnection().getDataPackage();
         for (Package pack : dataPackage) {
             MetadataSchemaRepositoryObject metadataSchema = new MetadataSchemaRepositoryObject(getObject(), (Schema) pack);
             RepositoryNode schemaNode = new DBSchemaRepNode((IRepositoryViewObject) metadataSchema, this,
@@ -95,9 +96,10 @@ public class DBConnectionRepNode extends RepositoryNode {
      * @param viewObject
      * @param catalog
      */
-    private List<IRepositoryNode> createRepositoryNodeCatalog() {
+    private List<IRepositoryNode> createRepositoryNodeCatalog(EList<Package> dataPackage) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-        EList<Package> dataPackage = ((ConnectionItem) getObject().getProperty().getItem()).getConnection().getDataPackage();
+        // EList<Package> dataPackage = ((ConnectionItem)
+        // getObject().getProperty().getItem()).getConnection().getDataPackage();
         for (Package pack : dataPackage) {
             MetadataCatalogRepositoryObject metadataCatalog = new MetadataCatalogRepositoryObject(getObject(), (Catalog) pack);
             RepositoryNode catalogNode = new DBCatalogRepNode((IRepositoryViewObject) metadataCatalog, this,
