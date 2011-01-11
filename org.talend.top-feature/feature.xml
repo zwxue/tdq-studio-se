@@ -393,13 +393,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.talend.libraries.apache"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.talend.libraries.jfreechart"
          download-size="0"
          install-size="0"
