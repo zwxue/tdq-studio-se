@@ -51,6 +51,7 @@ public class DBColumnFolderRepNode extends RepositoryNode {
 
     private TdView tdView;
 
+    private List<IRepositoryNode> children;
     /**
      * DOC klliu DBColumnFolderRepNode constructor comment.
      * 
@@ -60,12 +61,16 @@ public class DBColumnFolderRepNode extends RepositoryNode {
      */
     public DBColumnFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        children = new ArrayList<IRepositoryNode>();
         // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
+        if (!children.isEmpty()) {
+            return children;
+        }
+
         List<TdColumn> tdcolumns = new ArrayList<TdColumn>();
         IRepositoryViewObject meataColumnSetObject = this.getObject();
         if (meataColumnSetObject instanceof TdTableRepositoryObject) {
@@ -96,8 +101,8 @@ public class DBColumnFolderRepNode extends RepositoryNode {
                 tdcolumns.add((TdColumn) mec);
             }
         }
-        createTdcolumnsNode(tdcolumns, repsNodes);
-        return repsNodes;
+        createTdcolumnsNode(tdcolumns, children);
+        return children;
     }
 
     /**

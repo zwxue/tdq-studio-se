@@ -15,7 +15,7 @@ package org.talend.dataprofiler.core.helper;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -81,9 +81,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     public static final Connection getTdDataProvider(ModelElementIndicator indicator) {
-        Item connItem = indicator.getModelElementRepositoryNode().getObject().getProperty().getItem();
-        if (connItem instanceof ConnectionItem) {
-            return ((ConnectionItem) connItem).getConnection();
+        Property property = indicator.getModelElementRepositoryNode().getObject().getProperty();
+        if (property != null && property.getItem() instanceof ConnectionItem) {
+            return ((ConnectionItem) property.getItem()).getConnection();
         }
         return null;
     }

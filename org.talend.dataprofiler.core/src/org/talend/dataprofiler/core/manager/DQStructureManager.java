@@ -52,33 +52,43 @@ import org.talend.core.context.Context;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ByteArray;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -86,6 +96,8 @@ import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * Create the folder structure for the DQ Reponsitory view.
@@ -564,12 +576,12 @@ public final class DQStructureManager {
      */
 
     public List<IRepositoryNode> getConnectionRepositoryNodes() {
-        RepositoryNode node = getRootNode();
+        RepositoryNode node = getRootNode(EResourceConstant.METADATA.getName());
         List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                boolean equals = subNode.getLabel().equals("Db Connections");
+                boolean equals = subNode.getLabel().equals("Db Connections");// FIXME klliu, DONT use labels here!!!
                 if (equals) {
                     connNodes.addAll(subNode.getChildren());
                 }
@@ -597,14 +609,14 @@ public final class DQStructureManager {
      * 
      * @return
      */
-    private RepositoryNode getRootNode() {
+    private RepositoryNode getRootNode(String nodeName) {
         RepositoryNode node = null;
         CommonViewer commonViewer = getDQCommonViewer();
         if (commonViewer != null) {
             TreeItem[] items = commonViewer.getTree().getItems();
             for (TreeItem item : items) {
                 String text = item.getText();
-                if (text.equals(EResourceConstant.METADATA.getName())) {
+                if (text.equals(nodeName)) {
                     node = (RepositoryNode) item.getData();
                 }
             }
@@ -636,18 +648,85 @@ public final class DQStructureManager {
         return commonViewer;
     }
 
-    /**
-     * 
-     * DOC mzhao Create repository node by column.
-     * 
-     * @param tdColumn
-     * @return
-     */
-    public RepositoryNode createColumnNode(TdColumn tdColumn, RepositoryNode parent) {
-        Connection conn = ConnectionHelper.getConnection(tdColumn);
-        Property property = PropertyHelper.getProperty(conn);
-        IRepositoryViewObject connReposViewObject = new RepositoryViewObject(property);
-        MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(connReposViewObject, tdColumn);
-        return new RepositoryNode(metadataColumn, parent, ENodeType.REPOSITORY_ELEMENT);
+
+    public RepositoryNode recursiveFind(ModelElement element) {
+        if (element instanceof Analysis) {
+
+        } else if (element instanceof TdReport) {
+
+        } else if (element instanceof TdColumn) {
+            TdColumn column = (TdColumn) element;
+           IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsColumnSet(column));
+           for(IRepositoryNode columnNode:columnSetNode.getChildren().get(0).getChildren()){
+                TdColumn columnOnUI = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
+                if (ResourceHelper.getUUID(column).equals(ResourceHelper.getUUID(columnOnUI))) {
+                    return (RepositoryNode) columnNode;
+               }
+           }
+
+        } else if (element instanceof TdTable) {
+            TdTable table = (TdTable) element;
+            IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(element));
+            for (IRepositoryNode tableNode : schemaOrCatalogNode.getChildren().get(0).getChildren()) {
+                TdTable tableOnUI = (TdTable) ((TdTableRepositoryObject) tableNode.getObject()).getTdTable();
+                if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
+                    return (RepositoryNode) tableNode;
+                }
+            }
+
+        } else if (element instanceof TdView) {
+            TdView view = (TdView) element;
+            IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(element));
+            for (IRepositoryNode viewNode : schemaOrCatalogNode.getChildren().get(1).getChildren()) {
+                TdView viewOnUI = (TdView) ((TdViewRepositoryObject) viewNode.getObject()).getTdView();
+                if (ResourceHelper.getUUID(view).equals(ResourceHelper.getUUID(viewOnUI))) {
+                    return (RepositoryNode) viewNode;
+                }
+            }
+        } else if (element instanceof Catalog) {
+            Catalog catalog = (Catalog) element;
+            IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(catalog));
+            for (IRepositoryNode catalogNode : connNode.getChildren()) {
+                Catalog catalogOnUI = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
+                if (ResourceHelper.getUUID(catalog).equals(ResourceHelper.getUUID(catalogOnUI))) {
+                    return (RepositoryNode) catalogNode;
+                }
+            }
+
+        } else if (element instanceof Schema) {
+            Schema schema = (Schema) element;
+            Catalog catalog = CatalogHelper.getParentCatalog(schema);
+            // Schema's parent is catalog (MS SQL Server)
+            if (catalog != null) {
+                IRepositoryNode catalogNode = recursiveFind(catalog);
+                for (IRepositoryNode schemaNode : catalogNode.getChildren()) {
+                    Schema schemaOnUI = ((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema();
+                    if (ResourceHelper.getUUID(schema).equals(ResourceHelper.getUUID(schemaOnUI))) {
+                        return (RepositoryNode) schemaNode;
+                    }
+                }
+
+            }
+            // schema's parent is connection (e.g Oracle)
+            IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(schema));
+            for (IRepositoryNode schemaNode : connNode.getChildren()) {
+                Schema schemaOnUI = ((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema();
+                if (ResourceHelper.getUUID(catalog).equals(ResourceHelper.getUUID(schemaOnUI))) {
+                    return (RepositoryNode) schemaNode;
+                }
+            }
+
+
+        } else if (element instanceof Connection) {
+            Connection connection = (Connection) element;
+            List<IRepositoryNode> connsNode = getConnectionRepositoryNodes();
+            for (IRepositoryNode connNode : connsNode) {
+                ConnectionItem item = (ConnectionItem) ((RepositoryViewObject) connNode.getObject()).getProperty().getItem();
+                if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(item.getConnection()))) {
+                    return (RepositoryNode) connNode;
+                }
+            }
+        }
+        return null;
     }
 }

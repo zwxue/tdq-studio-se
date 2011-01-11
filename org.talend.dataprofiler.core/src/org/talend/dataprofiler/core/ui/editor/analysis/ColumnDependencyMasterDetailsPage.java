@@ -303,7 +303,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         List<RepositoryNode> columns = new ArrayList<RepositoryNode>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            columns.add(DQStructureManager.getInstance().createColumnNode((TdColumn) indicator.eGet(reference), null));
+            columns.add(DQStructureManager.getInstance().recursiveFind((TdColumn) indicator.eGet(reference)));
         }
         return columns;
     }

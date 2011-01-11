@@ -100,6 +100,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             RepositoryNode repNode = (RepositoryNode) reposNodeLs.get(i);
             IRepositoryNode parentNode = repNode.getParent().getParent();
             // Add the parent->children relation to the multi map
+
             modelElementCheckedMap.put(parentNode, repNode);
             // Check the parent element either if any of their columns had already been checked.
             if (!containerList.contains(parentNode)) {

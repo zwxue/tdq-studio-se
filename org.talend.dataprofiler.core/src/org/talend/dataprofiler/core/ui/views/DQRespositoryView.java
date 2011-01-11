@@ -61,7 +61,9 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
@@ -95,7 +97,6 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.RepositoryWorkUnit;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -179,13 +180,15 @@ public class DQRespositoryView extends CommonNavigator {
 
         // initialized drivers in sql explorer.
         SQLExplorerPlugin.getDefault().initAllDrivers();
-
-        List<IRepositoryNode> connNodes = DQStructureManager.getInstance().getConnectionRepositoryNodes();
-        if (connNodes != null && connNodes.size() > 0) {
-            for (IRepositoryNode connRepNode : connNodes) {
-                ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
-                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connItem.getConnection());
+        try {
+            for (ConnectionItem item : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                if (item == null || item instanceof DatabaseConnectionItem) {
+                    continue;
+                }
+                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(item.getConnection());
             }
+        } catch (PersistenceException e) {
+            log.error(e, e);
         }
 
         IFile defFile = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);

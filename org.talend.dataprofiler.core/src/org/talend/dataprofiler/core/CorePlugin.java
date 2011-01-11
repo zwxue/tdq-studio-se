@@ -48,6 +48,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.jfree.util.Log;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
@@ -451,6 +452,8 @@ public class CorePlugin extends AbstractUIPlugin {
                 XmiResourceManager xmiResourceManager = new XmiResourceManager();
                 IProject rootProject = ResourceManager.getRootProject();
                 if (rootProject.getFile(FileConstants.LOCAL_PROJECT_FILENAME).exists()) {
+                    // Initialize TDQ EMF model packages.
+                    new EMFUtil();
                     project = new Project(xmiResourceManager.loadProject(rootProject));
                 } else {
                     User user = PropertiesFactoryImpl.eINSTANCE.createUser();

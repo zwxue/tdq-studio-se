@@ -31,6 +31,7 @@ public class DBCatalogRepNode extends RepositoryNode {
 
     private IRepositoryViewObject parentObject;
 
+    private List<IRepositoryNode> schemaChildren;
     /**
      * DOC klliu DBCatalogRepNode constructor comment.
      * 
@@ -41,6 +42,7 @@ public class DBCatalogRepNode extends RepositoryNode {
     public DBCatalogRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         parentObject = object;
+        schemaChildren = new ArrayList<IRepositoryNode>();
     }
 
     /*
@@ -85,7 +87,9 @@ public class DBCatalogRepNode extends RepositoryNode {
      * @param schema the schema should to be added under the catalog
      */
     private List<IRepositoryNode> createRepositoryNodeSchema(List<Schema> schemas) {
-        List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
+        if (!schemaChildren.isEmpty()) {
+            return schemaChildren;
+        }
         for (Schema schema : schemas) {
             MetadataSchemaRepositoryObject metadataSchema = new MetadataSchemaRepositoryObject(
                     ((MetadataCatalogRepositoryObject) getObject()).getViewObject(), schema);
@@ -94,9 +98,9 @@ public class DBCatalogRepNode extends RepositoryNode {
             schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
             schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
             metadataSchema.setRepositoryNode(schemaNode);
-            repsNodes.add(schemaNode);
+            schemaChildren.add(schemaNode);
         }
-        return repsNodes;
+        return schemaChildren;
     }
 
 }

@@ -182,7 +182,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, tdColumn);
 
             currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
-                    .createColumnNode(tdColumn, null));
+                    .recursiveFind(tdColumn));
             Collection<Indicator> indicatorList = columnSetAnalysisHandler.getRegexMathingIndicators(element);
             currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
             meIndicatorList.add(currentIndicator);

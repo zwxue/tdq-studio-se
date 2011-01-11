@@ -175,7 +175,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             // MOD mzhao feature 15750, The column is recompute from the file, here create a new repository view object.
 
             currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
-                    .createColumnNode(tdColumn, null));
+                    .recursiveFind(tdColumn));
             DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
             Collection<Indicator> indicatorList = analysisHandler.getIndicators(element);

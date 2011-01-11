@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -25,10 +24,10 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -50,6 +49,8 @@ public class DBTableFolderRepNode extends RepositoryNode {
 
     private Schema schema;
 
+    private List<IRepositoryNode> children;
+
     /**
      * DOC klliu FolderRepNode constructor comment.
      * 
@@ -59,15 +60,18 @@ public class DBTableFolderRepNode extends RepositoryNode {
      */
     public DBTableFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        children = new ArrayList<IRepositoryNode>();
         // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
+        if (!children.isEmpty()) {
+            return children;
+        }
         IRepositoryViewObject object = this.getParent().getObject();
-        createRepositoryNodeTableFolderNode(repsNodes, object);
-        return repsNodes;
+        createRepositoryNodeTableFolderNode(children, object);
+        return children;
     }
 
     /**
@@ -78,51 +82,25 @@ public class DBTableFolderRepNode extends RepositoryNode {
      */
     private void createRepositoryNodeTableFolderNode(List<IRepositoryNode> node, IRepositoryViewObject metadataObject) {
         List<TdTable> tables = new ArrayList<TdTable>();
-        if (metadataObject instanceof MetadataCatalogRepositoryObject) {
-            viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
-            catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
-            item = (ConnectionItem) viewObject.getProperty().getItem();
-            connection = item.getConnection();
-        } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
-            viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
-            schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
-            item = (ConnectionItem) viewObject.getProperty().getItem();
-            connection = item.getConnection();
-        }
-        EList<ModelElement> ownedElement = null;
-        if (catalog != null) {
-            ownedElement = catalog.getOwnedElement();
-        }
-
-        if (ownedElement != null && ownedElement.size() <= 0) {
-            try {
-                if (catalog != null) {
+        try {
+            if (metadataObject instanceof MetadataCatalogRepositoryObject) {
+                viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
+                catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
+                tables = PackageHelper.getTables(catalog);
+                if (tables.isEmpty()) {
                     tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
-                } else if (schema != null) {
+                }
+            } else {
+                viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
+                schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
+                tables = PackageHelper.getTables(schema);
+                if (tables.isEmpty()) {
                     tables = DqRepositoryViewService.getTables(connection, schema, null, true);
                 }
-                for (ModelElement element : ownedElement) {
-                    if (element instanceof TdTable) {
-                        TdTable table = (TdTable) element;
-                        tables.add(table);
-                    }
-                }
-            } catch (Exception e) {
-                log.error(e, e);
-            }
-        } else {
-            if (tables.size() <= 0) {
-                try {
-                    if (catalog != null) {
-                        tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
-                    } else if (schema != null) {
-                        tables = DqRepositoryViewService.getTables(connection, schema, null, true);
-                    }
-                } catch (Exception e) {
-                    log.error(e, e);
-                }
-            }
 
+            }
+        } catch (Exception e) {
+            log.error(e, e);
         }
         createTableRepositoryNode(tables, node);
     }

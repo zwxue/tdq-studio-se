@@ -171,10 +171,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
 
             for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
-                columnListA.add(DQStructureManager.getInstance().createColumnNode(tdColumn, null));
+                columnListA.add(DQStructureManager.getInstance().recursiveFind(tdColumn));
             }
             for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
-                columnListB.add(DQStructureManager.getInstance().createColumnNode(tdColumn, null));
+                columnListB.add(DQStructureManager.getInstance().recursiveFind(tdColumn));
             }
             // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
 
@@ -698,8 +698,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 ColumnDependencyIndicator cdi = null;
                 for (int i = 0; i < indicators.size(); i++) {
                     cdi = (ColumnDependencyIndicator) indicators.get(i);
-                    columnListA.add(DQStructureManager.getInstance().createColumnNode(cdi.getColumnA(), null));
-                    columnListB.add(DQStructureManager.getInstance().createColumnNode(cdi.getColumnB(), null));
+                    columnListA.add(DQStructureManager.getInstance().recursiveFind(cdi.getColumnA()));
+                    columnListB.add(DQStructureManager.getInstance().recursiveFind(cdi.getColumnB()));
                 }
                 tableViewerPosStack.get(0).setInput(columnListA);
                 tableViewerPosStack.get(1).setInput(columnListB);
@@ -709,14 +709,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 // columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
 
                 for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
-                    columnListA.add(DQStructureManager.getInstance().createColumnNode(tdColumn, null));
+                    columnListA.add(DQStructureManager.getInstance().recursiveFind(tdColumn));
                 }
 
                 tableViewerPosStack.get(0).setInput(columnListA);
                 columnListB.clear();
                 // columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
                 for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
-                    columnListB.add(DQStructureManager.getInstance().createColumnNode(tdColumn, null));
+                    columnListB.add(DQStructureManager.getInstance().recursiveFind(tdColumn));
                 }
                 tableViewerPosStack.get(1).setInput(columnListB);
             }
