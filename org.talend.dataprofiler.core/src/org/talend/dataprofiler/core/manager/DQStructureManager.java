@@ -158,8 +158,8 @@ public final class DQStructureManager {
                         EResourceConstant.MDM_CONNECTIONS.getName());
             }
 
-            ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING,
-                    Path.EMPTY, EResourceConstant.ANALYSIS.getName());
+            ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
+                    EResourceConstant.ANALYSIS.getName());
 
             if (!ReponsitoryContextBridge.isDefautProject()) {
                 Folder reportFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING,
@@ -169,10 +169,8 @@ public final class DQStructureManager {
             Folder patternFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                     Path.EMPTY, EResourceConstant.PATTERNS.getName());
 
-
             Folder rulesFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
-                    Path.EMPTY,
-                    EResourceConstant.RULES.getName());
+                    Path.EMPTY, EResourceConstant.RULES.getName());
             Folder rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
                     EResourceConstant.RULES_SQL.getName());
 
@@ -184,32 +182,28 @@ public final class DQStructureManager {
             Folder systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATORS,
                     Path.EMPTY, EResourceConstant.SYSTEM_INDICATORS.getName());
 
-            Folder udiFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATORS,
-                    Path.EMPTY, EResourceConstant.USER_DEFINED_INDICATORS.getName());
+            Folder udiFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATORS, Path.EMPTY,
+                    EResourceConstant.USER_DEFINED_INDICATORS.getName());
 
             Folder jrxmlFolder = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                     Path.EMPTY, EResourceConstant.JRXML_TEMPLATE.getName());
 
             Folder patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERNS,
-                        Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
+                    Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
 
             Folder patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERNS,
-                        Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
+                    Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
 
             Folder sourceFileFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
-                        Path.EMPTY, EResourceConstant.SOURCE_FILES.getName());
-
-
+                    Path.EMPTY, EResourceConstant.SOURCE_FILES.getName());
 
             // use the tos create folder API
-            // copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null,
-            // ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+            copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null,
+                    ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
             copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            // copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null,
-            // ERepositoryObjectType.TDQ_PATTERN_SQL);
-            // copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null,
-            // ERepositoryObjectType.TDQ_SOURCE_FILES);
-            // copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
+            copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
+            copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILES);
+            copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
 
             WorkspaceVersionHelper.storeVersion();
 
