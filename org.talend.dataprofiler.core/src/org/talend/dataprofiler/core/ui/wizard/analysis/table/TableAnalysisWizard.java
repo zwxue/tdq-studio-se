@@ -19,6 +19,9 @@ import org.eclipse.core.resources.IFile;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -199,7 +202,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
      */
     @Override
     public void openEditor(Item item) {
-        // TODO Auto-generated method stub
-
+        AnalysisItemEditorInput itemEditorInput = new AnalysisItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(itemEditorInput, AnalysisEditor.class.getName());
     }
 }

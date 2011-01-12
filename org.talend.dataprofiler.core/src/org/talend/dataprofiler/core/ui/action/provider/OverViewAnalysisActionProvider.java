@@ -46,23 +46,6 @@ public class OverViewAnalysisActionProvider extends AbstractCommonActionProvider
         // DOC MOD klliu 2010-12-14 feature 15750 for overview catalog or schema analysis.
         List<IRepositoryNode> packageList = new ArrayList<IRepositoryNode>();
         boolean showMenu = false;
-        // for (Object obj : list) {
-        // // MOD by zshen for 14891: use same repository API with TOS to persistent metadata
-        // if (obj instanceof RepositoryNode) {
-        // RepositoryNode node = (RepositoryNode) obj;
-        // IRepositoryViewObject viewObject = node.getObject();
-        // if (viewObject instanceof MetadataSchemaRepositoryObject) {
-        // MetadataSchemaRepositoryObject schemaObject = (MetadataSchemaRepositoryObject) viewObject;
-        // packageList.add(schemaObject.getSchema());
-        // showMenu = true;
-        // } else if (viewObject instanceof MetadataCatalogRepositoryObject) {
-        // MetadataCatalogRepositoryObject catalogObject = (MetadataCatalogRepositoryObject) viewObject;
-        // packageList.add(catalogObject.getCatalog());
-        // showMenu = true;
-        // }
-        //
-        // }
-        // }
         for (Object obj : list) {
             if (obj instanceof DBConnectionRepNode || obj instanceof DBCatalogRepNode || obj instanceof DBSchemaRepNode
                     || obj instanceof DBTableRepNode) {
@@ -70,7 +53,6 @@ public class OverViewAnalysisActionProvider extends AbstractCommonActionProvider
                 packageList.add(node);
                 showMenu = true;
             }
-
         }
         if (showMenu) {
             OverviewAnalysisAction overviewAnalysisAction = new OverviewAnalysisAction(packageList);

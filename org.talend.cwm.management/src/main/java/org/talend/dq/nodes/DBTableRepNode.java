@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.cwm.relational.TdTable;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -24,6 +25,10 @@ import org.talend.repository.model.RepositoryNode;
  * DOC klliu Database table repository node displayed on repository view (UI).
  */
 public class DBTableRepNode extends RepositoryNode {
+
+    private TdTableRepositoryObject tdTableRepositoryObject;
+
+    private TdTable tdTable;
 
     /**
      * DOC klliu DBTableRepNode constructor comment.
@@ -34,6 +39,16 @@ public class DBTableRepNode extends RepositoryNode {
      */
     public DBTableRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        tdTableRepositoryObject = (TdTableRepositoryObject) object;
+        tdTable = tdTableRepositoryObject.getTdTable();
+    }
+
+    public TdTableRepositoryObject getTdTableRepositoryObject() {
+        return this.tdTableRepositoryObject;
+    }
+
+    public TdTable getTdTable() {
+        return this.tdTable;
     }
 
     /*

@@ -122,47 +122,49 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (element instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) element;
                 if (node.getChildren().size() <= 0) {
-                IRepositoryViewObject viewObject = node.getObject();
-                String label = viewObject == null ? null : viewObject.getLabel();
-                if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
-                    List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                    resContants.add(EResourceConstant.ANALYSIS);
-                    if (!ReponsitoryContextBridge.isDefautProject()) {
-                    resContants.add(EResourceConstant.REPORTS);
+                    IRepositoryViewObject viewObject = node.getObject();
+                    String label = viewObject == null ? null : viewObject.getLabel();
+                    if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
+                        List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
+                        resContants.add(EResourceConstant.ANALYSIS);
+                        if (!ReponsitoryContextBridge.isDefautProject()) {
+                            resContants.add(EResourceConstant.REPORTS);
+                        }
+                        instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
+                    } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
+                        List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
+                        resContants.add(EResourceConstant.EXCHANGE);
+                        resContants.add(EResourceConstant.INDICATORS);
+                        if (!PluginChecker.isOnlyTopLoaded()) {
+                            resContants.add(EResourceConstant.JRXML_TEMPLATE);
+                        }
+                        resContants.add(EResourceConstant.PATTERNS);
+                        resContants.add(EResourceConstant.RULES);
+                        resContants.add(EResourceConstant.SOURCE_FILES);
+                        instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
+                    } else if (EResourceConstant.INDICATORS.getName().equals(label)) {
+                        List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
+                        resContants.add(EResourceConstant.SYSTEM_INDICATORS);
+                        resContants.add(EResourceConstant.USER_DEFINED_INDICATORS);
+                        instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
+                    } else if (EResourceConstant.PATTERNS.getName().equals(label)) {
+                        List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
+                        resContants.add(EResourceConstant.PATTERN_REGEX);
+                        resContants.add(EResourceConstant.PATTERN_SQL);
+                        instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
+                    } else if (EResourceConstant.RULES.getName().equals(label)) {
+                        instance.createRepositoryNodeSystemFolder(folderHelper, node, EResourceConstant.RULES_SQL);
+                    } else if (EResourceConstant.METADATA.getName().equals(label)) {
+                        List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
+                        resContants.add(EResourceConstant.DB_CONNECTIONS);
+                        resContants.add(EResourceConstant.MDM_CONNECTIONS);
+                        if (!PluginChecker.isOnlyTopLoaded()) {
+                            resContants.add(EResourceConstant.FILEDELIMITED);
+                        }
+                        instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
+                    } else if (node instanceof RecycleBinRepNode) {
+                        // TODO get deleted node !
                     }
-                    instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (EResourceConstant.LIBRARIES.getName().equals(label)) {
-                    List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                    resContants.add(EResourceConstant.EXCHANGE);
-                    resContants.add(EResourceConstant.INDICATORS);
-                    resContants.add(EResourceConstant.JRXML_TEMPLATE);
-                    resContants.add(EResourceConstant.PATTERNS);
-                    resContants.add(EResourceConstant.RULES);
-                    resContants.add(EResourceConstant.SOURCE_FILES);
-                    instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (EResourceConstant.INDICATORS.getName().equals(label)) {
-                    List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                    resContants.add(EResourceConstant.SYSTEM_INDICATORS);
-                    resContants.add(EResourceConstant.USER_DEFINED_INDICATORS);
-                    instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (EResourceConstant.PATTERNS.getName().equals(label)) {
-                    List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                    resContants.add(EResourceConstant.PATTERN_REGEX);
-                    resContants.add(EResourceConstant.PATTERN_SQL);
-                    instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (EResourceConstant.RULES.getName().equals(label)) {
-                    instance.createRepositoryNodeSystemFolder(folderHelper, node, EResourceConstant.RULES_SQL);
-                } else if (EResourceConstant.METADATA.getName().equals(label)) {
-                    List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                    resContants.add(EResourceConstant.DB_CONNECTIONS);
-                    resContants.add(EResourceConstant.MDM_CONNECTIONS);
-                    if (!PluginChecker.isOnlyTopLoaded()) {
-                        resContants.add(EResourceConstant.FILEDELIMITED);
-                    }
-                    instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                } else if (node instanceof RecycleBinRepNode) {
-                    // TODO get deleted node !
-                }
                 }
                 return node.getChildren().toArray();
             }
@@ -173,7 +175,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         }
         return super.getChildren(element);
     }
-    
 
     @Override
     public boolean hasChildren(Object element) {

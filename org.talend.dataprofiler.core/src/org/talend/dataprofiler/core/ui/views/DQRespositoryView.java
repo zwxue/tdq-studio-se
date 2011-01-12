@@ -92,6 +92,7 @@ import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
@@ -349,14 +350,15 @@ public class DQRespositoryView extends CommonNavigator {
                         openItemEditorAction.run();
                     }
                     if (obj instanceof RepositoryNode) {
-                        IRepositoryViewObject viewObject = ((RepositoryNode) obj).getObject();
-                        OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(viewObject);
-                        openItemEditorAction.run();
+                        RepositoryNode repoNode = (RepositoryNode) obj;
+                        if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
+                            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
+                            openItemEditorAction.run();
+                        }
                     }
                 }
                 super.mouseDoubleClick(e);
             }
-
         });
         // ~ADD mzhao for feature 6233 Load columns when selecting a table (or
         // view) in DQ Repository view

@@ -493,16 +493,6 @@
          </enablement>
       </actionProvider>
       <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.predefined.RunConnAnalysis"
-            id="org.talend.dataprofiler.core.ui.action.provider.predefined.RunConnAnalysis">
-         <enablement>
-            <and>
-               <instanceof
-                     value="org.talend.dq.nodes.DBConnectionRepNode">
-               </instanceof></and>
-         </enablement>
-      </actionProvider>
-      <actionProvider
             class="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewTableProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewTableProvider">
          <enablement>

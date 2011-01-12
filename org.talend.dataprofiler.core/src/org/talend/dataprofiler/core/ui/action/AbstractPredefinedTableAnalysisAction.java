@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -30,8 +33,9 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import orgomg.cwm.resource.relational.Table;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -62,22 +66,21 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
     }
 
     protected TdTable[] getTables() {
-        Object obj = getSelection().getFirstElement();
-
-        if (obj instanceof TdTable) {
-            TdTable[] table = new TdTable[getSelection().size()];
-            for (int i = 0; i < getSelection().size(); i++) {
-                table[i] = (TdTable) getSelection().toArray()[i];
+        List<DBTableRepNode> tableNodeList = RepositoryNodeHelper.getTableNodeList(getSelection().toArray());
+        if (tableNodeList.size() > 0) {
+            List<TdTable> tableList = new ArrayList<TdTable>();
+            for (DBTableRepNode tableNode : tableNodeList) {
+                tableList.add(tableNode.getTdTable());
             }
-            return table;
+            return tableList.toArray(new TdTable[tableList.size()]);
         }
         return null;
     }
 
     protected Connection getTdDataProvidor() {
         Object obj = getSelection().getFirstElement();
-        if (obj instanceof Table) {
-            return ConnectionHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema((Table) obj));
+        if (obj instanceof DBTableRepNode) {
+            return ConnectionHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(((DBTableRepNode) obj).getTdTable()));
         }
         return null;
     }
