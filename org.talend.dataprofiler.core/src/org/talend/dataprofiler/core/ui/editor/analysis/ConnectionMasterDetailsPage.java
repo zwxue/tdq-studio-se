@@ -25,6 +25,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
@@ -94,9 +95,10 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
 
     public List<OverviewIndUIElement> getCatalogIndicators() {
         ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
+        Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
         EList<CatalogIndicator> catalogIndicators = conIndicator.getCatalogIndicators();
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
-        RepositoryNode connNode = getCurrentRepNodeOnUI();
+        RepositoryNode connNode = DQStructureManager.getInstance().recursiveFind(analyzedElement);
         for (Indicator indicator : catalogIndicators) {
             for (IRepositoryNode catalogNode : connNode.getChildren()) {
                 Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
