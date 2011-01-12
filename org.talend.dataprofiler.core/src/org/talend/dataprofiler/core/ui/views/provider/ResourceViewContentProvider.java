@@ -121,6 +121,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 return folders.toArray();
             } else if (element instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) element;
+                if (node.getChildren().size() <= 0) {
                 IRepositoryViewObject viewObject = node.getObject();
                 String label = viewObject == null ? null : viewObject.getLabel();
                 if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
@@ -161,6 +162,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                 } else if (node instanceof RecycleBinRepNode) {
                     // TODO get deleted node !
+                }
                 }
                 return node.getChildren().toArray();
             }

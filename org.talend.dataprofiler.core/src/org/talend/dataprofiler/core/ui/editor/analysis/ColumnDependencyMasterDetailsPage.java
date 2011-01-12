@@ -25,6 +25,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -33,6 +34,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -47,10 +49,10 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
@@ -221,6 +223,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      */
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
+        IRepositoryViewObject reposObject = null;
         getAnalysisHandler().clearAnalysis();
 
         List<RepositoryNode> columnListAANode = anaColumnCompareViewer.getColumnListA();
@@ -248,8 +251,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         }
 
         if (columnListAANode.size() > 0) {
-
-            tdDataProvider = ((ConnectionItem) columnListAANode.get(0).getObject().getProperty().getItem()).getConnection();
+            reposObject = columnListAANode.get(0).getObject();
+            tdDataProvider = ((ConnectionItem) reposObject.getProperty().getItem()).getConnection();
             // MOD qiongli bug 14437:Add dependency
             analysis.getContext().setConnection(tdDataProvider);
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
@@ -263,12 +266,19 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
-        ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
-        if (save.isOk()) {
+     // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
+        ReturnCode saved = new ReturnCode(false);
+        IEditorInput editorInput = this.getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
+            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+        }
+        if (saved.isOk()) {
             // MOD qiongli bug 14437: save dependency
-            if (tdDataProvider != null) {
+            if (reposObject != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(tdDataProvider);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());
             }
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }

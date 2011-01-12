@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -55,6 +56,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
@@ -79,9 +81,9 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -566,6 +568,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      */
 
     public void saveAnalysis() throws DataprofilerCoreException {
+        IRepositoryViewObject reposObject = null;
         correlationAnalysisHandler.clearAnalysis();
         columnSetMultiIndicator.getAnalyzedColumns().clear();
 
@@ -579,9 +582,10 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         // save analysis
         List<RepositoryNode> repositoryNodeList = treeViewer.getColumnSetMultiValueList();
 
-        Connection tdProvider = null;
+
         if (repositoryNodeList != null && repositoryNodeList.size() != 0) {
-            tdProvider = ((ConnectionItem) repositoryNodeList.get(0).getObject().getProperty().getItem()).getConnection();
+            reposObject = repositoryNodeList.get(0).getObject();
+            Connection tdProvider = ((ConnectionItem) reposObject.getProperty().getItem()).getConnection();
             // tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
             analysis.getContext().setConnection(tdProvider);
 
@@ -621,11 +625,18 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
-        ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
+        // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
+        ReturnCode saved = new ReturnCode(false);
+        IEditorInput editorInput = this.getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
+            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+        }
         if (saved.isOk()) {
-            if (tdProvider != null) {
+            if (reposObject != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(tdProvider);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());
             }
             // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true
             // );

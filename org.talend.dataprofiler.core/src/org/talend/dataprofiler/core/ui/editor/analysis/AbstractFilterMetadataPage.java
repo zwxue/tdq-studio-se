@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -92,8 +93,9 @@ import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -780,8 +782,15 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
-        ReturnCode save = AnaResourceFileHelper.getInstance().save(analysis);
-        if (save.isOk()) {
+        // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
+        ReturnCode saved = new ReturnCode(false);
+        IEditorInput editorInput = this.getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
+            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+        }
+        if (saved.isOk()) {
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }
     }

@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -83,9 +84,9 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -699,6 +700,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @throws DataprofilerCoreException
      */
     public void saveAnalysis() throws DataprofilerCoreException {
+        IRepositoryViewObject reposObject = null;
         analysisHandler.clearAnalysis();
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
@@ -720,7 +722,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             analysis.getContext().setConnection(tdProvider);
 
             for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-                IRepositoryViewObject reposObject = modelElementIndicator.getModelElementRepositoryNode().getObject();
+                reposObject = modelElementIndicator.getModelElementRepositoryNode().getObject();
                 ModelElement modelEle = null;
                 if (reposObject instanceof MetadataColumnRepositoryObject) {
                     modelEle = ((MetadataColumnRepositoryObject) reposObject).getTdColumn();
@@ -763,12 +765,18 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
-
-        ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
+        // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
+        ReturnCode saved = new ReturnCode(false);
+        IEditorInput editorInput = this.getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
+            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+        }
         if (saved.isOk()) {
-            if (tdProvider != null) {
+            if (reposObject != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(tdProvider);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());
             }
             // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true
             // );

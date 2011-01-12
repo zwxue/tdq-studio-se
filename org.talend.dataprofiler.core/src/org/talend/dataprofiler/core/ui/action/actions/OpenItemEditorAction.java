@@ -26,6 +26,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -46,7 +47,6 @@ import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -82,23 +82,26 @@ public class OpenItemEditorAction extends Action {
                 || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
             editorInput = new ConnectionItemEditorInput(item);
             editorID = ConnectionEditor.class.getName();
-        } else if (ERepositoryObjectType.TDQ_ANALYSIS.getKey().equals(key)) {
+        } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
             editorInput = new AnalysisItemEditorInput(item);
             Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
             AnalysisParameters parameters = analysis.getParameters();
             AnalysisType analysisType = parameters.getAnalysisType();
             // boolean equals = analysisType.equals(AnalysisType.CONNECTION);
             // if (equals) {
-                EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
-                Connection conn = null;
-                if (analysedElements.size() > 0) {
-                    ModelElement modelElement = analysedElements.get(0);
-                    conn = retiveConnections(modelElement);
-                }
-                // FIXME User UUID to find the right conn repository node.
-                String label = conn.getLabel();
-                IRepositoryNode connectionRepositoryNode = DQStructureManager.getInstance().getConnectionRepositoryNode(label);
-                ((AnalysisItemEditorInput) editorInput).setConnectionNode((DBConnectionRepNode) connectionRepositoryNode);
+            EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+            RepositoryNode connectionRepositoryNode = null;
+            if (analysedElements.size() > 0) {
+                ModelElement modelElement = analysedElements.get(0);
+                Connection connection = ConnectionHelper.getConnection((TdColumn) modelElement);
+                connectionRepositoryNode = DQStructureManager.getInstance().recursiveFind(connection);
+            }
+            // FIXME User UUID to find the right conn repository node.
+            // String label = conn.getLabel();
+            // IRepositoryNode connectionRepositoryNode =
+            // DQStructureManager.getInstance().getConnectionRepositoryNode(label);
+
+            ((AnalysisItemEditorInput) editorInput).setConnectionNode((DBConnectionRepNode) connectionRepositoryNode);
             // }
             editorID = AnalysisEditor.class.getName();
         } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
@@ -114,7 +117,7 @@ public class OpenItemEditorAction extends Action {
                 * if (ERepositoryObjectType.TDQ_JRXMLTEMPLATE.getKey().equals(key) ||
                 * ERepositoryObjectType.TDQ_SOURCE_FILES.getKey().equals(key) ||
                 * ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key))
-                */ {
+                */{
             IPath append = WorkbenchUtils.getFilePath((RepositoryNode) reposViewObj.getRepositoryNode());
             fileEditorInput = ResourceManager.getRootProject().getFile(append);
         }

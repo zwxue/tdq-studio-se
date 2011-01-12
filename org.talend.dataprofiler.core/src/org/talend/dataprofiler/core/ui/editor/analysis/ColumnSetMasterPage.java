@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -47,6 +48,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -77,9 +79,9 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -519,6 +521,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      */
 
     public void saveAnalysis() throws DataprofilerCoreException {
+        IRepositoryViewObject reposObject = null;
         columnSetAnalysisHandler.clearAnalysis();
         simpleStatIndicator.getAnalyzedColumns().clear();
         allMatchIndicator.getAnalyzedColumns().clear();
@@ -544,8 +547,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             List<TdColumn> columnList = new ArrayList<TdColumn>();
             for (IRepositoryNode rd : repositoryNodes) {
+                reposObject = rd.getObject();
                 columnList.add(
-(TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+(TdColumn) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
             }
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
             columnSetAnalysisHandler.addIndicator(columnList, simpleStatIndicator);
@@ -580,12 +584,19 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
-        ReturnCode saved = AnaResourceFileHelper.getInstance().save(analysis);
+        // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
+        ReturnCode saved = new ReturnCode(false);
+        IEditorInput editorInput = this.getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
+            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+        }
         if (saved.isOk()) {
             if (tdProvider != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
 
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(tdProvider);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());
             }
 
             if (log.isDebugEnabled()) {
