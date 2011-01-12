@@ -369,10 +369,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) tdDataProvider2));
         }
         ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(
-                JavaSqlFactory
-.getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(
-                this.urlText
-.getText(), JavaSqlFactory.getDriverClass(tdDataProvider2), props);
+                JavaSqlFactory.getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(
+                this.urlText.getText(), JavaSqlFactory.getDriverClass(tdDataProvider2), props);
         // ~
         return returnCode;
     }

@@ -36,6 +36,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -54,11 +55,13 @@ import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * This is a Master Detail Page for <a href="http://www.talendforge.org/bugs/view.php?id=8134">Functional Dependency
@@ -120,8 +123,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
                 .getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
 
         anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer((AbstractAnalysisMetadataPage) this, topComp,
-                getColumnLeftSet(), getColumnRightSet(), DefaultMessagesImpl
-                        .getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$
+                getColumnLeftSet(), getColumnRightSet(),
+                DefaultMessagesImpl.getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$
                         .getString("FunctionalDependencyMasterDetailsPage.Description"), false, true); //$NON-NLS-1$
 
         anaColumnCompareViewer.addPropertyChangeListener(this);
@@ -185,8 +188,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     @Override
     protected ReturnCode canRun() {
 
-        return columnListA.size() > 0 ? new ReturnCode(true) : new ReturnCode(DefaultMessagesImpl
-                .getString("ColumnDependencyMasterDetailsPage.columnsBlankRunMessage"), false); //$NON-NLS-1$
+        return columnListA.size() > 0 ? new ReturnCode(true) : new ReturnCode(
+                DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.columnsBlankRunMessage"), false); //$NON-NLS-1$
     }
 
     /*
@@ -266,7 +269,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
-     // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
+        // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
         if (editorInput instanceof AnalysisItemEditorInput) {
@@ -330,21 +333,13 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         for (int i = 0; i < columnASet.size(); i++) {
             RepositoryNode columnANode = columnASet.get(i);
             RepositoryNode columnBNode = columnBSet.get(i);
-            TdColumn tdColumn = (TdColumn) ((MetadataColumnRepositoryObject) columnANode.getObject()).getTdColumn();
-            TdColumn tdColumn2 = (TdColumn) ((MetadataColumnRepositoryObject) columnBNode.getObject()).getTdColumn();
-            String uuid = ResourceHelper.getUUID(tdColumn);
-            String uuid1 = ResourceHelper.getUUID(tdColumn2);
-            // ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) ((MetadataColumnRepositoryObject)
-            // columnANode
-            // .getObject()).getTdColumn());
-            // ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) ((MetadataColumnRepositoryObject)
-            // columnBNode
-            // .getObject()).getTdColumn());
-
-            // int typeA = ((TdColumn) columnA).getJavaType();
-            // int typeB = ((TdColumn) columnB).getJavaType();
-
-            if (!uuid.equals(uuid1)) {
+            TdColumn tdColumnA = ((DBColumnRepNode) columnANode).getTdColumn();
+            TdColumn tdColumnB = ((DBColumnRepNode) columnBNode).getTdColumn();
+            ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(tdColumnA);
+            ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(tdColumnB);
+            String uuidA = ResourceHelper.getUUID(ownerA);
+            String uuidB = ResourceHelper.getUUID(ownerB);
+            if (!uuidA.equals(uuidB)) {
                 // must come from one table
                 return new ReturnCode(DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.tableMessage"), false); //$NON-NLS-1$
             }
