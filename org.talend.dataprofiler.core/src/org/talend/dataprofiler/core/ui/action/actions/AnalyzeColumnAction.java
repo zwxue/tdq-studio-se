@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -20,13 +21,13 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -58,15 +59,14 @@ public class AnalyzeColumnAction extends Action {
             if (editor != null) {
                 ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
                 if (!this.selection.isEmpty()) {
-                    MetadataColumnRepositoryObject[] columns = new MetadataColumnRepositoryObject[selection.size()];
-                    Iterator it = this.selection.iterator();
-
-                    int i = 0;
-                    while (it.hasNext()) {
-                        columns[i] = (MetadataColumnRepositoryObject) it.next();
-                        i++;
+                    List<RepositoryNode> nodeList = new ArrayList<RepositoryNode>();
+                    Object[] objs = this.selection.toArray();
+                    for (Object obj : objs) {
+                        if (obj instanceof RepositoryNode) {
+                            nodeList.add((RepositoryNode) obj);
+                        }
                     }
-                    page.getTreeViewer().setInput(columns);
+                    page.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
                 }
             }
         }
