@@ -52,6 +52,7 @@ import org.talend.core.context.Context;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -60,11 +61,11 @@ import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.core.runtime.CoreRuntimePlugin;
@@ -86,14 +87,11 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
-import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -101,6 +99,7 @@ import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -689,6 +688,30 @@ public final class DQStructureManager {
                     return (RepositoryNode) viewNode;
                 }
             }
+        } else if (element instanceof MetadataColumn) {
+            // MOD qiongli 2011-1-12 for delimted file
+            MetadataColumn column = (MetadataColumn) element;
+            IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsMetadataTable(column));
+            for (IRepositoryNode columnNode : columnSetNode.getChildren().get(0).getChildren()) {
+                MetadataColumn columnOnUI = ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
+                if (ResourceHelper.getUUID(column).equals(ResourceHelper.getUUID(columnOnUI))) {
+                    return (RepositoryNode) columnNode;
+                }
+            }
+
+        } else if (element instanceof MetadataTable) {
+            // MOD qiongli 2011-1-12 for delimted file
+            MetadataTable table = (MetadataTable) element;
+            if (table.getNamespace() instanceof RecordFile) {
+            IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(table));
+            for (IRepositoryNode tableNode : connNode.getChildren()) {
+                MetadataTable tableOnUI = (MetadataTable) ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
+                if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
+                    return (RepositoryNode) tableNode;
+                }
+            }
+            }
+
         } else if (element instanceof Catalog) {
             Catalog catalog = (Catalog) element;
             IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(catalog));
@@ -734,13 +757,5 @@ public final class DQStructureManager {
             }
         }
         return null;
-    }
-
-    public RepositoryNode createColumnNode(MetadataColumn mdColumn, RepositoryNode parent) {
-        Connection conn = ConnectionHelper.getTdDataProvider((TdColumn) mdColumn);
-        Property property = PropertyHelper.getProperty(conn);
-        IRepositoryViewObject connReposViewObject = new RepositoryViewObject(property);
-        MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(connReposViewObject, mdColumn);
-        return new DFColumnRepNode(metadataColumn, parent, ENodeType.REPOSITORY_ELEMENT);
     }
 }

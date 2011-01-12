@@ -180,7 +180,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             if (tdColumn == null && mdColumn != null) {
                 currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(DQStructureManager.getInstance()
-                        .createColumnNode(mdColumn, null));
+                        .recursiveFind(mdColumn));
             } else {
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
                         .recursiveFind(tdColumn));

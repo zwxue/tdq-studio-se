@@ -32,6 +32,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -238,7 +239,8 @@ public abstract class ModelElementTreeMenuProvider {
                     IRepositoryNode rd = meIndicator.getModelElementRepositoryNode();
                     ModelElement me = ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn();
                     ModelElement ana = getAnalysis2();
-                    ana.setName(me.getName());
+                    // MOD qiongli 2011-1-12 feature 16796 :handle the case of ModelElement name is null
+                    ana.setName(ModelElementHelper.getName(me));
                     if (me instanceof ModelElement) {
                         (new TdAddTaskAction(tree.getShell(), ana)).run();
                     }
