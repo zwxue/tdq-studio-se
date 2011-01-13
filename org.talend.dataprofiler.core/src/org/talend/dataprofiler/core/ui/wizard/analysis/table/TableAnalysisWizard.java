@@ -51,7 +51,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
     private DQRuleSelectPage dqruleSelectPage = null;
 
-    private boolean showTableSelectPage = true;
+    public boolean showTableSelectPage = true;
 
     public boolean isShowTableSelectPage() {
         return showTableSelectPage;

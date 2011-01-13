@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.schema;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
@@ -73,18 +70,19 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
             // Connection tdProvider = packageParameter.getTdDataProvider();
             getAnalysisBuilder().setAnalysisConnection(tdProvider);
             Indicator[] indicators = new Indicator[packageParameter.getPackages().size()];
-            List<ModelElement> element = new ArrayList<ModelElement>();
+            ModelElement[] modelElement = new ModelElement[packageParameter.getPackages().size()];
             int i = 0;
             for (IRepositoryNode node : packageParameter.getPackages()) {
                 SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
                 DBSchemaRepNode catalogNode = (DBSchemaRepNode) node;
                 Schema schema = ((MetadataSchemaRepositoryObject) catalogNode.getObject()).getSchema();
-                element.add(schema);
+                modelElement[i] = schema;
                 DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createSchemaIndicator);
                 createSchemaIndicator.setAnalyzedElement(schema);
                 indicators[i] = createSchemaIndicator;
                 i++;
             }
+
             // PackagesAnalyisParameter packageParameter = getParameter();
             // Connection tdProvider = packageParameter.getTdDataProvider();
             // getAnalysisBuilder().setAnalysisConnection(tdProvider);
@@ -98,7 +96,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
             // indicators[i] = createSchemaIndicator;
             // i++;
             // }
-            getAnalysisBuilder().addElementsToAnalyze((ModelElement[]) element.toArray(), indicators);
+            getAnalysisBuilder().addElementsToAnalyze(modelElement, indicators);
         }
 
         return analysis;

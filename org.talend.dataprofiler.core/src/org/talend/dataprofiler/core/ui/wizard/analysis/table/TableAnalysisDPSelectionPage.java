@@ -22,11 +22,17 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
@@ -40,6 +46,7 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
     private static String connsStr = DefaultMessagesImpl.getString("TableAnalysisPageStep0.tables"); //$NON-NLS-1$
 
+    public Connection connection = null;
     public TableAnalysisDPSelectionPage() {
         super(newAnaStr, chooseConnStr, connsStr, new TableContentProvider(), true);
     }
@@ -59,27 +66,46 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
         addListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
-                Connection oldTdDataProvider = null;
+               // Connection oldTdDataProvider = null;
                 NamedColumnSetAnalysisParameter paraneter = (NamedColumnSetAnalysisParameter) getConnectionParams();
                 List tempList = ((IStructuredSelection) event.getSelection()).toList();
                 List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
                 for (Object object : tempList) {
-                    if (object instanceof NamedColumnSet) {
-                        NamedColumnSet set = (NamedColumnSet) object;
-                        Connection tdProvider = ConnectionHelper.getTdDataProvider(TableHelper
-                                .getParentCatalogOrSchema(set));
-                        oldTdDataProvider = oldTdDataProvider == null ? tdProvider : oldTdDataProvider;
-                        if (oldTdDataProvider != null && !oldTdDataProvider.equals(tdProvider)) {
-                            MessageUI.openWarning(DefaultMessagesImpl
-                                    .getString("TableAnalysisDPSelectionPage.TableSelectWarning")); //$NON-NLS-1$
-                        } else if (tdProvider != null && paraneter != null) {
-                            setList.add(set);
-                            paraneter.setTdDataProvider(oldTdDataProvider);
-                        }
+                    if (object instanceof DBTableRepNode) {
+                        DBTableRepNode tableNode = (DBTableRepNode) object;
+                        setList.add(tableNode.getTdTable());
                     }
+//                    if (object instanceof NamedColumnSet) {
+//                        NamedColumnSet set = (NamedColumnSet) object;
+//                        Connection tdProvider = ConnectionHelper.getTdDataProvider(TableHelper
+//                                .getParentCatalogOrSchema(set));
+//                        oldTdDataProvider = oldTdDataProvider == null ? tdProvider : oldTdDataProvider;
+//                        if (oldTdDataProvider != null && !oldTdDataProvider.equals(tdProvider)) {
+//                            MessageUI.openWarning(DefaultMessagesImpl
+//                                    .getString("TableAnalysisDPSelectionPage.TableSelectWarning")); //$NON-NLS-1$
+//                        } else if (tdProvider != null && paraneter != null) {
+//                            setList.add(set);
+//                            paraneter.setTdDataProvider(oldTdDataProvider);
+//                        }
+//                    }
                 }
                 if (setList.size() > 0 && paraneter != null) {
                     paraneter.setNamedColumnSets(setList.toArray(new NamedColumnSet[setList.size()]));
+                    DBTableRepNode recursiveFind = (DBTableRepNode) DQStructureManager.getInstance().recursiveFind(
+                            (TdTable) setList.get(0));
+                    RepositoryNode parent = recursiveFind.getParent().getParent();
+                    if (parent instanceof DBSchemaRepNode) {
+                        parent = parent.getParent();
+                    }
+                    // TdTableRepositoryObject tableViewObject = (TdTableRepositoryObject) recursiveFind.getObject();
+                    // IRepositoryViewObject viewObject = parent.getObject();
+                    DBConnectionRepNode connNode = (DBConnectionRepNode) parent.getParent();
+                    paraneter.setConnectionRepNode(connNode);
+                    Connection connection = ConnectionHelper.getConnection((TdTable) setList.get(0));
+                    paraneter.setTdDataProvider(connection);
+                    List<IRepositoryNode> packagesNode = new ArrayList<IRepositoryNode>();
+                    packagesNode.add((DBCatalogRepNode) parent);
+                    paraneter.setPackages(packagesNode);
                     setPageComplete(true);
                 } else {
                     setPageComplete(false);

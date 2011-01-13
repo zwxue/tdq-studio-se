@@ -15,17 +15,15 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.CoreException;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
-import org.talend.core.model.repository.ERepositoryObjectType;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC mzhao class global comment. Catalog content provider.
@@ -46,30 +44,30 @@ public class CatalogContentProvider extends ResourceViewContentProvider {
      */
     @Override
     public Object[] getChildren(Object parentElement) {
-        if (parentElement instanceof IContainer) {
-            try {
-                Object[] members = ((IContainer) parentElement).members();
-                if (parentElement.equals(ResourceManager.getConnectionFolder())) {
-                    try {
-                        members = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS)
-                                .toArray();
-                    } catch (PersistenceException e) {
-                        log.error(e, e);
-                    }
-                }
-                return members;
-            } catch (CoreException e) {
-                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
-            }
-        } else if (parentElement instanceof IRepositoryViewObject) {
-            IRepositoryViewObject repoistoryViewObj = (IRepositoryViewObject) parentElement;
-            Item item = repoistoryViewObj.getProperty().getItem();
-            if (item instanceof ConnectionItem) {
-                ((ConnectionItem) item).getConnection().getDataPackage();
-                return ComparatorsFactory.sort(((ConnectionItem) item).getConnection().getDataPackage().toArray(),
-                        ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
-            }
-        }
+        // if (parentElement instanceof IContainer) {
+        // try {
+        // Object[] members = ((IContainer) parentElement).members();
+        // if (parentElement.equals(ResourceManager.getConnectionFolder())) {
+        // try {
+        // members = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS)
+        // .toArray();
+        // } catch (PersistenceException e) {
+        // log.error(e, e);
+        // }
+        // }
+        // return members;
+        // } catch (CoreException e) {
+        //                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+        // }
+        // } else if (parentElement instanceof IRepositoryViewObject) {
+        // IRepositoryViewObject repoistoryViewObj = (IRepositoryViewObject) parentElement;
+        // Item item = repoistoryViewObj.getProperty().getItem();
+        // if (item instanceof ConnectionItem) {
+        // ((ConnectionItem) item).getConnection().getDataPackage();
+        // return ComparatorsFactory.sort(((ConnectionItem) item).getConnection().getDataPackage().toArray(),
+        // ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+        // }
+        // }
 
         // else if (parentElement instanceof IFile) {
         // IFile prvFile = (IFile) parentElement;
@@ -79,6 +77,17 @@ public class CatalogContentProvider extends ResourceViewContentProvider {
         // ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
         // }
         // }
+        if (parentElement instanceof IContainer) {
+            if (ResourceManager.isMetadataFolder((IResource) parentElement)) {
+
+                IFolder container = (IFolder) parentElement;
+                IRepositoryViewObject viewObject = new Folder(((IFolder) container).getName(), ((IFolder) container).getName());
+                RepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
+                viewObject.setRepositoryNode(node);
+                Object[] children = super.getChildren(node);
+                return children;
+            }
+        }
         return super.getChildren(parentElement);
     }
 
@@ -113,6 +122,6 @@ public class CatalogContentProvider extends ResourceViewContentProvider {
      */
     @Override
     public boolean hasChildren(Object element) {
-        return !(element instanceof Catalog);
+        return !(element instanceof DBCatalogRepNode);
     }
 }

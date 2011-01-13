@@ -14,15 +14,13 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
-import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -45,32 +43,32 @@ public class SchemaContentProvider extends ResourceViewContentProvider {
      */
     @Override
     public Object[] getChildren(Object parentElement) {
-        if (parentElement instanceof IContainer) {
-            IContainer container = (IContainer) parentElement;
-            IResource[] members = null;
-            try {
-                if (ResourceManager.getConnectionFolder().equals(container)) {
-                    return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
-                } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                    return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION).toArray();
-                }
-
-                members = container.members();
-            } catch (CoreException e) {
-                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
-            } catch (Exception e) {
-                log.error(e, e);
-            }
-            return members;
-        } else if (parentElement instanceof IRepositoryViewObject) {
-            IRepositoryViewObject repoistoryViewObj = (IRepositoryViewObject) parentElement;
-            Item item = repoistoryViewObj.getProperty().getItem();
-            if (item instanceof ConnectionItem) {
-                ((ConnectionItem) item).getConnection().getDataPackage();
-                return ComparatorsFactory.sort(((ConnectionItem) item).getConnection().getDataPackage().toArray(),
-                        ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
-            }
-        }
+        // if (parentElement instanceof IContainer) {
+        // IContainer container = (IContainer) parentElement;
+        // IResource[] members = null;
+        // try {
+        // if (ResourceManager.getConnectionFolder().equals(container)) {
+        // return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
+        // } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
+        // return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION).toArray();
+        // }
+        //
+        // members = container.members();
+        // } catch (CoreException e) {
+        //                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+        // } catch (Exception e) {
+        // log.error(e, e);
+        // }
+        // return members;
+        // } else if (parentElement instanceof IRepositoryViewObject) {
+        // IRepositoryViewObject repoistoryViewObj = (IRepositoryViewObject) parentElement;
+        // Item item = repoistoryViewObj.getProperty().getItem();
+        // if (item instanceof ConnectionItem) {
+        // ((ConnectionItem) item).getConnection().getDataPackage();
+        // return ComparatorsFactory.sort(((ConnectionItem) item).getConnection().getDataPackage().toArray(),
+        // ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
+        // }
+        // }
         // else if (parentElement instanceof IFile) {
         // IFile prvFile = (IFile) parentElement;
         // if (FactoriesUtil.isProvFile(prvFile.getFileExtension())) {
@@ -79,6 +77,17 @@ public class SchemaContentProvider extends ResourceViewContentProvider {
         // ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
         // }
         // }
+        if (parentElement instanceof IContainer) {
+            if (ResourceManager.isMetadataFolder((IResource) parentElement)) {
+
+                IFolder container = (IFolder) parentElement;
+                IRepositoryViewObject viewObject = new Folder(((IFolder) container).getName(), ((IFolder) container).getName());
+                RepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
+                viewObject.setRepositoryNode(node);
+                Object[] children = super.getChildren(node);
+                return children;
+            }
+        }
         return super.getChildren(parentElement);
     }
 

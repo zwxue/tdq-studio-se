@@ -14,14 +14,15 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.eclipse.core.resources.IFolder;
+import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * @author zqin
@@ -47,23 +48,33 @@ public class ConnectionsContentProvider extends ResourceViewContentProvider {
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof IContainer) {
             IContainer container = (IContainer) parentElement;
-            IResource[] members = null;
-            try {
-                if (ResourceManager.getConnectionFolder().equals(container)) {
-                    return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
-                } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                    return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
-                }
-            } catch (PersistenceException e) {
-                log.error(e, e);
-            }
-            try {
+            IRepositoryNode node = null;
+            // IResource[] members = null;
+            // try {
+            //
+            // // if (ResourceManager.getConnectionFolder().equals(container)) {
+            // // return
+            // // ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
+            // // } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
+            // // return
+            // // ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
+            // // }
+            // } catch (PersistenceException e) {
+            // log.error(e, e);
+            // }
+            // try {
+            // members = container.members();
+            // } catch (CoreException e) {
+            //                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+            // }
+            if (ResourceManager.isMetadataFolder(container)) {
 
-                members = container.members();
-            } catch (CoreException e) {
-                log.error("Can't get the children of container:" + ((IContainer) parentElement).getLocation()); //$NON-NLS-1$
+                IRepositoryViewObject viewObject = new Folder(((IFolder) container).getName(), ((IFolder) container).getName());
+                node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
+                viewObject.setRepositoryNode(node);
+                Object[] children = super.getChildren(node);
+                return children;
             }
-            return members;
         }
         return super.getChildren(parentElement);
     }
@@ -100,7 +111,7 @@ public class ConnectionsContentProvider extends ResourceViewContentProvider {
     @Override
     public boolean hasChildren(Object element) {
 
-        return !(element instanceof NamedColumnSet);
+        return !(element instanceof DBConnectionRepNode);
     }
 
 }

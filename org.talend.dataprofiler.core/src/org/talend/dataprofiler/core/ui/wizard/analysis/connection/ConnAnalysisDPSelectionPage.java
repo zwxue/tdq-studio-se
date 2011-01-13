@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ConnectionsContentProvider;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
+import org.talend.dq.nodes.DBConnectionRepNode;
 
 /**
  * 
@@ -74,8 +75,25 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 // get the dataprovider from the seleted connection
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 AnalysisFilterParameter connPanameter = (AnalysisFilterParameter) getConnectionParams();
-                if (object instanceof IRepositoryViewObject) {
-                    IRepositoryViewObject reposViewObj = (IRepositoryViewObject) object;
+//                if (object instanceof IRepositoryViewObject) {
+//                    IRepositoryViewObject reposViewObj = (IRepositoryViewObject) object;
+//                    // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview
+//                    // analysis.
+//                    if (ConnectionUtils.isMdmConnection(reposViewObj)) {
+//                        setPageComplete(false);
+//                        return;
+//                    }
+//
+//                    Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
+//                    if (connection != null && connPanameter != null) {
+//                        connPanameter.setTdDataProvider(connection);
+//                    }
+//
+//                    setPageComplete(true);
+//                } 
+                if (object instanceof DBConnectionRepNode) {
+                    DBConnectionRepNode connNode = (DBConnectionRepNode) object;
+                    IRepositoryViewObject reposViewObj = connNode.getObject();
                     // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview
                     // analysis.
                     if (ConnectionUtils.isMdmConnection(reposViewObj)) {
@@ -86,6 +104,7 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                     Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
                     if (connection != null && connPanameter != null) {
                         connPanameter.setTdDataProvider(connection);
+                        connPanameter.setConnectionRepNode(connNode);
                     }
 
                     setPageComplete(true);

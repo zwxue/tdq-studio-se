@@ -24,7 +24,6 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
-import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -125,7 +124,7 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getSchemaIndicators()
      */
     @Override
-    protected List<SchemaIndicator> getSchemaIndicators() {
+    protected List<OverviewIndUIElement> getSchemaIndicators() {
         return Collections.emptyList();
     }
 

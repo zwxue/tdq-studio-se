@@ -668,7 +668,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      */
     protected abstract List<OverviewIndUIElement> getCatalogIndicators();
 
-    protected abstract List<SchemaIndicator> getSchemaIndicators();
+    protected abstract List<OverviewIndUIElement> getSchemaIndicators();
 
     private TableViewer createSecondStatisticalTable(Composite parent) {
         TableViewer secondTableViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);

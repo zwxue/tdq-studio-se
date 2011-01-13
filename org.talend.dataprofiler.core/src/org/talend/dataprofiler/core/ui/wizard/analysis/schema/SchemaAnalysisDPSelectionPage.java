@@ -28,8 +28,11 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.SchemaContentProvider;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -67,17 +70,23 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
             public void selectionChanged(SelectionChangedEvent event) {
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 PackagesAnalyisParameter schemaPanameter = (PackagesAnalyisParameter) getConnectionParams();
+
                 List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
                 if (object instanceof IRepositoryNode) {
-                    DBSchemaRepNode catalogNode = (DBSchemaRepNode) object;
-                    Schema schema = ((MetadataSchemaRepositoryObject) catalogNode.getObject()).getSchema();
-                    Connection tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
-                            .doSwitch(schema));
-                    nodes.add(catalogNode);
+                    DBSchemaRepNode schemaNode = (DBSchemaRepNode) object;
+                    Schema schema = ((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema();
+                    Connection tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH.doSwitch(schema));
+                    RepositoryNode parent = schemaNode.getParent();
+
                     if (tdProvider != null && schemaPanameter != null) {
+                        if (parent instanceof DBCatalogRepNode) {
+                            nodes.add(parent);
+                        }
                         schemaPanameter.setTdDataProvider(tdProvider);
+                        schemaPanameter.setConnectionRepNode((DBConnectionRepNode) parent);
                         schemaPanameter.setPackages(nodes);
                     }
+                    nodes.add(schemaNode);
                     setPageComplete(true);
                 } else {
                     setPageComplete(false);

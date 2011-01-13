@@ -23,6 +23,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -88,9 +89,28 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         return catalogs;
     }
 
-    public List<SchemaIndicator> getSchemaIndicators() {
+    public List<OverviewIndUIElement> getSchemaIndicators() {
+        // ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
+        // return conIndicator.getSchemaIndicators();
         ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
-        return conIndicator.getSchemaIndicators();
+        Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
+        EList<SchemaIndicator> schemaIndicators = conIndicator.getSchemaIndicators();
+        List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
+        RepositoryNode connNode = DQStructureManager.getInstance().recursiveFind(analyzedElement);
+        for (Indicator indicator : schemaIndicators) {
+            for (IRepositoryNode schemaNode : connNode.getChildren()) {
+                String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema());
+                String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+                if (nodeUuid.equals(anaUuid)) {
+                    OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+                    cataUIEle.setNode(schemaNode);
+                    cataUIEle.setOverviewIndicator(indicator);
+                    cataUIEleList.add(cataUIEle);
+                    break;
+                }
+            }
+        }
+        return cataUIEleList;
     }
 
     public List<OverviewIndUIElement> getCatalogIndicators() {
