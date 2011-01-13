@@ -84,14 +84,16 @@ public class OverviewAnalysisAction extends Action implements ICheatSheetAction 
             } else if (node instanceof DBSchemaRepNode) {
                 IRepositoryNode parent = ((DBSchemaRepNode) node).getParent();
                 if (parent instanceof DBCatalogRepNode) {
-                    IRepositoryNode catalogNode = ((DBCatalogRepNode) parent).getParent();
-                    packaFilterParameter.setConnectionRepNode((DBConnectionRepNode) catalogNode);
-                    catalogs.add(catalogNode);
+                    IRepositoryNode connNode = ((DBCatalogRepNode) parent).getParent();
+                    packaFilterParameter.setConnectionRepNode((DBConnectionRepNode) connNode);
+                    catalogs.add(connNode);
                     packaFilterParameter.setPackages(catalogs);
                 } else {
                     schemaNode = (DBSchemaRepNode) node;
                     catalogs.add(schemaNode);
+                    packaFilterParameter.setConnectionRepNode((DBConnectionRepNode) parent);
                     packaFilterParameter.setPackages(catalogs);
+
                 }
             }
         }

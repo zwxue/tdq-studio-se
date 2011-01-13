@@ -48,7 +48,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
 
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
-        if (getParameter().getTdDataProvider() == null) {
+        if (getParameter().getConnectionRepNode() == null) {
             tableAnaDPSelectionPage = new SchemaAnalysisDPSelectionPage();
             addPage(tableAnaDPSelectionPage);
         }

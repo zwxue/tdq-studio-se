@@ -72,7 +72,7 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 PackagesAnalyisParameter schemaPanameter = (PackagesAnalyisParameter) getConnectionParams();
 
                 List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-                if (object instanceof IRepositoryNode) {
+                if (object instanceof DBSchemaRepNode) {
                     DBSchemaRepNode schemaNode = (DBSchemaRepNode) object;
                     Schema schema = ((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema();
                     Connection tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH.doSwitch(schema));
