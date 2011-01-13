@@ -27,6 +27,8 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -52,6 +54,7 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
+import orgomg.cwm.resource.relational.View;
 
 /**
  * DOC mzhao Open TDQ items editor action.
@@ -67,6 +70,8 @@ public class OpenItemEditorAction extends Action {
     private AbstractItemEditorInput editorInput = null;
 
     private IFile fileEditorInput = null;
+
+    private Connection connection = null;
 
     public OpenItemEditorAction(IRepositoryViewObject reposViewObj) {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
@@ -93,7 +98,27 @@ public class OpenItemEditorAction extends Action {
             RepositoryNode connectionRepositoryNode = null;
             if (analysedElements.size() > 0) {
                 ModelElement modelElement = analysedElements.get(0);
-                Connection connection = ConnectionHelper.getConnection((TdColumn) modelElement);
+
+                if (modelElement instanceof Catalog) {
+                    Catalog catalog = SwitchHelpers.CATALOG_SWITCH.caseCatalog((Catalog) modelElement);
+                    connection = ConnectionHelper.getConnection(catalog);
+                } else if (modelElement instanceof Schema) {
+                    Schema schema = SwitchHelpers.SCHEMA_SWITCH.caseSchema((Schema) modelElement);
+                    if (schema != null) {
+                        connection = ConnectionHelper.getConnection(schema);
+                    }
+
+                } else if (modelElement instanceof TdTable) {
+                    TdTable tdTable = SwitchHelpers.TABLE_SWITCH.caseTdTable((TdTable) modelElement);
+                    connection = ConnectionHelper.getConnection(tdTable);
+                } else if (modelElement instanceof TdView) {
+                    TdView tdView = SwitchHelpers.VIEW_SWITCH.caseView((View) modelElement);
+                    connection = ConnectionHelper.getConnection(tdView);
+                } else if (modelElement instanceof TdColumn) {
+                    TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.caseTdColumn((TdColumn) modelElement);
+                    connection = ConnectionHelper.getConnection(tdColumn);
+                }
+
                 connectionRepositoryNode = DQStructureManager.getInstance().recursiveFind(connection);
             }
             // FIXME User UUID to find the right conn repository node.
