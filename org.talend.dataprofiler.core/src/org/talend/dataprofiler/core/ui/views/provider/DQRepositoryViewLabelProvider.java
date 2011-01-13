@@ -166,6 +166,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.PATTERN_REG);
                 } else if (node instanceof RuleRepNode) {
                     return ImageLib.getImage(ImageLib.DQ_RULE);
+                } else if (node instanceof SourceFileRepNode) {
+                    return ImageLib.getImage(ImageLib.SOURCE_FILE);
                 }
             } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
                 if (node instanceof DBCatalogRepNode) {
