@@ -391,7 +391,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.ImportRemotePatternActionProvider">
          <enablement>
             <adapt
-                  type="org.talend.dq.nodes.ExchangeFolderRepNode">
+                  type="org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode">
             </adapt>
          </enablement>
       </actionProvider>

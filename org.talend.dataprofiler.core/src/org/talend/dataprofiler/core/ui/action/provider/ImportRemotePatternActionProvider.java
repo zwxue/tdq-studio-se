@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.ImportRemotePatternAction;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 
 /**
@@ -41,12 +42,16 @@ public class ImportRemotePatternActionProvider extends AbstractCommonActionProvi
         List<IEcosComponent> selectedComponents = new ArrayList<IEcosComponent>();
 
         for (Object obj : currentSelection.toArray()) {
-            // DOC MOD klliu 2010-12-15 feature 15750 need to add the remote IEcosComponent
-            // selectedComponents.add((IEcosComponent) obj);
+            if (obj instanceof ExchangeComponentRepNode) {
+                ExchangeComponentRepNode node = (ExchangeComponentRepNode) obj;
+                selectedComponents.add(node.getEcosComponent());
+            }
         }
 
-        ImportRemotePatternAction importAction = new ImportRemotePatternAction(selectedComponents
-                .toArray(new IEcosComponent[selectedComponents.size()]));
-        menu.add(importAction);
+        if (selectedComponents.size() > 0) {
+            ImportRemotePatternAction importAction = new ImportRemotePatternAction(
+                    selectedComponents.toArray(new IEcosComponent[selectedComponents.size()]));
+            menu.add(importAction);
+        }
     }
 }

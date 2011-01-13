@@ -17,6 +17,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.nodes.DBCatalogRepNode;
@@ -91,7 +93,8 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
                 || node instanceof DBViewFolderRepNode || node instanceof DBTableRepNode || node instanceof DBViewRepNode
                 || node instanceof DBColumnFolderRepNode || node instanceof DBColumnRepNode || node instanceof MDMSchemaRepNode
                 || node instanceof MDMXmlElementRepNode || node instanceof DFTableRepNode
-                || node instanceof DFColumnFolderRepNode || node instanceof DFColumnRepNode;
+                || node instanceof DFColumnFolderRepNode || node instanceof DFColumnRepNode
+                || node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode;
     }
 
     /**
@@ -104,10 +107,12 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         switch (node.getType()) {
         case TDQ_REPOSITORY_ELEMENT:
         case REPOSITORY_ELEMENT:
-            Item item = node.getObject().getProperty().getItem();
-            IFolder folder = WorkbenchUtils.getFolder(node);
-            return item instanceof TDQIndicatorDefinitionItem
-                    && ResourceService.isSubFolder(ResourceManager.getSystemIndicatorFolder(), folder);
+            if (node.getObject() != null) {
+                Item item = node.getObject().getProperty().getItem();
+                IFolder folder = WorkbenchUtils.getFolder(node);
+                return item instanceof TDQIndicatorDefinitionItem
+                        && ResourceService.isSubFolder(ResourceManager.getSystemIndicatorFolder(), folder);
+            }
         default:
 
         }

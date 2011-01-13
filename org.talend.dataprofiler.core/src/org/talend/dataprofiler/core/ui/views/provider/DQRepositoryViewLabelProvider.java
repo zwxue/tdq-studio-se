@@ -14,11 +14,11 @@ package org.talend.dataprofiler.core.ui.views.provider;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.talend.core.model.properties.DelimitedFileConnectionItem;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
@@ -32,6 +32,7 @@ import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
@@ -49,7 +50,6 @@ import org.talend.resource.EResourceConstant;
 
 /**
  * @author rli
- * 
  */
 public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
@@ -58,71 +58,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
     }
 
     public Image getImage(Object element) {
-
-        // if (element instanceof IFolderNode) {
-        // return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-        // } else if (element instanceof TdColumn) {
-        // if (ColumnHelper.isPrimaryKey((TdColumn) element)) {
-        // // get the icon for primary key
-        // return ImageLib.getImage(ImageLib.PK_COLUMN);
-        // }
-        // } else if (element instanceof IEcosComponent) {
-        // return ImageLib.getImage(ImageLib.EXCHANGE);
-        // } else if (element instanceof IEcosCategory) {
-        // return ImageLib.getImage(ImageLib.EXCHANGE);
-        // } else if (element instanceof IndicatorCategory) {
-        // return ImageLib.getImage(ImageLib.IND_CATEGORY);
-        // } else if (element instanceof IndicatorDefinition) {
-        // return ImageLib.getImage(ImageLib.IND_DEFINITION);
-        // } else if (element instanceof TdView) {
-        // return ImageLib.getImage(ImageLib.VIEW);
-        // } else if (element instanceof TdXmlSchema) {
-        // return ImageLib.getImage(ImageLib.XML_DOC);
-        // } else if (element instanceof TdXmlElementType) {
-        // return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
-        // } else if (element instanceof IRecycleBin) {
-        // return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
-        // } else
-        // // MOD qiongli
-        // if (element instanceof DQRecycleBinNode) {
-        // DQRecycleBinNode rbn = (DQRecycleBinNode) element;
-        // Object obj = rbn.getObject();
-        // // MOD qiongli 2010-10-8,bug 15674
-        // if (obj instanceof Property) {
-        // Property property = (Property) obj;
-        // Item item = property.getItem();
-        // if (item instanceof TDQAnalysisItem) {
-        // IFile file = PropertyHelper.getItemFile(property);
-        // Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(file);
-        // ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
-        // analysisHandler.setAnalysis(analysis);
-        // if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
-        // if (!analysisHandler.getResultMetadata().isLastRunOk()) {
-        // return ImageLib.createErrorIcon(ImageLib.ANALYSIS_OBJECT).createImage();
-        // } else if (analysisHandler.getResultMetadata().isOutThreshold()) {
-        // return ImageLib.createInvalidIcon(ImageLib.ANALYSIS_OBJECT).createImage();
-        // }
-        // }
-        // return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
-        // } else if (item instanceof TDQReportItem) {
-        // return ImageLib.getImage(ImageLib.REPORT_OBJECT);
-        // } else if (item instanceof TDQPatternItem) {
-        // return ImageLib.getImage(ImageLib.PATTERN_REG);
-        // } else if (item instanceof TDQBusinessRuleItem) {
-        // return ImageLib.getImage(ImageLib.DQ_RULE);
-        // } else if (item instanceof TDQIndicatorDefinitionItem) {
-        // return ImageLib.getImage(ImageLib.IND_DEFINITION);
-        // } else if (item instanceof MDMConnectionItem) {
-        // return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-        // } else if (item instanceof ConnectionItem) {
-        // return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-        // }
-        // } else if (obj instanceof IFolder) {
-        // return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-        // }
-        // } else if (element instanceof MDMConnection) {
-        // return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-        // } else
         if (element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
             IRepositoryViewObject viewObject = node.getObject();
@@ -149,12 +84,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             } else if (type.equals(ENodeType.SIMPLE_FOLDER)) {
                 return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             } else if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
-                Item item = viewObject.getProperty().getItem();
                 if (node instanceof DBConnectionRepNode) {
                     return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (node instanceof MDMConnectionRepNode) {
                     return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-                } else if (item instanceof DelimitedFileConnectionItem) {
+                } else if (node instanceof DFConnectionRepNode) {
                     return ImageLib.getImage(ImageLib.FILE_DELIMITED);
                 } else if (node instanceof AnalysisRepNode) {
                     return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
@@ -168,6 +102,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.DQ_RULE);
                 } else if (node instanceof SourceFileRepNode) {
                     return ImageLib.getImage(ImageLib.SOURCE_FILE);
+                } else if (node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode) {
+                    return ImageLib.getImage(ImageLib.EXCHANGE);
                 }
             } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
                 if (node instanceof DBCatalogRepNode) {
@@ -199,75 +135,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
     }
 
     public String getText(Object element) {
-        // String tableOwner = null;
-        // if (element instanceof ModelElement) {
-        // tableOwner = ColumnSetHelper.getTableOwner((ModelElement) element);
-        // }
-        // if (element instanceof AbstractFolderNode) {
-        // if (((IFolderNode) element).getChildren() != null) {
-        //                return ((IFolderNode) element).getName() + "(" + ((IFolderNode) element).getChildren().length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-        // }
-        //
-        // return ((IFolderNode) element).getName();
-        // } else if (element instanceof IEcosComponent) {
-        // return ((IEcosComponent) element).getName();
-        // } else if (element instanceof IEcosCategory) {
-        // return ((IEcosCategory) element).getName();
-        // } else if (element instanceof IndicatorDefinition) {
-        // return ((IndicatorDefinition) element).getName();
-        // } else if (element instanceof IndicatorCategory) {
-        // return ((IndicatorCategory) element).getName();
-        // } else if (element instanceof IRecycleBin) {
-        // return ((IRecycleBin) element).getName();
-        // }
-        //
-        // // PTODO qzhang fixed bug 4176: Display expressions as children of the
-        // // patterns
-        // if (element instanceof RegularExpression) {
-        // RegularExpression regExp = (RegularExpression) element;
-        // return regExp.getExpression().getLanguage();
-        // } else if (element instanceof Connection) {
-        // return ((Connection) element).getName();
-        // }
-        //
-        // // MOD mzhao feature 10238
-        // if (element instanceof TdXmlSchema) {
-        // return ((TdXmlSchema) element).getName();
-        // } else if (element instanceof TdXmlElementType) {
-        // String elemLabe = ((TdXmlElementType) element).getName();
-        // String elementType = ((TdXmlElementType) element).getJavaType();
-        // if (elementType != null && !StringUtils.isEmpty(elementType)) {
-        // elemLabe += " (" + elementType + ")";
-        // }
-        // return elemLabe;
-        // } else if ((element instanceof TdTable || element instanceof TdView) && tableOwner != null &&
-        // !"".equals(tableOwner)) {
-        // return super.getText(element) + "(" + tableOwner + ")";
-        // } else
-        // // MOD qiongli :get the name of recycle bin's child
-        // if (element instanceof DQRecycleBinNode) {
-        // DQRecycleBinNode rbn = (DQRecycleBinNode) element;
-        // Object obj = rbn.getObject();
-        // // MOD qiongli 2010-8-10,bug 15674
-        // if (obj instanceof Property) {
-        // Property property = (Property) obj;
-        // Item item = property.getItem();
-        // if (item instanceof ConnectionItem) {
-        // Connection connection = ((ConnectionItem) item).getConnection();
-        // if (connection.eIsProxy()) {
-        // connection = (Connection) EObjectHelper.resolveObject(connection);
-        // }
-        // return connection.getName();
-        // }
-        // return property.getLabel();
-        // } else if (obj instanceof IFolder) {
-        // return ((IFolder) obj).getName();
-        // }
-        //
-        // } else
         if (element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
-            if (node instanceof RecycleBinRepNode) {
+            if (node instanceof RecycleBinRepNode || node instanceof ExchangeCategoryRepNode
+                    || node instanceof ExchangeComponentRepNode) {
+                // virtual node, get the lable of node directly
                 return node.getLabel();
             } else if (node instanceof DBTableFolderRepNode) {
                 return ((DBTableFolderRepNode) node).getNodeName();

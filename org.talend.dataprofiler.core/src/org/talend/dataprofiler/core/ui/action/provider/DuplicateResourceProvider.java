@@ -43,39 +43,33 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
             if (!selection.isEmpty()) {
                 Object[] objs = selection.toArray();
                 IFile[] files = new IFile[objs.length];
+                boolean showMenu = false;
                 for (int i = 0; i < objs.length; i++) {
                     Object obj = objs[i];
                     RepositoryNode node = (RepositoryNode) obj;
-                    Item item = node.getObject().getProperty().getItem();
-                    EClass eClass = item.eClass();
-                    IPath folderPath = WorkbenchUtils.getPath(node);
-                    String name = node
-                            .getObject()
-                            .getLabel()
-                            .concat("_")
-                            .concat(node.getObject().getProperty().getVersion())
-                            .concat(".")
-                            .concat(WorkbenchUtils.getItemExtendtion(item != null ? eClass.getClassifierID() : node.getObject()
-                                    .getProperty().getItem().eClass().getClassifierID()));
-                    IPath append = folderPath.append(new Path(name));
-                    IFile file = ResourceManager.getRootProject().getFile(append);
-                    files[i] = file;
+                    if (node.getObject() != null) {
+                        Item item = node.getObject().getProperty().getItem();
+                        EClass eClass = item.eClass();
+                        IPath folderPath = WorkbenchUtils.getPath(node);
+                        String name = node
+                                .getObject()
+                                .getLabel()
+                                .concat("_")
+                                .concat(node.getObject().getProperty().getVersion())
+                                .concat(".")
+                                .concat(WorkbenchUtils.getItemExtendtion(item != null ? eClass.getClassifierID() : node
+                                        .getObject().getProperty().getItem().eClass().getClassifierID()));
+                        IPath append = folderPath.append(new Path(name));
+                        IFile file = ResourceManager.getRootProject().getFile(append);
+                        files[i] = file;
+                        showMenu = true;
+                    }
                 }
-                DuplicateAction duplicate = new DuplicateAction();
-                menu.add(duplicate);
+                if (showMenu) {
+                    DuplicateAction duplicate = new DuplicateAction();
+                    menu.add(duplicate);
+                }
             }
         }
     }
-
-    // if (!selection.isEmpty()) {
-    // Object[] objs = selection.toArray();
-    // IFile[] files = new IFile[objs.length];
-    // for (int i = 0; i < objs.length; i++) {
-    // IFile file = (IFile) objs[i];
-    // files[i] = file;
-    // }
-    //
-    // DuplicateAction duplicate = new DuplicateAction(files);
-    // menu.add(duplicate);
-    // }
 }

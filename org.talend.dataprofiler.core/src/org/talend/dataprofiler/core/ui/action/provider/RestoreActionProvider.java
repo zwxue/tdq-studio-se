@@ -38,9 +38,11 @@ public class RestoreActionProvider extends AbstractCommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) obj;
-            if (node.getObject().isDeleted()) {
-                restoreAction = new DQRestoreAction();
-                menu.add(restoreAction);
+            if (node.getObject() != null) {
+                if (node.getObject().isDeleted()) {
+                    restoreAction = new DQRestoreAction();
+                    menu.add(restoreAction);
+                }
             }
         }
     }
