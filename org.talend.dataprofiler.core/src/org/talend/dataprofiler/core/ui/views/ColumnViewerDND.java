@@ -57,6 +57,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -68,9 +69,12 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.PatternRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -118,13 +122,13 @@ public class ColumnViewerDND {
                 super.dragEnter(event);
                 IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
                 Object object = selection.getFirstElement();
-                if (object instanceof IFile) {
-                    if (FactoriesUtil.DEFINITION.equals(((IFile) object).getFileExtension())) {
-                        receiver = new UDIReceiver();
-                    } else {
-                        receiver = new PatternReceiver();
-                    }
+                // if (object instanceof IFile) {
+                if (object instanceof SysIndicatorDefinitionRepNode) {
+                    receiver = new UDIReceiver();
+                } else if (object instanceof PatternRepNode) {
+                    receiver = new PatternReceiver();
                 }
+                // }
 
                 // // MOD mzhao 9848 2010-01-14, Allowing drag table.
                 // if (object instanceof TdColumn || object instanceof TdTable) {
@@ -220,8 +224,9 @@ public class ColumnViewerDND {
 
             boolean is = true;
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
-            if (firstElement instanceof IFile) {
-                IFile fe = (IFile) firstElement;
+
+            if (firstElement instanceof PatternRepNode) {
+                IFile fe = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((PatternRepNode) firstElement));
                 if (NewSourcePatternActionProvider.EXTENSION_PATTERN.equals(fe.getFileExtension())) {
                     Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(fe);
                     if (pattern != null && TaggedValueHelper.getValidStatus(pattern)) {
@@ -267,9 +272,10 @@ public class ColumnViewerDND {
             Analysis analysis = null;
             ArrayList<IFile> al = new ArrayList<IFile>();
             if (ts.iterator() != null) {
-                Iterator<IFile> iter = (Iterator<IFile>) ts.iterator();
+                Iterator<IRepositoryNode> iter = (Iterator<IRepositoryNode>) ts.iterator();
                 while (iter.hasNext()) {
-                    al.add(iter.next());
+                    IFile fe = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((PatternRepNode) iter.next()));
+                    al.add(fe);
                 }
                 for (IFile fe : al) {
                     // MOD yyi 2010-07-01 13993: Drag&drop patterns to column set analysis,get NPE.
@@ -504,21 +510,30 @@ public class ColumnViewerDND {
 
             boolean is = true;
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
-            if (firstElement instanceof IFile) {
-                IFile fe = (IFile) firstElement;
+
+            if (firstElement instanceof SysIndicatorDefinitionRepNode) {
+                IFile fe = ResourceManager.getRootProject().getFile(
+                        WorkbenchUtils.getFilePath((SysIndicatorDefinitionRepNode) firstElement));
+
+                // if (firstElement instanceof IFile) {
+                // IFile fe = (IFile) firstElement;
                 // MOD qiongli 2010-8-3 bug 14579:If it is systemIndicator,it is not to be darg.
                 if (fe.getProjectRelativePath().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getPath())) {
                     event.detail = DND.DROP_NONE;
                     return;
                 }
-                if (FactoriesUtil.DEFINITION.equals(fe.getFileExtension())) {
+
+                boolean equals = FactoriesUtil.DEFINITION.equals(fe.getFileExtension());
+                if (equals) {
                     IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findIndDefinition(fe);
                     // MOD yyi 2009-09-16
                     // Feature :8866
                     if (udi != null && (TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi))) {
+
                         is = false;
                     }
                 }
+                // }
             }
 
             if (event.item == null || is) {
@@ -541,10 +556,17 @@ public class ColumnViewerDND {
             AnalysisColumnTreeViewer viewer = null;
             Analysis analysis = null;
             ArrayList<IFile> al = new ArrayList<IFile>();
-            if (ts.iterator() != null) {
-                Iterator<IFile> iter = (Iterator<IFile>) ts.iterator();
-                while (iter.hasNext()) {
-                    al.add(iter.next());
+            if (ts.toList() != null) {
+                // Iterator<IFile> iter = (Iterator<IFile>) ts.iterator();
+                List list = ts.toList();
+                // while (iter.hasNext()) {
+                for (Object obj : list) {
+                    if (obj instanceof SysIndicatorDefinitionRepNode) {
+                        IFile file = ResourceManager.getRootProject().getFile(
+                                WorkbenchUtils.getFilePath((SysIndicatorDefinitionRepNode) obj));
+
+                        al.add(file);
+                    }
                 }
                 for (IFile fe : al) {
                     TreeItem item = (TreeItem) event.item;
