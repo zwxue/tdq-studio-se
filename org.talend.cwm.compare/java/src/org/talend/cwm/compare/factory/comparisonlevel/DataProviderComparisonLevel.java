@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -29,6 +31,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -49,8 +52,15 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected Connection findDataProvider() {
+        Connection provider = null;
+        if (selectedObj instanceof RepositoryNode) {
+            Item connItem = ((RepositoryNode) selectedObj).getObject().getProperty().getItem();
+            provider = ((ConnectionItem) connItem).getConnection();
+        } else {
         TypedReturnCode<Connection> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
-        return returnVlaue.getObject();
+            provider = returnVlaue.getObject();
+        }
+        return provider;
     }
 
     @Override

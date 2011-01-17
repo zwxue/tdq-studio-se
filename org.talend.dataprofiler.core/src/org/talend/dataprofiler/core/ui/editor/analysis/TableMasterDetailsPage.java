@@ -68,7 +68,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.chart.ChartUtils;
@@ -85,6 +84,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.TableAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
@@ -641,7 +641,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
-            reposObject = DQStructureManager.getInstance().recursiveFind(tdProvider).getObject();
+            reposObject = RepositoryNodeHelper.recursiveFind(tdProvider).getObject();
             if (reposObject != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
                 ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());

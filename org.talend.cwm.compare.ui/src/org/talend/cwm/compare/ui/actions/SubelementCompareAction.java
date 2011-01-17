@@ -23,13 +23,17 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -79,14 +83,21 @@ public class SubelementCompareAction extends Action {
             selectedElement = (EObject) selection.getFirstElement();
             IFolderNode folderNode = null;
             if (selectedElement instanceof ColumnSet) {
-                Package parentPackage = (Package) ((IFolderNode) selectedOjbect).getParent();
+                IRepositoryViewObject reposViewObj = ((RepositoryNode) selectedOjbect).getParent().getObject();
+                Package parentPackage = null;
+                if (reposViewObj instanceof ISubRepositoryObject) {
+                    parentPackage = (Package) ((ISubRepositoryObject) reposViewObj).getModelElement();
+                }
+
                 // MOD mzhao 2009-08-05 Bug 8581
                 // PackageHelper.addColumnSet((ColumnSet) selectedElement,
                 // parentPackage);
                 // ((ColumnSet) selectedElement).setNamespace(parentPackage);
                 ModelElement matchedElement = findMatchedModelElement(parentPackage, selectedElement);
                 folderNode = FolderNodeHelper.getFolderNodes(matchedElement)[0];
-                openComparisonEditor(folderNode);
+                IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(matchedElement);
+
+                openComparisonEditor(repositoryNode.getChildren().get(0));
             } else if (selectedElement instanceof Catalog) {
                 // Judge and see if there are schemas under the catalog.(Case of
                 // SQL Servers)
@@ -98,19 +109,23 @@ public class SubelementCompareAction extends Action {
                     popCompUIAction.setSelectedObject(findMatchedModelElement(conn, selectedElement));
                     popCompUIAction.run();
                 } else {
-                    folderNode = getTableOrViewFolder(selectedElement);
-                    openComparisonEditor(folderNode);
+                    IRepositoryNode repositoryfolderNode = getTableOrViewFolder(selectedElement);
+                    openComparisonEditor(repositoryfolderNode);
                 }
             } else if (selectedElement instanceof Schema) {
-                folderNode = getTableOrViewFolder(selectedElement);
-                openComparisonEditor(folderNode);
+                IRepositoryNode repositoryfolderNode = getTableOrViewFolder(selectedElement);
+                openComparisonEditor(repositoryfolderNode);
             } else {
                 return;
             }
 
             // Remove namespace link
             if (selectedElement instanceof ColumnSet) {
-                Package parentPackage = (Package) ((IFolderNode) selectedOjbect).getParent();
+                IRepositoryViewObject reposViewObj = ((RepositoryNode) selectedOjbect).getParent().getObject();
+                Package parentPackage = null;
+                if (reposViewObj instanceof ISubRepositoryObject) {
+                    parentPackage = (Package) ((ISubRepositoryObject) reposViewObj).getModelElement();
+                }
                 Package originPackage = parentPackage;
                 if (originPackage.eIsProxy()) {
                     originPackage = (Package) EObjectHelper.resolveObject(originPackage);
@@ -128,8 +143,15 @@ public class SubelementCompareAction extends Action {
         popCompUIAction.run();
     }
 
-    private IFolderNode getTableOrViewFolder(EObject selectedElement) {
-        IFolderNode folderNode = null;
+    public void openComparisonEditor(IRepositoryNode repositoryfolderNode) {
+        repositoryfolderNode.getChildren();
+        // closeCurrentEditor();
+        popCompUIAction.setSelectedObject(repositoryfolderNode);
+        popCompUIAction.run();
+    }
+
+    private IRepositoryNode getTableOrViewFolder(EObject selectedElement) {
+        IRepositoryNode folderNode = null;
         Connection conn = null;
         if (selectedOjbect instanceof Catalog) {
             conn = ConnectionHelper.getTdDataProvider(((Catalog) selectedOjbect));
@@ -140,10 +162,11 @@ public class SubelementCompareAction extends Action {
         }
         // ((Package) selectedElement).getDataManager().add(dataProvider);
         ModelElement matchedElement = findMatchedModelElement(conn, selectedElement);
+        IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(matchedElement);
         if (actionType == TABLE_COMPARE) {
-            folderNode = FolderNodeHelper.getFolderNodes(matchedElement)[0];
-        } else {
-            folderNode = FolderNodeHelper.getFolderNodes(matchedElement)[1];
+            return repositoryNode.getChildren().get(0);
+        } else if (actionType == VIEW_COMPARE) {
+            return repositoryNode.getChildren().get(1);
         }
 
         return folderNode;

@@ -41,7 +41,6 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataquality.exception.DataprofilerCoreException;
@@ -54,6 +53,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -315,7 +315,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         List<RepositoryNode> columns = new ArrayList<RepositoryNode>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            columns.add(DQStructureManager.getInstance().recursiveFind((TdColumn) indicator.eGet(reference)));
+            columns.add(RepositoryNodeHelper.recursiveFind((TdColumn) indicator.eGet(reference)));
         }
         return columns;
     }

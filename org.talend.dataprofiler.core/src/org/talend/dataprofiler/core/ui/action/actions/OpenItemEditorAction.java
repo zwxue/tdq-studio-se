@@ -31,7 +31,6 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
@@ -48,6 +47,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -119,7 +119,7 @@ public class OpenItemEditorAction extends Action {
                     connection = ConnectionHelper.getConnection(tdColumn);
                 }
 
-                connectionRepositoryNode = DQStructureManager.getInstance().recursiveFind(connection);
+                connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
             }
             // FIXME User UUID to find the right conn repository node.
             // String label = conn.getLabel();

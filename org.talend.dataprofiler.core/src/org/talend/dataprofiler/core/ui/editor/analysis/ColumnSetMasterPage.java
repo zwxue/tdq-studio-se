@@ -56,7 +56,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
@@ -82,6 +81,7 @@ import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -183,7 +183,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, tdColumn);
 
-            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
+            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
                     .recursiveFind(tdColumn));
             Collection<Indicator> indicatorList = columnSetAnalysisHandler.getRegexMathingIndicators(element);
             currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));

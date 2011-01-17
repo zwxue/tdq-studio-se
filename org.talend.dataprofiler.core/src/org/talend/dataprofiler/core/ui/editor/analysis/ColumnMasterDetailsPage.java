@@ -66,7 +66,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
@@ -87,6 +86,7 @@ import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -180,10 +180,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             // MOD mzhao feature 15750, The column is recompute from the file, here create a new repository view object.
 
             if (tdColumn == null && mdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(DQStructureManager.getInstance()
+                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
                         .recursiveFind(mdColumn));
             } else {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(DQStructureManager.getInstance()
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
                         .recursiveFind(tdColumn));
             }
 

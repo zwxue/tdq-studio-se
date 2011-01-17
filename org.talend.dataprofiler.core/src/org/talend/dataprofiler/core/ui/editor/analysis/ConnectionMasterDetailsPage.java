@@ -26,12 +26,12 @@ import org.talend.core.repository.model.repositoryObject.MetadataCatalogReposito
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IProxyRepositoryService;
@@ -96,7 +96,7 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
         EList<SchemaIndicator> schemaIndicators = conIndicator.getSchemaIndicators();
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
-        RepositoryNode connNode = DQStructureManager.getInstance().recursiveFind(analyzedElement);
+        RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(analyzedElement);
         for (Indicator indicator : schemaIndicators) {
             for (IRepositoryNode schemaNode : connNode.getChildren()) {
                 String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema());
@@ -118,7 +118,7 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
         EList<CatalogIndicator> catalogIndicators = conIndicator.getCatalogIndicators();
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
-        RepositoryNode connNode = DQStructureManager.getInstance().recursiveFind(analyzedElement);
+        RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(analyzedElement);
         for (Indicator indicator : catalogIndicators) {
             for (IRepositoryNode catalogNode : connNode.getChildren()) {
                 Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();

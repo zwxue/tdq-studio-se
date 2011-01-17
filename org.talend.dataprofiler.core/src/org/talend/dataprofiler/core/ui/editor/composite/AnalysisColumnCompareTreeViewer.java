@@ -60,7 +60,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnDependencyMasterDetailsPage;
@@ -70,6 +69,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -172,10 +172,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
 
             for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
-                columnListA.add(DQStructureManager.getInstance().recursiveFind(tdColumn));
+                columnListA.add(RepositoryNodeHelper.recursiveFind(tdColumn));
             }
             for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
-                columnListB.add(DQStructureManager.getInstance().recursiveFind(tdColumn));
+                columnListB.add(RepositoryNodeHelper.recursiveFind(tdColumn));
             }
             // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
 
@@ -714,8 +714,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 ColumnDependencyIndicator cdi = null;
                 for (int i = 0; i < indicators.size(); i++) {
                     cdi = (ColumnDependencyIndicator) indicators.get(i);
-                    columnListA.add(DQStructureManager.getInstance().recursiveFind(cdi.getColumnA()));
-                    columnListB.add(DQStructureManager.getInstance().recursiveFind(cdi.getColumnB()));
+                    columnListA.add(RepositoryNodeHelper.recursiveFind(cdi.getColumnA()));
+                    columnListB.add(RepositoryNodeHelper.recursiveFind(cdi.getColumnB()));
                 }
                 tableViewerPosStack.get(0).setInput(columnListA);
                 tableViewerPosStack.get(1).setInput(columnListB);
@@ -725,14 +725,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 // columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
 
                 for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
-                    columnListA.add(DQStructureManager.getInstance().recursiveFind(tdColumn));
+                    columnListA.add(RepositoryNodeHelper.recursiveFind(tdColumn));
                 }
 
                 tableViewerPosStack.get(0).setInput(columnListA);
                 columnListB.clear();
                 // columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
                 for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
-                    columnListB.add(DQStructureManager.getInstance().recursiveFind(tdColumn));
+                    columnListB.add(RepositoryNodeHelper.recursiveFind(tdColumn));
                 }
                 tableViewerPosStack.get(1).setInput(columnListB);
             }

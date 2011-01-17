@@ -37,7 +37,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
@@ -56,6 +55,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -389,7 +389,7 @@ public abstract class ModelElementTreeMenuProvider {
                         .getTdColumn();
 
                 // dqview.showSelectedElements(me);
-                RepositoryNode node = DQStructureManager.getInstance().recursiveFind(me);
+                RepositoryNode node = RepositoryNodeHelper.recursiveFind(me);
                 dqview.showSelectedElements(node);
             } catch (Exception e) {
                 log.error(e, e);

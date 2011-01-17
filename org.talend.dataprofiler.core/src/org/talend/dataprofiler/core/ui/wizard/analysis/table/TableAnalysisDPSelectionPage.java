@@ -24,9 +24,9 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
@@ -91,7 +91,7 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 }
                 if (setList.size() > 0 && paraneter != null) {
                     paraneter.setNamedColumnSets(setList.toArray(new NamedColumnSet[setList.size()]));
-                    DBTableRepNode recursiveFind = (DBTableRepNode) DQStructureManager.getInstance().recursiveFind(
+                    DBTableRepNode recursiveFind = (DBTableRepNode) RepositoryNodeHelper.recursiveFind(
                             (TdTable) setList.get(0));
                     RepositoryNode parent = recursiveFind.getParent().getParent();
                     if (parent instanceof DBSchemaRepNode) {

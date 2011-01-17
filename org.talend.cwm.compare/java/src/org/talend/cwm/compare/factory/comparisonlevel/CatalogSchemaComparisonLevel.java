@@ -28,6 +28,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -39,6 +41,7 @@ import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
@@ -72,7 +75,13 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected Connection findDataProvider() {
-        Connection provider = ConnectionHelper.getTdDataProvider((Package) selectedObj);
+        Connection provider = null;
+        if (selectedObj instanceof RepositoryNode) {
+            Item connItem = ((RepositoryNode) selectedObj).getObject().getProperty().getItem();
+            provider = ((ConnectionItem) connItem).getConnection();
+        } else {
+            provider = ConnectionHelper.getTdDataProvider((Package) selectedObj);
+        }
         return provider;
     }
 
@@ -120,7 +129,12 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected Resource getLeftResource() throws ReloadCompareException {
-        Package selectedPackage = (Package) selectedObj;
+        Package selectedPackage = null;
+        if (selectedObj instanceof RepositoryNode) {
+            selectedPackage = (Package) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
+        } else {
+            selectedPackage = (Package) selectedObj;
+        }
         // MOD mzhao 2009-01-20 Extract method findMatchedPackage to
         // DQStructureComparer class
         // for common use.
@@ -154,7 +168,12 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected Resource getRightResource() throws ReloadCompareException {
-        Package selectedPackage = (Package) selectedObj;
+        Package selectedPackage = null;
+        if (selectedObj instanceof RepositoryNode) {
+            selectedPackage = (Package) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
+        } else {
+            selectedPackage = (Package) selectedObj;
+        }
         // MOD Extract method findMatchedPackage to DQStructureComparer class
         // for common use.
         Package toReloadObj = DQStructureComparer.findMatchedPackage(selectedPackage, tempReloadProvider);

@@ -23,10 +23,10 @@ import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositor
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -79,7 +79,7 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         Connection connection = ConnectionHelper.getConnection(SwitchHelpers.SCHEMA_SWITCH.caseSchema((Schema) indicators.get(0)
                 .getAnalyzedElement()));
-        RepositoryNode connNode = DQStructureManager.getInstance().recursiveFind(connection);
+        RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(connection);
         for (Indicator indicator : indicators) {
             for (IRepositoryNode schemaNode : connNode.getChildren()) {
                 String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema());

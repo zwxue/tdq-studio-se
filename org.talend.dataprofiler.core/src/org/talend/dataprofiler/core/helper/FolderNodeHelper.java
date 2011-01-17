@@ -63,6 +63,7 @@ public final class FolderNodeHelper {
         return folderNodes == null ? new IFolderNode[] {} : folderNodes;
     }
 
+
     /**
      * 
      * MOD mzhao bug 8567, 2010-03-29 Alter the first parameter type from EObject to Package.

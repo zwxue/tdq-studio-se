@@ -62,7 +62,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -822,7 +821,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     public static List<DBColumnRepNode> columns2Nodes(List<TdColumn> tdColumns) {
         List<DBColumnRepNode> nodes = new ArrayList<DBColumnRepNode>();
         for (TdColumn tdColumn : tdColumns) {
-            RepositoryNode repNode = DQStructureManager.getInstance().recursiveFind(tdColumn);
+            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(tdColumn);
             if (repNode != null && repNode instanceof DBColumnRepNode) {
                 nodes.add((DBColumnRepNode) repNode);
             }

@@ -34,6 +34,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
@@ -47,8 +49,10 @@ import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
@@ -164,11 +168,17 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
 	@Override
 	protected Connection findDataProvider() {
+        Connection provider = null;
+        if (selectedObj instanceof RepositoryNode) {
+            Item connItem = ((RepositoryNode) selectedObj).getObject().getProperty().getItem();
+            provider = ((ConnectionItem) connItem).getConnection();
+        } else {
 		ColumnSet columnSet = (ColumnSet) selectedObj;
 		Package parentCatalogOrSchema = ColumnSetHelper
 				.getParentCatalogOrSchema(columnSet);
-		Connection provider = ConnectionHelper
+            provider = ConnectionHelper
 				.getTdDataProvider(parentCatalogOrSchema);
+        }
 		return provider;
 	}
 
@@ -195,7 +205,12 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
 	@Override
 	protected Resource getLeftResource() throws ReloadCompareException {
-		ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
+        ColumnSet selectedColumnSet = null;
+        if (selectedObj instanceof RepositoryNode) {
+            selectedColumnSet = (ColumnSet) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
+        } else {
+            selectedColumnSet = (ColumnSet) selectedObj;
+        }
 		ColumnSet findMatchedColumnSet = DQStructureComparer
 				.findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
 		List<TdColumn> columnList = new ArrayList<TdColumn>();
@@ -212,7 +227,12 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
 	@Override
 	protected Resource getRightResource() throws ReloadCompareException {
-		ColumnSet selectedColumnSet = (ColumnSet) selectedObj;
+        ColumnSet selectedColumnSet = null;
+        if (selectedObj instanceof RepositoryNode) {
+            selectedColumnSet = (ColumnSet) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
+        } else {
+            selectedColumnSet = (ColumnSet) selectedObj;
+        }
 		ColumnSet findMatchedColumnSet = DQStructureComparer
 				.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
 		List<TdColumn> columns = null;
