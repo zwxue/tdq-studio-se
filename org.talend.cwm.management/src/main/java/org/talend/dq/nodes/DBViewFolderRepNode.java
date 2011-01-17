@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -25,10 +24,11 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
+import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdView;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -77,61 +77,41 @@ public class DBViewFolderRepNode extends RepositoryNode {
      */
     private void createRepositoryNodeViewFolderNode(List<IRepositoryNode> node, IRepositoryViewObject metadataObject) {
         List<TdView> views = new ArrayList<TdView>();
+        try {
         if (metadataObject instanceof MetadataCatalogRepositoryObject) {
             viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
             catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
             item = (ConnectionItem) viewObject.getProperty().getItem();
             connection = item.getConnection();
+            views = PackageHelper.getViews(catalog);
+            if (views.isEmpty()) {
+                views = DqRepositoryViewService.getViews(connection, catalog, null, true);
+                    if (views.size() > 0) {
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                    }
+            }
         } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
             viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
             schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
             item = (ConnectionItem) viewObject.getProperty().getItem();
             connection = item.getConnection();
-        }
-        EList<ModelElement> ownedElement = null;
-        if (catalog != null) {
-            ownedElement = catalog.getOwnedElement();
-        }
-
-        if (ownedElement != null && ownedElement.size() <= 0) {
-            views = getViews(new ArrayList<TdView>());
-            for (ModelElement element : ownedElement) {
-                if (element instanceof TdView) {
-                    TdView view = (TdView) element;
-                    views.add(view);
-                }
+            views = PackageHelper.getViews(schema);
+            if (views.isEmpty()) {
+                    views = DqRepositoryViewService.getViews(connection, schema, null, true);
+                    if (views.size() > 0) {
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                    }
             }
+        }
 
-        } else {
-            if (views.size() <= 0) {
-                views = getViews(new ArrayList<TdView>());
-            }
-
+        } catch (Exception e) {
+            log.error(e, e);
         }
 
         createTableRepositoryNode(views, node);
     }
 
-    /**
-     * DOC klliu Comment method "getViews".
-     * 
-     * @param catalog2
-     * @param schema2
-     * @return
-     */
-    private List<TdView> getViews(List<TdView> tdviews) {
-        try {
 
-            if (catalog != null) {
-                tdviews = DqRepositoryViewService.getViews(connection, catalog, null, true);
-            } else if (schema != null) {
-                tdviews = DqRepositoryViewService.getViews(connection, schema, null, true);
-            }
-        } catch (Exception e) {
-            log.error(e, e);
-        }
-        return tdviews;
-    }
 
     /**
      * DOC klliu Comment method "createTableRepositoryNode".

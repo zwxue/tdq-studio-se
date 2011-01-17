@@ -29,6 +29,7 @@ import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -92,6 +93,9 @@ public class DBColumnFolderRepNode extends RepositoryNode {
                     tdcolumns = DqRepositoryViewService.getColumns(connection, tdTable, null, true);
                 } else if (tdView != null) {
                     tdcolumns = DqRepositoryViewService.getColumns(connection, tdView, null, true);
+                }
+                if (tdcolumns.size() > 0) {
+                    ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
                 }
             } catch (Exception e) {
                 log.error(e, e);

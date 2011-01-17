@@ -26,6 +26,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositor
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Catalog;
@@ -85,22 +86,31 @@ public class DBTableFolderRepNode extends RepositoryNode {
         try {
             if (metadataObject instanceof MetadataCatalogRepositoryObject) {
                 viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
-                connection = ((ConnectionItem) viewObject.getProperty().getItem()).getConnection();
+                item = (ConnectionItem) viewObject.getProperty().getItem();
+                connection = item.getConnection();
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
                 tables = PackageHelper.getTables(catalog);
                 if (tables.isEmpty()) {
                     tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
+                    if (tables.size() > 0) {
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                    }
                 }
             } else {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
-                connection = ((ConnectionItem) viewObject.getProperty().getItem()).getConnection();
+                item = (ConnectionItem) viewObject.getProperty().getItem();
+                connection = item.getConnection();
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
                 tables = PackageHelper.getTables(schema);
                 if (tables.isEmpty()) {
                     tables = DqRepositoryViewService.getTables(connection, schema, null, true);
+                    if (tables.size() > 0) {
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                    }
                 }
 
             }
+
         } catch (Exception e) {
             log.error(e, e);
         }

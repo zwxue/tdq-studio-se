@@ -25,12 +25,14 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -186,4 +188,16 @@ public class DataProviderWriter extends AElementPersistance {
     protected void notifyResourceChanges() {
         ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
     }
+
+    @Override
+    public ReturnCode save(ModelElement element) {
+        IRepositoryViewObject repositoryViewObject = RepositoryNodeHelper.recursiveFind(element).getObject();
+        if (repositoryViewObject != null) {
+            return save(repositoryViewObject.getProperty().getItem());
+        }
+        return super.save(element);
+
+    }
+
+
 }

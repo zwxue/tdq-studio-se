@@ -3,7 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Management Plug-in
 Bundle-SymbolicName: org.talend.cwm.management;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.talend.dataquality;visibility:=reexport,
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.navigator,
+ org.talend.dataquality;visibility:=reexport,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
