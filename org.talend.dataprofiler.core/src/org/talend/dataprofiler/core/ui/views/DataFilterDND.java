@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views;
 
-import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -26,21 +26,22 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.part.FileEditorInput;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.nodes.DBColumnRepNode;
 
 /**
  * DOC Zqin class global comment. Detailled comment
  */
 public final class DataFilterDND {
-    
-    private DataFilterDND() {}
+
+    private DataFilterDND() {
+    }
 
     public static void installDND(final Text targetControl) {
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -57,7 +58,7 @@ public final class DataFilterDND {
             @Override
             public void dragEnter(DropTargetEvent event) {
                 Object obj = ((IStructuredSelection) commonViewer.getSelection()).getFirstElement();
-                if (!(obj instanceof TdColumn)) {
+                if (!(obj instanceof DBColumnRepNode)) {
                     event.detail = DND.DROP_NONE;
                 } else {
                     event.detail = DND.DROP_MOVE;
@@ -76,15 +77,21 @@ public final class DataFilterDND {
                 if (event.detail != DND.DROP_NONE) {
                     IStructuredSelection selection = (IStructuredSelection) commonViewer.getSelection();
                     if (!selection.isEmpty()) {
-                        Iterator<TdColumn> it = selection.iterator();
+                        // Iterator<TdColumn> it = selection.iterator();
+                        List list = selection.toList();
                         IEditorPart currentActiveEditor = CorePlugin.getDefault().getCurrentActiveEditor();
                         if (currentActiveEditor instanceof AnalysisEditor) {
                             AnalysisEditor editor = (AnalysisEditor) currentActiveEditor;
-                            FileEditorInput input = (FileEditorInput) editor.getEditorInput();
-                            Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
-                            while (it.hasNext()) {
+                            AnalysisItemEditorInput input = (AnalysisItemEditorInput) editor.getEditorInput();
+                            Analysis analysis = input.getTDQAnalysisItem().getAnalysis();
+                            // AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
+                            // while (it.hasNext()) {
+                            for (Object object : list) {
+                                DBColumnRepNode node = (DBColumnRepNode) object;
                                 DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                                targetControl.insert(language.quote(it.next().getName()));
+                                MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
+                                String name = columnObject.getTdColumn().getName();
+                                targetControl.insert(language.quote(name));
                                 // Focus text.
                                 targetControl.forceFocus();
                             }
