@@ -65,6 +65,9 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.nodes.DBColumnFolderRepNode;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -123,8 +126,12 @@ public class ColumnViewerDND {
                     }
                 }
 
-                // MOD mzhao 9848 2010-01-14, Allowing drag table.
-                if (object instanceof TdColumn || object instanceof TdTable) {
+                // // MOD mzhao 9848 2010-01-14, Allowing drag table.
+                // if (object instanceof TdColumn || object instanceof TdTable) {
+                // receiver = new ColumnReceiver();
+                // }
+                // MOD klliu 15750 2011-01-17 for Drag&Drop On columnset
+                if (object instanceof DBColumnRepNode || object instanceof DBTableRepNode) {
                     receiver = new ColumnReceiver();
                 }
 
@@ -303,30 +310,48 @@ public class ColumnViewerDND {
             RepositoryNode firstElement = (RepositoryNode) structuredSelection.getFirstElement();
             // MOD mzhao 9848 2010-01-14, Allowing drag table.
             // Make sure the selected elements are the same type.
-            Iterator it = structuredSelection.iterator();
-            Object pre = firstElement;
-            while (it.hasNext()) {
-                Object current = it.next();
-                if (!isSameType(pre, current)) {
-                    return;
-                }
-                pre = current;
-            }
+            // Iterator it = structuredSelection.iterator();
+            // Object pre = firstElement;
+            // while (it.hasNext()) {
+            // Object current = it.next();
+            // if (!isSameType(pre, current)) {
+            // return;
+            // }
+            // pre = current;
+            // }
 
             Tree tree = (Tree) ((DropTarget) event.widget).getControl();
             AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
-            IRepositoryViewObject repViewObj = firstElement.getObject();
+            // IRepositoryViewObject repViewObj = firstElement.getObject();
+            // object instanceof DBColumnRepNode || object instanceof DBTableRepNode
+            int i = 0;
 
-            if (repViewObj instanceof MetadataColumnRepositoryObject) {
-                if (viewer != null && viewer.canDrop(firstElement)) {
-                    event.detail = DND.DROP_MOVE;
+            if (firstElement instanceof DBTableRepNode) {
+
+                DBColumnFolderRepNode columnFolderNode = (DBColumnFolderRepNode) firstElement.getChildren().get(0);
+                List<IRepositoryNode> children = columnFolderNode.getChildren();
+                for (IRepositoryNode node : children) {
+                    DBColumnRepNode columnNode = (DBColumnRepNode) node;
+                    if (viewer != null && viewer.canDrop(columnNode)) {// i < children.size()) {
+                        event.detail = DND.DROP_MOVE;
+                    }
                 }
 
-            } else if (repViewObj instanceof MetadataTableRepositoryObject) {
+            } else if (firstElement instanceof DBColumnRepNode) {
                 if (viewer != null && viewer.canDrop(firstElement)) {
                     event.detail = DND.DROP_MOVE;
                 }
             }
+            // if (repViewObj instanceof MetadataColumnRepositoryObject) {
+            // if (viewer != null && viewer.canDrop(firstElement)) {
+            // event.detail = DND.DROP_MOVE;
+            // }
+            //
+            // } else if (repViewObj instanceof MetadataTableRepositoryObject) {
+            // if (viewer != null && viewer.canDrop(firstElement)) {
+            // event.detail = DND.DROP_MOVE;
+            // }
+            // }
 
         }
 
@@ -345,7 +370,6 @@ public class ColumnViewerDND {
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
             Iterator it = selection.iterator();
             List<IRepositoryNode> selectedColumn = new ArrayList<IRepositoryNode>();
-
             while (it.hasNext()) {
                 // MOD mzhao 9848 2010-01-14, Allowing drag table.
                 RepositoryNode next = (RepositoryNode) it.next();
@@ -532,8 +556,8 @@ public class ColumnViewerDND {
                         addIndicatorUnits = UDIUtils.createIndicatorUnit(fe, data, analysis);
                     } catch (Throwable e) {
                         log.error(e, e);
-                        MessageDialog.openError(commonViewer.getTree().getShell(), DefaultMessagesImpl
-                                .getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
+                        MessageDialog.openError(commonViewer.getTree().getShell(),
+                                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
                     }
                     if (addIndicatorUnits != null && addIndicatorUnits.length > 0) {
                         for (IndicatorUnit unit : addIndicatorUnits) {
@@ -606,8 +630,8 @@ public class ColumnViewerDND {
                 if (event.item == null) {
                     index = -1;
                 } else {
-//                    Widget widget = event.widget;
-//                    Object data = event.data;
+                    // Widget widget = event.widget;
+                    // Object data = event.data;
                     TableItem item = (TableItem) event.item;
                     TableItem[] items = targetControl.getItems();
                     for (int i = 0; i < items.length; i++) {
@@ -634,7 +658,8 @@ public class ColumnViewerDND {
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
 
             event.detail = DND.DROP_NONE;
-            IRepositoryNode firstElement = (RepositoryNode)((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
+            IRepositoryNode firstElement = (RepositoryNode) ((StructuredSelection) LocalSelectionTransfer.getTransfer()
+                    .getSelection()).getFirstElement();
             IRepositoryViewObject repViewObj = firstElement.getObject();
             if (repViewObj instanceof MetadataColumnRepositoryObject) {
                 TdColumn column = (TdColumn) firstElement;
