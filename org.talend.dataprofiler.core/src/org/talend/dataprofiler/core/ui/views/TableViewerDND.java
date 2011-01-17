@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.views;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -32,12 +31,18 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractTableDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.RuleRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
@@ -74,11 +79,14 @@ public abstract class TableViewerDND {
                 super.dragEnter(event);
                 IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
                 Object object = selection.getFirstElement();
-                if (object instanceof IFile) {
+                if (object instanceof RuleRepNode) {
                     receiver = new DQRuleReceiver();
                 }
 
                 if (object instanceof NamedColumnSet) {
+                    receiver = new TableReceiver();
+                }
+                if (object instanceof DBTableRepNode) {
                     receiver = new TableReceiver();
                 }
 
@@ -149,10 +157,10 @@ public abstract class TableViewerDND {
 
             boolean is = true;
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
-            if (firstElement instanceof IFile) {
-                IFile fe = (IFile) firstElement;
-                if (FactoriesUtil.DQRULE.equals(fe.getFileExtension())) {
-                    WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
+            if (firstElement instanceof RuleRepNode) {
+                IFile file = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((RuleRepNode) firstElement));
+                if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
+                    WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
                     if (whereRule != null && TaggedValueHelper.getValidStatus(whereRule)) {
                         is = false;
                     }
@@ -167,6 +175,7 @@ public abstract class TableViewerDND {
                     event.detail = DND.DROP_NONE;
                 } else {
                     event.detail = lastValidOperation;
+
                 }
             }
         }
@@ -176,8 +185,10 @@ public abstract class TableViewerDND {
             List list = ((StructuredSelection) commonViewer.getSelection()).toList();
             List<IFile> files = new ArrayList<IFile>();
             for (Object obj : list) {
-                if (obj instanceof IFile) {
-                    files.add((IFile) obj);
+                System.out.println(obj.getClass().getName());
+                if (obj instanceof RuleRepNode) {
+                    IFile file = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((RuleRepNode) obj));
+                    files.add(file);
                 }
             }
 
@@ -206,15 +217,19 @@ public abstract class TableViewerDND {
 
         // @Override
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
+            // MOD klliu select a table node to table ana for analyze on DQRepostitory
             event.detail = DND.DROP_NONE;
             Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
-            if (firstElement instanceof NamedColumnSet) {
-                NamedColumnSet set = (NamedColumnSet) firstElement;
+            IRepositoryNode tableNOde = (IRepositoryNode) firstElement;
+            if (tableNOde instanceof DBTableRepNode) {
+                MetadataTableRepositoryObject tableViewObject = (MetadataTableRepositoryObject) tableNOde.getObject();
+                NamedColumnSet set = (NamedColumnSet) tableViewObject.getTable();
                 Tree tree = (Tree) ((DropTarget) event.widget).getControl();
                 AbstractTableDropTree viewer = (AbstractTableDropTree) tree.getData();
                 if (viewer != null && viewer.canDrop(set)) {
                     event.detail = DND.DROP_MOVE;
                 }
+
             }
         }
 
@@ -225,14 +240,17 @@ public abstract class TableViewerDND {
             Tree control = (Tree) ((DropTarget) event.widget).getControl();
             AbstractTableDropTree viewer = (AbstractTableDropTree) control.getData();
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
-            Iterator it = selection.iterator();
+            List<DBTableRepNode> list = selection.toList();
             List<NamedColumnSet> selectedTableList = new ArrayList<NamedColumnSet>();
-            while (it.hasNext()) {
-                NamedColumnSet set = (NamedColumnSet) it.next();
+            for (DBTableRepNode tableNOde : list) {
+                MetadataTableRepositoryObject tableViewObject = (MetadataTableRepositoryObject) tableNOde.getObject();
+                NamedColumnSet set = (NamedColumnSet) tableViewObject.getTable();
                 selectedTableList.add(set);
             }
+
             int size1 = selection.size();
             int size2 = selectedTableList.size();
+
             if (size1 == size2) {
                 viewer.dropTables(selectedTableList, index);
             }
