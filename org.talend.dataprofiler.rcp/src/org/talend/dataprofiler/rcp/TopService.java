@@ -39,6 +39,8 @@ import org.talend.repository.model.IRepositoryNode;
 /**
  * 
  * DOC zshen class global comment. Detailled comment
+ * 
+ * FIXME do we really need this class?
  */
 public class TopService implements ICoreService {
 
@@ -459,6 +461,16 @@ public class TopService implements ICoreService {
     public boolean isOpenedItemInEditor(IRepositoryViewObject object) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ICoreService#updatePalette()
+     */
+    public void updatePalette() {
+        // TODO Auto-generated method stub
+
     }
 
 }
