@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
@@ -56,12 +57,13 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
-import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
@@ -87,6 +89,8 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
+import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
@@ -581,13 +585,8 @@ public final class DQStructureManager {
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                boolean equals = subNode.getLabel().equals("Db Connections") || subNode.getLabel().equals("File delimited");// FIXME
-                                                                                                                            // klliu,
-                                                                                                                            // DONT
-                                                                                                                            // use
-                                                                                                                            // labels
-                                                                                                                            // here!!!
-                if (equals) {
+                if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
+                    // don't add mdm connections
                     connNodes.addAll(subNode.getChildren());
                 }
             }
@@ -598,7 +597,6 @@ public final class DQStructureManager {
     public IRepositoryNode getConnectionRepositoryNode(String name) {
         List<IRepositoryNode> connections = getConnectionRepositoryNodes();
         if (connections != null && connections.size() > 0) {
-
             for (IRepositoryNode conn : connections) {
                 boolean equals = conn.getObject().getLabel().equals(name);
                 if (equals) {
@@ -653,44 +651,47 @@ public final class DQStructureManager {
         return commonViewer;
     }
 
+    /**
+     * recursive find the RepositoryNode which contain the ModelElement.
+     * 
+     * @param modelElement
+     * @return
+     */
+    public RepositoryNode recursiveFind(ModelElement modelElement) {
+        if (modelElement instanceof Analysis) {
 
-    public RepositoryNode recursiveFind(ModelElement element) {
-        if (element instanceof Analysis) {
+        } else if (modelElement instanceof TdReport) {
 
-        } else if (element instanceof TdReport) {
-
-        } else if (element instanceof TdColumn) {
-            TdColumn column = (TdColumn) element;
-           IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsColumnSet(column));
-           for(IRepositoryNode columnNode:columnSetNode.getChildren().get(0).getChildren()){
+        } else if (modelElement instanceof TdColumn) {
+            TdColumn column = (TdColumn) modelElement;
+            IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsColumnSet(column));
+            for (IRepositoryNode columnNode : columnSetNode.getChildren().get(0).getChildren()) {
                 TdColumn columnOnUI = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
                 if (ResourceHelper.getUUID(column).equals(ResourceHelper.getUUID(columnOnUI))) {
                     return (RepositoryNode) columnNode;
-               }
-           }
-
-        } else if (element instanceof TdTable) {
-            TdTable table = (TdTable) element;
-            IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(element));
+                }
+            }
+        } else if (modelElement instanceof TdTable) {
+            TdTable table = (TdTable) modelElement;
+            IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(modelElement));
             for (IRepositoryNode tableNode : schemaOrCatalogNode.getChildren().get(0).getChildren()) {
                 TdTable tableOnUI = (TdTable) ((TdTableRepositoryObject) tableNode.getObject()).getTdTable();
                 if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
                     return (RepositoryNode) tableNode;
                 }
             }
-
-        } else if (element instanceof TdView) {
-            TdView view = (TdView) element;
-            IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(element));
+        } else if (modelElement instanceof TdView) {
+            TdView view = (TdView) modelElement;
+            IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(modelElement));
             for (IRepositoryNode viewNode : schemaOrCatalogNode.getChildren().get(1).getChildren()) {
                 TdView viewOnUI = (TdView) ((TdViewRepositoryObject) viewNode.getObject()).getTdView();
                 if (ResourceHelper.getUUID(view).equals(ResourceHelper.getUUID(viewOnUI))) {
                     return (RepositoryNode) viewNode;
                 }
             }
-        } else if (element instanceof MetadataColumn) {
+        } else if (modelElement instanceof MetadataColumn) {
             // MOD qiongli 2011-1-12 for delimted file
-            MetadataColumn column = (MetadataColumn) element;
+            MetadataColumn column = (MetadataColumn) modelElement;
             IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsMetadataTable(column));
             for (IRepositoryNode columnNode : columnSetNode.getChildren().get(0).getChildren()) {
                 MetadataColumn columnOnUI = ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
@@ -698,22 +699,20 @@ public final class DQStructureManager {
                     return (RepositoryNode) columnNode;
                 }
             }
-
-        } else if (element instanceof MetadataTable) {
+        } else if (modelElement instanceof MetadataTable) {
             // MOD qiongli 2011-1-12 for delimted file
-            MetadataTable table = (MetadataTable) element;
+            MetadataTable table = (MetadataTable) modelElement;
             if (table.getNamespace() instanceof RecordFile) {
-            IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(table));
-            for (IRepositoryNode tableNode : connNode.getChildren()) {
-                MetadataTable tableOnUI = (MetadataTable) ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
-                if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
-                    return (RepositoryNode) tableNode;
+                IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(table));
+                for (IRepositoryNode tableNode : connNode.getChildren()) {
+                    MetadataTable tableOnUI = (MetadataTable) ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
+                    if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
+                        return (RepositoryNode) tableNode;
+                    }
                 }
             }
-            }
-
-        } else if (element instanceof Catalog) {
-            Catalog catalog = (Catalog) element;
+        } else if (modelElement instanceof Catalog) {
+            Catalog catalog = (Catalog) modelElement;
             IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(catalog));
             for (IRepositoryNode catalogNode : connNode.getChildren()) {
                 Catalog catalogOnUI = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
@@ -721,9 +720,8 @@ public final class DQStructureManager {
                     return (RepositoryNode) catalogNode;
                 }
             }
-
-        } else if (element instanceof Schema) {
-            Schema schema = (Schema) element;
+        } else if (modelElement instanceof Schema) {
+            Schema schema = (Schema) modelElement;
             Catalog catalog = CatalogHelper.getParentCatalog(schema);
             // Schema's parent is catalog (MS SQL Server)
             if (catalog != null) {
@@ -734,7 +732,6 @@ public final class DQStructureManager {
                         return (RepositoryNode) schemaNode;
                     }
                 }
-
             }
             // schema's parent is connection (e.g Oracle)
             IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(schema));
@@ -744,18 +741,45 @@ public final class DQStructureManager {
                     return (RepositoryNode) schemaNode;
                 }
             }
-
-
-        } else if (element instanceof Connection) {
-            Connection connection = (Connection) element;
+        } else if (modelElement instanceof Connection) {
+            Connection connection = (Connection) modelElement;
             List<IRepositoryNode> connsNode = getConnectionRepositoryNodes();
             for (IRepositoryNode connNode : connsNode) {
-                ConnectionItem item = (ConnectionItem) ((RepositoryViewObject) connNode.getObject()).getProperty().getItem();
-                if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(item.getConnection()))) {
-                    return (RepositoryNode) connNode;
+                Item itemTemp = ((IRepositoryViewObject) connNode.getObject()).getProperty().getItem();
+                if (itemTemp instanceof ConnectionItem) {
+                    ConnectionItem item = (ConnectionItem) itemTemp;
+                    if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(item.getConnection()))) {
+                        return (RepositoryNode) connNode;
+                    }
+                } else if (itemTemp instanceof FolderItem) {
+                    List<ConnectionItem> connItems = getConnectionItemsFromFolderItem((FolderItem) itemTemp);
+                    for (ConnectionItem connItem : connItems) {
+                        if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(connItem.getConnection()))) {
+                            return (RepositoryNode) connNode;
+                        }
+                    }
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * get all the ConnectionItems from FolderItem (recursive).
+     * 
+     * @param folderItem
+     * @return
+     */
+    private List<ConnectionItem> getConnectionItemsFromFolderItem(FolderItem folderItem) {
+        List<ConnectionItem> list = new ArrayList<ConnectionItem>();
+        EList objs = folderItem.getChildren();
+        for (Object obj : objs) {
+            if (obj instanceof FolderItem) {
+                list.addAll(getConnectionItemsFromFolderItem((FolderItem) obj));
+            } else if (obj instanceof ConnectionItem) {
+                list.add((ConnectionItem) obj);
+            }
+        }
+        return list;
     }
 }

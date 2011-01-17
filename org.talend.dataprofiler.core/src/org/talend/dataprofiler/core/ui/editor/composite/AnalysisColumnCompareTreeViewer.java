@@ -629,8 +629,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
         if (selection.length == 1) {
             try {
-                DBColumnRepNode column = (DBColumnRepNode) selection[0].getData();
-                dqview.showSelectedElements(column);
+                // DBColumnRepNode column = (DBColumnRepNode) selection[0].getData();
+                dqview.showSelectedElements(selection[0].getData());
             } catch (Exception e) {
                 log.error(e, e);
             }

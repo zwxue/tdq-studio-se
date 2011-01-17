@@ -65,6 +65,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
@@ -99,6 +100,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -1233,7 +1235,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
                     CorePlugin.getDefault().refreshWorkSpace();
                     CorePlugin.getDefault().refreshDQView();
-                    dqview.showSelectedElements(set);
+                    RepositoryNode node = DQStructureManager.getInstance().recursiveFind(set);
+                    dqview.showSelectedElements(node);
 
                 } catch (Exception e) {
                     log.error(e, e);

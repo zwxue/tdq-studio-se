@@ -42,7 +42,6 @@ public class DFConnectionFolderRepNode extends RepositoryNode {
      */
     public DFConnectionFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

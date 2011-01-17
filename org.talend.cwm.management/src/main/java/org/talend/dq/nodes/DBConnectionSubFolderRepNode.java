@@ -18,7 +18,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu DBConnectionSubFolderRepNode type comment.
  */
-public class DBConnectionSubFolderRepNode extends RepositoryNode {
+public class DBConnectionSubFolderRepNode extends DBConnectionFolderRepNode {
 
     /**
      * DOC klliu DBConnectionSubFolderRepNode constructor comment.
@@ -30,5 +30,4 @@ public class DBConnectionSubFolderRepNode extends RepositoryNode {
     public DBConnectionSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
     }
-
 }

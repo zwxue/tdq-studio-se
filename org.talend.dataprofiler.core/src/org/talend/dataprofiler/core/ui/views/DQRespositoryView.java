@@ -24,12 +24,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -485,72 +480,15 @@ public class DQRespositoryView extends CommonNavigator {
         if (contentProvider == null) {
             contentProvider = (ITreeContentProvider) getCommonViewer().getContentProvider();
         }
-        if (item instanceof EObject) {
-            Object parent = contentProvider.getParent(item);
-            Object[] tbFolderNodes = contentProvider.getChildren(parent);
-            boolean isFind = false;
-            IFolderNode fn = null;
-            for (Object folderNode : tbFolderNodes) {
-                if (!(folderNode instanceof IFolderNode)) {
-                    continue;
-                }
-                fn = (IFolderNode) folderNode;
-                Object[] folderChilds = contentProvider.getChildren(fn);
-                for (Object child : folderChilds) {
-                    if (child == item) {
-                        isFind = true;
-                        break;
-                    }
-                }
-                if (isFind) {
-                    break;
-                }
-            }
-            // If EMF node,get folder parent.
-            if (fn != null) {
-                recursiveExpandTree(fn);
-                getCommonViewer().expandToLevel(fn, 1);
-            } else {
-                Object emfParent = contentProvider.getParent(item);
-                // EMF XMI resources
-                if (emfParent instanceof Resource) {
-                    Resource cwmResource = (Resource) emfParent;
-                    IFile resourceFile = null;
-                    URI uri = cwmResource.getURI();
-                    uri = cwmResource.getResourceSet().getURIConverter().normalize(uri);
-                    String scheme = uri.scheme();
-                    if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) { //$NON-NLS-1$ //$NON-NLS-2$
-                        StringBuffer platformResourcePath = new StringBuffer();
-                        for (int j = 1, size = uri.segmentCount(); j < size; ++j) {
-                            platformResourcePath.append('/');
-                            platformResourcePath.append(uri.segment(j));
-                        }
-                        resourceFile = ResourcesPlugin.getWorkspace().getRoot()
-                                .getFile(new Path(platformResourcePath.toString()));
-                    }
-                    emfParent = resourceFile;
-                }
-
-                recursiveExpandTree(emfParent);
-                getCommonViewer().expandToLevel(emfParent, 1);
-            }
-        } else if (item instanceof IFolderNode) {
-            // User provider get IFolderNode parent will be null, here must call
-            // IFolderNode.getParent.
-            IFolderNode folderNode = (IFolderNode) item;
-            Object eo = folderNode.getParent();
-            recursiveExpandTree(eo);
-            getCommonViewer().expandToLevel(eo, 1);
-        } else {
-            // Workspace resources
-            Object workspaceParent = contentProvider.getParent(item);
-            if (workspaceParent == null) {
+        // MOD xqliu 2011-01-14 bug 15750: show in DQ Repository View
+        if (item instanceof RepositoryNode) {
+            RepositoryNode node = ((RepositoryNode) item).getParent();
+            if (node == null) {
                 return;
             }
-            getCommonViewer().expandToLevel(workspaceParent, 1);
-            recursiveExpandTree(workspaceParent);
+            recursiveExpandTree(node);
+            getCommonViewer().expandToLevel(node, 1);
         }
-
     }
 
     /**
