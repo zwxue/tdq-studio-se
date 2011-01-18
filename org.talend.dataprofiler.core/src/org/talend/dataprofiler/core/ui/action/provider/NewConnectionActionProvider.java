@@ -20,8 +20,8 @@ import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -62,17 +62,9 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
                 if (ifolder != null
                         && (ResourceService.isSubFolder(ResourceManager.getConnectionFolder(), ifolder) || ResourceService
                                 .isSubFolder(ResourceManager.getMDMConnectionFolder(), ifolder))) {
-                    CreateConnectionAction createConnectionAction = new CreateConnectionAction(ifolder);
+                    CreateConnectionAction createConnectionAction = new CreateConnectionAction(node);
                     menu.add(createConnectionAction);
                 }
-                // menu.insertBefore("group.edit", createConnectionAction);
-                // IFolder ifolder = WorkbenchUtils.folder2IFolder(folder);
-                // if (ResourceService.isSubFolder(ResourceManager.getConnectionFolder(), ifolder)
-                // || ResourceService.isSubFolder(ResourceManager.getMDMConnectionFolder(), ifolder)) {
-                // CreateConnectionAction createConnectionAction = new CreateConnectionAction(ifolder);
-                // menu.add(createConnectionAction);
-                // // menu.insertBefore("group.edit", createConnectionAction);
-                // }
             }
         }
     }

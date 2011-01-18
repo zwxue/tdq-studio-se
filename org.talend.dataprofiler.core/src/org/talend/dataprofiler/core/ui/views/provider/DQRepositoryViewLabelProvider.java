@@ -12,8 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import java.util.List;
+
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -85,6 +91,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             } else if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
                 if (node instanceof DBConnectionRepNode) {
+                    if (!isSupportedConnection(node)) {
+                        return ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
+                    }
                     return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (node instanceof MDMConnectionRepNode) {
                     return ImageLib.getImage(ImageLib.MDM_CONNECTION);
@@ -149,14 +158,30 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return DefaultMessagesImpl.getString("ColumnFolderNode.columns");
             } else if (node instanceof SourceFileRepNode) {
                 return ((SourceFileRepNode) node).getLabel();
-            }
-            if (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof SysIndicatorDefinitionRepNode
+            } else if (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof SysIndicatorDefinitionRepNode
                     || node instanceof PatternRepNode || node instanceof RuleRepNode) {
                 return node.getObject().getLabel() + " " + node.getObject().getVersion();
+            } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
+                return node.getObject().getLabel() + "(Unsupported)";
             }
             return node.getObject().getLabel();
         }
         String text = super.getText(element);
         return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;
+    }
+
+    private boolean isSupportedConnection(IRepositoryNode repNode) {
+        ERepositoryObjectType objectType = repNode.getObjectType();
+
+        if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
+            ConnectionItem connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
+            if (connectionItem.getConnection() instanceof DatabaseConnection) {
+                String databaseType = ((DatabaseConnection) connectionItem.getConnection()).getDatabaseType();
+                List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
+                return tdqSupportDBType.contains(databaseType);
+            }
+        }
+
+        return false;
     }
 }

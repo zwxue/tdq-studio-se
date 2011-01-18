@@ -28,7 +28,6 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionAnal
 import org.talend.dataprofiler.core.ui.wizard.analysis.schema.SchemaAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.FunctionDependencyWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
-import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizard;
 import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -36,7 +35,6 @@ import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
 import org.talend.dq.analysis.parameters.FuncationDependencyParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
@@ -194,11 +192,6 @@ public final class WizardFactory {
             parameter = new PatternParameter();
         }
         return new CreatePatternWizard(parameter, type, expression, language);
-    }
-
-    public static Wizard createDatabaseConnectionWizard(DBConnectionParameter connectionParam) {
-
-        return new DatabaseConnectionWizard(connectionParam);
     }
 
 }

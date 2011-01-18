@@ -19,13 +19,17 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -39,11 +43,13 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
 
     private static final int WIDTH = 550;
 
-    private static final int HEIGHT = 350;
+    private static final int HEIGHT = 550;
 
     private static final int MDM_CONNECTION_TYPE_VALUE = 1;
 
     private IFolder folder;
+
+    private RepositoryNode node;
 
     public CreateConnectionAction() {
         super(DefaultMessagesImpl.getString("CreateConnectionAction.newConnection")); //$NON-NLS-1$
@@ -55,6 +61,17 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
         this.folder = folder;
         // MOD qiongli bug 14203
         if (ResourceService.isSubFolder(ResourceManager.getMDMConnectionFolder(), folder)) {
+            setImageDescriptor(ImageLib.createAddedIcon(ImageLib.MDM_CONNECTION));
+        } else {
+            setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
+        }
+    }
+
+    public CreateConnectionAction(RepositoryNode node) {
+        this();
+        this.node = node;
+        // MOD qiongli bug 14203
+        if (node instanceof MDMConnectionRepNode) {
             setImageDescriptor(ImageLib.createAddedIcon(ImageLib.MDM_CONNECTION));
         } else {
             setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.NEW_CONNECTION));
@@ -76,13 +93,14 @@ public class CreateConnectionAction extends Action implements ICheatSheetAction 
             provider.setFolderResource(folder);
             connectionParam.setFolderProvider(provider);
         }
-        Wizard wizard = WizardFactory.createDatabaseConnectionWizard(connectionParam);
+        Wizard wizard = new DatabaseWizard(PlatformUI.getWorkbench(), true, node, null);
 
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         wizard.setContainer(dialog);
         dialog.open();
-//            ProxyRepositoryManager.getInstance().save();
+
+        CorePlugin.getDefault().refreshDQView();
     }
 
     /*

@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Driver;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.database.IDriverService;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 
 /**
  * 
@@ -147,4 +149,7 @@ public class TOPDriverService implements IDriverService {
         return driver;
     }
 
+    public List<String> getTDQSupportDBTemplate() {
+        return Arrays.asList(SupportDBUrlStore.getInstance().getDBTypes());
+    }
 }

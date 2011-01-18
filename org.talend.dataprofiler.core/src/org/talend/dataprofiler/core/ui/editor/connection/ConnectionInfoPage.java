@@ -25,6 +25,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -39,6 +41,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -63,7 +66,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.dialog.UrlEditDialog;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
@@ -74,8 +76,11 @@ import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.i18n.Messages;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -88,6 +93,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private static Logger log = Logger.getLogger(ConnectionInfoPage.class);
 
     private Connection connection;
+
+    private ConnectionItem connectionItem;
 
     private DBConnectionParameter tmpParam;
 
@@ -114,12 +121,14 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         IEditorInput editorInput = editor.getEditorInput();
         if (editorInput instanceof ConnectionItemEditorInput) {
             ConnectionItemEditorInput input = (ConnectionItemEditorInput) editorInput;
+            connectionItem = input.getConnectionItem();
             connection = input.getConnectionItem().getConnection();
         } else if (editorInput instanceof FileEditorInput) {
             Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
             String fileLabel = proty.getLabel();
             Item item = proty.getItem();
             if (item instanceof ConnectionItem) {
+                connectionItem = (ConnectionItem) item;
                 connection = ((ConnectionItem) item).getConnection();
             }
         }
@@ -265,20 +274,31 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      * MOD yyi 9082 2010-02-25
      */
     protected void changeConnectionInformations() {
-        UrlEditDialog urlDlg = new UrlEditDialog(null, connection);
+        // UrlEditDialog urlDlg = new UrlEditDialog(null, connection);
+        //
+        // if (urlDlg.open() == Window.OK) {
+        // tmpParam = urlDlg.getResult();
+        //
+        // if (!tmpParam.getJdbcUrl().equals(urlText.getText())) {
+        // urlText.setText(tmpParam.getJdbcUrl());
+        // isUrlChanged = true;
+        // }
+        // // has new jar file for generic jdbc
+        // if (!"".equals(tmpParam.getDriverPath())) {
+        // setDirty(true);
+        // isUrlChanged = true;
+        // }
+        // }
 
-        if (urlDlg.open() == Window.OK) {
-            tmpParam = urlDlg.getResult();
+        if (connectionItem != null) {
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(connectionItem.getConnection());
 
-            if (!tmpParam.getJdbcUrl().equals(urlText.getText())) {
-                urlText.setText(tmpParam.getJdbcUrl());
-                isUrlChanged = true;
-            }
-            // has new jar file for generic jdbc
-            if (!"".equals(tmpParam.getDriverPath())) {
-                setDirty(true);
-                isUrlChanged = true;
-            }
+            Wizard wizard = new DatabaseWizard(PlatformUI.getWorkbench(), false, node, null);
+
+            WizardDialog dialog = new WizardDialog(null, wizard);
+            dialog.setPageSize(550, 550);
+            wizard.setContainer(dialog);
+            dialog.open();
         }
     }
 
