@@ -185,7 +185,6 @@ public abstract class TableViewerDND {
             List list = ((StructuredSelection) commonViewer.getSelection()).toList();
             List<IFile> files = new ArrayList<IFile>();
             for (Object obj : list) {
-                System.out.println(obj.getClass().getName());
                 if (obj instanceof RuleRepNode) {
                     IFile file = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((RuleRepNode) obj));
                     files.add(file);

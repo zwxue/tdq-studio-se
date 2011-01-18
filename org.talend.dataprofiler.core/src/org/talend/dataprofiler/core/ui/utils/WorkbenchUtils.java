@@ -86,8 +86,10 @@ public final class WorkbenchUtils {
             fileExtension = FileConstants.REP_EXTENSION;
             break;
         case org.talend.dataquality.properties.PropertiesPackage.TDQ_INDICATOR_DEFINITION_ITEM:
+            fileExtension = FileConstants.DEF_EXTENSION;
             break;
         case org.talend.dataquality.properties.PropertiesPackage.TDQ_PATTERN_ITEM:
+            fileExtension = FileConstants.PAT_EXTENSION;
             break;
         case org.talend.dataquality.properties.PropertiesPackage.TDQ_BUSINESS_RULE_ITEM:
             fileExtension = FileConstants.RULE_EXTENSION;
