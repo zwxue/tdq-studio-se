@@ -99,6 +99,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -821,25 +822,29 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      * @param objs
      */
     public void setInput(Object[] objs) {
-        if (objs != null && objs.length != 0) {
-            if (!(objs[0] instanceof NamedColumnSet)) {
-                return;
-            }
+        List<DBTableRepNode> tableNodeList = RepositoryNodeHelper.getTableNodeList(objs);
+        if (tableNodeList.size() == 0) {
+            return;
         }
+        // if (objs != null && objs.length != 0) {
+        // if (!(objs[0] instanceof NamedColumnSet)) {
+        // return;
+        // }
+        // }
 
-        List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
-        for (Object obj : objs) {
-            NamedColumnSet table = (NamedColumnSet) obj;
-            Connection tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(table));
+        List<DBTableRepNode> setList = new ArrayList<DBTableRepNode>();
+        for (DBTableRepNode tableNode : tableNodeList) {
+            Connection tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(tableNode
+                    .getTdTable()));
             if (tdProvider == null) {
-                MessageUI
-                        .openError(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.TableProviderIsNull", table.getName())); //$NON-NLS-1$
+                MessageUI.openError(DefaultMessagesImpl.getString(
+                        "AnalysisTableTreeViewer.TableProviderIsNull", tableNode.getLabel())); //$NON-NLS-1$
             } else if (this.getAnalysis().getContext().getConnection() != null
                     && !tdProvider.equals(this.getAnalysis().getContext().getConnection())) {
                 MessageUI.openError(DefaultMessagesImpl.getString(
-                        "AnalysisTableTreeViewer.TableDataProviderIsInvalid", table.getName())); //$NON-NLS-1$
+                        "AnalysisTableTreeViewer.TableDataProviderIsInvalid", tableNode.getLabel())); //$NON-NLS-1$
             } else {
-                setList.add(table);
+                setList.add(tableNode);
             }
         }
         List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
@@ -849,8 +854,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 setList.remove(tableIndicator.getColumnSet());
             }
         }
-        for (NamedColumnSet set : setList) {
-            TableIndicator tableIndicator = TableIndicator.createTableIndicatorWithRowCountIndicator(set);
+        for (DBTableRepNode set : setList) {
+            TableIndicator tableIndicator = TableIndicator.createTableIndicatorWithRowCountIndicator(set.getTdTable());
             tableIndicatorList.add(tableIndicator);
         }
         this.tableIndicators = tableIndicatorList.toArray(new TableIndicator[tableIndicatorList.size()]);

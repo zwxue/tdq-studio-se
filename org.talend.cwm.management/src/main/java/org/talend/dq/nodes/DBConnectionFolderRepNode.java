@@ -48,6 +48,7 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         try {
+            super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
             // sub folders

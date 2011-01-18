@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.indicators.ext.FrequencyExt;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -59,6 +60,8 @@ public final class ComparatorsFactory {
     public static final int IREPOSITORYVIEWOBJECT_COMPARATOR_ID = 8;
 
     public static final int DQRECYCLYBIN_COMPARATOR_ID = 9;
+
+    public static final int REPOSITORY_NODE_COMPARATOR_ID = 10;
 
     /**
      * DOC zqin Comment method "sort".
@@ -116,6 +119,8 @@ public final class ComparatorsFactory {
             return new IRepositoryViewObjectComparator();
         case DQRECYCLYBIN_COMPARATOR_ID:
             return new DQRecyclebinComparator();
+        case REPOSITORY_NODE_COMPARATOR_ID:
+            return new RepositoryNodeComparator();
         default:
             return new ModelElementComparator();
         }
@@ -322,6 +327,25 @@ public final class ComparatorsFactory {
                 return 0;
             }
             return name0.compareTo(name1);
+        }
+
+    }
+
+    /**
+     * comparator for IRepositoryNode.
+     */
+    static class RepositoryNodeComparator implements Comparator<IRepositoryNode> {
+
+        public int compare(IRepositoryNode o1, IRepositoryNode o2) {
+            if (o1 == null || o2 == null) {
+                return 0;
+            }
+            String label1 = ((IRepositoryNode) o1).getLabel();
+            String label2 = ((IRepositoryNode) o2).getLabel();
+            if (label1 == null || label2 == null) {
+                return 0;
+            }
+            return label1.compareTo(label2);
         }
 
     }

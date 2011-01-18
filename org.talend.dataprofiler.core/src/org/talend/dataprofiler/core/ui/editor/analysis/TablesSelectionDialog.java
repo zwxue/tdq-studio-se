@@ -13,30 +13,24 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -44,95 +38,105 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
-import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.nodes.foldernode.NamedColumnSetFolderNode;
 import org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog;
-import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.filters.TypedViewerFilter;
-import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableContentProvider;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewFolderRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
-import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.NamedColumnSet;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
+
     private static Logger log = Logger.getLogger(TablesSelectionDialog.class);
-    private Map<PackageKey, TableCheckedMap> packageCheckedMap;
-    private IFolder metadataFolder = ResourceManager.getMetadataFolder();
+
+    private Map<RepositoryNodeKey, TableCheckedMap> packageCheckedMap;
+
+    private RepositoryNode metadataFolder = RepositoryNodeHelper.getRootNode(EResourceConstant.METADATA.getName());
+
+    private TableSelectionType tableType;
+
+    public TableSelectionType getTableType() {
+        return this.tableType;
+    }
+
     public TablesSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
-            List<NamedColumnSet> setList, String message) {
+            List<IRepositoryNode> setList, String message) {
         super(metadataFormPage, parent, message);
         this.setDialogType(DIALOG_TYPE_TABLE);
         addFirstPartFilters();
         this.setInput(metadataFolder);
-        packageCheckedMap = new HashMap<PackageKey, TableCheckedMap>();
+        packageCheckedMap = new HashMap<RepositoryNodeKey, TableCheckedMap>();
         initCheckedTable(setList);
         this.setTitle(title);
+        this.tableType = TableSelectionType.TABLE;
     }
 
     @Override
-    /*
-     * 
-     * DOC mzhao bug 9240 mzhao 2009-11-05
+    /**
+     * DOC mzhao bug 9240 mzhao 2009-11-05.
      * 
      * @param columnSetList
      */
     protected void unfoldToCheckedElements() {
-        Iterator<PackageKey> it = packageCheckedMap.keySet().iterator();
+        Iterator<RepositoryNodeKey> it = packageCheckedMap.keySet().iterator();
         while (it.hasNext()) {
-            PackageKey csk = it.next();
-            getTreeViewer().expandToLevel(csk.getPackage(), 1);
-            StructuredSelection structSel = new StructuredSelection(csk.getPackage());
+            RepositoryNodeKey csk = it.next();
+            getTreeViewer().expandToLevel(csk.getPackageNode(), 1);
+            IRepositoryNode packageNode = csk.getPackageNode();
+            List<IRepositoryNode> filterTableView = filterTableView(packageNode.getChildren());
+            StructuredSelection structSel = new StructuredSelection(packageNode);
+            if (filterTableView.size() > 0) {
+                structSel = new StructuredSelection(filterTableView.get(0));
+            }
             getTreeViewer().setSelection(structSel);
         }
     }
 
-    private void initCheckedTable(List<NamedColumnSet> tableList) {
-        List<Package> packageList = new ArrayList<Package>();
-        for (int i = 0; i < tableList.size(); i++) {
-            tableList.get(i).eContainer();
-            Package packageOwner = PackageHelper.getCatalogOrSchema(tableList.get(i).getNamespace());
-            if (!packageList.contains(packageOwner)) {
-                packageList.add(packageOwner);
+    private void initCheckedTable(List<IRepositoryNode> tableList) {
+        List<IRepositoryNode> packageList = new ArrayList<IRepositoryNode>();
+        for (IRepositoryNode tableNode : tableList) {
+            if (tableNode instanceof DBTableRepNode) {
+                DBTableRepNode tableRepNode = (DBTableRepNode) tableNode;
+                IRepositoryNode parentPackageNode = DBTableRepNode.getParentPackageNode(tableRepNode);
+                if (parentPackageNode != null) {
+                    if (!packageList.contains(parentPackageNode)) {
+                        packageList.add(parentPackageNode);
+                    }
+                    RepositoryNodeKey packageKey = new RepositoryNodeKey(parentPackageNode);
+                    TableCheckedMap tableCheckedMap = packageCheckedMap.get(packageKey);
+                    if (tableCheckedMap == null) {
+                        tableCheckedMap = new TableCheckedMap();
+                        this.packageCheckedMap.put(packageKey, tableCheckedMap);
+                    }
+                    tableCheckedMap.putTableChecked(tableNode, Boolean.TRUE);
+                }
             }
-            PackageKey packageKey = new PackageKey(packageOwner);
-            TableCheckedMap tableCheckedMap = packageCheckedMap.get(packageKey);
-            if (tableCheckedMap == null) {
-                tableCheckedMap = new TableCheckedMap();
-                this.packageCheckedMap.put(packageKey, tableCheckedMap);
-            }
-            tableCheckedMap.putTableChecked(tableList.get(i), Boolean.TRUE);
         }
         this.setInitialElementSelections(packageList);
     }
 
     protected void initProvider() {
-        fLabelProvider = new DBTablesViewLabelProvider();
+        fLabelProvider = new DQRepositoryViewLabelProvider();
         fContentProvider = new DBTreeViewContentProvider();
         sLabelProvider = new TableLabelProvider();
         sContentProvider = new TableContentProvider();
@@ -141,7 +145,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     @SuppressWarnings("unchecked")
     private void addFirstPartFilters() {
         final Class[] acceptedClasses = new Class[] { IResource.class, IFolderNode.class, EObject.class,
-                IRepositoryViewObject.class };
+                IRepositoryViewObject.class, IRepositoryNode.class };
         IProject rootProject = ResourceManager.getRootProject();
         IResource[] allResource = null;
         try {
@@ -165,8 +169,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         addFilter(new TDQEEConnectionFolderFilter());
     }
 
+    @Override
     protected void addCheckedListener() {
-
         // When user checks a checkbox in the tree, check all its children
         getTreeViewer().addCheckStateListener(new ICheckStateListener() {
 
@@ -176,17 +180,19 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 getTreeViewer().setSelection(new TreeSelection(treePath));
 
                 if (event.getChecked()) {
-                    getTreeViewer().setSubtreeChecked(event.getElement(), true);
-                    if (event.getElement() instanceof Package) {
-                        setOutput(event.getElement());
-                        handleTablesChecked((Package) event.getElement(), true);
+                    Object element = event.getElement();
+                    getTreeViewer().setSubtreeChecked(element, true);
+                    if (element instanceof IRepositoryNode) {
+                        setOutput(element);
+                        handleTablesChecked((IRepositoryNode) element, true);
                     }
 
                 } else {
-                    getTreeViewer().setSubtreeChecked(event.getElement(), false);
-                    if (event.getElement() instanceof Package) {
-                        setOutput(event.getElement());
-                        handleTablesChecked((Package) event.getElement(), false);
+                    Object element = event.getElement();
+                    getTreeViewer().setSubtreeChecked(element, false);
+                    if (element instanceof IRepositoryNode) {
+                        setOutput(element);
+                        handleTablesChecked((IRepositoryNode) element, false);
                     }
                 }
             }
@@ -195,51 +201,54 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         getTableViewer().addCheckStateListener(new ICheckStateListener() {
 
             public void checkStateChanged(CheckStateChangedEvent event) {
-                if (event.getElement() instanceof NamedColumnSet) {
-                    handleTableChecked((NamedColumnSet) event.getElement(), event.getChecked());
+                Object element = event.getElement();
+                if (element instanceof DBTableRepNode || element instanceof DBViewRepNode) {
+                    handleTableChecked((IRepositoryNode) element, event.getChecked());
                 }
             }
         });
     }
 
-    private NamedColumnSet[] getCheckedTables(Package pckg) {
-        PackageKey packageKey = new PackageKey(pckg);
+    private IRepositoryNode[] getCheckedTableNodes(IRepositoryNode node) {
+        RepositoryNodeKey packageKey = new RepositoryNodeKey(node);
         TableCheckedMap tableCheckMap = packageCheckedMap.get(packageKey);
         if (tableCheckMap == null) {
-            Boolean allCheckFlag = this.getTreeViewer().getChecked(pckg);
+            Boolean allCheckFlag = this.getTreeViewer().getChecked(node);
             this.getTableViewer().setAllChecked(allCheckFlag);
             tableCheckMap = new TableCheckedMap();
-            List<NamedColumnSet> temp = PackageHelper.getNmaedColumnSets(pckg);
-            NamedColumnSet[] tables = temp.toArray(new NamedColumnSet[temp.size()]);
+            List<IRepositoryNode> nmaedColumnSetNodes = RepositoryNodeHelper.getNmaedColumnSetNodes(node);
+            IRepositoryNode[] tables = nmaedColumnSetNodes.toArray(new IRepositoryNode[nmaedColumnSetNodes.size()]);
             tableCheckMap.putAllChecked(tables, allCheckFlag);
             packageCheckedMap.put(packageKey, tableCheckMap);
             return allCheckFlag ? tables : null;
         } else {
-            return tableCheckMap.getCheckedTables(PackageHelper.getNmaedColumnSets(pckg));
+            return tableCheckMap.getCheckedTableNodes(RepositoryNodeHelper.getNmaedColumnSetNodes(node));
         }
     }
 
-    private void handleTableChecked(NamedColumnSet table, Boolean checkedFlag) {
-        Package pckg = PackageHelper.getCatalogOrSchema(table.getNamespace());
+    private void handleTableChecked(IRepositoryNode table, Boolean checkedFlag) {
+        IRepositoryNode parentPackageNode = DBTableRepNode.getParentPackageNode(table);
         if (checkedFlag) {
-            getTreeViewer().setChecked(pckg, true);
+            getTreeViewer().setChecked(parentPackageNode, true);
         }
-        TableCheckedMap tableCheckMap = packageCheckedMap.get(new PackageKey(pckg));
+        TableCheckedMap tableCheckMap = packageCheckedMap.get(new RepositoryNodeKey(parentPackageNode));
         if (tableCheckMap != null) {
             tableCheckMap.putTableChecked(table, checkedFlag);
         }
     }
 
-    private void handleTablesChecked(Package pckg, Boolean checkedFlag) {
-        PackageKey key = new PackageKey(pckg);
+    private void handleTablesChecked(IRepositoryNode packageNode, Boolean checkedFlag) {
+        RepositoryNodeKey key = new RepositoryNodeKey(packageNode);
         TableCheckedMap tableCheckMap = packageCheckedMap.get(key);
-        List<NamedColumnSet> temp = PackageHelper.getNmaedColumnSets(pckg);
+        List<IRepositoryNode> nmaedColumnSetNodes = RepositoryNodeHelper.getNmaedColumnSetNodes(packageNode);
         if (tableCheckMap != null) {
             tableCheckMap.clear();
-            tableCheckMap.putAllChecked(temp.toArray(new NamedColumnSet[temp.size()]), checkedFlag);
+            tableCheckMap
+                    .putAllChecked(nmaedColumnSetNodes.toArray(new IRepositoryNode[nmaedColumnSetNodes.size()]), checkedFlag);
         } else {
             tableCheckMap = new TableCheckedMap();
-            tableCheckMap.putAllChecked(temp.toArray(new NamedColumnSet[temp.size()]), checkedFlag);
+            tableCheckMap
+                    .putAllChecked(nmaedColumnSetNodes.toArray(new IRepositoryNode[nmaedColumnSetNodes.size()]), checkedFlag);
             packageCheckedMap.put(key, tableCheckMap);
         }
         getTableViewer().setAllChecked(checkedFlag);
@@ -259,7 +268,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
                 packageCheckedMap.clear();
                 if (getTableViewer().getInput() != null) {
-                    handleTablesChecked((Package) getTableViewer().getInput(), true);
+                    handleTablesChecked((IRepositoryNode) getTableViewer().getInput(), true);
                 }
                 updateOKStatus();
             }
@@ -272,7 +281,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 getTreeViewer().setCheckedElements(new Object[0]);
                 packageCheckedMap.clear();
                 if (getTableViewer().getInput() != null) {
-                    handleTablesChecked((Package) getTableViewer().getInput(), false);
+                    handleTablesChecked((IRepositoryNode) getTableViewer().getInput(), false);
                 }
                 updateOKStatus();
             }
@@ -282,10 +291,10 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     public void selectionChanged(SelectionChangedEvent event) {
         Object selectedObj = ((IStructuredSelection) event.getSelection()).getFirstElement();
-        if (selectedObj instanceof Package) {
-            Package pckg = (Package) selectedObj;
-            this.setOutput(pckg);
-            NamedColumnSet[] tables = getCheckedTables(pckg);
+        if (selectedObj instanceof DBTableFolderRepNode || selectedObj instanceof DBViewFolderRepNode) {
+            IRepositoryNode node = (IRepositoryNode) selectedObj;
+            this.setOutput(node);
+            IRepositoryNode[] tables = getCheckedTableNodes(node);
             if (tables != null) {
                 this.getTableViewer().setCheckedElements(tables);
             }
@@ -295,24 +304,49 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     /**
      * This class will combine catlogName and/or schemaName as a key.
      */
-    class PackageKey {
+    class RepositoryNodeKey {
 
-        private final String catalogName;
+        private static final String CATALOG_NAME = "__Catalog_Name__";//$NON-NLS-1$
 
-        private final String schemaName;
+        private static final String SCHEMA_NAME = "__Schema_Name__";//$NON-NLS-1$
 
-        private Package pakg = null;
+        private String catalogName;
 
-        public PackageKey(Package pckg) {
-            schemaName = SwitchHelpers.SCHEMA_SWITCH.doSwitch(pckg) == null ? "__Schema_Name__" : SwitchHelpers.SCHEMA_SWITCH //$NON-NLS-1$
-                    .doSwitch(pckg).getName();
-            catalogName = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg) == null ? "__Catalog_Name__" : SwitchHelpers.CATALOG_SWITCH //$NON-NLS-1$
-                    .doSwitch(pckg).getName();
-            this.pakg = pckg;
+        private String schemaName;
+
+        private IRepositoryNode node = null;
+
+        public RepositoryNodeKey(IRepositoryNode node) {
+            this.node = node;
+            initNames(node);
         }
 
-        public Package getPackage() {
-            return pakg;
+        private void initNames(IRepositoryNode node) {
+            if (node instanceof DBCatalogRepNode) {
+                DBCatalogRepNode catalogNode = (DBCatalogRepNode) node;
+                catalogName = SwitchHelpers.CATALOG_SWITCH.doSwitch(catalogNode.getCatalog()) == null ? CATALOG_NAME
+                        : SwitchHelpers.CATALOG_SWITCH.doSwitch(catalogNode.getCatalog()).getName();
+                schemaName = SCHEMA_NAME;
+            } else if (node instanceof DBSchemaRepNode) {
+                DBSchemaRepNode schemaNode = (DBSchemaRepNode) node;
+                RepositoryNode parentNode = schemaNode.getParent();
+                if (parentNode instanceof DBCatalogRepNode) {
+                    initNames(parentNode);
+                } else {
+                    catalogName = CATALOG_NAME;
+                }
+                schemaName = SwitchHelpers.SCHEMA_SWITCH.doSwitch(schemaNode.getSchema()) == null ? SCHEMA_NAME
+                        : SwitchHelpers.SCHEMA_SWITCH.doSwitch(schemaNode.getSchema()).getName();
+            } else if (node instanceof DBTableFolderRepNode || node instanceof DBViewFolderRepNode) {
+                initNames(node.getParent());
+            } else {
+                catalogName = CATALOG_NAME;
+                schemaName = SCHEMA_NAME;
+            }
+        }
+
+        public IRepositoryNode getPackageNode() {
+            return this.node;
         }
 
         @Override
@@ -335,7 +369,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             if (getClass() != obj.getClass()) {
                 return false;
             }
-            final PackageKey other = (PackageKey) obj;
+            final RepositoryNodeKey other = (RepositoryNodeKey) obj;
             if (catalogName == null) {
                 if (other.catalogName != null) {
                     return false;
@@ -356,43 +390,42 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * @author xqliu
-     * 
      */
     class TableCheckedMap {
 
         Map<String, Boolean> tableNameMap = new HashMap<String, Boolean>();
 
-        public void putTableChecked(NamedColumnSet set, Boolean isChecked) {
-            tableNameMap.put(set.getName(), isChecked);
+        public void putTableChecked(IRepositoryNode set, Boolean isChecked) {
+            tableNameMap.put(set.getLabel(), isChecked);
         }
 
-        public Boolean getTableChecked(NamedColumnSet set) {
-            return tableNameMap.get(set.getName());
+        public Boolean getTableChecked(IRepositoryNode set) {
+            return tableNameMap.get(set.getLabel());
         }
 
-        public void putAllChecked(NamedColumnSet[] sets, Boolean isChecked) {
+        public void putAllChecked(IRepositoryNode[] sets, Boolean isChecked) {
             for (int i = 0; i < sets.length; i++) {
-                tableNameMap.put(sets[i].getName(), isChecked);
+                tableNameMap.put(sets[i].getLabel(), isChecked);
             }
         }
 
-        public NamedColumnSet[] getCheckedTables(List<NamedColumnSet> setList) {
-            List<NamedColumnSet> checkedTables = new ArrayList<NamedColumnSet>();
-            for (NamedColumnSet set : setList) {
-                if (tableNameMap.containsKey(set.getName()) && tableNameMap.get(set.getName())) {
+        public IRepositoryNode[] getCheckedTableNodes(List<IRepositoryNode> setList) {
+            List<IRepositoryNode> checkedTables = new ArrayList<IRepositoryNode>();
+            for (IRepositoryNode set : setList) {
+                if (tableNameMap.containsKey(set.getLabel()) && tableNameMap.get(set.getLabel())) {
                     checkedTables.add(set);
                 }
             }
-            return checkedTables.toArray(new NamedColumnSet[checkedTables.size()]);
+            return checkedTables.toArray(new IRepositoryNode[checkedTables.size()]);
         }
 
-        public List<NamedColumnSet> getCheckedTableList(Package pckg) {
-            List<NamedColumnSet> checkedTables = new ArrayList<NamedColumnSet>();
+        public List<IRepositoryNode> getCheckedTableNodeList(IRepositoryNode packageNode) {
+            List<IRepositoryNode> checkedTables = new ArrayList<IRepositoryNode>();
 
-            List<NamedColumnSet> setList = PackageHelper.getNmaedColumnSets(pckg);
+            List<IRepositoryNode> setList = RepositoryNodeHelper.getNmaedColumnSetNodes(packageNode);
 
-            for (NamedColumnSet set : setList) {
-                if (tableNameMap.containsKey(set.getName()) && tableNameMap.get(set.getName())) {
+            for (IRepositoryNode set : setList) {
+                if (tableNameMap.containsKey(set.getLabel()) && tableNameMap.get(set.getLabel())) {
                     checkedTables.add(set);
                 }
             }
@@ -405,23 +438,25 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     }
 
+    @Override
     protected void computeResult() {
         setResult(getAllCheckedTables());
     }
 
-    private List<NamedColumnSet> getAllCheckedTables() {
+    private List<IRepositoryNode> getAllCheckedTables() {
         Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
-        List<NamedColumnSet> tableList = new ArrayList<NamedColumnSet>();
-        for (int i = 0; i < checkedNodes.length; i++) {
-            if (!(checkedNodes[i] instanceof Package)) {
+        List<IRepositoryNode> tableList = new ArrayList<IRepositoryNode>();
+        for (Object obj : checkedNodes) {
+            if (!(obj instanceof DBTableFolderRepNode || obj instanceof DBViewFolderRepNode)) {
                 continue;
             }
-            PackageKey packageKey = new PackageKey((Package) checkedNodes[i]);
+            IRepositoryNode node = (IRepositoryNode) obj;
+            RepositoryNodeKey packageKey = new RepositoryNodeKey(node);
             if (packageCheckedMap.containsKey(packageKey)) {
                 TableCheckedMap tableMap = packageCheckedMap.get(packageKey);
-                tableList.addAll(tableMap.getCheckedTableList((Package) checkedNodes[i]));
+                tableList.addAll(tableMap.getCheckedTableNodeList(node));
             } else {
-                tableList.addAll(PackageHelper.getTables((Package) checkedNodes[i]));
+                tableList.addAll(RepositoryNodeHelper.getNmaedColumnSetNodes(node));
             }
         }
         return tableList;
@@ -430,18 +465,17 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     protected void okPressed() {
         super.okPressed();
         this.packageCheckedMap = null;
-        // this.currentCheckedPackage = null;
     }
 
     /**
-     * @author xqliu
+     * label provider for table viewer.
      */
     class TableLabelProvider extends LabelProvider {
 
         public Image getImage(Object element) {
-            if (element instanceof TdTable) {
+            if (element instanceof DBTableRepNode) {
                 return ImageLib.getImage(ImageLib.TABLE);
-            } else if (element instanceof TdView) {
+            } else if (element instanceof DBViewRepNode) {
                 return ImageLib.getImage(ImageLib.VIEW);
             } else {
                 return null;
@@ -449,7 +483,10 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         }
 
         public String getText(Object element) {
-            return ((NamedColumnSet) element).getName();
+            if (element instanceof IRepositoryNode) {
+                return ((IRepositoryNode) element).getLabel();
+            }
+            return "";//$NON-NLS-1$
         }
 
     }
@@ -459,147 +496,95 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
      */
     class DBTreeViewContentProvider extends ResourceViewContentProvider {
 
-        /**
-         * DOC xqliu DBTreeViewContentProvider constructor comment.
-         */
         public DBTreeViewContentProvider() {
             super();
         }
 
-        @SuppressWarnings("unchecked")
         public Object[] getChildren(Object parentElement) {
-            if (parentElement instanceof IContainer) {
-                IContainer container = ((IContainer) parentElement);
-                IResource[] members = null;
-                try {
-                    members = container.members();
-                } catch (CoreException e) {
-                    log.error(DefaultMessagesImpl.getString("TablesSelectionDialog.cannotGetChildren") + container.getLocation()); //$NON-NLS-1$
+            if (!(parentElement instanceof DBTableFolderRepNode || parentElement instanceof DBViewFolderRepNode)) {
+                if (parentElement instanceof IRepositoryNode) {
+                    IRepositoryNode repoNode = (IRepositoryNode) parentElement;
+                    return filterTableView(repoNode.getChildren()).toArray();
                 }
 
-                if (container.equals(ResourceManager.getConnectionFolder())) {
-                    ComparatorsFactory.sort(members, ComparatorsFactory.FILEMODEL_COMPARATOR_ID);
-                }
-                try {
-                    if (ResourceManager.getConnectionFolder().equals(container)) {
-                        return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
-                    } else if (ResourceManager.getMDMConnectionFolder().equals(container)) {
-                        return ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_MDMCONNECTION)
-                                .toArray();
-                    }
-                } catch (PersistenceException e) {
-                    log.error(e, e);
-                }
-                return members;
-            } else if (parentElement instanceof Schema) {
-                return null;
-            } else if (parentElement instanceof Catalog) {
-                Catalog catalog = (Catalog) parentElement;
-                EList<ModelElement> eList = catalog.getOwnedElement();
-                if (!(eList.size() > 0 && eList.get(0) instanceof Schema)) {
-                    return null;
-                }
+                return super.getChildren(parentElement);
             }
-            return super.getChildren(parentElement);
+            return null;
         }
 
         public Object getParent(Object element) {
-            if (element instanceof EObject) {
-                EObject eObj = (EObject) element;
-                Package packageValue = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObj);
-                Catalog parentCatalog = CatalogHelper.getParentCatalog(packageValue);
-                if (parentCatalog != null) {
-                    return parentCatalog;
-                }
-
-                if (packageValue != null) {
-                    Connection conn = ConnectionHelper.getTdDataProvider(packageValue);
-                    // IFile findCorrespondingFile =
-                    // PrvResourceFileHelper.getInstance().findCorrespondingFile(tdDataProvider);
-                    // return ProxyRepositoryViewObject.getRepositoryViewObject(conn);
-                    return conn;
-                }
-            } else if (element instanceof IFolderNode) {
-                return ((IFolderNode) element).getParent();
-            } else if (element instanceof IResource) {
-                return ((IResource) element).getParent();
+            if (element instanceof IRepositoryNode) {
+                return ((IRepositoryNode) element).getParent();
             }
-            return super.getParent(element);
+            return null;
         }
 
         public boolean hasChildren(Object element) {
-            return !(element instanceof NamedColumnSetFolderNode);
+            if (element instanceof IRepositoryNode) {
+                if (!(element instanceof DBTableFolderRepNode || element instanceof DBViewFolderRepNode)) {
+                    return ((IRepositoryNode) element).hasChildren();
+                }
+            }
+            return false;
         }
 
     }
 
     /**
-     * @author xqliu
+     * Table Selection Dialog type enum.
      */
-    class TableContentProvider implements IStructuredContentProvider {
+    public enum TableSelectionType {
+        TABLE("table", "Table"), //$NON-NLS-1$//$NON-NLS-2$
+        VIEW("view", "View"), //$NON-NLS-1$//$NON-NLS-2$
+        ALL("all", "Table/View"); //$NON-NLS-1$//$NON-NLS-2$
 
-        public Object[] getElements(Object inputElement) {
-            if (inputElement instanceof Package) {
-                EObject eObj = (EObject) inputElement;
-                Package pckg = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObj);
+        private String key;
 
-                if (pckg != null) {
-                    Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(pckg);
-                    Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(pckg);
-                    List<NamedColumnSet> temp = PackageHelper.getNmaedColumnSets(pckg);
-                    NamedColumnSet[] tables = temp.toArray(new NamedColumnSet[temp.size()]);
-                    if (tables.length <= 0) {
-                        Connection provider = ConnectionHelper.getTdDataProvider(pckg);
-                        if (provider == null) {
-                            return null;
-                        }
-                        try {
-                            List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
-                            if (catalog != null) {
-                                setList.addAll(DqRepositoryViewService.getTables(provider, catalog, null, true));
-                                setList.addAll(DqRepositoryViewService.getViews(provider, catalog, null, true));
-                            }
-                            if (schema != null) {
-                                setList.addAll(DqRepositoryViewService.getTables(provider, schema, null, true));
-                                setList.addAll(DqRepositoryViewService.getViews(provider, schema, null, true));
-                            }
-                            tables = setList.toArray(new NamedColumnSet[setList.size()]);
-                            // save the Table from db into EMF Object.
-                            pckg.getOwnedElement().addAll(setList);
-                        } catch (Exception e) {
-                            MessageBoxExceptionHandler.process(e);
-                        }
+        private String label;
 
-                        ElementWriterFactory.getInstance().createDataProviderWriter().save(provider);
-                    }
-                    return sort(tables, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
-                }
-            }
-            return null;
+        public String getKey() {
+            return this.key;
         }
 
-        /**
-         * Sort the parameter objects, and return the sorted array.
-         * 
-         * @param objects
-         * @param comparatorId the comparator id has been defined in the {@link ComparatorsFactory};
-         * @return
-         */
-        @SuppressWarnings("unchecked")
-        protected Object[] sort(Object[] objects, int comparatorId) {
-            if (objects == null || objects.length <= 1) {
-                return objects;
-            }
-            Arrays.sort(objects, ComparatorsFactory.buildComparator(comparatorId));
-            return objects;
+        public String getLabel() {
+            return this.label;
         }
 
-        public void dispose() {
+        TableSelectionType() {
+            this("table", "Table"); //$NON-NLS-1$//$NON-NLS-2$
         }
 
-        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        TableSelectionType(String key) {
+            this(key, key);
         }
 
+        TableSelectionType(String key, String label) {
+            this.key = key;
+            this.label = label;
+        }
     }
 
+    /**
+     * filter for table and view according to the dialog's type.
+     * 
+     * @param nodes
+     * @return
+     */
+    public List<IRepositoryNode> filterTableView(List<IRepositoryNode> nodes) {
+        List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
+        for (IRepositoryNode node : nodes) {
+            if (node instanceof DBTableFolderRepNode) {
+                if (TableSelectionType.TABLE.equals(getTableType()) || TableSelectionType.ALL.equals(getTableType())) {
+                    list.add(node);
+                }
+            } else if (node instanceof DBViewFolderRepNode) {
+                if (TableSelectionType.VIEW.equals(getTableType()) || TableSelectionType.VIEW.equals(getTableType())) {
+                    list.add(node);
+                }
+            } else {
+                list.add(node);
+            }
+        }
+        return list;
+    }
 }

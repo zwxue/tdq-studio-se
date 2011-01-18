@@ -14,17 +14,13 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.talend.core.model.repository.Folder;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
-import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
+import org.talend.dq.nodes.DBViewFolderRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -40,51 +36,10 @@ public class TableContentProvider extends ResourceViewContentProvider {
 
     @Override
     public Object[] getChildren(Object parentElement) {
-        if (parentElement instanceof IContainer) {
-            // IContainer container = ((IContainer) parentElement);
-            // Object[] members = null;
-            // try {
-            // members = container.members();
-            // } catch (CoreException e) {
-            // log.error("Can't get the children of container:" + container.getLocation());
-            // }
-            // if (container.equals(ResourceManager.getConnectionFolder())) {
-            //
-            // try {
-            // members =
-            // ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.METADATA_CONNECTIONS).toArray();
-            // } catch (PersistenceException e) {
-            // log.error(e);
-            // }
-            // ComparatorsFactory.sort(members, ComparatorsFactory.IREPOSITORYVIEWOBJECT_COMPARATOR_ID);
-            // }
-            // return members;
-            // } else if (parentElement instanceof NamedColumnSet) {
-            // return null;
-            // } else if (parentElement instanceof NamedColumnSetFolderNode) {
-            // NamedColumnSetFolderNode folderNode = (NamedColumnSetFolderNode) parentElement;
-            // // if (folderNode instanceof ViewFolderNode) {
-            // // return null;
-            // // }
-            // folderNode.loadChildren();
-            // Object[] children = folderNode.getChildren();
-            // if (children != null && children.length > 0) {
-            // if (!(children[0] instanceof ColumnSet)) {
-            // return children;
-            // }
-            // }
-            // return ComparatorsFactory.sort(children, ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
-            if (ResourceManager.isMetadataFolder((IResource) parentElement)) {
-
-                IFolder container = (IFolder) parentElement;
-                IRepositoryViewObject viewObject = new Folder(((IFolder) container).getName(), ((IFolder) container).getName());
-                RepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
-                viewObject.setRepositoryNode(node);
-                Object[] children = super.getChildren(node);
-                return children;
-            }
+        if (parentElement instanceof DBTableFolderRepNode || parentElement instanceof DBViewFolderRepNode) {
+            return ((IRepositoryNode) parentElement).getChildren().toArray();
         }
-        return super.getChildren(parentElement);
+        return null;
     }
 
     @Override

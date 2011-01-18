@@ -22,6 +22,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositor
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -29,20 +30,31 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class DBCatalogRepNode extends RepositoryNode {
 
-    private IRepositoryViewObject parentObject;
+    private IRepositoryViewObject object;
 
     private List<IRepositoryNode> schemaChildren;
+
+    private Catalog catalog;
+
+    public Catalog getCatalog() {
+        return this.catalog;
+    }
+
     /**
      * DOC klliu DBCatalogRepNode constructor comment.
      * 
-     * @param object
+     * @param viewObject
      * @param parent
      * @param type
      */
-    public DBCatalogRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
-        super(object, parent, type);
-        parentObject = object;
+    public DBCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type) {
+        super(viewObject, parent, type);
+        object = viewObject;
         schemaChildren = new ArrayList<IRepositoryNode>();
+        if (object instanceof MetadataCatalogRepositoryObject) {
+            MetadataCatalogRepositoryObject metadataCatalogObject = (MetadataCatalogRepositoryObject) object;
+            this.catalog = metadataCatalogObject.getCatalog();
+        }
     }
 
     /*

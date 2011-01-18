@@ -19,11 +19,18 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC klliu Database schema repository node displayed on repository view (UI).
  */
 public class DBSchemaRepNode extends RepositoryNode {
+
+    private Schema schema;
+
+    public Schema getSchema() {
+        return this.schema;
+    }
 
     /**
      * DOC klliu DBSchemaRepNode constructor comment.
@@ -34,12 +41,14 @@ public class DBSchemaRepNode extends RepositoryNode {
      */
     public DBSchemaRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
+        if (object instanceof MetadataSchemaRepositoryObject) {
+            MetadataSchemaRepositoryObject metadataSchemaObject = (MetadataSchemaRepositoryObject) object;
+            this.schema = metadataSchemaObject.getSchema();
+        }
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        // TODO Auto-generated method stub
         IRepositoryViewObject object = getObject();
         return createTableViewFolder((MetadataSchemaRepositoryObject) object);
     }

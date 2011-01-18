@@ -82,6 +82,7 @@ import orgomg.cwm.resource.relational.Schema;
 public final class RepositoryNodeHelper {
 
     public static final String DQRESPOSITORYVIEW = "org.talend.dataprofiler.core.ui.views.DQRespositoryView"; //$NON-NLS-1$
+
     private RepositoryNodeHelper() {
     }
 
@@ -346,7 +347,6 @@ public final class RepositoryNodeHelper {
         return false;
     }
 
-
     public static RepositoryNode recursiveFind(ModelElement modelElement) {
         if (modelElement instanceof Analysis) {
 
@@ -503,7 +503,7 @@ public final class RepositoryNodeHelper {
         ISubRepositoryObject metadataObject = null;
         if (repositoryNode instanceof DBTableFolderRepNode || repositoryNode instanceof DBViewFolderRepNode
                 || repositoryNode instanceof DBColumnFolderRepNode) {
-                metadataObject = (ISubRepositoryObject) repositoryNode.getParent().getObject();
+            metadataObject = (ISubRepositoryObject) repositoryNode.getParent().getObject();
         } else if (repositoryNode.getObject() instanceof ISubRepositoryObject) {
             metadataObject = (ISubRepositoryObject) repositoryNode.getObject();
         }
@@ -518,7 +518,7 @@ public final class RepositoryNodeHelper {
      * 
      * @return
      */
-    private static RepositoryNode getRootNode(String nodeName) {
+    public static RepositoryNode getRootNode(String nodeName) {
         RepositoryNode node = null;
         CommonViewer commonViewer = getDQCommonViewer();
         if (commonViewer != null) {
@@ -557,11 +557,23 @@ public final class RepositoryNodeHelper {
         return commonViewer;
     }
 
-
     public static boolean canOpenEditor(RepositoryNode node) {
         return node instanceof AnalysisRepNode || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                 || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode || node instanceof RuleRepNode
                 || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode;
     }
 
+    public static List<IRepositoryNode> getNmaedColumnSetNodes(IRepositoryNode node) {
+        ArrayList<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
+        if (node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode || node instanceof DBTableFolderRepNode
+                || node instanceof DBViewFolderRepNode) {
+            List<IRepositoryNode> childrens = node.getChildren();
+            for (IRepositoryNode children : childrens) {
+                list.addAll(getNmaedColumnSetNodes(children));
+            }
+        } else if (node instanceof DBTableRepNode || node instanceof DBViewRepNode) {
+            list.add(node);
+        }
+        return list;
+    }
 }

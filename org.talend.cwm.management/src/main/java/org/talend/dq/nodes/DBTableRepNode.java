@@ -64,4 +64,27 @@ public class DBTableRepNode extends RepositoryNode {
         nodes.add(columnFolderNode);
         return nodes;
     }
+
+    /**
+     * get the parent package node of this table.
+     * 
+     * @param node
+     * @return
+     */
+    public static IRepositoryNode getParentPackageNode(IRepositoryNode node) {
+        if (node == null) {
+            return null;
+        }
+        if (node instanceof DBSchemaRepNode || node instanceof DBCatalogRepNode) {
+            return node;
+        } else {
+            return getParentPackageNode(node.getParent());
+        }
+    }
+
+    @Override
+    public String getLabel() {
+        return this.getTdTable().getName();
+    }
+
 }

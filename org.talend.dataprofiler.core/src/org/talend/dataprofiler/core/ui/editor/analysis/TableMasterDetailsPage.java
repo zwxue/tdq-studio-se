@@ -87,6 +87,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -330,9 +331,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     public void openTableSelectionDialog() {
         TableIndicator[] tableIndicators = treeViewer.getTableIndicator();
-        List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
+        List<IRepositoryNode> setList = new ArrayList<IRepositoryNode>();
         for (TableIndicator tableIndicator : tableIndicators) {
-            setList.add(tableIndicator.getColumnSet());
+            setList.add(RepositoryNodeHelper.recursiveFind(tableIndicator.getColumnSet()));
         }
         TablesSelectionDialog dialog = new TablesSelectionDialog(this, null,
                 DefaultMessagesImpl.getString("TableMasterDetailsPage.tableSelection"), setList, DefaultMessagesImpl //$NON-NLS-1$
