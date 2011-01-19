@@ -194,6 +194,12 @@
                        value="0">
                  </count>
               </adapt>
+              <adapt
+                    type="org.talend.dq.nodes.DFConnectionFolderRepNode">
+              </adapt>
+              <adapt
+                    type="org.talend.dq.nodes.DFConnectionSubFolderRepNode">
+              </adapt>
            </or>
 	         </enablement>
 		</actionProvider>

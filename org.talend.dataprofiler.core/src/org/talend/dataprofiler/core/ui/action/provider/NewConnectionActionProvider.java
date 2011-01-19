@@ -13,17 +13,18 @@
 package org.talend.dataprofiler.core.ui.action.provider;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
-import org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.action.actions.CreateDBConnectionAction;
+import org.talend.dataprofiler.core.ui.action.actions.CreateDFConnectionAction;
+import org.talend.dataprofiler.core.ui.action.actions.CreateMDMConnectionAction;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
+import org.talend.dq.nodes.DFConnectionFolderRepNode;
+import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
-import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 
 /**
  * @author rli
@@ -53,19 +54,25 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
         if (svnReposService != null && svnReposService.isReadonly()) {
             return;
         }
+
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
 
         if (obj instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;
-            if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
-                IFolder ifolder = WorkbenchUtils.getFolder(node);
-                if (ifolder != null
-                        && (ResourceService.isSubFolder(ResourceManager.getConnectionFolder(), ifolder) || ResourceService
-                                .isSubFolder(ResourceManager.getMDMConnectionFolder(), ifolder))) {
-                    CreateConnectionAction createConnectionAction = new CreateConnectionAction(node);
-                    menu.add(createConnectionAction);
-                }
+
+            IAction action = null;
+            if (node instanceof DBConnectionFolderRepNode) {
+                action = new CreateDBConnectionAction(node);
+            } else if (node instanceof DFConnectionFolderRepNode) {
+                action = new CreateDFConnectionAction(node);
+            } else if (node instanceof MDMConnectionFolderRepNode) {
+                action = new CreateMDMConnectionAction(node);
             }
+
+            if (action != null) {
+                menu.add(action);
+            }
+
         }
     }
 }

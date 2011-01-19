@@ -152,6 +152,11 @@ public final class DQStructureManager {
                         EResourceConstant.MDM_CONNECTIONS.getName());
             }
 
+            // if (!project.getFolder(EResourceConstant.FILEDELIMITED.getPath()).exists()) {
+            // ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+            // EResourceConstant.FILEDELIMITED.getName());
+            // }
+
             ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
                     EResourceConstant.ANALYSIS.getName());
 
