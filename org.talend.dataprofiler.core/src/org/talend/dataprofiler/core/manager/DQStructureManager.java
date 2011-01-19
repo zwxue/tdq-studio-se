@@ -254,7 +254,7 @@ public final class DQStructureManager {
                         continue;
                     }
                     Folder folder = null;
-                    if (!project.getFolder(file.getName()).exists()) {
+                    if (!project.getFolder(file.getPath()).exists()) {
                         folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
                     } else {
                         IPath fullPath = new Path(file.getPath());
@@ -334,6 +334,7 @@ public final class DQStructureManager {
                 AElementPersistance writer = ElementWriterFactory.getInstance().create(element.getFileExtension());
                 if (writer != null) {
                     writer.create(modelElement, folder);
+                    element.delete(true, null);
                 }
             }
         }
