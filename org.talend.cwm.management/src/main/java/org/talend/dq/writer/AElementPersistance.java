@@ -42,6 +42,7 @@ import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -452,6 +453,10 @@ public abstract class AElementPersistance {
         ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
         itemState.setDeleted(false);
         item.setState(itemState);
+        if (item instanceof TDQItem) {
+            ((TDQItem) item).setFilename(element.getName() + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING
+                    + this.getFileExtension());
+        }
 
         Resource eResource = element.eResource();
         if (eResource != null) {
