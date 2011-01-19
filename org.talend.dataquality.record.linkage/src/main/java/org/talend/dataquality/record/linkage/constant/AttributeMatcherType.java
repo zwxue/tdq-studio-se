@@ -28,7 +28,8 @@ public enum AttributeMatcherType {
     jaro("Jaro"),
     jaroWinkler("Jaro-Winkler"),
     qgrams("q-grams"),
-    dummy("Dummy");
+    dummy("Dummy"),
+    custom("Custom");
 
     private final String label;
 
@@ -56,4 +57,18 @@ public enum AttributeMatcherType {
         return this.label;
     }
 
+    /**
+     * Method "get"
+     * 
+     * @param label the label of the matcher
+     * @return the matcher type given the label or null
+     */
+    public static AttributeMatcherType get(String label) {
+        for (AttributeMatcherType type : AttributeMatcherType.values()) {
+            if (type.getLabel().equalsIgnoreCase(label)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }

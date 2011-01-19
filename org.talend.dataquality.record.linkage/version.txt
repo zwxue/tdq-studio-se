@@ -1,1 +1,4 @@
-Talend record linkage library version: 0.9.4
+Talend record linkage library version: 0.9.5
+
+Changes:
+- 0.9.5: added the ability to create a custom AttributeMatcher

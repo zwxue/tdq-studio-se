@@ -49,6 +49,32 @@ public final class AttributeMatcherFactory {
     }
 
     /**
+     * Method "createMatcher". If the type is {@link AttributeMatcherType#custom}, then the resulting IAttributeMatcher
+     * class is instantiated given the className argument. If the type is different, then the
+     * {@link AttributeMatcherFactory#createMatcher(AttributeMatcherType)} method is called.
+     * 
+     * @param type the type of the attribute matcher
+     * @param className the class name that implements IAttributeMatcher
+     * @return the instantiated Attribute Matcher class
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
+    public static IAttributeMatcher createMatcher(AttributeMatcherType type, String className) throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        if (type != null) {
+            switch (type) {
+            case custom:
+                return (IAttributeMatcher) Class.forName(className).newInstance();
+            default:
+                return createMatcher(type);
+            }
+        }
+        // TODO : log no matcher found
+        return null;
+    }
+
+    /**
      * Method "createMatcher".
      * 
      * @param type the type of attribute matcher
