@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -68,12 +69,12 @@ public class AnalyzeColumnCorrelationAction extends Action {
                 ColumnCorrelationNominalAndIntervalMasterPage page = (ColumnCorrelationNominalAndIntervalMasterPage) editor
                         .getMasterPage();
                 if (!this.selection.isEmpty()) {
-                    TdColumn[] columns = new TdColumn[selection.size()];
+                    DBColumnRepNode[] columns = new DBColumnRepNode[selection.size()];
                     Iterator it = this.selection.iterator();
 
                     int i = 0;
                     while (it.hasNext()) {
-                        columns[i] = (TdColumn) it.next();
+                        columns[i] = (DBColumnRepNode) it.next();
                         i++;
                     }
                     page.getTreeViewer().setInput(columns);
@@ -114,7 +115,11 @@ public class AnalyzeColumnCorrelationAction extends Action {
             Iterator it = selection.iterator();
 
             while (it.hasNext()) {
-                TdColumn column = (TdColumn) it.next();
+                Object theObject = it.next();
+                TdColumn column = null;
+                if (theObject instanceof DBColumnRepNode) {
+                    column = ((DBColumnRepNode) theObject).getTdColumn();
+                }
                 if (Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
                     hasNumberColumn = true;
                 } else if (Java2SqlType.isDateInSQL(column.getSqlDataType().getJavaDataType())
