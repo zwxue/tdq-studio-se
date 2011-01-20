@@ -25,6 +25,10 @@
          id="org.talend.utils_feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.talend.commons_feature"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.talend.utils"/>
       <import plugin="org.apache.log4j" version="1.2.15" match="greaterOrEqual"/>
