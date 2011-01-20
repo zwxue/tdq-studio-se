@@ -34,8 +34,10 @@ import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.properties.util.PropertiesSwitch;
 import org.talend.dataquality.rules.WhereRule;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -312,6 +314,15 @@ public enum EResourceConstant {
                 return PATTERNS;
             }
 
+            @Override
+            public Object caseTDQJrxmlItem(TDQJrxmlItem object) {
+                return JRXML_TEMPLATE;
+            }
+
+            @Override
+            public Object caseTDQSourceFileItem(TDQSourceFileItem object) {
+                return SOURCE_FILES;
+            }
         }.doSwitch(item);
     }
 

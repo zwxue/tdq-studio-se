@@ -19,6 +19,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -33,6 +34,9 @@ public class ReportHandle extends EMFResourceHandle {
         super(propety);
     }
 
+    ReportHandle(IRepositoryNode node) {
+        super(node);
+    }
     /*
      * (non-Javadoc)
      * 

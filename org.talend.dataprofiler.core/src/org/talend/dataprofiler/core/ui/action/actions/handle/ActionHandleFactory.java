@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 import org.eclipse.core.resources.IFile;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
 
 /**
@@ -41,6 +42,7 @@ public final class ActionHandleFactory {
      * 
      * @param property
      * @return
+     * @deprecated use createDuplicateHandle(IRepositoryNode) instead
      */
     public static IDuplicateHandle createDuplicateHandle(Property property) {
         IDuplicateHandle handle = null;
@@ -82,6 +84,48 @@ public final class ActionHandleFactory {
         return handle;
     }
 
+    public static IDuplicateHandle createDuplicateHandle(IRepositoryNode node) {
+        IDuplicateHandle handle = null;
+
+        EResourceConstant typedConstant = EResourceConstant.getTypedConstant(node.getObject().getProperty().getItem());
+
+        if (typedConstant == null) {
+            handle = new SimpleHandle(node);
+        } else {
+            switch (typedConstant) {
+            case DB_CONNECTIONS:
+                handle = new ConnectionHandle(node);
+                break;
+            case MDM_CONNECTIONS:
+                handle = new XMLDataProviderHandle(node);
+                break;
+            case JRXML_TEMPLATE:
+                handle = new JrxmlHandle(node);
+                break;
+            case ANALYSIS:
+                handle = new AnalysisHandle(node);
+                break;
+            case REPORTS:
+                handle = new ReportHandle(node);
+                break;
+            case PATTERNS:
+            case RULES_SQL:
+                handle = new EMFResourceHandle(node);
+                break;
+            case INDICATORS:
+                handle = new UDIHandle(node);
+                break;
+            case SOURCE_FILES:
+                handle = new SimpleHandle(node);
+                break;
+
+            default:
+                break;
+            }
+        }
+
+        return handle;
+    }
     /**
      * DOC bZhou Comment method "createDeletionHandle".
      * 

@@ -32,6 +32,8 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ISubRepositoryObject;
@@ -49,6 +51,11 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
@@ -69,6 +76,7 @@ import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -86,7 +94,7 @@ public final class RepositoryNodeHelper {
     private RepositoryNodeHelper() {
     }
 
-    public static IPath getPath(RepositoryNode node) {
+    public static IPath getPath(IRepositoryNode node) {
         if (node == null) {
             return null;
         }
@@ -499,7 +507,13 @@ public final class RepositoryNodeHelper {
         return connNodes;
     }
 
-    public static ModelElement getMetadataElement(RepositoryNode repositoryNode) {
+    /**
+     * get the metadata element from a node, if there have not metadata element, return null.
+     * 
+     * @param repositoryNode
+     * @return
+     */
+    public static ModelElement getMetadataElement(IRepositoryNode repositoryNode) {
         ISubRepositoryObject metadataObject = null;
         if (repositoryNode instanceof DBTableFolderRepNode || repositoryNode instanceof DBViewFolderRepNode
                 || repositoryNode instanceof DBColumnFolderRepNode) {
@@ -539,7 +553,7 @@ public final class RepositoryNodeHelper {
      * 
      * @return
      */
-    private static CommonViewer getDQCommonViewer() {
+    public static CommonViewer getDQCommonViewer() {
         IViewPart part = null;
         CommonViewer commonViewer = null;
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -575,5 +589,66 @@ public final class RepositoryNodeHelper {
             list.add(node);
         }
         return list;
+    }
+
+    public static List<IRepositoryNode> getRepositoryNodeList(Object[] objs) {
+        List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
+        for (Object obj : objs) {
+            if (obj instanceof IRepositoryNode) {
+                list.add((IRepositoryNode) obj);
+            }
+        }
+        return list;
+    }
+
+    public static List<IRepositoryNode> getRepositoryNodeList(Object[] objs, List<ENodeType> nodeTypes) {
+        List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
+        for (Object obj : objs) {
+            if (obj instanceof IRepositoryNode) {
+                IRepositoryNode node = (IRepositoryNode) obj;
+                for (ENodeType nodeType : nodeTypes) {
+                    if (nodeType.equals(node.getType())) {
+                        list.add(node);
+                        break;
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * get the (Resource) ModelElement from a node, if there have not ModelElement return null.
+     * 
+     * @param node
+     * @return
+     */
+    public static ModelElement getResourceModelElement(IRepositoryNode node) {
+        if (node != null) {
+            ENodeType nodeType = node.getType();
+            if (ENodeType.REPOSITORY_ELEMENT.equals(nodeType) || ENodeType.TDQ_REPOSITORY_ELEMENT.equals(nodeType)) {
+                IRepositoryViewObject object = node.getObject();
+                if (object != null) {
+                    Property property = object.getProperty();
+                    if (property != null) {
+                        Item item = property.getItem();
+                        if (item != null && item instanceof TDQItem) {
+                            if (item instanceof TDQAnalysisItem) {
+                                return ((TDQAnalysisItem) item).getAnalysis();
+                            } else if (item instanceof TDQBusinessRuleItem) {
+                                return ((TDQBusinessRuleItem) item).getDqrule();
+                            } else if (item instanceof TDQIndicatorDefinitionItem) {
+                                return ((TDQIndicatorDefinitionItem) item).getIndicatorDefinition();
+                            } else if (item instanceof TDQPatternItem) {
+                                return ((TDQPatternItem) item).getPattern();
+                            } else if (item instanceof TDQReportItem) {
+                                return ((TDQReportItem) item).getReport();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

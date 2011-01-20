@@ -26,6 +26,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -59,7 +60,7 @@ public final class WorkbenchUtils {
         return rootProject.getFolder(folder.getPath());
     }
 
-    public static IPath getPath(RepositoryNode node) {
+    public static IPath getPath(IRepositoryNode node) {
         return RepositoryNodeHelper.getPath(node);
     }
 
@@ -106,7 +107,7 @@ public final class WorkbenchUtils {
 
     }
 
-    public static IPath getFilePath(RepositoryNode node) {
+    public static IPath getFilePath(IRepositoryNode node) {
         Item item = node.getObject().getProperty().getItem();
         ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
         IPath folderPath = WorkbenchUtils.getPath(node);

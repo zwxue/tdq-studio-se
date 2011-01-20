@@ -20,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.string.AsciiUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -32,9 +33,13 @@ public final class WorkspaceUtils {
     private WorkspaceUtils() {
 
     }
+
     public static File ifileToFile(IFile ifile) {
-        return ifile.getLocation().toFile();
+        IPath location = ifile.getLocation() == null ? ResourceManager.getRootProject().getLocation().append(ifile.getFullPath())
+                : ifile.getLocation();
+        return location.toFile();
     }
+
     public static IFile fileToIFile(File file) {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IPath location = Path.fromOSString(file.getAbsolutePath());

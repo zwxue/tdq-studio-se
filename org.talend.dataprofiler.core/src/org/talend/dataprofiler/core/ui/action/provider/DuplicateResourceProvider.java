@@ -12,18 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.ecore.EClass;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.action.actions.DuplicateAction;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
-import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -36,40 +34,50 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
-        // DOC MOD klliu 2010-12-09 feature15750
         TreeSelection selection = (TreeSelection) this.getContext().getSelection();
-        RepositoryNode firstElement = (RepositoryNode) selection.getFirstElement();
-        if (firstElement.getType().equals(ENodeType.REPOSITORY_ELEMENT)) {
-            if (!selection.isEmpty()) {
-                Object[] objs = selection.toArray();
-                IFile[] files = new IFile[objs.length];
-                boolean showMenu = false;
-                for (int i = 0; i < objs.length; i++) {
-                    Object obj = objs[i];
-                    RepositoryNode node = (RepositoryNode) obj;
-                    if (node.getObject() != null) {
-                        Item item = node.getObject().getProperty().getItem();
-                        EClass eClass = item.eClass();
-                        IPath folderPath = WorkbenchUtils.getPath(node);
-                        String name = node
-                                .getObject()
-                                .getLabel()
-                                .concat("_")
-                                .concat(node.getObject().getProperty().getVersion())
-                                .concat(".")
-                                .concat(WorkbenchUtils.getItemExtendtion(item != null ? eClass.getClassifierID() : node
-                                        .getObject().getProperty().getItem().eClass().getClassifierID()));
-                        IPath append = folderPath.append(new Path(name));
-                        IFile file = ResourceManager.getRootProject().getFile(append);
-                        files[i] = file;
-                        showMenu = true;
-                    }
-                }
-                if (showMenu) {
-                    DuplicateAction duplicate = new DuplicateAction();
-                    menu.add(duplicate);
-                }
+        Object[] objs = selection.toArray();
+        if (shouldShowMenu(objs)) {
+            List<IRepositoryNode> repositoryNodeList = RepositoryNodeHelper.getRepositoryNodeList(objs);
+            DuplicateAction duplicate = new DuplicateAction(repositoryNodeList.toArray(new IRepositoryNode[repositoryNodeList
+                    .size()]));
+            menu.add(duplicate);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "shouldShowMenu".
+     * 
+     * @param array
+     * @return
+     */
+    private boolean shouldShowMenu(Object[] array) {
+
+        List<ENodeType> nodeTypes = new ArrayList<ENodeType>();
+        nodeTypes.add(ENodeType.REPOSITORY_ELEMENT);
+        nodeTypes.add(ENodeType.TDQ_REPOSITORY_ELEMENT);
+
+        List<IRepositoryNode> repositoryNodeList = RepositoryNodeHelper.getRepositoryNodeList(array, nodeTypes);
+        if (repositoryNodeList.size() == 0) {
+            return false;
+        }
+
+        List<ERepositoryObjectType> objectTypes = new ArrayList<ERepositoryObjectType>();
+        objectTypes.add(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+        objectTypes.add(ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+        objectTypes.add(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT);
+        objectTypes.add(ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT);
+        objectTypes.add(ERepositoryObjectType.TDQ_PATTERN_ELEMENT);
+        objectTypes.add(ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+        objectTypes.add(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+        objectTypes.add(ERepositoryObjectType.METADATA_MDMCONNECTION);
+        objectTypes.add(ERepositoryObjectType.METADATA_CONNECTIONS);
+
+        for (IRepositoryNode node : repositoryNodeList) {
+            ERepositoryObjectType contentType = node.getObjectType();
+            if (!objectTypes.contains(contentType)) {
+                return false;
             }
         }
+        return true;
     }
 }

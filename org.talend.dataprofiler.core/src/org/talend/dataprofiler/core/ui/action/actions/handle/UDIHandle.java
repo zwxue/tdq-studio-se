@@ -22,6 +22,7 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -38,6 +39,9 @@ public class UDIHandle extends EMFResourceHandle {
         super(propety);
     }
 
+    UDIHandle(IRepositoryNode node) {
+        super(node);
+    }
     /*
      * (non-Javadoc)
      * 
@@ -78,8 +82,9 @@ public class UDIHandle extends EMFResourceHandle {
         if (label.equals(PluginConstant.UNIQUE_COUNT) || label.equals(PluginConstant.BLANK_COUNT)
                 || label.equals(PluginConstant.DEFAULT_VALUE_COUNT) || label.equals(PluginConstant.ROW_COUNT)
                 || label.equals(PluginConstant.DUPLICATE_COUNT) || label.equals(PluginConstant.NULL_COUNT)
-                || label.equals("Pattern Frequency Table") || label.equals("Date Pattern Frequency Table")
-                || label.equals("Pattern Low Frequency Table")) {
+                || label.equals(PluginConstant.PATTERN_FREQUENCY_TABLE)
+                || label.equals(PluginConstant.DATE_PATTERN_FREQUENCY_TABLE)
+                || label.equals(PluginConstant.PATTERN_LOW_FREQUENCY_TABLE)) {
             return returnCode;
         }
         returnCode.setMessage("This '" + label + "' of Indicator's type could not be duplicated!");//$NON-NLS-1$

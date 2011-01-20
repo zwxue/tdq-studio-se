@@ -136,7 +136,6 @@ public final class ElementWriterFactory {
      * @return
      */
     public AElementPersistance create(ModelElement element) {
-
         if (ModelElementIdentifier.isAnalysis(element)) {
             return createAnalysisWrite();
         } else if (ModelElementIdentifier.isReport(element)) {
@@ -149,12 +148,10 @@ public final class ElementWriterFactory {
             if (ModelElementIdentifier.isDQRule(element)) {
                 return createdRuleWriter();
             }
-
             return createIndicatorDefinitionWriter();
         } else if (ModelElementIdentifier.isSoftware(element)) {
             return createSoftwareSystemWriter();
         }
-
         return null;
     }
 }

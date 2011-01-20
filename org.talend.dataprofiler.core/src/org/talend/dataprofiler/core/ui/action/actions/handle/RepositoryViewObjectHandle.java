@@ -28,6 +28,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -51,6 +52,14 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         this.repositoryObject = repositoryObject;
     }
 
+    RepositoryViewObjectHandle(IRepositoryNode node) {
+        this.property = node.getObject().getProperty();
+        this.repositoryObject = node.getObject();
+        // if (property.eIsProxy()) {
+        // property = (Property) EObjectHelper.resolveObject(property);
+        // }
+        // this.repositoryObject = repositoryObject;
+    }
     /*
      * (non-Javadoc)
      * 

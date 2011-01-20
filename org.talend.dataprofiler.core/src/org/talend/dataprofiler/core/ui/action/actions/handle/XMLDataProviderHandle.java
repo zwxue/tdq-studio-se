@@ -22,6 +22,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Package;
 
@@ -37,6 +38,10 @@ public class XMLDataProviderHandle extends RepositoryViewObjectHandle {
      */
     XMLDataProviderHandle(Property property) {
         super(property);
+    }
+
+    XMLDataProviderHandle(IRepositoryNode node) {
+        super(node);
     }
 
     /*

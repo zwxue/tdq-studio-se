@@ -60,7 +60,6 @@ public class SysIndicatorFolderRepNode extends RepositoryNode {
             // rule files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
                 if (!viewObject.isDeleted()) {
-                    ERepositoryObjectType repositoryObjectType = viewObject.getRepositoryObjectType();
                     SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
                             ENodeType.REPOSITORY_ELEMENT);
                     viewObject.setRepositoryNode(repNode);

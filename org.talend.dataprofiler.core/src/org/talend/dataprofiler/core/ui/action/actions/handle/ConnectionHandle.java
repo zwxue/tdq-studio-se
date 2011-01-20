@@ -21,6 +21,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -34,6 +35,10 @@ public class ConnectionHandle extends RepositoryViewObjectHandle {
      */
     ConnectionHandle(Property property) {
         super(property);
+    }
+
+    ConnectionHandle(IRepositoryNode node) {
+        super(node);
     }
 
     /*

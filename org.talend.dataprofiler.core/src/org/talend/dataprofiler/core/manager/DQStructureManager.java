@@ -340,7 +340,7 @@ public final class DQStructureManager {
         }
     }
 
-    private TDQSourceFileItem createSourceFileItem(File initFile, IPath path, String label, String extension) {
+    public TDQSourceFileItem createSourceFileItem(File initFile, IPath path, String label, String extension) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
         property.setStatusCode(""); //$NON-NLS-1$

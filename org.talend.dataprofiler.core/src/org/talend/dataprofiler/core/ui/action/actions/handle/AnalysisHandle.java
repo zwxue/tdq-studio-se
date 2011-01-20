@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 import org.talend.core.model.properties.Property;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -29,6 +30,10 @@ public class AnalysisHandle extends EMFResourceHandle {
      */
     AnalysisHandle(Property propety) {
         super(propety);
+    }
+
+    AnalysisHandle(IRepositoryNode node) {
+        super(node);
     }
 
     /*

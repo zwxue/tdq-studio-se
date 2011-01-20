@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -38,6 +39,8 @@ import org.talend.utils.sugars.ReturnCode;
 public class DuplicateAction extends Action {
 
     private Property[] propertyArray = new Property[0];
+
+    private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
 
     /**
      * DOC bZhou DuplicateAction constructor comment.
@@ -54,10 +57,13 @@ public class DuplicateAction extends Action {
      */
     public DuplicateAction(Property[] propertyArray) {
         this();
-
         this.propertyArray = propertyArray;
     }
 
+    public DuplicateAction(IRepositoryNode[] nodeArray) {
+        this();
+        this.nodeArray = nodeArray;
+    }
     /*
      * (non-Javadoc)
      * 
@@ -67,10 +73,10 @@ public class DuplicateAction extends Action {
     public void run() {
 
         Object duplicateObject = null;
-        for (Property property : propertyArray) {
-            if (property != null) {
+        for (IRepositoryNode node : nodeArray) {
+            if (node != null) {
 
-                final IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(property);
+                final IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(node);
 
                 if (handle != null) {
                     String initLabel = generateInitialLabel(handle);

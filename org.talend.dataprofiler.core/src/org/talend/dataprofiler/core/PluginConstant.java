@@ -85,19 +85,25 @@ public final class PluginConstant {
     
     public static final String MINIMAL_LENGTH = "Minimal Length";//$NON-NLS-1$
     
-    public static final String UNIQUE_COUNT = "Unique Count";//$NON-NLS-1$ 
+    public static final String UNIQUE_COUNT = "Unique_Count";//$NON-NLS-1$ 
 
-    public static final String DISTINCT_COUNT = "Distinct Count";//$NON-NLS-1$
+    public static final String DISTINCT_COUNT = "Distinct_Count";//$NON-NLS-1$
 
-    public static final String BLANK_COUNT = "Blank Count";//$NON-NLS-1$
+    public static final String BLANK_COUNT = "Blank_Count";//$NON-NLS-1$
 
-    public static final String DEFAULT_VALUE_COUNT = "Default Value Count";//$NON-NLS-1$
+    public static final String DEFAULT_VALUE_COUNT = "Default_Value_Count";//$NON-NLS-1$
+
+    public static final String ROW_COUNT = "Row_Count";//$NON-NLS-1$
+
+    public static final String DUPLICATE_COUNT = "Duplicate_Count";//$NON-NLS-1$
+
+    public static final String PATTERN_FREQUENCY_TABLE = "Pattern_Frequency_Table";//$NON-NLS-1$
+
+    public static final String DATE_PATTERN_FREQUENCY_TABLE = "Date_Pattern_Frequency_Table";//$NON-NLS-1$
+
+    public static final String PATTERN_LOW_FREQUENCY_TABLE = "Pattern_Low_Frequency_Table";//$NON-NLS-1$
 
     public static final String MAXIMAL_LENGTH = "Maximal Length";//$NON-NLS-1$
-
-    public static final String ROW_COUNT = "Row Count";//$NON-NLS-1$
-
-    public static final String DUPLICATE_COUNT = "Duplicate Count";//$NON-NLS-1$
 
     public static final String NULL_COUNT = "Null Count";//$NON-NLS-1$
 

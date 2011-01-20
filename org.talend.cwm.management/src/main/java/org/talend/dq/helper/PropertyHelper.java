@@ -327,8 +327,8 @@ public final class PropertyHelper {
 		}
         if (item instanceof TDQItem) {
             TDQItem tdqItem = (TDQItem) item;
-            return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property)).append(
-                    getItemStatePath(property)).append(tdqItem.getFilename());
+            return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property))
+                    .append(getItemStatePath(property)).append(tdqItem.getFilename());
         } else {
             IPath itemFilePath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension().addFileExtension(
                     FactoriesUtil.ITEM_EXTENSION);

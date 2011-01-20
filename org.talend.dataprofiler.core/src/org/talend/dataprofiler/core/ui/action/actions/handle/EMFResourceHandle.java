@@ -27,14 +27,17 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -61,6 +64,21 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
         IPath itemPath = PropertyHelper.getItemPath(property);
         this.file = ResourceManager.getRoot().getFile(itemPath);
         this.modelElement = ModelElementFileFactory.getModelElement(file);
+    }
+
+    /**
+     * use RepositoryNode to construct a handle.
+     * 
+     * @param node
+     */
+    EMFResourceHandle(IRepositoryNode node) {
+        this.property = node.getObject().getProperty();
+
+        // IPath itemPath = PropertyHelper.getItemPath(property);
+        IPath itemPath = WorkbenchUtils.getFilePath(node);
+        this.file = ResourceManager.getRoot().getFile(itemPath);
+        // this.modelElement = ModelElementFileFactory.getModelElement(file);
+        this.modelElement = RepositoryNodeHelper.getResourceModelElement(node);
     }
 
     /*

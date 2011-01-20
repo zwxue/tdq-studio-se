@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -20,16 +22,22 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.VersionUtils;
+import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.reports.AnalysisMap;
@@ -37,37 +45,27 @@ import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.string.StringUtilities;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
+public class JrxmlHandle extends SimpleHandle {
 
-    protected Property property;
-
-    protected IFile file;
-
-    /**
-     * DOC bZhou DuplicateJrxmlHandle constructor comment.
-     */
     JrxmlHandle(Property property) {
-        this.property = property;
-        IPath itemPath = PropertyHelper.getItemPath(property);
-        this.file = ResourceManager.getRoot().getFile(itemPath);
+        super(property);
     }
 
-    /**
-     * DOC bZhou JrxmlHandle constructor comment.
-     * 
-     * @param file
-     */
     JrxmlHandle(IFile file) {
-        this.file = file;
-        this.property = PropertyHelper.getProperty(file);
+        super(file);
+    }
+
+    JrxmlHandle(IRepositoryNode node) {
+        super(node);
     }
 
     /*
@@ -76,20 +74,20 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
     public IFile duplicate(String newLabel) {
-        IPath newFileNamePath = new Path(newLabel).addFileExtension(file.getFileExtension());
+
+        String fileExtension = file.getFileExtension();
+
+        IPath newFileNamePath = new Path(newLabel).addFileExtension(fileExtension);
         IFile newFile = file.getParent().getFile(newFileNamePath);
 
-        try {
-            file.copy(newFile.getFullPath(), true, null);
-
-            // create property
-        } catch (CoreException e) {
-            e.printStackTrace();
+        if ("jrxml".equalsIgnoreCase(fileExtension) || ".jasper".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$ //$NON-NLS-2$
+            createJrxml(
+                    newFile.getFullPath().removeLastSegments(1)
+                            .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1)),
+                    newLabel, WorkspaceUtils.ifileToFile(file), fileExtension);
+            return newFile;
         }
-
-        createProperty(newFile.getLocation().toFile());
-
-        return newFile;
+        return null;
     }
 
     /*
@@ -141,6 +139,7 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
      * DOC bZhou Comment method "createProperty".
      * 
      * @param targetFile
+     * @deprecated don't need this method
      */
     public void createProperty(File targetFile) {
         URI uri = URI.createFileURI(targetFile.getAbsolutePath());
@@ -181,39 +180,64 @@ public class JrxmlHandle implements IDuplicateHandle, IDeletionHandle {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IActionHandle#getProperty()
-     */
-    public Property getProperty() {
-        return this.property;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
      */
     public boolean isPhysicalDelete() {
         return property.getItem().getState().isDeleted();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * create jrxml file.
      * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#validDuplicated()
+     * @param path
+     * @param label
+     * @param initFile
+     * @param extendtion
+     * @return
      */
-    public ReturnCode validDuplicated() {
-        return new ReturnCode(true);
-    }
+    public static TDQJrxmlItem createJrxml(IPath path, String label, File initFile, String extendtion) {
+        Property property = PropertiesFactory.eINSTANCE.createProperty();
+        property.setVersion(VersionUtils.DEFAULT_VERSION);
+        property.setStatusCode(""); //$NON-NLS-1$
+        property.setLabel(label);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
-     */
-    public boolean isExistedLabel(String label) {
-        IPath path = file.getLocation();
-        String fileExtension = path.getFileExtension();
-        IPath newPath = path.removeLastSegments(1).append(label).addFileExtension(fileExtension);
-        return newPath.toFile().exists();
+        TDQJrxmlItem routineItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
+
+        routineItem.setProperty(property);
+        routineItem.setExtension(extendtion);
+        routineItem.setName(label);
+        ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
+        InputStream stream = null;
+        try {
+            stream = initFile.toURL().openStream();
+            byte[] innerContent = new byte[stream.available()];
+            stream.read(innerContent);
+
+            byteArray.setInnerContent(innerContent);
+        } catch (IOException e) {
+            ExceptionHandler.process(e);
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    //
+                }
+            }
+        }
+        String routineContent = new String(byteArray.getInnerContent());
+        byteArray.setInnerContent(routineContent.getBytes());
+        routineItem.setContent(byteArray);
+        IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
+        try {
+            property.setId(repositoryFactory.getNextId());
+            if (path != null) {
+                repositoryFactory.createParentFoldersRecursively(ERepositoryObjectType.getItemType(routineItem), path);
+            }
+            repositoryFactory.create(routineItem, path);
+        } catch (PersistenceException e) {
+            ExceptionHandler.process(e);
+        }
+        return routineItem;
     }
 }

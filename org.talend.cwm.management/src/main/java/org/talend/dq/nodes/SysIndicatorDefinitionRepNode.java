@@ -12,22 +12,39 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class SysIndicatorDefinitionRepNode extends RepositoryNode {
 
+    private IndicatorDefinition indicatorDefinition;
+
+    public IndicatorDefinition getIndicatorDefinition() {
+        return this.indicatorDefinition;
+    }
+
     /**
      * DOC klliu IndicatorDefinitionRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
     public SysIndicatorDefinitionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        Property property = object.getProperty();
+        if (property != null) {
+            Item item = property.getItem();
+            if (item != null && item instanceof TDQIndicatorDefinitionItem) {
+                this.indicatorDefinition = ((TDQIndicatorDefinitionItem) item).getIndicatorDefinition();
+            }
+        }
     }
 }

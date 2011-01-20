@@ -15,11 +15,14 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -33,9 +36,6 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
 
     protected IFile file;
 
-    /**
-     * DOC bZhou DuplicateSimpleHandle constructor comment.
-     */
     SimpleHandle(Property property) {
         this.property = property;
 
@@ -43,13 +43,14 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
         file = ResourceManager.getRoot().getFile(new Path(item.getFilename()));
     }
 
-    /**
-     * DOC bZhou SimpleHandle constructor comment.
-     * 
-     * @param file
-     */
     SimpleHandle(IFile file) {
         this.file = file;
+    }
+
+    SimpleHandle(IRepositoryNode node) {
+        this.property = node.getObject().getProperty();
+        IPath itemPath = WorkbenchUtils.getFilePath(node);
+        file = ResourceManager.getRoot().getFile(itemPath);
     }
 
     /*
@@ -58,18 +59,26 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
     public IFile duplicate(String newLabel) {
-        IPath newFileNamePath = new Path(newLabel).addFileExtension(file.getFileExtension());
+        String fileExtension = file.getFileExtension();
+
+        IPath newFileNamePath = new Path(newLabel).addFileExtension(fileExtension);
         IFile newFile = file.getParent().getFile(newFileNamePath);
 
-        try {
-            file.copy(newFile.getFullPath(), true, null);
-
-            // create property
-        } catch (CoreException e) {
-            e.printStackTrace();
+        if ("sql".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$
+            DQStructureManager.getInstance().createSourceFileItem(
+                    WorkspaceUtils.ifileToFile(file),
+                    newFile.getFullPath().removeLastSegments(1)
+                            .makeRelativeTo(ResourceManager.getSourceFileFolder().getFullPath().removeFirstSegments(1)),
+                    newLabel, fileExtension);
+            return newFile;
+        } else if ("jrxml".equalsIgnoreCase(fileExtension) || ".jasper".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$ //$NON-NLS-2$
+            JrxmlHandle.createJrxml(
+                    newFile.getFullPath().removeLastSegments(1)
+                            .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1)), newLabel,
+                    WorkspaceUtils.ifileToFile(file), fileExtension);
+            return newFile;
         }
-
-        return newFile;
+        return null;
     }
 
     /*
@@ -128,9 +137,10 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
      */
     public boolean isExistedLabel(String label) {
-        IPath path = file.getLocation();
-        String fileExtension = path.getFileExtension();
-        IPath newPath = path.removeLastSegments(1).append(label).addFileExtension(fileExtension);
+        IPath fullPath = file.getLocation() == null ? ResourceManager.getRootProject().getLocation().append(file.getFullPath())
+                : file.getLocation();
+        String fileExtension = fullPath.getFileExtension();
+        IPath newPath = fullPath.removeLastSegments(1).append(label).addFileExtension(fileExtension);
         return newPath.toFile().exists();
     }
 }

@@ -19,7 +19,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu  class global comment. Detailled comment
  */
-public class AnalysisSubFolderRepNode extends RepositoryNode {
+public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
 
     /**
      * DOC klliu AnalysisSubFolderRepNode constructor comment.
@@ -29,7 +29,5 @@ public class AnalysisSubFolderRepNode extends RepositoryNode {
      */
     public AnalysisSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
-
 }

@@ -22,8 +22,8 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -48,48 +48,26 @@ public class AnalysisFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
-        ERepositoryObjectType contentType = this.getContentType();
-        if (contentType != null) {
-            try {
-                RootContainer<String, IRepositoryViewObject> analysis = ProxyRepositoryFactory.getInstance().getAnalysis();
-
-                fetchRepositoryNodeByFolder(analysis, contentType, fetchNodeByFolder);
-            } catch (PersistenceException e) {
-                log.error(e, e);
+        try {
+            super.getChildren().clear();
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+            // sub folders
+            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_ANALYSIS);
+                super.getChildren().add(new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER));
             }
-        }
-        return fetchNodeByFolder.getChildren();
-    }
-
-    public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,
-            RepositoryNode node) {
-
-        RepositoryNode parent = node;
-        for (Object object : patterns.getSubContainer()) {
-            Container container = (Container) object;
-            Property property = (Property) container.getProperty();
-            // Item item = property.getItem();
-            ERepositoryObjectType itemType = ERepositoryObjectType.getTypeFromKey(property.getLabel());
-
-            if (itemType == null) {
-                itemType = parentItemType;
+            // ana files
+            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+                if (!viewObject.isDeleted()) {
+                    AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    viewObject.setRepositoryNode(anaNode);
+                    super.getChildren().add(anaNode);
+                }
             }
-            Folder folder = new Folder(((Property) property), itemType);
-            AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, parent, ENodeType.SIMPLE_FOLDER);
-            parent.getChildren().add(childNodeFolder);
-            fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
+        } catch (PersistenceException e) {
+            log.error(e, e);
         }
-        // not folder or folders have no subFolder
-        for (Object obj : patterns.getMembers()) {
-            RepositoryViewObject viewObject = (RepositoryViewObject) obj;
-            if (!viewObject.isDeleted()) {
-                AnalysisRepNode repNode = new AnalysisRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-                viewObject.setRepositoryNode(repNode);
-                parent.getChildren().add(repNode);
-
-            }
-        }
-        return parent;
+        return super.getChildren();
     }
 }
