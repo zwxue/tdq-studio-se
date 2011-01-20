@@ -1103,20 +1103,16 @@ public final class ConnectionUtils {
 			try {
 				if (noStructureExists) { // do no override existing catalogs or
 											// schemas
-					Map<String, String> paramMap = ParameterUtil
-							.toMap(ConnectionUtils
-									.createConnectionParam(dbConn));
-					IMetadataConnection metaConnection = MetadataFillFactory
-							.getDBInstance().fillUIParams(paramMap);
-					dbConn = (DatabaseConnection) MetadataFillFactory
-							.getDBInstance().fillUIConnParams(metaConnection,
+                    Map<String, String> paramMap = ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
+                    IMetadataConnection metaConnection = MetadataFillFactory.getDBInstance().fillUIParams(paramMap);
+                    dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection,
 									dbConn);
-					sqlConn = (java.sql.Connection) MetadataConnectionUtils
-							.checkConnection(metaConnection).getObject();
-					MetadataFillFactory.getDBInstance().fillCatalogs(dbConn,
-							sqlConn.getMetaData(), null);
-					MetadataFillFactory.getDBInstance().fillSchemas(dbConn,
-							sqlConn.getMetaData(), null);
+                    sqlConn = (java.sql.Connection) MetadataConnectionUtils.checkConnection(metaConnection).getObject();
+
+                    if (sqlConn != null) {
+                        MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, sqlConn.getMetaData(), null);
+                        MetadataFillFactory.getDBInstance().fillSchemas(dbConn, sqlConn.getMetaData(), null);
+                    }
 
 				}
 			} catch (SQLException e) {
@@ -1138,43 +1134,40 @@ public final class ConnectionUtils {
 	 * @return
 	 */
 	public static DBConnectionParameter createConnectionParam(Connection conn) {
-		DBConnectionParameter connectionParam = new DBConnectionParameter();
+        DBConnectionParameter connectionParam = new DBConnectionParameter();
 
-		Properties properties = new Properties();
-		// MOD xqliu 2010-08-06 bug 14593
-		properties.setProperty(TaggedValueHelper.USER,
- JavaSqlFactory.getUsernameDefault(conn));
-		properties.setProperty(TaggedValueHelper.PASSWORD,
- JavaSqlFactory.getPasswordDefault(conn));
-		// ~ 14593
-		connectionParam.setParameters(properties);
-		connectionParam.setName(conn.getName());
-		connectionParam.setAuthor(MetadataHelper.getAuthor(conn));
-		connectionParam.setDescription(MetadataHelper.getDescription(conn));
-		connectionParam.setPurpose(MetadataHelper.getPurpose(conn));
-		connectionParam.setStatus(MetadataHelper.getDevStatus(conn));
-		connectionParam.setDriverPath("");
-		connectionParam
-.setDriverClassName(JavaSqlFactory.getDriverClass(conn));
+        Properties properties = new Properties();
+        // MOD xqliu 2010-08-06 bug 14593
+        properties.setProperty(TaggedValueHelper.USER, JavaSqlFactory.getUsernameDefault(conn));
+        properties.setProperty(TaggedValueHelper.PASSWORD, JavaSqlFactory.getPasswordDefault(conn));
+        // ~ 14593
+        connectionParam.setParameters(properties);
+        connectionParam.setName(conn.getName());
+        connectionParam.setAuthor(MetadataHelper.getAuthor(conn));
+        connectionParam.setDescription(MetadataHelper.getDescription(conn));
+        connectionParam.setPurpose(MetadataHelper.getPurpose(conn));
+        connectionParam.setStatus(MetadataHelper.getDevStatus(conn));
+        connectionParam.setDriverPath("");
+        connectionParam.setDriverClassName(JavaSqlFactory.getDriverClass(conn));
         connectionParam.setJdbcUrl(JavaSqlFactory.getURL(conn));
-		connectionParam.setHost(ConnectionUtils.getServerName(conn));
-		connectionParam.setPort(ConnectionUtils.getPort(conn));
-		// MOD klliu if oracle set schema to other parameter
-		String schema = MetadataHelper.getOtherParameter(conn);
-		connectionParam.setOtherParameter(schema);
-		// MOD mzhao adapte model. MDM connection editing need handle
-		// additionally.
-		// connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE,
-		// DataProviderHelper.getUniverse(connection));
-		connectionParam.setDbName(ConnectionUtils.getSID(conn));
-		// MOD by zshen for bug 15314
-		String retrieveAllMetadata = MetadataHelper
-				.getRetrieveAllMetadata(conn);
-		connectionParam
-				.setRetrieveAllMetadata(retrieveAllMetadata == null ? true
-						: new Boolean(retrieveAllMetadata).booleanValue());
+        connectionParam.setHost(ConnectionUtils.getServerName(conn));
+        connectionParam.setPort(ConnectionUtils.getPort(conn));
+        if (conn instanceof DatabaseConnection) {
+            connectionParam.setSqlTypeName(((DatabaseConnection) conn).getDatabaseType());
+        }
+        // MOD klliu if oracle set schema to other parameter
+        String schema = MetadataHelper.getOtherParameter(conn);
+        connectionParam.setOtherParameter(schema);
+        // MOD mzhao adapte model. MDM connection editing need handle
+        // additionally.
+        // connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE,
+        // DataProviderHelper.getUniverse(connection));
+        connectionParam.setDbName(ConnectionUtils.getSID(conn));
+        // MOD by zshen for bug 15314
+        String retrieveAllMetadata = MetadataHelper.getRetrieveAllMetadata(conn);
+        connectionParam.setRetrieveAllMetadata(retrieveAllMetadata == null ? true : new Boolean(retrieveAllMetadata).booleanValue());
 
-		return connectionParam;
+        return connectionParam;
 	}
 
 
