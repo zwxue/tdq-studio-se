@@ -32,12 +32,12 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -190,7 +190,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // // MOD qiongli bug 14891 2010-9-20,Add MDM connections
         // Collection<Connection> mdmConne = ProxyRepositoryViewObject.getAllMDMConnections(true);
         // connections.addAll(mdmConne);
-        List<IRepositoryNode> allConnectionReposNodes = DQStructureManager.getInstance().getConnectionRepositoryNodes();
+        List<IRepositoryNode> allConnectionReposNodes = RepositoryNodeHelper.getConnectionRepositoryNodes();
         // ~ 15685
         // ~ 14549
 

@@ -53,6 +53,7 @@ import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
@@ -276,6 +277,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 log.info("fail to save dependency analysis:" + analysis.getFileName());
             }
         } else {
+            tdDataProvider = (Connection) analysis.getContext().getConnection();
+            tdDataProvider.getSupplierDependency().get(0).getClient().remove(analysis);
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
         }
@@ -303,6 +306,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         }
         if (saved.isOk()) {
             // MOD qiongli bug 14437:Add dependency
+            reposObject = RepositoryNodeHelper.recursiveFind(tdDataProvider).getObject();
             if (reposObject != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
                 ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());

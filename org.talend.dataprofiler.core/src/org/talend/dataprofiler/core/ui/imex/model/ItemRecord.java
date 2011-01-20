@@ -115,10 +115,11 @@ public class ItemRecord {
                     }
                 }
             }
-
             computeDependencies();
         } catch (Exception e) {
-            log.error("Can't initialize element [" + getName() + "] : " + e.getMessage());
+            if (!isSQL()) {
+                log.error("Can't initialize element [" + getName() + "] : " + e.getMessage(), e);
+            }
         }
     }
 
@@ -308,7 +309,6 @@ public class ItemRecord {
             List<ItemRecord> recordList = new ArrayList<ItemRecord>();
 
             File[] listFiles = file.listFiles();
-
             if (listFiles != null) {
                 for (File aFile : listFiles) {
                     if (isValid(aFile)) {
@@ -405,6 +405,15 @@ public class ItemRecord {
      */
     private boolean isJRXml() {
         return file.getName().endsWith(FactoriesUtil.JRXML);
+    }
+
+    /**
+     * DOC zshen Comment method "isSQL".
+     * 
+     * @return
+     */
+    private boolean isSQL() {
+        return file.getName().endsWith(FactoriesUtil.SQL);
     }
 
     /**

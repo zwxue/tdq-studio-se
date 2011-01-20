@@ -575,6 +575,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             // ~
         } else {
+            tdProvider = (Connection) analysis.getContext().getConnection();
+            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
         }
@@ -593,6 +595,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
+            reposObject = RepositoryNodeHelper.recursiveFind(tdProvider).getObject();
             if (tdProvider != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
 

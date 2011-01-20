@@ -17,9 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionException;
@@ -37,14 +35,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
-import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
@@ -63,17 +56,12 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
-import org.talend.dq.nodes.DBConnectionFolderRepNode;
-import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
-import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -555,81 +543,11 @@ public final class DQStructureManager {
         return !newFolder.exists();
     }
 
-    /**
-     * ADD mzhao 15750 , build dq metadata tree, get connection root node.
-     */
 
-    public List<IRepositoryNode> getConnectionRepositoryNodes() {
-        RepositoryNode node = getRootNode(EResourceConstant.METADATA.getName());
-        List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
-        if (node != null) {
-            List<IRepositoryNode> childrens = node.getChildren();
-            for (IRepositoryNode subNode : childrens) {
-                if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
-                    // don't add mdm connections
-                    connNodes.addAll(subNode.getChildren());
-                }
-            }
-        }
-        return connNodes;
-    }
 
-    public IRepositoryNode getConnectionRepositoryNode(String name) {
-        List<IRepositoryNode> connections = getConnectionRepositoryNodes();
-        if (connections != null && connections.size() > 0) {
-            for (IRepositoryNode conn : connections) {
-                boolean equals = conn.getObject().getLabel().equals(name);
-                if (equals) {
-                    return conn;
-                }
-            }
-        }
-        return null;
-    }
 
-    /**
-     * DOC klliu Comment method "getRootNode".
-     * 
-     * @return
-     */
-    private RepositoryNode getRootNode(String nodeName) {
-        RepositoryNode node = null;
-        CommonViewer commonViewer = getDQCommonViewer();
-        if (commonViewer != null) {
-            TreeItem[] items = commonViewer.getTree().getItems();
-            for (TreeItem item : items) {
-                String text = item.getText();
-                if (text.equals(nodeName)) {
-                    node = (RepositoryNode) item.getData();
-                }
-            }
 
-        }
-        return node;
-    }
 
-    /**
-     * DOC klliu 15750 Comment method "getDQRespositoryView".
-     * 
-     * @return
-     */
-    private CommonViewer getDQCommonViewer() {
-        IViewPart part = null;
-        CommonViewer commonViewer = null;
-        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if (activeWorkbenchWindow != null) {
-            IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-            if (activePage != null) {
-                part = activePage.findView(DQRespositoryView.ID);
-                if (part == null) {
-                    return null;
-                }
-                DQRespositoryView dqView = (DQRespositoryView) part;
-                commonViewer = dqView.getCommonViewer();
-            }
-        }
-        return commonViewer;
-    }
 
 
 

@@ -170,6 +170,7 @@ public class AnalysisWriter extends AElementPersistance {
             Analysis analysis = anaItem.getAnalysis();
             addDependencies(analysis);
             addResourceContent(analysis.eResource(), analysis);
+            anaItem.setAnalysis(analysis);
             ProxyRepositoryFactory.getInstance().save(anaItem);
         } catch (PersistenceException e) {
             log.error(e, e);

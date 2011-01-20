@@ -569,6 +569,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     public void saveAnalysis() throws DataprofilerCoreException {
         IRepositoryViewObject reposObject = null;
+        Connection tdProvider = null;
         correlationAnalysisHandler.clearAnalysis();
         columnSetMultiIndicator.getAnalyzedColumns().clear();
 
@@ -585,7 +586,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         if (repositoryNodeList != null && repositoryNodeList.size() != 0) {
             reposObject = repositoryNodeList.get(0).getObject();
-            Connection tdProvider = ((ConnectionItem) reposObject.getProperty().getItem()).getConnection();
+            tdProvider = ((ConnectionItem) reposObject.getProperty().getItem()).getConnection();
             // tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
             analysis.getContext().setConnection(tdProvider);
 
@@ -597,6 +598,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             columnSetMultiIndicator.getAnalyzedColumns().addAll(columnLst);
             correlationAnalysisHandler.addIndicator(columnLst, columnSetMultiIndicator);
         } else {
+
+            tdProvider = (Connection) analysis.getContext().getConnection();
+            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
             analysis.getContext().setConnection(null);
             analysis.getResults().getIndicators().clear();
             // MOD by zshen for bug 12042.
@@ -634,6 +638,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
+            reposObject = RepositoryNodeHelper.recursiveFind(tdProvider).getObject();
             if (reposObject != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
                 ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());

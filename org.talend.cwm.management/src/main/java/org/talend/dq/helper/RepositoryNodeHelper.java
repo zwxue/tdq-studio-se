@@ -500,12 +500,49 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode subNode : childrens) {
                 if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
                     // don't add mdm connections
-                    connNodes.addAll(subNode.getChildren());
+                    connNodes.addAll(getConnectionFromFolder(subNode));
                 }
             }
         }
         return connNodes;
     }
+
+    /**
+     * 
+     * Add zshen 15750 get all the Connection Node from one folder node
+     * 
+     * @param folderNode any node
+     * @return
+     */
+    private static List<IRepositoryNode> getConnectionFromFolder(IRepositoryNode folderNode) {
+        List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
+        if(isFolderNode(folderNode.getType())){
+            for (IRepositoryNode thefolderNode : folderNode.getChildren()) {
+                repositoryNodeList.addAll(getConnectionFromFolder(thefolderNode));
+            }
+        } else {
+            repositoryNodeList.add(folderNode);
+        }
+        return repositoryNodeList;
+    }
+
+    /**
+     * 
+     * Add zshen 15750 Decided whether one node is a Folder Node
+     * 
+     * @param nodeType the Type of nodes
+     * @return
+     */
+    private static boolean isFolderNode(ENodeType nodeType) {
+
+        switch (nodeType) {
+        case SYSTEM_FOLDER:
+        case SIMPLE_FOLDER:
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * get the metadata element from a node, if there have not metadata element, return null.

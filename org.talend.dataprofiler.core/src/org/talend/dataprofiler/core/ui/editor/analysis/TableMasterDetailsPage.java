@@ -618,11 +618,13 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 tdProvider = (Connection) EObjectHelper.resolveObject(tdProvider);
             }
             analysis.getContext().setConnection(tdProvider);
-
             for (TableIndicator tableIndicator : tableIndicators) {
                 analysisHandler.addIndicator(tableIndicator.getColumnSet(), tableIndicator.getIndicators());
             }
         } else {
+            tdProvider = (Connection) analysis.getContext().getConnection();
+            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+            // analysis.getClientDependency().get(0)
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
         }

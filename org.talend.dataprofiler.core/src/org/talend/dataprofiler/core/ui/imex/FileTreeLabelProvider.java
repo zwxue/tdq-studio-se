@@ -83,6 +83,8 @@ public class FileTreeLabelProvider extends LabelProvider {
                     image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (fileName.endsWith(FactoriesUtil.DEFINITION)) {
                     image = ImageLib.getImage(ImageLib.IND_DEFINITION);
+                } else if (fileName.endsWith(FactoriesUtil.SQL)) {
+                    image = ImageLib.getImage(ImageLib.SOURCE_FILE);
                 }
             }
         }
