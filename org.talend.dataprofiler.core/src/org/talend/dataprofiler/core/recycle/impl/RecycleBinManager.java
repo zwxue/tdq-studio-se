@@ -74,7 +74,7 @@ public final class RecycleBinManager {
         Project newProject = ProjectManager.getInstance().getCurrentProject();
         List<FolderItem> folderItems = newProject.getEmfProject().getFolders();
         for (FolderItem folder : new ArrayList<FolderItem>(folderItems)) {
-            if (WorkbenchUtils.isTDQRootFolder(folder)) {
+            if (WorkbenchUtils.isTDQOrMetadataRootFolder(folder)) {
                 addItemToRecycleBin(rcBinNode, folder, foldersList);
             }
         }

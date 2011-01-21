@@ -30,6 +30,7 @@ import org.talend.core.repository.constants.FileConstants;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.ProjectNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -133,19 +134,24 @@ public final class WorkbenchUtils {
 
     /**
      * 
-     * DOC qiongli Comment method "isTDQRootFolder".
+     * if it is TDQ_Data Profiling,TDQ_Libraries or metadata.
      * 
      * @param folderItem
      * @return
      */
-    public static boolean isTDQRootFolder(FolderItem folderItem) {
-        Property property = folderItem.getProperty();
-        if (property != null) {
-            String lable = property.getLabel();
-            if (lable.startsWith("TDQ") || lable.equals("metadata")) {
-                return true;
+    public static boolean isTDQOrMetadataRootFolder(FolderItem folderItem) {
+        if (ProjectNodeHelper.isTDQRootFolder(folderItem)) {
+            return true;
+        } else {
+            Property property = folderItem.getProperty();
+            if (property != null) {
+                String lable = property.getLabel();
+                if (lable != null && lable.equals("metadata")) {
+                    return true;
+                }
             }
         }
+
         return false;
     }
 }
