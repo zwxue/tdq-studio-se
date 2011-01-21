@@ -17,18 +17,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Path;
 import org.talend.core.model.properties.Property;
-import org.talend.cwm.exception.TalendException;
-import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
-import org.talend.dataprofiler.core.recycle.SelectedResources;
-import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class FolderHandle implements IDeletionHandle {
+public class FolderHandle {
 
     private Property property;
 
@@ -51,34 +46,6 @@ public class FolderHandle implements IDeletionHandle {
      * 
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
      */
-    public boolean delete() throws Exception {
-
-        IFolder folder = ResourceManager.getRoot().getFolder(new Path(pathStr));
-        // MOD qiongli 2010-9-13,bug 14697.
-        // MOD qiongli 2010-10-8,bug 15674
-        if (isPhysicalDelete()) {
-            if (folder.members().length == 0) {
-                folder.delete(true, null);
-            } else {
-                SelectedResources selectedResources = new SelectedResources();
-                Property[] selProps = selectedResources.getSelectedArrayForDelForever();
-                for (Property prop : selProps) {
-                    IDeletionHandle handle = ActionHandleFactory.createDeletionHandle(prop);
-                    if (handle != null) {
-                        handle.delete();
-                    } else {
-                        throw new TalendException("Can't delete the item  " + prop.getLabel() + " in the folder "
-                                + folder.getName() + " ：  No proper handle found!");
-                    }
-                }
-                if (selProps.length > 0)
-                    delsubFolderForever(folder);
-            }
-
-        }
-
-        return true;
-    }
 
     /**
      * DOC bZhou Comment method "delsubFolderForever".
@@ -114,23 +81,8 @@ public class FolderHandle implements IDeletionHandle {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
-     */
-    public boolean isPhysicalDelete() {
-        // MOD qiongli bug 14697
-        IFolder folder = null;
-        try {
-            folder = ResourceManager.getRoot().getFolder(new Path(pathStr));
-            if (folder.members().length == 0)
-                return true;
-        } catch (Exception exc) {
-            log.error(exc, exc);
-        }
-        return LogicalDeleteFileHandle.hasChildDeleted(folder);
-    }
+    /**
+
 
     /*
      * (non-Javadoc)

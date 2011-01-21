@@ -73,8 +73,13 @@ public class MDMConnectionFolderRepNode extends RepositoryNode {
                 itemType = parentItemType;
             }
             Folder folder = new Folder(((Property) property), itemType);
+            if (folder.isDeleted()) {
+                continue;
+            }
             MDMConnectionSubFolderRepNode childNodeFolder = new MDMConnectionSubFolderRepNode(folder, parent,
                     ENodeType.SIMPLE_FOLDER);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_MDMCONNECTION);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_MDMCONNECTION);
             parent.getChildren().add(childNodeFolder);
             fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
         }
@@ -83,6 +88,8 @@ public class MDMConnectionFolderRepNode extends RepositoryNode {
             RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
             if (!viewObject.isDeleted()) {
                 MDMConnectionRepNode repNode = new MDMConnectionRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_MDMCONNECTION);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_MDMCONNECTION);
                 viewObject.setRepositoryNode(repNode);
                 parent.getChildren().add(repNode);
 

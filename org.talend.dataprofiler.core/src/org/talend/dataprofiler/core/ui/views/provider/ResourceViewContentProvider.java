@@ -34,6 +34,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeR
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -163,7 +164,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         }
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                     } else if (node instanceof RecycleBinRepNode) {
-                        // TODO get deleted node !
+                        return RecycleBinManager.getInstance().getChildren((RecycleBinRepNode) node).toArray();
                     }
                 }
                 return node.getChildren().toArray();

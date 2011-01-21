@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
@@ -47,7 +46,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
+public class EMFResourceHandle implements IDuplicateHandle {
 
     private ModelElement modelElement;
 
@@ -124,21 +123,6 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
-     */
-    public boolean delete() throws Exception {
-        if (isPhysicalDelete()) {
-            ModelElementFileFactory.getResourceFileMap(file).delete(file);
-            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
-        } else {
-            LogicalDeleteFileHandle.deleteLogical(file);
-        }
-
-        return true;
-    }
 
     /*
      * (non-Javadoc)
@@ -191,14 +175,6 @@ public class EMFResourceHandle implements IDuplicateHandle, IDeletionHandle {
         return this.property;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
-     */
-    public boolean isPhysicalDelete() {
-        return property.getItem().getState().isDeleted();
-    }
 
     /*
      * (non-Javadoc)

@@ -20,11 +20,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -69,6 +72,11 @@ public final class WorkbenchUtils {
     }
 
     public static IFolder getFolder(RepositoryNode node) {
+        // MOD qiongli 2011-1-18 if it is recyclebin,return the root folder
+        IPath path = getPath(node);
+        if (path.toString().equals(PluginConstant.EMPTY_STRING)) {
+            return ResourceManager.getRootProject().getFolder(ResourceManager.getRootFolderLocation());
+        }
         return ResourceManager.getRootProject().getFolder(getPath(node));
     }
 
@@ -121,5 +129,23 @@ public final class WorkbenchUtils {
                         .getProperty().getItem().eClass().getClassifierID()));
         IPath append = folderPath.append(new Path(name));
         return append;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "isTDQRootFolder".
+     * 
+     * @param folderItem
+     * @return
+     */
+    public static boolean isTDQRootFolder(FolderItem folderItem) {
+        Property property = folderItem.getProperty();
+        if (property != null) {
+            String lable = property.getLabel();
+            if (lable.startsWith("TDQ") || lable.equals("metadata")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

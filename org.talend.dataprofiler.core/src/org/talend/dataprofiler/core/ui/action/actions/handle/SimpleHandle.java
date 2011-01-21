@@ -30,7 +30,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
+public class SimpleHandle implements IDuplicateHandle {
 
     protected Property property;
 
@@ -81,18 +81,6 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
-     */
-    public boolean delete() throws Exception {
-        if (file.exists() && isPhysicalDelete()) {
-            file.delete(true, null);
-        }
-
-        return true;
-    }
 
     /*
      * (non-Javadoc)
@@ -112,14 +100,6 @@ public class SimpleHandle implements IDuplicateHandle, IDeletionHandle {
         return this.property;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
-     */
-    public boolean isPhysicalDelete() {
-        return true;
-    }
 
     /*
      * (non-Javadoc)

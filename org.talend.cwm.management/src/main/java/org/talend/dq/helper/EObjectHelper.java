@@ -42,6 +42,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -151,6 +152,18 @@ public final class EObjectHelper {
 
     public static List<ModelElement> getDependencyClients(IRepositoryViewObject repositoryObject) {
         ModelElement findElement = getModelElement(repositoryObject);
+        return getDependencyClients(findElement);
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "getDependencyClients".
+     * 
+     * @param respositoryNode
+     * @return
+     */
+    public static List<ModelElement> getDependencyClients(IRepositoryNode respositoryNode) {
+        ModelElement findElement = RepositoryNodeHelper.getResourceModelElement(respositoryNode);
         return getDependencyClients(findElement);
     }
 

@@ -71,7 +71,12 @@ public class PatternSqlFolderRepNode extends RepositoryNode {
                 itemType = parentItemType;
             }
             Folder folder = new Folder(((Property) property), itemType);
+            if (folder.isDeleted()) {
+                continue;
+            }
             PatternSqlSubFolderRepNode childNodeFolder = new PatternSqlSubFolderRepNode(folder, parent, ENodeType.SIMPLE_FOLDER);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_SQL);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_SQL);
             parent.getChildren().add(childNodeFolder);
             fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
         }
@@ -80,6 +85,8 @@ public class PatternSqlFolderRepNode extends RepositoryNode {
             RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
             if (!viewObject.isDeleted()) {
                 PatternRepNode repNode = new PatternRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_SQL);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_SQL);
                 viewObject.setRepositoryNode(repNode);
                 parent.getChildren().add(repNode);
 

@@ -52,6 +52,8 @@ import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.IRepositoryNode.EProperties;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 
 /**
@@ -113,6 +115,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.SOURCE_FILE);
                 } else if (node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode) {
                     return ImageLib.getImage(ImageLib.EXCHANGE);
+                } else if (node instanceof RepositoryNode) {
+                    // MOD qiongli 2011-1-18 get image for nodes in recycle bin
+                    Image image = getImageByContentType((RepositoryNode) node);
+                    if (image != null) {
+                        return image;
+                    }
                 }
             } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
                 if (node instanceof DBCatalogRepNode) {
@@ -168,6 +176,49 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         }
         String text = super.getText(element);
         return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "getImageByContentType".
+     * 
+     * @param repositoryNode
+     * @return
+     */
+    private Image getImageByContentType(RepositoryNode repositoryNode) {
+        ERepositoryObjectType type = (ERepositoryObjectType) repositoryNode.getProperties(EProperties.CONTENT_TYPE);
+        if (type == null) {
+            return null;
+        }
+
+        switch (type) {
+        case TDQ_ANALYSIS_ELEMENT:
+            return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+        case METADATA_MDMCONNECTION:
+            return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+        case METADATA_CONNECTIONS:
+            return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+        case METADATA_FILE_DELIMITED:
+            return ImageLib.getImage(ImageLib.FILE_DELIMITED);
+        case TDQ_REPORT_ELEMENT:
+            return ImageLib.getImage(ImageLib.REPORT_OBJECT);
+        case TDQ_INDICATOR_ELEMENT:
+            return ImageLib.getImage(ImageLib.IND_DEFINITION);
+        case TDQ_PATTERN_ELEMENT:
+            return ImageLib.getImage(ImageLib.PATTERN_REG);
+        case TDQ_RULES:
+            return ImageLib.getImage(ImageLib.DQ_RULE);
+        case TDQ_RULES_SQL:
+            return ImageLib.getImage(ImageLib.DQ_RULE);
+        case TDQ_SOURCE_FILE_ELEMENT:
+            return ImageLib.getImage(ImageLib.SOURCE_FILE);
+        case TDQ_EXCHANGE:
+            return ImageLib.getImage(ImageLib.EXCHANGE);
+        case FOLDER:
+            return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+        }
+        return null;
+
     }
 
     private boolean isSupportedConnection(IRepositoryNode repNode) {

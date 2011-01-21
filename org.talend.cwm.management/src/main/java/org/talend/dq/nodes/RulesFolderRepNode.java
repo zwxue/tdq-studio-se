@@ -54,12 +54,20 @@ public class RulesFolderRepNode extends RepositoryNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
-                super.getChildren().add(new RulesSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER));
+                if (folder.isDeleted()) {
+                    continue;
+                }
+                RulesSubFolderRepNode childNodeFolder = new RulesSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES);
+                super.getChildren().add(childNodeFolder);
             }
             // rule files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
                 if (!viewObject.isDeleted()) {
                     RuleRepNode repNode = new RuleRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES);
+                    repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES);
                     viewObject.setRepositoryNode(repNode);
                     super.getChildren().add(repNode);
                 }

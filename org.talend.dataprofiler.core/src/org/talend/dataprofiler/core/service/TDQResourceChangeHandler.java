@@ -23,14 +23,12 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.AbstractResourceChangesService;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -115,36 +113,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         return super.handleResourceChange(modelElement);
     }
 
-    /**
-     * add a prop instance to the static var.
-     */
-    public void handleLogicalDelete(Property prop) {
-        // MOD qiongli 2010-12-6.bug 16843.can not be restored for svn project when it is prox property.
-        if (prop == null)
-            return;
-        if (prop.eIsProxy()) {
-            prop = (Property) EObjectHelper.resolveObject(prop);
-        }
-        // MOD qiongli 2010-10-22,bug 16610
-        // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-        if (prop != null) {
-            LogicalDeleteFileHandle.refreshDelPropertys(1, prop);
-        }
-    }
-
-    /**
-     * remove prop instance in the static var.
-     */
-    public void handlePhysicalDelete(Property prop) {
-        LogicalDeleteFileHandle.refreshDelPropertys(0, prop);
-    }
-
-    /**
-     * remove prop instance in the static var.
-     */
-    public void handleRestore(Property prop) {
-        LogicalDeleteFileHandle.refreshDelPropertys(0, prop);
-    }
 
     public Resource create(IProject project, Item item, int classID, IPath path) {
         String fileExtension = FileConstants.ITEM_EXTENSION;

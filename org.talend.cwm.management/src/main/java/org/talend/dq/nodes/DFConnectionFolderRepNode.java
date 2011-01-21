@@ -71,8 +71,13 @@ public class DFConnectionFolderRepNode extends RepositoryNode {
                 itemType = parentItemType;
             }
             Folder folder = new Folder(((Property) property), itemType);
+            if (folder.isDeleted()) {
+                continue;
+            }
             DFConnectionSubFolderRepNode childNodeFolder = new DFConnectionSubFolderRepNode(folder, parent,
                     ENodeType.SIMPLE_FOLDER);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
             parent.getChildren().add(childNodeFolder);
             fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
         }
@@ -81,6 +86,8 @@ public class DFConnectionFolderRepNode extends RepositoryNode {
             RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
             if (!viewObject.isDeleted()) {
                 DFConnectionRepNode repNode = new DFConnectionRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
                 viewObject.setRepositoryNode(repNode);
                 parent.getChildren().add(repNode);
 

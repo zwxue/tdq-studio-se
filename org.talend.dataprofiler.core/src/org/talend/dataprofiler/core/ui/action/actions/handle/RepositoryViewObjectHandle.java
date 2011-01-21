@@ -15,18 +15,12 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
-
 import org.apache.commons.lang.StringUtils;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
-import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -35,7 +29,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, IDeletionHandle {
+public abstract class RepositoryViewObjectHandle implements IDuplicateHandle {
     private Property property;
 
     private IRepositoryViewObject repositoryObject;
@@ -78,35 +72,6 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
         return repositoryObject;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
-     */
-    public boolean delete() throws Exception {
-
-        if (property.eIsProxy()) {
-            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
-            property = (Property) EObjectHelper.resolveObject(property);
-        }
-        // MOD qiongli 2010-9-10, bug 14469,15515
-        // MOD qiongli 2010-10-14,bug 15587,save property instance which is not from file to the static var.
-        // MOD qiongli 2010-10-19,bug 16349
-        Connection con = ((ConnectionItem) property.getItem()).getConnection();
-        if (isPhysicalDelete()) {
-            if (con != null) {
-                CWMPlugin.getDefault().removeAliasInSQLExplorer(con);
-            }
-            ProxyRepositoryFactory.getInstance().deleteObjectPhysical(repositoryObject);
-        } else {
-            ProxyRepositoryFactory.getInstance().deleteObjectLogical(repositoryObject);
-            DatabaseStructureView dsv = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
-            if (con != null && dsv != null) {
-                dsv.closeCurrentCabItem(con.getLabel());
-            }
-        }
-        return true;
-    }
 
     /*
      * (non-Javadoc)
@@ -116,15 +81,6 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle, ID
     public List<ModelElement> getDependencies() {
         return EObjectHelper.getDependencyClients(repositoryObject);
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
-     */
-    public boolean isPhysicalDelete() {
-        return property.getItem().getState().isDeleted();
     }
 
     /*

@@ -16,7 +16,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.properties.Item;
-import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
+import org.talend.dataprofiler.core.ui.action.actions.DQDeleteAction;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -57,7 +57,8 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         if (obj instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;
             if (shouldShowDeleteMenu(node)) {
-                menu.add(new DeleteObjectsAction());
+                // menu.add(new DeleteObjectsAction());
+                menu.add(new DQDeleteAction());
             }
         }
     }

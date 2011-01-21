@@ -52,14 +52,24 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
             // sub folders
+            // MOD qiongli 2011-1-18.setProperties for every node
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.METADATA_CONNECTIONS);
-                super.getChildren().add(new DBConnectionSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER));
+                if (folder.isDeleted()) {
+                    continue;
+                }
+                DBConnectionSubFolderRepNode childNodeFolder = new DBConnectionSubFolderRepNode(folder, this,
+                        ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
+                super.getChildren().add(childNodeFolder);
             }
             // connection files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
                 if (!viewObject.isDeleted()) {
                     DBConnectionRepNode repNode = new DBConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
+                    repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
                     viewObject.setRepositoryNode(repNode);
                     super.getChildren().add(repNode);
                 }

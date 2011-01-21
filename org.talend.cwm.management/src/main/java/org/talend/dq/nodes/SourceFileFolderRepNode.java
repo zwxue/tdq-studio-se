@@ -54,12 +54,20 @@ public class SourceFileFolderRepNode extends RepositoryNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : sourceFiles.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_SOURCE_FILES);
-                super.getChildren().add(new SourceFileSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER));
+                if (folder.isDeleted()) {
+                    continue;
+                }
+                SourceFileSubFolderNode childNodeFolder =new SourceFileSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+                super.getChildren().add(childNodeFolder);
             }
             // source files
             for (IRepositoryViewObject viewObject : sourceFiles.getMembers()) {
                 if (!viewObject.isDeleted()) {
                     SourceFileRepNode repNode = new SourceFileRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+                    repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
                     viewObject.setRepositoryNode(repNode);
                     super.getChildren().add(repNode);
                 }

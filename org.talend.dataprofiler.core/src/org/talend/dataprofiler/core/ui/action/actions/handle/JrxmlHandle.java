@@ -38,7 +38,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
@@ -90,31 +89,6 @@ public class JrxmlHandle extends SimpleHandle {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#delete()
-     */
-    public boolean delete() throws Exception {
-        if (isPhysicalDelete()) {
-            // MOD qiongli 2010-10-9,bug 15674
-            IPath filePath = file.getFullPath();
-            filePath = filePath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-            IFile propFile = ResourceManager.getRoot().getFile(filePath);
-            if (propFile.exists()) {
-                propFile.delete(true, null);
-            }
-
-            if (file.exists() && isPhysicalDelete()) {
-                file.delete(true, null);
-            }
-            LogicalDeleteFileHandle.refreshDelPropertys(0, property);
-        } else {
-            LogicalDeleteFileHandle.deleteLogical(file);
-        }
-
-        return true;
-    }
 
     /*
      * (non-Javadoc)
@@ -175,15 +149,6 @@ public class JrxmlHandle extends SimpleHandle {
         propertyResource.getContents().add(property.getItem().getState());
 
         EMFSharedResources.getInstance().saveResource(propertyResource);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDeletionHandle#isPhysicalDelete()
-     */
-    public boolean isPhysicalDelete() {
-        return property.getItem().getState().isDeleted();
     }
 
     /**

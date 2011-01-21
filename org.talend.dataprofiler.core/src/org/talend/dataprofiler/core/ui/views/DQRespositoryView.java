@@ -29,7 +29,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -54,7 +53,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.ConnectionItem;
@@ -71,12 +69,10 @@ import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
-import org.talend.dataprofiler.core.recycle.LogicalDeleteFileHandle;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
 import org.talend.dataprofiler.core.ui.ResoureceChangedListener;
-import org.talend.dataprofiler.core.ui.action.actions.DeleteObjectsAction;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditorInput;
@@ -391,9 +387,9 @@ public class DQRespositoryView extends CommonNavigator {
         IContextService contextService = (IContextService) getSite().getService(IContextService.class);
         contextService.activateContext(VIEW_CONTEXT_ID);
 
-        DeleteObjectsAction deleteObjectsAction = new DeleteObjectsAction();
-        IHandlerService service = (IHandlerService) getViewSite().getService(IHandlerService.class);
-        service.activateHandler(deleteObjectsAction.getActionDefinitionId(), new ActionHandler(deleteObjectsAction));
+        // DQDeleteAction dqDeleteAction = new DQDeleteAction();
+        // IHandlerService service = (IHandlerService) getViewSite().getService(IHandlerService.class);
+        // service.activateHandler(dqDeleteAction.getActionDefinitionId(), new ActionHandler(dqDeleteAction));
     }
 
     private void adjustFilter() {
@@ -505,8 +501,9 @@ public class DQRespositoryView extends CommonNavigator {
         public void run() {
             ProxyRepositoryManager.getInstance().refresh();
             // MOD qiongli 2010-12-7 bug 16843.
-            LogicalDeleteFileHandle.setManualRefresh(true);
-            LogicalDeleteFileHandle.setFinishScanAllFolders(false);
+            // MOD qiongli 2011-1-20. shield for resusing TOS delete mechanism.
+            // LogicalDeleteFileHandle.setManualRefresh(true);
+            // LogicalDeleteFileHandle.setFinishScanAllFolders(false);
             getCommonViewer().refresh();
             super.run();
         }

@@ -73,7 +73,12 @@ public class ReportFolderRepNode extends RepositoryNode {
                 itemType = parentItemType;
             }
             Folder folder = new Folder(((Property) property), itemType);
+            if (folder.isDeleted()) {
+                continue;
+            }
             ReportSubFolderRepNode childNodeFolder = new ReportSubFolderRepNode(folder, parent, ENodeType.SIMPLE_FOLDER);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORTS);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORTS);
             parent.getChildren().add(childNodeFolder);
             fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
         }
@@ -82,6 +87,8 @@ public class ReportFolderRepNode extends RepositoryNode {
             RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
             if (!viewObject.isDeleted()) {
                 ReportRepNode repNode = new ReportRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORTS);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORTS);
                 viewObject.setRepositoryNode(repNode);
                 parent.getChildren().add(repNode);
 

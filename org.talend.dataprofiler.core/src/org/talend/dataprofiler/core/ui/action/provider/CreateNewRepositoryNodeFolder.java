@@ -45,9 +45,13 @@ public class CreateNewRepositoryNodeFolder extends AbstractCommonActionProvider 
                     && !ResourceManager.getPatternFolder().equals(folder) && !ResourceManager.getIndicatorFolder().equals(folder)
                     && !ResourceService.isSubFolder(ResourceManager.getSystemIndicatorFolder(), folder)
                     && (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType()))) {
-                currentSelection = WorkbenchUtils.getFolder(node);
-                CreateRepositoryNodeAction createSubFolderAction = new CreateRepositoryNodeAction(currentSelection);
-                menu.add(createSubFolderAction);
+                // MOD qiongli 2011-1-20 don't add it for recycle bin elements
+                if (node.getObject() != null && !node.getObject().getProperty().getItem().getState().isDeleted()) {
+                    currentSelection = WorkbenchUtils.getFolder(node);
+                    CreateRepositoryNodeAction createSubFolderAction = new CreateRepositoryNodeAction(currentSelection);
+                    menu.add(createSubFolderAction);
+                }
+
             }
         }
 

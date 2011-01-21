@@ -71,8 +71,13 @@ public class PatternRegexFolderRepNode extends RepositoryNode {
                 itemType = parentItemType;
             }
             Folder folder = new Folder(((Property) property), itemType);
+            if (folder.isDeleted()) {
+                continue;
+            }
             PatternRegexSubFolderRepNode childNodeFolder = new PatternRegexSubFolderRepNode(folder, parent,
                     ENodeType.SIMPLE_FOLDER);
+            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
             parent.getChildren().add(childNodeFolder);
             fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
         }
@@ -81,6 +86,8 @@ public class PatternRegexFolderRepNode extends RepositoryNode {
             RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
             if (!viewObject.isDeleted()) {
                 PatternRepNode repNode = new PatternRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
                 viewObject.setRepositoryNode(repNode);
                 parent.getChildren().add(repNode);
 

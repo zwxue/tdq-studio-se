@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -126,50 +125,5 @@ public final class ActionHandleFactory {
 
         return handle;
     }
-    /**
-     * DOC bZhou Comment method "createDeletionHandle".
-     * 
-     * @param property
-     * @return
-     */
-    public static IDeletionHandle createDeletionHandle(Property property) {
-        IDeletionHandle handle = null;
 
-        Item item = property.getItem();
-
-        if (item != null) {
-            EResourceConstant typedConstant = EResourceConstant.getTypedConstant(item);
-
-            if (typedConstant == null) {
-                handle = new SimpleHandle(property);
-            } else {
-                switch (typedConstant) {
-                case DB_CONNECTIONS:
-                    handle = new ConnectionHandle(property);
-                    break;
-                case MDM_CONNECTIONS:
-                    handle = new XMLDataProviderHandle(property);
-                    break;
-                case JRXML_TEMPLATE:
-                    handle = new JrxmlHandle(property);
-                    break;
-                case ANALYSIS:
-                case REPORTS:
-                case PATTERNS:
-                case RULES_SQL:
-                case INDICATORS:
-                    handle = new EMFResourceHandle(property);
-                    break;
-                case FOLDER:
-                    handle = new FolderHandle(property);
-                    break;
-
-                default:
-                    break;
-                }
-            }
-        }
-
-        return handle;
-    }
 }

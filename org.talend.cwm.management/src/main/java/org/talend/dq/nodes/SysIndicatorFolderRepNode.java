@@ -55,13 +55,21 @@ public class SysIndicatorFolderRepNode extends RepositoryNode {
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(),
                         getSystemIndicatorFolderRepositoryType(container.getLabel()));
-                super.getChildren().add(new SysIndicatorFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER));
+                if (folder.isDeleted()) {
+                    continue;
+                }
+                SysIndicatorFolderRepNode childNodeFolder = new SysIndicatorFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+                super.getChildren().add(childNodeFolder);
             }
             // rule files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
                 if (!viewObject.isDeleted()) {
                     SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
                             ENodeType.REPOSITORY_ELEMENT);
+                    repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+                    repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
                     viewObject.setRepositoryNode(repNode);
                     super.getChildren().add(repNode);
                 }

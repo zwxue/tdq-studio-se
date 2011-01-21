@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
@@ -57,10 +58,14 @@ public class CreateUserFolderProvider extends AbstractCommonActionProvider {
             if (!ResourceService.isNoSubFolder(currentSelection)) {
                 // !ResourceManager.isConnectionFolder(currentSelection)
                 // && !ResourceManager.isMdmConnectionFolder(currentSelection)) {
-
-                CreateUserFolderAction createSubFolderAction = new CreateUserFolderAction();
-                menu.add(createSubFolderAction);
-
+                // MOD qiongli -2011-1-20 don't add it for recycle bin elements
+                RepositoryNode node = (RepositoryNode) obj;
+                if (node.getObject() != null) {
+                    if (!node.getObject().getProperty().getItem().getState().isDeleted()) {
+                        CreateUserFolderAction createSubFolderAction = new CreateUserFolderAction();
+                        menu.add(createSubFolderAction);
+                    }
+                }
             }
         }
 

@@ -73,5 +73,9 @@ public class RecycleBinRepNode extends RepositoryNode {
         this.label = label;
     }
 
+    @Override
+    public boolean isBin() {
+        return true;
+    }
 
 }

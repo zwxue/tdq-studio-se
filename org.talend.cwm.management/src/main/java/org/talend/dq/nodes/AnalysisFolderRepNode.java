@@ -55,12 +55,21 @@ public class AnalysisFolderRepNode extends RepositoryNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_ANALYSIS);
-                super.getChildren().add(new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER));
+                // MOD qiongli 2011-1-20.
+                if (folder.isDeleted()) {
+                    continue;
+                }
+                AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                super.getChildren().add(childNodeFolder);
             }
             // ana files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
                 if (!viewObject.isDeleted()) {
                     AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                    anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
                     viewObject.setRepositoryNode(anaNode);
                     super.getChildren().add(anaNode);
                 }
