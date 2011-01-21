@@ -18,6 +18,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
@@ -133,12 +134,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
             dataprovider = dp;
             return true;
         }
-        // else compare 2010-1-4
-        // if (ProxyRepositoryViewObject.areSame(dataprovider, dp)) {
-        // return true;
-        // }
-        // else
-        return false;
+        return ResourceHelper.areSame(dataprovider, dp);
     }
 
 
