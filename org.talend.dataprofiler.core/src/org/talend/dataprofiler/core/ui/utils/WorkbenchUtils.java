@@ -20,17 +20,20 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
+import org.talend.core.repository.model.FolderHelper;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.ProjectNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -140,18 +143,14 @@ public final class WorkbenchUtils {
      * @return
      */
     public static boolean isTDQOrMetadataRootFolder(FolderItem folderItem) {
-        if (ProjectNodeHelper.isTDQRootFolder(folderItem)) {
-            return true;
-        } else {
-            Property property = folderItem.getProperty();
-            if (property != null) {
-                String lable = property.getLabel();
-                if (lable != null && lable.equals("metadata")) {
-                    return true;
-                }
-            }
-        }
+        Project newProject = ProjectManager.getInstance().getCurrentProject();
 
+        FolderHelper folderHelper = LocalFolderHelper.createInstance(newProject.getEmfProject(), ProxyRepositoryFactory
+                .getInstance().getRepositoryContext().getUser());
+        String path = folderHelper.getFullFolderPath(folderItem);
+        if (path != null && (path.startsWith("TDQ") || path.startsWith("metadata"))) {
+            return true;
+        }
         return false;
     }
 }
