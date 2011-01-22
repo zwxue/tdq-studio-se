@@ -80,7 +80,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     }
 
     public UpdateFileAfterMergeConnectionTask() {
-        // TODO Auto-generated constructor stub
     }
 
     @Override

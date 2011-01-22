@@ -1200,6 +1200,12 @@
            name="update International phone number to matching mysql if exist"
            version="4.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateAfterMergeTosApiTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateAfterMergeTosApiTask"
+           name="org.talend.dataprofiler.core.migration.impl.UpdateAfterMergeTosApiTask"
+           version="4.2.0">
+     </workspacetask>
      
 
   </extension>

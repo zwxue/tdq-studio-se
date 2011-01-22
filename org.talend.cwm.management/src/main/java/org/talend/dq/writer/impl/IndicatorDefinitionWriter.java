@@ -32,7 +32,6 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
      * DOC bZhou SYSIndicatorWriter constructor comment.
      */
     IndicatorDefinitionWriter() {
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -68,7 +67,6 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
     }
 
     public ReturnCode save(Item item) {
-        // TODO Auto-generated method stub
         return null;
     }
 

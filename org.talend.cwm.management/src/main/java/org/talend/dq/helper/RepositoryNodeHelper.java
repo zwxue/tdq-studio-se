@@ -516,7 +516,7 @@ public final class RepositoryNodeHelper {
      */
     private static List<IRepositoryNode> getConnectionFromFolder(IRepositoryNode folderNode) {
         List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
-        if(isFolderNode(folderNode.getType())){
+        if (isFolderNode(folderNode.getType())) {
             for (IRepositoryNode thefolderNode : folderNode.getChildren()) {
                 repositoryNodeList.addAll(getConnectionFromFolder(thefolderNode));
             }
@@ -542,7 +542,6 @@ public final class RepositoryNodeHelper {
         }
         return false;
     }
-
 
     /**
      * get the metadata element from a node, if there have not metadata element, return null.
@@ -655,7 +654,8 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     * get the (Resource) ModelElement from a node, if there have not ModelElement return null.
+     * get the (Resource) ModelElement from a node(include: connection, analysis, business rule, indicator definition,
+     * pattern, report), if there have not ModelElement return null.
      * 
      * @param node
      * @return
@@ -681,6 +681,8 @@ public final class RepositoryNodeHelper {
                             } else if (item instanceof TDQReportItem) {
                                 return ((TDQReportItem) item).getReport();
                             }
+                        } else if (item != null && item instanceof ConnectionItem) {
+                            return ((ConnectionItem) item).getConnection();
                         }
                     }
                 }
