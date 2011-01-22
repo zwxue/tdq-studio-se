@@ -473,4 +473,14 @@ public class TopService implements ICoreService {
 
     }
 
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.core.ICoreService#resetUniservLibraries()
+     */
+    public void resetUniservLibraries() {
+        // TODO Auto-generated method stub
+
+    }
+
 }
