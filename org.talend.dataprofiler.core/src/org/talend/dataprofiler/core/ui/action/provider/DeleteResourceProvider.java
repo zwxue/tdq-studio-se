@@ -70,7 +70,8 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
      * @return
      */
     private boolean shouldShowDeleteMenu(RepositoryNode node) {
-        return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node) && !isDelimitedFile(node);
+        return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node) && !isDelimitedFile(node)
+                && !node.isBin();
     }
 
     /**

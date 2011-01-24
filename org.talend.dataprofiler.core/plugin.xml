@@ -635,8 +635,13 @@
           </enablement>
        </actionProvider>
        <actionProvider
-             class="org.talend.dataprofiler.core.ui.action.provider.EmptyRecycleBinActionProvider"
+             class="org.talend.dataprofiler.core.ui.action.provider.DQEmptyRecycleBinActionProvider"
              id="org.talend.dataprofiler.core.ui.action.provider.EmptyRecycleBinActionProvider">
+          <enablement>
+             <instanceof
+                   value="org.talend.dq.nodes.RecycleBinRepNode">
+             </instanceof>
+          </enablement>
        </actionProvider>
   </extension>
     
