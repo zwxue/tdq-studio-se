@@ -306,8 +306,8 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
                     String oldPath = property.getItem().getState().getPath();
                     if (!StringUtils.equals(oldPath, newPath.toString())) {
                         property.getItem().getState().setPath(newPath.toString());
-                        URI desUri = elementResource.getURI().trimFileExtension().appendFileExtension(
-                                FactoriesUtil.PROPERTIES_EXTENSION);
+                        URI desUri = elementResource.getURI().trimFileExtension()
+                                .appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
                         EMFSharedResources.getInstance().saveToUri(propertyResource, desUri.trimSegments(1));
                     }
                 }

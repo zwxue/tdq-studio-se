@@ -46,7 +46,11 @@ public class MDMXmlElementRepNode extends RepositoryNode {
         IRepositoryViewObject object = this.getObject();
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         TdXmlElementType tdXmlElementType = ((MetadataXmlElementTypeRepositoryObject) object).getTdXmlElementType();
-        List<TdXmlElementType> xmlElements = ConnectionUtils.getXMLElements(tdXmlElementType);
+        List<TdXmlElementType> xmlElements = null;
+        if (tdXmlElementType != null) {
+
+            xmlElements = ConnectionUtils.getXMLElements(tdXmlElementType);
+        }
         if (xmlElements.size() > 0) {
             for (ModelElement mElement : xmlElements) {
                 MetadataXmlElementTypeRepositoryObject metadataXmlElementType = new MetadataXmlElementTypeRepositoryObject(

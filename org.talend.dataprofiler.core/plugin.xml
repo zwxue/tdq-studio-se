@@ -168,7 +168,10 @@
         <dropAssistant
               class="org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant"
               id="org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant">
-           <possibleDropTargets></possibleDropTargets>
+           <possibleDropTargets>
+              <instanceof
+                    value="org.talend.repository.model.RepositoryNode">
+              </instanceof></possibleDropTargets>
         </dropAssistant>   
      </navigatorContent>
       <actionProvider

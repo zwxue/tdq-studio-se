@@ -57,6 +57,7 @@ import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
@@ -72,6 +73,7 @@ import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternRepNode;
+import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -357,6 +359,24 @@ public final class RepositoryNodeHelper {
 
     public static RepositoryNode recursiveFind(ModelElement modelElement) {
         if (modelElement instanceof Analysis) {
+            Analysis analysis = (Analysis) modelElement;
+            List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes();
+            for (IRepositoryNode anaNode : dataprofilingNode) {
+                Item itemTemp = ((IRepositoryViewObject) anaNode.getObject()).getProperty().getItem();
+                if (itemTemp instanceof TDQAnalysisItem) {
+                    TDQAnalysisItem item = (TDQAnalysisItem) itemTemp;
+                    if (ResourceHelper.getUUID(analysis).equals(ResourceHelper.getUUID(item.getAnalysis()))) {
+                        return (RepositoryNode) anaNode;
+                    }
+                } else if (itemTemp instanceof FolderItem) {
+                    List<TDQAnalysisItem> anaItems = getAnalysisItemsFromFolderItem((FolderItem) itemTemp);
+                    for (TDQAnalysisItem anaItem : anaItems) {
+                        if (ResourceHelper.getUUID(analysis).equals(ResourceHelper.getUUID(anaItem.getAnalysis()))) {
+                            return (RepositoryNode) anaNode;
+                        }
+                    }
+                }
+            }
 
         } else if (modelElement instanceof TdReport) {
 
@@ -488,6 +508,18 @@ public final class RepositoryNodeHelper {
         return list;
     }
 
+    private static List<TDQAnalysisItem> getAnalysisItemsFromFolderItem(FolderItem folderItem) {
+        List<TDQAnalysisItem> list = new ArrayList<TDQAnalysisItem>();
+        EList objs = folderItem.getChildren();
+        for (Object obj : objs) {
+            if (obj instanceof FolderItem) {
+                list.addAll(getAnalysisItemsFromFolderItem((FolderItem) obj));
+            } else if (obj instanceof TDQAnalysisItem) {
+                list.add((TDQAnalysisItem) obj);
+            }
+        }
+        return list;
+    }
     /**
      * ADD mzhao 15750 , build dq metadata tree, get connection root node.
      */
@@ -505,6 +537,32 @@ public final class RepositoryNodeHelper {
             }
         }
         return connNodes;
+    }
+
+    public static List<IRepositoryNode> getDataProfilingRepositoryNodes() {
+        RepositoryNode node = getRootNode(EResourceConstant.DATA_PROFILING.getName());
+        List<IRepositoryNode> dataProfilingNodes = new ArrayList<IRepositoryNode>();
+        if (node != null) {
+            List<IRepositoryNode> childrens = node.getChildren();
+            for (IRepositoryNode subNode : childrens) {
+                if (subNode instanceof AnalysisFolderRepNode || subNode instanceof ReportFolderRepNode) {
+                    dataProfilingNodes.addAll(getAnalysisFromFolder(subNode));
+                }
+            }
+        }
+        return dataProfilingNodes;
+    }
+
+    private static List<IRepositoryNode> getAnalysisFromFolder(IRepositoryNode folderNode) {
+        List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
+        if (isFolderNode(folderNode.getType())) {
+            for (IRepositoryNode thefolderNode : folderNode.getChildren()) {
+                repositoryNodeList.addAll(getAnalysisFromFolder(thefolderNode));
+            }
+        } else {
+            repositoryNodeList.add(folderNode);
+        }
+        return repositoryNodeList;
     }
 
     /**

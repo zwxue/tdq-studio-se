@@ -24,11 +24,14 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class SysIndicatorDefinitionRepNode extends RepositoryNode {
 
+    boolean isSystemIndicator = false;
+
     private IndicatorDefinition indicatorDefinition;
 
     public IndicatorDefinition getIndicatorDefinition() {
         return this.indicatorDefinition;
     }
+
 
     /**
      * DOC klliu IndicatorDefinitionRepNode constructor comment.
@@ -46,5 +49,13 @@ public class SysIndicatorDefinitionRepNode extends RepositoryNode {
                 this.indicatorDefinition = ((TDQIndicatorDefinitionItem) item).getIndicatorDefinition();
             }
         }
+    }
+
+    public void setSystemIndicator(boolean isSystemIndicator) {
+        this.isSystemIndicator = isSystemIndicator;
+    }
+
+    public boolean isSystemIndicator() {
+        return this.isSystemIndicator;
     }
 }

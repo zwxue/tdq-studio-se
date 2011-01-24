@@ -40,11 +40,9 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -69,6 +67,8 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -135,11 +135,11 @@ public class ColumnViewerDND {
                 // receiver = new ColumnReceiver();
                 // }
                 // MOD klliu 15750 2011-01-17 for Drag&Drop On columnset
-                if (object instanceof DBColumnRepNode || object instanceof DBTableRepNode) {
+                if (object instanceof DBColumnRepNode || object instanceof DBTableRepNode || object instanceof DFColumnRepNode) {
                     receiver = new ColumnReceiver();
                 }
 
-                if (object instanceof TdXmlElementType) {
+                if (object instanceof MDMXmlElementRepNode) {
                     receiver = new XmlElementReceiver();
                 }
 
@@ -347,6 +347,10 @@ public class ColumnViewerDND {
                 if (viewer != null && viewer.canDrop(firstElement)) {
                     event.detail = DND.DROP_MOVE;
                 }
+            } else if (firstElement instanceof DFColumnRepNode) {
+                if (viewer != null && viewer.canDrop(firstElement)) {
+                    event.detail = DND.DROP_MOVE;
+                }
             }
             // if (repViewObj instanceof MetadataColumnRepositoryObject) {
             // if (viewer != null && viewer.canDrop(firstElement)) {
@@ -457,13 +461,11 @@ public class ColumnViewerDND {
             event.detail = DND.DROP_NONE;
             RepositoryNode firstElement = (RepositoryNode) ((StructuredSelection) LocalSelectionTransfer.getTransfer()
                     .getSelection()).getFirstElement();
-            IRepositoryViewObject repViewObj = firstElement.getObject();
-            if (repViewObj instanceof MetadataXmlElementTypeRepositoryObject) {
-                RepositoryNode xmlElement = (RepositoryNode) firstElement;
+            if (firstElement instanceof MDMXmlElementRepNode) {
+                MDMXmlElementRepNode xmlElement = (MDMXmlElementRepNode) firstElement;
 
                 Tree tree = (Tree) ((DropTarget) event.widget).getControl();
                 AbstractColumnDropTree viewer = (AbstractColumnDropTree) tree.getData();
-
                 if (viewer != null && viewer.canDrop(xmlElement)) {
                     event.detail = DND.DROP_MOVE;
                 }

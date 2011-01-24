@@ -831,6 +831,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         ConnectionItem connItem = (ConnectionItem) metadataRepObject.getProperty().getItem();
         // MOD qiongli 2010-8-19,bug 14436:could not come from diffrent connection
         Connection tdProvider = connItem.getConnection();
+        boolean text = metadataRepObject instanceof MetadataXmlElementTypeRepositoryObject;
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null
@@ -859,6 +860,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 return false;
             }
         }
+
         if (metadataRepObject instanceof MetadataXmlElementTypeRepositoryObject) {
             return !metadataRepositoryNode.hasChildren();
         }

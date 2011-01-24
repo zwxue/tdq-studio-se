@@ -41,6 +41,7 @@ public final class ModelElementIndicatorHelper {
         if (repositoryObject.getObject() instanceof MetadataColumnRepositoryObject) {
             return createColumnIndicator(repositoryObject);
         } else if (repositoryObject.getObject() instanceof MetadataXmlElementTypeRepositoryObject) {
+
             return createXmlElementIndicator(repositoryObject);
         }
         return null;

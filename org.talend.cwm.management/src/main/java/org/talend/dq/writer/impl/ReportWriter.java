@@ -58,7 +58,7 @@ public class ReportWriter extends AElementPersistance {
             if (dependencyReturn.isOk()) {
                 try {
                     ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                            .saveResource(ana.eResource());
+                            .saveResource(report.eResource());
                 } catch (PersistenceException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -97,8 +97,23 @@ public class ReportWriter extends AElementPersistance {
     }
 
     public ReturnCode save(Item item) {
-        // TODO Auto-generated method stub
-        return null;
+        ReturnCode rc = new ReturnCode();
+//        try {
+//            TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
+//            if (anaItem != null && anaItem.eIsProxy()) {
+//                anaItem = (TDQAnalysisItem) EObjectHelper.resolveObject(anaItem);
+//                anaItem.getProperty().setLabel(anaItem.getAnalysis().getName());
+//            }
+//            Analysis analysis = anaItem.getAnalysis();
+//            addDependencies(analysis);
+//            addResourceContent(analysis.eResource(), analysis);
+//            ProxyRepositoryFactory.getInstance().save(anaItem);
+//        } catch (PersistenceException e) {
+//            log.error(e, e);
+//            rc.setOk(Boolean.FALSE);
+//            rc.setMessage(e.getMessage());
+//        }
+        return rc;
     }
 
     @Override
