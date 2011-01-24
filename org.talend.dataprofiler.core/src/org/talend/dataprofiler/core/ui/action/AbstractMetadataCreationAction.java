@@ -24,7 +24,6 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.model.IRepositoryNode.EProperties;
 
 
 /**
@@ -121,14 +120,14 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
     protected String[] collectSiblingNames(final RepositoryNode node) {
         List<String> names = doCollectChildNames(node.getParent());
-        names.remove((String) node.getProperties(EProperties.LABEL));
+        names.remove(node.getObject().getProperty().getLabel());
         return names.toArray(new String[names.size()]);
     }
 
     private List<String> doCollectChildNames(final RepositoryNode node) {
         List<String> names = new ArrayList<String>();
         for (IRepositoryNode sibling : node.getChildren()) {
-            names.add((String) sibling.getProperties(EProperties.LABEL));
+            names.add(sibling.getObject().getProperty().getLabel());
         }
         return names;
     }
