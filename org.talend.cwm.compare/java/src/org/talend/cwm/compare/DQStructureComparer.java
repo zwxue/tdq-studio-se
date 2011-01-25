@@ -56,7 +56,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -412,15 +412,15 @@ public final class DQStructureComparer {
      * @return
      * @throws ReloadCompareException
      */
-    public static MeatadataColumn findMatchedColumn(MeatadataColumn column, Connection toMatchDataProvider) throws ReloadCompareException {
+    public static TdColumn findMatchedColumn(TdColumn column, Connection toMatchDataProvider) throws ReloadCompareException {
         // MOD klliu update ColumnHelper.getColumnSetOwner(column)
         ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet(column);
         ColumnSet toReloadColumnSet = DQStructureComparer.findMatchedColumnSet(columnSet, toMatchDataProvider);
-        List<MeatadataColumn> columns = ColumnSetHelper.getColumns(toReloadColumnSet);
-        MeatadataColumn oldColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
-        MeatadataColumn toMatchedColumn = null;
+        List<TdColumn> columns = ColumnSetHelper.getColumns(toReloadColumnSet);
+        TdColumn oldColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
+        TdColumn toMatchedColumn = null;
         if (oldColumn != null) {
-            for (MeatadataColumn col : columns) {
+            for (TdColumn col : columns) {
                 if (oldColumn.getName().equals(col.getName())) {
                     toMatchedColumn = col;
                     break;
@@ -512,7 +512,7 @@ public final class DQStructureComparer {
             columnSet.getOwnedElement().clear();
             return;
         }
-        MeatadataColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(needReloadElement);
+        TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(needReloadElement);
         if (column != null) {
             column.getTaggedValue().clear();
             // ~MOD mzhao 2009-03-12 Clear primary key as well. If not clear, it

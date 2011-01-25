@@ -19,7 +19,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
@@ -91,7 +91,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected boolean isAllowed() {
         for (IRepositoryNode repositoryNode : getColumns()) {
-            MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+            TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
             if (!Java2SqlType.isDateInSQL(column.getSqlDataType().getJavaDataType())) {
                 return false;
             }

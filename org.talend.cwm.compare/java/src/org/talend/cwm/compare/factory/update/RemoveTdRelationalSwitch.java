@@ -13,7 +13,7 @@
 package org.talend.cwm.compare.factory.update;
 
 import org.eclipse.emf.ecore.EObject;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -39,9 +39,9 @@ public class RemoveTdRelationalSwitch extends UpdateRelationalSwitch {
             return Boolean.FALSE;
         }
         // MOD zshen 2010.06.10 for feature 12842
-        MeatadataColumn column = null;
-        if (leftElement instanceof MeatadataColumn) {
-            column = (MeatadataColumn) leftElement;
+        TdColumn column = null;
+        if (leftElement instanceof TdColumn) {
+            column = (TdColumn) leftElement;
         } else {
             return Boolean.FALSE;
         }
@@ -66,9 +66,9 @@ public class RemoveTdRelationalSwitch extends UpdateRelationalSwitch {
             return Boolean.FALSE;
         }
         // MOD zshen 2010.06.10 for feature 12842
-        MeatadataColumn column = null;
-        if (leftElement instanceof MeatadataColumn) {
-            column = (MeatadataColumn) leftElement;
+        TdColumn column = null;
+        if (leftElement instanceof TdColumn) {
+            column = (TdColumn) leftElement;
         } else {
             return Boolean.FALSE;
         }

@@ -21,7 +21,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -185,8 +185,8 @@ public class AnalysisHandler {
         List<ColumnSet> existingTables = new ArrayList<ColumnSet>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            if (element instanceof MeatadataColumn) {
-                ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) element);
+            if (element instanceof TdColumn) {
+                ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) element);
                 if (!existingTables.contains(columnSet)) {
                     existingTables.add(columnSet);
                 }
@@ -209,8 +209,8 @@ public class AnalysisHandler {
         List<String> existingTables = new ArrayList<String>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            if (element instanceof MeatadataColumn && element.eContainer() instanceof Table) {
-                String tableName = ColumnHelper.getTableFullName((MeatadataColumn) element);
+            if (element instanceof TdColumn && element.eContainer() instanceof Table) {
+                String tableName = ColumnHelper.getTableFullName((TdColumn) element);
                 if (!existingTables.contains(tableName)) {
                     existingTables.add(tableName);
                 }
@@ -231,8 +231,8 @@ public class AnalysisHandler {
         List<String> existingViews = new ArrayList<String>();
 
         for (ModelElement element : getAnalyzedColumns()) {
-            if (element instanceof MeatadataColumn && element.eContainer() instanceof View) {
-                String viewName = ColumnHelper.getTableFullName((MeatadataColumn) element);
+            if (element instanceof TdColumn && element.eContainer() instanceof View) {
+                String viewName = ColumnHelper.getTableFullName((TdColumn) element);
                 if (!existingViews.contains(viewName)) {
                     existingViews.add(viewName);
                 }

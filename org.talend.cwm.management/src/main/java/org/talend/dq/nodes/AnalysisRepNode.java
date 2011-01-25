@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -34,25 +32,12 @@ public class AnalysisRepNode extends RepositoryNode {
      */
     public AnalysisRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-
-        return buildChildren();
+        // TODO Auto-generated method stub
+        return super.getChildren();
     }
-
-    public List<IRepositoryNode> buildChildren() {
-        List<IRepositoryNode> anaElement = new ArrayList<IRepositoryNode>();
-        RepositoryNode parent = this.getParent();
-        if (!(parent instanceof ReportSubFolderRepNode)) {
-            AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
-            childNodeFolder.setProperties(EProperties.LABEL, "analyzed elements");
-            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-            anaElement.add(childNodeFolder);
-        }
-        return anaElement;
-    }
-
-
 }

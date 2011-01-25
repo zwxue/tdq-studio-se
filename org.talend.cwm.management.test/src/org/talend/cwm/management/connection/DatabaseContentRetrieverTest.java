@@ -31,7 +31,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.management.api.ConnectionService;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -174,8 +174,8 @@ public class DatabaseContentRetrieverTest {
             assertFalse(tables.isEmpty());
             for (TdTable tdTable : tables) {
                 log.info("Table " + tdTable.getName());
-                List<MeatadataColumn> columns = TableHelper.getColumns(tdTable);
-                for (MeatadataColumn tdColumn : columns) {
+                List<TdColumn> columns = TableHelper.getColumns(tdTable);
+                for (TdColumn tdColumn : columns) {
                     assertNotNull(tdColumn);
                     // assertTrue(tdColumn.getName().contains(COLUMNS_TO_MATCH));
                     log.info("Column " + tdColumn.getName());
@@ -196,13 +196,13 @@ public class DatabaseContentRetrieverTest {
     @Test
     public void testGetColumns() {
 
-        List<MeatadataColumn> columns = null;
+        List<TdColumn> columns = null;
         try {
             columns = DatabaseContentRetriever.getColumns(CATALOG, null, TABLES_TO_MATCH, "%" + COLUMNS_TO_MATCH + "%",
                     DBCONNECTION);
             assertNotNull(columns);
             assertFalse(columns.isEmpty());
-            for (MeatadataColumn tdColumn : columns) {
+            for (TdColumn tdColumn : columns) {
                 assertNotNull(tdColumn);
                 assertTrue(tdColumn.getName().contains(COLUMNS_TO_MATCH));
                 log.info("Column " + tdColumn.getName());
@@ -224,8 +224,8 @@ public class DatabaseContentRetrieverTest {
             assertFalse(tables.isEmpty());
             for (TdTable tdTable : tables) {
                 log.info("Table " + tdTable.getName());
-                List<MeatadataColumn> columns = TableHelper.getColumns(tdTable);
-                for (MeatadataColumn tdColumn : columns) {
+                List<TdColumn> columns = TableHelper.getColumns(tdTable);
+                for (TdColumn tdColumn : columns) {
                     assertNotNull(tdColumn);
                     log.info("Column " + tdColumn.getName());
                 }
@@ -249,8 +249,8 @@ public class DatabaseContentRetrieverTest {
             assertFalse(tables.isEmpty());
             for (TdView tdTable : tables) {
                 log.info("Table " + tdTable.getName());
-                List<MeatadataColumn> columns = ViewHelper.getColumns(tdTable);
-                for (MeatadataColumn tdColumn : columns) {
+                List<TdColumn> columns = ViewHelper.getColumns(tdTable);
+                for (TdColumn tdColumn : columns) {
                     assertNotNull(tdColumn);
                     log.info("Column " + tdColumn.getName());
                 }

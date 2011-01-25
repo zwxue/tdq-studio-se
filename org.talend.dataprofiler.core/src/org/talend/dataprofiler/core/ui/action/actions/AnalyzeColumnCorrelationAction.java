@@ -20,7 +20,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -116,9 +116,9 @@ public class AnalyzeColumnCorrelationAction extends Action {
 
             while (it.hasNext()) {
                 Object theObject = it.next();
-                MeatadataColumn column = null;
+                TdColumn column = null;
                 if (theObject instanceof DBColumnRepNode) {
-                    column = (MeatadataColumn) ((DBColumnRepNode) theObject).getTdColumn();
+                    column = ((DBColumnRepNode) theObject).getTdColumn();
                 }
                 if (Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
                     hasNumberColumn = true;

@@ -37,7 +37,7 @@ import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -134,7 +134,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 DefaultMessagesImpl.getString("ChangeConnectionAction.MayCauseAsynProblem")); //$NON-NLS-1$
         if (retCode) {
 
-            if (analyzedElements.get(0) instanceof MeatadataColumn) {
+            if (analyzedElements.get(0) instanceof TdColumn) {
                 anaEleSynDialog = new AnalyzedColumnsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
             } else if (analyzedElements.get(0) instanceof ColumnSet) {
                 anaEleSynDialog = new AnalyzedColumnSetsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
@@ -166,7 +166,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                                     try {
                                         reloadByColumnSetFolderLevel(treeModelLs, anaEleSynDialog, newDataProvider);
 
-                                        if (analyzedElements.get(0) instanceof MeatadataColumn) {
+                                        if (analyzedElements.get(0) instanceof TdColumn) {
                                             // Reload column folder
                                             reloadByColumnFolderLevel(treeModelLs, anaEleSynDialog, newDataProvider);
                                         }
@@ -243,8 +243,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         ColumnSet columnset = null;
         if (oldDataProviderModel instanceof ColumnSet) {
             columnset = (ColumnSet) oldDataProviderModel;
-        } else if (oldDataProviderModel instanceof MeatadataColumn) {
-            columnset = ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) oldDataProviderModel);
+        } else if (oldDataProviderModel instanceof TdColumn) {
+            columnset = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) oldDataProviderModel);
         } else {
             return;
         }
@@ -268,8 +268,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         ColumnSet columnset = null;
         if (newDataProviderModel instanceof ColumnSet) {
             columnset = (ColumnSet) newDataProviderModel;
-        } else if (newDataProviderModel instanceof MeatadataColumn) {
-            columnset = ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) newDataProviderModel);
+        } else if (newDataProviderModel instanceof TdColumn) {
+            columnset = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) newDataProviderModel);
         } else {
             return;
         }
@@ -311,7 +311,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
             synAnalysis.getContext().getAnalysedElements().clear();
             for (int i = 0; i < mes.length; i++) {
                 if (synEleMap.get(mes[i]) != null) {
-                    MeatadataColumn newColumn = (MeatadataColumn) synEleMap.get(mes[i]);
+                    TdColumn newColumn = (TdColumn) synEleMap.get(mes[i]);
                     synAnalysis.getContext().getAnalysedElements().add(newColumn);
                     isExistSynedElement = true;
                 }
@@ -332,10 +332,10 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 compositeInd.getAnalyzedColumns().clear();
                 for (ModelElement me : mes) {
                     if (synEleMap.get(me) != null) {
-                        MeatadataColumn newColumn = (MeatadataColumn) synEleMap.get(me);
-                        DataminingType dataminingType = MetadataHelper.getDataminingType((MeatadataColumn) me);
+                        TdColumn newColumn = (TdColumn) synEleMap.get(me);
+                        DataminingType dataminingType = MetadataHelper.getDataminingType((TdColumn) me);
                         if (dataminingType == null) {
-                            dataminingType = MetadataHelper.getDefaultDataminingType(((MeatadataColumn) me).getSqlDataType()
+                            dataminingType = MetadataHelper.getDefaultDataminingType(((TdColumn) me).getSqlDataType()
                                     .getJavaDataType());
                         }
                         MetadataHelper.setDataminingType(dataminingType, newColumn);
@@ -358,7 +358,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 compInd.getColumnSetA().clear();
                 for (ModelElement me : mesA) {
                     if (synEleMap.get(me) != null) {
-                        MeatadataColumn newColumn = (MeatadataColumn) synEleMap.get(me);
+                        TdColumn newColumn = (TdColumn) synEleMap.get(me);
                         compInd.getColumnSetA().add(newColumn);
                         anaBuilder.addElementToAnalyze(newColumn, indicator);
                         isExistSynedElement = true;
@@ -370,7 +370,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 compInd.getColumnSetB().clear();
                 for (ModelElement me : mesB) {
                     if (synEleMap.get(me) != null) {
-                        MeatadataColumn newColumn = (MeatadataColumn) synEleMap.get(me);
+                        TdColumn newColumn = (TdColumn) synEleMap.get(me);
                         compInd.getColumnSetB().add(newColumn);
                         anaBuilder.addElementToAnalyze(newColumn, indicator);
                         isExistSynedElement = true;
@@ -379,16 +379,16 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 // Analyzed element(Table)
                 ModelElement oldAnaEle = compInd.getAnalyzedElement();
                 compInd.setAnalyzedElement(null);
-                ColumnSet oldColSetA = ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) mesA[0]);
-                ColumnSet oldColSetB = ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) mesB[0]);
+                ColumnSet oldColSetA = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) mesA[0]);
+                ColumnSet oldColSetB = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) mesB[0]);
                 if (oldColSetA == oldAnaEle) {
                     if (synEleMap.get(mesA[0]) != null) {
-                        compInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) synEleMap.get(mesA[0])));
+                        compInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) synEleMap.get(mesA[0])));
                     }
                 }
                 if (oldColSetB == oldAnaEle) {
                     if (synEleMap.get(mesB[0]) != null) {
-                        compInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) synEleMap.get(mesB[0])));
+                        compInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) synEleMap.get(mesB[0])));
                     }
                 }
             } else if (indicator instanceof ColumnDependencyIndicator) { // ADD qiongli bug 0012766
@@ -399,7 +399,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 }
                 // Column A
                 if (synEleMap.get(funDepInd.getColumnA()) != null) {
-                    MeatadataColumn newColumn = (MeatadataColumn) synEleMap.get(funDepInd.getColumnA());
+                    TdColumn newColumn = (TdColumn) synEleMap.get(funDepInd.getColumnA());
                     funDepInd.setColumnA(newColumn);
                     anaBuilder.addElementToAnalyze(newColumn, indicator);
                     isExistSynedElement = true;
@@ -407,7 +407,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
                 // Column B
                 if (synEleMap.get(funDepInd.getColumnB()) != null) {
-                    MeatadataColumn newColumn = (MeatadataColumn) synEleMap.get(funDepInd.getColumnB());
+                    TdColumn newColumn = (TdColumn) synEleMap.get(funDepInd.getColumnB());
                     funDepInd.setColumnB(newColumn);
                     anaBuilder.addElementToAnalyze(newColumn, indicator);
                     isExistSynedElement = true;
@@ -420,13 +420,13 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 ColumnSet oldColSetB = ColumnHelper.getColumnOwnerAsColumnSet(funDepInd.getColumnB());
                 if (oldColSetA == oldAnaEle) {
                     if (synEleMap.get(funDepInd.getColumnA()) != null) {
-                        funDepInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) synEleMap.get(funDepInd
+                        funDepInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) synEleMap.get(funDepInd
                                 .getColumnA())));
                     }
                 }
                 if (oldColSetB == oldAnaEle) {
                     if (synEleMap.get(funDepInd.getColumnB()) != null) {
-                        funDepInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) synEleMap.get(funDepInd
+                        funDepInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) synEleMap.get(funDepInd
                                 .getColumnB())));
                     }
                 }

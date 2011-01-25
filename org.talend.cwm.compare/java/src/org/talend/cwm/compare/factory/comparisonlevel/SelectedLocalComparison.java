@@ -32,7 +32,7 @@ import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -195,7 +195,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
                     if (columnSet1 != null) {
                         adaptedDataProvider = ConnectionHelper.getDataProvider(columnSet1);
                     } else {
-                        MeatadataColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((MeatadataColumn) element);
+                        TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((TdColumn) element);
                         if (column1 != null) {
                             adaptedDataProvider = ConnectionHelper.getTdDataProvider(column1);
                         }
@@ -232,21 +232,21 @@ public class SelectedLocalComparison implements IComparisonLevel {
                         // meList.addAll(ColumnSetHelper
                         // .getColumns(findMatchedColumnSet));
                     } else {
-                        MeatadataColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((MeatadataColumn) element);
+                        TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((TdColumn) element);
                         if (column1 != null) {
-                            MeatadataColumn findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
+                            TdColumn findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
                             rootElement = findMathedColumn;
 
-                            if (findMathedColumn instanceof MeatadataColumn) {
-                                ((MeatadataColumn) rootElement).getTaggedValue().clear();
+                            if (findMathedColumn instanceof TdColumn) {
+                                ((TdColumn) rootElement).getTaggedValue().clear();
                                 // ~MOD 2009-04-21 Clear primary key as well. If
                                 // not clear, it
                                 // will cause exception: not contained in
                                 // a resource
-                                ((MeatadataColumn) rootElement).getUniqueKey().clear();
+                                ((TdColumn) rootElement).getUniqueKey().clear();
 
                                 // ~MOD 2009-04-21 Clear foreign key.
-                                ((MeatadataColumn) rootElement).getKeyRelationship().clear();
+                                ((TdColumn) rootElement).getKeyRelationship().clear();
                             }
 
                             // meList.add(findMathedColumn);

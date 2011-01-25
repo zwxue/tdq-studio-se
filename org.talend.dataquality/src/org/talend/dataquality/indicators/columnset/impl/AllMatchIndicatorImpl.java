@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MatchingIndicator;
@@ -408,7 +408,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     @SuppressWarnings("unchecked")
     private boolean instantiatePatterns() {
 
-        EList<MeatadataColumn> columns = this.getAnalyzedColumns();
+        EList<TdColumn> columns = this.getAnalyzedColumns();
         this.patterns = new List[columns.size()];
         EList<RegexpMatchingIndicator> indicators = this.getCompositeRegexMatchingIndicators();
         for (int i = 0; i < columns.size(); i++) {

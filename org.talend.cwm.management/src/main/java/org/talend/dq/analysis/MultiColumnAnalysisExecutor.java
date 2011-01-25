@@ -25,7 +25,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -78,23 +78,23 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private void instantiateQuery(Indicator indicator) {
         if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
             ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
-            final EList<MeatadataColumn> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
+            final EList<TdColumn> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
             final EList<String> numericFunctions = initializeNumericFunctions(colSetMultValIndicator);
             final EList<String> dateFunctions = initializeDateFunctions(colSetMultValIndicator);
 
             // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
-            for (MeatadataColumn column : colSetMultValIndicator.getNominalColumns()) {
+            for (TdColumn column : colSetMultValIndicator.getNominalColumns()) {
                 nominalColumns.add(getQuotedColumnName(column));
             }
             List<String> computedColumns = new ArrayList<String>();
-            for (MeatadataColumn column : colSetMultValIndicator.getNumericColumns()) {
+            for (TdColumn column : colSetMultValIndicator.getNumericColumns()) {
                 // call functions for each column
                 for (String f : numericFunctions) {
                     computedColumns.add(replaceVariablesLow(f, getQuotedColumnName(column)));
                 }
             }
-            for (MeatadataColumn column : colSetMultValIndicator.getDateColumns()) {
+            for (TdColumn column : colSetMultValIndicator.getDateColumns()) {
                 // call functions for each column
                 for (String f : dateFunctions) {
                     computedColumns.add(replaceVariablesLow(f, getQuotedColumnName(column)));
@@ -167,7 +167,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param analyzedColumns
      * @return the quoted table name
      */
-    private String getTableName(final EList<MeatadataColumn> analyzedColumns) {
+    private String getTableName(final EList<TdColumn> analyzedColumns) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(analyzedColumns.get(0));
         String tableName = columnSetOwner.getName();
 

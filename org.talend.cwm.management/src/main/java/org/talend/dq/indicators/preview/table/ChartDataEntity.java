@@ -18,7 +18,7 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -220,8 +220,8 @@ public class ChartDataEntity {
             int sqltype = Types.INTEGER;
             if (null != temp) {
                 int tempType = sqltype;
-                if (temp instanceof MeatadataColumn) {
-                    sqltype = ((MeatadataColumn) temp).getSqlDataType().getJavaDataType();
+                if (temp instanceof TdColumn) {
+                    sqltype = ((TdColumn) temp).getSqlDataType().getJavaDataType();
                 } else if (temp instanceof TdXmlElementType) {
                     tempType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) temp).getJavaType());
                 }

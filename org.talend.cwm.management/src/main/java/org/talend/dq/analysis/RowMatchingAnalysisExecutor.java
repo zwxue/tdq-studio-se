@@ -25,7 +25,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -88,8 +88,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         // (but is not need, hence we keep it commented)
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator().equals(indicator.eClass())) {
             RowMatchingIndicator rowMatchingIndicator = (RowMatchingIndicator) indicator;
-            EList<MeatadataColumn> columnSetA = rowMatchingIndicator.getColumnSetA();
-            EList<MeatadataColumn> columnSetB = rowMatchingIndicator.getColumnSetB();
+            EList<TdColumn> columnSetA = rowMatchingIndicator.getColumnSetA();
+            EList<TdColumn> columnSetB = rowMatchingIndicator.getColumnSetB();
             if (columnSetA.size() != columnSetB.size()) {
                 return traceError("Cannot compare two column sets with different size"); // break;
             }
@@ -115,8 +115,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param useNulls
      * @return
      */
-    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, EList<MeatadataColumn> columnSetA,
-            EList<MeatadataColumn> columnSetB, boolean useNulls) {
+    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, EList<TdColumn> columnSetA,
+            EList<TdColumn> columnSetB, boolean useNulls) {
         // MOD scorreia 2009-05-25 allow to compare elements from the same table
         // aliases of tables
         String aliasA = "A"; //$NON-NLS-1$
@@ -168,13 +168,13 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param columnSetB
      * @return
      */
-    private String createWhereClause(String tableNameB, EList<MeatadataColumn> columnSetB) {
+    private String createWhereClause(String tableNameB, EList<TdColumn> columnSetB) {
         final String isNull = dbms().isNull();
         final String and = dbms().and();
         return conditionOnAllColumns(tableNameB, columnSetB, isNull, and);
     }
 
-    private String createNotNullCondition(String tableNameB, EList<MeatadataColumn> columnSetB) {
+    private String createNotNullCondition(String tableNameB, EList<TdColumn> columnSetB) {
         final String isNotNull = dbms().isNotNull();
         final String or = dbms().or();
         return conditionOnAllColumns(tableNameB, columnSetB, isNotNull, or);
@@ -189,7 +189,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param and
      * @return
      */
-    private String conditionOnAllColumns(String tableName, EList<MeatadataColumn> columnSet, final String isNull, final String and) {
+    private String conditionOnAllColumns(String tableName, EList<TdColumn> columnSet, final String isNull, final String and) {
         int size = columnSet.size();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < size; i++) {
@@ -210,7 +210,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param columnSetB
      * @return
      */
-    private String createJoinClause(String tableNameA, EList<MeatadataColumn> columnSetA, String tableNameB, EList<MeatadataColumn> columnSetB,
+    private String createJoinClause(String tableNameA, EList<TdColumn> columnSetA, String tableNameB, EList<TdColumn> columnSetB,
             final boolean useNulls) {
         StringBuilder builder = new StringBuilder();
         int size = columnSetA.size();
@@ -250,13 +250,13 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param columnSetA
      * @return
      */
-    private String getTableName(EList<MeatadataColumn> columnSetA) {
+    private String getTableName(EList<TdColumn> columnSetA) {
         String tableName = null;
-        for (MeatadataColumn column : columnSetA) {
+        for (TdColumn column : columnSetA) {
             if (column != null && column.eIsProxy()) {
-                column = (MeatadataColumn) EObjectHelper.resolveObject(column);
+                column = (TdColumn) EObjectHelper.resolveObject(column);
             }
-            if (belongToSameSchemata((MeatadataColumn) column)) {
+            if (belongToSameSchemata((TdColumn) column)) {
                 ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
 
                 if (columnSetOwner == null) {

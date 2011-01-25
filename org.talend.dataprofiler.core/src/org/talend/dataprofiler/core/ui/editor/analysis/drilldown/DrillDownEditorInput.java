@@ -28,7 +28,7 @@ import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.XmlElementHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
@@ -241,8 +241,8 @@ public class DrillDownEditorInput implements IEditorInput {
         }
         if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
             int offset = 0;
-            if (analysisElement instanceof MeatadataColumn) {
-                List<MeatadataColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysisElement
+            if (analysisElement instanceof TdColumn) {
+                List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysisElement
                         .eContainer()));
 
                 offset = columnElementList.indexOf(analysisElement);
@@ -275,8 +275,8 @@ public class DrillDownEditorInput implements IEditorInput {
         if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALUE_TYPE)) {
 
             columnElementList.add(ModelElementHelper.getName(indicator.getAnalyzedElement()));
-        } else if (analysisElement instanceof MeatadataColumn) {
-            for (MeatadataColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
+        } else if (analysisElement instanceof TdColumn) {
+            for (TdColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
                     .eContainer()))) {
                 columnElementList.add(column.getName());
             }

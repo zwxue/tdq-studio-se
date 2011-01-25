@@ -25,7 +25,7 @@ import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -134,8 +134,8 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
 
         if (ColumnsetPackage.eINSTANCE.getColumnDependencyIndicator().equals(indicator.eClass())) {
             ColumnDependencyIndicator rowMatchingIndicator = (ColumnDependencyIndicator) indicator;
-            MeatadataColumn columnA = rowMatchingIndicator.getColumnA();
-            MeatadataColumn columnB = rowMatchingIndicator.getColumnB();
+            TdColumn columnA = rowMatchingIndicator.getColumnA();
+            TdColumn columnB = rowMatchingIndicator.getColumnB();
 
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
             Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
@@ -158,7 +158,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
      * @param useNulls
      * @return
      */
-    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, MeatadataColumn columnA, MeatadataColumn columnB,
+    private Expression createInstantiatedSqlExpression(Expression sqlGenericExpression, TdColumn columnA, TdColumn columnB,
             DbmsLanguage dbmsLanguage) {
         assert columnA != null;
         assert columnB != null;
@@ -187,7 +187,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
         return instantiatedExpression;
     }
 
-    private String getTableNameFromColumn(MeatadataColumn column) {
+    private String getTableNameFromColumn(TdColumn column) {
 
         ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
         if (columnSetOwner == null) {

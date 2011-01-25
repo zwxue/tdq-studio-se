@@ -57,7 +57,7 @@ import org.jfree.ui.TextAnchor;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils;
@@ -78,7 +78,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
     private ColumnSetMultiValueIndicator indicator;
 
-    private MeatadataColumn column;
+    private TdColumn column;
 
     private JFreeChart chart;
 
@@ -90,7 +90,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
     private Analysis analysis = null;
 
-    public HideSeriesChartComposite(Composite comp, Analysis ana, ColumnSetMultiValueIndicator indicator, MeatadataColumn column,
+    public HideSeriesChartComposite(Composite comp, Analysis ana, ColumnSetMultiValueIndicator indicator, TdColumn column,
             boolean isNeedUtility) {
         super(comp, SWT.NONE);
         this.analysis = ana;
@@ -172,7 +172,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
                         valueAggregator.addSeriesToXYZDataset(xyzDataSet, seriesK);
                         String seriesLabel = valueAggregator.getLabels(seriesK).get(xyItemEntity.getItem());
-                        EList<MeatadataColumn> nominalList = indicator.getNominalColumns();
+                        EList<TdColumn> nominalList = indicator.getNominalColumns();
                         final String queryString = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis,
                                 nominalList, seriesK, seriesLabel);
 
@@ -217,7 +217,7 @@ public class HideSeriesChartComposite extends ChartComposite {
 
             String seriesK = itemEntity.getRowKey().toString();
             String seriesLabel = itemEntity.getColumnKey().toString();
-            EList<MeatadataColumn> nominalList = indicator.getNominalColumns();
+            EList<TdColumn> nominalList = indicator.getNominalColumns();
             final String sql = MultiColumnSetValueExplorer.getInstance().getQueryStirng(column, analysis, nominalList, seriesK,
                     seriesLabel);
             MenuItem item = new MenuItem(menu, SWT.PUSH);

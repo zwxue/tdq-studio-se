@@ -38,7 +38,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
@@ -61,9 +61,9 @@ public final class EObjectHelper {
 
     }
 
-    public static MeatadataColumn[] getColumns(ColumnSet columnSet) {
-        List<MeatadataColumn> columns = ColumnSetHelper.getColumns(columnSet);
-        return columns.toArray(new MeatadataColumn[columns.size()]);
+    public static TdColumn[] getColumns(ColumnSet columnSet) {
+        List<TdColumn> columns = ColumnSetHelper.getColumns(columnSet);
+        return columns.toArray(new TdColumn[columns.size()]);
     }
 
     public static Package getParent(ColumnSet columnSet) {
@@ -77,11 +77,11 @@ public final class EObjectHelper {
     }
 
     /**
-     * TODO scorreia see if we can replace this method by {@link ConnectionHelper#getTdDataProvider(MeatadataColumn)}.
+     * TODO scorreia see if we can replace this method by {@link ConnectionHelper#getTdDataProvider(TdColumn)}.
      * 
-     * @deprecated it's probably better to use {@link ConnectionHelper#getTdDataProvider(MeatadataColumn)}
+     * @deprecated it's probably better to use {@link ConnectionHelper#getTdDataProvider(TdColumn)}
      */
-    public static Connection getTdDataProvider(MeatadataColumn column) {
+    public static Connection getTdDataProvider(TdColumn column) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
         return ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);

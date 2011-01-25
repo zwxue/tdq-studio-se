@@ -44,7 +44,7 @@ import org.talend.cwm.compare.factory.update.AddTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -393,7 +393,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     private void upperCase(EObject eObject) {
         Package pckg = SwitchHelpers.PACKAGE_SWITCH.doSwitch(eObject);
         ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObject);
-        MeatadataColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(eObject);
+        TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(eObject);
         if (column != null) {
             column.setName(column.getName() == null ? "" : column.getName().toUpperCase());
             column.setLabel(column.getLabel() == null ? "" : column.getLabel().toUpperCase());

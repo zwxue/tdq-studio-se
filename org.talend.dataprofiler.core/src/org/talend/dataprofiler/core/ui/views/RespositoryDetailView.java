@@ -48,7 +48,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
@@ -206,8 +206,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 ModelElement element = (ModelElement) fe;
                 createNameCommentDetail(element);
                 is = false;
-            } else if (fe instanceof MeatadataColumn) {
-                MeatadataColumn column = (MeatadataColumn) fe;
+            } else if (fe instanceof TdColumn) {
+                TdColumn column = (TdColumn) fe;
                 createTdColumn(column);
                 is = false;
             } else if (fe instanceof IEcosComponent) {
@@ -413,7 +413,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyses"), String.valueOf(description)); //$NON-NLS-1$
     }
 
-    private void createTdColumn(MeatadataColumn column) {
+    private void createTdColumn(TdColumn column) {
         createNameCommentDetail(column);
         newLabelAndText(
                 gContainer,

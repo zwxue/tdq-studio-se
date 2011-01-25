@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -49,7 +49,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
     @Override
     protected String getFreqRowsStatement() {
         // generate SELECT * FROM TABLE WHERE function(columnName) = labelToFind
-        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
 
         String clause = getInstantiatedClause();
         return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$
@@ -60,7 +60,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         // get function which convert data into a pattern
         String colName = columnName;
         String function = null;
-        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         int javaType = column.getSqlDataType().getJavaDataType();
         if (!Java2SqlType.isNumbericInSQL(javaType)) {
             function = getFunction();
@@ -91,7 +91,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         String dbmsName = this.dbmsLanguage.getDbmsName();
         if (DbmsLanguageFactory.isInfomix(dbmsName)) {
             // Handle date type.
-            MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
+            TdColumn column = (TdColumn) indicator.getAnalyzedElement();
             int javaType = column.getSqlDataType().getJavaDataType();
             if (Java2SqlType.isDateInSQL(javaType)) {
                 p = Pattern.compile(REGEX_INFOMIX_DATE, Pattern.CASE_INSENSITIVE);
@@ -118,7 +118,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
 
     private String columnNameConvert() {
         String colName = columnName;
-        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         IndicatorDefinition indicatorDefinition;
         String label = indicator.getIndicatorDefinition().getLabel();
         if (label == null || "".equals(label)) { //$NON-NLS-1$

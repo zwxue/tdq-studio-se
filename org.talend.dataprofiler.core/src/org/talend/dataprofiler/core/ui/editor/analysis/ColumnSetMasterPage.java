@@ -51,7 +51,7 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -177,7 +177,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
         ModelElementIndicator currentIndicator;
         for (ModelElement element : analyzedColumns) {
-            MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             if (tdColumn == null) {
                 continue;
             }
@@ -545,11 +545,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             analysis.getContext().setConnection(tdProvider);
 
-            List<MeatadataColumn> columnList = new ArrayList<MeatadataColumn>();
+            List<TdColumn> columnList = new ArrayList<TdColumn>();
             for (IRepositoryNode rd : repositoryNodes) {
                 reposObject = rd.getObject();
                 columnList.add(
-(MeatadataColumn) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
+(TdColumn) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
             }
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
             columnSetAnalysisHandler.addIndicator(columnList, simpleStatIndicator);
@@ -679,9 +679,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     protected ReturnCode canSave() {
         String message = null;
         List<IRepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
-        List<MeatadataColumn> columnList = new ArrayList<MeatadataColumn>();
+        List<TdColumn> columnList = new ArrayList<TdColumn>();
         for (IRepositoryNode rd : columnSetMultiValueList) {
-            columnList.add((MeatadataColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            columnList.add((TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
         }
         if (!columnSetMultiValueList.isEmpty()) {
             if (!ColumnHelper.isFromSameTable(columnList)) {

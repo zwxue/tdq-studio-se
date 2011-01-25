@@ -6,7 +6,7 @@
  */
 package org.talend.dataquality.indicators.columnset;
 
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.Indicator;
 
 /**
@@ -39,12 +39,12 @@ public interface ColumnDependencyIndicator extends Indicator {
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Column A</em>' reference.
-     * @see #setColumnA(MeatadataColumn)
+     * @see #setColumnA(TdColumn)
      * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnDependencyIndicator_ColumnA()
      * @model
      * @generated
      */
-    MeatadataColumn getColumnA();
+    TdColumn getColumnA();
 
     /**
      * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getColumnA <em>Column A</em>}' reference.
@@ -54,7 +54,7 @@ public interface ColumnDependencyIndicator extends Indicator {
      * @see #getColumnA()
      * @generated
      */
-    void setColumnA(MeatadataColumn value);
+    void setColumnA(TdColumn value);
 
     /**
      * Returns the value of the '<em><b>Column B</b></em>' reference.
@@ -65,12 +65,12 @@ public interface ColumnDependencyIndicator extends Indicator {
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Column B</em>' reference.
-     * @see #setColumnB(MeatadataColumn)
+     * @see #setColumnB(TdColumn)
      * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getColumnDependencyIndicator_ColumnB()
      * @model
      * @generated
      */
-    MeatadataColumn getColumnB();
+    TdColumn getColumnB();
 
     /**
      * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator#getColumnB <em>Column B</em>}' reference.
@@ -80,7 +80,7 @@ public interface ColumnDependencyIndicator extends Indicator {
      * @see #getColumnB()
      * @generated
      */
-    void setColumnB(MeatadataColumn value);
+    void setColumnB(TdColumn value);
 
     /**
      * Returns the value of the '<em><b>ACount</b></em>' attribute.

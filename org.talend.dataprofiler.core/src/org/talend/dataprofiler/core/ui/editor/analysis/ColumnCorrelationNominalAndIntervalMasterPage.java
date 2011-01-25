@@ -58,7 +58,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -173,7 +173,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         initializeIndicator(columnSetMultiIndicator);
         columnSetMultiIndicator.setStoreData(true);
         for (ModelElement element : analyzedColumns) {
-            MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             if (tdColumn == null) {
                 continue;
             }
@@ -405,7 +405,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             }
         } else {
 
-            List<MeatadataColumn> numericOrDateList = new ArrayList<MeatadataColumn>();
+            List<TdColumn> numericOrDateList = new ArrayList<TdColumn>();
             if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
                 numericOrDateList = columnSetMultiIndicator.getNumericColumns();
             }
@@ -413,8 +413,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 numericOrDateList = columnSetMultiIndicator.getDateColumns();
             }
 
-            for (MeatadataColumn column : numericOrDateList) {
-                final MeatadataColumn tdColumn = (MeatadataColumn) column;
+            for (TdColumn column : numericOrDateList) {
+                final TdColumn tdColumn = (TdColumn) column;
 
                 ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                         | ExpandableComposite.CLIENT_INDENT);
@@ -590,9 +590,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             // tdProvider = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(columnList.get(0)));
             analysis.getContext().setConnection(tdProvider);
 
-            List<MeatadataColumn> columnLst = new ArrayList<MeatadataColumn>();
+            List<TdColumn> columnLst = new ArrayList<TdColumn>();
             for (RepositoryNode repNode : repositoryNodeList) {
-                columnLst.add((MeatadataColumn) ((MetadataColumnRepositoryObject) repNode.getObject()).getTdColumn());
+                columnLst.add((TdColumn) ((MetadataColumnRepositoryObject) repNode.getObject()).getTdColumn());
             }
 
             columnSetMultiIndicator.getAnalyzedColumns().addAll(columnLst);
@@ -733,7 +733,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             } else if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
                 List<DBColumnRepNode> columnNodes = RepositoryNodeHelper.getColumnNodeList(nodes.toArray());
                 for (DBColumnRepNode columNode : columnNodes) {
-                    MeatadataColumn tdColumn = (MeatadataColumn) columNode.getTdColumn();
+                    TdColumn tdColumn = columNode.getTdColumn();
 
                     if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
                         message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
@@ -766,14 +766,14 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * @return
      */
     private String verifyColumn(List<RepositoryNode> columns, EClass className) {
-        List<MeatadataColumn> invalidCols = new ArrayList<MeatadataColumn>();
-        List<MeatadataColumn> nominalCols = new ArrayList<MeatadataColumn>();
-        List<MeatadataColumn> intervalCols = new ArrayList<MeatadataColumn>();
+        List<TdColumn> invalidCols = new ArrayList<TdColumn>();
+        List<TdColumn> nominalCols = new ArrayList<TdColumn>();
+        List<TdColumn> intervalCols = new ArrayList<TdColumn>();
         String message = null;
 
         for (int i = 0; i < columns.size(); i++) {
             RepositoryNode tdColumnNode = (RepositoryNode) columns.get(i);
-            MeatadataColumn tdColumn = (MeatadataColumn) ((MetadataColumnRepositoryObject) tdColumnNode.getObject()).getTdColumn();
+            TdColumn tdColumn = (TdColumn) ((MetadataColumnRepositoryObject) tdColumnNode.getObject()).getTdColumn();
             if (className == ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator()) {
                 if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                     invalidCols.add(tdColumn);

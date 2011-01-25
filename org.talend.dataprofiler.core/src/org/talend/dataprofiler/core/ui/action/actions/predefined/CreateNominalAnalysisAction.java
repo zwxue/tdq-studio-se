@@ -19,7 +19,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
@@ -58,10 +58,10 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
 
     @Override
     protected boolean preDo() {
-        List<MeatadataColumn> tempList = new ArrayList<MeatadataColumn>();
+        List<TdColumn> tempList = new ArrayList<TdColumn>();
 
         for (IRepositoryNode repositoryNode : getColumns()) {
-            MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+            TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
             if (!Java2SqlType.isTextInSQL(column.getSqlDataType().getJavaDataType())) {
                 tempList.add(column);
             }
@@ -78,7 +78,7 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
             if (Window.OK == dialog.open()) {
                 // zqin get the column and change their datamining type to "Nominal"
                 // use MetadataHelper
-                for (MeatadataColumn column : tempList) {
+                for (TdColumn column : tempList) {
                     MetadataHelper.setDataminingType(DataminingType.NOMINAL, column);
                 }
                 return true;

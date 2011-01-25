@@ -26,7 +26,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
@@ -1296,17 +1296,17 @@ public class DbmsLanguage {
     }
 
     private String getColumnName(ModelElement col) {
-        MeatadataColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
+        TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
         return column != null ? column.getName() : null;
     }
 
     private String getTableName(ModelElement col) {
-        MeatadataColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
+        TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
         return (column != null) ? ColumnHelper.getTableFullName(column) : null;
     }
 
     private ModelElement getTable(ModelElement col) {
-        MeatadataColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
+        TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
         return (column != null) ? ColumnHelper.getColumnOwnerAsColumnSet(column) : null;
     }
 

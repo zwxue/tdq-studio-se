@@ -26,7 +26,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -114,8 +114,8 @@ public class OpenItemEditorAction extends Action {
                 } else if (modelElement instanceof TdView) {
                     TdView tdView = SwitchHelpers.VIEW_SWITCH.caseView((View) modelElement);
                     connection = ConnectionHelper.getConnection(tdView);
-                } else if (modelElement instanceof MeatadataColumn) {
-                    MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.caseTdColumn((MeatadataColumn) modelElement);
+                } else if (modelElement instanceof TdColumn) {
+                    TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.caseTdColumn((TdColumn) modelElement);
                     connection = ConnectionHelper.getConnection(tdColumn);
                 }
 

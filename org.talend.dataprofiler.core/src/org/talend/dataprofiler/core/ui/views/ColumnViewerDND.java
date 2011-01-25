@@ -41,7 +41,7 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
@@ -439,11 +439,11 @@ public class ColumnViewerDND {
      * @return
      */
     static boolean isSameType(Object model1, Object model2) {
-        if ((model1 instanceof TdTable || model1 instanceof MeatadataColumn)
-                && (model2 instanceof TdTable || model2 instanceof MeatadataColumn)) {
+        if ((model1 instanceof TdTable || model1 instanceof TdColumn)
+                && (model2 instanceof TdTable || model2 instanceof TdColumn)) {
             if (model1 instanceof TdTable && model2 instanceof TdTable) {
                 return true;
-            } else if (model1 instanceof MeatadataColumn && model2 instanceof MeatadataColumn) {
+            } else if (model1 instanceof TdColumn && model2 instanceof TdColumn) {
                 return true;
             }
         }
@@ -621,7 +621,7 @@ public class ColumnViewerDND {
                 IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
                 Object object = selection.getFirstElement();
 
-                if (object instanceof MeatadataColumn) {
+                if (object instanceof TdColumn) {
                     receiver = new ColumnReceiverTable();
                 }
 
@@ -686,7 +686,7 @@ public class ColumnViewerDND {
                     .getSelection()).getFirstElement();
             IRepositoryViewObject repViewObj = firstElement.getObject();
             if (repViewObj instanceof MetadataColumnRepositoryObject) {
-                MeatadataColumn column = (MeatadataColumn) firstElement;
+                TdColumn column = (TdColumn) firstElement;
                 Table table = (Table) ((DropTarget) event.widget).getControl();
                 AbstractColumnDropTree viewer = (AbstractColumnDropTree) table.getData();
                 if (viewer != null && viewer.canDrop(firstElement)) {

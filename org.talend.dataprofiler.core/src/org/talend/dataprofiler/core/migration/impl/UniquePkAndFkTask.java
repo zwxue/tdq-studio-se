@@ -27,7 +27,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -103,7 +103,7 @@ public class UniquePkAndFkTask extends AbstractWorksapceUpdateTask {
             List<PrimaryKey> primaryKeyList = TableHelper.getPrimaryKeys(element);
             for (int i = 1; i < primaryKeyList.size(); i++) {
                 PrimaryKey pk = primaryKeyList.get(i);
-                MeatadataColumn column = (MeatadataColumn) pk.getFeature().get(pk.getFeature().size() - 1);
+                TdColumn column = (TdColumn) pk.getFeature().get(pk.getFeature().size() - 1);
                 ColumnHelper.removePrimaryKey(column);// remove old pk from column
                 column.getUniqueKey().add(primaryKeyList.get(0));// add new pk to column
                 primaryKeyList.get(0).getFeature().add(column);// add column to new pk
@@ -122,7 +122,7 @@ public class UniquePkAndFkTask extends AbstractWorksapceUpdateTask {
                     StructuralFeature[] structFeatureArray = fk.getFeature().toArray(
                             new StructuralFeature[fk.getFeature().size()]);
                     for (StructuralFeature fkFeature : structFeatureArray) {
-                        MeatadataColumn fkColumn = (MeatadataColumn) fkFeature;
+                        TdColumn fkColumn = (TdColumn) fkFeature;
                         fkColumn.getKeyRelationship().remove(fk);
                         fkColumn.getKeyRelationship().add(foreignKeySet.get(fk.getName()));
                     }

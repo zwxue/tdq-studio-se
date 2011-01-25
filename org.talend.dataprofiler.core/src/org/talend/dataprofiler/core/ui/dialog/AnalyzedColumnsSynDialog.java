@@ -22,7 +22,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.PackageHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -49,13 +49,13 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
 
     @Override
     public void reloadInputModel() {
-        MeatadataColumn column = null;
+        TdColumn column = null;
         modelInput.clear();
         synedEleMap.clear();
         for (ModelElement element : analyzedElements) {
             try {
 
-                column = (MeatadataColumn) element;
+                column = (TdColumn) element;
                 synedEleMap.put(column, null);
 
                 ColumnSet anaColumnSet = ColumnHelper.getColumnSetOwner(column);
@@ -128,8 +128,8 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
                     continue;
                 }
 
-                MeatadataColumn connColumn = null;
-                for (MeatadataColumn loopColumn : ColumnSetHelper.getColumns(connColumnSet)) {
+                TdColumn connColumn = null;
+                for (TdColumn loopColumn : ColumnSetHelper.getColumns(connColumnSet)) {
                     if (loopColumn.getName().equalsIgnoreCase(column.getName())) {
                         connColumn = loopColumn;
                         break;

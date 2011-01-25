@@ -16,7 +16,7 @@ package org.talend.dq.analysis.explore;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.utils.sql.Java2SqlType;
 
@@ -45,14 +45,14 @@ public final class MultiColumnSetValueExplorer extends DataExplorer {
         return null;
     }
 
-    public String getQueryStirng(MeatadataColumn column, Analysis ana, EList<MeatadataColumn> nominalList, String columnName, String columnValue) {
+    public String getQueryStirng(TdColumn column, Analysis ana, EList<TdColumn> nominalList, String columnName, String columnValue) {
         setAnalysis(ana);
         // MOD by hcheng for 6530
         String queryString = SELECT_ALL_FROM + getFullyQualifiedTableName(column);
         int col = columnName.indexOf(" "); //$NON-NLS-1$
         int val = columnValue.indexOf("|"); //$NON-NLS-1$
-        for (MeatadataColumn nominal : nominalList) {
-            final MeatadataColumn tdColumn = (MeatadataColumn) nominal;
+        for (TdColumn nominal : nominalList) {
+            final TdColumn tdColumn = (TdColumn) nominal;
 
             if (col > 0 && val > 0) {
                 String[] name = columnName.split(" "); //$NON-NLS-1$
@@ -73,7 +73,7 @@ public final class MultiColumnSetValueExplorer extends DataExplorer {
 
     }
 
-    private String buildWhereClause(String queryString, final MeatadataColumn tdColumn, String name, String value, String where) {
+    private String buildWhereClause(String queryString, final TdColumn tdColumn, String name, String value, String where) {
         if (tdColumn.getName().equals(name) && !value.equals("null")) { //$NON-NLS-1$
             if (Java2SqlType.isTextInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
                 queryString += where + dbmsLanguage.quote(name) + dbmsLanguage.equal() + "'" + value + "'"; //$NON-NLS-1$ //$NON-NLS-2$

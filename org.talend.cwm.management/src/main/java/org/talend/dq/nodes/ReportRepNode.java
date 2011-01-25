@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -24,10 +22,6 @@ import org.talend.repository.model.RepositoryNode;
  * DOC klliu class global comment. Detailled comment
  */
 public class ReportRepNode extends RepositoryNode {
-
-    public static String anaFloder = "Analyzes";
-
-    public static String genFloder = "Generated Documents";
 
     /**
      * DOC klliu ReportRepNode constructor comment.
@@ -38,20 +32,36 @@ public class ReportRepNode extends RepositoryNode {
      */
     public ReportRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        List<IRepositoryNode> anaElement = new ArrayList<IRepositoryNode>();
-        ReportSubFolderRepNode anaNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
-        anaNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORTS);
-        anaNodeFolder.setProperties(EProperties.LABEL, anaFloder);
-        anaElement.add(anaNodeFolder);
-        ReportSubFolderRepNode grenNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
-        grenNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORTS);
-        grenNodeFolder.setProperties(EProperties.LABEL, genFloder);
-        anaElement.add(grenNodeFolder);
-        return anaElement;
-        // return super.getChildren();
+        // RepositoryNode parent = node;
+        // for (Object object : patterns.getSubContainer()) {
+        // Container container = (Container) object;
+        // Object property = container.getProperty();
+        // Folder folder = new Folder(((Property) property), itemType);
+        // RepositoryNode childNodeFolder = new RepositoryNode(folder, parent, ENodeType.SIMPLE_FOLDER);
+        // parent.getChildren().add(childNodeFolder);
+        // fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
+        // }
+        // // not folder or folders have no subFolder
+        // for (Object obj : patterns.getMembers()) {
+        // RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
+        // if (!viewObject.isDeleted()) {
+        // if (node instanceof ReportFolderRepNode) {
+        // ReportRepNode repNode = new ReportRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+        // viewObject.setRepositoryNode(repNode);
+        // parent.getChildren().add(repNode);
+        //
+        // } else {
+        // RepositoryNode elementNode = new RepositoryNode(viewObject, parent, ENodeType.REPOSITORY_ELEMENT);
+        // parent.getChildren().add(elementNode);
+        // }
+        // }
+        // }
+        // return parent;
+        return super.getChildren();
     }
 }

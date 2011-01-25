@@ -32,7 +32,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
@@ -78,7 +78,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
             assert indicator != null;
-            MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
             if (tdColumn == null) {
                 continue;
             }
@@ -121,7 +121,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @param tdColumn a column
      * @return false when the given column has an owner different from the one registered in the map.
      */
-    protected boolean belongToSameSchemata(final MeatadataColumn tdColumn) {
+    protected boolean belongToSameSchemata(final TdColumn tdColumn) {
         assert tdColumn != null;
         if (schemata.get(tdColumn) != null) {
             return true;
@@ -165,7 +165,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         while (iterator.hasNext()) { // for (ModelElement modelElement : analysedElements) {
             ModelElement modelElement = iterator.next();
             // --- preconditions
-            MeatadataColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
+            TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
             if (col == null) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenElementIsNotColumn", modelElement); //$NON-NLS-1$
                 return null;
@@ -204,11 +204,11 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         }
         // MOD zshen feature 12919 select all the column to be prepare for drill down.
         if (analysis.getParameters().isStoreData()) {
-            List<MeatadataColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysedElements.get(0)
+            List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysedElements.get(0)
                     .eContainer()));
-            Iterator<MeatadataColumn> iter = columnList.iterator();
+            Iterator<TdColumn> iter = columnList.iterator();
             while (iter.hasNext()) {
-                MeatadataColumn column = iter.next();
+                TdColumn column = iter.next();
                 sql.append(this.quote(column.getName()));
                 // append comma if more columns exist
                 if (iter.hasNext()) {
@@ -294,7 +294,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         analysisHandler.setAnalysis(analysis);
 
         for (ModelElement node : context.getAnalysedElements()) {
-            MeatadataColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
+            TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
 
             // --- Check that each analyzed element has at least one indicator
             if (analysisHandler.getIndicators(column).size() == 0) {
@@ -319,9 +319,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @param column a column
      * @return the quoted column name
      */
-    protected String getQuotedColumnName(MeatadataColumn column) {
+    protected String getQuotedColumnName(TdColumn column) {
         if (column != null && column.eIsProxy()) {
-            column = (MeatadataColumn) EObjectHelper.resolveObject(column);
+            column = (TdColumn) EObjectHelper.resolveObject(column);
         }
         assert column != null;
         String quotedColName = quote(column.getName());
@@ -334,9 +334,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @param column
      * @return the quoted table name
      */
-    protected String getQuotedTableName(MeatadataColumn column) {
+    protected String getQuotedTableName(TdColumn column) {
         if (column != null && column.eIsProxy()) {
-            column = (MeatadataColumn) EObjectHelper.resolveObject(column);
+            column = (TdColumn) EObjectHelper.resolveObject(column);
         }
         String table = quote(ColumnHelper.getTableFullName(column));
         return table;

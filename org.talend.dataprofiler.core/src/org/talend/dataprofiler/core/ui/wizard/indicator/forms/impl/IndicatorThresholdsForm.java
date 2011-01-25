@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -124,7 +124,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 }
             } else {
                 // int sqltype = ((TdColumn) analyzedElement).getJavaType();
-                int sqltype = ((MeatadataColumn) analyzedElement).getSqlDataType().getJavaDataType();
+                int sqltype = ((TdColumn) analyzedElement).getSqlDataType().getJavaDataType();
                 isRangeForDate = Java2SqlType.isDateInSQL(sqltype)
                         && currentIndicatorType.isAChildOf(IndicatorEnum.RangeIndicatorEnum);
 

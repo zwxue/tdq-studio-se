@@ -31,7 +31,7 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -153,9 +153,9 @@ public abstract class AbstractPagePart {
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, List<TableViewer> tableViewerPosStack) {
         boolean isEmpty1 = tableViewerPosStack.get(0) == null || tableViewerPosStack.get(0).getInput() == null
-                || ((List<MeatadataColumn>) tableViewerPosStack.get(0).getInput()).size() == 0;
+                || ((List<TdColumn>) tableViewerPosStack.get(0).getInput()).size() == 0;
         boolean isEmpty2 = tableViewerPosStack.get(1) == null || tableViewerPosStack.get(1).getInput() == null
-                || ((List<MeatadataColumn>) tableViewerPosStack.get(1).getInput()).size() == 0;
+                || ((List<TdColumn>) tableViewerPosStack.get(1).getInput()).size() == 0;
         if (isEmpty1 && isEmpty2) {
             return;
         } else {
@@ -171,10 +171,10 @@ public abstract class AbstractPagePart {
 
             List<DBColumnRepNode> columnSet = (List<DBColumnRepNode>) input;
             if (columnSet != null && columnSet.size() != 0) {
-                MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) columnSet.get(0).getObject()).getTdColumn();
+                TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) columnSet.get(0).getObject()).getTdColumn();
 
                 if (column != null && column.eIsProxy()) {
-                    column = (MeatadataColumn) EObjectHelper.resolveObject(column);
+                    column = (TdColumn) EObjectHelper.resolveObject(column);
                 }
                 tdProvider = ConnectionHelper.getTdDataProvider(column);
                 setConnectionState(masterPage, tdProvider);

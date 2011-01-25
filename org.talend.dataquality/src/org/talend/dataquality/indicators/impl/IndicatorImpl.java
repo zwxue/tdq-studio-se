@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
@@ -412,7 +412,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         if (elt == null) {
             return getDataminingTypeGen();
         }
-        MeatadataColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
+        TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
         if (col == null) {
             return getDataminingTypeGen();
         }
@@ -1022,7 +1022,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         int javaType = Types.JAVA_OBJECT; // default type
         ModelElement elt = this.getAnalyzedElement();
         if (elt != null) {
-            MeatadataColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
+            TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
             if (col != null) {
                 javaType = col.getSqlDataType().getJavaDataType();
             }

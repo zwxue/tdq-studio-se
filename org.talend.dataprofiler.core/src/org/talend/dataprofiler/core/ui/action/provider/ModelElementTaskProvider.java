@@ -23,7 +23,6 @@ import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -67,18 +66,15 @@ public class ModelElementTaskProvider extends AbstractCommonActionProvider {
         Object firstElement = currentSelection.getFirstElement();
         if (firstElement instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) firstElement;
-            RepositoryNode parent = node.getParent();
-            if (!(parent instanceof ReportSubFolderRepNode)) {
-                Item item = node.getObject().getProperty().getItem();
-                if (item instanceof TDQAnalysisItem || item instanceof TDQReportItem || item instanceof ConnectionItem) {
-                    IPath append = WorkbenchUtils.getFilePath(node);
-                    IFile file = ResourceManager.getRootProject().getFile(append);
-                    addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), file);
-                    menu.add(addTaskAction);
-
-                }
+            Item item = node.getObject().getProperty().getItem();
+            if (item instanceof TDQAnalysisItem || item instanceof TDQReportItem || item instanceof ConnectionItem) {
+                IPath append = WorkbenchUtils.getFilePath(node);
+                IFile file = ResourceManager.getRootProject().getFile(append);
+                addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), file);
+                menu.add(addTaskAction);
 
             }
+
         }
     }
 }

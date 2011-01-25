@@ -22,7 +22,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
@@ -46,7 +46,7 @@ public class AnalyzeColumnSetAction extends Action {
 
     TreeSelection selection;
 
-    MeatadataColumn[] columns;
+    TdColumn[] columns;
 
     private DBConnectionRepNode connNode = null;
 
@@ -63,7 +63,7 @@ public class AnalyzeColumnSetAction extends Action {
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
 
-    public AnalyzeColumnSetAction(MeatadataColumn[] columns) {
+    public AnalyzeColumnSetAction(TdColumn[] columns) {
         super("Analyze Column Set"); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
         needselection = false;
@@ -114,12 +114,12 @@ public class AnalyzeColumnSetAction extends Action {
             if (editor != null) {
                 ColumnSetMasterPage page = (ColumnSetMasterPage) editor.getMasterPage();
                 if (this.needselection && !this.selection.isEmpty()) {
-                    MeatadataColumn[] tdColumns = new MeatadataColumn[selection.size()];
+                    TdColumn[] tdColumns = new TdColumn[selection.size()];
                     Iterator it = this.selection.iterator();
 
                     int i = 0;
                     while (it.hasNext()) {
-                        tdColumns[i] = (MeatadataColumn) it.next();
+                        tdColumns[i] = (TdColumn) it.next();
                         i++;
                     }
                     page.getTreeViewer().setInput(tdColumns);

@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -53,7 +53,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
      * @return
      */
 
-    public boolean addIndicator(List<MeatadataColumn> columns, Indicator indicator) {
+    public boolean addIndicator(List<TdColumn> columns, Indicator indicator) {
         for (ModelElement tdColumn : columns) {
             if (!analysis.getContext().getAnalysedElements().contains(tdColumn)) {
                 analysis.getContext().getAnalysedElements().add(tdColumn);
@@ -68,7 +68,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
 
         if (connection == null) { // try to get one
             for (ModelElement element : columns) {
-                MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+                TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
                 log.error("Connection has not been set in analysis Context");
                 connection = ConnectionHelper.getTdDataProvider(tdColumn);
                 analysis.getContext().setConnection(connection);
@@ -86,7 +86,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
         return true;
     }
 
-    private void initializeIndicator(Indicator indicator, List<MeatadataColumn> columns) {
+    private void initializeIndicator(Indicator indicator, List<TdColumn> columns) {
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }
@@ -113,7 +113,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
      * @param dataminingTypeLiteral the literal expression of the datamining type used for the analysis
      * @param column a column
      */
-    public void setDatamingType(String dataminingTypeLiteral, MeatadataColumn column) {
+    public void setDatamingType(String dataminingTypeLiteral, TdColumn column) {
         DataminingType type = DataminingType.get(dataminingTypeLiteral);
         MetadataHelper.setDataminingType(type, column);
         Resource resource = column.eResource();
@@ -130,7 +130,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
      * @param column
      * @return
      */
-    public DataminingType getDatamingType(MeatadataColumn column) {
+    public DataminingType getDatamingType(TdColumn column) {
 
         return MetadataHelper.getDataminingType(column);
     }
@@ -157,7 +157,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
      * @param column
      * @return the indicators attached to this column
      */
-    public Collection<Indicator> getIndicatorLeaves(MeatadataColumn column) {
+    public Collection<Indicator> getIndicatorLeaves(TdColumn column) {
         // get the leaf indicators
         Collection<Indicator> leafIndics = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
         // filter only indicators for this column

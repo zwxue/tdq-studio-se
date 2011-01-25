@@ -51,7 +51,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -317,8 +317,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
                 break;
             } else if (tableAliasA.equals(tableAliasB)) {
                 ret = false;
-                String tableA = ColumnHelper.getColumnSetOwner((MeatadataColumn) join.getColA()).getName();
-                String tableB = ColumnHelper.getColumnSetOwner((MeatadataColumn) join.getColB()).getName();
+                String tableA = ColumnHelper.getColumnSetOwner((TdColumn) join.getColA()).getName();
+                String tableB = ColumnHelper.getColumnSetOwner((TdColumn) join.getColB()).getName();
                 msg += DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.sameTableAlias", tableA, tableB) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
             } else {
                 if (!checkAlias(tableAliasA)) {
@@ -646,8 +646,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             if (transfer.isSupportedType(event.currentDataType)) {
                 if (event.data instanceof TreeSelection) {
                     TreeSelection ts = (TreeSelection) event.data;
-                    if (ts.getFirstElement() instanceof MeatadataColumn) {
-                        MeatadataColumn column = (MeatadataColumn) ts.getFirstElement();
+                    if (ts.getFirstElement() instanceof TdColumn) {
+                        TdColumn column = (TdColumn) ts.getFirstElement();
                         setColumn(column);
 
                         DropTarget target = (DropTarget) event.widget;
@@ -660,7 +660,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             }
         }
 
-        public void setColumn(MeatadataColumn column) {
+        public void setColumn(TdColumn column) {
             switch (getIndex()) {
             case LEFT:
                 getJoinElement().setColA(column);

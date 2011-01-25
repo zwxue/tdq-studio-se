@@ -26,7 +26,6 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -45,11 +44,9 @@ import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
-import org.talend.dq.nodes.PatternLanguageRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportRepNode;
-import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -147,9 +144,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
                     return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 }
-                // else if (node instanceof PatternLanguageRepNode) {
-                // return ImageLib.getImage(ImageLib.);
-                // }
             }
         }
         // ~
@@ -172,24 +166,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return DefaultMessagesImpl.getString("ColumnFolderNode.columns");
             } else if (node instanceof SourceFileRepNode) {
                 return ((SourceFileRepNode) node).getLabel();
-            } else if (node instanceof AnalysisRepNode || node instanceof ReportRepNode
-                    || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
-                    || node instanceof RuleRepNode) {
+            } else if (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof SysIndicatorDefinitionRepNode
+                    || node instanceof PatternRepNode || node instanceof RuleRepNode) {
                 return node.getObject().getLabel() + " " + node.getObject().getVersion();
             } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
                 return node.getObject().getLabel() + "(Unsupported)";
-            } else if (node instanceof AnalysisSubFolderRepNode) {
-                IRepositoryViewObject object = node.getObject();
-                if (object == null) {
-                    return DefaultMessagesImpl.getString("AnalysisSubFolderRepNode.analyzedElement");
-                }
-            } else if (node instanceof ReportSubFolderRepNode) {
-                IRepositoryViewObject object = node.getObject();
-                if (object == null) {
-                    return (String) node.getProperties(EProperties.LABEL);
-                }
-            } else if (node instanceof PatternLanguageRepNode) {
-                return node.getLabel();
             }
             return node.getObject().getLabel();
         }

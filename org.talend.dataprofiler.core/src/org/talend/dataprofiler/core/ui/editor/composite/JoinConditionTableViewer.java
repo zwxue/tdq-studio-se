@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -102,7 +102,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         this.myTable = createTable(parent);
 
         if (this.myJoinElement.size() > 0) {
-            updateColumnSetPackage((MeatadataColumn) this.myJoinElement.get(0).getColA());
+            updateColumnSetPackage((TdColumn) this.myJoinElement.get(0).getColA());
         }
     }
 
@@ -112,7 +112,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
      * @param column
      * @return
      */
-    private boolean updateColumnSetPackage(MeatadataColumn column) {
+    private boolean updateColumnSetPackage(TdColumn column) {
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(ColumnHelper.getColumnSetOwner(column));
         if (this.columnSetPackage == null) {
             this.columnSetPackage = parentCatalogOrSchema;
@@ -318,8 +318,8 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             Object result = null;
             JoinElement join = (JoinElement) element;
 
-            MeatadataColumn colA = (MeatadataColumn) join.getColA();
-            MeatadataColumn colB = (MeatadataColumn) join.getColB();
+            TdColumn colA = (TdColumn) join.getColA();
+            TdColumn colB = (TdColumn) join.getColB();
 
             ColumnSet tabA = colA == null ? null : ColumnHelper.getColumnSetOwner(colA);
             ColumnSet tabB = colB == null ? null : ColumnHelper.getColumnSetOwner(colB);
@@ -442,8 +442,8 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
             JoinElement join = (JoinElement) element;
 
-            MeatadataColumn colA = (MeatadataColumn) join.getColA();
-            MeatadataColumn colB = (MeatadataColumn) join.getColB();
+            TdColumn colA = (TdColumn) join.getColA();
+            TdColumn colB = (TdColumn) join.getColB();
 
             ColumnSet tabA = colA == null ? null : ColumnHelper.getColumnSetOwner(colA);
             ColumnSet tabB = colB == null ? null : ColumnHelper.getColumnSetOwner(colB);
@@ -556,11 +556,11 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     @Override
     public void dropModelElements(List<? extends IRepositoryNode> modelElements, int index) {
-        List<MeatadataColumn> columns = new ArrayList<MeatadataColumn>();
+        List<TdColumn> columns = new ArrayList<TdColumn>();
         for (IRepositoryNode repNode : modelElements) {
             if (repNode.getObject() instanceof MetadataColumnRepositoryObject) {
 
-                MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) repNode.getObject()).getTdColumn();
+                TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repNode.getObject()).getTdColumn();
                 if (column != null) {
                     columns.add(column);
                 }
@@ -575,7 +575,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
             }
             if (join != null) {
                 boolean dirty = false;
-                for (MeatadataColumn column : columns) {
+                for (TdColumn column : columns) {
                     if (column != null) {
                         if (!updateColumnSetPackage(column)) {
                             break;

@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.MeatadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
@@ -226,7 +226,7 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
      */
     @Override
     public boolean prepare() {
-        MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
+        TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
         this.defValue = ColumnHelper.getDefaultValue(tdColumn);
         return super.prepare();
     }
