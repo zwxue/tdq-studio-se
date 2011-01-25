@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.standardization.index;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -29,9 +30,12 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,19 +55,16 @@ public class SynonymIndexBuilderTest {
             { "IAIDQ", "International Association for Information & Data Quality|Int. Assoc. Info & DQ" }, };
 
     private static final String[] testList = { "IBM", "International Business Machines", "Big Blue", "I.B.M.", "big blue", "ibm",
-            "Ibm", "International assoc", "IAIDQ", "I.A.I.D.Q.", /* "I.B.M" */};
-
-    private static boolean recomputeIndex = true;
+            "Ibm", "International assoc", "IAIDQ", "I.A.I.D.Q.", "I.B.M." };
 
     private static boolean useQueryParser = true;
 
     private static boolean useAllDocCollector = false;
 
-    /**
-     * DOC scorreia Comment method "setUp".
-     * 
-     * @throws java.lang.Exception
-     */
+    private static boolean useMemeryForIndex = false;
+
+    private SynonymIndexBuilder builder;
+
     @Before
     public void setUp() throws Exception {
         initOnceForAll();
@@ -74,22 +75,119 @@ public class SynonymIndexBuilderTest {
         if (!path.exists()) {
             fail("Path does not exist, please create " + path.getPath() + " first!");
         }
-        if (recomputeIndex || path.listFiles().length == 0) {
-            SynonymIndexBuilder b = new SynonymIndexBuilder("data/index");
 
-            for (String[] syns : synonyms) {
-                b.index(syns[0], syns[1], '|');
-            }
-            b.closeIndex();
+
+        builder = new SynonymIndexBuilder();
+        builder.initIndexInfile(path);
+
+        // builder.initIndexInRAM();
+
+        builder.setSynonymSeparator('|');
+    }
+
+    @After
+    public void closeIndex() throws Exception {
+        builder.closeIndex();
+    }
+
+
+    private void insertAllDocuments() throws IOException {
+        for (String[] syns : synonyms) {
+            builder.insertSynonymDocument(syns[0], syns[1]);
         }
+    }
+
+    @Test
+    public void testInsertDocuments() throws Exception {
+        System.out.println("---------------Test insertDocuments--------------");
+        builder.deleteAllDocuments();
+        insertAllDocuments();
+        assertEquals(synonyms.length, builder.getWriter().numDocs());
+    }
+
+    @Test
+    public void testInsertSynonymDocument() throws IOException {
+        System.out.println("\n-------------Test addSynonymDocument-------------");
+        builder.insertSynonymDocument("ADD", "I|am|a|new|document");
+        builder.insertSynonymDocument("I.B.M.", "This|is|an|existing|document");
+        assertEquals(synonyms.length + 1, builder.getWriter().numDocs());
+    }
+
+    @Test
+    public void testUpdateSynonymDocument() throws IOException {
+        System.out.println("\n------------Test updateSynonymDocument-----------");
+        int updateCount = 0;
+        updateCount += builder.updateSynonymDocument("Sécurité Sociale", "I|have|been|updated");
+        updateCount += builder.updateSynonymDocument("INEXIST", "I|don't|exist");
+        assertEquals(1, updateCount);
+    }
+
+    @Test
+    public void testDeleteSynonymDocument() throws IOException {
+        System.out.println("\n------------Test deleteSynonymDocument-----------");
+        int deleteCount = 0;
+
+        assertEquals(1, builder.searchDocumentByWord("I.B.M.").totalHits);
+        deleteCount += builder.deleteSynonymDocument("ibm");
+        
+
+        deleteCount += builder.deleteSynonymDocument("random");
+        assertEquals(1, deleteCount);
+
+    }
+
+    @Test
+    public void testAddSynonymToWord() throws IOException {
+
+        System.out.println("\n---------------Test addSynonymToWord-------------");
+        int addCount = 0;
+
+        addCount += builder.addSynonymToWord("ANPE", "Another synonym of ANPE");
+        addCount += builder.addSynonymToWord("ANPE", "A.N.P.E");
+        addCount += builder.addSynonymToWord("ANPEEEE", "A.N.P.E");
+
+        assertEquals(1, addCount);
+    }
+
+    @Test
+    public void testDeleteSynonymFromWord() throws IOException {
+        System.out.println("\n------------Test deleteSynonymFromWord-----------");
+
+        int deleteCount = 0;
+
+        // the synonym to delete should be precise and case sensitive
+        deleteCount += builder.deleteSynonymFromWord("ANPE", "a.n.p.e");
+        deleteCount += builder.deleteSynonymFromWord("ANPE", "A.N.P.E");
+        deleteCount += builder.deleteSynonymFromWord("ANPE", "Pôle Emploi");
+
+        assertEquals(2, deleteCount);
+    }
+
+    @Test
+    public void testSearchDocumentBySynonym() throws IOException {
+        System.out.println("\n-----------Test searchDocumentBySynonym----------");
+        TopDocs docs = builder.searchDocumentBySynonym("i");
+        System.out.println(docs.totalHits + " documents found.");
+        for (int i = 0; i < docs.totalHits; i++) {
+            System.out.print(docs.scoreDocs[i]);
+            Document doc = builder.getSearcher().doc(docs.scoreDocs[i].doc);
+            System.out.println(Arrays.toString(doc.getValues("syn")));
+        }
+
+        assertEquals(2, docs.totalHits);
+    }
+
+    // @Test
+    public void testDeleteAll() throws IOException {
+        builder.deleteAllDocuments();
+        assertEquals(0, builder.getWriter().numDocs());
     }
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.standardization.index.SynonymIndexBuilder#index(java.lang.String, java.lang.String, char)}
+     * {@link org.talend.dataquality.standardization.index.SynonymIndexBuilder#input(java.lang.String, java.lang.String, char)}
      * .
      */
-    @Test
     public void testIndexStringStringChar() {
         for (String str : testList) {
             search(str);
@@ -104,12 +202,14 @@ public class SynonymIndexBuilderTest {
      */
     private void search(String str) {
         try {
-            FSDirectory index = FSDirectory.open(path);
+            Directory index = useMemeryForIndex ? builder.getIndexDir() : FSDirectory.open(path);
+
             searcher = new IndexSearcher(index);
 
             // Query query = new QueryParser(Version.LUCENE_30, "syn", synonymAnalyzer).parse("\"" + str + "\"");
             Query query = useQueryParser ? new QueryParser(Version.LUCENE_30, "syn", synonymAnalyzer).parse(str)
                     : new PhraseQuery();
+
             if (!useQueryParser) {
                 ((PhraseQuery) query).add(new Term("syn", str));
             }
