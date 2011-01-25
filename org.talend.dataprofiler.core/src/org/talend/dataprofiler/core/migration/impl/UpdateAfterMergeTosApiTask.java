@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.migration.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
+import org.talend.utils.io.FilesUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -51,46 +53,51 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(UpdateAfterMergeTosApiTask.class);
 
+    private static final String MIGRATION_FILE_EXT = ".mig";//$NON-NLS-1$
+
+    private static final String MIGRATION_FOLDER_EXT = "_mig";//$NON-NLS-1$
+
+    private static final String TDQ_DATAPROFILING = "TDQ_Data Profiling";//$NON-NLS-1$
+
+    private static final String TDQ_LIBRARIES = "TDQ_Libraries";//$NON-NLS-1$
+
+    private static final String SOFTWARE_SYSTEM_FILE = ".softwaresystem.softwaredeployment";//$NON-NLS-1$
+
+    private static final String DOT = ".";//$NON-NLS-1$
+
     private ProxyRepositoryFactory prfInstance;
-
-    private static final String MIGRATION_FOLDER_EXT = "_mig";
-
-    private static final String TDQ_DATAPROFILING = "TDQ_Data Profiling";
-
-    private static final String TDQ_LIBRARIES = "TDQ_Libraries";
 
     private File systemIndicatorMigFolder;
 
     private File userDefinedIndicatorMigFolder;
 
-    private Map<String, String> replaceStringMapIndicators = new HashMap<String, String>();
+    private Map<String, String> replaceStringMapIndicators;
 
     private File patternRegexMigFolder;
 
     private File patternSqlMigFolder;
 
-    private Map<String, String> replaceStringMapPatterns = new HashMap<String, String>();
+    private Map<String, String> replaceStringMapPatterns;
 
-    private File ruleSqlMigFolder;
+    private File ruleMigFolder;
 
-    private Map<String, String> replaceStringMapRules = new HashMap<String, String>();
+    private Map<String, String> replaceStringMapRules;
 
     private File sourceFileMigFolder;
 
-    // source file don't need to record replace information
-    // private Map<String, String> replaceStringMapSourceFiles = new HashMap<String, String>();
-
     private File jrxmlTemplateMigFolder;
 
-    private Map<String, String> replaceStringMapJrxmlTemplates = new HashMap<String, String>();
+    private Map<String, String> replaceStringMapJrxmlTemplates;
 
     private File analysisMigFolder;
 
-    private Map<String, String> replaceStringMapAnalysis = new HashMap<String, String>();
+    private Map<String, String> replaceStringMapAnalysis;
 
     private File reportMigFolder;
 
-    private Map<String, String> replaceStringMapReports = new HashMap<String, String>();
+    private Map<String, String> replaceStringMapReports;
+
+    private Map<String, String> replaceStringMapCommonFolders;
 
     public UpdateAfterMergeTosApiTask() {
         init();
@@ -101,6 +108,17 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             CorePlugin.getDefault().initProxyRepository();
         }
         this.prfInstance = ProxyRepositoryFactory.getInstance();
+
+        this.replaceStringMapIndicators = new HashMap<String, String>();
+        this.replaceStringMapPatterns = new HashMap<String, String>();
+        this.replaceStringMapRules = new HashMap<String, String>();
+        this.replaceStringMapJrxmlTemplates = new HashMap<String, String>();
+        this.replaceStringMapAnalysis = new HashMap<String, String>();
+        this.replaceStringMapReports = new HashMap<String, String>();
+        // common folder(TDQ_DATAPROFILING, TDQ_LIBRARIES) need to be replace also
+        this.replaceStringMapCommonFolders = new HashMap<String, String>();
+        replaceStringMapCommonFolders.put(TDQ_DATAPROFILING + MIGRATION_FILE_EXT, TDQ_DATAPROFILING);
+        replaceStringMapCommonFolders.put(TDQ_LIBRARIES + MIGRATION_FILE_EXT, TDQ_LIBRARIES);
     }
 
     /*
@@ -128,7 +146,170 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      */
     @Override
     protected boolean doExecute() throws Exception {
-        return renameFolders(getWorkspacePath()) && createNewFolders() && updateLibrariesFolder() && updateDataProfilingFolder();
+        boolean b1 = renameFolders(getWorkspacePath());
+        boolean b2 = createNewFolders();
+        boolean b3 = updateLibrariesFolder();
+        boolean b4 = updateDataProfilingFolder();
+        boolean b5 = replaceFileName();
+        boolean b6 = deleteMigFolders(getWorkspacePath());
+        boolean b7 = clearModelElementCache();
+        return b1 && b2 && b3 && b4 && b5 && b6 && b7;
+    }
+
+    /**
+     * clear the cache of ModelElement.
+     * 
+     * @return
+     */
+    private boolean clearModelElementCache() {
+        try {
+            AnaResourceFileHelper.getInstance().clear();
+            RepResourceFileHelper.getInstance().clear();
+            IndicatorResourceFileHelper.getInstance().clear();
+            PatternResourceFileHelper.getInstance().clear();
+            DQRuleResourceFileHelper.getInstance().clear();
+        } catch (Exception e) {
+            log.error(e, e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * delete mig folders.
+     * 
+     * @param basePath
+     * @return
+     */
+    private boolean deleteMigFolders(IPath basePath) {
+        IPath librariesPath = basePath.append(ResourceManager.getLibrariesFolder().getFullPath()
+                .makeRelativeTo(ResourceManager.getRootProject().getFullPath()));
+        IPath dataProfilingPath = basePath.append(ResourceManager.getDataProfilingFolder().getFullPath()
+                .makeRelativeTo(ResourceManager.getRootProject().getFullPath()));
+        boolean delete = FilesUtils.removeFolder(new File(librariesPath.toOSString() + MIGRATION_FOLDER_EXT), true);
+        boolean delete2 = FilesUtils.removeFolder(new File(dataProfilingPath.toOSString() + MIGRATION_FOLDER_EXT), true);
+        ResourceService.refreshStructure();
+        return delete && delete2;
+    }
+
+    /**
+     * replace the file name which has been changed.
+     * 
+     * @return
+     */
+    private boolean replaceFileName() {
+        boolean b1 = replaceFileName4Analysis();
+        boolean b2 = replaceFileName4Report();
+        boolean b3 = replaceFileName4Indicator();
+        boolean b4 = replaceFileName4Pattern();
+        boolean b5 = replaceFileName4Rule();
+        ResourceService.refreshStructure();
+        return b1 && b2 && b3 && b4 && b5;
+    }
+
+    /**
+     * replace the Rule's file.
+     * 
+     * @return
+     */
+    private boolean replaceFileName4Rule() {
+        // replace map
+        Map<String, String> replaceMap = new HashMap<String, String>();
+        replaceMap.putAll(this.replaceStringMapCommonFolders);
+        replaceMap.putAll(this.replaceStringMapIndicators);
+        replaceMap.putAll(this.replaceStringMapAnalysis);
+        replaceMap.putAll(this.replaceStringMapRules); // really need this ???
+        // accept file extention name
+        String[] acceptFileExtentionNames = { FactoriesUtil.DQRULE };
+
+        return org.talend.commons.utils.io.FilesUtils.migrateFolder(new File(ResourceManager.getRulesFolder().getLocation()
+                .toOSString()), acceptFileExtentionNames, replaceMap, log);
+
+    }
+
+    /**
+     * replace the Pattern's file.
+     * 
+     * @return
+     */
+    private boolean replaceFileName4Pattern() {
+        // replace map
+        Map<String, String> replaceMap = new HashMap<String, String>();
+        replaceMap.putAll(this.replaceStringMapCommonFolders);
+        replaceMap.putAll(this.replaceStringMapIndicators);
+        replaceMap.putAll(this.replaceStringMapAnalysis);
+        replaceMap.putAll(this.replaceStringMapPatterns); // really need this ???
+        // accept file extention name
+        String[] acceptFileExtentionNames = { FactoriesUtil.PATTERN };
+
+        return org.talend.commons.utils.io.FilesUtils.migrateFolder(new File(ResourceManager.getPatternFolder().getLocation()
+                .toOSString()), acceptFileExtentionNames, replaceMap, log);
+
+    }
+
+    /**
+     * replace the Indicator's file.
+     * 
+     * @return
+     */
+    private boolean replaceFileName4Indicator() {
+        // replace map
+        Map<String, String> replaceMap = new HashMap<String, String>();
+        replaceMap.putAll(this.replaceStringMapCommonFolders);
+        replaceMap.putAll(this.replaceStringMapAnalysis);
+        replaceMap.putAll(this.replaceStringMapRules);
+        replaceMap.putAll(this.replaceStringMapPatterns);
+        replaceMap.putAll(this.replaceStringMapIndicators); // really need this ???
+        // accept file extention name
+        String[] acceptFileExtentionNames = { FactoriesUtil.DEFINITION };
+
+        return org.talend.commons.utils.io.FilesUtils.migrateFolder(new File(ResourceManager.getIndicatorFolder().getLocation()
+                .toOSString()), acceptFileExtentionNames, replaceMap, log);
+
+    }
+
+    /**
+     * report the Report's file.
+     * 
+     * @return
+     */
+    private boolean replaceFileName4Report() {
+        if (!PluginChecker.isOnlyTopLoaded()) {
+            // replace map
+            Map<String, String> replaceMap = new HashMap<String, String>();
+            replaceMap.putAll(this.replaceStringMapCommonFolders);
+            replaceMap.putAll(this.replaceStringMapAnalysis);
+            replaceMap.putAll(this.replaceStringMapJrxmlTemplates);
+            replaceMap.putAll(this.replaceStringMapReports); // really need this ???
+            // accept file extention name
+            String[] acceptFileExtentionNames = { FactoriesUtil.REP };
+
+            return org.talend.commons.utils.io.FilesUtils.migrateFolder(new File(ResourceManager.getReportsFolder().getLocation()
+                    .toOSString()), acceptFileExtentionNames, replaceMap, log);
+
+        }
+        return true;
+    }
+
+    /**
+     * replace the Analysis's file.
+     * 
+     * @return
+     */
+    private boolean replaceFileName4Analysis() {
+        // replace map
+        Map<String, String> replaceMap = new HashMap<String, String>();
+        replaceMap.putAll(this.replaceStringMapCommonFolders);
+        replaceMap.putAll(this.replaceStringMapIndicators);
+        replaceMap.putAll(this.replaceStringMapPatterns);
+        replaceMap.putAll(this.replaceStringMapRules);
+        replaceMap.putAll(this.replaceStringMapReports);
+        replaceMap.putAll(this.replaceStringMapAnalysis); // really need this ???
+        // accept file extention name
+        String[] acceptFileExtentionNames = { FactoriesUtil.ANA };
+
+        return org.talend.commons.utils.io.FilesUtils.migrateFolder(new File(ResourceManager.getAnalysisFolder().getLocation()
+                .toOSString()), acceptFileExtentionNames, replaceMap, log);
     }
 
     /**
@@ -137,24 +318,67 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * @return
      */
     private boolean updateDataProfilingFolder() {
+        boolean result = true;
         try {
             analysisMigFolder = getMigSubFolder(TDQ_DATAPROFILING + MIGRATION_FOLDER_EXT, ResourceManager.getAnalysisFolder()
                     .getFullPath());
-            updateModelElements(analysisMigFolder, FactoriesUtil.ANA, ResourceManager.getAnalysisFolder(), analysisMigFolder, true,
-                    replaceStringMapAnalysis);
-            // System.out.println("AAAAAAAAAAAAAAAAAAAAAAA::" + replaceStringMapAnalysis.toString());
+            updateModelElements(analysisMigFolder, FactoriesUtil.ANA, ResourceManager.getAnalysisFolder(), analysisMigFolder,
+                    true, replaceStringMapAnalysis);
 
             if (!PluginChecker.isOnlyTopLoaded()) {
                 reportMigFolder = getMigSubFolder(TDQ_DATAPROFILING + MIGRATION_FOLDER_EXT, ResourceManager.getReportsFolder()
                         .getFullPath());
-                updateModelElements(reportMigFolder, FactoriesUtil.REP, ResourceManager.getReportsFolder(), reportMigFolder, true,
-                        replaceStringMapReports);
-                // System.out.println("BBBBBBBBBBBBBBBBBBBBBB::" + replaceStringMapReports.toString());
+                updateModelElements(reportMigFolder, FactoriesUtil.REP, ResourceManager.getReportsFolder(), reportMigFolder,
+                        true, replaceStringMapReports);
+
+                copyReportFolders(reportMigFolder,
+                        getMigSubFolder(TDQ_DATAPROFILING, ResourceManager.getReportsFolder().getFullPath()));
             }
         } catch (Exception e) {
             log.error(e, e);
+            result = false;
+        } finally {
+            ResourceService.refreshStructure();
         }
-        return true;
+        return result;
+    }
+
+    /**
+     * copy .xxx folders (which contains the generated docs for reports) from TDQ_Data Profiling_mig to TDQ_Data
+     * Profiling.
+     * 
+     * @param source
+     * @param target
+     * @return
+     */
+    private boolean copyReportFolders(File source, File target) {
+        boolean result = true;
+        File[] listFiles = source.listFiles();
+        for (File file : listFiles) {
+            if (file.isDirectory()) {
+                if (file.getName().startsWith(DOT)) {
+                    try {
+                        FilesUtils.copyFolder(file, getTargetFile(file), true, null, null, true);
+                    } catch (IOException e) {
+                        log.error(e, e);
+                        result = false;
+                    }
+                } else {
+                    copyReportFolders(file, getTargetFile(file));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * get the .xxx folder's target file.
+     * 
+     * @param file
+     * @return
+     */
+    private File getTargetFile(File file) {
+        return new File(file.toString().replaceAll(TDQ_DATAPROFILING + MIGRATION_FOLDER_EXT, TDQ_DATAPROFILING));
     }
 
     /**
@@ -163,6 +387,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * @return
      */
     private boolean updateLibrariesFolder() {
+        boolean result = true;
         try {
             systemIndicatorMigFolder = getMigSubFolder(TDQ_LIBRARIES + MIGRATION_FOLDER_EXT, ResourceManager
                     .getSystemIndicatorFolder().getFullPath());
@@ -172,7 +397,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                     systemIndicatorMigFolder, false, replaceStringMapIndicators);
             updateModelElements(userDefinedIndicatorMigFolder, FactoriesUtil.DEFINITION, ResourceManager.getUDIFolder(),
                     userDefinedIndicatorMigFolder, true, replaceStringMapIndicators);
-            // System.out.println("11111111111111111111111::" + replaceStringMapIndicators.toString());
 
             patternRegexMigFolder = getMigSubFolder(TDQ_LIBRARIES + MIGRATION_FOLDER_EXT, ResourceManager.getPatternRegexFolder()
                     .getFullPath());
@@ -182,29 +406,49 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                     patternRegexMigFolder, true, replaceStringMapPatterns);
             updateModelElements(patternSqlMigFolder, FactoriesUtil.PATTERN, ResourceManager.getPatternSQLFolder(),
                     patternSqlMigFolder, true, replaceStringMapPatterns);
-            // System.out.println("2222222222222222222222222::" + replaceStringMapPatterns.toString());
 
-            ruleSqlMigFolder = getMigSubFolder(TDQ_LIBRARIES + MIGRATION_FOLDER_EXT, ResourceManager.getRulesSQLFolder()
-                    .getFullPath());
-            updateModelElements(ruleSqlMigFolder, FactoriesUtil.DQRULE, ResourceManager.getRulesSQLFolder(), ruleSqlMigFolder, true,
+            ruleMigFolder = getMigSubFolder(TDQ_LIBRARIES + MIGRATION_FOLDER_EXT, ResourceManager.getRulesFolder().getFullPath());
+            updateModelElements(ruleMigFolder, FactoriesUtil.DQRULE, ResourceManager.getRulesFolder(), ruleMigFolder, true,
                     replaceStringMapRules);
-            // System.out.println("333333333333333333333::" + replaceStringMapRules.toString());
 
             sourceFileMigFolder = getMigSubFolder(TDQ_LIBRARIES + MIGRATION_FOLDER_EXT, ResourceManager.getSourceFileFolder()
                     .getFullPath());
             updateFiles(sourceFileMigFolder, FactoriesUtil.SQL, ResourceManager.getSourceFileFolder(), sourceFileMigFolder, true,
                     null);
-            // System.out.println("4444444444444444444444444::" + replaceStringMapSourceFiles.toString());
 
-            jrxmlTemplateMigFolder = getMigSubFolder(TDQ_LIBRARIES + MIGRATION_FOLDER_EXT, ResourceManager.getJRXMLFolder()
-                    .getFullPath());
-            updateFiles(jrxmlTemplateMigFolder, FactoriesUtil.JRXML, ResourceManager.getJRXMLFolder(), jrxmlTemplateMigFolder, true,
-                    replaceStringMapJrxmlTemplates);
-            // System.out.println("5555555555555555555555555::" + jrxmlTemplateMigFolder.toString());
+            if (!PluginChecker.isOnlyTopLoaded()) {
+                jrxmlTemplateMigFolder = getMigSubFolder(TDQ_LIBRARIES + MIGRATION_FOLDER_EXT, ResourceManager.getJRXMLFolder()
+                        .getFullPath());
+                updateFiles(jrxmlTemplateMigFolder, FactoriesUtil.JRXML, ResourceManager.getJRXMLFolder(),
+                        jrxmlTemplateMigFolder, true, replaceStringMapJrxmlTemplates);
+            }
+
+            copySoftwareSystemFile();
         } catch (Exception e) {
             log.error(e, e);
+            result = false;
+        } finally {
+            ResourceService.refreshStructure();
         }
-        return true;
+        return result;
+    }
+
+    /**
+     * copy .softwaresystem.softwaredeployment file from TDQ_Libraries_mig folder to new TDQ_Libraries folder..
+     * 
+     * @return
+     */
+    private boolean copySoftwareSystemFile() {
+        try {
+            File sourceFile = WorkspaceUtils.ifileToFile(ResourceManager.getRootProject()
+                    .getFolder(TDQ_LIBRARIES + MIGRATION_FOLDER_EXT).getFile(SOFTWARE_SYSTEM_FILE));
+            File targetFile = WorkspaceUtils.ifileToFile(ResourceManager.getLibrariesFolder().getFile(SOFTWARE_SYSTEM_FILE));
+            FilesUtils.copyFile(sourceFile, targetFile);
+            ResourceService.refreshStructure();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
@@ -216,9 +460,10 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * @param baseFile
      * @param createSubFolder
      * @param replaceStringMap
+     * @return
      */
-    private void updateFiles(File parentFile, String fileExtension, IFolder baseFolder, File baseFile, boolean createSubFolder,
-            Map<String, String> replaceStringMap) {
+    private boolean updateFiles(File parentFile, String fileExtension, IFolder baseFolder, File baseFile,
+            boolean createSubFolder, Map<String, String> replaceStringMap) {
         try {
             if (!parentFile.isFile()) {
                 boolean updateSubFolders = true;
@@ -240,7 +485,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                     String label = parentFile.getName().substring(0, parentFile.getName().length() - fileExtension.length() - 1);
                     // create new file
                     createFile(parentFile, fileExtension, filePath, label);
-                    // System.out.println(">>>>>>>>>>>>>>>>>>>::fullPathFolder=" + fullPathFolder.toString());
                     // record the replace information
                     if (replaceStringMap != null) {
                         IPath replatePrefixPath = fullPathFolder.getFullPath().removeFirstSegments(1);
@@ -253,7 +497,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             }
         } catch (Exception e) {
             log.error(e, e);
+            return false;
         }
+        return true;
     }
 
     /**
@@ -270,7 +516,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             String pathFolderName = rawFile.toString().substring(baseFolder.getLocation().toOSString().length());
             if (pathFolderName.length() > 0) {
                 IPath path = Path.EMPTY;
-                String folderName = "";
+                String folderName = ""; //$NON-NLS-1$
 
                 IPath makeRelativeTo = baseFolder.getFolder(pathFolderName).getFullPath()
                         .makeRelativeTo(baseFolder.getFullPath());
@@ -301,8 +547,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * @param fileExtension
      * @param filePath
      * @param label
+     * @return
      */
-    private void createFile(File parentFile, String fileExtension, IPath filePath, String label) {
+    private boolean createFile(File parentFile, String fileExtension, IPath filePath, String label) {
         try {
             if (FactoriesUtil.JRXML.equals(fileExtension)) {
                 JrxmlHandle.createJrxml(filePath, label, parentFile, fileExtension);
@@ -311,7 +558,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             }
         } catch (Exception e) {
             log.error(e, e);
+            return false;
         }
+        return true;
     }
 
     /**
@@ -344,8 +593,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * @param baseFile
      * @param createSubFolder
      * @param replaceStringMap
+     * @return
      */
-    private void updateModelElements(File parentFile, String fileExtension, IFolder baseFolder, File baseFile,
+    private boolean updateModelElements(File parentFile, String fileExtension, IFolder baseFolder, File baseFile,
             boolean createSubFolder, Map<String, String> replaceStringMap) {
         try {
             if (!parentFile.isFile()) {
@@ -368,29 +618,20 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                         IFolder fullPathFolder = getFullPathFolder(baseFolder, baseFile, parentFile);
                         // create new file
                         ElementWriterFactory.getInstance().createPatternWriter().create(modelElement, fullPathFolder);
-                        // System.out.println(">>>>>>>>>>>>>>>>>>>::fullPathFolder=" + fullPathFolder.toString());
                         // record the replace information
-                        IPath replatePrefixPath = fullPathFolder.getFullPath().removeFirstSegments(1);
-                        // replace name should begin with TDQ_Libraries (for element under TDQ_Libraries)
+                        IPath replatePrefixPath = fullPathFolder.getFullPath().removeFirstSegments(2);
                         String oldFileNameFull = replatePrefixPath.append(parentFile.getName()).toString();
                         String newFileNameFull = replatePrefixPath.append(
                                 getDefaultNewFileName(modelElement.getName(), fileExtension)).toString();
-                        // replace name should begin with Analyses or Reports (for element under TDQ_Data Profiling),
-                        // because report can dependency on analysis and the relaview path begin with Analyses, not
-                        // TDQ_Data
-                        // Profiling
-                        if (FactoriesUtil.REP.equals(fileExtension) || FactoriesUtil.ANA.equals(fileExtension)) {
-                            oldFileNameFull = replatePrefixPath.removeFirstSegments(1).append(parentFile.getName()).toString();
-                            newFileNameFull = replatePrefixPath.removeFirstSegments(1)
-                                    .append(getDefaultNewFileName(modelElement.getName(), fileExtension)).toString();
-                        }
                         replaceStringMap.put(oldFileNameFull, newFileNameFull);
                     }
                 }
             }
         } catch (Exception e) {
             log.error(e, e);
+            return false;
         }
+        return true;
     }
 
     /**
@@ -432,6 +673,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             return ERepositoryObjectType.TDQ_PATTERN_SQL;
         } else if (ResourceManager.getUDIFolder().equals(baseFolder)) {
             return ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
+        } else if (ResourceManager.getRulesFolder().equals(baseFolder)) {
+            return ERepositoryObjectType.TDQ_RULES;
         } else if (ResourceManager.getRulesSQLFolder().equals(baseFolder)) {
             return ERepositoryObjectType.TDQ_RULES_SQL;
         } else if (ResourceManager.getAnalysisFolder().equals(baseFolder)) {
@@ -467,7 +710,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * @return
      */
     private String getDefaultNewFileName(String label, String fileExtention) {
-        return label.replace(' ', '_') + "_0.1." + fileExtention;//$NON-NLS-1$
+        return label.replace(' ', '_') + "_0.1." + fileExtention; //$NON-NLS-1$
     }
 
     /**
@@ -481,14 +724,13 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     private IFolder getFullPathFolder(IFolder baseFolder, File baseFile, File file) {
         IFile tempFile = baseFolder.getFile(file.toString().substring(baseFile.toString().length()));
         IPath tempPath = tempFile.getFullPath().removeLastSegments(1).removeFirstSegments(1);
-        // System.out.println("::baseFolder=" + baseFolder.toString() + "||baseFile=" + baseFile.toString() + "||file="
-        // + file.toString() + "||tempPath=" + tempPath);
         return ResourceManager.getRootProject().getFolder(tempPath);
     }
 
     /**
      * rename TDQ_Data Profiling and TDQ_Libraries folders.
      * 
+     * @param basePath
      * @return
      */
     private boolean renameFolders(IPath basePath) {
@@ -496,8 +738,10 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                 .makeRelativeTo(ResourceManager.getRootProject().getFullPath()));
         IPath dataProfilingPath = basePath.append(ResourceManager.getDataProfilingFolder().getFullPath()
                 .makeRelativeTo(ResourceManager.getRootProject().getFullPath()));
-        return librariesPath.toFile().renameTo(new File(librariesPath.toOSString() + MIGRATION_FOLDER_EXT))
-                && dataProfilingPath.toFile().renameTo(new File(dataProfilingPath.toOSString() + MIGRATION_FOLDER_EXT));
+        boolean renameTo = librariesPath.toFile().renameTo(new File(librariesPath.toOSString() + MIGRATION_FOLDER_EXT));
+        boolean renameTo2 = dataProfilingPath.toFile().renameTo(new File(dataProfilingPath.toOSString() + MIGRATION_FOLDER_EXT));
+        ResourceService.refreshStructure();
+        return renameTo && renameTo2;
     }
 
     /**
@@ -519,9 +763,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      */
     private boolean createNewFolders() {
         try {
-            // refresh the project first
-            ResourceService.refreshStructure();
-
             // create folders
             this.prfInstance.createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
                     EResourceConstant.ANALYSIS.getName());

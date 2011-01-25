@@ -32,6 +32,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -136,13 +137,19 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         for (int i = 0; i < renderObjs.size(); i++) {
             // if (this.registedResourceMap.containsValue(renderObjs.get(i).eResource())) {
             Iterator<IFile> iterator = this.registedResourceMap.keySet().iterator();
-            Resource renderObjResource = renderObjs.get(i).eResource();
-            while (iterator.hasNext()) {
-                IFile next = iterator.next();
-                if (registedResourceMap.get(next).getURI().toString().equals(renderObjResource.getURI().toString())) {
-                    // this.register(next, renderObjResource);
-                    fileList.add(next);
-                    break;
+            RenderedObject renderedObject = renderObjs.get(i);
+            if (renderedObject.eIsProxy()) {
+                renderedObject = (RenderedObject) EObjectHelper.resolveObject(renderedObject);
+            }
+            Resource renderObjResource = renderedObject.eResource();
+            if (renderObjResource != null) {
+                while (iterator.hasNext()) {
+                    IFile next = iterator.next();
+                    if (registedResourceMap.get(next).getURI().toString().equals(renderObjResource.getURI().toString())) {
+                        // this.register(next, renderObjResource);
+                        fileList.add(next);
+                        break;
+                    }
                 }
             }
             // }

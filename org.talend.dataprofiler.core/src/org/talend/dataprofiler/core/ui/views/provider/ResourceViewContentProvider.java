@@ -89,8 +89,10 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                             IPath relativePath = iFolder.getFullPath().makeRelativeTo(
                                     ((IProject) currentOpenProject).getFullPath());
                             FolderItem folder2 = folderHelper.getFolder(relativePath);
-                            viewObject = new Folder(folder2.getProperty(), instance.retrieveRepObjectTypeByPath(relativePath
-                                    .toOSString()));
+                            if (folder2 != null && relativePath != null) {
+                                viewObject = new Folder(folder2.getProperty(), instance.retrieveRepObjectTypeByPath(relativePath
+                                        .toOSString()));
+                            }
                         } else {
                             viewObject = new Folder(((IFolder) folder).getName(), ((IFolder) folder).getName());
                         }
