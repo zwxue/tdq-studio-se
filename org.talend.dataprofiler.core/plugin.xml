@@ -958,6 +958,10 @@
            id="org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog"
            name="%command.category.indicatorSelectionDialog">
      </category>
+     <command
+           id="restoreItem"
+           name="%command.name.restoreItem">
+     </command>
   </extension>
   <extension
         point="org.eclipse.ui.bindings">
