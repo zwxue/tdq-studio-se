@@ -38,6 +38,7 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -152,7 +153,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         boolean b4 = updateDataProfilingFolder();
         boolean b5 = replaceFileName();
         boolean b6 = deleteMigFolders(getWorkspacePath());
-        boolean b7 = clearModelElementCache();
+        boolean b7 = reloadModelElementCache();
         return b1 && b2 && b3 && b4 && b5 && b6 && b7;
     }
 
@@ -161,13 +162,16 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * 
      * @return
      */
-    private boolean clearModelElementCache() {
+    private boolean reloadModelElementCache() {
         try {
+            // 1) clear and unload element
             AnaResourceFileHelper.getInstance().clear();
             RepResourceFileHelper.getInstance().clear();
             IndicatorResourceFileHelper.getInstance().clear();
             PatternResourceFileHelper.getInstance().clear();
             DQRuleResourceFileHelper.getInstance().clear();
+            // 2) reload from file
+            ResourceFileMap.getAll();
         } catch (Exception e) {
             log.error(e, e);
             return false;
