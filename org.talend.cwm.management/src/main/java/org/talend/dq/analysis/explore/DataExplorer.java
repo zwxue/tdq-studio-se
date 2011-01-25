@@ -19,7 +19,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -185,7 +185,7 @@ public abstract class DataExplorer implements IDataExplorer {
      * @param column
      * @return
      */
-    protected String getFullyQualifiedTableName(TdColumn column) {
+    protected String getFullyQualifiedTableName(MeatadataColumn column) {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
         return getFullyQualifiedTableName(columnSetOwner);
     }
@@ -220,7 +220,7 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     protected String getRowsStatementWithSubQuery() {
         String fromClause = getFromClause();
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
         String table = getFullyQualifiedTableName(column);
         // MOD qiongli 2010-10-28.bug 16658 ,add it if has data filter.
         String queryStr = " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in() //$NON-NLS-1$

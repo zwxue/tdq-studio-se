@@ -11,7 +11,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.MatchingIndicatorImpl;
@@ -39,7 +39,7 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
      * @generated
      * @ordered
      */
-    protected EList<TdColumn> columnSetA;
+    protected EList<MeatadataColumn> columnSetA;
 
     /**
      * The cached value of the '{@link #getColumnSetB() <em>Column Set B</em>}' reference list.
@@ -49,7 +49,7 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
      * @generated
      * @ordered
      */
-    protected EList<TdColumn> columnSetB;
+    protected EList<MeatadataColumn> columnSetB;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -72,9 +72,9 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public EList<TdColumn> getColumnSetA() {
+    public EList<MeatadataColumn> getColumnSetA() {
         if (columnSetA == null) {
-            columnSetA = new EObjectResolvingEList<TdColumn>(TdColumn.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A);
+            columnSetA = new EObjectResolvingEList<MeatadataColumn>(MeatadataColumn.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A);
         }
         return columnSetA;
     }
@@ -83,9 +83,9 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public EList<TdColumn> getColumnSetB() {
+    public EList<MeatadataColumn> getColumnSetB() {
         if (columnSetB == null) {
-            columnSetB = new EObjectResolvingEList<TdColumn>(TdColumn.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B);
+            columnSetB = new EObjectResolvingEList<MeatadataColumn>(MeatadataColumn.class, this, ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B);
         }
         return columnSetB;
     }
@@ -115,11 +115,11 @@ public abstract class ColumnsCompareIndicatorImpl extends MatchingIndicatorImpl 
         switch (featureID) {
             case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_A:
                 getColumnSetA().clear();
-                getColumnSetA().addAll((Collection<? extends TdColumn>)newValue);
+                getColumnSetA().addAll((Collection<? extends MeatadataColumn>)newValue);
                 return;
             case ColumnsetPackage.COLUMNS_COMPARE_INDICATOR__COLUMN_SET_B:
                 getColumnSetB().clear();
-                getColumnSetB().addAll((Collection<? extends TdColumn>)newValue);
+                getColumnSetB().addAll((Collection<? extends MeatadataColumn>)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

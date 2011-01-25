@@ -55,7 +55,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -171,10 +171,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
 
-            for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
+            for (MeatadataColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
                 columnListA.add(RepositoryNodeHelper.recursiveFind(tdColumn));
             }
-            for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
+            for (MeatadataColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
                 columnListB.add(RepositoryNodeHelper.recursiveFind(tdColumn));
             }
             // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
@@ -431,10 +431,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 RepositoryNode node = columnSet.get(0);
 
                 MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
-                TdColumn column = ((TdColumn) columnObject.getTdColumn());
+                MeatadataColumn column = ((MeatadataColumn) columnObject.getTdColumn());
 
                 if (column != null && column.eIsProxy()) {
-                    column = (TdColumn) EObjectHelper.resolveObject(column);
+                    column = (MeatadataColumn) EObjectHelper.resolveObject(column);
                 }
                 String tableName = ColumnHelper.getColumnOwnerAsColumnSet(column).getName();
                 columnsElementViewer.getTable().getColumn(0)
@@ -513,8 +513,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     private class CaseInsensitiveComparator implements Comparator<Object> {
 
         public int compare(Object element1, Object element2) {
-            TdColumn col1 = (TdColumn) element1;
-            TdColumn col2 = (TdColumn) element2;
+            MeatadataColumn col1 = (MeatadataColumn) element1;
+            MeatadataColumn col2 = (MeatadataColumn) element2;
             String lower1 = col1.getName().toLowerCase();
             String lower2 = col2.getName().toLowerCase();
             return lower1.compareTo(lower2);
@@ -529,19 +529,19 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         if (columnsA.size() != 0 && columnsA.get(0).getObject() instanceof MetadataColumnRepositoryObject) {
             RepositoryNode node = columnsA.get(0);
             MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
-            TdColumn column = ((TdColumn) columnObject.getTdColumn());
+            MeatadataColumn column = ((MeatadataColumn) columnObject.getTdColumn());
             ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
             rowMatchingIndicator.setAnalyzedElement(columnSetOwner);
         }
         rowMatchingIndicator.getColumnSetA().clear();
         for (RepositoryNode reposNode : columnsA) {
             rowMatchingIndicator.getColumnSetA().add(
-                    (TdColumn) ((MetadataColumnRepositoryObject) reposNode.getObject()).getTdColumn());
+                    (MeatadataColumn) ((MetadataColumnRepositoryObject) reposNode.getObject()).getTdColumn());
         }
         rowMatchingIndicator.getColumnSetB().clear();
         for (RepositoryNode reposNode : columnsB) {
             rowMatchingIndicator.getColumnSetB().add(
-                    (TdColumn) ((MetadataColumnRepositoryObject) reposNode.getObject()).getTdColumn());
+                    (MeatadataColumn) ((MetadataColumnRepositoryObject) reposNode.getObject()).getTdColumn());
         }
     }
 
@@ -561,7 +561,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         if (columnList.size() > 0) {
             RepositoryNode column = (RepositoryNode) columnList.get(0);
             MetadataColumnRepositoryObject colObject = (MetadataColumnRepositoryObject) column.getObject();
-            String tableName = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) colObject.getTdColumn()).getName();
+            String tableName = ColumnHelper.getColumnOwnerAsColumnSet((MeatadataColumn) colObject.getTdColumn()).getName();
             columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
         }
 
@@ -677,7 +677,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
             if (element instanceof DBColumnRepNode) {
 
-                TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) (((DBColumnRepNode) element).getObject()))
+                MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) (((DBColumnRepNode) element).getObject()))
                         .getTdColumn();
                 return column.getName();
             }
@@ -724,14 +724,14 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 columnListA.clear();
                 // columnListA.addAll(rowMatchingIndicatorA.getColumnSetA());
 
-                for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
+                for (MeatadataColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
                     columnListA.add(RepositoryNodeHelper.recursiveFind(tdColumn));
                 }
 
                 tableViewerPosStack.get(0).setInput(columnListA);
                 columnListB.clear();
                 // columnListB.addAll(rowMatchingIndicatorA.getColumnSetB());
-                for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
+                for (MeatadataColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
                     columnListB.add(RepositoryNodeHelper.recursiveFind(tdColumn));
                 }
                 tableViewerPosStack.get(1).setInput(columnListB);

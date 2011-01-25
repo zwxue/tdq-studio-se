@@ -15,7 +15,7 @@ package org.talend.dq.analysis.explore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 
@@ -31,7 +31,7 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     @Override
     protected String getFreqRowsStatement() {
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
         // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
 
         String resultSql = null;

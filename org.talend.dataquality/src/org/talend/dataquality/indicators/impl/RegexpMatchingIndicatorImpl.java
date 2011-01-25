@@ -15,7 +15,7 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -108,7 +108,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                             r = DomainHelper.getSQLRegexp(p);
                             // MOD klliu 2010-06-18 bug : 13695
                             if (r == null) { // get regex valid for all kind of database and engine
-                                TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement);
+                                MeatadataColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement);
                                 if (column != null) {
                                     Connection tdDataProvider = ConnectionHelper.getTdDataProvider(column);
 

@@ -15,7 +15,7 @@ package org.talend.cwm.compare.factory.update;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
@@ -39,9 +39,9 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
     @Override
     public Boolean caseForeignKey(ForeignKey object) {
         ColumnSet columnSet = null;
-        TdColumn tdColumn = null;
-        if (leftElement instanceof TdColumn) {
-            tdColumn = (TdColumn) leftElement;
+        MeatadataColumn tdColumn = null;
+        if (leftElement instanceof MeatadataColumn) {
+            tdColumn = (MeatadataColumn) leftElement;
             columnSet = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         }
         if (columnSet == null) {
@@ -66,9 +66,9 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
     @Override
     public Boolean casePrimaryKey(PrimaryKey object) {
         ColumnSet columnSet = null;
-        TdColumn tdColumn = null;
-        if (leftElement instanceof TdColumn) {
-            tdColumn = (TdColumn) leftElement;
+        MeatadataColumn tdColumn = null;
+        if (leftElement instanceof MeatadataColumn) {
+            tdColumn = (MeatadataColumn) leftElement;
             columnSet = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         }
         if (columnSet == null) {

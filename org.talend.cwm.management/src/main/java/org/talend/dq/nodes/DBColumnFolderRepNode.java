@@ -26,7 +26,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -72,7 +72,7 @@ public class DBColumnFolderRepNode extends RepositoryNode {
             return children;
         }
 
-        List<TdColumn> tdcolumns = new ArrayList<TdColumn>();
+        List<MeatadataColumn> tdcolumns = new ArrayList<MeatadataColumn>();
         IRepositoryViewObject meataColumnSetObject = this.getObject();
         if (meataColumnSetObject instanceof TdTableRepositoryObject) {
             TdTableRepositoryObject tdTableRepositoryObject = (TdTableRepositoryObject) meataColumnSetObject;
@@ -102,7 +102,7 @@ public class DBColumnFolderRepNode extends RepositoryNode {
             }
         } else {
             for (MetadataColumn mec : columns) {
-                tdcolumns.add((TdColumn) mec);
+                tdcolumns.add((MeatadataColumn) mec);
             }
         }
         createTdcolumnsNode(tdcolumns, children);
@@ -115,7 +115,7 @@ public class DBColumnFolderRepNode extends RepositoryNode {
      * @param tdcolumns
      * @param repsNodes
      */
-    private void createTdcolumnsNode(List<TdColumn> tdcolumns, List<IRepositoryNode> repsNodes) {
+    private void createTdcolumnsNode(List<MeatadataColumn> tdcolumns, List<IRepositoryNode> repsNodes) {
         for (MetadataColumn tdColumn : tdcolumns) {
             MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(object, tdColumn);
             metadataColumn.setId(tdColumn.getName());

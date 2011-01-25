@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
@@ -69,7 +69,7 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
     protected boolean isAllowed() {
 
         for (IRepositoryNode repositoryNode : getColumns()) {
-            TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+            MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
             if (!Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
                 return false;
             }

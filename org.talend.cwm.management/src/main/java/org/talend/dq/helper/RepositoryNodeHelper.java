@@ -47,7 +47,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataquality.analysis.Analysis;
@@ -336,11 +336,11 @@ public final class RepositoryNodeHelper {
         return false;
     }
 
-    public static List<TdColumn> getTdColumnList(Object[] objs) {
-        List<TdColumn> list = new ArrayList<TdColumn>();
+    public static List<MeatadataColumn> getTdColumnList(Object[] objs) {
+        List<MeatadataColumn> list = new ArrayList<MeatadataColumn>();
         for (Object obj : objs) {
-            if (obj != null && obj instanceof TdColumn) {
-                list.add((TdColumn) obj);
+            if (obj != null && obj instanceof MeatadataColumn) {
+                list.add((MeatadataColumn) obj);
             }
         }
         return list;
@@ -349,7 +349,7 @@ public final class RepositoryNodeHelper {
     public static boolean hasTdColumn(Object[] objs) {
         if (objs != null && objs.length > 0) {
             for (Object obj : objs) {
-                if (obj != null && obj instanceof TdColumn) {
+                if (obj != null && obj instanceof MeatadataColumn) {
                     return true;
                 }
             }
@@ -380,11 +380,11 @@ public final class RepositoryNodeHelper {
 
         } else if (modelElement instanceof TdReport) {
 
-        } else if (modelElement instanceof TdColumn) {
-            TdColumn column = (TdColumn) modelElement;
+        } else if (modelElement instanceof MeatadataColumn) {
+            MeatadataColumn column = (MeatadataColumn) modelElement;
             IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsColumnSet(column));
             for (IRepositoryNode columnNode : columnSetNode.getChildren().get(0).getChildren()) {
-                TdColumn columnOnUI = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
+                MeatadataColumn columnOnUI = (MeatadataColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
                 if (ResourceHelper.getUUID(column).equals(ResourceHelper.getUUID(columnOnUI))) {
                     return (RepositoryNode) columnNode;
                 }

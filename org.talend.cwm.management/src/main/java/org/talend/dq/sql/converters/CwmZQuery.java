@@ -21,7 +21,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
 import org.talend.sqltools.ZQueryHelper;
@@ -64,7 +64,7 @@ public class CwmZQuery {
         return addSelect(ColumnSetHelper.getColumns(columnSet));
     }
 
-    public boolean addSelect(Collection<? extends TdColumn> columns) {
+    public boolean addSelect(Collection<? extends MeatadataColumn> columns) {
         String[] columnFullNames = ColumnHelper.getColumnFullNames(columns);
         if (columnFullNames.length == 0) {
             return false;
@@ -73,7 +73,7 @@ public class CwmZQuery {
         return true;
     }
 
-    public boolean addSelect(TdColumn column) {
+    public boolean addSelect(MeatadataColumn column) {
         return this.addSelect(Collections.singleton(column));
     }
 
@@ -98,7 +98,7 @@ public class CwmZQuery {
         return evalFromStatement(ColumnSetHelper.getColumns(columnSet));
     }
 
-    public List<ColumnSet> evalFromStatement(Collection<? extends TdColumn> columns) {
+    public List<ColumnSet> evalFromStatement(Collection<? extends MeatadataColumn> columns) {
         // TODO implement me
         return null;
     }

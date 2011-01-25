@@ -20,7 +20,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import orgomg.cwm.resource.relational.Catalog;
@@ -63,8 +63,8 @@ public class DQRepositoryListenerView extends ViewPart implements ISelectionList
                 label.setText(((TdTable) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else if (first instanceof TdView) {
                 label.setText(((TdView) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
-            } else if (first instanceof TdColumn) {
-                label.setText(((TdColumn) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
+            } else if (first instanceof MeatadataColumn) {
+                label.setText(((MeatadataColumn) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else {
                 label.setText(first.toString() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
                 if (first.toString().endsWith(".prv")) { //$NON-NLS-1$

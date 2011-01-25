@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -332,7 +332,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         for (int i = 0; i < elements.length; i++) {
             final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
 
-            final TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode()
+            final MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode()
                     .getObject()).getTdColumn();
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 
@@ -354,7 +354,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
                 // for presentation
             }
-            final TdColumn tdColumn = (TdColumn) ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode()
+            final MeatadataColumn tdColumn = (MeatadataColumn) ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode()
                     .getObject()).getTdColumn();
             DataminingType dataminingType = MetadataHelper.getDataminingType(tdColumn);
 

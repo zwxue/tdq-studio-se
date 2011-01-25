@@ -42,7 +42,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -155,12 +155,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (analyzedElement == null) {
             return traceError("Analyzed element is null for indicator " + indicator.getName());
         }
-        TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (tdColumn == null) {
             return traceError("Analyzed element is not a column for indicator " + indicator.getName());
         }
         if (tdColumn.eIsProxy()) {
-            tdColumn = (TdColumn) EObjectHelper.resolveObject(tdColumn);
+            tdColumn = (MeatadataColumn) EObjectHelper.resolveObject(tdColumn);
         }
         String colName = getQuotedColumnName(tdColumn);
         if (!belongToSameSchemata(tdColumn)) {
@@ -434,7 +434,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param tdColumn the analyzed column
      * @return a list of new where clauses (or the one given as argument)
      */
-    private List<String> duplicateForCrossJoin(String completedSqlString, List<String> whereExpression, TdColumn tdColumn) {
+    private List<String> duplicateForCrossJoin(String completedSqlString, List<String> whereExpression, MeatadataColumn tdColumn) {
         if (whereExpression.isEmpty()) {
             return whereExpression;
         }
@@ -446,12 +446,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         List<String> duplicatedWhereExpressions = new ArrayList<String>();
         // get the table
         ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
-        List<TdColumn> columns = ColumnHelper.getColumns(columnSetOwner.getFeature());
+        List<MeatadataColumn> columns = ColumnHelper.getColumns(columnSetOwner.getFeature());
         for (String where : whereExpression) {
             // we expect only 2 table aliases, hence two distinct where clauses.
             String whereA = where;
             String whereB = where;
-            for (TdColumn col : columns) {
+            for (MeatadataColumn col : columns) {
                 String colNameToReplace = where.contains(quotedColName) ? quotedColName : col.getName();
                 if (where.contains(colNameToReplace)) {
                     whereA = whereA.replace(colNameToReplace, tableAliases[0] + "." + colNameToReplace); //$NON-NLS-1$
@@ -549,7 +549,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @param colName the name of the given column (tdColumn.getName() ) (could contain quotes)
      * @return
      */
-    private String castColumn(Indicator indicator, TdColumn tdColumn, String colName) {
+    private String castColumn(Indicator indicator, MeatadataColumn tdColumn, String colName) {
         int javaType = tdColumn.getSqlDataType().getJavaDataType();
         boolean isText = Java2SqlType.isTextInSQL(javaType);
 

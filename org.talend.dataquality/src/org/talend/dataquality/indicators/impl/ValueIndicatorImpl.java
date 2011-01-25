@@ -12,7 +12,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.ValueIndicator;
@@ -272,7 +272,7 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
         // MOD scorreia handle date: bug 5938
         final ModelElement elt = getAnalyzedElement();
         if (elt != null) {
-            final TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
+            final MeatadataColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
             if (col != null
                     && (Java2SqlType.isDateInSQL(col.getSqlDataType().getJavaDataType()) || Java2SqlType.isDateTimeSQL(col
                             .getSqlDataType().getJavaDataType()))) {

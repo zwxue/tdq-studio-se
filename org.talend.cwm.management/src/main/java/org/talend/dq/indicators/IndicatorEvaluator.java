@@ -27,7 +27,7 @@ import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -148,7 +148,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
                         recordIncrement = valueObjectList.size();
                         for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
-                            List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                            List<MeatadataColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
                                     .getAnalyzedElement().eContainer()));
                             String newcol = columnList.get(j).getName();
                             Object newobject = resultSet.getObject(newcol);
@@ -170,7 +170,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     } else if (indicator instanceof UniqueCountIndicator
                             && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
                         List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
-                        List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                        List<MeatadataColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
                                 .getAnalyzedElement().eContainer()));
                         int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
                         for (Object[] dataObject : removeValueObjectList) {

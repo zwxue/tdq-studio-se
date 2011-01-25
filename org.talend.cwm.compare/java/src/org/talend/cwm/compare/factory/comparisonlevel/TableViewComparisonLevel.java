@@ -44,7 +44,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
@@ -69,7 +69,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 	/**
      * 
      */
-	private static final List<TdColumn> EMPTY_COLUMN_LIST = Collections
+	private static final List<MeatadataColumn> EMPTY_COLUMN_LIST = Collections
 			.emptyList();
 
     public TableViewComparisonLevel(DBColumnFolderRepNode dbFolderNode) {
@@ -213,11 +213,11 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         }
 		ColumnSet findMatchedColumnSet = DQStructureComparer
 				.findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
-		List<TdColumn> columnList = new ArrayList<TdColumn>();
+		List<MeatadataColumn> columnList = new ArrayList<MeatadataColumn>();
 		columnList.addAll(ColumnSetHelper.getColumns(findMatchedColumnSet));
 		Resource leftResource = copyedDataProvider.eResource();
 		leftResource.getContents().clear();
-		for (TdColumn column : columnList) {
+		for (MeatadataColumn column : columnList) {
 			DQStructureComparer.clearSubNode(column);
 			leftResource.getContents().add(column);
 		}
@@ -235,7 +235,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         }
 		ColumnSet findMatchedColumnSet = DQStructureComparer
 				.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
-		List<TdColumn> columns = null;
+		List<MeatadataColumn> columns = null;
 		try {
 			// MOD scorreia 2009-01-29 clear content of findMatchedColumnSet
 			ColumnSetHelper.setColumns(findMatchedColumnSet, EMPTY_COLUMN_LIST);
@@ -256,7 +256,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 			//$NON-NLS-1$
 		}
 		rightResource.getContents().clear();
-		for (TdColumn column : columns) {
+		for (MeatadataColumn column : columns) {
 			DQStructureComparer.clearSubNode(column);
 			rightResource.getContents().add(column);
 		}
@@ -267,7 +267,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 	@Override
 	protected void handleAddElement(ModelElementChangeRightTarget addElement) {
 		EObject rightElement = addElement.getRightElement();
-		TdColumn columnSetSwitch = SwitchHelpers.COLUMN_SWITCH
+		MeatadataColumn columnSetSwitch = SwitchHelpers.COLUMN_SWITCH
 				.doSwitch(rightElement);
 		if (columnSetSwitch != null) {
 			ColumnSet columnSet = (ColumnSet) selectedObj;
@@ -301,7 +301,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 		TdExpression addedExpression = DataqualitySwitchHelper.TDEXPRESSION_SWITCH
 				.doSwitch(rightElement);
 		if (addedExpression != null) {
-			TdColumn parentColumn = SwitchHelpers.COLUMN_SWITCH
+			MeatadataColumn parentColumn = SwitchHelpers.COLUMN_SWITCH
 					.doSwitch(addElement.getLeftParent());
 			if (parentColumn != null) {
 				parentColumn.setInitialValue(addedExpression);
@@ -313,7 +313,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 	protected void handleRemoveElement(
 			ModelElementChangeLeftTarget removeElement) {
 		// MOD mzhao 13411, handle column changes 2010-08-23
-		TdColumn removeColumn = SwitchHelpers.COLUMN_SWITCH
+		MeatadataColumn removeColumn = SwitchHelpers.COLUMN_SWITCH
 				.doSwitch(removeElement.getLeftElement());
 		if (removeColumn != null) {
 			ColumnSet columnSet = (ColumnSet) selectedObj;
@@ -325,7 +325,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 		TdExpression removedExpression = DataqualitySwitchHelper.TDEXPRESSION_SWITCH
 				.doSwitch(removeElement.getLeftElement());
 		if (removedExpression != null) {
-			TdColumn expressionOwner = SwitchHelpers.COLUMN_SWITCH
+			MeatadataColumn expressionOwner = SwitchHelpers.COLUMN_SWITCH
 					.doSwitch(removedExpression.eContainer());
 			if (expressionOwner != null) {
 				expressionOwner.setInitialValue(null);

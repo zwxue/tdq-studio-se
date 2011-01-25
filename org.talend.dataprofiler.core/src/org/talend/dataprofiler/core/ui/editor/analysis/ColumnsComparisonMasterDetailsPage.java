@@ -39,7 +39,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
@@ -268,7 +268,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                     .getTdColumn());
         }
         if (analysedElements.size() > 0) {
-            tdDataProvider = ConnectionHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
+            tdDataProvider = ConnectionHelper.getTdDataProvider((MeatadataColumn) analysedElements.get(0));
             analysis.getContext().setConnection(tdDataProvider);
             // MOD qiongli bug 14437:Add dependency
             analysis.getContext().setConnection(tdDataProvider);
@@ -332,13 +332,13 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage"), false); //$NON-NLS-1$
         }
 
-        List<TdColumn> columnAList = new ArrayList<TdColumn>();
-        List<TdColumn> columnBList = new ArrayList<TdColumn>();
+        List<MeatadataColumn> columnAList = new ArrayList<MeatadataColumn>();
+        List<MeatadataColumn> columnBList = new ArrayList<MeatadataColumn>();
         for (RepositoryNode rd : anaColumnCompareViewer.getColumnListA()) {
-            columnAList.add((TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            columnAList.add((MeatadataColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
         }
         for (RepositoryNode rd : anaColumnCompareViewer.getColumnListB()) {
-            columnBList.add((TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            columnBList.add((MeatadataColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
         }
         if (anaColumnCompareViewer.getColumnListA().size() > 0) {
             if (!ColumnHelper.isFromSameTable(columnAList) || !ColumnHelper.isFromSameTable(columnBList)) {
@@ -347,14 +347,14 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             }
 
             for (int i = 0; i < anaColumnCompareViewer.getColumnListA().size(); i++) {
-                TdColumn columnA = columnAList.get(i);
-                TdColumn columnB = columnBList.get(i);
+                MeatadataColumn columnA = columnAList.get(i);
+                MeatadataColumn columnB = columnBList.get(i);
 
                 ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(columnA);
                 ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(columnB);
 
-                int typeA = ((TdColumn) columnA).getSqlDataType().getJavaDataType();
-                int typeB = ((TdColumn) columnB).getSqlDataType().getJavaDataType();
+                int typeA = ((MeatadataColumn) columnA).getSqlDataType().getJavaDataType();
+                int typeB = ((MeatadataColumn) columnB).getSqlDataType().getJavaDataType();
                 if (!Java2SqlType.isGenericSameType(typeA, typeB)) {
                     return new ReturnCode(
                             DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
@@ -365,7 +365,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 }
             }
 
-            List<TdColumn> allColumns = new ArrayList<TdColumn>();
+            List<MeatadataColumn> allColumns = new ArrayList<MeatadataColumn>();
             allColumns.addAll(columnAList);
             allColumns.addAll(columnBList);
 

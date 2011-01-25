@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
@@ -36,7 +36,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
         String clause = ""; //$NON-NLS-1$
 
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
         int javaType = column.getSqlDataType().getJavaDataType();
 
         if (Java2SqlType.isTextInSQL(javaType)) {
@@ -231,7 +231,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      */
     protected String getInstantiatedClause() {
         // get function which convert data into a pattern
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
         int javaType = column.getSqlDataType().getJavaDataType();
         // MOD mzhao bug 9681 2009-11-09
 

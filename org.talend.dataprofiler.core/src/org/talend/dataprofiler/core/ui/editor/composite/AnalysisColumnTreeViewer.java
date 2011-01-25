@@ -61,7 +61,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
@@ -465,7 +465,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             combo.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
-                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), (TdColumn) metadataColumn);
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), (MeatadataColumn) metadataColumn);
                     setDirty(true);
                 }
 

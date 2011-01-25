@@ -24,7 +24,7 @@ import org.talend.core.model.properties.Status;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
@@ -79,7 +79,7 @@ public final class MetadataHelper {
      * @param type
      * @param column
      */
-    public static void setDataminingType(DataminingType type, TdColumn column) {
+    public static void setDataminingType(DataminingType type, MeatadataColumn column) {
         column.setContentType(type.getLiteral());
     }
 
@@ -100,8 +100,8 @@ public final class MetadataHelper {
      * @param modelElement
      */
     public static void setDataminingType(DataminingType type, ModelElement modelElement) {
-        if (modelElement instanceof TdColumn) {
-            setDataminingType(type, (TdColumn) modelElement);
+        if (modelElement instanceof MeatadataColumn) {
+            setDataminingType(type, (MeatadataColumn) modelElement);
         } else if (modelElement instanceof TdXmlElementType) {
             setDataminingType(type, (TdXmlElementType) modelElement);
         }
@@ -113,7 +113,7 @@ public final class MetadataHelper {
      * @param column
      * @return the DataminingType or null if none has been set.
      */
-    public static DataminingType getDataminingType(TdColumn column) {
+    public static DataminingType getDataminingType(MeatadataColumn column) {
         // MOD xqliu 2009-11-27 bug 8690
         // MOD xqliu 2010-03-23 bug 12014
         String contentType = column.getContentType();
@@ -348,8 +348,8 @@ public final class MetadataHelper {
      * @return
      */
     public static DataminingType getDataminingType(ModelElement modelElement) {
-        if (modelElement instanceof TdColumn) {
-            return getDataminingType((TdColumn) modelElement);
+        if (modelElement instanceof MeatadataColumn) {
+            return getDataminingType((MeatadataColumn) modelElement);
         } else if (modelElement instanceof TdXmlElementType) {
             DataminingType.get(((TdXmlElementType) modelElement).getContentType());
         }

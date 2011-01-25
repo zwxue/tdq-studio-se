@@ -13,7 +13,7 @@
 package org.talend.cwm.compare.factory.update;
 
 import org.eclipse.emf.ecore.EObject;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.util.RelationalSwitch;
 import orgomg.cwm.objectmodel.core.DataType;
@@ -83,9 +83,9 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
     }
 
     @Override
-    public Boolean caseTdColumn(TdColumn object) {
-        if (recentElement instanceof TdColumn) {
-            TdColumn c = (TdColumn) recentElement;
+    public Boolean caseTdColumn(MeatadataColumn object) {
+        if (recentElement instanceof MeatadataColumn) {
+            MeatadataColumn c = (MeatadataColumn) recentElement;
             object.setName(c.getName());
             object.setLength(c.getLength());
             // MOD klliu update the c.getJavaType()

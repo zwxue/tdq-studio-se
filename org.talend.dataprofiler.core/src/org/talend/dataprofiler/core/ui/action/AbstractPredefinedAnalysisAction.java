@@ -26,7 +26,7 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -178,7 +178,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                     for (IndicatorEnum childEnum : oneEnum.getChildren()) {
                         // MOD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose by
                         // user.
-                        TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject())
+                        MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) columnNode.getObject())
 .getTdColumn();
                         if (ModelElementIndicatorRule.patternRule(childEnum, column, language)) {
                             columnIndicator.addTempIndicatorEnum(childEnum);

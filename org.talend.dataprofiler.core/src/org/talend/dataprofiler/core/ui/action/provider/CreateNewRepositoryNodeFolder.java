@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.CreateRepositoryNodeAction;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -39,19 +40,23 @@ public class CreateNewRepositoryNodeFolder extends AbstractCommonActionProvider 
         }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
-        if (node.getParent() != null) {
-            IFolder folder = WorkbenchUtils.getFolder(node);
-            if (!(node instanceof ExchangeFolderRepNode) && !ResourceManager.getRulesFolder().equals(folder)
-                    && !ResourceManager.getPatternFolder().equals(folder) && !ResourceManager.getIndicatorFolder().equals(folder)
-                    && !ResourceService.isSubFolder(ResourceManager.getSystemIndicatorFolder(), folder)
-                    && (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType()))) {
-                // MOD qiongli 2011-1-20 don't add it for recycle bin elements
-                if (node.getObject() != null && !node.getObject().getProperty().getItem().getState().isDeleted()) {
-                    currentSelection = WorkbenchUtils.getFolder(node);
-                    CreateRepositoryNodeAction createSubFolderAction = new CreateRepositoryNodeAction(currentSelection);
-                    menu.add(createSubFolderAction);
-                }
+        RepositoryNode parent = node.getParent();
+        if (!(parent instanceof ReportSubFolderRepNode)) {
+            if (parent != null) {
+                IFolder folder = WorkbenchUtils.getFolder(node);
+                if (!(node instanceof ExchangeFolderRepNode) && !ResourceManager.getRulesFolder().equals(folder)
+                        && !ResourceManager.getPatternFolder().equals(folder)
+                        && !ResourceManager.getIndicatorFolder().equals(folder)
+                        && !ResourceService.isSubFolder(ResourceManager.getSystemIndicatorFolder(), folder)
+                        && (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType()))) {
+                    // MOD qiongli 2011-1-20 don't add it for recycle bin elements
+                    if (node.getObject() != null && !node.getObject().getProperty().getItem().getState().isDeleted()) {
+                        currentSelection = WorkbenchUtils.getFolder(node);
+                        CreateRepositoryNodeAction createSubFolderAction = new CreateRepositoryNodeAction(currentSelection);
+                        menu.add(createSubFolderAction);
+                    }
 
+                }
             }
         }
 

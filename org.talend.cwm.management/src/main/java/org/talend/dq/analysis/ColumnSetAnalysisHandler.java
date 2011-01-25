@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -55,7 +55,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
      * @return
      */
 
-    public boolean addIndicator(List<TdColumn> columns, Indicator indicator) {
+    public boolean addIndicator(List<MeatadataColumn> columns, Indicator indicator) {
         for (ModelElement tdColumn : columns) {
             if (!analysis.getContext().getAnalysedElements().contains(tdColumn)) {
                 analysis.getContext().getAnalysedElements().add(tdColumn);
@@ -70,7 +70,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
 
         if (connection == null) { // try to get one
             for (ModelElement element : columns) {
-                TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+                MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
                 log.error("Connection has not been set in analysis Context");
                 connection = ConnectionHelper.getTdDataProvider(tdColumn);
                 analysis.getContext().setConnection(connection);
@@ -107,7 +107,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
      * @param dataminingTypeLiteral the literal expression of the datamining type used for the analysis
      * @param column a column
      */
-    public void setDatamingType(String dataminingTypeLiteral, TdColumn column) {
+    public void setDatamingType(String dataminingTypeLiteral, MeatadataColumn column) {
         DataminingType type = DataminingType.get(dataminingTypeLiteral);
         MetadataHelper.setDataminingType(type, column);
         Resource resource = column.eResource();
@@ -124,7 +124,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
      * @param column
      * @return
      */
-    public DataminingType getDatamingType(TdColumn column) {
+    public DataminingType getDatamingType(MeatadataColumn column) {
 
         return MetadataHelper.getDataminingType(column);
     }
@@ -188,7 +188,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
      * @param column
      * @return the indicators attached to this column
      */
-    public Collection<Indicator> getIndicatorLeaves(TdColumn column) {
+    public Collection<Indicator> getIndicatorLeaves(MeatadataColumn column) {
         // get the leaf indicators
         Collection<Indicator> leafIndics = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
         // filter only indicators for this column

@@ -63,7 +63,7 @@ import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
 import org.talend.cwm.compare.ui.actions.SubelementCompareAction;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.helper.EObjectHelper;
@@ -135,7 +135,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                                     Messages.getString("CompareModelContentMergeViewer.CompareListOfColumns"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
                                     SubelementCompareAction.COLUMN_COMPARE);
                             manager.add(subEleCompColumnAction);
-                        } else if (selectedElement instanceof TdColumn) {
+                        } else if (selectedElement instanceof MeatadataColumn) {
                             addRenameMenuAction(manager, selectedElement);
                         }
 

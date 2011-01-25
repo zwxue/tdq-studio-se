@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dq.dbms.GenericSQLHandler;
@@ -55,8 +55,8 @@ public class ColumnDependencyExplorer extends DataExplorer {
         // MOD by zshen fixed 12039 to distinguish the same name of column.
         String genericSQL = dbmsLanguage.getFDGenericInvalidDetailedValues();
         ColumnDependencyIndicator cdIndicator = ((ColumnDependencyIndicator) this.indicator);
-        TdColumn columnA = cdIndicator.getColumnA();
-        TdColumn columnB = cdIndicator.getColumnB();
+        MeatadataColumn columnA = cdIndicator.getColumnA();
+        MeatadataColumn columnB = cdIndicator.getColumnB();
         if (columnA.getName().equals(columnB.getName())) {
             genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_A, dbmsLanguage.quote(columnA.getName()) + " AS "
                     + columnA.getName() + "_A");
@@ -70,8 +70,8 @@ public class ColumnDependencyExplorer extends DataExplorer {
         // MOD by zshen fixed 12039 to distinguish the same name of column.
         String genericSQL = dbmsLanguage.getFDGenericValidDetailedValues();
         ColumnDependencyIndicator cdIndicator = ((ColumnDependencyIndicator) this.indicator);
-        TdColumn columnA = cdIndicator.getColumnA();
-        TdColumn columnB = cdIndicator.getColumnB();
+        MeatadataColumn columnA = cdIndicator.getColumnA();
+        MeatadataColumn columnB = cdIndicator.getColumnB();
         if (columnA.getName().equals(columnB.getName())) {
             genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_A, dbmsLanguage.quote(columnA.getName()) + " AS "
                     + columnA.getName() + "_A");
@@ -106,8 +106,8 @@ public class ColumnDependencyExplorer extends DataExplorer {
      */
     private String getStatement(String genericSQL) {
         ColumnDependencyIndicator cdIndicator = ((ColumnDependencyIndicator) this.indicator);
-        TdColumn columnA = cdIndicator.getColumnA();
-        TdColumn columnB = cdIndicator.getColumnB();
+        MeatadataColumn columnA = cdIndicator.getColumnA();
+        MeatadataColumn columnB = cdIndicator.getColumnB();
 
         GenericSQLHandler sqlHandler = new GenericSQLHandler(genericSQL);
 

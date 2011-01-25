@@ -60,7 +60,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -169,7 +169,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
         ModelElementIndicator currentIndicator;
         for (ModelElement element : analyzedColumns) {
-            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+            MeatadataColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(element);
 
             // MOD qiongli 2011-1-10,16796:delimitefile

@@ -38,7 +38,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
@@ -239,9 +239,9 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         for (int i = 0; i < columnListAANode.size(); i++) {
             if (columnListBBNode.size() > i) {
                 ColumnDependencyIndicator indicator = ColumnsetFactory.eINSTANCE.createColumnDependencyIndicator();
-                TdColumn columnA = (TdColumn) ((MetadataColumnRepositoryObject) columnListAANode.get(i).getObject())
+                MeatadataColumn columnA = (MeatadataColumn) ((MetadataColumnRepositoryObject) columnListAANode.get(i).getObject())
                         .getTdColumn();
-                TdColumn columnB = (TdColumn) ((MetadataColumnRepositoryObject) columnListBBNode.get(i).getObject())
+                MeatadataColumn columnB = (MeatadataColumn) ((MetadataColumnRepositoryObject) columnListBBNode.get(i).getObject())
                         .getTdColumn();
                 indicator.setColumnA(columnA);
                 indicator.setColumnB(columnB);
@@ -318,7 +318,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         List<RepositoryNode> columns = new ArrayList<RepositoryNode>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            columns.add(RepositoryNodeHelper.recursiveFind((TdColumn) indicator.eGet(reference)));
+            columns.add(RepositoryNodeHelper.recursiveFind((MeatadataColumn) indicator.eGet(reference)));
         }
         return columns;
     }
@@ -336,8 +336,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         for (int i = 0; i < columnASet.size(); i++) {
             RepositoryNode columnANode = columnASet.get(i);
             RepositoryNode columnBNode = columnBSet.get(i);
-            TdColumn tdColumnA = ((DBColumnRepNode) columnANode).getTdColumn();
-            TdColumn tdColumnB = ((DBColumnRepNode) columnBNode).getTdColumn();
+            MeatadataColumn tdColumnA = (MeatadataColumn) ((DBColumnRepNode) columnANode).getTdColumn();
+            MeatadataColumn tdColumnB = (MeatadataColumn) ((DBColumnRepNode) columnBNode).getTdColumn();
             ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(tdColumnA);
             ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(tdColumnB);
             String uuidA = ResourceHelper.getUUID(ownerA);

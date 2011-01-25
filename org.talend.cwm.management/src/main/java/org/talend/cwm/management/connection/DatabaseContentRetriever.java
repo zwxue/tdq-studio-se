@@ -41,7 +41,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -87,7 +87,7 @@ public final class DatabaseContentRetriever {
             String columnName = metaData.getColumnName(i);
             // String columnClassName = metaData.getColumnClassName(i);
             // TODO add other informations
-            TdColumn column = ColumnHelper.createTdColumn(columnName);
+            MeatadataColumn column = ColumnHelper.createTdColumn(columnName);
             ColumnSetHelper.addColumn(column, columnSet);
         }
 
@@ -702,7 +702,7 @@ public final class DatabaseContentRetriever {
      * @see DatabaseMetaData#getColumns(String, String, String, String)
      */
     // MOD by zshen need DatabaseConnection to be prarmeter
-    public static List<TdColumn> getColumns(String catalogName, String schemaPattern, String tablePattern, String columnPattern,
+    public static List<MeatadataColumn> getColumns(String catalogName, String schemaPattern, String tablePattern, String columnPattern,
             DatabaseConnection connection) throws SQLException {
         return new ColumnBuilder(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
     }

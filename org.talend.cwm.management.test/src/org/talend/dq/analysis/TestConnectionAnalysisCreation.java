@@ -22,7 +22,7 @@ import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -127,7 +127,7 @@ public class TestConnectionAnalysisCreation {
      * 
      * @return
      */
-    private static BooleanExpressionNode getExpression(TdColumn column) {
+    private static BooleanExpressionNode getExpression(MeatadataColumn column) {
         CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
         expre.setOperands(column, "sunny");
         return expre.generateExpressions();
@@ -169,13 +169,13 @@ public class TestConnectionAnalysisCreation {
         Assert.assertFalse(tables.isEmpty());
         TdTable tdTable = tables.get(0);
         System.out.println("analyzed Table: " + tdTable.getName());
-        List<TdColumn> columns;
+        List<MeatadataColumn> columns;
         columns = DqRepositoryViewService.getColumns(dataManager, tdTable, null, true);
         // MOD scorreia 2009-01-29 columns are stored in the table
         // TableHelper.addColumns(tdTable, columns);
 
         Assert.assertFalse(columns.isEmpty());
-        TdColumn col = columns.get(0);
+        MeatadataColumn col = columns.get(0);
         System.out.println("analyzed Column: " + col.getName());
         return col;
     }

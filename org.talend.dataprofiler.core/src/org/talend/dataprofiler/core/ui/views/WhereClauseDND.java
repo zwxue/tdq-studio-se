@@ -26,7 +26,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 
@@ -54,7 +54,7 @@ public final class WhereClauseDND {
             @Override
             public void dragEnter(DropTargetEvent event) {
                 Object obj = ((IStructuredSelection) commonViewer.getSelection()).getFirstElement();
-                if (!(obj instanceof TdColumn)) {
+                if (!(obj instanceof MeatadataColumn)) {
                     event.detail = DND.DROP_NONE;
                 } else {
                     event.detail = DND.DROP_MOVE;
@@ -71,7 +71,7 @@ public final class WhereClauseDND {
                 if (event.detail != DND.DROP_NONE) {
                     IStructuredSelection selection = (IStructuredSelection) commonViewer.getSelection();
                     if (!selection.isEmpty()) {
-                        Iterator<TdColumn> it = selection.iterator();
+                        Iterator<MeatadataColumn> it = selection.iterator();
                         IEditorPart currentActiveEditor = CorePlugin.getDefault().getCurrentActiveEditor();
                         if (currentActiveEditor instanceof DQRuleEditor) {
                             // DQRuleEditor editor = (DQRuleEditor) currentActiveEditor;

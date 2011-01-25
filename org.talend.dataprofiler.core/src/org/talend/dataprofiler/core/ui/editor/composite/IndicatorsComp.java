@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -68,7 +68,7 @@ public class IndicatorsComp extends AbstractPagePart {
 
     private Tree tree;
 
-    private List<TdColumn> columnSetMultiValueList;
+    private List<MeatadataColumn> columnSetMultiValueList;
 
     private AbstractAnalysisMetadataPage masterPage;
 
@@ -78,7 +78,7 @@ public class IndicatorsComp extends AbstractPagePart {
         parentComp = parent;
         tree = createTree(parent);
         tree.setData(this);
-        columnSetMultiValueList = new ArrayList<TdColumn>();
+        columnSetMultiValueList = new ArrayList<MeatadataColumn>();
     }
 
     public IndicatorsComp(Composite parent, AbstractAnalysisMetadataPage masterPage) {
@@ -230,7 +230,7 @@ public class IndicatorsComp extends AbstractPagePart {
         }
     }
 
-    public List<TdColumn> getColumnSetMultiValueList() {
+    public List<MeatadataColumn> getColumnSetMultiValueList() {
         return this.columnSetMultiValueList;
     }
 

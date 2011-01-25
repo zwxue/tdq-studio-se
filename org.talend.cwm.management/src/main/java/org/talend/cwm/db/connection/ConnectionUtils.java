@@ -70,7 +70,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.xml.TdXmlContent;
 import org.talend.cwm.xml.TdXmlElementType;
@@ -1239,8 +1239,8 @@ public final class ConnectionUtils {
 	public static void retrieveColumn(MetadataTable tdTable) {
 		List<MetadataColumn> columnList = tdTable.getColumns();
 		if (columnList != null && columnList.size() > 0
-				&& columnList.get(0) instanceof TdColumn) {
-			TdColumn tempColumn = ((TdColumn) columnList.get(0));
+				&& columnList.get(0) instanceof MeatadataColumn) {
+			MeatadataColumn tempColumn = ((MeatadataColumn) columnList.get(0));
 			if (tempColumn.getSqlDataType() == null
 					|| "NULL".equalsIgnoreCase(tempColumn.getSqlDataType().getName())//$NON-NLS-1$
 					&& 0 == tempColumn.getSqlDataType().getJavaDataType()) {
@@ -1255,7 +1255,7 @@ public final class ConnectionUtils {
 							return;
 						}
 						for (Object colobj : columnList) {
-							TdColumn tdColumn = (TdColumn) colobj;
+							MeatadataColumn tdColumn = (MeatadataColumn) colobj;
 
 							try {
 								List<TdSqlDataType> newDataTypeList = DatabaseContentRetriever

@@ -57,7 +57,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -496,7 +496,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     private List<IRepositoryNode> getColumnNodes(Object columnNodes) {
         List<IRepositoryNode> result = new ArrayList<IRepositoryNode>();
         List<DBColumnRepNode> columnNodeList = null;
-        List<TdColumn> columnList = null;
+        List<MeatadataColumn> columnList = null;
         if (columnNodes instanceof Object[]) {
             columnNodeList = RepositoryNodeHelper.getColumnNodeList((Object[]) columnNodes);
             columnList = RepositoryNodeHelper.getTdColumnList((Object[]) columnNodes);
@@ -516,7 +516,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     private void addItemElements(final List<IRepositoryNode> columns, int index) {
         for (int i = 0; i < columns.size(); i++) {
             final RepositoryNode columnNode = (RepositoryNode) columns.get(i);
-            final TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
+            final MeatadataColumn column = (MeatadataColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE, index);
 
             columnSetMultiValueList.add(index, columnNode);
@@ -779,10 +779,10 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     @Override
     public boolean canDrop(IRepositoryNode modelElement) {
-        List<TdColumn> existColumns = new ArrayList<TdColumn>();
+        List<MeatadataColumn> existColumns = new ArrayList<MeatadataColumn>();
         for (RepositoryNode columnFromMultiValueList : this.getColumnSetMultiValueList()) {
             IRepositoryViewObject repObject = ((RepositoryNode) columnFromMultiValueList).getObject();
-            existColumns.add((TdColumn) ((MetadataColumnRepositoryObject) repObject).getTdColumn());
+            existColumns.add((MeatadataColumn) ((MetadataColumnRepositoryObject) repObject).getTdColumn());
         }
 
         if (existColumns.contains(modelElement)) {
@@ -790,7 +790,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         }
         // MOD qiongli 2010-8-19,bug 14436:if come from diffrent table,can not drop
         IRepositoryViewObject repObject = modelElement.getObject();
-        existColumns.add((TdColumn) ((MetadataColumnRepositoryObject) repObject).getTdColumn());
+        existColumns.add((MeatadataColumn) ((MetadataColumnRepositoryObject) repObject).getTdColumn());
         if (!existColumns.isEmpty() && !ColumnHelper.isFromSameTable(existColumns)) {
             return false;
         }
@@ -818,9 +818,9 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     }
 
-    public static List<DBColumnRepNode> columns2Nodes(List<TdColumn> tdColumns) {
+    public static List<DBColumnRepNode> columns2Nodes(List<MeatadataColumn> tdColumns) {
         List<DBColumnRepNode> nodes = new ArrayList<DBColumnRepNode>();
-        for (TdColumn tdColumn : tdColumns) {
+        for (MeatadataColumn tdColumn : tdColumns) {
             RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(tdColumn);
             if (repNode != null && repNode instanceof DBColumnRepNode) {
                 nodes.add((DBColumnRepNode) repNode);

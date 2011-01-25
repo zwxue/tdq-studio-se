@@ -33,7 +33,7 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -574,7 +574,7 @@ public abstract class ModelElementTreeMenuProvider {
             TreePath[] paths = new TreePath[items.length];
 
             for (int i = 0; i < items.length; i++) {
-                TdColumn tdColumn = (TdColumn) items[i].getData("COLUMN_INDICATOR_KEY");
+                MeatadataColumn tdColumn = (MeatadataColumn) items[i].getData("COLUMN_INDICATOR_KEY");
                 paths[i] = new TreePath(new Object[] { tdColumn });
             }
             CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();

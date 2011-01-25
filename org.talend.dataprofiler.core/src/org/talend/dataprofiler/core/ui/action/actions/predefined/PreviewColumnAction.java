@@ -19,7 +19,7 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -45,21 +45,21 @@ public class PreviewColumnAction extends Action {
 	@Override
     public void run() {
         // TODO 10238
-        if (modelElements[0] instanceof TdColumn) {
-            TdColumn[] columns = new TdColumn[modelElements.length];
+        if (modelElements[0] instanceof MeatadataColumn) {
+            MeatadataColumn[] columns = new MeatadataColumn[modelElements.length];
             int i = 0;
             for (ModelElement me : modelElements) {
-                columns[i] = (TdColumn) me;
+                columns[i] = (MeatadataColumn) me;
                 ++i;
             }
-            if (ColumnHelper.isFromSameTable(Arrays.asList((TdColumn[]) columns))) {
-                TdColumn oneColumn = columns[0];
+            if (ColumnHelper.isFromSameTable(Arrays.asList((MeatadataColumn[]) columns))) {
+                MeatadataColumn oneColumn = columns[0];
                 Connection dataprovider = ConnectionHelper.getTdDataProvider(oneColumn);
                 ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(oneColumn);
                 String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
                 DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
                 String columnClause = ""; //$NON-NLS-1$
-                for (TdColumn column : columns) {
+                for (MeatadataColumn column : columns) {
                     columnClause += language.quote(column.getName()) + ","; //$NON-NLS-1$
                 }
                 columnClause = columnClause.substring(0, columnClause.length() - 1);

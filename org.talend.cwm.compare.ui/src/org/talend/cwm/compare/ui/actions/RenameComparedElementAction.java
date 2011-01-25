@@ -58,7 +58,7 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
@@ -226,7 +226,7 @@ public class RenameComparedElementAction extends Action {
         ColumnSet selectedColumnSet = (ColumnSet) theSelectedElement;
         Connection copyedDataProvider = createCopyedProvider();
         ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, copyedDataProvider);
-        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        List<MeatadataColumn> columnList = new ArrayList<MeatadataColumn>();
         columnList.addAll(ColumnSetHelper.getColumns(findMatchedColumnSet));
 
         // URI uri =
@@ -241,7 +241,7 @@ public class RenameComparedElementAction extends Action {
         // }
 
         leftResource.getContents().clear();
-        for (TdColumn column : columnList) {
+        for (MeatadataColumn column : columnList) {
             DQStructureComparer.clearSubNode(column);
             leftResource.getContents().add(column);
         }
@@ -278,7 +278,7 @@ public class RenameComparedElementAction extends Action {
         columnSetFolderNode.loadChildren();
 
         ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(selectedColumnSet, tempReloadProvider);
-        List<TdColumn> columns = null;
+        List<MeatadataColumn> columns = null;
         try {
             columns = DqRepositoryViewService.getColumns(tempReloadProvider, findMatchedColumnSet, null, true);
         } catch (Exception e1) {
@@ -292,7 +292,7 @@ public class RenameComparedElementAction extends Action {
             throw new ReloadCompareException("NoFactoryFoundForURI" + uri.toFileString()); //$NON-NLS-1$
         }
         rightResource.getContents().clear();
-        for (TdColumn column : columns) {
+        for (MeatadataColumn column : columns) {
             DQStructureComparer.clearSubNode(column);
             rightResource.getContents().add(column);
         }

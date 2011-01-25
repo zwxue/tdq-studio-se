@@ -23,7 +23,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -63,7 +63,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         // get columns from either tables or views.
         ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch((EObject) getParent());
         if (columnSet != null) {
-            List<TdColumn> columnList = null;
+            List<MeatadataColumn> columnList = null;
             if (FILTER_FLAG) {
                 String columnFilter = ColumnHelper.getColumnFilter(columnSet);
                 columnList = filterColumns(ColumnSetHelper.getColumns(columnSet), columnFilter);
@@ -131,7 +131,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
      * @param columnPattern
      * @return
      */
-    private <T extends TdColumn> List<T> filterColumns(List<T> columns, String columnPattern) {
+    private <T extends MeatadataColumn> List<T> filterColumns(List<T> columns, String columnPattern) {
         if (needFilter(columnPattern)) {
             String[] patterns = cleanPatterns(columnPattern.split(",")); //$NON-NLS-1$
             return filterMatchingColumns(columns, patterns);
@@ -147,7 +147,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
      * @param patterns
      * @return
      */
-    private <T extends TdColumn> List<T> filterMatchingColumns(List<T> columns, String[] patterns) {
+    private <T extends MeatadataColumn> List<T> filterMatchingColumns(List<T> columns, String[] patterns) {
         List<T> retColumns = new ArrayList<T>();
         int size = 0;
         for (T t : columns) {

@@ -25,7 +25,7 @@ import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -133,7 +133,7 @@ public class TestAnalysisCreation {
         analysisBuilder.addElementToAnalyze(column, indicators);
 
         // get the domain constraint
-        Domain dataFilter = getDataFilter(dataManager, (TdColumn) column); // CAST here for test
+        Domain dataFilter = getDataFilter(dataManager, (MeatadataColumn) column); // CAST here for test
         // analysisBuilder.addFilterOnData(dataFilter);
 
         // TODO scorreia save domain with analysisbuilder?
@@ -185,7 +185,7 @@ public class TestAnalysisCreation {
         analysisBuilder.addElementToAnalyze(column, indicators);
 
         // get the domain constraint
-        Domain dataFilter = getDataFilter(dataManager, (TdColumn) column); // CAST here for test
+        Domain dataFilter = getDataFilter(dataManager, (MeatadataColumn) column); // CAST here for test
         analysisBuilder.addFilterOnData(dataFilter);
 
         // run analysis
@@ -204,7 +204,7 @@ public class TestAnalysisCreation {
      * @param column
      * @return
      */
-    private Domain getDataFilter(Connection dataManager, TdColumn column) {
+    private Domain getDataFilter(Connection dataManager, MeatadataColumn column) {
         Domain domain = DOMAIN.createDomain();
         RangeRestriction rangeRestriction = DOMAIN.createRangeRestriction();
         domain.getRanges().add(rangeRestriction);
@@ -220,7 +220,7 @@ public class TestAnalysisCreation {
      * 
      * @return
      */
-    private BooleanExpressionNode getExpression(TdColumn column) {
+    private BooleanExpressionNode getExpression(MeatadataColumn column) {
         CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
         expre.setOperands(column, "\"sunny\"");
         return expre.generateExpressions();
@@ -335,14 +335,14 @@ public class TestAnalysisCreation {
             }
         }
         System.out.println("analyzed Table: " + tdTable.getName());
-        List<TdColumn> columns;
+        List<MeatadataColumn> columns;
         columns = DqRepositoryViewService.getColumns(dataManager, tdTable, null, true);
         // MOD scorreia 2009-01-29 columns are stored in the table
         // TableHelper.addColumns(tdTable, columns);
 
         Assert.assertFalse(columns.isEmpty());
-        TdColumn col = columns.get(0);
-        for (TdColumn tdColumn : columns) {
+        MeatadataColumn col = columns.get(0);
+        for (MeatadataColumn tdColumn : columns) {
             if (COLUMN_ANALYZED.equals(tdColumn.getName())) {
                 col = tdColumn;
                 break;

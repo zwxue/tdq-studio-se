@@ -30,7 +30,7 @@ import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
@@ -316,19 +316,19 @@ public class DBConnectTest {
         List<TdTable> tableList = MetadataFillFactory.getDBInstance().fillTables(catalogList.get(13), databaseMetaData, null,
                 null,
                 new String[] { TableType.TABLE.toString() });
-        List<TdColumn> columnList = MetadataFillFactory.getDBInstance().fillColumns(tableList.get(2), databaseMetaData, null);
+        List<MeatadataColumn> columnList = MetadataFillFactory.getDBInstance().fillColumns(tableList.get(2), databaseMetaData, null);
 
         if (tableList.size() <= 0) {
             fail("The table of db should have more than one.");
         }
 
-        for (TdColumn tdColumn : columnList) {
+        for (MeatadataColumn tdColumn : columnList) {
             sqlDataTypeList.add(tdColumn.getSqlDataType().getName());
             tdColumn.setSqlDataType(null);
         }
         ConnectionUtils.retrieveColumn((MetadataTable) tableList.get(2));
         int i = 0;
-        for (TdColumn tdColumn : columnList) {
+        for (MeatadataColumn tdColumn : columnList) {
             assertNotNull(tdColumn.getSqlDataType());
             assertEquals(sqlDataTypeList.get(i), tdColumn.getSqlDataType().getName());
             i++;

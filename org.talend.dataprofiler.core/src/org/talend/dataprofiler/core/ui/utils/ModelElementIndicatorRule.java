@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.ui.utils;
 
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -58,10 +58,10 @@ public final class ModelElementIndicatorRule {
     public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me, ExecutionLanguage language) {
 
         int javaType = 0;
-        boolean isDeliFileColumn = !(me instanceof TdColumn) && me instanceof MetadataColumn;
-        if (me instanceof TdColumn) {
+        boolean isDeliFileColumn = !(me instanceof MeatadataColumn) && me instanceof MetadataColumn;
+        if (me instanceof MeatadataColumn) {
             // javaType = ((TdColumn) me).getJavaType();
-            javaType = ((TdColumn) me).getSqlDataType().getJavaDataType();
+            javaType = ((MeatadataColumn) me).getSqlDataType().getJavaDataType();
         } else if (me instanceof TdXmlElementType) {
             javaType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) me).getJavaType());
         } else if (isDeliFileColumn) {
@@ -85,8 +85,8 @@ public final class ModelElementIndicatorRule {
             return true;
         case DefValueCountIndicatorEnum:
             Expression initialValue = null;
-            if (me instanceof TdColumn) {
-                initialValue = ((TdColumn) me).getInitialValue();
+            if (me instanceof MeatadataColumn) {
+                initialValue = ((MeatadataColumn) me).getInitialValue();
             }
             if (initialValue != null && initialValue.getBody() != null) {
                 // MOD scorreia 2009-04-21 bug 6979

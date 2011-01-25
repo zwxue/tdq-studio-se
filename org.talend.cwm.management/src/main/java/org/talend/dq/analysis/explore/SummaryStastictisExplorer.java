@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IQRIndicator;
@@ -36,7 +36,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
     private String getMatchingRowsStatement() {
         double value = Double.valueOf(entity.getValue());
         String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + value;
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
         return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
     }
 
@@ -51,7 +51,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         double value = Double.valueOf(entity.getValue());
         String whereClause = null;
 
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
         IndicatorParameters parameters = indicator.getParameters();
         if (parameters != null) {
             String where1 = null;
@@ -148,7 +148,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
         }
         String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.less() + lowerValue + dbmsLanguage.or()
                 + this.columnName + dbmsLanguage.greater() + upperValue;
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
         return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
     }
 
@@ -170,7 +170,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
         String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.greaterOrEqual() + lowerValue
                 + dbmsLanguage.and() + this.columnName + dbmsLanguage.lessOrEqual() + upperValue;
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        MeatadataColumn column = (MeatadataColumn) indicator.getAnalyzedElement();
         return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
 
     }

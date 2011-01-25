@@ -49,7 +49,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -200,14 +200,14 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     private void createBubbleOrGanttChart(final ScrolledForm form, final Composite composite,
             final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         List<Composite> previewChartList = new ArrayList<Composite>();
-        List<TdColumn> bubOrGanttColumnList = new ArrayList<TdColumn>();
+        List<MeatadataColumn> bubOrGanttColumnList = new ArrayList<MeatadataColumn>();
         if (columnSetMultiValueIndicator instanceof CountAvgNullIndicator) {
             bubOrGanttColumnList = columnSetMultiValueIndicator.getNumericColumns();
         } else {
             bubOrGanttColumnList = columnSetMultiValueIndicator.getDateColumns();
         }
-        for (TdColumn column : bubOrGanttColumnList) {
-            final TdColumn tdColumn = (TdColumn) column;
+        for (MeatadataColumn column : bubOrGanttColumnList) {
+            final MeatadataColumn tdColumn = (MeatadataColumn) column;
 
             final ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
@@ -481,7 +481,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
 
         public Image getImage(Object element) {
-            if (element instanceof TdColumn) {
+            if (element instanceof MeatadataColumn) {
                 return ImageLib.getImage(ImageLib.TD_COLUMN);
             }
             return null;

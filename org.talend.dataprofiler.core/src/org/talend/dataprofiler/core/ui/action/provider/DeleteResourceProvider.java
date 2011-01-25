@@ -35,6 +35,7 @@ import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -56,9 +57,12 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;
-            if (shouldShowDeleteMenu(node)) {
-                // menu.add(new DeleteObjectsAction());
-                menu.add(new DQDeleteAction());
+            RepositoryNode parent = node.getParent();
+            if (!(parent instanceof ReportSubFolderRepNode)) {
+                if (shouldShowDeleteMenu(node)) {
+                    // menu.add(new DeleteObjectsAction());
+                    menu.add(new DQDeleteAction());
+                }
             }
         }
     }

@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model;
 
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 
 /**
  * This class can store the all the Indicators of one TdColumn, and provide the method to access all indicator.
@@ -22,5 +22,5 @@ public interface ColumnIndicator extends ModelElementIndicator {
     /**
      * @return the tdColumn
      */
-    public TdColumn getTdColumn();
+    public MeatadataColumn getTdColumn();
 }

@@ -24,7 +24,7 @@ import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -108,14 +108,14 @@ public class TestMultiColAnalysisCreation {
         analysisBuilder.setAnalysisConnection(dataManager);
 
         // get a column to analyze
-        List<TdColumn> columns = new ArrayList<TdColumn>();
+        List<MeatadataColumn> columns = new ArrayList<MeatadataColumn>();
         try {
             columns.addAll(getColumns(dataManager));
         } catch (Exception e) {
             log.error(e, e);
         }
         ColumnSetMultiValueIndicator indicator = getIndicator(columns);
-        for (TdColumn tdColumn : columns) {
+        for (MeatadataColumn tdColumn : columns) {
             analysisBuilder.addElementToAnalyze(tdColumn, indicator);
         }
 
@@ -181,7 +181,7 @@ public class TestMultiColAnalysisCreation {
      * @param column
      * @return
      */
-    private Domain getDataFilter(Connection dataManager, TdColumn column) {
+    private Domain getDataFilter(Connection dataManager, MeatadataColumn column) {
         Domain domain = DOMAIN.createDomain();
         RangeRestriction rangeRestriction = DOMAIN.createRangeRestriction();
         domain.getRanges().add(rangeRestriction);
@@ -197,7 +197,7 @@ public class TestMultiColAnalysisCreation {
      * 
      * @return
      */
-    private BooleanExpressionNode getExpression(TdColumn column) {
+    private BooleanExpressionNode getExpression(MeatadataColumn column) {
         CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
         expre.setOperands(column, "\"sunny\"");
         return expre.generateExpressions();
@@ -209,7 +209,7 @@ public class TestMultiColAnalysisCreation {
      * @param column
      * @return
      */
-    private ColumnSetMultiValueIndicator getIndicator(List<TdColumn> columns) {
+    private ColumnSetMultiValueIndicator getIndicator(List<MeatadataColumn> columns) {
         ColumnSetMultiValueIndicator ind = ColumnsetFactory.eINSTANCE.createColumnSetMultiValueIndicator();
         ind.getAnalyzedColumns().addAll(columns);
 
@@ -233,7 +233,7 @@ public class TestMultiColAnalysisCreation {
      * @return
      * @throws Exception
      */
-    private List<TdColumn> getColumns(Connection dataManager) throws Exception {
+    private List<MeatadataColumn> getColumns(Connection dataManager) throws Exception {
         List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(dataManager.getDataPackage());
         Catalog catalog = null;
         for (Catalog tdCatalog : tdCatalogs) {
@@ -254,15 +254,15 @@ public class TestMultiColAnalysisCreation {
         Assert.assertFalse(tables.isEmpty());
         TdTable tdTable = tables.get(0);
         System.out.println("analyzed Table: " + tdTable.getName());
-        List<TdColumn> columns;
+        List<MeatadataColumn> columns;
         columns = DqRepositoryViewService.getColumns(dataManager, tdTable, null, true);
         // MOD scorreia 2009-01-29 columns are stored in the table
         // TableHelper.addColumns(tdTable, columns);
 
         Assert.assertFalse(columns.isEmpty());
 
-        List<TdColumn> usedCols = new ArrayList<TdColumn>();
-        for (TdColumn tdColumn : columns) {
+        List<MeatadataColumn> usedCols = new ArrayList<MeatadataColumn>();
+        for (MeatadataColumn tdColumn : columns) {
             for (int i = 0; i < COLUMNS.length; i++) {
                 String c = COLUMNS[i];
                 if (tdColumn.getName().equals(c)) {
@@ -271,7 +271,7 @@ public class TestMultiColAnalysisCreation {
             }
         }
         // set DM type for each used column
-        for (TdColumn tdColumn : usedCols) {
+        for (MeatadataColumn tdColumn : usedCols) {
             final int javaType = tdColumn.getJavaType();
             if (Java2SqlType.isNumbericInSQL(javaType)) {
                 MetadataHelper.setDataminingType(DataminingType.INTERVAL, tdColumn);

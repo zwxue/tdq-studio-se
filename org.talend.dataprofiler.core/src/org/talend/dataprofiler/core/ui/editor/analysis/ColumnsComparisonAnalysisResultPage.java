@@ -53,7 +53,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.MeatadataColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -174,22 +174,22 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         if (indicators.size() != 0) {
             rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
             rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
-            TdColumn columnA = null;
+            MeatadataColumn columnA = null;
             if (rowMatchingIndicatorA.getColumnSetA().size() > 0) {
                 columnA = rowMatchingIndicatorA.getColumnSetA().get(0);
                 if (columnA.eIsProxy()) {
-                    columnA = (TdColumn) EObjectHelper.resolveObject(columnA);
+                    columnA = (MeatadataColumn) EObjectHelper.resolveObject(columnA);
                 }
             }
             String columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnOwnerAsColumnSet(
                     columnA).getName(): PluginConstant.EMPTY_STRING;
             columnHeader1.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl.getString(
                     "ColumnsComparisonAnalysisResultPage.elementsFrom", columnName)); //$NON-NLS-1$
-            TdColumn columnB = null;
+            MeatadataColumn columnB = null;
             if(rowMatchingIndicatorA.getColumnSetB().size()>0){
                 columnB = rowMatchingIndicatorA.getColumnSetB().get(0);
                 if (columnB.eIsProxy()) {
-                    columnB = (TdColumn) EObjectHelper.resolveObject(columnB);
+                    columnB = (MeatadataColumn) EObjectHelper.resolveObject(columnB);
                 }
             }
             columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnOwnerAsColumnSet(columnB)
@@ -235,14 +235,14 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         int sizeB = rowMatchingIndicatorA.getColumnSetB().size();
         if (sizeA > 0 && sizeB > 0) {
 
-            TdColumn columnA = rowMatchingIndicatorA.getColumnSetA().get(0);
+            MeatadataColumn columnA = rowMatchingIndicatorA.getColumnSetA().get(0);
             if (columnA.eIsProxy()) {
-                columnA = (TdColumn) EObjectHelper.resolveObject(columnA);
+                columnA = (MeatadataColumn) EObjectHelper.resolveObject(columnA);
             }
             String tableNameA = ColumnHelper.getColumnOwnerAsColumnSet(columnA).getName();
-            TdColumn columnB = rowMatchingIndicatorA.getColumnSetB().get(0);
+            MeatadataColumn columnB = rowMatchingIndicatorA.getColumnSetB().get(0);
             if (columnB.eIsProxy()) {
-                columnB = (TdColumn) EObjectHelper.resolveObject(columnB);
+                columnB = (MeatadataColumn) EObjectHelper.resolveObject(columnB);
             }
             String tableNameB = ColumnHelper.getColumnOwnerAsColumnSet(columnB).getName();
             // ~
@@ -643,25 +643,25 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
      */
     static class ColumnPair {
 
-        private TdColumn columnA;
+        private MeatadataColumn columnA;
 
-        private TdColumn columnB;
+        private MeatadataColumn columnB;
 
-        public ColumnPair(TdColumn columnA, TdColumn columnB) {
+        public ColumnPair(MeatadataColumn columnA, MeatadataColumn columnB) {
             this.columnA = columnA;
             this.columnB = columnB;
 
         }
 
-        public TdColumn getAOfPair() {
+        public MeatadataColumn getAOfPair() {
             return columnA;
         }
 
-        public TdColumn getBOfPair() {
+        public MeatadataColumn getBOfPair() {
             return columnB;
         }
 
-        public static ColumnPair[] createColumnPairs(List<TdColumn> columnListA, List<TdColumn> columnListB) {
+        public static ColumnPair[] createColumnPairs(List<MeatadataColumn> columnListA, List<MeatadataColumn> columnListB) {
             if (columnListA.size() != columnListB.size()) {
                 return null;
             }
