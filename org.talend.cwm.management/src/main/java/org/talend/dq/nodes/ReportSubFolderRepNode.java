@@ -12,13 +12,29 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.foundation.businessinformation.Document;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
 public class ReportSubFolderRepNode extends RepositoryNode {
+
+    private List<IRepositoryNode> anaElement;
+
+    private EList<AnalysisMap> analysisMaps;
 
     /**
      * DOC klliu ReportSubFolderRepNode constructor comment.
@@ -31,4 +47,55 @@ public class ReportSubFolderRepNode extends RepositoryNode {
         super(object, parent, type);
     }
 
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
+    @Override
+    public List<IRepositoryNode> getChildren() {
+        anaElement = new ArrayList<IRepositoryNode>();
+        IRepositoryViewObject reportViewObject = this.getObject();
+        if (reportViewObject == null) {
+            ReportRepNode parent = (ReportRepNode) this.getParent();
+            TDQReportItem reportItem = (TDQReportItem) parent.getObject().getProperty().getItem();
+            TdReport report = (TdReport) reportItem.getReport();
+            if (this.getProperties(EProperties.LABEL).equals(parent.anaFloder)) {
+                // EList<AnalysisMap> analysisMaps = report.getAnalysisMap();
+                for (AnalysisMap analysisMap : analysisMaps) {
+                    Analysis analysis = analysisMap.getAnalysis();
+                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+                    IRepositoryViewObject viewObject = recursiveFind.getObject();
+                    AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                    anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                    anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                    viewObject.setRepositoryNode(anaNode);
+                    anaElement.add(anaNode);
+                }
+            } else {
+                EList<Document> documents = report.getDocument();
+                for (Document document : documents) {
+                    // FIXME need to add document node
+                }
+            }
+            return anaElement;
+
+        }
+        return super.getChildren();
+    }
+
+    public String getCount() {
+        IRepositoryViewObject reportViewObject = this.getObject();
+        if (reportViewObject == null) {
+            ReportRepNode parent = (ReportRepNode) this.getParent();
+            TDQReportItem reportItem = (TDQReportItem) parent.getObject().getProperty().getItem();
+            TdReport report = (TdReport) reportItem.getReport();
+            if (this.getProperties(EProperties.LABEL).equals(parent.anaFloder)) {
+                analysisMaps = report.getAnalysisMap();
+            } else {
+                return "(" + 0 + ")";
+            }
+        }
+        return "(" + analysisMaps.size() + ")";
+    }
 }

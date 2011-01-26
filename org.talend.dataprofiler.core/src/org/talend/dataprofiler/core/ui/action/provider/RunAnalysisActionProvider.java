@@ -20,6 +20,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -46,13 +47,16 @@ public class RunAnalysisActionProvider extends AbstractCommonActionProvider {
         // }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
-        IPath append = WorkbenchUtils.getFilePath(node);
-        Item item = node.getObject().getProperty().getItem();
-        if (item instanceof TDQAnalysisItem) {
-            IFile file = ResourceManager.getRootProject().getFile(append);
-            runAnalysisAction = new RunAnalysisAction();
-            runAnalysisAction.setSelectionFile(file);
-            menu.add(runAnalysisAction);
+        RepositoryNode parent = node.getParent();
+        if (!(parent instanceof ReportSubFolderRepNode)) {
+            IPath append = WorkbenchUtils.getFilePath(node);
+            Item item = node.getObject().getProperty().getItem();
+            if (item instanceof TDQAnalysisItem) {
+                IFile file = ResourceManager.getRootProject().getFile(append);
+                runAnalysisAction = new RunAnalysisAction();
+                runAnalysisAction.setSelectionFile(file);
+                menu.add(runAnalysisAction);
+            }
         }
 
     }

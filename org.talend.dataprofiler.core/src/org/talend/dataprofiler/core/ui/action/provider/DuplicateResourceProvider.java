@@ -20,8 +20,11 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.action.actions.DuplicateAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -75,6 +78,10 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
         for (IRepositoryNode node : repositoryNodeList) {
             ERepositoryObjectType contentType = node.getObjectType();
             if (!objectTypes.contains(contentType)) {
+                return false;
+            }
+            RepositoryNode parent = node.getParent();
+            if ((parent instanceof ReportSubFolderRepNode) && (node instanceof AnalysisRepNode)) {
                 return false;
             }
         }

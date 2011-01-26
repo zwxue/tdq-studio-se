@@ -12,8 +12,18 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
+import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.Expression;
 
 
 /**
@@ -29,7 +39,24 @@ public class PatternRepNode extends RepositoryNode {
      */
     public PatternRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
+    @Override
+    public List<IRepositoryNode> getChildren() {
+        List<IRepositoryNode> languageElement = new ArrayList<IRepositoryNode>();
+        IRepositoryViewObject object = this.getObject();
+        TDQPatternItem patternItem = (TDQPatternItem) object.getProperty().getItem();
+        Pattern pattern = patternItem.getPattern();
+        EList<PatternComponent> components = pattern.getComponents();
+        for (PatternComponent component : components) {
+            RegularExpression re = (RegularExpression) component;
+            Expression expression = re.getExpression();
+            String language = expression.getLanguage();
+            PatternLanguageRepNode plrn = new PatternLanguageRepNode(this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            plrn.setId(language);
+            plrn.setLabel(language);
+            languageElement.add(plrn);
+        }
+        return languageElement;
+    }
 }
