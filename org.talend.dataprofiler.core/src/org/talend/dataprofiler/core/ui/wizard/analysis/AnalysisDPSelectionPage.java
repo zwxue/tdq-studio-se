@@ -48,7 +48,14 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
 
     private boolean multiSelect;
 
-    private IFolder metadataFolder = ResourceManager.getMetadataFolder();
+    private IFolder metadataFolder;
+
+    private IFolder getMetadataFolder() {
+        if (this.metadataFolder == null) {
+            this.metadataFolder = ResourceManager.getMetadataFolder();
+        }
+        return this.metadataFolder;
+    }
 
     public AnalysisDPSelectionPage(String labText, ResourceViewContentProvider contentProvider) {
         init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$
@@ -96,7 +103,7 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         fViewer = new TreeViewer(treeContainer, style);
         fViewer.setContentProvider(fContentProvider);
         fViewer.setLabelProvider(fLabelProvider);
-        fViewer.setInput(metadataFolder);
+        fViewer.setInput(this.getMetadataFolder());
     }
 
     protected abstract void addListeners();

@@ -16,15 +16,10 @@ import org.talend.dq.nodes.analysis.AbstractAnalysisNode;
 
 /**
  * @author zqin
- * 
  */
 public class AnalysisTypeNode extends AbstractAnalysisNode {
 
-    /**
-     * 
-     */
     public AnalysisTypeNode(String name, String literal, Object parent) {
-        // TODO Auto-generated constructor stub
         super(name, literal, parent);
     }
 

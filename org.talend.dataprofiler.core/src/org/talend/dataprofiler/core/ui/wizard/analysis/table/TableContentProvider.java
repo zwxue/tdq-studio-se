@@ -14,6 +14,9 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
+import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
@@ -21,6 +24,9 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -38,8 +44,17 @@ public class TableContentProvider extends ResourceViewContentProvider {
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof DBTableFolderRepNode || parentElement instanceof DBViewFolderRepNode) {
             return ((IRepositoryNode) parentElement).getChildren().toArray();
+        } else if (parentElement instanceof IContainer) {
+            IContainer container = (IContainer) parentElement;
+            if (ResourceManager.isMetadataFolder(container)) {
+                IRepositoryViewObject viewObject = new Folder(((IFolder) container).getName(), ((IFolder) container).getName());
+                IRepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
+                viewObject.setRepositoryNode(node);
+                Object[] children = super.getChildren(node);
+                return children;
+            }
         }
-        return null;
+        return super.getChildren(parentElement);
     }
 
     @Override
