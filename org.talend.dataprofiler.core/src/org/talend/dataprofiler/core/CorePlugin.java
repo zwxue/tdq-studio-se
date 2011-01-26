@@ -58,7 +58,9 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.User;
+import org.talend.core.model.properties.helper.StatusHelper;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.IRepositoryFactory;
@@ -473,6 +475,11 @@ public class CorePlugin extends AbstractUIPlugin {
 
                 if (project != null) {
                     initRepositoryContext(project);
+
+                    // add status
+                    String defaultTechnicalStatusList = "DEV development;TEST testing;PROD production";
+                    List<Status> statusList = StatusHelper.parse(defaultTechnicalStatusList);
+                    proxyRepository.setTechnicalStatus(statusList);
                 }
 
             } catch (PersistenceException e) {
