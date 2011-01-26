@@ -25,7 +25,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -47,6 +47,8 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.PluginChecker;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -55,6 +57,7 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.ui.IMDMProviderService;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -77,6 +80,8 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.i18n.Messages;
 import org.talend.repository.model.RepositoryNode;
@@ -293,12 +298,26 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (connectionItem != null) {
             RepositoryNode node = RepositoryNodeHelper.recursiveFind(connectionItem.getConnection());
 
-            Wizard wizard = new DatabaseWizard(PlatformUI.getWorkbench(), false, node, null);
+            IWizard wizard = null;
+            if (node != null) {
+                if (node instanceof DBConnectionRepNode) {
+                    wizard = new DatabaseWizard(PlatformUI.getWorkbench(), false, node, null);
+                } else if (node instanceof MDMConnectionRepNode) {
+                    if (PluginChecker.isMDMPluginLoaded() && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
+                        IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(IMDMProviderService.class);
+                        if (service != null) {
+                            wizard = service.newMDMWizard(PlatformUI.getWorkbench(), false, node, null);
+                        }
+                    }
+                }
+            }
 
-            WizardDialog dialog = new WizardDialog(null, wizard);
-            dialog.setPageSize(550, 550);
-            wizard.setContainer(dialog);
-            dialog.open();
+            if (wizard != null) {
+                WizardDialog dialog = new WizardDialog(null, wizard);
+                dialog.setPageSize(550, 550);
+                wizard.setContainer(dialog);
+                dialog.open();
+            }
         }
     }
 

@@ -18,6 +18,7 @@ import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
@@ -56,8 +57,17 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
 
         if (editorInput != null && clazz != null) {
+            CorePlugin.getDefault().closeEditorIfOpened(item.getProperty());
             CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
         }
     }
 
+    public void fillMetadata(Connection connection) {
+        ConnectionUtils.fillConnectionInformation(connection);
+    }
+
+    public void refresh() {
+        CorePlugin.getDefault().refreshWorkSpace();
+        CorePlugin.getDefault().refreshDQView();
+    }
 }

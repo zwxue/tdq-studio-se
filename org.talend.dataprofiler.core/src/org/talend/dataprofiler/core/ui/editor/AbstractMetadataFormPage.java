@@ -36,7 +36,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.utils.VersionUtils;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -337,9 +337,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         String version = MetadataHelper.getVersion(currentModelElement);
         String devStatus = MetadataHelper.getDevStatus(currentModelElement);
 
-        if (currentModelElement instanceof DatabaseConnection) {
+        if (currentModelElement instanceof Connection) {
             Property property = PropertyHelper.getProperty(currentModelElement);
             if (property != null) {
+                name = property.getLabel();
                 purpose = property.getPurpose();
                 description = property.getDescription();
                 author = property.getAuthor().getLogin();
@@ -368,6 +369,18 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         MetadataHelper.setAuthor(currentModelElement, authorText.getText());
         // MetadataHelper.setVersion(versionText.getText(), currentModelElement);
         MetadataHelper.setDevStatus(currentModelElement, statusCombo.getText());
+
+        if (currentModelElement instanceof Connection) {
+            Property property = PropertyHelper.getProperty(currentModelElement);
+            if (property != null) {
+                property.setLabel(nameText.getText());
+                property.setPurpose(purposeText.getText());
+                property.setDescription(descriptionText.getText());
+                property.setStatusCode(statusCombo.getText());
+                property.getAuthor().setLogin(authorText.getText());
+                // property.setVersion(versionText.getText());
+            }
+        }
     }
 
     public boolean performGlobalAction(String actionId) {

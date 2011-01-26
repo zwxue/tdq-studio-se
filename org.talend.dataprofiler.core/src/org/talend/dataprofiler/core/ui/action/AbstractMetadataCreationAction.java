@@ -21,7 +21,6 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -56,8 +55,6 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
             initDialogBeforeOpen(dialog);
 
             dialog.open();
-
-            CorePlugin.getDefault().refreshDQView();
         }
     }
 

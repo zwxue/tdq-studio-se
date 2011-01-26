@@ -34,6 +34,7 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -191,9 +192,12 @@ public class DataProviderWriter extends AElementPersistance {
 
     @Override
     public ReturnCode save(ModelElement element) {
-        IRepositoryViewObject repositoryViewObject = RepositoryNodeHelper.recursiveFind(element).getObject();
-        if (repositoryViewObject != null) {
-            return save(repositoryViewObject.getProperty().getItem());
+        RepositoryNode node = RepositoryNodeHelper.recursiveFind(element);
+        if (node != null) {
+            IRepositoryViewObject repositoryViewObject = node.getObject();
+            if (repositoryViewObject != null) {
+                return save(repositoryViewObject.getProperty().getItem());
+            }
         }
         return super.save(element);
 

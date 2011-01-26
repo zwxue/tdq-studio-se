@@ -49,5 +49,8 @@ public class ConnectionItemEditorInput extends AbstractItemEditorInput {
         return connectionItem;
     }
 
+    public void setConnectionItem(ConnectionItem connectionItem) {
+        this.connectionItem = connectionItem;
+    }
 
 }

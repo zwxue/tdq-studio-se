@@ -72,6 +72,7 @@ import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
+import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
@@ -81,8 +82,8 @@ import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.record.RecordFile;
@@ -565,7 +566,8 @@ public final class RepositoryNodeHelper {
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
+                if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode
+                        || subNode instanceof MDMConnectionFolderRepNode) {
                     // don't add mdm connections
                     connNodes.addAll(getModelElementFromFolder(subNode));
                 }

@@ -12,17 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.util.Properties;
-
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
-import org.talend.cwm.management.api.FolderProvider;
+import org.eclipse.ui.PlatformUI;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.PluginChecker;
+import org.talend.core.ui.IMDMProviderService;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizard;
-import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.repository.model.RepositoryNode;
 
 
@@ -44,17 +41,26 @@ public class CreateMDMConnectionAction extends AbstractMetadataCreationAction {
      */
     @Override
     protected IWizard createWizard() {
-        DBConnectionParameter connectionParam = new DBConnectionParameter();
-        connectionParam.setParameters(new Properties());
+        // DBConnectionParameter connectionParam = new DBConnectionParameter();
+        // connectionParam.setParameters(new Properties());
+        //
+        // IFolder folder = WorkbenchUtils.getFolder(node);
+        // if (folder != null) {
+        // FolderProvider provider = new FolderProvider();
+        // provider.setFolderResource(folder);
+        // connectionParam.setFolderProvider(provider);
+        // }
+        //
+        // return new DatabaseConnectionWizard(connectionParam);
 
-        IFolder folder = WorkbenchUtils.getFolder(node);
-        if (folder != null) {
-            FolderProvider provider = new FolderProvider();
-            provider.setFolderResource(folder);
-            connectionParam.setFolderProvider(provider);
+        if (PluginChecker.isMDMPluginLoaded() && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
+            IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(IMDMProviderService.class);
+            if (service != null) {
+                return service.newMDMWizard(PlatformUI.getWorkbench(), true, node, getExistingNames());
+            }
         }
 
-        return new DatabaseConnectionWizard(connectionParam);
+        return null;
     }
 
     /* (non-Javadoc)
