@@ -31,6 +31,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
@@ -59,6 +60,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
@@ -85,7 +87,14 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
     private ReturnCode changeActionStatus;
 
     public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, Connection tdProvider) {
-        this.newDataProvider = (Connection) masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
+        Object connectionObj = masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
+        if (connectionObj instanceof DBConnectionRepNode) {
+            this.newDataProvider = ((ConnectionItem) (((DBConnectionRepNode) connectionObj).getObject().getProperty().getItem()))
+                    .getConnection();
+        } else {
+            this.newDataProvider = (Connection) connectionObj;
+        }
+
         this.oldDataProvider = tdProvider;
         this.synAnalysis = masterPage.getAnalysis();
         changeActionStatus = new ReturnCode(Boolean.FALSE);

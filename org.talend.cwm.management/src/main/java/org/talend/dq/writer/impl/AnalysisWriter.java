@@ -31,7 +31,9 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -87,7 +89,9 @@ public class AnalysisWriter extends AElementPersistance {
                     TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
                             pattern);
                     if (dependencyReturn.isOk()) {
-
+                        TDQPatternItem patternItem = (TDQPatternItem) RepositoryNodeHelper.recursiveFind(pattern).getObject()
+                                .getProperty().getItem();
+                        patternItem.setPattern(pattern);
                         ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
                                 .saveResource(pattern.eResource());
 

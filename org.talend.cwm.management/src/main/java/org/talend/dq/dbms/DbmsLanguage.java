@@ -798,8 +798,9 @@ public class DbmsLanguage {
             if (patternComponent != null) {
                 expression = this.getExpression(patternComponent);
                 if (expression != null
-                        && !(isJavaEngin ^ DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.JAVA.getName(),
-                                expression.getLanguage()))) {
+                        && (!(isJavaEngin ^ DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.JAVA.getName(),
+                                expression.getLanguage())) || DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.SQL.getName(),
+ expression.getLanguage()))) {
                     return expression;
                 }
             }

@@ -39,6 +39,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -54,7 +55,8 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -347,8 +349,10 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             }
         }
         // EMFUtil.saveSingleResource(pattern.eResource());
-
-        PatternResourceFileHelper.getInstance().save(pattern);
+        Item patternItem = ((PatternItemEditorInput) this.getEditor().getEditorInput()).getItem();
+        ((TDQPatternItem) patternItem).setPattern(this.pattern);
+        ElementWriterFactory.getInstance().createPatternWriter().save(patternItem);
+        // PatternResourceFileHelper.getInstance().save(pattern);
 
         return true;
 

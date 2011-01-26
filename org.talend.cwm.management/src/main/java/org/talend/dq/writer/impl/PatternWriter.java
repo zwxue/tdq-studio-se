@@ -17,8 +17,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -45,9 +49,11 @@ public class PatternWriter extends AElementPersistance {
      */
     @Override
     protected void addDependencies(ModelElement element) {
-        // TODO Auto-generated method stub
+
 
     }
+
+
 
     /*
      * (non-Javadoc)
@@ -78,8 +84,24 @@ public class PatternWriter extends AElementPersistance {
     }
 
     public ReturnCode save(Item item) {
-        // TODO Auto-generated method stub
-        return null;
+        ReturnCode rc = new ReturnCode();
+        try {
+            TDQPatternItem patternItem = (TDQPatternItem) item;
+            if (patternItem != null && patternItem.eIsProxy()) {
+                patternItem = (TDQPatternItem) EObjectHelper.resolveObject(patternItem);
+                patternItem.getProperty().setLabel(patternItem.getPattern().getName());
+            }
+            Pattern pattern = patternItem.getPattern();
+            addDependencies(pattern);
+            addResourceContent(pattern.eResource(), pattern);
+            patternItem.setPattern(pattern);
+            ProxyRepositoryFactory.getInstance().save(patternItem);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
     }
 
     @Override
@@ -87,4 +109,5 @@ public class PatternWriter extends AElementPersistance {
         ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
 
     }
+
 }

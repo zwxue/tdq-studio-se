@@ -293,6 +293,8 @@ public class ColumnViewerDND {
                         TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
                         if (trc.isOk()) {
                             ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, trc.getObject());
+                        } else {
+                            MessageUI.openError(trc.getMessage());
                         }
                     }
                 }

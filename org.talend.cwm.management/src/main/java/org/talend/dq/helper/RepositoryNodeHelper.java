@@ -51,6 +51,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
@@ -72,7 +73,9 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.PatternRegexFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
+import org.talend.dq.nodes.PatternSqlFolderRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
@@ -485,6 +488,25 @@ public final class RepositoryNodeHelper {
                     }
                 }
             }
+        } else if (modelElement instanceof Pattern) {
+            Pattern pattern = (Pattern) modelElement;
+            List<IRepositoryNode> patternsNode = getPatternsRepositoryNodes();
+            for (IRepositoryNode patternNode : patternsNode) {
+                Item itemTemp = ((IRepositoryViewObject) patternNode.getObject()).getProperty().getItem();
+                if (itemTemp instanceof TDQPatternItem) {
+                    TDQPatternItem item = (TDQPatternItem) itemTemp;
+                    if (ResourceHelper.getUUID(pattern).equals(ResourceHelper.getUUID(item.getPattern()))) {
+                        return (RepositoryNode) patternNode;
+                    }
+                } else if (itemTemp instanceof FolderItem) {
+                    List<TDQPatternItem> patternItems = getPatternsItemsFromFolderItem((FolderItem) itemTemp);
+                    for (TDQPatternItem patternItem : patternItems) {
+                        if (ResourceHelper.getUUID(pattern).equals(ResourceHelper.getUUID(patternItem.getPattern()))) {
+                            return (RepositoryNode) patternNode;
+                        }
+                    }
+                }
+            }
         }
         return null;
     }
@@ -520,6 +542,19 @@ public final class RepositoryNodeHelper {
         }
         return list;
     }
+
+    private static List<TDQPatternItem> getPatternsItemsFromFolderItem(FolderItem folderItem) {
+        List<TDQPatternItem> list = new ArrayList<TDQPatternItem>();
+        EList objs = folderItem.getChildren();
+        for (Object obj : objs) {
+            if (obj instanceof FolderItem) {
+                list.addAll(getPatternsItemsFromFolderItem((FolderItem) obj));
+            } else if (obj instanceof TDQAnalysisItem) {
+                list.add((TDQPatternItem) obj);
+            }
+        }
+        return list;
+    }
     /**
      * ADD mzhao 15750 , build dq metadata tree, get connection root node.
      */
@@ -532,7 +567,7 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode subNode : childrens) {
                 if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode) {
                     // don't add mdm connections
-                    connNodes.addAll(getConnectionFromFolder(subNode));
+                    connNodes.addAll(getModelElementFromFolder(subNode));
                 }
             }
         }
@@ -546,24 +581,48 @@ public final class RepositoryNodeHelper {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
                 if (subNode instanceof AnalysisFolderRepNode || subNode instanceof ReportFolderRepNode) {
-                    dataProfilingNodes.addAll(getAnalysisFromFolder(subNode));
+                    dataProfilingNodes.addAll(getModelElementFromFolder(subNode));
                 }
             }
         }
         return dataProfilingNodes;
     }
 
-    private static List<IRepositoryNode> getAnalysisFromFolder(IRepositoryNode folderNode) {
-        List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
-        if (isFolderNode(folderNode.getType())) {
-            for (IRepositoryNode thefolderNode : folderNode.getChildren()) {
-                repositoryNodeList.addAll(getAnalysisFromFolder(thefolderNode));
+    // private static List<IRepositoryNode> getAnalysisFromFolder(IRepositoryNode folderNode) {
+    // List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
+    // if (isFolderNode(folderNode.getType())) {
+    // for (IRepositoryNode thefolderNode : folderNode.getChildren()) {
+    // repositoryNodeList.addAll(getAnalysisFromFolder(thefolderNode));
+    // }
+    // } else {
+    // repositoryNodeList.add(folderNode);
+    // }
+    // return repositoryNodeList;
+    // }
+
+    public static List<IRepositoryNode> getPatternsRepositoryNodes() {
+        RepositoryNode node = getRootNode(EResourceConstant.LIBRARIES.getName());
+        List<IRepositoryNode> patternsNodes = new ArrayList<IRepositoryNode>();
+        if (node != null) {
+            List<IRepositoryNode> childrens = node.getChildren();
+            for (IRepositoryNode subNode : childrens) {
+                if (EResourceConstant.PATTERNS.getName().equals((subNode.getObject().getLabel()))) {
+                    List<IRepositoryNode> subChildren = subNode.getChildren();
+                    for (IRepositoryNode patternsNode : subChildren) {
+                        if (patternsNode instanceof PatternRegexFolderRepNode || patternsNode instanceof PatternSqlFolderRepNode) {
+                            patternsNodes.addAll(getModelElementFromFolder(subNode));
+                        }
+                    }
+                    return patternsNodes;
+
+                }
+
             }
-        } else {
-            repositoryNodeList.add(folderNode);
         }
-        return repositoryNodeList;
+        return patternsNodes;
     }
+
+
 
     /**
      * 
@@ -572,11 +631,11 @@ public final class RepositoryNodeHelper {
      * @param folderNode any node
      * @return
      */
-    private static List<IRepositoryNode> getConnectionFromFolder(IRepositoryNode folderNode) {
+    private static List<IRepositoryNode> getModelElementFromFolder(IRepositoryNode folderNode) {
         List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
         if (isFolderNode(folderNode.getType())) {
             for (IRepositoryNode thefolderNode : folderNode.getChildren()) {
-                repositoryNodeList.addAll(getConnectionFromFolder(thefolderNode));
+                repositoryNodeList.addAll(getModelElementFromFolder(thefolderNode));
             }
         } else {
             repositoryNodeList.add(folderNode);
@@ -635,6 +694,7 @@ public final class RepositoryNodeHelper {
                 String text = item.getText();
                 if (text.equals(nodeName)) {
                     node = (RepositoryNode) item.getData();
+                    return node;
                 }
             }
 

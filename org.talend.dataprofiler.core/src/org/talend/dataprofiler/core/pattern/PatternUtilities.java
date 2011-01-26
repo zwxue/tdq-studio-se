@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
@@ -51,6 +52,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
@@ -163,6 +165,10 @@ public final class PatternUtilities {
         } else {
             patternMatchingIndicator = isSQLPattern ? PatternIndicatorFactory.createSqlPatternMatchingIndicator(pattern)
                     : PatternIndicatorFactory.createRegexpMatchingIndicator(pattern);
+        }
+        IEditorPart theEdit = CorePlugin.getDefault().getCurrentActiveEditor();
+        if (theEdit != null && theEdit instanceof AnalysisEditor && analysis.getContext().getConnection() == null) {
+            theEdit.doSave(null);
         }
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
