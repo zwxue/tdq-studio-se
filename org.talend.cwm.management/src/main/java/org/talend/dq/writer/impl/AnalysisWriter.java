@@ -31,6 +31,7 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -76,6 +77,9 @@ public class AnalysisWriter extends AElementPersistance {
                     TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
                             udi);
                     if (dependencyReturn.isOk()) {
+                        TDQIndicatorDefinitionItem udiItem = (TDQIndicatorDefinitionItem) RepositoryNodeHelper.recursiveFind(udi)
+                                .getObject().getProperty().getItem();
+                        udiItem.setIndicatorDefinition(udi);
                         ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
                                 .saveResource(udi.eResource());
                     }

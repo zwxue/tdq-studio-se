@@ -527,7 +527,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         allMatchIndicator.getAnalyzedColumns().clear();
         // set execute engine
         Analysis analysis = columnSetAnalysisHandler.getAnalysis();
-        analysis.getParameters().setExecutionLanguage(ExecutionLanguage.JAVA);
+        analysis.getParameters().setExecutionLanguage(ExecutionLanguage.SQL);
 
         // set data filter
         columnSetAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());

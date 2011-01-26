@@ -22,8 +22,11 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -57,8 +60,12 @@ public class ReportWriter extends AElementPersistance {
             TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
             if (dependencyReturn.isOk()) {
                 try {
+                    RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(ana);
+                    TDQAnalysisItem anaItem = (TDQAnalysisItem) repositoryNode.getObject()
+                            .getProperty().getItem();
+                    anaItem.setAnalysis(ana);
                     ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                            .saveResource(report.eResource());
+                            .saveResource(ana.eResource());
                 } catch (PersistenceException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
