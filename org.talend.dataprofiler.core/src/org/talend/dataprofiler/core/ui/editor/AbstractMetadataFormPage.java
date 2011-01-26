@@ -36,12 +36,15 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -333,6 +336,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         String author = MetadataHelper.getAuthor(currentModelElement);
         String version = MetadataHelper.getVersion(currentModelElement);
         String devStatus = MetadataHelper.getDevStatus(currentModelElement);
+
+        if (currentModelElement instanceof DatabaseConnection) {
+            Property property = PropertyHelper.getProperty(currentModelElement);
+            if (property != null) {
+                purpose = property.getPurpose();
+                description = property.getDescription();
+                author = property.getAuthor().getLogin();
+                version = property.getVersion();
+                devStatus = property.getStatusCode();
+            }
+        }
 
         nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
         purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);

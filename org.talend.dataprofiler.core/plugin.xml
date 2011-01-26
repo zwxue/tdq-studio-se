@@ -1270,5 +1270,12 @@
      <find_driver
            class="org.talend.dataprofiler.core.service.TOPDriverService"></find_driver>
   </extension>
+  <extension
+        point="org.talend.core.runtime.service">
+     <Service
+           class="org.talend.dataprofiler.core.service.TOPRepositoryService"
+           serviceId="org.talend.core.ITDQRepositoryService">
+     </Service>
+  </extension>
 
 </plugin>
