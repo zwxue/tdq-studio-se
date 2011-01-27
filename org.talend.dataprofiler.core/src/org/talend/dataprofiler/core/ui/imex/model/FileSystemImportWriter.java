@@ -35,12 +35,16 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
@@ -153,13 +157,31 @@ public class FileSystemImportWriter implements IImportWriter {
         Map<IPath, IPath> toImportMap = new HashMap<IPath, IPath>();
 
         if (record.isValid()) {
-            IPath itemPath = PropertyHelper.getItemPath(record.getProperty());
+            Property property = record.getProperty();
+
+            IPath itemPath = PropertyHelper.getItemPath(property);
 
             IPath itemDesPath = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath).getLocation();
             IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
             toImportMap.put(record.getFilePath(), itemDesPath);
             toImportMap.put(record.getPropertyPath(), propDesPath);
+
+            EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
+            if (typedConstant != null && typedConstant == EResourceConstant.MDM_CONNECTIONS) {
+                ConnectionItem item = (ConnectionItem) property.getItem();
+                Connection connection = item.getConnection();
+                List<TdXmlSchema> tdXmlDocumentList = ConnectionHelper.getTdXmlDocument(connection);
+                for (TdXmlSchema schema : tdXmlDocumentList) {
+                    IPath srcPath = record.getFilePath().removeLastSegments(1).append(schema.getXsdFilePath());
+                    if (!srcPath.toFile().exists()) {
+                        log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");
+                        break;
+                    }
+                    IPath desPath = itemDesPath.removeLastSegments(1).append(new Path(schema.getXsdFilePath()));
+                    toImportMap.put(srcPath, desPath);
+                }
+            }
         }
 
         return toImportMap;
@@ -287,9 +309,11 @@ public class FileSystemImportWriter implements IImportWriter {
 
                             for (IPath resPath : toImportMap.keySet()) {
                                 IPath desPath = toImportMap.get(resPath);
-                                write(resPath, desPath);
+                                synchronized (ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                                        .getResourceManager().resourceSet) {
+                                    write(resPath, desPath);
+                                }
                             }
-
                         } else {
                             for (String error : record.getErrors()) {
                                 log.error(error);

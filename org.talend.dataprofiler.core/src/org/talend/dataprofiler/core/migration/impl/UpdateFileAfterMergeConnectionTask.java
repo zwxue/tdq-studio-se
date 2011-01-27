@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
@@ -44,6 +45,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
@@ -80,6 +82,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     }
 
     public UpdateFileAfterMergeConnectionTask() {
+        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -101,21 +104,21 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         // ADD xqliu 2010-12-21 bug 17704
         // copy .xsd folder to new location
         File srcMdmXsdFolder = getWorkspacePath().append(
-                ExchangeFileNameToReferenceTask.MDM_CONNECTION + IPath.SEPARATOR + ".xsd").toFile();//$NON-NLS-1$ 
+                ExchangeFileNameToReferenceTask.MDM_CONNECTION + IPath.SEPARATOR + ".xsd").toFile();//$NON-NLS-1$
         File tarMdmXsdFolder = getWorkspacePath().append(
-                ERepositoryObjectType.getFolderName(ERepositoryObjectType.METADATA_MDMCONNECTION) + IPath.SEPARATOR + ".xsd")//$NON-NLS-1$ 
+                ERepositoryObjectType.getFolderName(ERepositoryObjectType.METADATA_MDMCONNECTION) + IPath.SEPARATOR + ".xsd")//$NON-NLS-1$
                 .toFile();
         FilesUtils.copyFolder(srcMdmXsdFolder, tarMdmXsdFolder, true, null, null, true, null);
         // update MDMConnection XSDPath
         File mdmConnectionFolder = new File(ResourceManager.getMDMConnectionFolder().getRawLocationURI());
-        final String[] metadataFileExtentionNames = { ".item" };//$NON-NLS-1$ 
+        final String[] metadataFileExtentionNames = { ".item" };//$NON-NLS-1$
         UpdateMDMConnectionXSDPathTask.doUpdate(true, true, mdmConnectionFolder, metadataFileExtentionNames);
         // reload the mdm connection
         ArrayList<File> fileList = new ArrayList<File>();
         FilesUtils.getAllFilesFromFolder(mdmConnectionFolder, fileList, new FilenameFilter() {
 
             public boolean accept(File dir, String name) {
-                if (name.endsWith("item")) {//$NON-NLS-1$ 
+                if (name.endsWith("item")) {//$NON-NLS-1$
                     return true;
                 }
                 return false;
@@ -145,6 +148,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                     && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 
             AnaResourceFileHelper.getInstance().clear();
+            AnaResourceFileHelper.getInstance().getAllAnalysis();
             ResourceService.refreshStructure();
         } catch (Exception e) {
             result = false;
@@ -166,31 +170,27 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
                         EResourceConstant.DB_CONNECTIONS.getName());
             }
-            folderMap.put(srcDBFolder, null);
-
             if (!ResourceManager.getMDMConnectionFolder().exists()) {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
                         EResourceConstant.MDM_CONNECTIONS.getName());
             }
-            folderMap.put(srcMDMFolder, null);
-        } else {
-            File file = getWorkspacePath().append(EResourceConstant.METADATA.getPath()).toFile();
-            if (!file.exists()) {
-                file.mkdir();
-            }
-
-            file = getWorkspacePath().append(EResourceConstant.DB_CONNECTIONS.getPath()).toFile();
-            if (!file.exists()) {
-                file.mkdir();
-            }
-            folderMap.put(srcDBFolder, file);
-
-            file = getWorkspacePath().append(EResourceConstant.MDM_CONNECTIONS.getPath()).toFile();
-            if (!file.exists()) {
-                file.mkdir();
-            }
-            folderMap.put(srcMDMFolder, file);
         }
+        File file = getWorkspacePath().append(EResourceConstant.METADATA.getPath()).toFile();
+        if (!file.exists()) {
+            file.mkdir();
+        }
+
+        file = getWorkspacePath().append(EResourceConstant.DB_CONNECTIONS.getPath()).toFile();
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        folderMap.put(srcDBFolder, file);
+
+        file = getWorkspacePath().append(EResourceConstant.MDM_CONNECTIONS.getPath()).toFile();
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        folderMap.put(srcMDMFolder, file);
 
         return folderMap;
     }
@@ -243,9 +243,22 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                 .getProperty());
 
         if (property != null) {
+            File targetFolder = folderMap.get(parentFolder);
             Item item = property.getItem();
             String connNameBofore = null;
             String connNameAfter = null;
+
+            IPath path = new Path(item.getState().getPath());
+            if (ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(),
+                    ERepositoryObjectType.getItemType(item), path) == null) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.getItemType(item),
+                        path.removeLastSegments(1), path.lastSegment());
+            }
+            if (path == null) {
+                path = Path.EMPTY;
+            }
+            String connName = null;
+
             if (item instanceof ConnectionItem) {
                 Connection conn = ((ConnectionItem) item).getConnection();
                 connNameBofore = conn.eResource().getURI().trimFileExtension().lastSegment();
@@ -257,28 +270,41 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
                 String label = conn.getName() + "_" + version;
                 connNameAfter = label;
-            }
 
-            IPath path = new Path(item.getState().getPath());
-            if (ProxyRepositoryFactory.getInstance().getFolderItem(ProjectManager.getInstance().getCurrentProject(),
-                    ERepositoryObjectType.getItemType(item), path) == null) {
-                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.getItemType(item),
-                        path.removeLastSegments(1), path.lastSegment());
+                File destItemFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter)
+                        .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
+                File destPropFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter)
+                        .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+                if (destItemFile.exists()) {
+                    int num = 0;
+
+                    // ~
+                    while (destItemFile.exists() || destPropFile.exists()) {
+
+                        connName = conn.getName() + String.valueOf(++num);
+                        connNameAfter = connName + "_" + version;
+                        destItemFile = new Path(destItemFile.getPath()).removeLastSegments(1).append(connNameAfter)
+                                .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
+                        destPropFile = new Path(destPropFile.getPath()).removeLastSegments(1).append(connNameAfter)
+                                .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+                    }
+                    conn.setName(connName);
+                    conn.setLabel(connName);
+                    property.setLabel(connName);
+
+                    // EMFUtil.saveResource(itemResource);
+                }
+                String relationPropPath = ReponsitoryContextBridge.getRootProject().getFullPath()
+                        .append(new Path(destPropFile.getPath()).makeRelativeTo(this.getWorkspacePath())).toOSString();
+                MetadataHelper.setPropertyPath(relationPropPath, conn);
             }
 
             if (isWorksapcePath()) {
+
                 ProxyRepositoryFactory.getInstance().create(item, path, true);
 
-                if (item instanceof ConnectionItem) {
-                    Connection conn = ((ConnectionItem) item).getConnection();
-                    if (conn.eIsProxy()) {
-                        conn = (Connection) EObjectHelper.resolveObject(conn);
-                    }
-                    connNameAfter = conn.eResource().getURI().trimFileExtension().lastSegment();
-
-                }
             } else {
-                copyFile(parentFolder, propFile, property, path, connNameAfter, folderMap);
+                connNameAfter = copyFile(targetFolder, propFile, property, path, connNameAfter, folderMap);
             }
 
             if (connNameBofore != null && connNameAfter != null) {
@@ -287,14 +313,10 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         }
     }
 
-    private void copyFile(File parentFolder, File propFile, Property property, IPath path, String connNameAfter,
-            Map<File, File> folderMap)
-            throws IOException {
-        if (path == null) {
-            path = Path.EMPTY;
-        }
+    private String copyFile(File targetFolder, File propFile, Property property, IPath path, String connNameAfter,
+            Map<File, File> folderMap) throws IOException {
 
-        File targetFolder = folderMap.get(parentFolder);
+        String connName = null;
 
         File destItemFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter).addFileExtension(
                 FactoriesUtil.ITEM_EXTENSION).toFile();
@@ -304,39 +326,90 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         File srcItemFile = new Path(propFile.getAbsolutePath()).removeFileExtension().addFileExtension(
                 FactoriesUtil.ITEM_EXTENSION).toFile();
         File srcPropFile = propFile;
+        Item item = property.getItem();
+        // MOD by zshen to resolve repetitious name question(any time it should't come in here)
+        if (destItemFile.exists()) {
+            int num = 0;
 
+            if (item instanceof ConnectionItem) {
+
+                Resource itemResource = getResource(srcItemFile.getAbsolutePath());
+                Connection conn = null;
+                for (EObject object : itemResource.getContents()) {
+                    if (object instanceof Connection) {
+                        conn = (Connection) object;
+                        connName = conn.getName();
+
+                    }
+                }
+
+                // ~
+                while (destItemFile.exists() || destPropFile.exists()) {
+                    String version = property.getVersion();
+                    if (version == null) {
+                        version = "0.1";
+                    }
+
+                    connName = connName + String.valueOf(++num);
+                    conn.setName(connName);
+                    connNameAfter = connName + "_" + version;
+                    destItemFile = new Path(destItemFile.getPath()).removeLastSegments(1).append(connNameAfter)
+                            .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
+                    destPropFile = new Path(destPropFile.getPath()).removeLastSegments(1).append(connNameAfter)
+                            .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+                    // TODO change connection property path
+
+                }
+                // EMFUtil.saveResource(itemResource);
+            }
+        }
         FileUtils.copyFile(srcItemFile, destItemFile);
         FileUtils.copyFile(srcPropFile, destPropFile);
 
-        Item item = property.getItem();
         if (item instanceof ConnectionItem) {
             ConnectionItem connectionItem = (ConnectionItem) item;
-
-            Resource resource = getResource(destItemFile.getAbsolutePath());
-
-            for (EObject object : resource.getContents()) {
+            Resource itemResource = getResource(destItemFile.getAbsolutePath());
+            Connection conn = null;
+            for (EObject object : itemResource.getContents()) {
                 if (object instanceof Connection) {
-                    connectionItem.setConnection((Connection) object);
+                    conn = (Connection) object;
+                    if (connName != null) {
+                        conn.setName(connName);
+                        conn.setLabel(connName);
+                    }
+                    String relationPropPath = ReponsitoryContextBridge.getRootProject().getFullPath()
+                            .append(new Path(destPropFile.getPath()).makeRelativeTo(this.getWorkspacePath())).toOSString();
+                    MetadataHelper.setPropertyPath(relationPropPath, conn);
+                    connectionItem.setConnection(conn);
+
                 }
             }
+            EMFUtil.saveResource(itemResource);
 
-            resource = getResource(destPropFile.getAbsolutePath());
+            Resource propResource = getResource(destPropFile.getAbsolutePath());
 
-            Property newProperty = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
+            Property newProperty = (Property) EcoreUtil.getObjectByType(propResource.getContents(),
+                    PropertiesPackage.eINSTANCE
                     .getProperty());
             newProperty.setAuthor(property.getAuthor());
             newProperty.setLabel(connectionItem.getConnection().getName());
             newProperty.setItem(item);
+            // String propertyPath = String.valueOf(Path.SEPARATOR)
+            // + (new
+            // Path(destPropFile.getPath()).makeRelativeTo(this.getWorkspacePath().removeLastSegments(1)).toString());
+            // MetadataHelper.setPropertyPath(propertyPath, connectionItem.getConnection());
             item.setProperty(newProperty);
 
-            resource.getContents().clear();
+            propResource.getContents().clear();
 
-            resource.getContents().add(newProperty);
-            resource.getContents().add(item);
-            resource.getContents().add(item.getState());
+            propResource.getContents().add(newProperty);
+            propResource.getContents().add(item);
+            propResource.getContents().add(item.getState());
 
-            EMFUtil.saveResource(resource);
+            EMFUtil.saveResource(propResource);
+
         }
+        return connNameAfter;
     }
 
     private Resource getResource(String filePath) {

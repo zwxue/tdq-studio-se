@@ -135,8 +135,10 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
                 if (null != file.getFileExtension() && file.getFileExtension().equals(FactoriesUtil.ANA)) {
                     URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
                     Resource eResource = EMFSharedResources.getInstance().getResource(uri, true);
-                    if (!eResource.getContents().isEmpty()) {
+                    if (eResource.getContents().size() > 0) {
                         analyses.add((Analysis) eResource.getContents().get(0));
+                    } else {
+                        log.error("can't get the analysis from resource :" + eResource);
                     }
                 }
             }

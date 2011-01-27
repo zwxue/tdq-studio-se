@@ -115,6 +115,7 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
                         && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 
                 AnaResourceFileHelper.getInstance().clear();
+                AnaResourceFileHelper.getInstance().getAllAnalysis();
             } catch (Exception e) {
                 returnFlag = false;
                 log.error(e, e);

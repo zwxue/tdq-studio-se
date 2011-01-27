@@ -74,7 +74,7 @@ public class RefineTextIndicatorsTask extends AbstractWorksapceUpdateTask {
     }
 
     public Date getOrder() {
-        return createDate(2010, 9, 28);
+        return createDate(2010, 8, 15);
     }
 
 }

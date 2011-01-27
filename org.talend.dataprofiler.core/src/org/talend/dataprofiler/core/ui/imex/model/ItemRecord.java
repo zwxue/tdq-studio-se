@@ -118,7 +118,9 @@ public class ItemRecord {
             computeDependencies();
         } catch (Exception e) {
             if (!isSQL()) {
-                log.error("Can't initialize element [" + getName() + "] : " + e.getMessage(), e);
+                String errorMessage = "Can't initialize element [" + getName() + "] : " + e.getMessage();
+                log.error(errorMessage);
+                this.errors.add(errorMessage);
             }
         }
     }

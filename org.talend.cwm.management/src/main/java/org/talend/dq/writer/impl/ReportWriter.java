@@ -61,9 +61,10 @@ public class ReportWriter extends AElementPersistance {
             if (dependencyReturn.isOk()) {
                 try {
                     RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(ana);
-                    TDQAnalysisItem anaItem = (TDQAnalysisItem) repositoryNode.getObject()
-                            .getProperty().getItem();
-                    anaItem.setAnalysis(ana);
+                    if (repositoryNode != null) {
+                        TDQAnalysisItem anaItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty().getItem();
+                        anaItem.setAnalysis(ana);
+                    }
                     ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
                             .saveResource(ana.eResource());
                 } catch (PersistenceException e) {

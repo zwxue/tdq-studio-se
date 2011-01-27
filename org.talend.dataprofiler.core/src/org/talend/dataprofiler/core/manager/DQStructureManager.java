@@ -310,7 +310,8 @@ public final class DQStructureManager {
      * @throws CoreException
      * @throws IOException
      */
-    private void copyFileToFolder(InputStream inputStream, String fileName, IFolder folder) throws CoreException, IOException {
+    private void copyFileToFolder(InputStream inputStream, String fileName, IFolder folder, boolean... isImportItem)
+            throws CoreException, IOException {
         if (inputStream == null) {
             return;
         }
@@ -321,7 +322,7 @@ public final class DQStructureManager {
             if (modelElement != null) {
                 AElementPersistance writer = ElementWriterFactory.getInstance().create(element.getFileExtension());
                 if (writer != null) {
-                    writer.create(modelElement, folder);
+                    writer.create(modelElement, folder, isImportItem);
                     element.delete(true, null);
                 }
             }
@@ -489,7 +490,8 @@ public final class DQStructureManager {
      * @throws CoreException
      */
     @SuppressWarnings("unchecked")
-    public void copyFilesToFolder(Plugin plugin, String srcPath, boolean recurse, IFolder desFolder, String suffix)
+    public void copyFilesToFolder(Plugin plugin, String srcPath, boolean recurse, IFolder desFolder, String suffix,
+            boolean... isImportItem)
             throws IOException, CoreException {
         if (plugin == null) {
             return;
@@ -518,7 +520,7 @@ public final class DQStructureManager {
                         folder.create(true, true, null);
                     }
 
-                    copyFilesToFolder(plugin, currentPath, recurse, folder, suffix);
+                    copyFilesToFolder(plugin, currentPath, recurse, folder, suffix, isImportItem);
                     continue;
                 }
 
@@ -529,7 +531,7 @@ public final class DQStructureManager {
                 String fileName = new Path(fileURL.getPath()).lastSegment();
                 InputStream openStream = null;
                 openStream = fileURL.openStream();
-                copyFileToFolder(openStream, fileName, desFolder);
+                copyFileToFolder(openStream, fileName, desFolder, isImportItem);
             } catch (IOException e) {
                 log.error(e, e);
             }

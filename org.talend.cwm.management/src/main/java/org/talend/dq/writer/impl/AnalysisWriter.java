@@ -39,6 +39,7 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -80,12 +81,15 @@ public class AnalysisWriter extends AElementPersistance {
                     TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
                             udi);
                     if (dependencyReturn.isOk()) {
-                        TDQItem udiItem = (TDQItem) RepositoryNodeHelper.recursiveFind(udi)
-                                .getObject().getProperty().getItem();
-                        if (udiItem instanceof TDQIndicatorDefinitionItem) {
-                            ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
-                        } else if (udiItem instanceof TDQBusinessRuleItem) {
-                            ((TDQBusinessRuleItem) udiItem).setDqrule((DQRule) udi);
+                        RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(udi);
+                        if (repositoryNode != null) {
+                            TDQItem udiItem = (TDQItem) repositoryNode.getObject().getProperty()
+                                    .getItem();
+                            if (udiItem instanceof TDQIndicatorDefinitionItem) {
+                                ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
+                            } else if (udiItem instanceof TDQBusinessRuleItem) {
+                                ((TDQBusinessRuleItem) udiItem).setDqrule((DQRule) udi);
+                            }
                         }
                         ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
                                 .saveResource(udi.eResource());
@@ -100,9 +104,12 @@ public class AnalysisWriter extends AElementPersistance {
                     TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
                             pattern);
                     if (dependencyReturn.isOk()) {
-                        TDQPatternItem patternItem = (TDQPatternItem) RepositoryNodeHelper.recursiveFind(pattern).getObject()
-                                .getProperty().getItem();
-                        patternItem.setPattern(pattern);
+                        RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(pattern);
+                        if (repositoryNode != null) {
+                            TDQPatternItem patternItem = (TDQPatternItem) repositoryNode.getObject()
+                                    .getProperty().getItem();
+                            patternItem.setPattern(pattern);
+                        }
                         ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
                                 .saveResource(pattern.eResource());
 

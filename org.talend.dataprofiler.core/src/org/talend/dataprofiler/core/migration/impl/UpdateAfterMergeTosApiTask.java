@@ -601,6 +601,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      */
     private boolean updateModelElements(File parentFile, String fileExtension, IFolder baseFolder, File baseFile,
             boolean createSubFolder, Map<String, String> replaceStringMap) {
+        boolean isImport = true;
         try {
             if (!parentFile.isFile()) {
                 boolean updateSubFolders = true;
@@ -621,7 +622,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                         // get new file's full path folder
                         IFolder fullPathFolder = getFullPathFolder(baseFolder, baseFile, parentFile);
                         // create new file
-                        ElementWriterFactory.getInstance().createPatternWriter().create(modelElement, fullPathFolder);
+                        ElementWriterFactory.getInstance().createPatternWriter().create(modelElement, fullPathFolder, isImport);
                         // record the replace information
                         IPath replatePrefixPath = fullPathFolder.getFullPath().removeFirstSegments(2);
                         String oldFileNameFull = replatePrefixPath.append(parentFile.getName()).toString();

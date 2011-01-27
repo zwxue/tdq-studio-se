@@ -114,7 +114,7 @@ public final class EMFSharedResources {
         return this.emfUtil.addPoolToResourceSet(filePath, eObject);
     }
 
-    public Resource getResource(URI uri, boolean loadOnDemand) {
+    public synchronized Resource getResource(URI uri, boolean loadOnDemand) {
         return resourceSet.getResource(uri, loadOnDemand);
     }
 

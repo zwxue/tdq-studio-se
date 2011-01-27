@@ -81,7 +81,7 @@ public abstract class AElementPersistance {
      * @param folder
      * @return
      */
-    public TypedReturnCode<Object> create(ModelElement element, IFolder folder) {
+    public TypedReturnCode<Object> create(ModelElement element, IFolder folder, boolean... isImportItem) {
         TypedReturnCode<Object> trc = new TypedReturnCode<Object>();
 
         if (getFileExtension() == null) {
@@ -92,7 +92,7 @@ public abstract class AElementPersistance {
             Property property = initProperty(element);
             Item item = property.getItem();
             try {
-                ProxyRepositoryFactory.getInstance().create(item, getPath(element, itemPath));
+                ProxyRepositoryFactory.getInstance().create(item, getPath(element, itemPath), isImportItem);
                 trc.setObject(item);
                 trc.setOk(Boolean.TRUE);
             } catch (PersistenceException e) {

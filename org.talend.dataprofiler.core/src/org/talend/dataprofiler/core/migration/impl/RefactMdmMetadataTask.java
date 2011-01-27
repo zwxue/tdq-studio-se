@@ -67,6 +67,7 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
             String[] anaFileExtentionNames = { ".ana" };
             result = FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMapMdm(), log);
             AnaResourceFileHelper.getInstance().clear();
+            AnaResourceFileHelper.getInstance().getAllAnalysis();
         } catch (Exception e) {
             result = false;
             log.error(e, e);

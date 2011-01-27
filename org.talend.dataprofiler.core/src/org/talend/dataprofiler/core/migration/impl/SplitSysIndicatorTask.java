@@ -59,7 +59,7 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
         }
 
         manager.copyFilesToFolder(CorePlugin.getDefault(), DQStructureManager.SYSTEM_INDICATOR_PATH, true, systemIndicatorFolder,
-                null);
+                null, true);
 
         DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
 
