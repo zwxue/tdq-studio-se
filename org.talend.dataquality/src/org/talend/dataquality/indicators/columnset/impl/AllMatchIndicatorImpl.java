@@ -449,4 +449,5 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     public Long getIntegerValue() {
         return getNotMatchingValueCount();
     }
+
 } // AllMatchIndicatorImpl

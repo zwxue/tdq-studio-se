@@ -17,14 +17,13 @@ import org.talend.dataquality.indicators.TextParameters;
  * <!-- end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class MaxLengthWithBlankNullIndicatorImpl extends MaxLengthIndicatorImpl implements MaxLengthWithBlankNullIndicator {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MaxLengthWithBlankNullIndicatorImpl() {
@@ -33,7 +32,6 @@ public class MaxLengthWithBlankNullIndicatorImpl extends MaxLengthIndicatorImpl 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

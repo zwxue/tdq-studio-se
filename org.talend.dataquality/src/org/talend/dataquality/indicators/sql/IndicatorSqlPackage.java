@@ -349,6 +349,15 @@ public interface IndicatorSqlPackage extends EPackage {
     int USER_DEF_INDICATOR__IN_VALID_ROW = IndicatorsPackage.INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int USER_DEF_INDICATOR__STORE_DATA = IndicatorsPackage.INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -735,6 +744,15 @@ public interface IndicatorSqlPackage extends EPackage {
      * @ordered
      */
     int WHERE_RULE_INDICATOR__IN_VALID_ROW = USER_DEF_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WHERE_RULE_INDICATOR__STORE_DATA = USER_DEF_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.
@@ -1124,6 +1142,15 @@ public interface IndicatorSqlPackage extends EPackage {
      * @ordered
      */
     int JAVA_USER_DEF_INDICATOR__IN_VALID_ROW = USER_DEF_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int JAVA_USER_DEF_INDICATOR__STORE_DATA = USER_DEF_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>User Count</b></em>' attribute.

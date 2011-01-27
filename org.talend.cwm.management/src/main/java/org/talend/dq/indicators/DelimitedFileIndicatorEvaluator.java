@@ -20,9 +20,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -94,9 +91,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             // } catch (IOException e) {
             // e.printStackTrace();
             // }
-            if (csvReader == null) {
-                return returnCode;
-            }
 
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
@@ -111,7 +105,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     MetadataColumn mColumn = (MetadataColumn) analysisElementList.get(i);
                     List<Indicator> indicators = getIndicators(mColumn.getLabel());
                     MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
-                    Integer position = getColumnIndex(mColumn);
+                    Integer position = ColumnHelper.getColumnIndex(mColumn);
                     if (position == null || position >= rowValues.length)
                         continue;
                     if (position >= rowValues.length) {
@@ -182,45 +176,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     }
 
-    /**
-     * 
-     * DOC qiongli:Get the column index by MetadataColumn.
-     * 
-     * @param mColumn
-     * @return
-     */
-    private Integer getColumnIndex(MetadataColumn mColumn) {
-        MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
-        MetadataColumn mc = null;
-        EList<MetadataColumn> columnLs = mTable.getColumns();
-        Integer index = null;
-        for (int i = 0; i < columnLs.size(); i++) {
-            mc = (MetadataColumn) columnLs.get(i);
-            if (mColumn.equals(mc)) {
-                index = Integer.valueOf(i);
-                break;
-            }
-        }
-        return index;
-    }
-
-    private static IPath buildTempCSVFilename(IPath inPath) {
-        String filename = inPath.lastSegment();
-        if (inPath.getFileExtension() != null) {
-            filename = filename.substring(0, filename.length() - inPath.getFileExtension().length());
-        } else {
-            // Check if file has no suffix.
-            int length = filename.length();
-            filename = filename.substring(0, length - 1) + "."; //$NON-NLS-1$
-        }
-
-        filename += "csv";
-        IEclipsePreferences node = new DefaultScope().getNode("org.talend.core");
-        String pathStr = node.get("filePathTemp", "");
-        IPath tempPath = new Path(pathStr);
-        tempPath = tempPath.append(filename);
-        return tempPath;
-    }
 
     public DelimitedFileConnection getDelimitedFileconnection() {
         return this.delimitedFileconnection;

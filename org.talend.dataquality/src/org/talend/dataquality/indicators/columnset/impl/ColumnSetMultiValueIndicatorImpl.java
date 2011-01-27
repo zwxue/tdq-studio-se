@@ -7,7 +7,10 @@ package org.talend.dataquality.indicators.columnset.impl;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -22,6 +25,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.talend.algorithms.AlgoUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -34,6 +38,7 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.CompositeIndicatorImpl;
+import org.talend.utils.collections.Tuple;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -211,6 +216,16 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @ordered
      */
     protected DuplicateCountIndicator duplicateCountIndicator;
+
+    /**
+     * store the value of group like use sql 'select a ,b from table group by a,b'.
+     */
+    protected HashMap<Object, Long> valueByGroupMap = new HashMap<Object, Long>();
+
+    /**
+     * make 'valueByGroupMap' convert to a List<Object[]>
+     */
+    protected List<Object[]> valueByGroupList = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1011,5 +1026,59 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         for (Indicator indicator : getChildIndicators()) {
             indicator.setCount(newCount);
         }
+    }
+
+
+
+    @Override
+    public boolean finalizeComputation() {
+        convertValueByGroupMapToList();
+        storeSqlResults(valueByGroupList);
+        return super.finalizeComputation();
+    }
+
+    @Override
+    public boolean reset() {
+        this.valueByGroupMap.clear();
+        return super.reset();
+    }
+
+    /**
+     * 
+     * convert Map 'valueByGroupMap' to a List<Object[]>
+     * 
+     * @return
+     */
+    protected List<Object[]> convertValueByGroupMapToList() {
+        Iterator<Object> it = valueByGroupMap.keySet().iterator();
+        valueByGroupList = new ArrayList<Object[]>();
+        while (it.hasNext()) {
+            Tuple tuple = (Tuple) it.next();
+            List<Object> tempLs = new ArrayList<Object>();
+            tempLs.addAll(Arrays.asList(tuple.getTuple()));
+            tempLs.add(valueByGroupMap.get(tuple));
+            valueByGroupList.add(tempLs.toArray());
+        }
+        return valueByGroupList;
+    }
+
+    @Override
+    public boolean handle(EList<Object> datas) {
+        Object objects[] = datas.toArray();
+        Tuple tuple = new Tuple(objects);
+        Iterator<Object> it = valueByGroupMap.keySet().iterator();
+        boolean isFound = false;
+        while (it.hasNext()) {
+            Tuple oldTuple = (Tuple) it.next();
+            if (tuple.equals(oldTuple)) {
+                AlgoUtils.incrementValueCounts(oldTuple, this.valueByGroupMap);
+                isFound = true;
+                break;
+            }
+        }
+        if (!isFound) {
+            AlgoUtils.incrementValueCounts(tuple, this.valueByGroupMap);
+        }
+        return true;
     }
 } // ColumnSetMultiValueIndicatorImpl

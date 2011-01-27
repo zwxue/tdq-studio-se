@@ -24,15 +24,22 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -66,7 +73,9 @@ import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -91,6 +100,8 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
+import com.informix.util.stringUtil;
+
 /**
  * @author yyi 2009-12-16
  * 
@@ -112,8 +123,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     private SimpleStatIndicator simpleStatIndicator;
 
     private AllMatchIndicator allMatchIndicator;
-
-    protected String execLang;
 
     private String stringDataFilter;
 
@@ -138,6 +147,17 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     private Section indicatorsSection;
 
     private ModelElementIndicator[] currentModelElementIndicators;
+
+    // MOD qiongli 2011-1-25.add java engine for columnSet.
+    private String execLang;
+
+    private Section analysisParamSection = null;
+
+    private CCombo execCombo;
+
+    private Button drillDownCheck;
+
+    private Text maxNumText;
 
     public ColumnSetMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -231,6 +251,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         createIndicatorsSection(form, topComp);
 
         createDataFilterSection(form, topComp);
+
+        createAnalysisParamSection(form, topComp);
 
         // createAnalysisParamSection(form, topComp);
 
@@ -516,6 +538,132 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
+     * 
+     * DOC qiongli Comment method "createAnalysisParamSection".
+     * 
+     * @param form
+     * @param anasisDataComp
+     */
+    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
+        analysisParamSection = createSection(form, anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        Composite sectionClient = toolkit.createComposite(analysisParamSection);
+
+        sectionClient.setLayout(new GridLayout(2, false));
+        toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
+        // MOD zshen:need to use the component with finish indicator Selection.
+        execCombo = new CCombo(sectionClient, SWT.BORDER);
+        // ~
+        execCombo.setEditable(false);
+
+        for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
+            String temp = language.getLiteral();
+            execCombo.add(temp);
+        }
+        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        // MOD zshen feature 12919 : add allow drill down and max number row component for java engin.
+        final Composite javaEnginSection = createjavaEnginSection(sectionClient);
+        if (ExecutionLanguage.SQL.equals(executionLanguage)) {
+            javaEnginSection.setVisible(false);
+        }
+        execCombo.setText(executionLanguage.getLiteral());
+        execLang = executionLanguage.getLiteral();
+        treeViewer.setLanguage(ExecutionLanguage.get(executionLanguage.getLiteral()));
+        // ~
+        execCombo.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                // MOD xqliu 2009-08-24 bug 8776
+                execLang = execCombo.getText();
+
+                // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
+                // "analyzed Columns",ExecutionLanguage only is Java.
+                if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {
+                    MessageUI.openWarning(DefaultMessagesImpl
+                            .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
+                    execCombo.setText(ExecutionLanguage.JAVA.getLiteral());
+                    execLang = execCombo.getText();
+                    return;
+                }
+                // ~11104
+                // MOD zshen feature 12919 : hidden or display parameter of java engin.
+                if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang))) {
+                    javaEnginSection.setVisible(false);
+                } else {
+                    javaEnginSection.setVisible(true);
+                }
+                // 12919~
+                setDirty(true);
+                treeViewer.setLanguage(ExecutionLanguage.get(execLang));
+                // ~
+            }
+
+        });
+        analysisParamSection.setClient(sectionClient);
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "createjavaEnginSection".
+     * 
+     * @param sectionClient
+     * @return
+     */
+    protected Composite createjavaEnginSection(Composite sectionClient) {
+
+        AnalysisParameters anaParameters = columnSetAnalysisHandler.getAnalysis().getParameters();
+        Composite javaEnginSection = toolkit.createComposite(sectionClient);
+        Composite checkSection = toolkit.createComposite(javaEnginSection);
+        Composite numberSection = toolkit.createComposite(javaEnginSection);
+        GridLayout gridLayout = new GridLayout(2, false);
+        gridLayout.marginWidth = 0;
+
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(javaEnginSection);
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(checkSection);
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(numberSection);
+
+        javaEnginSection.setLayout(gridLayout);
+        checkSection.setLayout(gridLayout);
+        numberSection.setLayout(gridLayout);
+        toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
+        drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);
+        drillDownCheck.setSelection(true);
+        drillDownCheck.setSelection(anaParameters.isStoreData());
+        drillDownCheck.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                setDirty(true);
+            }
+
+        });
+        Label maxNumLabel = toolkit.createLabel(numberSection,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"));
+        maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
+        maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
+        maxNumText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                String textContent = maxNumText.getText();
+                if (stringUtil.isANum(textContent)) {
+                    setDirty(true);
+                } else {
+                    MessageDialog.openWarning(e.display.getActiveShell(),
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warningMessageTitle"),
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.integerConvertWarning"));
+                    maxNumText.setText(textContent.substring(0, textContent.length() - 1));
+                }
+
+            }
+
+        });
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
+        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
+        GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).applyTo(drillDownCheck);
+        return javaEnginSection;
+    }
+
+    /**
      * @param outputFolder
      * @throws DataprofilerCoreException
      */
@@ -527,7 +675,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         allMatchIndicator.getAnalyzedColumns().clear();
         // set execute engine
         Analysis analysis = columnSetAnalysisHandler.getAnalysis();
-        analysis.getParameters().setExecutionLanguage(ExecutionLanguage.SQL);
+        analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
 
         // set data filter
         columnSetAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
@@ -724,5 +872,20 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (theResultPage.getTableFilterResult() != null) {
             theResultPage.setTableFilterResult(null);
         }
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "includeDatePatternFreqIndicator".
+     * 
+     * @return
+     */
+    private boolean includeDatePatternFreqIndicator() {
+        for (ModelElementIndicator modelElementIndicator : this.treeViewer.getModelElementIndicator()) {
+            if (modelElementIndicator.contains(IndicatorEnum.DatePatternFreqIndicatorEnum)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

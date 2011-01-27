@@ -350,6 +350,15 @@ public interface SchemaPackage extends EPackage {
     int SCHEMA_INDICATOR__IN_VALID_ROW = IndicatorsPackage.COMPOSITE_INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SCHEMA_INDICATOR__STORE_DATA = IndicatorsPackage.COMPOSITE_INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -760,6 +769,15 @@ public interface SchemaPackage extends EPackage {
     int ABSTRACT_TABLE_INDICATOR__IN_VALID_ROW = IndicatorsPackage.INDICATOR__IN_VALID_ROW;
 
     /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ABSTRACT_TABLE_INDICATOR__STORE_DATA = IndicatorsPackage.INDICATOR__STORE_DATA;
+
+    /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1064,6 +1082,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int TABLE_INDICATOR__IN_VALID_ROW = ABSTRACT_TABLE_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TABLE_INDICATOR__STORE_DATA = ABSTRACT_TABLE_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.
@@ -1388,6 +1415,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CATALOG_INDICATOR__IN_VALID_ROW = SCHEMA_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CATALOG_INDICATOR__STORE_DATA = SCHEMA_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -1775,6 +1811,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int CONNECTION_INDICATOR__IN_VALID_ROW = CATALOG_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int CONNECTION_INDICATOR__STORE_DATA = CATALOG_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Table Count</b></em>' attribute.
@@ -2190,6 +2235,15 @@ public interface SchemaPackage extends EPackage {
      * @ordered
      */
     int VIEW_INDICATOR__IN_VALID_ROW = ABSTRACT_TABLE_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VIEW_INDICATOR__STORE_DATA = ABSTRACT_TABLE_INDICATOR__STORE_DATA;
 
     /**
      * The feature id for the '<em><b>Row Count</b></em>' attribute.

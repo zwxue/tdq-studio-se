@@ -17,7 +17,7 @@ import org.talend.dataquality.indicators.TextParameters;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class AvgLengthWithNullIndicatorImpl extends AverageLengthIndicatorImpl implements AvgLengthWithNullIndicator {
@@ -25,7 +25,6 @@ public class AvgLengthWithNullIndicatorImpl extends AverageLengthIndicatorImpl i
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected AvgLengthWithNullIndicatorImpl() {
@@ -34,7 +33,6 @@ public class AvgLengthWithNullIndicatorImpl extends AverageLengthIndicatorImpl i
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

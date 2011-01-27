@@ -46,24 +46,31 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.model.XmlElementIndicator;
+import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sql.TalendTypeConvert;
 
 /**
  * 
@@ -92,6 +99,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     // private final List<String> comboTextList = new ArrayList<String>();
 
     private ColumnSetMasterPage masterPage;
+
+    private ExecutionLanguage language;
 
     // private Menu menu;
 
@@ -329,20 +338,20 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     private void addItemElements(final ModelElementIndicator[] elements) {
+        // MOD qiongli 2011-1-27,change TdColumn to MetadataColumn for supporting delimited file.
         for (int i = 0; i < elements.length; i++) {
             final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
 
-            final TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode()
+            final MetadataColumn column = (MetadataColumn) ((MetadataColumnRepositoryObject) meIndicator
+                    .getModelElementRepositoryNode()
                     .getObject()).getTdColumn();
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, column);
             columnSetMultiValueList.add(meIndicator.getModelElementRepositoryNode());
-            String columnName = column.getName();
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
-            treeItem.setText(0, columnName != null ? columnName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT
-                    + column.getSqlDataType().getName() + PluginConstant.PARENTHESIS_RIGHT : "null"); //$NON-NLS-1$
+            treeItem.setText(0, getModelElemetnDisplayName(meIndicator)); //$NON-NLS-1$
             treeItem.setData(COLUMN_INDICATOR_KEY, column);
             treeItem.setData(MODELELEMENT_INDICATOR_KEY, meIndicator);
 
@@ -354,9 +363,13 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
                 // for presentation
             }
-            final TdColumn tdColumn = (TdColumn) ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode()
+            final MetadataColumn tdColumn = (MetadataColumn) ((MetadataColumnRepositoryObject) meIndicator
+                    .getModelElementRepositoryNode()
                     .getObject()).getTdColumn();
             DataminingType dataminingType = MetadataHelper.getDataminingType(tdColumn);
+            if (meIndicator instanceof DelimitedFileIndicator) {
+                dataminingType = MetadataHelper.getDefaultDataminingType(meIndicator.getJavaType());
+            }
 
             if (dataminingType == null) {
                 combo.select(0);
@@ -683,6 +696,30 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         masterPage.updateIndicatorSection();
     }
 
+    /**
+     * 
+     * DOC qiongli Comment method "getModelElemetnDisplayName".
+     * 
+     * @param meIndicator
+     * @return
+     */
+    private String getModelElemetnDisplayName(ModelElementIndicator meIndicator) {
+        String meName = meIndicator.getElementName();
+        String typeName = "";
+        if (meIndicator instanceof ColumnIndicator) {
+            // MOD scorreia 2010-10-20 bug 16403 avoid NPE here
+            TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
+            typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";
+        } else if (meIndicator instanceof XmlElementIndicator) {
+            typeName = ((TdXmlElementType) meIndicator.getModelElementRepositoryNode()).getJavaType();
+        } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
+            MetadataColumn mColumn = ((DelimitedFileIndicatorImpl) meIndicator).getMetadataColumn();
+            typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());
+        }
+        return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
+                + PluginConstant.PARENTHESIS_RIGHT : "null";
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -727,5 +764,13 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             return getAnalysis();
         }
 
+    }
+
+    public ExecutionLanguage getLanguage() {
+        return this.language;
+    }
+
+    public void setLanguage(ExecutionLanguage language) {
+        this.language = language;
     }
 }

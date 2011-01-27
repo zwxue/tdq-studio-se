@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
@@ -2196,6 +2197,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         ColumnsetPackage theColumnsetPackage = (ColumnsetPackage)EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI);
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
         RulesPackage theRulesPackage = (RulesPackage)EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI);
+        EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
         DomainPackage theDomainPackage = (DomainPackage)EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI);
 
         // Add subpackages
@@ -2316,6 +2318,9 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         addEOperation(indicatorEClass, ecorePackage.getEString(), "getInstanceValue", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         addEOperation(indicatorEClass, ecorePackage.getEBoolean(), "mustStoreRow", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = addEOperation(indicatorEClass, ecorePackage.getEBoolean(), "handle", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theEcorePackage.getEJavaObject(), "datas", 0, -1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(rowCountIndicatorEClass, RowCountIndicator.class, "RowCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.JoinElement;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -489,5 +490,13 @@ public interface Indicator extends ModelElement {
      * @generated
      */
     boolean mustStoreRow();
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model datasMany="true"
+     * @generated
+     */
+    boolean handle(EList<Object> datas);
 
 } // Indicator

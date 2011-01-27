@@ -70,7 +70,9 @@ public final class AnalysisExecutorSelector {
             exec = new MultiColumnAnalysisExecutor();
             break;
         case COLUMN_SET:
-            exec = new MultiColumnAnalysisExecutor();
+            exec = ExecutionLanguage.SQL.equals(executionEngine) ? new MultiColumnAnalysisExecutor()
+                    : new ColumnSetAnalysisExecutor();
+
             break;
         case TABLE:
             exec = ExecutionLanguage.SQL.equals(executionEngine) ? new TableAnalysisSqlExecutor() : new TableAnalysisExecutor();

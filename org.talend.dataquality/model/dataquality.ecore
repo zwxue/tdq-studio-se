@@ -295,6 +295,9 @@
           <details key="documentation" value="Returns true if the previously handled data must be added to the list of data to be viewable. For example, if this indicator is the null count indicator and the previous data passed to the handle(data) method was null, then this method must return true because the row containing this null value must be stored in order the user to be able to drill down in the rows which contain nulls."/>
         </eAnnotations>
       </eOperations>
+      <eOperations name="handle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+        <eParameters name="datas" upperBound="-1" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EJavaObject"/>
+      </eOperations>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
           defaultValueLiteral="0"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="nullCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
