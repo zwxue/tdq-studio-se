@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
@@ -31,8 +32,10 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
@@ -77,9 +80,13 @@ public class AnalysisWriter extends AElementPersistance {
                     TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
                             udi);
                     if (dependencyReturn.isOk()) {
-                        TDQIndicatorDefinitionItem udiItem = (TDQIndicatorDefinitionItem) RepositoryNodeHelper.recursiveFind(udi)
+                        TDQItem udiItem = (TDQItem) RepositoryNodeHelper.recursiveFind(udi)
                                 .getObject().getProperty().getItem();
-                        udiItem.setIndicatorDefinition(udi);
+                        if (udiItem instanceof TDQIndicatorDefinitionItem) {
+                            ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
+                        } else if (udiItem instanceof TDQBusinessRuleItem) {
+                            ((TDQBusinessRuleItem) udiItem).setDqrule((DQRule) udi);
+                        }
                         ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
                                 .saveResource(udi.eResource());
                     }

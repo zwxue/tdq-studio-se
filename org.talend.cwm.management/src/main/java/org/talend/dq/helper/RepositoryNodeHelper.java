@@ -80,12 +80,13 @@ import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.PatternSqlFolderRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.nodes.RulesFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.record.RecordFile;
@@ -537,6 +538,11 @@ public final class RepositoryNodeHelper {
                     if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(item.getIndicatorDefinition()))) {
                         return (RepositoryNode) udiNode;
                     }
+                } else if (itemTemp instanceof TDQBusinessRuleItem) {
+                    TDQBusinessRuleItem item = (TDQBusinessRuleItem) itemTemp;
+                    if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(item.getDqrule()))) {
+                        return (RepositoryNode) udiNode;
+                    }
                 } else if (itemTemp instanceof FolderItem) {
                     List<TDQIndicatorDefinitionItem> udiItems = getIndicatorItemsFromFolderItem((FolderItem) itemTemp);
                     for (TDQIndicatorDefinitionItem udiItem : udiItems) {
@@ -695,14 +701,15 @@ public final class RepositoryNodeHelper {
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                if (EResourceConstant.INDICATORS.getName().equals((subNode.getObject().getLabel()))) {
+                if (EResourceConstant.INDICATORS.getName().equals((subNode.getObject().getLabel()))
+                        || EResourceConstant.RULES.getName().equals((subNode.getObject().getLabel()))) {
                     List<IRepositoryNode> subChildren = subNode.getChildren();
                     for (IRepositoryNode udisNode : subChildren) {
-                        if (udisNode instanceof UserDefIndicatorFolderRepNode) {
+                        if (udisNode instanceof UserDefIndicatorFolderRepNode || udisNode instanceof RulesFolderRepNode) {
                             udisNodes.addAll(getModelElementFromFolder(udisNode));
                         }
                     }
-                    return udisNodes;
+
 
                 }
 
