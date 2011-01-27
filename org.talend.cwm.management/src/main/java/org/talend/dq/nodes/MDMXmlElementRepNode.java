@@ -29,6 +29,18 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MDMXmlElementRepNode extends RepositoryNode {
 
+    private MetadataXmlElementTypeRepositoryObject metadataXmlElementTypeRepositoryObject;
+
+    private TdXmlElementType tdXmlElementType;
+
+    public MetadataXmlElementTypeRepositoryObject getMetadataXmlElementTypeRepositoryObject() {
+        return this.metadataXmlElementTypeRepositoryObject;
+    }
+
+    public TdXmlElementType getTdXmlElementType() {
+        return this.tdXmlElementType;
+    }
+
     /**
      * DOC klliu MDMXmlElementRepNode constructor comment.
      * 
@@ -38,7 +50,10 @@ public class MDMXmlElementRepNode extends RepositoryNode {
      */
     public MDMXmlElementRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
+        if (object instanceof MetadataXmlElementTypeRepositoryObject) {
+            this.metadataXmlElementTypeRepositoryObject = (MetadataXmlElementTypeRepositoryObject) object;
+            this.tdXmlElementType = this.metadataXmlElementTypeRepositoryObject.getTdXmlElementType();
+        }
     }
 
     @Override
@@ -56,15 +71,15 @@ public class MDMXmlElementRepNode extends RepositoryNode {
                 MetadataXmlElementTypeRepositoryObject metadataXmlElementType = new MetadataXmlElementTypeRepositoryObject(
                         this.getObject(), (TdXmlElementType) mElement);
                 RepositoryNode xmlElementTypeNode = new MDMXmlElementRepNode((IRepositoryViewObject) metadataXmlElementType,
-                        this,
-                        ENodeType.TDQ_REPOSITORY_ELEMENT);
+                        this, ENodeType.TDQ_REPOSITORY_ELEMENT);
                 xmlElementTypeNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
                 xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
                 repsNodes.add(xmlElementTypeNode);
             }
             return repsNodes;
-        } else
+        } else {
             return new ArrayList<IRepositoryNode>();
+        }
     }
 }

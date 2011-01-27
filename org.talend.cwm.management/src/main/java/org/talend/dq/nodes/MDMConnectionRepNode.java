@@ -39,7 +39,6 @@ public class MDMConnectionRepNode extends RepositoryNode {
      */
     public MDMConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

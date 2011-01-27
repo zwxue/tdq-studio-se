@@ -61,10 +61,8 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -93,6 +91,8 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sql.TalendTypeConvert;
@@ -449,9 +449,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 // for presentation
             }
 
-            IRepositoryViewObject repViewObj = meIndicator.getModelElementRepositoryNode().getObject();
-            final MetadataColumn metadataColumn = ((MetadataColumnRepositoryObject) repViewObj).getTdColumn();
-            DataminingType dataminingType = MetadataHelper.getDataminingType(metadataColumn);
+            final ModelElement modelElement = RepositoryNodeHelper
+                    .getSubModelElement(meIndicator.getModelElementRepositoryNode());
+            DataminingType dataminingType = MetadataHelper.getDataminingType(modelElement);
             // MOD qiongli 2010-11-15 feature 16796
             if (meIndicator instanceof DelimitedFileIndicator) {
                 dataminingType = MetadataHelper.getDefaultDataminingType(meIndicator.getJavaType());
@@ -465,7 +465,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             combo.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
-                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), (TdColumn) metadataColumn);
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), modelElement);
                     setDirty(true);
                 }
 
@@ -618,7 +618,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
             typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";
         } else if (meIndicator instanceof XmlElementIndicator) {
-            typeName = ((TdXmlElementType) meIndicator.getModelElementRepositoryNode()).getJavaType();
+            typeName = ((MDMXmlElementRepNode) meIndicator.getModelElementRepositoryNode()).getTdXmlElementType().getJavaType();
         } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
             MetadataColumn mColumn = ((DelimitedFileIndicatorImpl) meIndicator).getMetadataColumn();
             typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());
@@ -845,9 +845,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         List<ModelElement> existModelElements = new ArrayList<ModelElement>();
         for (ModelElementIndicator modelElementIndicator : this.getModelElementIndicator()) {
-            IRepositoryViewObject reposViewObj = modelElementIndicator.getModelElementRepositoryNode().getObject();
-            ModelElement me = ((MetadataColumnRepositoryObject) reposViewObj).getTdColumn();
-
+            ModelElement me = RepositoryNodeHelper.getModelElementFromRepositoryNode(modelElementIndicator
+                    .getModelElementRepositoryNode());
             existModelElements.add(me);
         }
         // MOD mzhao 9848 2010-01-14, allowing to drag and drop table.

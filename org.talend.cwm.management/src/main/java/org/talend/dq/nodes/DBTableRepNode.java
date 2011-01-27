@@ -30,6 +30,14 @@ public class DBTableRepNode extends RepositoryNode {
 
     private TdTable tdTable;
 
+    public TdTableRepositoryObject getTdTableRepositoryObject() {
+        return this.tdTableRepositoryObject;
+    }
+
+    public TdTable getTdTable() {
+        return this.tdTable;
+    }
+
     /**
      * DOC klliu DBTableRepNode constructor comment.
      * 
@@ -39,16 +47,10 @@ public class DBTableRepNode extends RepositoryNode {
      */
     public DBTableRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        tdTableRepositoryObject = (TdTableRepositoryObject) object;
-        tdTable = tdTableRepositoryObject.getTdTable();
-    }
-
-    public TdTableRepositoryObject getTdTableRepositoryObject() {
-        return this.tdTableRepositoryObject;
-    }
-
-    public TdTable getTdTable() {
-        return this.tdTable;
+        if (object instanceof TdTableRepositoryObject) {
+            this.tdTableRepositoryObject = (TdTableRepositoryObject) object;
+            this.tdTable = this.tdTableRepositoryObject.getTdTable();
+        }
     }
 
     /*

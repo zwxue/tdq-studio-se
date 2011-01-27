@@ -50,6 +50,8 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -75,6 +77,8 @@ import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.MDMSchemaRepNode;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.PatternSqlFolderRepNode;
@@ -88,6 +92,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwm.resource.relational.Catalog;
@@ -364,6 +369,12 @@ public final class RepositoryNodeHelper {
         return false;
     }
 
+    /**
+     * find RepositoryNode by ModelElement, if no RepositoryNode, return null.
+     * 
+     * @param modelElement
+     * @return
+     */
     public static RepositoryNode recursiveFind(ModelElement modelElement) {
         if (modelElement instanceof Analysis) {
             Analysis analysis = (Analysis) modelElement;
@@ -384,7 +395,6 @@ public final class RepositoryNodeHelper {
                     }
                 }
             }
-
         } else if (modelElement instanceof TdReport) {
             TdReport report = (TdReport) modelElement;
             List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes();
@@ -413,7 +423,6 @@ public final class RepositoryNodeHelper {
                     return (RepositoryNode) columnNode;
                 }
             }
-
         } else if (modelElement instanceof TdTable) {
             TdTable table = (TdTable) modelElement;
             IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(modelElement));
@@ -423,7 +432,6 @@ public final class RepositoryNodeHelper {
                     return (RepositoryNode) tableNode;
                 }
             }
-
         } else if (modelElement instanceof TdView) {
             TdView view = (TdView) modelElement;
             IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(modelElement));
@@ -443,7 +451,6 @@ public final class RepositoryNodeHelper {
                     return (RepositoryNode) columnNode;
                 }
             }
-
         } else if (modelElement instanceof MetadataTable) {
             // MOD qiongli 2011-1-12 for delimted file
             MetadataTable table = (MetadataTable) modelElement;
@@ -456,7 +463,6 @@ public final class RepositoryNodeHelper {
                     }
                 }
             }
-
         } else if (modelElement instanceof Catalog) {
             Catalog catalog = (Catalog) modelElement;
             IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(catalog));
@@ -466,7 +472,6 @@ public final class RepositoryNodeHelper {
                     return (RepositoryNode) catalogNode;
                 }
             }
-
         } else if (modelElement instanceof Schema) {
             Schema schema = (Schema) modelElement;
             Catalog catalog = CatalogHelper.getParentCatalog(schema);
@@ -479,7 +484,6 @@ public final class RepositoryNodeHelper {
                         return (RepositoryNode) schemaNode;
                     }
                 }
-
             }
             // schema's parent is connection (e.g Oracle)
             IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(schema));
@@ -489,7 +493,6 @@ public final class RepositoryNodeHelper {
                     return (RepositoryNode) schemaNode;
                 }
             }
-
         } else if (modelElement instanceof Connection) {
             Connection connection = (Connection) modelElement;
             List<IRepositoryNode> connsNode = getConnectionRepositoryNodes();
@@ -548,6 +551,58 @@ public final class RepositoryNodeHelper {
                     for (TDQIndicatorDefinitionItem udiItem : udiItems) {
                         if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(udiItem.getIndicatorDefinition()))) {
                             return (RepositoryNode) udiNode;
+                        }
+                    }
+                }
+            }
+        } else if (modelElement instanceof TdXmlElementType) {
+            TdXmlElementType xmlElementType = (TdXmlElementType) modelElement;
+            TdXmlSchema ownedDocument = xmlElementType.getOwnedDocument();
+            if (ownedDocument != null) {
+                RepositoryNode xmlSchemaNode = recursiveFind(ownedDocument);
+                if (xmlSchemaNode != null) {
+                    return recursiveFindXmlElementType(xmlSchemaNode.getChildren(), xmlElementType);
+                }
+            }
+        } else if (modelElement instanceof TdXmlSchema) {
+            TdXmlSchema xmlSchema = (TdXmlSchema) modelElement;
+            EList<DataManager> dataManager = xmlSchema.getDataManager();
+            if (dataManager.size() > 0) {
+                RepositoryNode connNode = recursiveFind(dataManager.get(0));
+                if (connNode != null) {
+                    for (IRepositoryNode xmlSchemaNode : connNode.getChildren()) {
+                        if (xmlSchemaNode instanceof MDMSchemaRepNode) {
+                            TdXmlSchema tdXmlSchemaOnUi = ((MDMSchemaRepNode) xmlSchemaNode).getTdXmlSchema();
+                            if (ResourceHelper.getUUID(xmlSchema).equals(ResourceHelper.getUUID(tdXmlSchemaOnUi))) {
+                                return (RepositoryNode) xmlSchemaNode;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * recursive find the ReopsitoryNode accroding to xmlElementType under nodes.
+     * 
+     * @param nodes
+     * @param xmlElementType
+     * @return
+     */
+    private static RepositoryNode recursiveFindXmlElementType(List<IRepositoryNode> nodes, TdXmlElementType xmlElementType) {
+        if (nodes != null && nodes.size() > 0) {
+            for (IRepositoryNode node : nodes) {
+                if (node instanceof MDMXmlElementRepNode) {
+                    TdXmlElementType tdXmlElementTypeOnUi = ((MDMXmlElementRepNode) node).getTdXmlElementType();
+                    if (ResourceHelper.getUUID(xmlElementType).equals(ResourceHelper.getUUID(tdXmlElementTypeOnUi))) {
+                        return (RepositoryNode) node;
+                    } else {
+                        RepositoryNode recursiveFindXmlElementType = recursiveFindXmlElementType(node.getChildren(),
+                                xmlElementType);
+                        if (recursiveFindXmlElementType != null) {
+                            return recursiveFindXmlElementType;
                         }
                     }
                 }
@@ -626,6 +681,7 @@ public final class RepositoryNodeHelper {
         }
         return list;
     }
+
     /**
      * ADD mzhao 15750 , build dq metadata tree, get connection root node.
      */
@@ -638,7 +694,6 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode subNode : childrens) {
                 if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode
                         || subNode instanceof MDMConnectionFolderRepNode) {
-                    // don't add mdm connections
                     connNodes.addAll(getModelElementFromFolder(subNode));
                 }
             }
@@ -694,7 +749,6 @@ public final class RepositoryNodeHelper {
         return patternsNodes;
     }
 
-
     public static List<IRepositoryNode> getUdisRepositoryNodes() {
         RepositoryNode node = getRootNode(EResourceConstant.LIBRARIES.getName());
         List<IRepositoryNode> udisNodes = new ArrayList<IRepositoryNode>();
@@ -718,11 +772,9 @@ public final class RepositoryNodeHelper {
         return udisNodes;
     }
 
-
-
     /**
      * 
-     * Add zshen 15750 get all the Connection Node from one folder node
+     * Add zshen 15750 get all the Connection Node from one folder node.
      * 
      * @param folderNode any node
      * @return
@@ -741,7 +793,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * 
-     * Add zshen 15750 Decided whether one node is a Folder Node
+     * Add zshen 15750 Decided whether one node is a Folder Node.
      * 
      * @param nodeType the Type of nodes
      * @return
@@ -752,8 +804,9 @@ public final class RepositoryNodeHelper {
         case SYSTEM_FOLDER:
         case SIMPLE_FOLDER:
             return true;
+        default:
+            return false;
         }
-        return false;
     }
 
     /**
@@ -899,6 +952,58 @@ public final class RepositoryNodeHelper {
                             return ((ConnectionItem) item).getConnection();
                         }
                     }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * get the (Sub) ModelElement from a node(include: catalog, schema, table, view, column, xmlSchema, xmlElement), if
+     * there have not ModelElement return null.
+     * 
+     * @param node
+     * @return
+     */
+    public static ModelElement getSubModelElement(IRepositoryNode node) {
+        if (node != null) {
+            if (node instanceof DBCatalogRepNode) {
+                return ((DBCatalogRepNode) node).getCatalog();
+            } else if (node instanceof DBSchemaRepNode) {
+                return ((DBSchemaRepNode) node).getSchema();
+            } else if (node instanceof DBTableRepNode) {
+                return ((DBTableRepNode) node).getTdTable();
+            } else if (node instanceof DBViewRepNode) {
+                return ((DBViewRepNode) node).getTdView();
+            } else if (node instanceof DBColumnRepNode) {
+                return ((DBColumnRepNode) node).getTdColumn();
+            } else if (node instanceof MDMSchemaRepNode) {
+                return ((MDMSchemaRepNode) node).getTdXmlSchema();
+            } else if (node instanceof MDMXmlElementRepNode) {
+                return ((MDMXmlElementRepNode) node).getTdXmlElementType();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * get ModelElement from IRepositoryNode, if there no ModelElement, return null.
+     * 
+     * @param node
+     * @return
+     */
+    public static ModelElement getModelElementFromRepositoryNode(IRepositoryNode node) {
+        ModelElement metadataElement = getMetadataElement(node);
+        if (metadataElement != null) {
+            return metadataElement;
+        } else {
+            metadataElement = getResourceModelElement(node);
+            if (metadataElement != null) {
+                return metadataElement;
+            } else {
+                metadataElement = getSubModelElement(node);
+                if (metadataElement != null) {
+                    return metadataElement;
                 }
             }
         }

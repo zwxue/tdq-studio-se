@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
+import org.talend.cwm.relational.TdView;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -23,6 +25,18 @@ import org.talend.repository.model.RepositoryNode;
  * DOC klliu Database view repository node displayed on repository view (UI).
  */
 public class DBViewRepNode extends RepositoryNode {
+
+    private TdViewRepositoryObject tdViewRepositoryObject;
+
+    private TdView tdView;
+
+    public TdViewRepositoryObject getTdViewRepositoryObject() {
+        return this.tdViewRepositoryObject;
+    }
+
+    public TdView getTdView() {
+        return this.tdView;
+    }
 
     /**
      * DOC klliu DBViewRepNode constructor comment.
@@ -33,6 +47,10 @@ public class DBViewRepNode extends RepositoryNode {
      */
     public DBViewRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        if (object instanceof TdViewRepositoryObject) {
+            this.tdViewRepositoryObject = (TdViewRepositoryObject) object;
+            this.tdView = this.tdViewRepositoryObject.getTdView();
+        }
     }
 
     /*

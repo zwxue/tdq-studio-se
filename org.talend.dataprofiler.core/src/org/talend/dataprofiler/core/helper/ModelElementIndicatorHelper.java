@@ -37,12 +37,13 @@ public final class ModelElementIndicatorHelper {
     private ModelElementIndicatorHelper() {
     }
 
-    public static final ModelElementIndicator createModelElementIndicator(RepositoryNode repositoryObject) {
-        if (repositoryObject.getObject() instanceof MetadataColumnRepositoryObject) {
-            return createColumnIndicator(repositoryObject);
-        } else if (repositoryObject.getObject() instanceof MetadataXmlElementTypeRepositoryObject) {
-
-            return createXmlElementIndicator(repositoryObject);
+    public static final ModelElementIndicator createModelElementIndicator(RepositoryNode node) {
+        if (node != null) {
+            if (node.getObject() instanceof MetadataColumnRepositoryObject) {
+                return createColumnIndicator(node);
+            } else if (node.getObject() instanceof MetadataXmlElementTypeRepositoryObject) {
+                return createXmlElementIndicator(node);
+            }
         }
         return null;
     }

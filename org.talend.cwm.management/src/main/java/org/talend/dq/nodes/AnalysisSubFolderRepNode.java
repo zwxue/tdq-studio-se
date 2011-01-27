@@ -21,6 +21,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.properties.TDQAnalysisItem;
@@ -121,6 +122,13 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
             columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
             medataViewObject.setRepositoryNode(columnNode);
             return columnNode;
+        } else if (analyzedElement instanceof TdXmlElementType) {
+            MDMXmlElementRepNode mdmXmlElementNode = new MDMXmlElementRepNode(medataViewObject, this,
+                    ENodeType.REPOSITORY_ELEMENT);
+            mdmXmlElementNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.MDM_ELEMENT_TYPE);
+            mdmXmlElementNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
+            medataViewObject.setRepositoryNode(mdmXmlElementNode);
+            return mdmXmlElementNode;
         }
         return null;
     }

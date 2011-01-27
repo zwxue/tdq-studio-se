@@ -55,6 +55,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
@@ -167,7 +168,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         stringDataFilter = analysisHandler.getStringDataFilter();
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
         List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
-        ModelElementIndicator currentIndicator;
+        ModelElementIndicator currentIndicator = null;
         for (ModelElement element : analyzedColumns) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
             TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(element);
@@ -182,16 +183,21 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             if (tdColumn == null && mdColumn != null) {
                 currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
                         .recursiveFind(mdColumn));
-            } else {
+            } else if (tdColumn != null) {
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
                         .recursiveFind(tdColumn));
+            } else if (xmlElement != null) {
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
+                        .recursiveFind(xmlElement));
             }
 
             DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
             Collection<Indicator> indicatorList = analysisHandler.getIndicators(element);
-            currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
-            meIndicatorList.add(currentIndicator);
+            if (currentIndicator != null) {
+                currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
+                meIndicatorList.add(currentIndicator);
+            }
         }
         currentModelElementIndicators = meIndicatorList.toArray(new ModelElementIndicator[meIndicatorList.size()]);
     }
@@ -350,12 +356,18 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * 
      */
     public void openColumnsSelectionDialog() {
+        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
+        ModelElement connModelElement = RepositoryNodeHelper.getResourceModelElement(connNode);
+        if (connModelElement != null && connModelElement instanceof MDMConnection) {
+            MessageUI
+                    .openWarning("Can't select columns from Mdm Connection!\nPlease drag Mdm Element from Repository View Tree.");
+            return;
+        }
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             reposViewObjList.add(modelElementIndicator.getModelElementRepositoryNode());
         }
-        RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
         ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
                 this,
                 null,

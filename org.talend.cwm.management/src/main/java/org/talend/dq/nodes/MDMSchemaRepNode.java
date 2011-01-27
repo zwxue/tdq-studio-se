@@ -31,6 +31,18 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MDMSchemaRepNode extends RepositoryNode {
 
+    private MetadataXmlSchemaRepositoryObject metadataXmlSchemaRepositoryObject;
+
+    private TdXmlSchema tdXmlSchema;
+
+    public MetadataXmlSchemaRepositoryObject getMetadataXmlSchemaRepositoryObject() {
+        return this.metadataXmlSchemaRepositoryObject;
+    }
+
+    public TdXmlSchema getTdXmlSchema() {
+        return this.tdXmlSchema;
+    }
+
     /**
      * DOC klliu MDMSchemaRepNode constructor comment.
      * 
@@ -40,7 +52,10 @@ public class MDMSchemaRepNode extends RepositoryNode {
      */
     public MDMSchemaRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
+        if (object instanceof MetadataXmlSchemaRepositoryObject) {
+            this.metadataXmlSchemaRepositoryObject = (MetadataXmlSchemaRepositoryObject) object;
+            this.tdXmlSchema = this.metadataXmlSchemaRepositoryObject.getTdXmlSchema();
+        }
     }
 
     @Override
@@ -60,9 +75,7 @@ public class MDMSchemaRepNode extends RepositoryNode {
                         metadataXmlSchema.getViewObject(), (TdXmlElementType) mElement);
                 metadataXmlSchema.getChildren().add((IRepositoryViewObject) metadataXmlElementType);
                 MDMXmlElementRepNode xmlElementTypeNode = new MDMXmlElementRepNode(
-                        (IRepositoryViewObject) metadataXmlElementType,
-                        this,
-                        ENodeType.TDQ_REPOSITORY_ELEMENT);
+                        (IRepositoryViewObject) metadataXmlElementType, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
                 xmlElementTypeNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
                 xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
