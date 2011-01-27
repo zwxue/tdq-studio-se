@@ -116,7 +116,7 @@ public class CWMPlugin extends Plugin {
                         alias.setDriver(manDr);
                     }
 
-                    if (!aliasManager.contains(alias)) {
+                    if (!aliasManager.contains(alias) && alias.getName() != null) {
                         aliasManager.addAlias(alias);
                         // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the
                         // trash bin
