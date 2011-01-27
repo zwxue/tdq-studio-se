@@ -1147,7 +1147,7 @@ public final class ConnectionUtils {
         connectionParam.setDescription(MetadataHelper.getDescription(conn));
         connectionParam.setPurpose(MetadataHelper.getPurpose(conn));
         connectionParam.setStatus(MetadataHelper.getDevStatus(conn));
-        connectionParam.setDriverPath("");
+        connectionParam.setDriverPath(((DatabaseConnection) conn).getDriverJarPath());
         connectionParam.setDriverClassName(JavaSqlFactory.getDriverClass(conn));
         connectionParam.setJdbcUrl(JavaSqlFactory.getURL(conn));
         connectionParam.setHost(ConnectionUtils.getServerName(conn));
