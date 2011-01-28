@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.help.IHelpResource;
@@ -33,6 +34,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ViewerDataFactory;
 import org.talend.dataprofiler.core.model.nodes.analysis.AnalysisTypeNode;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.AnalysisTypeLabelProvider;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -43,6 +45,8 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.analysis.parameters.FuncationDependencyParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * @author zqin
@@ -54,12 +58,37 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
     private Wizard selectedWizard;
 
+    private FolderProvider currentFolderProvider;
+
+    public FolderProvider getCurrentFolderProvider() {
+        return this.currentFolderProvider;
+    }
+
     public NewWizardSelectionPage() {
         setTitle(DefaultMessagesImpl.getString("NewWizardSelectionPage.wizard")); //$NON-NLS-1$
         setMessage(DefaultMessagesImpl.getString("NewWizardSelectionPage.Analysis")); //$NON-NLS-1$
         setCanFinishEarly(false);
         setPageComplete(false);
         setHasPages(true);
+    }
+
+    public NewWizardSelectionPage(RepositoryNode node) {
+        super();
+        if (node != null) {
+            initCurrentFolderProvider(WorkbenchUtils.getPath(node));
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "initCurrentFolderProvider".
+     * 
+     * @param path
+     */
+    private void initCurrentFolderProvider(IPath path) {
+        if (path != null) {
+            this.currentFolderProvider = new FolderProvider();
+            this.currentFolderProvider.setFolderResource(ResourceManager.getRootProject().getFolder(path));
+        }
     }
 
     /*
@@ -141,51 +170,52 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
                     AnalysisType currentType = AnalysisType.get(node.getLiteral());
 
-                    FolderProvider currentFolderProvider = ((CreateNewAnalysisWizard) getWizard()).getCurrentFolderProvider();
+                    FolderProvider folderProvider = getCurrentFolderProvider() == null ? ((CreateNewAnalysisWizard) getWizard())
+                            .getCurrentFolderProvider() : getCurrentFolderProvider();
                     switch (type) {
                     case COLUMN_CORRELATION:
                         AnalysisParameter correlationColumnParam = new AnalysisLabelParameter();
                         ((AnalysisLabelParameter) correlationColumnParam).setCategoryLabel(node.getName());
-                        correlationColumnParam.setFolderProvider(currentFolderProvider);
+                        correlationColumnParam.setFolderProvider(folderProvider);
                         parameter = correlationColumnParam;
                         href = relatedTopics[6].getHref();
                         break;
                     case MULTIPLE_COLUMN:
                         AnalysisParameter correlationParam = new AnalysisParameter();
-                        correlationParam.setFolderProvider(currentFolderProvider);
+                        correlationParam.setFolderProvider(folderProvider);
                         parameter = correlationParam;
                         type = currentType == AnalysisType.COLUMN_SET ? currentType : type;
                         href = currentType == AnalysisType.COLUMN_SET ? relatedTopics[8].getHref() : relatedTopics[4].getHref();
                         break;
                     case COLUMNS_COMPARISON:
                         AnalysisParameter anaParam = new AnalysisParameter();
-                        anaParam.setFolderProvider(currentFolderProvider);
+                        anaParam.setFolderProvider(folderProvider);
                         parameter = anaParam;
                         href = relatedTopics[5].getHref();
                         break;
                     case CONNECTION:
                         AnalysisFilterParameter connParam = new AnalysisFilterParameter();
-                        connParam.setFolderProvider(currentFolderProvider);
+                        connParam.setFolderProvider(folderProvider);
                         parameter = connParam;
                         href = relatedTopics[0].getHref();
                         break;
                     // MOD mzhao 2008-12-31 CATALOG and SCHEMA added here.
                     case CATALOG:
                         PackagesAnalyisParameter catalogParam = new PackagesAnalyisParameter();
-                        catalogParam.setFolderProvider(currentFolderProvider);
+                        catalogParam.setFolderProvider(folderProvider);
                         parameter = catalogParam;
                         href = relatedTopics[1].getHref();
                         break;
                     case SCHEMA:
                         PackagesAnalyisParameter schemaParam = new PackagesAnalyisParameter();
-                        schemaParam.setFolderProvider(currentFolderProvider);
+                        schemaParam.setFolderProvider(folderProvider);
                         parameter = schemaParam;
                         href = relatedTopics[2].getHref();
                         break;
                     case TABLE:
                         if (currentType == AnalysisType.COLUMN_SET) {
                             AnalysisParameter corrParam = new AnalysisParameter();
-                            corrParam.setFolderProvider(currentFolderProvider);
+                            corrParam.setFolderProvider(folderProvider);
                             parameter = corrParam;
                             href = relatedTopics[8].getHref();
                             type = currentType;
@@ -193,14 +223,14 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         }
                         if (currentType == AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY) {
                             FuncationDependencyParameter funcationDependency = new FuncationDependencyParameter();
-                            funcationDependency.setFolderProvider(currentFolderProvider);
+                            funcationDependency.setFolderProvider(folderProvider);
                             parameter = funcationDependency;
                             href = relatedTopics[7].getHref();
                             type = currentType;
                             break;
                         }
                         NamedColumnSetAnalysisParameter tableParam = new NamedColumnSetAnalysisParameter();
-                        tableParam.setFolderProvider(currentFolderProvider);
+                        tableParam.setFolderProvider(folderProvider);
                         parameter = tableParam;
                         href = relatedTopics[3].getHref();
                         break;

@@ -82,7 +82,9 @@ public class CreateNewAnalysisWizard extends Wizard {
     @Override
     public void addPages() {
 
-        mainPage = new NewWizardSelectionPage();
+        // mainPage = new NewWizardSelectionPage();
+        mainPage = new NewWizardSelectionPage(this.node);
+        mainPage.setWizard(wizard);
         addPage(mainPage);
     }
 
