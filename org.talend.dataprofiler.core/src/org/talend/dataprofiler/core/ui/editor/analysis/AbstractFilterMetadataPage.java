@@ -221,12 +221,16 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         public void selectionChanged(SelectionChangedEvent event) {
             StructuredSelection selection = (StructuredSelection) event.getSelection();
             OverviewIndUIElement firstElement = (OverviewIndUIElement) selection.getFirstElement();
-            IRepositoryNode node = firstElement.getNode();
-            currentSelectionSchemaIndicator = (SchemaIndicator) firstElement.getOverviewIndicator();
-            if (currentSelectionSchemaIndicator == null) {
-                return;
+            if (firstElement != null) {
+                // TableViewer viewer = (TableViewer) event.getSource();
+
+                IRepositoryNode node = firstElement.getNode();
+                currentSelectionSchemaIndicator = (SchemaIndicator) firstElement.getOverviewIndicator();
+                if (currentSelectionSchemaIndicator == null) {
+                    return;
+                }
+                displayTableAndViewComp(currentSelectionSchemaIndicator, node);
             }
-            displayTableAndViewComp(currentSelectionSchemaIndicator, node);
         }
     }
 

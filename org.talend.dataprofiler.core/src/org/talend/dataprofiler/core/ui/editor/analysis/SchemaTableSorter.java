@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 
 /**
@@ -37,8 +38,8 @@ public class SchemaTableSorter extends ViewerSorter {
     }
 
     public int compare(Viewer viewer, Object o1, Object o2) {
-        TableIndicator tableIndicator1 = (TableIndicator) o1;
-        TableIndicator tableIndicator2 = (TableIndicator) o2;
+        TableIndicator tableIndicator1 = (TableIndicator) ((OverviewIndUIElement) o1).getOverviewIndicator();
+        TableIndicator tableIndicator2 = (TableIndicator) ((OverviewIndUIElement) o2).getOverviewIndicator();
         String value1;
         String value2;
         long number1;

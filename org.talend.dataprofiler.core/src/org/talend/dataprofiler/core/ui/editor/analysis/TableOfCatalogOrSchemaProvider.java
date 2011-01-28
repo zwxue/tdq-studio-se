@@ -74,7 +74,7 @@ public class TableOfCatalogOrSchemaProvider extends LabelProvider implements ITa
     }
 
     public Image getColumnImage(Object element, int columnIndex) {
-        if (element instanceof TableIndicator && columnIndex == 0) {
+        if (((OverviewIndUIElement) element).getOverviewIndicator() instanceof TableIndicator && columnIndex == 0) {
             return CWMImageEnum.Table.getImg();
         }
         return null;
