@@ -23,8 +23,10 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
+import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
@@ -48,6 +50,7 @@ import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternLanguageRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
+import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
@@ -164,6 +167,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     || node instanceof ExchangeComponentRepNode) {
                 // virtual node, get the lable of node directly
                 return node.getLabel();
+            } else if (node instanceof DBConnectionFolderRepNode) {
+                return "DB " + ((DBConnectionFolderRepNode) node).getObject().getLabel();
             } else if (node instanceof DBTableFolderRepNode) {
                 return ((DBTableFolderRepNode) node).getNodeName();
             } else if (node instanceof DBViewFolderRepNode) {
@@ -178,12 +183,16 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return node.getObject().getLabel() + " " + node.getObject().getVersion();
             } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
                 return node.getObject().getLabel() + "(Unsupported)";
+            } else if (node instanceof AnalysisFolderRepNode) {
+                return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
             } else if (node instanceof AnalysisSubFolderRepNode) {
                 AnalysisSubFolderRepNode anaSubNode = (AnalysisSubFolderRepNode) node;
                 IRepositoryViewObject object = node.getObject();
                 if (object == null) {
                     return DefaultMessagesImpl.getString("AnalysisSubFolderRepNode.analyzedElement") + anaSubNode.getCount();
                 }
+            } else if (node instanceof ReportFolderRepNode) {
+                return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
             } else if (node instanceof ReportSubFolderRepNode) {
                 ReportSubFolderRepNode repSubNode = (ReportSubFolderRepNode) node;
                 IRepositoryViewObject object = node.getObject();
@@ -192,6 +201,16 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 }
             } else if (node instanceof PatternLanguageRepNode) {
                 return node.getLabel();
+            }
+            String label = node.getObject().getLabel();
+            boolean startsWith = label.startsWith(DQStructureManager.PREFIX_TDQ);
+            if (startsWith) {
+                label = label.substring(4, label.length());
+                return label;
+            } else if (label.equals(EResourceConstant.METADATA.getName())) {
+                label = label.substring(0, 1).toUpperCase() + label.substring(1);
+                return label;
+
             }
             return node.getObject().getLabel();
         }
