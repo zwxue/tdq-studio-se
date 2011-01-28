@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlSchemaRepositoryObject;
@@ -30,6 +33,12 @@ import orgomg.cwm.objectmodel.core.Package;
  */
 public class MDMConnectionRepNode extends RepositoryNode {
 
+    private MDMConnection mdmConnection;
+
+    public MDMConnection getMdmConnection() {
+        return this.mdmConnection;
+    }
+
     /**
      * DOC klliu MDMConnectionRepNode constructor comment.
      * 
@@ -39,6 +48,12 @@ public class MDMConnectionRepNode extends RepositoryNode {
      */
     public MDMConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof MDMConnectionItem) {
+                this.mdmConnection = (MDMConnection) ((MDMConnectionItem) item).getConnection();
+            }
+        }
     }
 
     @Override
@@ -70,4 +85,13 @@ public class MDMConnectionRepNode extends RepositoryNode {
         }
         return nodes;
     }
+
+    @Override
+    public String getLabel() {
+        if (this.getMdmConnection() != null) {
+            return this.getMdmConnection().getName();
+        }
+        return super.getLabel();
+    }
+
 }

@@ -35,7 +35,9 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
+import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -169,14 +171,28 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         return RecycleBinManager.getInstance().getChildren((RecycleBinRepNode) node).toArray();
                     }
                 }
-                return node.getChildren().toArray();
+                return sortRepositoryNode(node.getChildren().toArray());
             }
         } catch (CoreException e) {
             log.error(e);
         } catch (PersistenceException e) {
             log.error(e);
         }
-        return super.getChildren(element);
+        return sortRepositoryNode(super.getChildren(element));
+    }
+
+    /**
+     * sort element on the tree.
+     * 
+     * @param array
+     * @return
+     */
+    private Object[] sortRepositoryNode(Object[] array) {
+        if (array != null && array.length > 0) {
+            List<IRepositoryNode> repositoryNodeList = RepositoryNodeHelper.getRepositoryNodeList(array);
+            return ComparatorsFactory.sort(repositoryNodeList.toArray(), ComparatorsFactory.REPOSITORY_NODE_COMPARATOR_ID);
+        }
+        return new Object[] {};
     }
 
     @Override

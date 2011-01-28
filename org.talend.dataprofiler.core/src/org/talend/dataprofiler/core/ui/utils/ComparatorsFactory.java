@@ -340,8 +340,8 @@ public final class ComparatorsFactory {
             if (o1 == null || o2 == null) {
                 return 0;
             }
-            String label1 = ((IRepositoryNode) o1).getLabel();
-            String label2 = ((IRepositoryNode) o2).getLabel();
+            String label1 = o1.getLabel();
+            String label2 = o2.getLabel();
             if (label1 == null || label2 == null) {
                 return 0;
             }

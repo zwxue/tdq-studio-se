@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.repository.model.RepositoryNode;
 
 
@@ -20,6 +22,12 @@ import org.talend.repository.model.RepositoryNode;
  * DOC klliu  class global comment. Detailled comment
  */
 public class JrxmlTempleteRepNode extends RepositoryNode {
+
+    private TDQJrxmlItem jrxmlItem;
+
+    public TDQJrxmlItem getJrxmlItem() {
+        return this.jrxmlItem;
+    }
 
     /**
      * DOC klliu JrxmlTempleteRepNode constructor comment.
@@ -29,7 +37,20 @@ public class JrxmlTempleteRepNode extends RepositoryNode {
      */
     public JrxmlTempleteRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof TDQJrxmlItem) {
+                this.jrxmlItem = (TDQJrxmlItem) item;
+            }
+        }
+    }
+
+    @Override
+    public String getLabel() {
+        if (this.getJrxmlItem() != null) {
+            return this.getJrxmlItem().getName();
+        }
+        return super.getLabel();
     }
 
 }

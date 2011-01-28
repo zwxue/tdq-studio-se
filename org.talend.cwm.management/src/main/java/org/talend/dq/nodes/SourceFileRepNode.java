@@ -12,28 +12,45 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class SourceFileRepNode extends RepositoryNode {
 
+    private TDQSourceFileItem sourceFileItem;
+
+    public TDQSourceFileItem getSourceFileItem() {
+        return this.sourceFileItem;
+    }
+
     /**
      * DOC klliu SourceFileRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
     public SourceFileRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof TDQSourceFileItem) {
+                this.sourceFileItem = (TDQSourceFileItem) item;
+            }
+        }
     }
 
+    @Override
     public String getLabel() {
-        TDQSourceFileItem item = (TDQSourceFileItem) this.getObject().getProperty().getItem();
-        return item.getName() + "." + item.getExtension();
+        if (this.getSourceFileItem() != null) {
+            return this.getSourceFileItem().getName();
+        }
+        return super.getLabel();
+
     }
 }

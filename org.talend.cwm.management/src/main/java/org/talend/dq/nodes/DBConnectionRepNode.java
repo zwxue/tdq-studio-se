@@ -17,7 +17,10 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
@@ -33,6 +36,12 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class DBConnectionRepNode extends RepositoryNode {
 
+    private DatabaseConnection databaseConnection;
+
+    public DatabaseConnection getDatabaseConnection() {
+        return this.databaseConnection;
+    }
+
     /**
      * DOC klliu DBConnectionRepNode constructor comment.
      * 
@@ -42,6 +51,12 @@ public class DBConnectionRepNode extends RepositoryNode {
      */
     public DBConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof DatabaseConnectionItem) {
+                this.databaseConnection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
+            }
+        }
     }
 
     /*
@@ -110,5 +125,13 @@ public class DBConnectionRepNode extends RepositoryNode {
             nodes.add(catalogNode);
         }
         return nodes;
+    }
+
+    @Override
+    public String getLabel() {
+        if (this.getDatabaseConnection() != null) {
+            return this.getDatabaseConnection().getName();
+        }
+        return super.getLabel();
     }
 }

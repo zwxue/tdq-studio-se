@@ -32,7 +32,6 @@ public class SysIndicatorDefinitionRepNode extends RepositoryNode {
         return this.indicatorDefinition;
     }
 
-
     /**
      * DOC klliu IndicatorDefinitionRepNode constructor comment.
      * 
@@ -58,4 +57,13 @@ public class SysIndicatorDefinitionRepNode extends RepositoryNode {
     public boolean isSystemIndicator() {
         return this.isSystemIndicator;
     }
+
+    @Override
+    public String getLabel() {
+        if (this.getIndicatorDefinition() != null) {
+            return this.getIndicatorDefinition().getName();
+        }
+        return super.getLabel();
+    }
+
 }

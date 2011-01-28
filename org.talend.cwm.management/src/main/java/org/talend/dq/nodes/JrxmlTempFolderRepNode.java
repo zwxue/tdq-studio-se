@@ -89,4 +89,12 @@ public class JrxmlTempFolderRepNode extends RepositoryNode {
         }
         return parent;
     }
+
+    @Override
+    public String getLabel() {
+        if (this.getObject() != null) {
+            this.getObject().getLabel();
+        }
+        return super.getLabel();
+    }
 }

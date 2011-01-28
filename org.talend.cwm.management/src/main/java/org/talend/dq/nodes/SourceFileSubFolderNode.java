@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import org.apache.log4j.Logger;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
@@ -22,7 +21,6 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class SourceFileSubFolderNode extends SourceFileFolderRepNode {
 
-    private static Logger log = Logger.getLogger(SourceFileSubFolderNode.class);
     /**
      * DOC klliu SourceFileSubFolderNode constructor comment.
      * @param object

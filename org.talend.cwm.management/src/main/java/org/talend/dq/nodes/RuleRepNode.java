@@ -12,22 +12,46 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class RuleRepNode extends RepositoryNode {
 
+    private DQRule rule;
+
+    public DQRule getRule() {
+        return this.rule;
+    }
+
     /**
      * DOC klliu RuleRepNOde constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
      */
     public RuleRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof TDQBusinessRuleItem) {
+                this.rule = ((TDQBusinessRuleItem) item).getDqrule();
+            }
+        }
     }
+
+    @Override
+    public String getLabel() {
+        if (this.getRule() != null) {
+            return this.getRule().getName();
+        }
+        return super.getLabel();
+    }
+
 }

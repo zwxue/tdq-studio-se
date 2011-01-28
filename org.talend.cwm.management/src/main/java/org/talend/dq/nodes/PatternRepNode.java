@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -31,6 +32,12 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class PatternRepNode extends RepositoryNode {
 
+    private Pattern pattern;
+
+    public Pattern getPattern() {
+        return this.pattern;
+    }
+
     /**
      * DOC klliu PatternRepNode constructor comment.
      * @param object
@@ -39,6 +46,12 @@ public class PatternRepNode extends RepositoryNode {
      */
     public PatternRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof TDQPatternItem) {
+                this.pattern = ((TDQPatternItem) item).getPattern();
+            }
+        }
     }
 
     @Override
@@ -59,4 +72,13 @@ public class PatternRepNode extends RepositoryNode {
         }
         return languageElement;
     }
+
+    @Override
+    public String getLabel() {
+        if (this.getPattern() != null) {
+            return this.getPattern().getName();
+        }
+        return super.getLabel();
+    }
+
 }

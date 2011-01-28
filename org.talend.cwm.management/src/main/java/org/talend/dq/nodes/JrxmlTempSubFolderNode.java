@@ -32,7 +32,6 @@ public class JrxmlTempSubFolderNode extends RepositoryNode {
      */
     public JrxmlTempSubFolderNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
     //
     // @Override
@@ -63,4 +62,11 @@ public class JrxmlTempSubFolderNode extends RepositoryNode {
     // }
     // return parent.getChildren();
     // }
+    @Override
+    public String getLabel() {
+        if (this.getObject() != null) {
+            this.getObject().getLabel();
+        }
+        return super.getLabel();
+    }
 }

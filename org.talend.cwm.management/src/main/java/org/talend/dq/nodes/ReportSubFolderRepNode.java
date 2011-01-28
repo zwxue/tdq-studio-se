@@ -60,7 +60,7 @@ public class ReportSubFolderRepNode extends RepositoryNode {
             ReportRepNode parent = (ReportRepNode) this.getParent();
             TDQReportItem reportItem = (TDQReportItem) parent.getObject().getProperty().getItem();
             TdReport report = (TdReport) reportItem.getReport();
-            if (this.getProperties(EProperties.LABEL).equals(parent.anaFloder)) {
+            if (this.getProperties(EProperties.LABEL).equals(parent.ANA_FLODER)) {
                 // EList<AnalysisMap> analysisMaps = report.getAnalysisMap();
                 for (AnalysisMap analysisMap : analysisMaps) {
                     Analysis analysis = analysisMap.getAnalysis();
@@ -90,12 +90,20 @@ public class ReportSubFolderRepNode extends RepositoryNode {
             ReportRepNode parent = (ReportRepNode) this.getParent();
             TDQReportItem reportItem = (TDQReportItem) parent.getObject().getProperty().getItem();
             TdReport report = (TdReport) reportItem.getReport();
-            if (this.getProperties(EProperties.LABEL).equals(parent.anaFloder)) {
+            if (this.getProperties(EProperties.LABEL).equals(parent.ANA_FLODER)) {
                 analysisMaps = report.getAnalysisMap();
             } else {
                 return "(" + 0 + ")";
             }
         }
         return "(" + analysisMaps.size() + ")";
+    }
+
+    @Override
+    public String getLabel() {
+        if (this.getObject() != null) {
+            this.getObject().getLabel();
+        }
+        return super.getLabel();
     }
 }
