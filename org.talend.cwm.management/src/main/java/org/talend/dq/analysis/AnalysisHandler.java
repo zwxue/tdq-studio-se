@@ -19,11 +19,16 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dq.helper.PropertyHelper;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -111,7 +116,10 @@ public class AnalysisHandler {
     }
 
     public String getConnectionName() {
-        return analysis.getContext().getConnection() == null ? "" : analysis.getContext().getConnection().getName(); //$NON-NLS-1$
+        DataManager connection = analysis.getContext().getConnection();
+        Property property = PropertyHelper.getProperty(connection);
+
+        return property == null ? "" : property.getLabel(); //$NON-NLS-1$
     }
 
     public String getTableNames() {
@@ -220,6 +228,13 @@ public class AnalysisHandler {
                     existingTables.add(tableName);
                 }
 
+            } else if (element instanceof MetadataColumn) {
+                // MOD qiongli 2011-1-28,for delimited file
+                MetadataTable table = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) element);
+                String tableName = table.getLabel();
+                if (!existingTables.contains(tableName)) {
+                    existingTables.add(tableName);
+                }
             }
         }
 

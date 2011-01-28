@@ -20,6 +20,7 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.analysis.Analysis;
@@ -117,7 +118,12 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
             medataViewObject.setRepositoryNode(tableNode);
             return tableNode;
         } else if (analyzedElement instanceof MetadataColumn) {
-            DBColumnRepNode columnNode = new DBColumnRepNode(medataViewObject, childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            RepositoryNode columnNode = null;
+            if (analyzedElement instanceof TdColumn) {
+                columnNode = new DBColumnRepNode(medataViewObject, childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            } else {
+                columnNode = new DFColumnRepNode(medataViewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            }
             columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
             columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
             medataViewObject.setRepositoryNode(columnNode);
