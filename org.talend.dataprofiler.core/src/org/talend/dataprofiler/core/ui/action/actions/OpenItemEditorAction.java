@@ -170,9 +170,9 @@ public class OpenItemEditorAction extends Action {
             Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(modelElement);
             Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(modelElement);
             if (catalog != null) {
-                return conn = ConnectionHelper.getConnection(catalog);
+                conn = ConnectionHelper.getConnection(catalog);
             } else if (schema != null) {
-                return conn = ConnectionHelper.getConnection(schema);
+                conn = ConnectionHelper.getConnection(schema);
             }
         }
         return conn;

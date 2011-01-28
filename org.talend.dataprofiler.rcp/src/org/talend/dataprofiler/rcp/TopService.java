@@ -38,9 +38,14 @@ import org.talend.repository.model.IRepositoryNode;
 
 /**
  * 
- * DOC zshen class global comment. Detailled comment
+ * @author zshen
  * 
- * FIXME do we really need this class?
+ * This class is needed by ProxyRepositoryFactory, so if simple remove it will effect startup for TOP. If you came to
+ * ProxyRepositoryFactory class you will find coreService variable and it need a service (which implements ICoreService)
+ * to initialize itself. We have a CoreService calss in the org.talend.core plugin but in TOP we can't get it from
+ * org.talend.core(TOP don't contain it). So we need another one to instead of it. And ICoreService is main responsible
+ * to check Job name and logon project, logon project we have be done by myself and we don't have job on the TOP. So
+ * TopService only is empty class.
  */
 public class TopService implements ICoreService {
 
