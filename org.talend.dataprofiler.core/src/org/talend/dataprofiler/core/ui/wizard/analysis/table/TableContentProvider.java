@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -20,6 +23,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
@@ -42,6 +46,7 @@ public class TableContentProvider extends ResourceViewContentProvider {
 
     @Override
     public Object[] getChildren(Object parentElement) {
+        List<RepositoryNode> analyzeNode = new ArrayList<RepositoryNode>();
         if (parentElement instanceof DBTableFolderRepNode || parentElement instanceof DBViewFolderRepNode) {
             return ((IRepositoryNode) parentElement).getChildren().toArray();
         } else if (parentElement instanceof IContainer) {
@@ -51,7 +56,13 @@ public class TableContentProvider extends ResourceViewContentProvider {
                 IRepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
                 viewObject.setRepositoryNode(node);
                 Object[] children = super.getChildren(node);
-                return children;
+                // if analyze Connection/Catalog/Schema,now only surpport DB type klliu 2011-01-28
+                for (Object object : children) {
+                    if (object instanceof DBConnectionFolderRepNode) {
+                        analyzeNode.add((RepositoryNode) object);
+                    }
+                }
+                return analyzeNode.toArray();
             }
         }
         return super.getChildren(parentElement);

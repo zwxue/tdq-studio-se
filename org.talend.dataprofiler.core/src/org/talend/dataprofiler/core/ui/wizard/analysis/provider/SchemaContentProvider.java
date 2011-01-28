@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -19,6 +22,7 @@ import org.eclipse.core.resources.IResource;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -77,6 +81,7 @@ public class SchemaContentProvider extends ResourceViewContentProvider {
         // ComparatorsFactory.MODELELEMENT_COMPARATOR_ID);
         // }
         // }
+        List<RepositoryNode> analyzeNode = new ArrayList<RepositoryNode>();
         if (parentElement instanceof IContainer) {
             if (ResourceManager.isMetadataFolder((IResource) parentElement)) {
 
@@ -85,7 +90,13 @@ public class SchemaContentProvider extends ResourceViewContentProvider {
                 RepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
                 viewObject.setRepositoryNode(node);
                 Object[] children = super.getChildren(node);
-                return children;
+                // if analyze Connection/Catalog/Schema,now only surpport DB type klliu 2011-01-28
+                for (Object object : children) {
+                    if (object instanceof DBConnectionFolderRepNode) {
+                        analyzeNode.add((RepositoryNode) object);
+                    }
+                }
+                return analyzeNode.toArray();
             }
         }
         return super.getChildren(parentElement);

@@ -240,14 +240,18 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     public void selectionChanged(SelectionChangedEvent event) {
+        // MOD klliu 2011-01-27 15750 todo 31
         RepositoryNode selectedObj = (RepositoryNode) ((IStructuredSelection) event.getSelection()).getFirstElement();
-        if (selectedObj.hasChildren()) {
-            this.setOutput(selectedObj);
-            List<?> repositoryNodeList = (List<?>) modelElementCheckedMap.get(selectedObj);
-            if (repositoryNodeList != null) {
-                this.getTableViewer().setCheckedElements(repositoryNodeList.toArray());
+        if (selectedObj != null) {
+            if (selectedObj.hasChildren()) {
+                this.setOutput(selectedObj);
+                List<?> repositoryNodeList = (List<?>) modelElementCheckedMap.get(selectedObj);
+                if (repositoryNodeList != null) {
+                    this.getTableViewer().setCheckedElements(repositoryNodeList.toArray());
+                }
             }
         }
+
     }
 
     @SuppressWarnings("unchecked")

@@ -24,8 +24,9 @@ import org.eclipse.swt.graphics.Image;
 import org.talend.dataprofiler.core.ImageLib.CWMImageEnum;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
-import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -68,10 +69,10 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
     protected abstract String getOtherColumnText(int columnIndex, SchemaIndicator schemaIndicator);
 
     public Image getColumnImage(Object element, int columnIndex) {
-        if (((OverviewIndUIElement) element).getOverviewIndicator() instanceof SchemaIndicator
-                && !(element instanceof CatalogIndicator) && columnIndex == 0) {
+        // MOD klliu 2011-01-27 15750 todo 31
+        if (((OverviewIndUIElement) element).getNode() instanceof DBSchemaRepNode && columnIndex == 0) {
             return CWMImageEnum.Schema.getImg();
-        } else if (((OverviewIndUIElement) element).getOverviewIndicator() instanceof CatalogIndicator && columnIndex == 0) {
+        } else if (((OverviewIndUIElement) element).getNode() instanceof DBCatalogRepNode && columnIndex == 0) {
             return CWMImageEnum.Catalog.getImg();
         } else {
             return null;
