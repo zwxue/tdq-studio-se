@@ -841,7 +841,7 @@ public final class RepositoryNodeHelper {
             TreeItem[] items = commonViewer.getTree().getItems();
             for (TreeItem item : items) {
                 String text = item.getText();
-                if (text.equals(nodeName)) {
+                if (text.equalsIgnoreCase(nodeName)) {
                     node = (RepositoryNode) item.getData();
                     return node;
                 }
