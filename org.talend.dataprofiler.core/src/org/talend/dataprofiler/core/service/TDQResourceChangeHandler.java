@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -99,13 +100,22 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     @Override
     public boolean handleResourceChange(ModelElement modelElement) {
+
+        // MOD qiongli 2011-1-28 bug 16776,add asyncExec(new Runnable).
+        final ModelElement modelElementFinal = modelElement;
         List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(modelElement);
         if (clientDependencys.size() > 0) {
-            ModelElement[] dependencyElements = clientDependencys.toArray(new ModelElement[clientDependencys.size()]);
+            final ModelElement[] dependencyElements = clientDependencys.toArray(new ModelElement[clientDependencys.size()]);
 
-            DeleteModelElementConfirmDialog.showDialog(null,
-                    PropertyHelper.getItemFile(PropertyHelper.getProperty(modelElement)), dependencyElements,
-                    DefaultMessagesImpl.getString("TDQResourceChangeHandler.ConnectionNotBeSave"));
+            Display.getDefault().asyncExec(new Runnable() {
+
+                public void run() {
+                    DeleteModelElementConfirmDialog.showDialog(null,
+                            PropertyHelper.getItemFile(PropertyHelper.getProperty(modelElementFinal)), dependencyElements,
+                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.ConnectionNotBeSave"));
+                }
+            });
+
             return false;
         }
 

@@ -73,7 +73,7 @@ public class DQDeleteAction extends DeleteAction {
                 List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
                 if (dependencies != null && !dependencies.isEmpty()) {
                     haveDependencies = true;
-                    ModelElement modEle = RepositoryNodeHelper.getMetadataElement(node);
+                    ModelElement modEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
                     showDependenciesDialog(modEle, dependencies);
                     break;
                 }
