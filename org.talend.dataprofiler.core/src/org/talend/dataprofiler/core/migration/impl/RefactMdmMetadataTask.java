@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 
 /**
@@ -66,8 +65,8 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
         try {
             String[] anaFileExtentionNames = { ".ana" };
             result = FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMapMdm(), log);
-            AnaResourceFileHelper.getInstance().clear();
-            AnaResourceFileHelper.getInstance().getAllAnalysis();
+            // AnaResourceFileHelper.getInstance().clear();
+            // AnaResourceFileHelper.getInstance().getAllAnalysis();
         } catch (Exception e) {
             result = false;
             log.error(e, e);

@@ -99,6 +99,18 @@ public final class IndicatorResourceFileHelper extends ResourceFileMap {
 
     /**
      * 
+     * DOC zshen Fetch all system indicators.
+     * 
+     * @return
+     */
+    public Collection<IndicatorDefinition> getAllSysIs() {
+        IFolder udiFolder = ResourceManager.getLibrariesFolder().getFolder(EResourceConstant.INDICATORS.getName())
+                .getFolder(EResourceConstant.SYSTEM_INDICATORS.getName());
+        return getAllIndicators(udiFolder);
+    }
+
+    /**
+     * 
      * DOC mzhao Fetch all user defined indicators.
      * 
      * @return

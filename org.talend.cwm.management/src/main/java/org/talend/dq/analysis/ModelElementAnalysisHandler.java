@@ -135,10 +135,28 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         EList<Indicator> allIndics = analysis.getResults().getIndicators();
         for (Indicator indicator : allIndics) {
             if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(modelElement)) {
+                initializeIndicator(indicator);
                 indics.add(indicator);
             }
         }
         return indics;
+    }
+
+    /**
+     * 
+     * zshen Comment method "initializeIndicator".
+     * 
+     * @param indicator
+     */
+    private void initializeIndicator(Indicator indicator) {
+        if (indicator.getIndicatorDefinition() == null || indicator.getIndicatorDefinition().eIsProxy()) {
+            DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
+        }
+        if (indicator instanceof CompositeIndicator) {
+            for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
+                initializeIndicator(child); // recurse
+            }
+        }
     }
 
     /**

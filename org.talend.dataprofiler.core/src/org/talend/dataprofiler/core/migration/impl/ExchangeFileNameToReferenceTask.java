@@ -40,7 +40,6 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -114,8 +113,8 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
                 returnFlag &= FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMap(), log)
                         && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 
-                AnaResourceFileHelper.getInstance().clear();
-                AnaResourceFileHelper.getInstance().getAllAnalysis();
+                // AnaResourceFileHelper.getInstance().clear();
+                // AnaResourceFileHelper.getInstance().getAllAnalysis();
             } catch (Exception e) {
                 returnFlag = false;
                 log.error(e, e);

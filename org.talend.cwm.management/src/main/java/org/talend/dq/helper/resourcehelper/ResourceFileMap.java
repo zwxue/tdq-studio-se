@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -64,6 +65,8 @@ public abstract class ResourceFileMap {
         all.addAll(AnaResourceFileHelper.getInstance().getAllAnalysis());
         all.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules());
         all.addAll(IndicatorResourceFileHelper.getInstance().getAllUDIs());
+        all.addAll(IndicatorResourceFileHelper.getInstance().getAllSysIs());
+        DefinitionHandler.reload();
         all.addAll(PatternResourceFileHelper.getInstance().getAllPatternes());
         all.addAll(PrvResourceFileHelper.getInstance().getAllDataProviders());
         if (!PluginChecker.isOnlyTopLoaded()) {

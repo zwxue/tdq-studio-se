@@ -47,12 +47,10 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -147,9 +145,9 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
             result &= FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMap(), log)
                     && FilesUtils.migrateFolder(fileRule, rulesFileEctentionNames, this.getReplaceStringMap(), log);
 
-            AnaResourceFileHelper.getInstance().clear();
-            AnaResourceFileHelper.getInstance().getAllAnalysis();
-            ResourceService.refreshStructure();
+            // AnaResourceFileHelper.getInstance().clear();
+            // AnaResourceFileHelper.getInstance().getAllAnalysis();
+            // ResourceService.refreshStructure();
         } catch (Exception e) {
             result = false;
             log.error(e, e);

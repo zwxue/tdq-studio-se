@@ -175,7 +175,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         columnSetAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = columnSetAnalysisHandler.getStringDataFilter();
         analyzedColumns = columnSetAnalysisHandler.getAnalyzedColumns();
-        if (columnSetAnalysisHandler.getSimpleStatIndicator() == null) {
+        if (columnSetAnalysisHandler.getSimpleStatIndicator() == null
+                || columnSetAnalysisHandler.getSimpleStatIndicator().eIsProxy()) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             simpleStatIndicator = columnsetFactory.createSimpleStatIndicator();
             simpleStatIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
@@ -218,7 +219,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     private void initializeIndicator(Indicator indicator) {
-        if (indicator.getIndicatorDefinition() == null) {
+        if (indicator.getIndicatorDefinition() == null || indicator.getIndicatorDefinition().eIsProxy()) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }
         if (indicator instanceof CompositeIndicator) {

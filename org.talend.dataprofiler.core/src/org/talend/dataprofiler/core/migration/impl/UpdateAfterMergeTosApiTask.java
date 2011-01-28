@@ -39,6 +39,7 @@ import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -165,13 +166,14 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     private boolean reloadModelElementCache() {
         try {
             // 1) clear and unload element
-            AnaResourceFileHelper.getInstance().clear();
-            RepResourceFileHelper.getInstance().clear();
-            IndicatorResourceFileHelper.getInstance().clear();
-            PatternResourceFileHelper.getInstance().clear();
-            DQRuleResourceFileHelper.getInstance().clear();
+             AnaResourceFileHelper.getInstance().clear();
+             RepResourceFileHelper.getInstance().clear();
+             IndicatorResourceFileHelper.getInstance().clear();
+             PatternResourceFileHelper.getInstance().clear();
+             DQRuleResourceFileHelper.getInstance().clear();
+             EMFSharedResources.getInstance().unloadResources();
             // 2) reload from file
-            ResourceFileMap.getAll();
+             ResourceFileMap.getAll();
         } catch (Exception e) {
             log.error(e, e);
             return false;
@@ -190,8 +192,16 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                 .makeRelativeTo(ResourceManager.getRootProject().getFullPath()));
         IPath dataProfilingPath = basePath.append(ResourceManager.getDataProfilingFolder().getFullPath()
                 .makeRelativeTo(ResourceManager.getRootProject().getFullPath()));
-        boolean delete = FilesUtils.removeFolder(new File(librariesPath.toOSString() + MIGRATION_FOLDER_EXT), true);
-        boolean delete2 = FilesUtils.removeFolder(new File(dataProfilingPath.toOSString() + MIGRATION_FOLDER_EXT), true);
+        File librariesFile = new File(librariesPath.toOSString() + MIGRATION_FOLDER_EXT);
+        File dataProfilingFile = new File(dataProfilingPath.toOSString() + MIGRATION_FOLDER_EXT);
+        boolean delete = true;
+        boolean delete2 = true;
+        if (librariesFile != null) {
+            delete = FilesUtils.removeFolder(librariesFile, true);
+        }
+        if (dataProfilingFile != null) {
+            delete2 = FilesUtils.removeFolder(dataProfilingFile, true);
+        }
         ResourceService.refreshStructure();
         return delete && delete2;
     }

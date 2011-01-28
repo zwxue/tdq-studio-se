@@ -213,9 +213,10 @@ public class TableIndicator {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
             indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             indicator.setAnalyzedElement(getColumnSet());
-            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
-                log.error(DefaultMessagesImpl.getString("TableIndicator.couldnotSetDef") + indicator.getName()); //$NON-NLS-1$
-            }
+
+        }
+        if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
+            log.error(DefaultMessagesImpl.getString("TableIndicator.couldnotSetDef") + indicator.getName()); //$NON-NLS-1$
         }
         TableIndicatorUnit indicatorUnit = new TableIndicatorUnit(indicatorEnum, indicator, this);
         this.indicatorUnitMap.put(indicatorEnum, indicatorUnit);
