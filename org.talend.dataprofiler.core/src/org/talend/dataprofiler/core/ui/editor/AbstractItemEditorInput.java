@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -63,8 +64,9 @@ public class AbstractItemEditorInput implements IEditorInput {
         }
         if (obj instanceof AbstractItemEditorInput) {
             AbstractItemEditorInput other = (AbstractItemEditorInput) obj;
-            return item.getProperty().getLabel().equals(other.item.getProperty().getLabel());
+            return StringUtils.equals(item.getProperty().getLabel(), other.item.getProperty().getLabel());
         }
+
         return false;
     }
 
