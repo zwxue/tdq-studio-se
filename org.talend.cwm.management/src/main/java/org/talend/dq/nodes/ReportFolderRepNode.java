@@ -24,6 +24,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -50,7 +51,10 @@ public class ReportFolderRepNode extends RepositoryNode {
         ERepositoryObjectType contentType = this.getContentType();
         if (contentType != null) {
             try {
-                RootContainer<String, IRepositoryViewObject> reports = ProxyRepositoryFactory.getInstance().getReport();
+                RootContainer<String, IRepositoryViewObject> reports = ProxyRepositoryFactory.getInstance()
+                        .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+                // RootContainer<String, IRepositoryViewObject> reports =
+                // ProxyRepositoryFactory.getInstance().getReport();
                 fetchRepositoryNodeByFolder(reports, contentType, fetchNodeByFolder);
             } catch (PersistenceException e) {
                 log.error(e, e);

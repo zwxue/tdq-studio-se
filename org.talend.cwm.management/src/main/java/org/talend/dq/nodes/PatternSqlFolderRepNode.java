@@ -24,6 +24,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -50,7 +51,11 @@ public class PatternSqlFolderRepNode extends RepositoryNode {
         RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
         ERepositoryObjectType contentType = this.getContentType();
         try {
-            RootContainer<String, IRepositoryViewObject> patterns = ProxyRepositoryFactory.getInstance().getPatterns(contentType);
+            RootContainer<String, IRepositoryViewObject> patterns = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+
+            // RootContainer<String, IRepositoryViewObject> patterns =
+            // ProxyRepositoryFactory.getInstance().getPatterns(contentType);
             fetchRepositoryNodeByFolder(patterns, contentType, fetchNodeByFolder);
         } catch (PersistenceException e) {
             log.error(e, e);
