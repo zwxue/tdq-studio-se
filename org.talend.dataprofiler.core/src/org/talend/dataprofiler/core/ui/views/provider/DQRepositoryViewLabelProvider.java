@@ -183,14 +183,14 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return node.getObject().getLabel() + " " + node.getObject().getVersion();
             } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
                 return node.getObject().getLabel() + "(Unsupported)";
-            } else if (node instanceof AnalysisFolderRepNode) {
-                return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
             } else if (node instanceof AnalysisSubFolderRepNode) {
                 AnalysisSubFolderRepNode anaSubNode = (AnalysisSubFolderRepNode) node;
                 IRepositoryViewObject object = node.getObject();
                 if (object == null) {
                     return DefaultMessagesImpl.getString("AnalysisSubFolderRepNode.analyzedElement") + anaSubNode.getCount();
                 }
+            } else if (node instanceof AnalysisFolderRepNode) {
+                return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
             } else if (node instanceof ReportFolderRepNode) {
                 return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
             } else if (node instanceof ReportSubFolderRepNode) {
