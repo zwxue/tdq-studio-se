@@ -647,8 +647,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     public void openIndicatorSelectDialog(Shell shell) {
-        final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell, DefaultMessagesImpl
-                .getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators); //$NON-NLS-1$
+        final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell,
+                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators); //$NON-NLS-1$
         dialog.create();
 
         if (!DQPreferenceManager.isBlockWeb()) {
@@ -710,10 +710,16 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     private String isExpressionNull(TreeItem item) {
         String expressContent = null;
+        ModelElement me = null;
         IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
         ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
         IRepositoryViewObject reposViewObj = meIndicator.getModelElementRepositoryNode().getObject();
-        ModelElement me = ((MetadataColumnRepositoryObject) reposViewObj).getTdColumn();
+        // MOD klliu 2010-01-30 Distinguish MetadataColumnRepositoryObject and MetadataXmlElementTypeRepositoryObject
+        if (reposViewObj instanceof MetadataColumnRepositoryObject) {
+            me = ((MetadataColumnRepositoryObject) reposViewObj).getTdColumn();
+        } else if (reposViewObj instanceof MetadataXmlElementTypeRepositoryObject) {
+            me = ((MetadataXmlElementTypeRepositoryObject) reposViewObj).getTdXmlElementType();
+        }
         Connection dataprovider = ModelElementHelper.getTdDataProvider(me);
         DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
         Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
