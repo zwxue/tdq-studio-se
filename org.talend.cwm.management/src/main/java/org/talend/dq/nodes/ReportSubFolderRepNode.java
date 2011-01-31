@@ -108,6 +108,9 @@ public class ReportSubFolderRepNode extends RepositoryNode {
         if (this.getObject() != null) {
             this.getObject().getLabel();
         }
+        if (getObjectType() == null) {
+            return ERepositoryObjectType.TDQ_FOLDER_NODE.toString();
+        }
         return super.getLabel();
     }
 }
