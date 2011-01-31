@@ -52,19 +52,19 @@ public abstract class EcosystemService {
 
     protected static Logger log = Logger.getLogger(EcosystemService.class);
 
-    public static String VERSION_LIST_URL = "http://talendforge.org/exchange/top/api/get_version_list.php"; //$NON-NLS-1$
+    public final static String VERSION_LIST_URL = "http://talendforge.org/exchange/top/api/get_version_list.php"; //$NON-NLS-1$
 
-    public static String REVISION_LIST_URL = "http://talendforge.org/exchange/top/api/get_revision_list.php"; //$NON-NLS-1$
+    public final static String REVISION_LIST_URL = "http://talendforge.org/exchange/top/api/get_revision_list.php"; //$NON-NLS-1$
 
-    private static Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(RC|M)\\d+)?_r\\d+"); //$NON-NLS-1$
+    private final static Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)(\\.(RC|M)\\d+)?_r\\d+"); //$NON-NLS-1$
 
-    private static Pattern DEFAULT_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.*(\\d*)"); //$NON-NLS-1$
+    private final static Pattern DEFAULT_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.*(\\d*)"); //$NON-NLS-1$
 
-    private static String CATEGORY_LIST_URL = "http://talendforge.org/exchange/top/api/get_category_list.php";
+    private final static String CATEGORY_LIST_URL = "http://talendforge.org/exchange/top/api/get_category_list.php";
 
     private static MultiValueMap versionMap = new MultiValueMap();
 
-    private static int TIMEOUT = 1000000;
+    private final static int TIMEOUT = 1000000;
 
     /**
      * Make sure that the version match x.x.x or x.x.xMx or x.x.xRCx, where x are all digit.

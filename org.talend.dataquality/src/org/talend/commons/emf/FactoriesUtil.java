@@ -322,6 +322,10 @@ public final class FactoriesUtil {
         return StringUtils.equalsIgnoreCase(fileExt, ITEM_EXTENSION);
     }
 
+    /**
+     * 
+     * DOC mzhao FactoriesUtil class global comment. Detailled comment
+     */
     public enum EElementEName {
         UNKNOWN("Unknow", ""),
 

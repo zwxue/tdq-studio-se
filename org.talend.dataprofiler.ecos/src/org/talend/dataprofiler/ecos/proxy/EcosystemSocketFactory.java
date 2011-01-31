@@ -27,13 +27,17 @@ import org.apache.axis.transport.http.HTTPConstants;
 import org.apache.axis.utils.Messages;
 import org.apache.commons.logging.Log;
 
+/**
+ * 
+ * DOC mzhao class global comment. Detailled comment
+ */
 public class EcosystemSocketFactory implements SocketFactory {
 
     /** Field log */
     protected static Log log = LogFactory.getLog(EcosystemSocketFactory.class.getName());
 
     /** Field CONNECT_TIMEOUT */
-    public static String CONNECT_TIMEOUT = "axis.client.connect.timeout"; //$NON-NLS-1$
+    public final static String CONNECT_TIMEOUT = "axis.client.connect.timeout"; //$NON-NLS-1$
 
     /** attributes */
     protected Hashtable<String, String> attributes = null;

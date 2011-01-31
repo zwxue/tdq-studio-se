@@ -16,92 +16,92 @@ package org.talend.dataprofiler.ecos.model;
  * DOC chuang  class global comment. Detailled comment
  */
 public class RevisionInfo {
-	private int revision_id;
+	private int revisionId;
 
-	private java.lang.String revision_name;
+	private java.lang.String revisionName;
 
-	private int extension_id;
+	private int extensionId;
 
-	private java.lang.String extension_name;
+	private java.lang.String extensionName;
 
-	private java.lang.String author_name;
+	private java.lang.String authorName;
 
-	private int author_id;
+	private int authorId;
 
-	private java.lang.String extension_description;
+	private java.lang.String extensionDescription;
 
-	private java.lang.String revision_date;
+	private java.lang.String revisionDate;
 	
 	private java.lang.String filename;
 
-	private java.lang.String revision_description;
+	private java.lang.String revisionDescription;
 
-	private java.lang.String file_url;
+	private java.lang.String fileUrl;
 
-	private java.lang.String download_url;
+	private java.lang.String downloadUrl;
 
-	public int getRevision_id() {
-		return revision_id;
+	public int getRevisionId() {
+		return revisionId;
 	}
 
-	public void setRevision_id(int revision_id) {
-		this.revision_id = revision_id;
+	public void setRevisionId(int revisionId) {
+		this.revisionId = revisionId;
 	}
 
-	public java.lang.String getRevision_name() {
-		return revision_name;
+	public java.lang.String getRevisionName() {
+		return revisionName;
 	}
 
-	public void setRevision_name(java.lang.String revision_name) {
-		this.revision_name = revision_name;
+	public void setRevisionName(java.lang.String revisionName) {
+		this.revisionName = revisionName;
 	}
 
-	public int getExtension_id() {
-		return extension_id;
+	public int getExtensionId() {
+		return extensionId;
 	}
 
-	public void setExtension_id(int extension_id) {
-		this.extension_id = extension_id;
+	public void setExtensionId(int extensionId) {
+		this.extensionId = extensionId;
 	}
 
-	public java.lang.String getExtension_name() {
-		return extension_name;
+	public java.lang.String getExtensOnName() {
+		return extensionName;
 	}
 
-	public void setExtension_name(java.lang.String extension_name) {
-		this.extension_name = extension_name;
+	public void setExtensionName(java.lang.String extensionName) {
+		this.extensionName = extensionName;
 	}
 
-	public java.lang.String getAuthor_name() {
-		return author_name;
+	public java.lang.String getAuthorName() {
+		return authorName;
 	}
 
-	public void setAuthor_name(java.lang.String author_name) {
-		this.author_name = author_name;
+	public void setAuthorName(java.lang.String authorName) {
+		this.authorName = authorName;
 	}
 
-	public int getAuthor_id() {
-		return author_id;
+	public int getAuthorId() {
+		return authorId;
 	}
 
-	public void setAuthor_id(int author_id) {
-		this.author_id = author_id;
+	public void setAuthorId(int authorId) {
+		this.authorId = authorId;
 	}
 
-	public java.lang.String getExtension_description() {
-		return extension_description;
+	public java.lang.String getExtensionDescription() {
+		return extensionDescription;
 	}
 
-	public void setExtension_description(java.lang.String extension_description) {
-		this.extension_description = extension_description;
+	public void setExtensionDescription(java.lang.String extensionDescription) {
+		this.extensionDescription = extensionDescription;
 	}
 
-	public java.lang.String getRevision_date() {
-		return revision_date;
+	public java.lang.String getRevisionDate() {
+		return revisionDate;
 	}
 
-	public void setRevision_date(java.lang.String revision_date) {
-		this.revision_date = revision_date;
+	public void setRevisionDate(java.lang.String revisionDate) {
+		this.revisionDate = revisionDate;
 	}
 
 	public java.lang.String getFilename() {
@@ -112,28 +112,28 @@ public class RevisionInfo {
 		this.filename = filename;
 	}
 
-	public java.lang.String getRevision_description() {
-		return revision_description;
+	public java.lang.String getRevisionDescription() {
+		return revisionDescription;
 	}
 
-	public void setRevision_description(java.lang.String revision_description) {
-		this.revision_description = revision_description;
+	public void setRevisionDescription(java.lang.String revisionDescription) {
+		this.revisionDescription = revisionDescription;
 	}
 
-	public java.lang.String getFile_url() {
-		return file_url;
+	public java.lang.String getFileUrl() {
+		return fileUrl;
 	}
 
-	public void setFile_url(java.lang.String file_url) {
-		this.file_url = file_url;
+	public void setFileUrl(java.lang.String fileUrl) {
+		this.fileUrl = fileUrl;
 	}
 
-	public java.lang.String getDownload_url() {
-		return download_url;
+	public java.lang.String getDownloadUrl() {
+		return downloadUrl;
 	}
 
-	public void setDownload_url(java.lang.String download_url) {
-		this.download_url = download_url;
+	public void setDownloadUrl(java.lang.String downloadUrl) {
+		this.downloadUrl = downloadUrl;
 	}  
 
 }

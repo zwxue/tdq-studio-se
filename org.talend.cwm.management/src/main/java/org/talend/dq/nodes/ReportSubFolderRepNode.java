@@ -65,6 +65,10 @@ public class ReportSubFolderRepNode extends RepositoryNode {
                 for (AnalysisMap analysisMap : analysisMaps) {
                     Analysis analysis = analysisMap.getAnalysis();
                     RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+                    // Avoid a NPE mzhao
+                    if (recursiveFind == null) {
+                        continue;
+                    }
                     IRepositoryViewObject viewObject = recursiveFind.getObject();
                     AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
                     anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);

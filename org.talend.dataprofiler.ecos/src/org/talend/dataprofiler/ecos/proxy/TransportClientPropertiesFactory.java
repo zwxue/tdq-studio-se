@@ -17,6 +17,10 @@ import java.util.HashMap;
 import org.apache.axis.AxisProperties;
 import org.apache.axis.components.net.TransportClientProperties;
 
+/**
+ * 
+ * DOC mzhao class global comment. Detailled comment
+ */
 public class TransportClientPropertiesFactory {
 
     private static HashMap<String, TransportClientProperties> cache = new HashMap<String, TransportClientProperties>();

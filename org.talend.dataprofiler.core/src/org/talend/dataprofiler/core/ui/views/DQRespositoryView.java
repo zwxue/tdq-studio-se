@@ -152,7 +152,7 @@ public class DQRespositoryView extends CommonNavigator {
         try {
             addPostWindowCloseListener();
 
-            addResourceChangedListener();
+            // addResourceChangedListener();
 
             initToolBar();
 

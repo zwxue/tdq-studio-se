@@ -15,6 +15,10 @@ package org.talend.dataprofiler.ecos.proxy;
 import org.apache.axis.components.net.TransportClientProperties;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * 
+ * DOC mzhao class global comment. Detailled comment
+ */
 public class DefaultHTTPTransportClientProperties implements TransportClientProperties {
 
     /**

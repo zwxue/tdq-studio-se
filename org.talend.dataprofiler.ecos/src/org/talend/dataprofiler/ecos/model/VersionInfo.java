@@ -18,7 +18,7 @@ package org.talend.dataprofiler.ecos.model;
 public class VersionInfo {
 	int id;
 	String name;
-	int nb_extensions;
+	int nbExtensions;
 
 	
 	public int getId() {
@@ -37,12 +37,12 @@ public class VersionInfo {
 		this.name = name;
 	}
 
-	public int getNb_extensions() {
-		return nb_extensions;
+	public int getNbExtensions() {
+		return nbExtensions;
 	}
 
-	public void setNb_extensions(int nb_extensions) {
-		this.nb_extensions = nb_extensions;
+	public void setNbExtensions(int nbExtensions) {
+		this.nbExtensions = nbExtensions;
 	}
 
 }
