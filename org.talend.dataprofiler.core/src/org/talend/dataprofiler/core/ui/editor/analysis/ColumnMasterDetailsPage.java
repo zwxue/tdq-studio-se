@@ -750,9 +750,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             }
         } else {
             tdProvider = (Connection) analysis.getContext().getConnection();
+            if (tdProvider != null) {
             tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
+            }
         }
         // if (providerList.size() != 0) {
         //
@@ -788,10 +790,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
-            reposObject = RepositoryNodeHelper.recursiveFind(tdProvider).getObject();
-            if (reposObject != null) {
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(tdProvider);
+            if (node != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(node.getObject().getProperty().getItem());
             }
             // AnaResourceFileHelper.getInstance().setResourcesNumberChanged(true
             // );

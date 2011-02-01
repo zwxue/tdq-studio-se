@@ -11,7 +11,7 @@
 
 This wizard prompts you to provide the connection metadata and authentication information and creates a connection to your DBMS (DataBase Management System). Upon completion, the database content is added to the <b>DQ Repository</b> tree view.
       </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction" pluginId="org.talend.dataprofiler.core"   confirm="false" param1="0">
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateDBConnectionAction" pluginId="org.talend.dataprofiler.core"   confirm="false" param1="0">
       </action>
    </item>
    <item title="The Database Content" dialog="true" skip="false" href="http://en.wikipedia.org/wiki/Database_management_system">

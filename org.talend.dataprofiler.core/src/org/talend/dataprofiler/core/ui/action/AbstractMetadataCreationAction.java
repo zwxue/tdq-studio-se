@@ -36,7 +36,7 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
     protected RepositoryNode node;
 
-    private AbstractMetadataCreationAction() {
+    protected AbstractMetadataCreationAction() {
         setText(getActionLabel());
         setImageDescriptor(getActionImage());
     }
@@ -128,6 +128,7 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
         }
         return names;
     }
+
 
     /**
      * DOC bZhou Comment method "createWizard".

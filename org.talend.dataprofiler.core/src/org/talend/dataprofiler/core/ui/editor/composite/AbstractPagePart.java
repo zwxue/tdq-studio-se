@@ -255,7 +255,12 @@ public abstract class AbstractPagePart {
 
             // The newest dataprovider now would be the old one for next
             // time connection changes.
-            tdProvider = (Connection) masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
+            Object connObject = masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
+            if (connObject instanceof RepositoryNode) {
+                tdProvider = ((ConnectionItem) ((RepositoryNode) connObject).getObject().getProperty().getItem()).getConnection();
+            } else if (connObject instanceof Connection) {
+                tdProvider = (Connection) connObject;
+            }
             // MOD mzhao bug 12766, 2010-04-22 save the editor automatically.
             masterPage.doSave(new NullProgressMonitor());
             //

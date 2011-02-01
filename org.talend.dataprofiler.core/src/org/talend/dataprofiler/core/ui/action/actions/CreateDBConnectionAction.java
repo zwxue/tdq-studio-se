@@ -19,8 +19,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -34,6 +36,12 @@ public class CreateDBConnectionAction extends AbstractMetadataCreationAction {
 
     public CreateDBConnectionAction(RepositoryNode node) {
         super(node);
+    }
+
+    public CreateDBConnectionAction() {
+        // MOD by zshen for bug 15750 TODO 39(9) create connection exception by cheat sheet
+        RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.getRepositoryFolderNode(EResourceConstant.DB_CONNECTIONS);
+        super.node = node;
     }
 
     @Override

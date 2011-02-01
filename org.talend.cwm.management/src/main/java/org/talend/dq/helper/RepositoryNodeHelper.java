@@ -74,6 +74,7 @@ import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
@@ -83,6 +84,7 @@ import org.talend.dq.nodes.PatternRegexFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.PatternSqlFolderRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
+import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.RulesFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
@@ -701,6 +703,31 @@ public final class RepositoryNodeHelper {
         return connNodes;
     }
 
+    /**
+     * 
+     * zshen Comment method "getRepositoryFolderNode".
+     * 
+     * @param folderConstant
+     * @return one RepositoryFolderNode which corresponding to the value of folderConstant
+     */
+    public static IRepositoryNode getRepositoryFolderNode(EResourceConstant folderConstant) {
+        String[] folderPathArray = folderConstant.getPath().split("/");
+        if (folderPathArray.length <= 0) {
+            return null;
+        }
+        IRepositoryNode node = getRootNode(folderPathArray[0]);
+        for (int i = 1; folderPathArray.length > i; i++) {
+            for (IRepositoryNode childNode : node.getChildren()) {
+                if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
+                    node = childNode;
+                    break;
+                }
+            }
+        }
+
+        return node;
+    }
+
     public static List<IRepositoryNode> getDataProfilingRepositoryNodes() {
         RepositoryNode node = getRootNode(EResourceConstant.DATA_PROFILING.getName());
         List<IRepositoryNode> dataProfilingNodes = new ArrayList<IRepositoryNode>();
@@ -823,6 +850,9 @@ public final class RepositoryNodeHelper {
         } else if (repositoryNode.getObject() instanceof ISubRepositoryObject) {
             metadataObject = (ISubRepositoryObject) repositoryNode.getObject();
         }
+        if(repositoryNode instanceof DBConnectionRepNode||repositoryNode instanceof DFConnectionRepNode||repositoryNode instanceof MDMConnectionRepNode){
+            return ((ConnectionItem) repositoryNode.getObject().getProperty().getItem()).getConnection();
+        }
         if (metadataObject != null) {
             return metadataObject.getModelElement();
         }
@@ -877,7 +907,7 @@ public final class RepositoryNodeHelper {
     public static boolean canOpenEditor(RepositoryNode node) {
         return node instanceof AnalysisRepNode || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                 || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode || node instanceof RuleRepNode
-                || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode;
+                || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode || node instanceof ReportRepNode;
     }
 
     public static List<IRepositoryNode> getNmaedColumnSetNodes(IRepositoryNode node) {

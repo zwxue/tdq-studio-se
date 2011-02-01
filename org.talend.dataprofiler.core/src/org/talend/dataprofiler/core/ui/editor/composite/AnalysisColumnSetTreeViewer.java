@@ -67,10 +67,12 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.TalendTypeConvert;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * 
@@ -263,12 +265,19 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         Object[] selectItem = currentTree.getSelection();
         List<IRepositoryNode> columnList = columnsElementViewer.getColumnSetMultiValueList();
         int index = 0;
+        RepositoryNode moveElement = null;
         List<Integer> indexArray = new ArrayList<Integer>();
         for (int i = 0; i < selectItem.length; i++) {
             index = currentTree.indexOf((TreeItem) selectItem[i]);
             if (index + step > -1 && index + step < columnList.size()) {
-                RepositoryNode moveElement = (RepositoryNode) ((TreeItem) selectItem[i])
+                Object treeElement = ((TreeItem) selectItem[i])
                         .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                // MOD by zshen for bug 15750 TODO 39 columnset analysis move up/down one column will get exception.
+                if (treeElement instanceof ModelElement) {
+                    moveElement = RepositoryNodeHelper.recursiveFind((ModelElement) treeElement);
+                } else if (treeElement instanceof RepositoryNode) {
+                    moveElement = (RepositoryNode) treeElement;
+                }
                 columnList.remove(moveElement);
                 columnList.add((index + step), moveElement);
                 indexArray.add(index + step);

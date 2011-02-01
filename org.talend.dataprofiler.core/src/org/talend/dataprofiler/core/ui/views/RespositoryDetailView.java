@@ -63,9 +63,11 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -184,13 +186,21 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         boolean is = true;
         if (part instanceof DQRespositoryView) {
             StructuredSelection sel = (StructuredSelection) selection;
+            // MOD by zshen for bug 15750 TODO 39(13) make Detail View can be used.
             Object fe = sel.getFirstElement();
+            if(fe instanceof IRepositoryNode){
+                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode((IRepositoryNode) fe);
+            }
             if (fe instanceof IFile) {
                 IFile fe2 = (IFile) fe;
                 is = createFileDetail(is, fe2);
             } else if (fe instanceof IRepositoryViewObject) {
                 is = createFileDetail(is, (IRepositoryViewObject) fe);
+            } else if (fe instanceof Connection) {
+                createDataProviderDetail((Connection) fe);
+                is = false;
             } else if (fe instanceof Catalog) {
+
                 Catalog catalog = (Catalog) fe;
                 createTdCatalogDetail(catalog);
                 is = false;

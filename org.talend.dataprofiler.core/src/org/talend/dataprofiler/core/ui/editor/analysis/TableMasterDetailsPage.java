@@ -88,6 +88,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -623,10 +624,12 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
         } else {
             tdProvider = (Connection) analysis.getContext().getConnection();
+            if (tdProvider != null) {
             tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
             // analysis.getClientDependency().get(0)
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
+            }
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 
@@ -644,10 +647,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
-            reposObject = RepositoryNodeHelper.recursiveFind(tdProvider).getObject();
-            if (reposObject != null) {
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(tdProvider);
+            if (node != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(node.getObject().getProperty().getItem());
             }
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + urlString + " successful"); //$NON-NLS-1$ //$NON-NLS-2$

@@ -264,9 +264,11 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             }
         } else {
             tdDataProvider = (Connection) analysis.getContext().getConnection();
+            if (tdDataProvider != null) {
             tdDataProvider.getSupplierDependency().get(0).getClient().remove(analysis);
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
+            }
         }
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
@@ -281,10 +283,10 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         }
         if (saved.isOk()) {
             // MOD qiongli bug 14437: save dependency
-            reposObject = RepositoryNodeHelper.recursiveFind(tdDataProvider).getObject();
-            if (reposObject != null) {
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(tdDataProvider);
+            if (node != null) {
                 // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(reposObject.getProperty().getItem());
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(node.getObject().getProperty().getItem());
             }
             log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
         }
