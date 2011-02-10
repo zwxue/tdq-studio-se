@@ -37,6 +37,7 @@ import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ISubRepositoryObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
@@ -90,6 +91,7 @@ import org.talend.dq.nodes.RulesFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -791,7 +793,6 @@ public final class RepositoryNodeHelper {
                         }
                     }
 
-
                 }
 
             }
@@ -850,7 +851,8 @@ public final class RepositoryNodeHelper {
         } else if (repositoryNode.getObject() instanceof ISubRepositoryObject) {
             metadataObject = (ISubRepositoryObject) repositoryNode.getObject();
         }
-        if(repositoryNode instanceof DBConnectionRepNode||repositoryNode instanceof DFConnectionRepNode||repositoryNode instanceof MDMConnectionRepNode){
+        if (repositoryNode instanceof DBConnectionRepNode || repositoryNode instanceof DFConnectionRepNode
+                || repositoryNode instanceof MDMConnectionRepNode) {
             return ((ConnectionItem) repositoryNode.getObject().getProperty().getItem()).getConnection();
         }
         if (metadataObject != null) {
@@ -877,6 +879,27 @@ public final class RepositoryNodeHelper {
                 }
             }
 
+        }
+        return node;
+    }
+
+    public static RepositoryNode getRootNode(ERepositoryObjectType nodeName) {
+        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                ProjectManager.getInstance().getCurrentProject(), nodeName, Path.EMPTY);
+        RepositoryNode node = null;
+        CommonViewer commonViewer = getDQCommonViewer();
+        if (commonViewer != null) {
+            TreeItem[] items = commonViewer.getTree().getItems();
+            for (TreeItem item : items) {
+                node = (RepositoryNode) item.getData();
+                String viewFolderID = node.getObject().getProperty().getId();
+                if (folderItem != null) {
+                    String folderID = folderItem.getProperty().getId();
+                    if (viewFolderID.equals(folderID)) {
+                        return node;
+                    }
+                }
+            }
         }
         return node;
     }
