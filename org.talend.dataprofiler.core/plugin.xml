@@ -59,6 +59,12 @@
 	         <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.startsWithDot"/>
 	         <contentExtension pattern="org.eclipse.ui.navigator.resources.filters.htmlFolder"/>	         
 	         <contentExtension pattern="org.eclipse.ui.navigator.resources.linkHelper" />
+          <contentExtension
+                pattern="org.talend.dataprofiler.core.ui.editor.DQEditorLinkHelper">
+          </contentExtension>
+          <actionExtension
+                pattern="org.talend.dataprofiler.core.ui.editor.DQEditorLinkHelper">
+          </actionExtension>
           </includes>
        </viewerContentBinding>
        <viewerActionBinding
@@ -1276,6 +1282,36 @@
            class="org.talend.dataprofiler.core.service.TOPRepositoryService"
            serviceId="org.talend.core.ITDQRepositoryService">
      </Service>
+  </extension>
+  <extension
+        point="org.eclipse.ui.navigator.linkHelper">
+     <linkHelper
+           class="org.talend.dataprofiler.core.ui.editor.DQEditorLinkHelper"
+           id="org.talend.dataprofiler.core.ui.editor.DQEditorLinkHelper">
+        <editorInputEnablement>
+           <instanceof
+                 value="org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput">
+           </instanceof></editorInputEnablement>
+        <selectionEnablement>
+           <or>
+              <instanceof
+                    value="org.talend.dq.nodes.AnalysisRepNode">
+              </instanceof>
+              <instanceof
+                    value="org.talend.dq.nodes.ReportRepNode">
+              </instanceof>
+              <instanceof
+                    value="org.talend.dq.nodes.DBConnectionRepNode">
+              </instanceof>
+              <instanceof
+                    value="org.talend.dq.nodes.PatternRepNode">
+              </instanceof>
+              <instanceof
+                    value="org.talend.dq.nodes.SysIndicatorDefinitionRepNode">
+              </instanceof>
+           </or>
+        </selectionEnablement>
+     </linkHelper>
   </extension>
 
 </plugin>

@@ -80,6 +80,22 @@ public class OpenItemEditorAction extends Action {
 
     @Override
     public void run() {
+        computeEditorInput();
+        if (editorInput != null) {
+            CorePlugin.getDefault().openEditor(editorInput, editorID);
+        } else {
+            IPath append = WorkbenchUtils.getFilePath((RepositoryNode) reposViewObj.getRepositoryNode());
+            fileEditorInput = ResourceManager.getRootProject().getFile(append);
+            try {
+                IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileEditorInput, true);
+            } catch (PartInitException e) {
+                log.error(e, e);
+            }
+        }
+
+    }
+
+    public AbstractItemEditorInput computeEditorInput() {
         // Connection editor
         String key = reposViewObj.getRepositoryObjectType().getKey();
         Item item = reposViewObj.getProperty().getItem();
@@ -138,24 +154,8 @@ public class OpenItemEditorAction extends Action {
         } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
             editorInput = new PatternItemEditorInput(item);
             editorID = PatternEditor.class.getName();
-        } else /*
-                * if (ERepositoryObjectType.TDQ_JRXMLTEMPLATE.getKey().equals(key) ||
-                * ERepositoryObjectType.TDQ_SOURCE_FILES.getKey().equals(key) ||
-                * ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key))
-                */{
-            IPath append = WorkbenchUtils.getFilePath((RepositoryNode) reposViewObj.getRepositoryNode());
-            fileEditorInput = ResourceManager.getRootProject().getFile(append);
         }
-        if (editorInput != null) {
-            CorePlugin.getDefault().openEditor(editorInput, editorID);
-        } else {
-            try {
-                IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileEditorInput, true);
-            } catch (PartInitException e) {
-                log.error(e, e);
-            }
-        }
-
+        return editorInput;
     }
 
     /**
