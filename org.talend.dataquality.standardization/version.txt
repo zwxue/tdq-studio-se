@@ -1,2 +1,8 @@
+1.5.1 # ytao modified
+- update java doc of deleteDocumentByWord process
+- modified insertDocument process,
+ remove a clause and change to commit the document immediately
+- add java doc for closeIndex process
+
 # Talend firsName standardization library version
 1.5.0

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.TermVector;
@@ -33,6 +34,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 
 /**
  * @author scorreia A class to create an index with synonyms.
@@ -166,18 +168,19 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     public void insertDocument(String word, String synonyms) throws IOException {
-        if (usingCreateMode) {
-            getWriter().addDocument(generateDocument(word, synonyms));
-            System.out.println("The document <" + word + "> is now inserted.");
-        } else {
+        // no need this clause
+//    	if (usingCreateMode) {
+//            getWriter().addDocument(generateDocument(word, synonyms));
+//            System.out.println("The document <" + word + "> is now inserted.");
+//        } else {
             if (searchDocumentByWord(word).totalHits == 0) {
                 getWriter().addDocument(generateDocument(word, synonyms));
+                getWriter().commit(); // avoid to insert duplicate document
                 System.out.println("The document <" + word + "> is now inserted.");
-
             } else {
                 System.err.println("The document <" + word + "> already exists and is ignored.");
             }
-        }
+        //}
     }
 
     /**
@@ -212,7 +215,7 @@ public class SynonymIndexBuilder {
     }
 
     /**
-     * delete an entire document by one of the synonyms.
+     * delete an entire document by word.
      * 
      * @param word
      * @throws IOException
@@ -343,9 +346,19 @@ public class SynonymIndexBuilder {
         return doc;
     }
 
+    /**ADDED BY ytao 2011/02/11
+     * If only need to initialize the index, do nothing after fold open,
+     * but just invoke this method at the end, index will be reset. 
+     * 
+     * (Ensure that usingCreateMode is true)
+     * 
+     * Not sure that the index is deleted and recreated, may be just delete all documents of index 
+     * since the index files are "_1a.cfs" and "segments.gen" and "segments_1e"
+     * currently, if these files are not exists, API will not work. something need to TODO 
+     */
     public void closeIndex() throws IOException {
         this.getWriter().optimize();
-        this.getWriter().close();
+        this.getWriter().close();   
     }
 
     public void commit() throws IOException {
@@ -363,9 +376,9 @@ public class SynonymIndexBuilder {
             // the entry and the synonyms are indexed as provided
             // analyzer = new KeywordAnalyzer();
 
-            // analyzer = new StandardAnalyzer(Version.LUCENE_30);
+            analyzer = new StandardAnalyzer(Version.LUCENE_30);
 
-            analyzer = new SynonymAnalyzer();
+            // analyzer = new SynonymAnalyzer();
         }
         return this.analyzer;
     }
