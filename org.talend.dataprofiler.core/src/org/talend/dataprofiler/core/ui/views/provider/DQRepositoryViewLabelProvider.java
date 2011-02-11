@@ -50,9 +50,12 @@ import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternLanguageRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
+import org.talend.dq.nodes.ReportAnalysisRepNode;
+import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -76,6 +79,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             IRepositoryNode node = (IRepositoryNode) element;
             IRepositoryViewObject viewObject = node.getObject();
             ENodeType type = node.getType();
+            if (node instanceof ReportAnalysisRepNode) {
+                return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+            }
             if (element instanceof RecycleBinRepNode) {
                 return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
             } else if (type.equals(ENodeType.SYSTEM_FOLDER)) {
@@ -192,14 +198,16 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             } else if (node instanceof AnalysisFolderRepNode) {
                 return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
             } else if (node instanceof ReportFolderRepNode) {
-                return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
-            } else if (node instanceof ReportSubFolderRepNode) {
-                ReportSubFolderRepNode repSubNode = (ReportSubFolderRepNode) node;
-                IRepositoryViewObject object = node.getObject();
-                if (object == null) {
-                    return (String) node.getProperties(EProperties.LABEL) + repSubNode.getCount();
+                if (node instanceof ReportSubFolderRepNode) {
+                    ReportSubFolderRepNode repSubNode = (ReportSubFolderRepNode) node;
+                    if (!ReportSubFolderType.SUB_FOLDER.equals(repSubNode.getReportSubFolderType())) {
+                        return (String) node.getProperties(EProperties.LABEL) + repSubNode.getCount();
+                    }
                 }
+                return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
             } else if (node instanceof PatternLanguageRepNode) {
+                return node.getLabel();
+            } else if (node instanceof ReportFileRepNode || node instanceof ReportAnalysisRepNode) {
                 return node.getLabel();
             }
             String label = node.getObject().getLabel();

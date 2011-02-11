@@ -21,6 +21,8 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.action.actions.DuplicateAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.ReportAnalysisRepNode;
+import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -82,6 +84,9 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
             }
             RepositoryNode parent = node.getParent();
             if ((parent instanceof ReportSubFolderRepNode) && (node instanceof AnalysisRepNode)) {
+                return false;
+            }
+            if (node instanceof ReportFileRepNode || node instanceof ReportAnalysisRepNode) {
                 return false;
             }
         }

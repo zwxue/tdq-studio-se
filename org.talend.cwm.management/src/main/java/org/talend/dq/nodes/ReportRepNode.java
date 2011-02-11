@@ -19,6 +19,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -57,17 +58,20 @@ public class ReportRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        List<IRepositoryNode> anaElement = new ArrayList<IRepositoryNode>();
+        List<IRepositoryNode> childrenNodes = new ArrayList<IRepositoryNode>();
         ReportSubFolderRepNode anaNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
         anaNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORTS);
         anaNodeFolder.setProperties(EProperties.LABEL, ANA_FLODER);
-        anaElement.add(anaNodeFolder);
+        anaNodeFolder.setReportSubFolderType(ReportSubFolderType.ANALYSIS);
+        anaNodeFolder.setReport(this.getReport());
+        childrenNodes.add(anaNodeFolder);
         ReportSubFolderRepNode grenNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
         grenNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORTS);
         grenNodeFolder.setProperties(EProperties.LABEL, GEN_FLODER);
-        anaElement.add(grenNodeFolder);
-        return anaElement;
-        // return super.getChildren();
+        grenNodeFolder.setReportSubFolderType(ReportSubFolderType.GENERATED_DOCS);
+        grenNodeFolder.setReport(this.getReport());
+        childrenNodes.add(grenNodeFolder);
+        return childrenNodes;
     }
 
     @Override

@@ -370,7 +370,7 @@ public final class ReportHelper {
      * @param report
      * @return a list of analyses or an empty list. Do not use this list to add analysis to the report.
      */
-    public static List<Analysis> getAnalyses(TdReport report) {
+    public static List<Analysis> getAnalyses(Report report) {
         List<Analysis> analyses = new ArrayList<Analysis>();
         EList<RenderedObject> components = report.getComponent();
         for (RenderedObject renderedObject : components) {

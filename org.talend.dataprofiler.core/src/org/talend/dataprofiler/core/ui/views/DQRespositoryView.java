@@ -86,6 +86,7 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.RepositoryWorkUnit;
@@ -336,18 +337,27 @@ public class DQRespositoryView extends CommonNavigator {
                             log.error(e1, e1);
                         }
                     }
+
                     if (obj instanceof IRepositoryViewObject) {
                         OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject) obj);
                         openItemEditorAction.run();
                     }
+
                     if (obj instanceof RepositoryNode) {
-                        RepositoryNode repoNode = (RepositoryNode) obj;
-                        if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
-                            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
-                            openItemEditorAction.run();
+                        if (obj instanceof ReportFileRepNode) {
+                            ReportFileRepNode reportFileNode = (ReportFileRepNode) obj;
+                            IResource resource = reportFileNode.getResource();
+                            item.setData(resource);
+                        } else {
+                            RepositoryNode repoNode = (RepositoryNode) obj;
+                            if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
+                                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
+                                openItemEditorAction.run();
+                            }
                         }
                     }
                 }
+
                 super.mouseDoubleClick(e);
             }
         });

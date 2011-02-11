@@ -15,26 +15,52 @@ package org.talend.dq.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.common.util.EList;
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dataquality.reports.AnalysisMap;
-import org.talend.dataquality.reports.TdReport;
-import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dq.helper.ReportUtils;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import orgomg.cwm.foundation.businessinformation.Document;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class ReportSubFolderRepNode extends RepositoryNode {
+public class ReportSubFolderRepNode extends ReportFolderRepNode {
 
-    private List<IRepositoryNode> anaElement;
+    private static Logger log = Logger.getLogger(ReportSubFolderRepNode.class);
 
-    private EList<AnalysisMap> analysisMaps;
+    private ReportSubFolderType reportSubFolderType;
+
+    public ReportSubFolderType getReportSubFolderType() {
+        return this.reportSubFolderType;
+    }
+
+    public void setReportSubFolderType(ReportSubFolderType reportSubFolderType) {
+        this.reportSubFolderType = reportSubFolderType;
+    }
+
+    private Report report;
+
+    public Report getReport() {
+        return this.report;
+    }
+
+    public void setReport(Report report) {
+        this.report = report;
+    }
+
+    private List<IRepositoryNode> reportSubFolderChildren = new ArrayList<IRepositoryNode>();
+
+    public List<IRepositoryNode> getReportSubFolderChildren() {
+        return this.reportSubFolderChildren;
+    }
 
     /**
      * DOC klliu ReportSubFolderRepNode constructor comment.
@@ -45,6 +71,7 @@ public class ReportSubFolderRepNode extends RepositoryNode {
      */
     public ReportSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        this.reportSubFolderType = ReportSubFolderType.SUB_FOLDER;
     }
 
     /*
@@ -54,63 +81,148 @@ public class ReportSubFolderRepNode extends RepositoryNode {
      */
     @Override
     public List<IRepositoryNode> getChildren() {
-        anaElement = new ArrayList<IRepositoryNode>();
-        IRepositoryViewObject reportViewObject = this.getObject();
-        if (reportViewObject == null) {
-            ReportRepNode parent = (ReportRepNode) this.getParent();
-            TDQReportItem reportItem = (TDQReportItem) parent.getObject().getProperty().getItem();
-            TdReport report = (TdReport) reportItem.getReport();
-            if (this.getProperties(EProperties.LABEL).equals(parent.ANA_FLODER)) {
-                // EList<AnalysisMap> analysisMaps = report.getAnalysisMap();
-                for (AnalysisMap analysisMap : analysisMaps) {
-                    Analysis analysis = analysisMap.getAnalysis();
-                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
-                    // Avoid a NPE mzhao
-                    if (recursiveFind == null) {
-                        continue;
+        if (this.getReport() != null) {
+            try {
+                if (ReportSubFolderType.ANALYSIS.equals(getReportSubFolderType())) {
+                    buildChildrenAnalysis(ReportHelper.getAnalyses(this.getReport()));
+                } else if (ReportSubFolderType.GENERATED_DOCS.equals(getReportSubFolderType())) {
+                    IResource[] repFiles = ReportUtils.getReportListFiles(RepResourceFileHelper.getInstance()
+                            .findCorrespondingFile(this.getReport()));
+                    if (repFiles == null || repFiles.length == 0) {
+                        loadChildrenLocalFolder();
+                    } else {
+                        buildChildrenReportFile(repFiles);
                     }
-                    IRepositoryViewObject viewObject = recursiveFind.getObject();
-                    AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                    anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                    anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                    viewObject.setRepositoryNode(anaNode);
-                    anaElement.add(anaNode);
                 }
-            } else {
-                EList<Document> documents = report.getDocument();
-                for (Document document : documents) {
-                    // FIXME need to add document node
-                }
+            } catch (Exception e) {
+                log.warn(e, e);
             }
-            return anaElement;
-
+            return this.getReportSubFolderChildren();
+        } else {
+            return super.getChildren();
         }
-        return super.getChildren();
+    }
+
+    /**
+     * build RepositoryNode(Analysis) children according to IResource array.
+     * 
+     * @param analyses
+     * @return
+     */
+    private List<IRepositoryNode> buildChildrenAnalysis(List<Analysis> analyses) {
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        for (Analysis analysis : analyses) {
+            ReportAnalysisRepNode node = new ReportAnalysisRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            node.setReport(this.getReport());
+            node.setAnalysis(analysis);
+            node.setId(this.getReport().getName() + analysis.getName());
+            nodes.add(node);
+        }
+        if (nodes.size() > 0) {
+            this.getReportSubFolderChildren().clear();
+            this.getReportSubFolderChildren().addAll(nodes);
+        }
+        return this.getReportSubFolderChildren();
+    }
+
+    /**
+     * build RepositoryNode(Report File) children according to IResource array.
+     * 
+     * @param repFiles
+     * @return
+     */
+    private List<IRepositoryNode> buildChildrenReportFile(IResource[] repFiles) {
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        for (IResource res : repFiles) {
+            ReportFileRepNode node = new ReportFileRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            node.setResource(res);
+            node.setId(res.getFullPath().toOSString());
+            nodes.add(node);
+        }
+        if (nodes.size() > 0) {
+            this.getReportSubFolderChildren().clear();
+            this.getReportSubFolderChildren().addAll(nodes);
+        }
+        return this.getReportSubFolderChildren();
+    }
+
+    /**
+     * load report file form default folder of the Report.
+     */
+    private void loadChildrenLocalFolder() {
+        IFolder currentRportFolder = ReportHelper.getOutputFolder(RepResourceFileHelper.getInstance().findCorrespondingFile(
+                this.getReport()));
+        if (!currentRportFolder.exists()) {
+            return;
+        }
+
+        try {
+            IResource[] members = currentRportFolder.members();
+            List<IResource> children = new ArrayList<IResource>();
+            for (IResource member : members) {
+                if (member.getType() == IResource.FOLDER || member.getName().equals(ReportUtils.REPORT_LIST)) {
+                    continue;
+                }
+                children.add(member);
+            }
+            buildChildrenReportFile(children.toArray(new IResource[children.size()]));
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
     }
 
     public String getCount() {
-        IRepositoryViewObject reportViewObject = this.getObject();
-        if (reportViewObject == null) {
-            ReportRepNode parent = (ReportRepNode) this.getParent();
-            TDQReportItem reportItem = (TDQReportItem) parent.getObject().getProperty().getItem();
-            TdReport report = (TdReport) reportItem.getReport();
-            if (this.getProperties(EProperties.LABEL).equals(parent.ANA_FLODER)) {
-                analysisMaps = report.getAnalysisMap();
-            } else {
-                return "(" + 0 + ")";
-            }
-        }
-        return "(" + analysisMaps.size() + ")";
+        return "(" + this.getChildren().size() + ")";
     }
 
     @Override
     public String getLabel() {
         if (this.getObject() != null) {
-            this.getObject().getLabel();
+            return this.getObject().getLabel();
         }
         if (getObjectType() == null) {
             return ERepositoryObjectType.TDQ_FOLDER_NODE.toString();
         }
         return super.getLabel();
+    }
+
+    /**
+     * ReportSubFolder's type enum.
+     */
+    public enum ReportSubFolderType {
+
+        SUB_FOLDER("report.subFolder", "report.subFolder.alias"), //$NON-NLS-1$ //$NON-NLS-2$
+        ANALYSIS("report.analysis", "report.analysis.alias"), //$NON-NLS-1$ //$NON-NLS-2$
+        GENERATED_DOCS("report.generatedDocs", "report.generatedDocs.alias"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        private String key;
+
+        private String alias;
+
+        public String getKey() {
+            return this.key;
+        }
+
+        public String getAlias() {
+            return this.alias;
+        }
+
+        ReportSubFolderType(String key) {
+            this(key, key);
+        }
+
+        ReportSubFolderType(String key, String alias) {
+            this.key = key;
+            this.alias = alias;
+        }
+
+        public static ReportSubFolderType getTypeFromKey(String key) {
+            for (ReportSubFolderType type : ReportSubFolderType.values()) {
+                if (type.getKey().equals(key)) {
+                    return type;
+                }
+            }
+            return null;
+        }
     }
 }
