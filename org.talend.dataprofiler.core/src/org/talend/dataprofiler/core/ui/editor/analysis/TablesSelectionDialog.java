@@ -38,6 +38,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
@@ -59,7 +60,6 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -71,7 +71,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private Map<RepositoryNodeKey, TableCheckedMap> packageCheckedMap;
 
-    private RepositoryNode metadataFolder = RepositoryNodeHelper.getRootNode(EResourceConstant.METADATA.getName());
+    private RepositoryNode metadataFolder = RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA);
 
     private TableSelectionType tableType;
 

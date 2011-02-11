@@ -80,13 +80,14 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
                     if (tdProvider != null && schemaPanameter != null) {
                         if (parent instanceof DBCatalogRepNode) {
-                            nodes.add(parent);
+                            schemaPanameter.setConnectionRepNode((DBConnectionRepNode) parent.getParent());
+                        } else {
+                            schemaPanameter.setConnectionRepNode((DBConnectionRepNode) parent);
                         }
                         schemaPanameter.setTdDataProvider(tdProvider);
-                        schemaPanameter.setConnectionRepNode((DBConnectionRepNode) parent);
-                        schemaPanameter.setPackages(nodes);
                     }
                     nodes.add(schemaNode);
+                    schemaPanameter.setPackages(nodes);
                     setPageComplete(true);
                 } else {
                     setPageComplete(false);

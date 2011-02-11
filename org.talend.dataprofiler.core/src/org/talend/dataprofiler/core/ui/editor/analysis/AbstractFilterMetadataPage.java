@@ -89,14 +89,17 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -579,14 +582,29 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
                 public void selectionChanged(SelectionChangedEvent event) {
                     StructuredSelection selection = (StructuredSelection) event.getSelection();
-                    CatalogIndicator firstElement = (CatalogIndicator) selection.getFirstElement();
-                    // MOD qiongli bug 13093,2010-7-2,
-                    currentCatalogIndicator = (SchemaIndicator) selection.getFirstElement();
-                    // MOD xqliu 2009-11-30 bug 9114
+                    OverviewIndUIElement firstElement = (OverviewIndUIElement) selection.getFirstElement();
+                    List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
                     if (firstElement != null) {
-                        schemaTableViewer.setInput(firstElement.getSchemaIndicators());
-                        schemaTableViewer.getTable().setVisible(true);
-                        addColumnSorters(schemaTableViewer, schemaTableViewer.getTable().getColumns(), schemaSorters);
+                        Indicator overviewIndicator = firstElement.getOverviewIndicator();
+                        CatalogIndicator catalogIndicator = (CatalogIndicator) overviewIndicator;// selection.getFirstElement();
+                        // MOD qiongli bug 13093,2010-7-2,
+                        currentCatalogIndicator = (SchemaIndicator) overviewIndicator; // selection.getFirstElement();
+                        // MOD xqliu 2009-11-30 bug 9114
+                        if (catalogIndicator != null) {
+                            EList<SchemaIndicator> schemaIndicators = catalogIndicator.getSchemaIndicators();
+                            for (SchemaIndicator schemaIndicator : schemaIndicators) {
+                                RepositoryNode schemaNode = RepositoryNodeHelper.recursiveFind(schemaIndicator
+                                        .getAnalyzedElement());
+                                OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+                                cataUIEle.setNode(schemaNode);
+                                cataUIEle.setOverviewIndicator(schemaIndicator);
+                                cataUIEleList.add(cataUIEle);
+                            }
+                            // schemaTableViewer.setInput(catalogIndicator.getSchemaIndicators());
+                            schemaTableViewer.setInput(cataUIEleList);
+                            schemaTableViewer.getTable().setVisible(true);
+                            addColumnSorters(schemaTableViewer, schemaTableViewer.getTable().getColumns(), schemaSorters);
+                        }
                     }
                     // ~
                 }
@@ -904,7 +922,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     runTableAnalysis(data);
                 }
 
-
             });
 
             cursor.addMenuDetectListener(new MenuDetectListener() {
@@ -1202,6 +1219,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         new AnalyzeColumnSetAction(data.getNode()).run();
     }
+
     /**
      * DOC yyi Comment method "runTableAnalysis".
      * 

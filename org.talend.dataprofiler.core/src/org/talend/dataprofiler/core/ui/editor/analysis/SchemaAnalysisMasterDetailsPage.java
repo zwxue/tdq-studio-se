@@ -19,15 +19,12 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -81,17 +78,19 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
                 .getAnalyzedElement()));
         RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(connection);
         for (Indicator indicator : indicators) {
-            for (IRepositoryNode schemaNode : connNode.getChildren()) {
-                String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema());
-                String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
-                if (nodeUuid.equals(anaUuid)) {
-                    OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
-                    cataUIEle.setNode(schemaNode);
-                    cataUIEle.setOverviewIndicator(indicator);
-                    cataUIEleList.add(cataUIEle);
-                    break;
-                }
-            }
+            // for (IRepositoryNode schemaNode : connNode.getChildren()) {
+            // String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject)
+            // schemaNode.getObject()).getSchema());
+            // String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
+            // if (nodeUuid.equals(anaUuid)) {
+            RepositoryNode schemaNode = RepositoryNodeHelper.recursiveFind(indicator.getAnalyzedElement());
+            OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
+            cataUIEle.setNode(schemaNode);
+            cataUIEle.setOverviewIndicator(indicator);
+            cataUIEleList.add(cataUIEle);
+            // break;
+            // }
+            // }
         }
         return cataUIEleList;
     }

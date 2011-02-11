@@ -691,7 +691,7 @@ public final class RepositoryNodeHelper {
      */
 
     public static List<IRepositoryNode> getConnectionRepositoryNodes() {
-        RepositoryNode node = getRootNode(EResourceConstant.METADATA.getName());
+        RepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
         List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
@@ -717,7 +717,7 @@ public final class RepositoryNodeHelper {
         if (folderPathArray.length <= 0) {
             return null;
         }
-        IRepositoryNode node = getRootNode(folderPathArray[0]);
+        IRepositoryNode node = getRootNode(ERepositoryObjectType.METADATA_CONNECTIONS);
         for (int i = 1; folderPathArray.length > i; i++) {
             for (IRepositoryNode childNode : node.getChildren()) {
                 if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
@@ -731,7 +731,7 @@ public final class RepositoryNodeHelper {
     }
 
     public static List<IRepositoryNode> getDataProfilingRepositoryNodes() {
-        RepositoryNode node = getRootNode(EResourceConstant.DATA_PROFILING.getName());
+        RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING);// t.DATA_PROFILING.getName());
         List<IRepositoryNode> dataProfilingNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
@@ -757,7 +757,7 @@ public final class RepositoryNodeHelper {
     // }
 
     public static List<IRepositoryNode> getPatternsRepositoryNodes() {
-        RepositoryNode node = getRootNode(EResourceConstant.LIBRARIES.getName());
+        RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);// .LIBRARIES.getName());
         List<IRepositoryNode> patternsNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
@@ -779,7 +779,7 @@ public final class RepositoryNodeHelper {
     }
 
     public static List<IRepositoryNode> getUdisRepositoryNodes() {
-        RepositoryNode node = getRootNode(EResourceConstant.LIBRARIES.getName());
+        RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);// EResourceConstant.LIBRARIES.getName());
         List<IRepositoryNode> udisNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
@@ -866,23 +866,6 @@ public final class RepositoryNodeHelper {
      * 
      * @return
      */
-    public static RepositoryNode getRootNode(String nodeName) {
-        RepositoryNode node = null;
-        CommonViewer commonViewer = getDQCommonViewer();
-        if (commonViewer != null) {
-            TreeItem[] items = commonViewer.getTree().getItems();
-            for (TreeItem item : items) {
-                String text = item.getText();
-                if (text.equalsIgnoreCase(nodeName)) {
-                    node = (RepositoryNode) item.getData();
-                    return node;
-                }
-            }
-
-        }
-        return node;
-    }
-
     public static RepositoryNode getRootNode(ERepositoryObjectType nodeName) {
         FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
                 ProjectManager.getInstance().getCurrentProject(), nodeName, Path.EMPTY);
