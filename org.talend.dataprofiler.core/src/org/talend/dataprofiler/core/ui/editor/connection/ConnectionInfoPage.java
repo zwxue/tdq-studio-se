@@ -231,7 +231,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         });
 
-        if (JavaSqlFactory.getDriverClass(connection).startsWith("org.sqlite")) { //$NON-NLS-1$
+        String driverClass = JavaSqlFactory.getDriverClass(connection);
+        if (driverClass != null && driverClass.startsWith("org.sqlite")) { //$NON-NLS-1$
             loginText.setEnabled(false);
             passwordText.setEnabled(false);
         }

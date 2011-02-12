@@ -23,18 +23,15 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.markers.MarkerViewUtil;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.TdResourceModel;
 import org.talend.dataprofiler.core.ui.dialog.TdTaskPropertiesDialog;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 @SuppressWarnings("restriction")
@@ -60,24 +57,29 @@ public class TdAddTaskAction extends Action {
             // TaskPropertiesDialog dialog = new TaskPropertiesDialog(newTree.getShell());
             ModelElement modelElement = null;
             IFile file = null;
-            if (navObj instanceof IFile) {
-                file = (IFile) navObj;
-                String fileExtension = file.getFileExtension();
-                if (FactoriesUtil.isAnalysisFile(fileExtension)) {
-                    modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
-                } else if (FactoriesUtil.isReportFile(fileExtension)) {
-                    modelElement = RepResourceFileHelper.getInstance().findReport(file);
-                }
-
-            } else if (navObj instanceof ModelElement) {
-                modelElement = (ModelElement) navObj;
-                // MOD qiongli 2011-1-10 feature 16796.for DelimitedFile ModelElement.
-                if (modelElement.getName() == null) {
-                    modelElement.setName(ModelElementHelper.getName(modelElement));
-                }
-
+            // if (navObj instanceof IFile) {
+            // file = (IFile) navObj;
+            // String fileExtension = file.getFileExtension();
+            // if (FactoriesUtil.isAnalysisFile(fileExtension)) {
+            // modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
+            // } else if (FactoriesUtil.isReportFile(fileExtension)) {
+            // modelElement = RepResourceFileHelper.getInstance().findReport(file);
+            // }
+            //
+            // } else if (navObj instanceof ModelElement) {
+            // modelElement = (ModelElement) navObj;
+            // // MOD qiongli 2011-1-10 feature 16796.for DelimitedFile ModelElement.
+            // if (modelElement.getName() == null) {
+            // modelElement.setName(ModelElementHelper.getName(modelElement));
+            // }
+            //
+            // file = WorkspaceUtils.getModelElementResource(modelElement);
+            //
+            // }
+            if (navObj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) navObj;
+                modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
                 file = WorkspaceUtils.getModelElementResource(modelElement);
-
             }
             if (modelElement != null) {
                 TdResourceModel tdResModel = new TdResourceModel(file.getFullPath(), (Workspace) file.getWorkspace(),

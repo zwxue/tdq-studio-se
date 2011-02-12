@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IPath;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 @SuppressWarnings("restriction")

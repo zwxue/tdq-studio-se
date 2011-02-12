@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.markers.internal.MarkerMessages;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 @SuppressWarnings("restriction")

@@ -12,20 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
-import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.dataquality.properties.TDQAnalysisItem;
-import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
 
 /**
  * 
@@ -67,18 +63,34 @@ public class ModelElementTaskProvider extends AbstractCommonActionProvider {
         Object firstElement = currentSelection.getFirstElement();
         if (firstElement instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) firstElement;
-            RepositoryNode parent = node.getParent();
-            if (!(parent instanceof ReportSubFolderRepNode)) {
-                Item item = node.getObject().getProperty().getItem();
-                if (item instanceof TDQAnalysisItem || item instanceof TDQReportItem || item instanceof ConnectionItem) {
-                    IPath append = WorkbenchUtils.getFilePath(node);
-                    IFile file = ResourceManager.getRootProject().getFile(append);
-                    addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), file);
-                    menu.add(addTaskAction);
-
-                }
+            if (shouldShowAddTask(node)) {
+                addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), node);
+                menu.add(addTaskAction);
             }
+            // RepositoryNode parent = node.getParent();
+            // if (!(parent instanceof ReportSubFolderRepNode)) {
+            // Item item = node.getObject().getProperty().getItem();
+            // if (item instanceof TDQAnalysisItem || item instanceof TDQReportItem || item instanceof ConnectionItem) {
+            // // IPath append = WorkbenchUtils.getFilePath(node);
+            // // IFile file = ResourceManager.getRootProject().getFile(append);
+            // // addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), file);
+            // addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), node);
+            // menu.add(addTaskAction);
+            //
+            // }
+            // }
 
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "shouldShowAddTask".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean shouldShowAddTask(RepositoryNode node) {
+        return (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof MDMConnectionRepNode
+                || node instanceof DBConnectionRepNode || node instanceof DFConnectionRepNode);
     }
 }

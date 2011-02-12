@@ -598,6 +598,9 @@
                <instanceof
                      value="org.talend.dq.nodes.MDMConnectionRepNode">
                </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DFConnectionRepNode">
+               </instanceof>
             </or>
          </enablement>
       </actionProvider>
