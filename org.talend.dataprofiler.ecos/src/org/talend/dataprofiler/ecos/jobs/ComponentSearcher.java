@@ -87,13 +87,13 @@ public class ComponentSearcher {
             Map<String, IEcosComponent> extensionsMap = new HashMap<String, IEcosComponent>();
 
             for (RevisionInfo revision : revisions) {
-                IEcosComponent extension = extensionsMap.get(revision.getExtensOnName());
+                IEcosComponent extension = extensionsMap.get(revision.getExtenson_name());
                 if (extension == null) {
                     extension = new EcosComponent();
-                    extension.setName(revision.getExtensOnName());
-                    extension.setAuthor(revision.getAuthorName());
+                    extension.setName(revision.getExtenson_name());
+                    extension.setAuthor(revision.getAuthor_name());
                     extension.setCategry(categry);
-                    extension.setDescription(revision.getExtensionDescription());
+                    extension.setDescription(revision.getExtension_description());
 
                     extensionsMap.put(extension.getName(), extension);
                     extensions.add(extension);
@@ -123,11 +123,11 @@ public class ComponentSearcher {
      */
     private static IRevision convertRevision(RevisionInfo revision) throws ParseException {
         IRevision rev = new Revision();
-        rev.setDate(formatter.parse(revision.getRevisionDate()));
-        rev.setName(revision.getRevisionName());
-        rev.setUrl(revision.getDownloadUrl());
-        rev.setDescription(revision.getRevisionDescription());
-        rev.setId(revision.getRevisionId());
+        rev.setDate(formatter.parse(revision.getRevision_date()));
+        rev.setName(revision.getRevision_name());
+        rev.setUrl(revision.getDownload_url());
+        rev.setDescription(revision.getRevision_description());
+        rev.setId(revision.getRevision_id());
         rev.setFileName(revision.getFilename());
         return rev;
     }
