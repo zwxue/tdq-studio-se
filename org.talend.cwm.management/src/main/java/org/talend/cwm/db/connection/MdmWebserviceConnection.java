@@ -38,7 +38,6 @@ import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -46,13 +45,17 @@ import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.cwm.xml.XmlFactory;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.mdm.webservice.WSComponent;
 import org.talend.mdm.webservice.WSDataClusterPK;
 import org.talend.mdm.webservice.WSDataModelPK;
+import org.talend.mdm.webservice.WSGetComponentVersion;
 import org.talend.mdm.webservice.WSGetDataModel;
 import org.talend.mdm.webservice.WSPing;
 import org.talend.mdm.webservice.WSRegexDataModelPKs;
 import org.talend.mdm.webservice.WSRunQuery;
+import org.talend.mdm.webservice.WSVersion;
 import org.talend.mdm.webservice.XtentisBindingStub;
 import org.talend.mdm.webservice.XtentisPort;
 import org.talend.mdm.webservice.XtentisServiceLocator;
@@ -323,9 +326,24 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         return stub.runQuery(new WSRunQuery(null, wsdcPK, xmlSql, null));
     }
 
+    /**
+     * 
+     * get MDM software Version.
+     * 
+     * @return
+     */
     public String getVersion() {
-        // TODO 10238
-        return DatabaseConstant.MDM_VERSION;
+        String versionStr = PluginConstant.EMPTY_STRING;
+        try {
+            XtentisBindingStub stub = getXtentisBindingStub();
+            WSVersion wsVersion = stub.getComponentVersion(new WSGetComponentVersion(WSComponent.DataManager, null));
+            versionStr = wsVersion.getMajor() + PluginConstant.DOT_STRING + wsVersion.getMinor() + PluginConstant.DOT_STRING
+                    + wsVersion.getRevision();
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+
+        return versionStr;
     }
 
     public String getUserName() {

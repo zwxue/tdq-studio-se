@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.views;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
@@ -39,19 +40,25 @@ import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
@@ -469,9 +476,21 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (softwareSystem == null) {
             softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
         }
-        String subtype = (softwareSystem == null) ? "" : softwareSystem.getSubtype(); //$NON-NLS-1$
+
+        // MOD qiongli 2011-2-12.bug 16164.
+        String subtype = PluginConstant.EMPTY_STRING;
+        String version = PluginConstant.EMPTY_STRING;
+        if (softwareSystem == null) {
+            boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
+            boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataProvider);
+            subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage()
+                    : PluginConstant.EMPTY_STRING;
+            version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
+        } else {
+            subtype = softwareSystem.getSubtype();
+            version = softwareSystem.getVersion();
+        }
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
-        String version = (softwareSystem == null) ? "" : softwareSystem.getVersion(); //$NON-NLS-1$
         newLabelAndText(gContainer, "Version: ", version); //$NON-NLS-1$
 
     }
@@ -504,6 +523,24 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private void initializeToolBar() {
         getViewSite().getActionBars().getToolBarManager();
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "getMDMVersion".
+     * 
+     * @param mdmConn
+     * @return
+     */
+    private String getMDMVersion(MDMConnection mdmConn) {
+        String version = null;
+        Properties props = new Properties();
+        props.put(TaggedValueHelper.USER, mdmConn.getUsername());
+        props.put(TaggedValueHelper.PASSWORD, mdmConn.getPassword());
+        props.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse());
+        MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), props);
+        version = mdmWsConn.getVersion();
+        return version;
     }
 
 }
