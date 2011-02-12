@@ -64,7 +64,9 @@ public enum PatternLanguageType {
              SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
              SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
              PatternToExcelEnum.InformixRegexp),
-    MDM(12, SupportDBUrlType.MDM.getLanguage(), SupportDBUrlType.MDM.getLanguage(), PatternToExcelEnum.MDMRegexp),
+    // MOD by bzhou, currently, we won't support MDM on using pattern.
+    // MDM(12, SupportDBUrlType.MDM.getLanguage(), SupportDBUrlType.MDM.getLanguage(), PatternToExcelEnum.MDMRegexp),
+
     // SQLITE3(
     // 9,
     // SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),

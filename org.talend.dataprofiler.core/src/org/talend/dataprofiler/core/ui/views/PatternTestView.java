@@ -19,6 +19,7 @@ import java.util.List;
 
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -57,6 +58,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
@@ -98,6 +100,8 @@ public class PatternTestView extends ViewPart {
     private Text testText, regularText;
 
     Button sqlButton, testButton;
+
+    Button buttonJava, buttonSql;
 
     Composite butPane;
 
@@ -143,7 +147,7 @@ public class PatternTestView extends ViewPart {
         data.horizontalAlignment = GridData.CENTER;
         coboCom.setLayoutData(data);
         // MOD qiongli feature 16799: Add java in Pattern Test View
-        Button buttonJava = new Button(coboCom, SWT.RADIO);
+        buttonJava = new Button(coboCom, SWT.RADIO);
         buttonJava.setText(ExecutionLanguage.JAVA.getLiteral());
         data = new GridData();
         data.widthHint = 120;
@@ -154,10 +158,11 @@ public class PatternTestView extends ViewPart {
             public void widgetSelected(SelectionEvent e) {
                 isJavaEngine = true;
                 sqlButton.setEnabled(false);
+                dbCombo.setEnabled(false);
             }
 
         });
-        Button buttonSql = new Button(coboCom, SWT.RADIO);
+        buttonSql = new Button(coboCom, SWT.RADIO);
         buttonSql.setText(DefaultMessagesImpl.getString("PatternTestView.Connections"));
         buttonSql.addSelectionListener(new SelectionAdapter() {
 
@@ -165,10 +170,13 @@ public class PatternTestView extends ViewPart {
             public void widgetSelected(SelectionEvent e) {
                 isJavaEngine = false;
                 sqlButton.setEnabled(true);
+                dbCombo.setEnabled(true);
             }
 
         });//$NON-NLS-1$
         buttonSql.setSelection(true);
+        buttonSql.setEnabled(!isJavaEngine);
+
         dbCombo = new CCombo(coboCom, SWT.DROP_DOWN | SWT.BORDER);
         dbCombo.setEditable(false);
         data = new GridData();
@@ -421,12 +429,22 @@ public class PatternTestView extends ViewPart {
         this.editorPage = editorPage;
         pattern = editorPattern;
         this.regularExpression = regularExpression;
-        if (PluginConstant.EMPTY_STRING.equals(regularText)) {
-            return;
-        }
-        this.regularText.setText(regularExpression.getExpression().getBody());
+        String body = regularExpression.getExpression().getBody();
+        this.regularText.setText(body == null ? "" : body);
         this.saveButton.setEnabled(true);
         this.createPatternButton.setEnabled(true);
+
+        if (regularExpression != null) {
+            String language = regularExpression.getExpression().getLanguage();
+
+            isJavaEngine = StringUtils.equalsIgnoreCase(language, PatternLanguageType.JAVA.getName());
+
+            buttonJava.setSelection(isJavaEngine);
+            buttonSql.setEnabled(!isJavaEngine);
+            buttonSql.setSelection(!isJavaEngine);
+            dbCombo.setEnabled(buttonSql.getSelection());
+
+        }
     }
 
     public String getRegularText() {
