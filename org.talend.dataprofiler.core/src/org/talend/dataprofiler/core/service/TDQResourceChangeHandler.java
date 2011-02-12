@@ -48,6 +48,7 @@ import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -122,7 +123,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         // TODO Handle element deletion from resource, resource delete.
         return super.handleResourceChange(modelElement);
     }
-
 
     public Resource create(IProject project, Item item, int classID, IPath path) {
         String fileExtension = FileConstants.ITEM_EXTENSION;
@@ -208,5 +208,18 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             log.error(e, e);
         }
         return itemResource;
+    }
+
+    @Override
+    public boolean isAnalysisOrReportItem(Item item) {
+        String path = item.getState().getPath();
+        if (path != null) {
+            if (item instanceof TDQAnalysisItem) {
+                return path.equals(ResourceManager.getAnalysisFolder().getFullPath().toString());
+            } else if (item instanceof TDQReportItem) {
+                return path.equals(ResourceManager.getReportsFolder().getFullPath().toString());
+            }
+        }
+        return super.isAnalysisOrReportItem(item);
     }
 }

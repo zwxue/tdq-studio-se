@@ -137,8 +137,14 @@ public abstract class AElementPersistance {
             path = itemPath.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
         } else if (element instanceof Analysis) { // analysis
             path = itemPath.makeRelativeTo(ResourceManager.getAnalysisFolder().getFullPath());
+            if (path.isEmpty()) {
+                return itemPath;
+            }
         } else if (element instanceof Report) { // report
             path = itemPath.makeRelativeTo(ResourceManager.getReportsFolder().getFullPath());
+            if (path.isEmpty()) {
+                return itemPath;
+            }
         } else if (element instanceof IndicatorDefinition) {
             if (element instanceof WhereRule) { // dqrule
                 path = itemPath.makeRelativeTo(ResourceManager.getRulesSQLFolder().getFullPath());
