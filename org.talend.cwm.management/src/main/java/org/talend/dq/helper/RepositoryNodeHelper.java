@@ -92,6 +92,8 @@ import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.repository.ProjectManager;
+import org.talend.repository.model.ERepositoryStatus;
+import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -1044,5 +1046,21 @@ public final class RepositoryNodeHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * 
+     * if logical delete state is true .
+     * 
+     * @param node
+     * @return
+     */
+    public static boolean isStateDeleted(IRepositoryNode node) {
+        final IRepositoryViewObject viewObject = node.getObject();
+        final IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+        if (factory.getStatus(viewObject) == ERepositoryStatus.DELETED) {
+            return true;
+        }
+        return false;
     }
 }

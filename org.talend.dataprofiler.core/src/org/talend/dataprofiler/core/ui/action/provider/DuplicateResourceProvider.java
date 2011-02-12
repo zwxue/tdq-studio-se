@@ -78,6 +78,10 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
         objectTypes.add(ERepositoryObjectType.METADATA_CONNECTIONS);
 
         for (IRepositoryNode node : repositoryNodeList) {
+            // MOD qiongli 2011-2-12.filter elements in recycle bin.
+            if (RepositoryNodeHelper.isStateDeleted(node)) {
+                return false;
+            }
             ERepositoryObjectType contentType = node.getObjectType();
             if (!objectTypes.contains(contentType)) {
                 return false;

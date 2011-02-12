@@ -31,7 +31,6 @@ import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
-import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
@@ -74,8 +73,7 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
      * @return
      */
     private boolean shouldShowDeleteMenu(RepositoryNode node) {
-        return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node) && !isDelimitedFile(node)
-                && !node.isBin();
+        return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node) && !node.isBin();
     }
 
     /**
@@ -121,20 +119,6 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
             }
         default:
 
-        }
-        return false;
-    }
-
-    /**
-     * 
-     * DOC qiongli Comment method "isDelimitedFile".
-     * 
-     * @param node
-     * @return
-     */
-    private boolean isDelimitedFile(RepositoryNode node) {
-        if (node instanceof DFConnectionRepNode) {
-            return true;
         }
         return false;
     }
