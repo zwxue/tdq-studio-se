@@ -1058,6 +1058,15 @@ public final class RepositoryNodeHelper {
     public static boolean isStateDeleted(IRepositoryNode node) {
         final IRepositoryViewObject viewObject = node.getObject();
         final IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+
+        // TDQ's ISubRepositoryObject will return a null when call getAbstractMetadataObject()
+        if (viewObject instanceof ISubRepositoryObject) {
+            ISubRepositoryObject subRepositoryObject = (ISubRepositoryObject) viewObject;
+            if (subRepositoryObject.getAbstractMetadataObject() == null) {
+                return false;
+            }
+        }
+
         if (factory.getStatus(viewObject) == ERepositoryStatus.DELETED) {
             return true;
         }
