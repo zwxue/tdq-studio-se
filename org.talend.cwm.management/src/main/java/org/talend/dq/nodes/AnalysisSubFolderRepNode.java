@@ -141,17 +141,20 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
 
     public String getCount() {
         IRepositoryViewObject anaViewObject = this.getParent().getObject();
-        TDQAnalysisItem item = (TDQAnalysisItem) anaViewObject.getProperty().getItem();
-        Analysis analysis = item.getAnalysis();
-        AnalysisContext context = analysis.getContext();
-        EList<ModelElement> analysedElements = context.getAnalysedElements();
-        if (analysedElements.size() == 1) {
-            ModelElement modelElement = analysedElements.get(0);
-            if (modelElement instanceof DatabaseConnection) {
-                EList<Package> dataPackage = ((DatabaseConnection) modelElement).getDataPackage();
-                return "(" + dataPackage.size() + ")";
+        if (anaViewObject.getProperty() != null) {
+            TDQAnalysisItem item = (TDQAnalysisItem) anaViewObject.getProperty().getItem();
+            Analysis analysis = item.getAnalysis();
+            AnalysisContext context = analysis.getContext();
+            EList<ModelElement> analysedElements = context.getAnalysedElements();
+            if (analysedElements.size() == 1) {
+                ModelElement modelElement = analysedElements.get(0);
+                if (modelElement instanceof DatabaseConnection) {
+                    EList<Package> dataPackage = ((DatabaseConnection) modelElement).getDataPackage();
+                    return "(" + dataPackage.size() + ")";
+                }
             }
+            return "(" + analysedElements.size() + ")";
         }
-        return "(" + analysedElements.size() + ")";
+        return "(0)";
     }
 }
