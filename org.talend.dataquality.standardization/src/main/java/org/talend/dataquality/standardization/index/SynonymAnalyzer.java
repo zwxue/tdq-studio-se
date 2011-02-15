@@ -16,6 +16,8 @@ import java.io.Reader;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;
+import org.apache.lucene.analysis.StopAnalyzer;
+import org.apache.lucene.analysis.StopFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
@@ -25,23 +27,17 @@ import org.apache.lucene.util.Version;
  * DOC scorreia class global comment. Detailled comment
  */
 public class SynonymAnalyzer extends Analyzer {
-  private SynonymEngine engine;
 
-  public SynonymAnalyzer(SynonymEngine engine) {
-    this.engine = engine;
-  }
+    public SynonymAnalyzer() {
+    }
 
-    // public TokenStream tokenStream(String fieldName, Reader reader) {
-    // TokenStream result = new SynonymFilter(new LowerCaseFilter(new StandardFilter(new
-    // StandardTokenizer(Version.LUCENE_30,
-    // reader))), engine);
-    // return result;
-    // }
-
-  public TokenStream tokenStream(String fieldName, Reader reader) {
-        TokenStream result = new SynonymFilter(new StandardFilter(new LowerCaseFilter(new StandardTokenizer(Version.LUCENE_30,
-                reader))), engine);
+    public TokenStream tokenStream(String fieldName, Reader reader) {
+        TokenStream result = new StandardFilter(new StopFilter(true, new LowerCaseFilter(new StandardTokenizer(Version.LUCENE_30,
+                reader)), StopAnalyzer.ENGLISH_STOP_WORDS_SET));
         return result;
-  }
-
+    }
+    /*
+     * public TokenStream tokenStream(String fieldName, Reader reader) { TokenStream result = new SynonymFilter(new
+     * StandardFilter(new LowerCaseFilter(new StandardTokenizer(Version.LUCENE_30, reader))), engine); return result; }
+     */
 }
