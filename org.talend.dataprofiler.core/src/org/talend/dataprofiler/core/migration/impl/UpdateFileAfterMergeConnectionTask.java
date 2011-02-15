@@ -252,9 +252,9 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.getItemType(item),
                         path.removeLastSegments(1), path.lastSegment());
             }
-            if (path == null) {
-                path = Path.EMPTY;
-            }
+            // if (path == null) {
+            // path = Path.EMPTY;
+            // }
             String connName = null;
 
             if (item instanceof ConnectionItem) {

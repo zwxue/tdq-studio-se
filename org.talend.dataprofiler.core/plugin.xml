@@ -1227,6 +1227,12 @@
            name="org.talend.dataprofiler.core.migration.impl.UpdateAfterMergeTosApiTask"
            version="4.2.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdatePathProperty"
+           id="update the value of path on the property files"
+           name="update the value of path on the property files"
+           version="4.1.3">
+     </workspacetask>
      
 
   </extension>

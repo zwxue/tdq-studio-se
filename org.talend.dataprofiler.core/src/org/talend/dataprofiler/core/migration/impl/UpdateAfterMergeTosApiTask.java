@@ -39,7 +39,6 @@ import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -171,7 +170,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
              IndicatorResourceFileHelper.getInstance().clear();
              PatternResourceFileHelper.getInstance().clear();
              DQRuleResourceFileHelper.getInstance().clear();
-             EMFSharedResources.getInstance().unloadResources();
+            // EMFSharedResources.getInstance().unloadResources();
             // 2) reload from file
              ResourceFileMap.getAll();
         } catch (Exception e) {

@@ -107,11 +107,12 @@ public abstract class AMigrationTask implements IMigrationTask {
     protected abstract boolean doExecute() throws Exception;
 
     public Boolean isModelTask() {
-        return "org.talend.dataprofiler.core.migration.impl.MergeMetadataTask".equals(getId())
-                || "org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask".equals(getId())
-                || "org.talend.dataprofiler.core.migration.impl.UpdatePropertiesFileTask".equals(getId())
-                || "org.talend.dataprofiler.core.migration.impl.UpdateAnalysisWithMinLengthIndicator".equals(getId())
-                || "org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask".equals(getId())
-                || "org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask".equals(getId());
+        return "org.talend.dataprofiler.core.migration.impl.MergeMetadataTask".equals(getId())//$NON-NLS-1$
+                || "org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask".equals(getId())//$NON-NLS-1$
+                || "org.talend.dataprofiler.core.migration.impl.UpdatePropertiesFileTask".equals(getId())//$NON-NLS-1$
+                || "org.talend.dataprofiler.core.migration.impl.UpdateAnalysisWithMinLengthIndicator".equals(getId())//$NON-NLS-1$
+                || "org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask".equals(getId())//$NON-NLS-1$
+                || "org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask".equals(getId())//$NON-NLS-1$
+                || "update the value of path on the property files".equals(getId());//$NON-NLS-1$
     }
 }
