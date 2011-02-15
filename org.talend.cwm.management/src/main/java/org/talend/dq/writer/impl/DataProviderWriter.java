@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -34,6 +35,7 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -176,7 +178,9 @@ public class DataProviderWriter extends AElementPersistance {
             addDependencies(conn);
             addResourceContent(conn);
             connItem.setConnection(conn);
-            ProxyRepositoryFactory.getInstance().save(connItem);
+            // MOD klliu 2011-02-15
+            Project currentProject = ProjectManager.getInstance().getCurrentProject();
+            ProxyRepositoryFactory.getInstance().save(currentProject, connItem);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);

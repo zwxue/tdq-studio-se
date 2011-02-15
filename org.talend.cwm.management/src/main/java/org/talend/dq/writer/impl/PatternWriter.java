@@ -18,12 +18,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.ProjectManager;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -95,7 +97,9 @@ public class PatternWriter extends AElementPersistance {
             addDependencies(pattern);
             addResourceContent(pattern.eResource(), pattern);
             patternItem.setPattern(pattern);
-            ProxyRepositoryFactory.getInstance().save(patternItem);
+            // MOD klliu 2011-02-15
+            Project currentProject = ProjectManager.getInstance().getCurrentProject();
+            ProxyRepositoryFactory.getInstance().save(currentProject, patternItem);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);

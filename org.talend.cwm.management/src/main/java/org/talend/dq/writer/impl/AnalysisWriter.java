@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -39,6 +40,7 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -193,12 +195,16 @@ public class AnalysisWriter extends AElementPersistance {
             addDependencies(analysis);
             addResourceContent(analysis.eResource(), analysis);
             anaItem.setAnalysis(analysis);
-            ProxyRepositoryFactory.getInstance().save(anaItem);
+            // MOD klliu 2011-02-15
+            Project currentProject = ProjectManager.getInstance().getCurrentProject();
+            ProxyRepositoryFactory.getInstance().save(currentProject, anaItem);
+            // super.save(anaItem);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
             rc.setMessage(e.getMessage());
         }
+
         return rc;
     }
 
