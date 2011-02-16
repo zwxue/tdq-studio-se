@@ -168,7 +168,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         }
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                     } else if (node instanceof RecycleBinRepNode) {
-                        return RecycleBinManager.getInstance().getChildren((RecycleBinRepNode) node).toArray();
+                        RecycleBinManager.getInstance().loadChildren((RecycleBinRepNode) node);
                     }
                 }
                 return sortRepositoryNode(node.getChildren().toArray());

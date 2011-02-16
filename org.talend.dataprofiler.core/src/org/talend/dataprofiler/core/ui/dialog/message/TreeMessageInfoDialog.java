@@ -17,11 +17,16 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC rli  class global comment. Detailled comment
@@ -34,15 +39,43 @@ public class TreeMessageInfoDialog extends MessageDialog {
 
     private Object input;
 
+    private Button checkButton;
+
+    private boolean isChecked = false;
+
     public TreeMessageInfoDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
             int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
         super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels, defaultIndex);
     }
 
     protected Control createCustomArea(Composite parent) {
-        TreeViewer viewer = new TreeViewer(parent, SWT.BORDER);
-        GridData gd = new GridData(GridData.FILL_BOTH);
+        // MOD qiongli 2011-2-15,feature 17588.
+        Composite mainComposite = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        layout.marginHeight = 0;
+        layout.marginWidth = 0;
+        layout.numColumns = 1;
+        mainComposite.setLayout(layout);
+        Composite checkComp = new Composite(mainComposite, SWT.NONE);
+        GridLayout layout1 = new GridLayout();
+        layout.marginHeight = 0;
+        layout.marginWidth = 0;
+        layout.numColumns = 1;
+        checkComp.setLayout(layout1);
+        checkButton = new Button(checkComp, SWT.CHECK);
+        checkButton.setText(DefaultMessagesImpl.getString("DQDeleteAction.deleteAllDependency"));
+        checkButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                isChecked = true;
+            }
+
+        });
+        TreeViewer viewer = new TreeViewer(mainComposite, SWT.BORDER);
+        GridData gd = new GridData();
         gd.heightHint = 150;
+        gd.widthHint = 450;
         viewer.getTree().setLayoutData(gd);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(labelProvider);
@@ -62,6 +95,10 @@ public class TreeMessageInfoDialog extends MessageDialog {
 
     public void setInput(Object input) {
         this.input = input;
+    }
+
+    public boolean isChecked() {
+        return this.isChecked;
     }
 
 }

@@ -204,7 +204,7 @@ public class DeleteModelElementConfirmDialog {
      * @param dialogMessage
      * @return
      */
-    public static int showDialog(Shell parentShell, Object obj, ModelElement[] dependencyElements, String dialogMessage) {
+    public static boolean showDialog(Shell parentShell, Object obj, ModelElement[] dependencyElements, String dialogMessage) {
         for (ModelElement element : dependencyElements) {
             ImpactNode node = new ImpactNode(element);
             if (!impactNodes.contains(node)) {
@@ -214,6 +214,7 @@ public class DeleteModelElementConfirmDialog {
         }
 
         ImpactNode[] impactElements = getImpactNodes();
+        boolean isChecked = false;
         if (impactElements.length > 0) {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, DefaultMessagesImpl
                     .getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
@@ -223,9 +224,11 @@ public class DeleteModelElementConfirmDialog {
             dialog.setInput(new Object());
             clear();
             dialog.open();
+            isChecked = dialog.isChecked();
+
         }
 
-        return Window.CANCEL;
+        return isChecked;
     }
 
     /**

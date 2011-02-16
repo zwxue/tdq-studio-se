@@ -40,6 +40,8 @@ public final class RecycleBinManager {
 
     private static RecycleBinManager instance;
 
+    private List<IRepositoryNode> recycleBinChildren = null;
+
 
     private RecycleBinManager() {
 
@@ -69,7 +71,7 @@ public final class RecycleBinManager {
      * @param rcBinNode
      * @return
      */
-    public List<IRepositoryNode> getChildren(RecycleBinRepNode rcBinNode) {
+    public void loadChildren(RecycleBinRepNode rcBinNode) {
         List<RepositoryNode> foldersList = new ArrayList<RepositoryNode>();
         Project newProject = ProjectManager.getInstance().getCurrentProject();
         List<FolderItem> folderItems = newProject.getEmfProject().getFolders();
@@ -78,7 +80,8 @@ public final class RecycleBinManager {
                 addItemToRecycleBin(rcBinNode, folder, foldersList);
             }
         }
-        return new ArrayList<IRepositoryNode>(foldersList.size());
+        recycleBinChildren = rcBinNode.getChildren();
+        // return new ArrayList<IRepositoryNode>(foldersList.size());
     }
 
     /**
@@ -191,5 +194,12 @@ public final class RecycleBinManager {
             return getFolderContentType((FolderItem) folderItem.getParent());
         }
         return null;
+    }
+
+    public List<IRepositoryNode> getRecycleBinChildren() {
+        if (recycleBinChildren == null) {
+            recycleBinChildren = new ArrayList<IRepositoryNode>();
+        }
+        return this.recycleBinChildren;
     }
 }
