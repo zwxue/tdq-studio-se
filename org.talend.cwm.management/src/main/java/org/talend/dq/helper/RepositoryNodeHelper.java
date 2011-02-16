@@ -719,7 +719,7 @@ public final class RepositoryNodeHelper {
         if (folderPathArray.length <= 0) {
             return null;
         }
-        IRepositoryNode node = getRootNode(ERepositoryObjectType.METADATA_CONNECTIONS);
+        IRepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
         for (int i = 1; folderPathArray.length > i; i++) {
             for (IRepositoryNode childNode : node.getChildren()) {
                 if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
@@ -877,6 +877,10 @@ public final class RepositoryNodeHelper {
             TreeItem[] items = commonViewer.getTree().getItems();
             for (TreeItem item : items) {
                 node = (RepositoryNode) item.getData();
+                // MOD qiongli 2011-2-16,bug 18642.filter recycle bin node.
+                if (node.isBin()) {
+                    continue;
+                }
                 String viewFolderID = node.getObject().getProperty().getId();
                 if (folderItem != null) {
                     String folderID = folderItem.getProperty().getId();
