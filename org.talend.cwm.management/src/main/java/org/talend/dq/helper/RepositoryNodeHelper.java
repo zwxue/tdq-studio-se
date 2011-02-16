@@ -95,8 +95,8 @@ import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -700,6 +700,20 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode subNode : childrens) {
                 if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode
                         || subNode instanceof MDMConnectionFolderRepNode) {
+                    connNodes.addAll(getModelElementFromFolder(subNode));
+                }
+            }
+        }
+        return connNodes;
+    }
+
+    public static List<IRepositoryNode> getDBConnectionRepositoryNodes() {
+        RepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
+        List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
+        if (node != null) {
+            List<IRepositoryNode> childrens = node.getChildren();
+            for (IRepositoryNode subNode : childrens) {
+                if (subNode instanceof DBConnectionFolderRepNode) {
                     connNodes.addAll(getModelElementFromFolder(subNode));
                 }
             }
