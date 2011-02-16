@@ -30,6 +30,7 @@ public class AbstractItemEditorInput implements IEditorInput {
         this.item = tdqItem;
 
     }
+
     public boolean exists() {
         return false;
     }
@@ -57,14 +58,23 @@ public class AbstractItemEditorInput implements IEditorInput {
     public String getPath() {
         return item.getState().getPath() + "/";
     }
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
+        // if (this == obj) {
+        // return true;
+        // }
         if (obj instanceof AbstractItemEditorInput) {
             AbstractItemEditorInput other = (AbstractItemEditorInput) obj;
-            return StringUtils.equals(item.getProperty().getLabel(), other.item.getProperty().getLabel());
+            boolean isEqualsId = item.getProperty().getId().equals(other.item.getProperty().getId());
+            if (isEqualsId) {
+                if (StringUtils.equals(item.getProperty().getLabel(), other.item.getProperty().getLabel())) {
+                    if (item.getProperty().getVersion().equals(other.item.getProperty().getVersion())) {
+                        return true;
+                    }
+                }
+            } else
+                return false;
         }
 
         return false;
