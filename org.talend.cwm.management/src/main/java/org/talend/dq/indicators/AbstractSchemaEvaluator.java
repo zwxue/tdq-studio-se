@@ -119,7 +119,14 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      */
     protected void evalAllCounts(String catalog, String schema, NamedColumnSet t, SchemaIndicator schemaIndic, boolean isTable,
             ReturnCode ok) throws SQLException {
-        String quCatalog = catalog == null ? null : dbms().quote(catalog);
+        // String quCatalog = catalog == null ? null : dbms().quote(catalog);
+        // MOD klliu 2011-02-17 bug 18961
+        EObject eContainer = schemaIndic.getAnalyzedElement().eContainer();
+        String quCatalog = null;
+        if (eContainer instanceof Catalog) {
+            quCatalog = dbms().quote(((Catalog) eContainer).getName());
+        }
+        // String quCatalog = catalog == null ? null : dbms().quote(catalog);
         String quSchema = schema == null ? null : dbms().quote(schema);
         final String table = t.getName();
         String quTable = dbms().quote(table);
@@ -199,7 +206,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         TableIndicator tableIndicator = SchemaFactory.eINSTANCE.createTableIndicator();
         // MOD xqliu 2009-1-21 feature 4715
         DefinitionHandler.getInstance().setDefaultIndicatorDefinition(tableIndicator);
-        // t is not stored in xmi file. tableIndicator.setAnalyzedElement(t);
+        // t is not stored in xmi file.
+        tableIndicator.setAnalyzedElement(t);
         tableIndicator.setTableName(t.getName());
         tableIndicator.setRowCount(rowCount);
         tableIndicator.setKeyCount(pkCount);
@@ -414,12 +422,20 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     protected void evalSchemaIndicLow(final CatalogIndicator catalogIndic, final SchemaIndicator schemaIndic,
             final Catalog tdCatalog, final Schema tdSchema, ReturnCode ok) throws SQLException {
+        // MOD klliu 2011-02-17 bug 18961
         boolean hasSchema = tdSchema != null;
-        boolean hasCatalog = tdCatalog != null;
-
-        String catName = hasCatalog ? tdCatalog.getName() : null;
+        boolean hasCatalog = false;
         String schemaName = hasSchema ? tdSchema.getName() : null;
-
+        String catName = null;
+        if (tdCatalog == null) {
+            if (tdSchema.eContainer() instanceof Catalog) {
+                hasCatalog = true;
+                catName = ((Catalog) tdSchema.eContainer()).getName();
+            }
+        } else {
+            hasCatalog = true;
+            catName = hasCatalog ? tdCatalog.getName() : null;
+        }
         schemaIndic.setAnalyzedElement(hasSchema ? tdSchema : tdCatalog);
 
         // profile tables
