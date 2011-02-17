@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -95,8 +96,8 @@ import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -883,10 +884,14 @@ public final class RepositoryNodeHelper {
      * @return
      */
     public static RepositoryNode getRootNode(ERepositoryObjectType nodeName) {
+        return getRootNode(nodeName, false);
+    }
+
+    public static RepositoryNode getRootNode(ERepositoryObjectType nodeName, boolean open) {
         FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
                 ProjectManager.getInstance().getCurrentProject(), nodeName, Path.EMPTY);
         RepositoryNode node = null;
-        CommonViewer commonViewer = getDQCommonViewer();
+        CommonViewer commonViewer = getDQCommonViewer(open);
         if (commonViewer != null) {
             TreeItem[] items = commonViewer.getTree().getItems();
             for (TreeItem item : items) {
@@ -922,6 +927,35 @@ public final class RepositoryNodeHelper {
                 part = activePage.findView(DQRESPOSITORYVIEW);
                 if (part == null) {
                     return null;
+                }
+                CommonNavigator dqView = (CommonNavigator) part;
+                commonViewer = dqView.getCommonViewer();
+            }
+        }
+        return commonViewer;
+    }
+
+    public static CommonViewer getDQCommonViewer(boolean open) {
+        IViewPart part = null;
+        CommonViewer commonViewer = null;
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow != null) {
+            IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+            if (activePage != null) {
+                part = activePage.findView(DQRESPOSITORYVIEW);
+                if (part == null) {
+                    if (open) {
+                        try {
+                            part = activePage.showView(DQRESPOSITORYVIEW);
+                        } catch (PartInitException e) {
+                            e.printStackTrace();
+                        }
+                        if (part == null) {
+                            return null;
+                        }
+                    } else {
+                        return null;
+                    }
                 }
                 CommonNavigator dqView = (CommonNavigator) part;
                 commonViewer = dqView.getCommonViewer();
@@ -1089,5 +1123,33 @@ public final class RepositoryNodeHelper {
             return true;
         }
         return false;
+    }
+
+    public static RepositoryNode recursiveFind(String nodeId) {
+        return recursiveFind(nodeId, getTdqRootNodes());
+    }
+
+    public static RepositoryNode recursiveFind(String nodeId, List<IRepositoryNode> nodes) {
+        assert nodeId != null;
+        assert nodes != null;
+        for (IRepositoryNode node : nodes) {
+            if (nodeId.equals(node.getId())) {
+                return (RepositoryNode) node;
+            } else {
+                RepositoryNode recursiveFind = recursiveFind(nodeId, node.getChildren());
+                if (recursiveFind != null) {
+                    return recursiveFind;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static List<IRepositoryNode> getTdqRootNodes() {
+        List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
+        list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+        list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
+        list.add(getRootNode(ERepositoryObjectType.METADATA, true));
+        return list;
     }
 }

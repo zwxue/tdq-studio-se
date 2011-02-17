@@ -12,14 +12,19 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.Properties;
+
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.eclipse.ui.intro.IIntroSite;
+import org.eclipse.ui.intro.config.IIntroAction;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
@@ -36,13 +41,14 @@ import org.talend.top.repository.ProxyRepositoryManager;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  * 
  */
-public class CreateNewAnalysisAction extends Action implements ICheatSheetAction {
+public class CreateNewAnalysisAction extends Action implements ICheatSheetAction, IIntroAction {
 
     public IPath path;
 
     public RepositoryNode node;
 
     private IFolder folder;
+
     String defaultLabel;
 
     public CreateNewAnalysisAction() {
@@ -67,8 +73,6 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         this.node = node;
 
     }
-
-
 
     /*
      * (non-Javadoc)
@@ -176,5 +180,15 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
 
         if (WizardDialog.OK == dialog.open())
             ProxyRepositoryManager.getInstance().save();
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
+     */
+    public void run(IIntroSite site, Properties params) {
+        PlatformUI.getWorkbench().getIntroManager().closeIntro(PlatformUI.getWorkbench().getIntroManager().getIntro());
+        run();
     }
 }

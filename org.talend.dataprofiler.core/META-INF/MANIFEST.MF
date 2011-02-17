@@ -47,7 +47,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.metadata.managment.ui,
  org.talend.libraries.jdbc.informix,
  org.talend.commons.ui,
- org.talend.repository.mdm
+ org.talend.repository.mdm,
+ org.eclipse.ui.intro;bundle-version="3.4.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.gridviewer,
  org.eclipse.nebula.widgets.grid,

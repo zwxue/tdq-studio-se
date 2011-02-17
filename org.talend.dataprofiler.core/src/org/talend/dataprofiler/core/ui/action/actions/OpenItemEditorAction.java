@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -20,6 +22,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.intro.IIntroSite;
+import org.eclipse.ui.intro.config.IIntroAction;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -59,7 +63,7 @@ import orgomg.cwm.resource.relational.View;
 /**
  * DOC mzhao Open TDQ items editor action.
  */
-public class OpenItemEditorAction extends Action {
+public class OpenItemEditorAction extends Action implements IIntroAction {
 
     protected static Logger log = Logger.getLogger(OpenItemEditorAction.class);
 
@@ -72,6 +76,10 @@ public class OpenItemEditorAction extends Action {
     private IFile fileEditorInput = null;
 
     private Connection connection = null;
+
+    public OpenItemEditorAction() {
+        super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
+    }
 
     public OpenItemEditorAction(IRepositoryViewObject reposViewObj) {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
@@ -96,6 +104,7 @@ public class OpenItemEditorAction extends Action {
     }
 
     public AbstractItemEditorInput computeEditorInput() {
+        assert reposViewObj != null;
         // Connection editor
         String key = reposViewObj.getRepositoryObjectType().getKey();
         Item item = reposViewObj.getProperty().getItem();
@@ -177,4 +186,28 @@ public class OpenItemEditorAction extends Action {
         }
         return conn;
     }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
+     */
+    public void run(IIntroSite site, Properties params) {
+        initRepositoryViewObject(params);
+        PlatformUI.getWorkbench().getIntroManager().closeIntro(PlatformUI.getWorkbench().getIntroManager().getIntro());
+        run();
+    }
+
+    /**
+     * DOC xqliu Comment method "initRepositoryViewObject".
+     * 
+     * @param params
+     */
+    private void initRepositoryViewObject(Properties params) {
+        RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(params.getProperty("nodeId")); //$NON-NLS-1$
+        if (repositoryNode != null) {
+            this.reposViewObj = repositoryNode.getObject();
+        }
+    }
+
 }
