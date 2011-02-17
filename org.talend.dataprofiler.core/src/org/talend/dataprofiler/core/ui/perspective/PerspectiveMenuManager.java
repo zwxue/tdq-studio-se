@@ -26,6 +26,7 @@ import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.ContributionItemFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -39,6 +40,7 @@ public class PerspectiveMenuManager extends MenuManager {
     public PerspectiveMenuManager() {
         super("&Perspective", DefaultMessagesImpl.getString("PerspectiveMenuManager.perspective"));  //$NON-NLS-1$ //$NON-NLS-2$
         
+
         addMenuListener(new MenuFiller());
         
         setRemoveAllWhenShown(true);
@@ -114,6 +116,8 @@ public class PerspectiveMenuManager extends MenuManager {
                     manager.add(perspAction);
                 }
             }
+            // MOD qiongli 2011-2-17,feature 17168.make it show the menu item 'Perspective--other...'
+            manager.add(ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(workbench.getActiveWorkbenchWindow()));
         }
     }
 }
