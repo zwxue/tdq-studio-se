@@ -12,13 +12,22 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.properties.Item;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -30,6 +39,8 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     private WizardPage[] extenalPages;
 
     private Indicator indicator;
+
+    private ColumnAnalysisDOSelectionPage selectionPage;
 
     public WizardPage[] getExtenalPages() {
         if (extenalPages == null) {
@@ -71,7 +82,10 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     @Override
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
-
+        if (getParameter().getConnectionRepNode() == null) {
+            selectionPage = new ColumnAnalysisDOSelectionPage();
+            addPage(selectionPage);
+        }
         for (WizardPage page : getExtenalPages()) {
             addPage(page);
         }
@@ -93,5 +107,30 @@ public class ColumnWizard extends AbstractAnalysisWizard {
      */
     public Indicator getIndicator() {
         return this.indicator;
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.core.model.properties
+     * .Item)
+     */
+    @Override
+    public void openEditor(Item item) {
+        super.openEditor(item);
+        if (this.selectionPage != null) {
+            AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getActiveEditor();
+            if (editor != null) {
+                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                List<IRepositoryNode> nodes = this.selectionPage.nodes;
+                if (nodes.size() > 0) {
+                    List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
+                    nodeList.addAll(nodes);
+                    page.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
+                }
+            }
+        }
     }
 }

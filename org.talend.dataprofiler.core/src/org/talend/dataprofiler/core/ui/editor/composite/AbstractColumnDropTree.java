@@ -61,6 +61,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -456,6 +457,13 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         List<RepositoryNode> reposList = new ArrayList<RepositoryNode>();
         for (Object obj : objs) {
+            // MOD klliu 2011-02-16 feature 15387
+            if (obj instanceof MDMXmlElementRepNode) {
+                boolean isleaf = isLeaf((MDMXmlElementRepNode) obj);
+                if (isleaf) {
+                    reposList.add((RepositoryNode) obj);
+                }
+            }
             if (obj instanceof DBColumnRepNode || obj instanceof DFColumnRepNode) {
                 reposList.add((RepositoryNode) obj);
             }
@@ -467,8 +475,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         // MOD qiongli 2011-1-7 feature 16796.
         boolean isDelimitedFile = false;
         if (objs != null && objs.length != 0) {
-            isMdm = objs[0] instanceof MetadataXmlElementTypeRepositoryObject;
-            isDelimitedFile = objs[0] instanceof DFTableRepNode;
+            // MOD klliu 2011-02-16 feature 15387
+            isMdm = objs[0] instanceof MetadataXmlElementTypeRepositoryObject || objs[0] instanceof MDMXmlElementRepNode;
+            isDelimitedFile = objs[0] instanceof DFTableRepNode || objs[0] instanceof DFColumnRepNode;
             if (!(reposList.get(0) instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
                 return;
             }
@@ -520,4 +529,11 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         return false;
     }
 
+    private boolean isLeaf(MDMXmlElementRepNode obj) {
+        List<IRepositoryNode> children = obj.getChildren();
+        if (children.size() > 0) {
+            return false;
+        }
+        return true;
+    }
 }

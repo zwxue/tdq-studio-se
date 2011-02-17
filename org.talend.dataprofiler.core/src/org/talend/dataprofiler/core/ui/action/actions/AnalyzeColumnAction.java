@@ -21,12 +21,21 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -77,7 +86,16 @@ public class AnalyzeColumnAction extends Action {
     }
 
     private int openStandardAnalysisDialog(AnalysisType type) {
-        Wizard wizard = WizardFactory.createAnalysisWizard(type);
+        // MOD klliu 2011-02-16 Modify this action for distincting CreateNewAnalysisAction feature 15387
+        DBColumnRepNode firstElement = (DBColumnRepNode) this.selection.getFirstElement();
+        MetadataColumnRepositoryObject viewObject = (MetadataColumnRepositoryObject) firstElement.getObject();
+        Item item = viewObject.getProperty().getItem();
+        DatabaseConnectionItem databaseConnectionItem = (DatabaseConnectionItem) item;
+        Connection connection = databaseConnectionItem.getConnection();
+        IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+        AnalysisParameter parameter = new AnalysisParameter();
+        parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
+        Wizard wizard = WizardFactory.createAnalysisWizard(type, parameter);
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);
