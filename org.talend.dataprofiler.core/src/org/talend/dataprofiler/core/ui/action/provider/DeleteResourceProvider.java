@@ -35,6 +35,7 @@ import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -98,7 +99,23 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
                 || node instanceof DBColumnFolderRepNode || node instanceof DBColumnRepNode || node instanceof MDMSchemaRepNode
                 || node instanceof MDMXmlElementRepNode || node instanceof DFTableRepNode
                 || node instanceof DFColumnFolderRepNode || node instanceof DFColumnRepNode
-                || node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode;
+                || node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode
+                || isReportSubFolderVirtualNode(node);
+    }
+
+    /**
+     * DOC xqliu Comment method "isReportSubFolderVirtualNode".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean isReportSubFolderVirtualNode(RepositoryNode node) {
+        if (node instanceof ReportSubFolderRepNode) {
+            ReportSubFolderRepNode subFolderNode = (ReportSubFolderRepNode) node;
+            return ReportSubFolderType.ANALYSIS.equals(subFolderNode.getReportSubFolderType())
+                    || ReportSubFolderType.GENERATED_DOCS.equals(subFolderNode.getReportSubFolderType());
+        }
+        return false;
     }
 
     /**

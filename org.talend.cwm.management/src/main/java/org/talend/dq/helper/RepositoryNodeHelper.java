@@ -85,8 +85,11 @@ import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.PatternSqlFolderRepNode;
+import org.talend.dq.nodes.ReportAnalysisRepNode;
+import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.RulesFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
@@ -134,7 +137,14 @@ public final class RepositoryNodeHelper {
             }
             return new Path(ERepositoryObjectType.getFolderName(contentType)); //$NON-NLS-1$
         case SIMPLE_FOLDER:
-            String label = node.getObject().getProperty().getLabel();
+            String label = "";//$NON-NLS-1$
+            if (node.getObject() != null) {
+                label = node.getObject().getProperty().getLabel();
+            }
+            if (node instanceof ReportSubFolderRepNode) {
+                ReportSubFolderRepNode reportSubFolderRepNode = (ReportSubFolderRepNode) node;
+                label = reportSubFolderRepNode.getLabel();
+            }
             return getPath(node.getParent()).append(label);
         default:
         }
@@ -1119,9 +1129,14 @@ public final class RepositoryNodeHelper {
             }
         }
 
-        if (factory.getStatus(viewObject) == ERepositoryStatus.DELETED) {
-            return true;
+        if (node instanceof ReportAnalysisRepNode || node instanceof ReportFileRepNode) {
+            return false;
+        } else {
+            if (factory.getStatus(viewObject) == ERepositoryStatus.DELETED) {
+                return true;
+            }
         }
+
         return false;
     }
 

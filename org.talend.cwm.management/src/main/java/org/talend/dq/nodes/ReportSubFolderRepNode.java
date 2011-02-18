@@ -177,6 +177,10 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
 
     @Override
     public String getLabel() {
+        if (ReportSubFolderType.ANALYSIS.equals(getReportSubFolderType())
+                || ReportSubFolderType.GENERATED_DOCS.equals(getReportSubFolderType())) {
+            return this.getProperties(EProperties.LABEL).toString();
+        }
         if (this.getObject() != null) {
             return this.getObject().getLabel();
         }
