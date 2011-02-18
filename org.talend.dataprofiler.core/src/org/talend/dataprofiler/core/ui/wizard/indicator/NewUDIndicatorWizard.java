@@ -96,7 +96,11 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         // ADD xqliu 2010-06-04 feature 13454
         recordModificationDate(indicatorDefinition);
         // ~ 13454
-        return ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(indicatorDefinition, folder);
+        TypedReturnCode<Object> returnCode = ElementWriterFactory.getInstance().createIndicatorDefinitionWriter()
+                .create(indicatorDefinition, folder);
+        // MOD qiongli 2011-2-18,bug 19014.After creating UDI,reaload all indicators
+        DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
+        return returnCode;
     }
 
     /**
