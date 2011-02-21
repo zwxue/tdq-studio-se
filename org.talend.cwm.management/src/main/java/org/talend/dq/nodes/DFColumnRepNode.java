@@ -14,6 +14,8 @@ package org.talend.dq.nodes;
 
 import java.util.List;
 
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -23,6 +25,9 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class DFColumnRepNode extends RepositoryNode {
 
+    private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
+
+    private MetadataColumn metadataColumn;
     /**
      * DOC qiongli DFColumnRepNode constructor comment.
      * 
@@ -32,13 +37,17 @@ public class DFColumnRepNode extends RepositoryNode {
      */
     public DFColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
+        metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
+        metadataColumn = (MetadataColumn) metadataColumnRepositoryObject.getTdColumn();
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        // TODO Auto-generated method stub
         return super.getChildren();
+    }
+
+    public MetadataColumn getMetadataColumn() {
+        return this.metadataColumn;
     }
 
 }

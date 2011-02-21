@@ -75,8 +75,10 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
@@ -1081,6 +1083,10 @@ public final class RepositoryNodeHelper {
                 return ((MDMSchemaRepNode) node).getTdXmlSchema();
             } else if (node instanceof MDMXmlElementRepNode) {
                 return ((MDMXmlElementRepNode) node).getTdXmlElementType();
+            } else if (node instanceof DFColumnRepNode) {
+                return ((DFColumnRepNode) node).getMetadataColumn();
+            } else if (node instanceof DFTableRepNode) {
+                return ((DFTableRepNode) node).getMetadataTable();
             }
         }
         return null;

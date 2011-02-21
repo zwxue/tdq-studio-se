@@ -31,6 +31,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
@@ -101,7 +102,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             label: while (csvReader.readRecord()) {
                 String[] rowValues = csvReader.getValues();
                 Object object = null;
-                for (int i = 0; i < analysisElementList.size(); i++) {
+                element: for (int i = 0; i < analysisElementList.size(); i++) {
                     MetadataColumn mColumn = (MetadataColumn) analysisElementList.get(i);
                     List<Indicator> indicators = getIndicators(mColumn.getLabel());
                     MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
@@ -113,12 +114,14 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     } else {
                         object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
                     }
-                    if (object == null) {
-                        continue;
-                    }
+
                     for (Indicator indicator : indicators) {
                         if (!continueRun()) {
                             break label;
+                        }
+                        // bug 19036,to irregularly data,still compute for RowCountIndicator
+                        if (object == null && !(indicator instanceof RowCountIndicator)) {
+                            continue element;
                         }
                         indicator.handle(object);
                         AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);

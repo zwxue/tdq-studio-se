@@ -15,6 +15,7 @@ package org.talend.dq.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.repository.model.IRepositoryNode;
@@ -25,6 +26,9 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class DFTableRepNode extends RepositoryNode {
 
+    private MetadataTableRepositoryObject mdTableRepositoryObject;
+
+    private MetadataTable metadataTable;
     /**
      * DOC qiongli DFRepositoryNode constructor comment.
      * 
@@ -34,6 +38,8 @@ public class DFTableRepNode extends RepositoryNode {
      */
     public DFTableRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        this.mdTableRepositoryObject = (MetadataTableRepositoryObject) object;
+        this.metadataTable = this.mdTableRepositoryObject.getTable();
     }
 
     @Override
@@ -43,6 +49,10 @@ public class DFTableRepNode extends RepositoryNode {
         DFColumnFolderRepNode columnFolderNode = new DFColumnFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
         nodes.add(columnFolderNode);
         return nodes;
+    }
+
+    public MetadataTable getMetadataTable() {
+        return this.metadataTable;
     }
 
 }
