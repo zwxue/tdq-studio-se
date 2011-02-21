@@ -25,6 +25,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -44,16 +46,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
@@ -346,9 +351,15 @@ public class DQRespositoryView extends CommonNavigator {
                     if (obj instanceof RepositoryNode) {
                         if (obj instanceof ReportFileRepNode) {
                             ReportFileRepNode reportFileNode = (ReportFileRepNode) obj;
-                            IResource resource = reportFileNode.getResource();
-                            item.setData(resource);
-                        } else {
+                            IPath location = Path.fromOSString(reportFileNode.getResource().getRawLocation().toOSString());
+                            IFile latestRepIFile = ResourceManager.getRootProject().getFile(location.lastSegment());
+                            try {
+                                latestRepIFile.createLink(location, IResource.REPLACE, null);
+                                IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                                page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
+                            } catch (Throwable e1) {
+                                log.error(e1, e1);
+                            }
                             RepositoryNode repoNode = (RepositoryNode) obj;
                             if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
                                 OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
