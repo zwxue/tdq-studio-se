@@ -60,15 +60,11 @@ public class MDMSchemaRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        return createRepositoryNodeTdXmlElementType();
-    }
-
-    public List<IRepositoryNode> createRepositoryNodeTdXmlElementType() {
         MetadataXmlSchemaRepositoryObject metadataXmlSchema = (MetadataXmlSchemaRepositoryObject) this.getObject();
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
 
-        TdXmlSchema tdXmlSchema = metadataXmlSchema.getTdXmlSchema();
-        List<ModelElement> xmlElements = ConnectionUtils.getXMLElements(tdXmlSchema);
+        TdXmlSchema xmlSchema = metadataXmlSchema.getTdXmlSchema();
+        List<ModelElement> xmlElements = ConnectionUtils.getXMLElements(xmlSchema);
         for (ModelElement mElement : xmlElements) {
             if (mElement instanceof TdXmlElementType) {
                 MetadataXmlElementTypeRepositoryObject metadataXmlElementType = new MetadataXmlElementTypeRepositoryObject(
@@ -83,5 +79,10 @@ public class MDMSchemaRepNode extends RepositoryNode {
             }
         }
         return repsNodes;
+    }
+
+    @Override
+    public boolean hasChildren() {
+        return getChildren().size() > 0;
     }
 }

@@ -39,12 +39,14 @@ import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -80,7 +82,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     @Override
     /**
-     * DOC mzhao bug 9240 mzhao 2009-11-05
+     * DOC mzhao bug 9240 mzhao 2009-11-05.
      */
     protected void unfoldToCheckedElements() {
         Iterator<?> it = modelElementCheckedMap.keySet().iterator();
@@ -93,8 +95,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     /**
-     * 
-     * DOC mzhao Initiate the checked list in column selection dialog
+     * DOC mzhao Initiate the checked list in column selection dialog.
      * 
      * @param reposNodeLs
      */
@@ -102,7 +103,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         List<IRepositoryNode> containerList = new ArrayList<IRepositoryNode>();
         for (int i = 0; i < reposNodeLs.size(); i++) {
             RepositoryNode repNode = (RepositoryNode) reposNodeLs.get(i);
-            IRepositoryNode parentNode = repNode.getParent().getParent();
+            // IRepositoryNode parentNode = repNode.getParent().getParent();
+            IRepositoryNode parentNode = getParentNode(repNode);
             // Add the parent->children relation to the multi map
 
             modelElementCheckedMap.put(parentNode, repNode);
@@ -112,6 +114,22 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             }
         }
         this.setInitialElementSelections(containerList);
+    }
+
+    /**
+     * DOC xqliu Comment method "getParentNode".
+     * 
+     * @param repNode
+     * @return
+     */
+    private IRepositoryNode getParentNode(RepositoryNode repNode) {
+        IRepositoryNode node = repNode.getParent();
+        if (repNode instanceof DBColumnRepNode) {
+            node = repNode.getParent().getParent();
+        } else if (repNode instanceof MDMXmlElementRepNode) {
+            node = repNode.getParent();
+        }
+        return node;
     }
 
     protected void initProvider() {
@@ -139,7 +157,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 setOutput(event.getElement());
                 RepositoryNode selectedNode = (RepositoryNode) event.getElement();
                 if (selectedNode instanceof DBTableRepNode || selectedNode instanceof DBViewRepNode
-                        || selectedNode instanceof MDMSchemaRepNode || selectedNode instanceof DFTableRepNode) {
+                        || selectedNode instanceof DFTableRepNode || selectedNode instanceof MDMSchemaRepNode
+                        || selectedNode instanceof MDMXmlElementRepNode) {
                     handleTreeElementsChecked(selectedNode, event.getChecked());
                 }
             }
@@ -161,7 +180,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * @param checkedFlag
      */
     private void handleTableElementsChecked(RepositoryNode reposNode, Boolean checkedFlag) {
-        RepositoryNode tableParent = reposNode.getParent().getParent();
+        // RepositoryNode tableParent = reposNode.getParent().getParent();
+        IRepositoryNode tableParent = getParentNode(reposNode);
         if (checkedFlag) {
             getTreeViewer().setChecked(tableParent, checkedFlag);
             modelElementCheckedMap.put(tableParent, reposNode);
@@ -191,7 +211,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     modelElementCheckedMap.put(repNode, colNode);
                 }
             }
-
         } else {
             modelElementCheckedMap.remove(repNode);
         }
@@ -299,6 +318,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 return new Object[] { parentElement };
             }
 
+            if (parentElement instanceof MDMSchemaRepNode || parentElement instanceof MDMXmlElementRepNode) {
+                return RepositoryNodeHelper.getMdmChildren(parentElement, false);
+            }
+
             return new Object[0];
         }
 
@@ -314,25 +337,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         public boolean hasChildren(Object element) {
             return Boolean.FALSE;
             // ~
-        }
-
-        /**
-         * If element if TdXmlElementType, the super method hasChildren() return wrong result, so add use this method to
-         * get the right result. xqliu 2010-02-04
-         * 
-         * @param element
-         * @return
-         */
-        private boolean superHasChildren(Object element) {
-            boolean hasChildren = super.hasChildren(element);
-            if (element instanceof EObject) {
-                EObject eobject = (EObject) element;
-                if (SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(eobject) != null) {
-                    hasChildren = !hasChildren;
-                }
-            }
-
-            return hasChildren;
         }
     }
 
@@ -352,6 +356,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         @Override
         public Object[] getChildren(Object parentElement) {
             if (parentElement instanceof IRepositoryNode) {
+                if (parentElement instanceof MDMSchemaRepNode || parentElement instanceof MDMXmlElementRepNode) {
+                    return RepositoryNodeHelper.getMdmChildren(parentElement, true);
+                }
                 IRepositoryNode repoNode = (IRepositoryNode) parentElement;
                 return repoNode.getChildren().toArray();
             }
@@ -371,9 +378,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         public boolean hasChildren(Object element) {
             if (element instanceof RepositoryNode) {
                 RepositoryNode repoNode = (RepositoryNode) element;
-                if (repoNode instanceof DBTableRepNode || repoNode instanceof DBViewRepNode
-                        || repoNode instanceof MDMSchemaRepNode || repoNode instanceof DFTableRepNode) {
+                if (repoNode instanceof DBTableRepNode || repoNode instanceof DBViewRepNode || repoNode instanceof DFTableRepNode) {
                     return Boolean.FALSE;
+                } else if (repoNode instanceof MDMSchemaRepNode || repoNode instanceof MDMXmlElementRepNode) {
+                    return RepositoryNodeHelper.getMdmChildren(element, true).length > 0;
                 }
                 return repoNode.hasChildren();
             }

@@ -55,7 +55,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
@@ -353,16 +352,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
-     * 
+     * open the column selection dialog.
      */
     public void openColumnsSelectionDialog() {
         RepositoryNode connNode = (RepositoryNode) getConnCombo().getData(String.valueOf(getConnCombo().getSelectionIndex()));
-        ModelElement connModelElement = RepositoryNodeHelper.getResourceModelElement(connNode);
-        if (connModelElement != null && connModelElement instanceof MDMConnection) {
-            MessageUI
-                    .openWarning("Can't select columns from Mdm Connection!\nPlease drag Mdm Element from Repository View Tree.");
-            return;
-        }
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
@@ -751,9 +744,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         } else {
             tdProvider = (Connection) analysis.getContext().getConnection();
             if (tdProvider != null) {
-            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-            analysis.getContext().setConnection(null);
-            analysis.getClientDependency().clear();
+                tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+                analysis.getContext().setConnection(null);
+                analysis.getClientDependency().clear();
             }
         }
         // if (providerList.size() != 0) {

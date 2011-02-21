@@ -1173,4 +1173,28 @@ public final class RepositoryNodeHelper {
         list.add(getRootNode(ERepositoryObjectType.METADATA, true));
         return list;
     }
+
+    /**
+     * DOC xqliu Comment method "getMdmChildren".
+     * 
+     * @param parentElement
+     * @param hasChildren
+     * @return
+     */
+    public static Object[] getMdmChildren(Object parentElement, boolean hasChildren) {
+        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
+        List<IRepositoryNode> result = new ArrayList<IRepositoryNode>();
+        if (parentElement instanceof MDMSchemaRepNode) {
+            children = ((MDMSchemaRepNode) parentElement).getChildren();
+        } else if (parentElement instanceof MDMXmlElementRepNode) {
+            children = ((MDMXmlElementRepNode) parentElement).getChildren();
+        }
+        for (IRepositoryNode node : children) {
+            boolean hasChildren2 = node.hasChildren();
+            if ((hasChildren && hasChildren2) || (!hasChildren && !hasChildren2)) {
+                result.add(node);
+            }
+        }
+        return result.toArray();
+    }
 }

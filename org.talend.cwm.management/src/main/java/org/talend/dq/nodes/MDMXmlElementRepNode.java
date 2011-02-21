@@ -60,11 +60,11 @@ public class MDMXmlElementRepNode extends RepositoryNode {
     public List<IRepositoryNode> getChildren() {
         IRepositoryViewObject object = this.getObject();
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
-        TdXmlElementType tdXmlElementType = ((MetadataXmlElementTypeRepositoryObject) object).getTdXmlElementType();
+        TdXmlElementType xmlElementType = ((MetadataXmlElementTypeRepositoryObject) object).getTdXmlElementType();
         List<TdXmlElementType> xmlElements = null;
-        if (tdXmlElementType != null) {
+        if (xmlElementType != null) {
 
-            xmlElements = ConnectionUtils.getXMLElements(tdXmlElementType);
+            xmlElements = ConnectionUtils.getXMLElements(xmlElementType);
         }
         if (xmlElements.size() > 0) {
             for (ModelElement mElement : xmlElements) {
@@ -82,4 +82,10 @@ public class MDMXmlElementRepNode extends RepositoryNode {
             return new ArrayList<IRepositoryNode>();
         }
     }
+
+    @Override
+    public boolean hasChildren() {
+        return getChildren().size() > 0;
+    }
+
 }
