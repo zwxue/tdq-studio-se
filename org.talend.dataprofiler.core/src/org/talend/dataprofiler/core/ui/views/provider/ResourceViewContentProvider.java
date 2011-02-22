@@ -187,7 +187,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
      * @param array
      * @return
      */
-    private Object[] sortRepositoryNode(Object[] array) {
+    protected Object[] sortRepositoryNode(Object[] array) {
         if (array != null && array.length > 0) {
             List<IRepositoryNode> repositoryNodeList = RepositoryNodeHelper.getRepositoryNodeList(array);
             return ComparatorsFactory.sort(repositoryNodeList.toArray(), ComparatorsFactory.REPOSITORY_NODE_COMPARATOR_ID);
