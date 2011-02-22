@@ -91,7 +91,12 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.RepositoryWorkUnit;
@@ -293,6 +298,7 @@ public class DQRespositoryView extends CommonNavigator {
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
+                boolean superDoubleClick = true;
                 Tree tree = (Tree) e.getSource();
                 Point point = new Point(e.x, e.y);
                 TreeItem item = tree.getItem(point);
@@ -347,9 +353,9 @@ public class DQRespositoryView extends CommonNavigator {
                         OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject) obj);
                         openItemEditorAction.run();
                     }
-
                     if (obj instanceof RepositoryNode) {
                         if (obj instanceof ReportFileRepNode) {
+                            superDoubleClick = false;
                             ReportFileRepNode reportFileNode = (ReportFileRepNode) obj;
                             IPath location = Path.fromOSString(reportFileNode.getResource().getRawLocation().toOSString());
                             IFile latestRepIFile = ResourceManager.getRootProject().getFile(location.lastSegment());
@@ -360,16 +366,24 @@ public class DQRespositoryView extends CommonNavigator {
                             } catch (Throwable e1) {
                                 log.error(e1, e1);
                             }
+                        } else {
                             RepositoryNode repoNode = (RepositoryNode) obj;
                             if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
                                 OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
                                 openItemEditorAction.run();
                             }
+                            if (repoNode instanceof AnalysisRepNode || repoNode instanceof ReportRepNode
+                                    || repoNode instanceof SysIndicatorDefinitionRepNode || repoNode instanceof PatternRepNode
+                                    || repoNode instanceof RuleRepNode) {
+                                superDoubleClick = false;
+                            }
                         }
+
                     }
                 }
-
-                super.mouseDoubleClick(e);
+                if (superDoubleClick) {
+                    super.mouseDoubleClick(e);
+                }
             }
         });
         // ~ADD mzhao for feature 6233 Load columns when selecting a table (or
