@@ -342,6 +342,8 @@ public final class ComparatorsFactory {
             }
             String label1 = o1.getLabel();
             String label2 = o2.getLabel();
+            // System.out.println("class1=" + o1.getClass().getName() + " | label1=" + label1);
+            // System.out.println("class2=" + o2.getClass().getName() + " | label2=" + label2);
             if (label1 == null || label2 == null) {
                 return 0;
             }

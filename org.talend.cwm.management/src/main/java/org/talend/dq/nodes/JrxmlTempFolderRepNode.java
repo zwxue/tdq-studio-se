@@ -97,7 +97,7 @@ public class JrxmlTempFolderRepNode extends RepositoryNode {
     @Override
     public String getLabel() {
         if (this.getObject() != null) {
-            this.getObject().getLabel();
+            return this.getObject().getLabel();
         }
         return super.getLabel();
     }

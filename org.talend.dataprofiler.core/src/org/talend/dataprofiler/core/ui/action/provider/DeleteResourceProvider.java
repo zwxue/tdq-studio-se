@@ -21,6 +21,7 @@ import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -67,32 +68,14 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         }
     }
 
-    /**
-     * DOC xqliu Comment method "shouldShowDeleteMenu".
-     * 
-     * @param node
-     * @return
-     */
     private boolean shouldShowDeleteMenu(RepositoryNode node) {
         return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node) && !node.isBin();
     }
 
-    /**
-     * DOC xqliu Comment method "isSystemFolder".
-     * 
-     * @param node
-     * @return
-     */
     private boolean isSystemFolder(RepositoryNode node) {
         return ENodeType.SYSTEM_FOLDER.equals(node.getType());
     }
 
-    /**
-     * DOC xqliu Comment method "isVirturalNode".
-     * 
-     * @param node
-     * @return
-     */
     private boolean isVirturalNode(RepositoryNode node) {
         return node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode || node instanceof DBTableFolderRepNode
                 || node instanceof DBViewFolderRepNode || node instanceof DBTableRepNode || node instanceof DBViewRepNode
@@ -100,15 +83,9 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
                 || node instanceof MDMXmlElementRepNode || node instanceof DFTableRepNode
                 || node instanceof DFColumnFolderRepNode || node instanceof DFColumnRepNode
                 || node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode
-                || isReportSubFolderVirtualNode(node);
+                || isReportSubFolderVirtualNode(node) || isAnalysisSubFolderVirtualNode(node);
     }
 
-    /**
-     * DOC xqliu Comment method "isReportSubFolderVirtualNode".
-     * 
-     * @param node
-     * @return
-     */
     private boolean isReportSubFolderVirtualNode(RepositoryNode node) {
         if (node instanceof ReportSubFolderRepNode) {
             ReportSubFolderRepNode subFolderNode = (ReportSubFolderRepNode) node;
@@ -118,12 +95,14 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         return false;
     }
 
-    /**
-     * DOC xqliu Comment method "isSystemIndicator".
-     * 
-     * @param node
-     * @return
-     */
+    private boolean isAnalysisSubFolderVirtualNode(RepositoryNode node) {
+        if (node instanceof AnalysisSubFolderRepNode) {
+            AnalysisSubFolderRepNode subFolderNode = (AnalysisSubFolderRepNode) node;
+            return subFolderNode.getObject() == null;
+        }
+        return false;
+    }
+
     private boolean isSystemIndicator(RepositoryNode node) {
         switch (node.getType()) {
         case TDQ_REPOSITORY_ELEMENT:

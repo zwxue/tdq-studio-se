@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -62,18 +63,19 @@ public class ReportFolderRepNode extends RepositoryNode {
                 ReportSubFolderRepNode childNodeFolder = new ReportSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+                folder.setRepositoryNode(childNodeFolder);
                 super.getChildren().add(childNodeFolder);
             }
             // rep files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!viewObject.isDeleted()) {
-                    ReportRepNode repNode = new ReportRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-
-                    repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
-                    repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
-                    viewObject.setRepositoryNode(repNode);
-                    super.getChildren().add(repNode);
+                if (viewObject.isDeleted()) {
+                    continue;
                 }
+                ReportRepNode repNode = new ReportRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+                viewObject.setRepositoryNode(repNode);
+                super.getChildren().add(repNode);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
@@ -84,8 +86,65 @@ public class ReportFolderRepNode extends RepositoryNode {
     @Override
     public String getLabel() {
         if (this.getObject() != null) {
-            this.getObject().getLabel();
+            return this.getObject().getLabel();
         }
         return super.getLabel();
     }
+
+    public String getLabelWithCount() {
+        String label = "Report"; //$NON-NLS-1$
+        if (this.getObject() != null) {
+            label = this.getObject().getLabel();
+        } else {
+            label = super.getLabel();
+        }
+        return decorateCount(label);
+    }
+
+    private String decorateCount(String label) {
+        return label + " (" + getChildrenAll(false).size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * get all children under the folder.
+     * 
+     * @param withDelete include deleted ones
+     * @return
+     */
+    public List<IRepositoryNode> getChildrenAll(boolean withDelete) {
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        try {
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+
+            // sub folders
+            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_REPORTS);
+                if (!withDelete && folder.isDeleted()) {
+                    continue;
+                }
+                ReportSubFolderRepNode childNodeFolder = new ReportSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+                folder.setRepositoryNode(childNodeFolder);
+                nodes.addAll(childNodeFolder.getChildrenAll(withDelete));
+            }
+
+            // rep files
+            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+                if (!withDelete && viewObject.isDeleted()) {
+                    continue;
+                }
+                ReportRepNode repNode = new ReportRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+                viewObject.setRepositoryNode(repNode);
+                nodes.add(repNode);
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        return nodes;
+    }
+
 }

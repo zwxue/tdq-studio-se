@@ -189,22 +189,26 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return node.getObject().getLabel() + " " + node.getObject().getVersion();
             } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
                 return node.getObject().getLabel() + "(Unsupported)";
-            } else if (node instanceof AnalysisSubFolderRepNode) {
-                AnalysisSubFolderRepNode anaSubNode = (AnalysisSubFolderRepNode) node;
-                IRepositoryViewObject object = node.getObject();
-                if (object == null) {
-                    return DefaultMessagesImpl.getString("AnalysisSubFolderRepNode.analyzedElement") + anaSubNode.getCount();
-                }
             } else if (node instanceof AnalysisFolderRepNode) {
-                return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
+                if (node instanceof AnalysisSubFolderRepNode) {
+                    AnalysisSubFolderRepNode anaSubNode = (AnalysisSubFolderRepNode) node;
+                    if (node.getObject() == null) {
+                        return DefaultMessagesImpl.getString("AnalysisSubFolderRepNode.analyzedElement") + anaSubNode.getCount();
+                    }
+                    return anaSubNode.getLabelWithCount();
+                }
+                AnalysisFolderRepNode anaNode = (AnalysisFolderRepNode) node;
+                return anaNode.getLabelWithCount();
             } else if (node instanceof ReportFolderRepNode) {
                 if (node instanceof ReportSubFolderRepNode) {
                     ReportSubFolderRepNode repSubNode = (ReportSubFolderRepNode) node;
                     if (!ReportSubFolderType.SUB_FOLDER.equals(repSubNode.getReportSubFolderType())) {
                         return (String) node.getProperties(EProperties.LABEL) + repSubNode.getCount();
                     }
+                    return repSubNode.getLabelWithCount();
                 }
-                return node.getObject().getLabel() + "(" + node.getChildren().size() + ")";
+                ReportFolderRepNode repNode = (ReportFolderRepNode) node;
+                return repNode.getLabelWithCount();
             } else if (node instanceof PatternLanguageRepNode) {
                 return node.getLabel();
             } else if (node instanceof ReportFileRepNode || node instanceof ReportAnalysisRepNode) {

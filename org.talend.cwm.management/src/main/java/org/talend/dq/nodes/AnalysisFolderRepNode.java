@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -63,18 +64,20 @@ public class AnalysisFolderRepNode extends RepositoryNode {
                 AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                folder.setRepositoryNode(childNodeFolder);
                 super.getChildren().add(childNodeFolder);
             }
+
             // ana files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!viewObject.isDeleted()) {
-                    AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-
-                    anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                    anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-                    viewObject.setRepositoryNode(anaNode);
-                    super.getChildren().add(anaNode);
+                if (viewObject.isDeleted()) {
+                    continue;
                 }
+                AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                viewObject.setRepositoryNode(anaNode);
+                super.getChildren().add(anaNode);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
@@ -89,4 +92,61 @@ public class AnalysisFolderRepNode extends RepositoryNode {
         }
         return super.getLabel();
     }
+
+    public String getLabelWithCount() {
+        String label = "Analysis"; //$NON-NLS-1$
+        if (this.getObject() != null) {
+            label = this.getObject().getLabel();
+        } else {
+            label = super.getLabel();
+        }
+        return decorateCount(label);
+    }
+
+    private String decorateCount(String label) {
+        return label + " (" + getChildrenAll(false).size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * get all children under the folder.
+     * 
+     * @param withDelete include deleted ones
+     * @return
+     */
+    public List<IRepositoryNode> getChildrenAll(boolean withDelete) {
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        try {
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+
+            // sub folders
+            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_ANALYSIS);
+                if (!withDelete && folder.isDeleted()) {
+                    continue;
+                }
+                AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                folder.setRepositoryNode(childNodeFolder);
+                nodes.addAll(childNodeFolder.getChildrenAll(withDelete));
+            }
+
+            // ana files
+            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+                if (!withDelete && viewObject.isDeleted()) {
+                    continue;
+                }
+                AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                anaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                anaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+                viewObject.setRepositoryNode(anaNode);
+                nodes.add(anaNode);
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        return nodes;
+    }
+
 }
