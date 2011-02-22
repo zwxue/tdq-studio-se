@@ -91,4 +91,12 @@ public class ExchangeFolderRepNode extends RepositoryNode {
         }
         return list;
     }
+
+    @Override
+    public String getLabel() {
+        if (this.getObject() != null) {
+            return this.getObject().getLabel();
+        }
+        return super.getLabel();
+    }
 }
