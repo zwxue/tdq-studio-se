@@ -1138,7 +1138,7 @@ public final class RepositoryNodeHelper {
         if (node instanceof ReportAnalysisRepNode || node instanceof ReportFileRepNode) {
             return false;
         } else {
-            if (factory.getStatus(viewObject) == ERepositoryStatus.DELETED) {
+            if (viewObject != null && factory.getStatus(viewObject) == ERepositoryStatus.DELETED) {
                 return true;
             }
         }
