@@ -16,14 +16,19 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -53,6 +58,8 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.ReportFileRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -77,6 +84,8 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     private Connection connection = null;
 
+    private IRepositoryNode repositoryNode = null;
+
     public OpenItemEditorAction() {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
     }
@@ -86,83 +95,108 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         this.reposViewObj = reposViewObj;
     }
 
+    public OpenItemEditorAction(IRepositoryNode repNode) {
+        super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
+        this.repositoryNode = repNode;
+        this.reposViewObj = repNode.getObject();
+    }
+
     @Override
     public void run() {
         computeEditorInput();
         if (editorInput != null) {
             CorePlugin.getDefault().openEditor(editorInput, editorID);
         } else {
-            IPath append = WorkbenchUtils.getFilePath((RepositoryNode) reposViewObj.getRepositoryNode());
-            fileEditorInput = ResourceManager.getRootProject().getFile(append);
-            try {
-                IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileEditorInput, true);
-            } catch (PartInitException e) {
-                log.error(e, e);
+            if (reposViewObj == null) {
+                if (repositoryNode != null && repositoryNode instanceof ReportFileRepNode) {
+                    ReportFileRepNode reportFileNode = (ReportFileRepNode) repositoryNode;
+                    IPath location = Path.fromOSString(reportFileNode.getResource().getRawLocation().toOSString());
+                    IFile latestRepIFile = ResourceManager.getRootProject().getFile(location.lastSegment());
+                    try {
+                        latestRepIFile.createLink(location, IResource.REPLACE, null);
+                        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                        page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
+                    } catch (Throwable e1) {
+                        log.error(e1, e1);
+                    }
+                }
+            } else {
+                IPath append = WorkbenchUtils.getFilePath((RepositoryNode) reposViewObj.getRepositoryNode());
+                fileEditorInput = ResourceManager.getRootProject().getFile(append);
+                try {
+                    IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileEditorInput, true);
+                } catch (PartInitException e) {
+                    log.error(e, e);
+                }
             }
         }
 
     }
 
     public AbstractItemEditorInput computeEditorInput() {
-        assert reposViewObj != null;
-        // Connection editor
-        String key = reposViewObj.getRepositoryObjectType().getKey();
-        Item item = reposViewObj.getProperty().getItem();
-        if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
-                || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
-            editorInput = new ConnectionItemEditorInput(item);
-            editorID = ConnectionEditor.class.getName();
-        } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
-            editorInput = new AnalysisItemEditorInput(item);
-            Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
-            AnalysisParameters parameters = analysis.getParameters();
-            AnalysisType analysisType = parameters.getAnalysisType();
-            // boolean equals = analysisType.equals(AnalysisType.CONNECTION);
-            // if (equals) {
-            EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
-            RepositoryNode connectionRepositoryNode = null;
-            if (analysedElements.size() > 0) {
-                ModelElement modelElement = analysedElements.get(0);
+        // assert reposViewObj != null;
+        if (reposViewObj == null) {
+            editorInput = null;
+        } else {
+            // Connection editor
+            String key = reposViewObj.getRepositoryObjectType().getKey();
+            Item item = reposViewObj.getProperty().getItem();
+            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
+                    || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
+                editorInput = new ConnectionItemEditorInput(item);
+                editorID = ConnectionEditor.class.getName();
+            } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
+                editorInput = new AnalysisItemEditorInput(item);
+                Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
+                AnalysisParameters parameters = analysis.getParameters();
+                AnalysisType analysisType = parameters.getAnalysisType();
+                // boolean equals = analysisType.equals(AnalysisType.CONNECTION);
+                // if (equals) {
+                EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+                RepositoryNode connectionRepositoryNode = null;
+                if (analysedElements.size() > 0) {
+                    ModelElement modelElement = analysedElements.get(0);
 
-                if (modelElement instanceof Catalog) {
-                    Catalog catalog = SwitchHelpers.CATALOG_SWITCH.caseCatalog((Catalog) modelElement);
-                    connection = ConnectionHelper.getConnection(catalog);
-                } else if (modelElement instanceof Schema) {
-                    Schema schema = SwitchHelpers.SCHEMA_SWITCH.caseSchema((Schema) modelElement);
-                    if (schema != null) {
-                        connection = ConnectionHelper.getConnection(schema);
+                    if (modelElement instanceof Catalog) {
+                        Catalog catalog = SwitchHelpers.CATALOG_SWITCH.caseCatalog((Catalog) modelElement);
+                        connection = ConnectionHelper.getConnection(catalog);
+                    } else if (modelElement instanceof Schema) {
+                        Schema schema = SwitchHelpers.SCHEMA_SWITCH.caseSchema((Schema) modelElement);
+                        if (schema != null) {
+                            connection = ConnectionHelper.getConnection(schema);
+                        }
+
+                    } else if (modelElement instanceof TdTable) {
+                        TdTable tdTable = SwitchHelpers.TABLE_SWITCH.caseTdTable((TdTable) modelElement);
+                        connection = ConnectionHelper.getConnection(tdTable);
+                    } else if (modelElement instanceof TdView) {
+                        TdView tdView = SwitchHelpers.VIEW_SWITCH.caseView((View) modelElement);
+                        connection = ConnectionHelper.getConnection(tdView);
+                    } else if (modelElement instanceof TdColumn) {
+                        TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.caseTdColumn((TdColumn) modelElement);
+                        connection = ConnectionHelper.getConnection(tdColumn);
                     }
 
-                } else if (modelElement instanceof TdTable) {
-                    TdTable tdTable = SwitchHelpers.TABLE_SWITCH.caseTdTable((TdTable) modelElement);
-                    connection = ConnectionHelper.getConnection(tdTable);
-                } else if (modelElement instanceof TdView) {
-                    TdView tdView = SwitchHelpers.VIEW_SWITCH.caseView((View) modelElement);
-                    connection = ConnectionHelper.getConnection(tdView);
-                } else if (modelElement instanceof TdColumn) {
-                    TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.caseTdColumn((TdColumn) modelElement);
-                    connection = ConnectionHelper.getConnection(tdColumn);
+                    connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
                 }
+                // FIXME User UUID to find the right conn repository node.
+                // String label = conn.getLabel();
+                // IRepositoryNode connectionRepositoryNode =
+                // DQStructureManager.getInstance().getConnectionRepositoryNode(label);
 
-                connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+                ((AnalysisItemEditorInput) editorInput).setConnectionNode((DBConnectionRepNode) connectionRepositoryNode);
+                // }
+                editorID = AnalysisEditor.class.getName();
+            } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
+                editorInput = new IndicatorDefinitionItemEditorInput(item);
+                editorID = IndicatorEditor.class.getName();
+            } else if (ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT.getKey().equals(key)) {
+                editorInput = new BusinessRuleItemEditorInput(item);
+                editorID = DQRuleEditor.class.getName();
+            } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
+                editorInput = new PatternItemEditorInput(item);
+                editorID = PatternEditor.class.getName();
             }
-            // FIXME User UUID to find the right conn repository node.
-            // String label = conn.getLabel();
-            // IRepositoryNode connectionRepositoryNode =
-            // DQStructureManager.getInstance().getConnectionRepositoryNode(label);
-
-            ((AnalysisItemEditorInput) editorInput).setConnectionNode((DBConnectionRepNode) connectionRepositoryNode);
-            // }
-            editorID = AnalysisEditor.class.getName();
-        } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
-            editorInput = new IndicatorDefinitionItemEditorInput(item);
-            editorID = IndicatorEditor.class.getName();
-        } else if (ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT.getKey().equals(key)) {
-            editorInput = new BusinessRuleItemEditorInput(item);
-            editorID = DQRuleEditor.class.getName();
-        } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
-            editorInput = new PatternItemEditorInput(item);
-            editorID = PatternEditor.class.getName();
         }
         return editorInput;
     }

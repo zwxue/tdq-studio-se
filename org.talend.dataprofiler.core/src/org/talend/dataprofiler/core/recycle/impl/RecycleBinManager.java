@@ -98,7 +98,7 @@ public final class RecycleBinManager {
         RepositoryNode currentParentNode = parentNode;
         if (item instanceof FolderItem) {
             itemType = getFolderContentType((FolderItem) item);
-            if (item.getState().isDeleted()) {
+            if (item.getState() != null && item.getState().isDeleted()) {
                 // need to display this folder in the recycle bin.
                 Folder folder = new Folder(item.getProperty(), itemType);
                 RepositoryNode folderNode = null;

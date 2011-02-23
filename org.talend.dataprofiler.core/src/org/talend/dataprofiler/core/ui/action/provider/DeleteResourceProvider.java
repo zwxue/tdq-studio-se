@@ -35,6 +35,8 @@ import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
+import org.talend.dq.nodes.ReportAnalysisRepNode;
+import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -58,18 +60,19 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;
-            RepositoryNode parent = node.getParent();
-            if (!(parent instanceof ReportSubFolderRepNode)) {
-                if (shouldShowDeleteMenu(node)) {
-                    // menu.add(new DeleteObjectsAction());
-                    menu.add(new DQDeleteAction());
-                }
+            // RepositoryNode parent = node.getParent();
+            // if (!(parent instanceof ReportSubFolderRepNode)) {
+            if (shouldShowDeleteMenu(node)) {
+                // menu.add(new DeleteObjectsAction());
+                menu.add(new DQDeleteAction());
             }
+            // }
         }
     }
 
     private boolean shouldShowDeleteMenu(RepositoryNode node) {
-        return !isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node) && !node.isBin();
+        return (!isSystemFolder(node) && !isVirturalNode(node) && !isSystemIndicator(node) && !node.isBin())
+                || (node instanceof ReportFileRepNode);
     }
 
     private boolean isSystemFolder(RepositoryNode node) {
@@ -83,7 +86,8 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
                 || node instanceof MDMXmlElementRepNode || node instanceof DFTableRepNode
                 || node instanceof DFColumnFolderRepNode || node instanceof DFColumnRepNode
                 || node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode
-                || isReportSubFolderVirtualNode(node) || isAnalysisSubFolderVirtualNode(node);
+                || isReportSubFolderVirtualNode(node) || isAnalysisSubFolderVirtualNode(node)
+                || node instanceof ReportAnalysisRepNode || node instanceof ReportFileRepNode;
     }
 
     private boolean isReportSubFolderVirtualNode(RepositoryNode node) {

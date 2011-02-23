@@ -98,7 +98,9 @@ public class DQDeleteAction extends DeleteAction {
                 RepositoryNode node = (RepositoryNode) obj;
                 boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
                 if (!isStateDeleted) {
-                    CorePlugin.getDefault().closeEditorIfOpened(node.getObject().getProperty());
+                    if (node.getObject() != null) {
+                        CorePlugin.getDefault().closeEditorIfOpened(node.getObject().getProperty());
+                    }
                     excuteSuperRun(true);
                     continue;
                 }

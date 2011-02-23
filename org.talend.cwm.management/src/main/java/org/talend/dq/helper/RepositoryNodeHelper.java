@@ -998,7 +998,8 @@ public final class RepositoryNodeHelper {
     public static boolean canOpenEditor(RepositoryNode node) {
         return node instanceof AnalysisRepNode || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                 || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode || node instanceof RuleRepNode
-                || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode || node instanceof ReportRepNode;
+                || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode || node instanceof ReportRepNode
+                || node instanceof ReportFileRepNode;
     }
 
     public static List<IRepositoryNode> getNmaedColumnSetNodes(IRepositoryNode node) {
