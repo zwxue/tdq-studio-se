@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -82,7 +83,8 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     @Override
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
-        if (getParameter().getConnectionRepNode() == null) {
+        AnalysisParameter parameter = (AnalysisParameter) getParameter();
+        if (parameter.getConnectionRepNode() == null && parameter.getAnalysisType().equals(AnalysisType.MULTIPLE_COLUMN)) {
             selectionPage = new ColumnAnalysisDOSelectionPage();
             addPage(selectionPage);
         }

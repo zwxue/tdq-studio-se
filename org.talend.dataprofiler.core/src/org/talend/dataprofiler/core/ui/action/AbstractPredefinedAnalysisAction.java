@@ -46,6 +46,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -176,6 +177,18 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
             return getStandardAnalysisWizardDialog(type, parameter);
         } else if (firstElement instanceof TdTable) {
             Connection connection = ConnectionHelper.getConnection((TdTable) firstElement);
+            IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+            parameter = new AnalysisParameter();
+            parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
+            return getStandardAnalysisWizardDialog(type, parameter);
+        } else if (firstElement instanceof DBColumnRepNode) {
+            // MOD klliu 2011-02-23 feature 15387
+            DBColumnRepNode columnNode = (DBColumnRepNode) firstElement;
+            MetadataColumnRepositoryObject viewObject = (MetadataColumnRepositoryObject) columnNode.getObject();
+            Item item = viewObject.getProperty().getItem();
+            DatabaseConnectionItem databaseConnectionItem = (DatabaseConnectionItem) item;
+            Connection connection = databaseConnectionItem.getConnection();
+
             IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
             parameter = new AnalysisParameter();
             parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
