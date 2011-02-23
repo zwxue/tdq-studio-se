@@ -81,6 +81,9 @@ public class FileSystemExportWriter implements IExportWriter {
         IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
         toExportMap.put(itemResPath, itemDesPath);
+        if (!propResPath.toFile().exists()) {
+            return toExportMap;
+        }
         toExportMap.put(propResPath, propDesPath);
 
         Property property = record.getProperty();

@@ -197,6 +197,9 @@ public final class ImageLib {
     public static final String FILE_DELIMITED = "filedelimited.gif";
 
     public static final String SOURCE_FILE = "editor.gif";
+
+    public static final String JAR_FILE = "jar_obj.gif";
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */

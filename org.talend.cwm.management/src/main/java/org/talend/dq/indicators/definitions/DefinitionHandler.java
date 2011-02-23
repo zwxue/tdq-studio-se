@@ -425,8 +425,12 @@ public final class DefinitionHandler {
     }
 
     private IndicatorCategory getIndicatorCategory(String categoryId) {
-
+        // MOD by zshen for feature 18724 if it is proxy then reload the definitions
+        if (indicatorCategories.size() > 0 && indicatorCategories.get(0).eIsProxy()) {
+            this.initializeDefinitions();
+        }
         for (IndicatorCategory indCategory : indicatorCategories) {
+
             CwmResource resource = (CwmResource) indCategory.eResource();
             if (resource != null) {
                 EObject object = resource.getEObject(categoryId);

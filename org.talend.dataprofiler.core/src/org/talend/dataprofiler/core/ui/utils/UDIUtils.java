@@ -12,16 +12,23 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -32,14 +39,18 @@ import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.dialog.JavaUdiJarSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
@@ -52,17 +63,23 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
+import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public final class UDIUtils {
 
+    public static final String JAREXTENSIONG = "jar";
     private UDIUtils() {
     }
 
@@ -160,6 +177,7 @@ public final class UDIUtils {
         CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new UdiLabelProvider(),
                 new WorkbenchContentProvider());
         dialog.addFilter(new RecycleBinFilter());
+        dialog.addFilter(new FolderObjFilter());
         dialog.setInput(udiProject);
         dialog.setValidator(new ISelectionStatusValidator() {
 
@@ -205,8 +223,136 @@ public final class UDIUtils {
         dialog.setSize(80, 30);
         return dialog;
     }
+
+/**
+ * 
+ * zshen Comment method "createUdiJarCheckedTreeSelectionDialog".
+ * @param udiJarProject
+ * @return
+ */
+    public static JavaUdiJarSelectDialog createUdiJarCheckedTreeSelectionDialog(IFolder udiJarProject, String[] selectionPath) {
+
+        JavaUdiJarSelectDialog dialog = new JavaUdiJarSelectDialog(null, new UdiLabelProvider(), new UdiJarContentProvider());
+        // dialog.addFilter(new RecycleBinFilter());
+        // dialog.addFilter(new FolderObjFilter());
+    dialog.setInput(udiJarProject);
+        dialog.setCheckedElements(selectionPath);
+    dialog.setValidator(new ISelectionStatusValidator() {
+        
+        public IStatus validate(Object[] selection) {
+            IStatus status = Status.OK_STATUS;
+            for (Object udi : selection) {
+                if (udi instanceof IFile) {
+                    IFile file = (IFile) udi;
+                    if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
+                        IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
+                        boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
+                        if (!validStatus) {
+                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                    .getString("AnalysisColumnTreeViewer.chooseValidUdis")); //$NON-NLS-1$
+                        }
+                    }
+                }
+            }
+            return status;
+        }
+        
+    });
+        // dialog.addFilter(new DQFolderFliter(true));
+        dialog.addFilter(new ViewerFilter() {
+        
+ @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof File) {
+                    File file = (File) element;
+                    if (JAREXTENSIONG.equals(new Path(file.getName()).getFileExtension())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    dialog.setContainerMode(true);
+    dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udiSelector")); //$NON-NLS-1$
+    dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udis")); //$NON-NLS-1$
+    dialog.setSize(80, 30);
+    return dialog;
 }
 
+    /**
+     * 
+     * zshen Comment method "getLibJarFileList".
+     * 
+     * @return
+     */
+    public static List<IFile> getLibJarFileList() {
+        List<IFile> fileList = new ArrayList<IFile>();
+        try {
+            for (org.eclipse.core.resources.IResource fileResource : ResourceManager.getUDIJarFolder().members()) {
+                if (IResource.FILE == fileResource.getType()
+                        && JAREXTENSIONG.equalsIgnoreCase(fileResource.getFullPath().getFileExtension())) {
+                    fileList.add((IFile) fileResource);
+                }
+            }
+        } catch (CoreException e) {
+            e.printStackTrace();
+        }
+        return fileList;
+    }
+
+    /**
+     * 
+     * zshen Comment method "getContainJarFile".
+     * 
+     * @param jarPathStr
+     * @return
+     */
+    public static List<IFile> getContainJarFile(String jarPathStr) {
+        List<IFile> fileList = new ArrayList<IFile>();
+
+        for (String containJarName : jarPathStr.split("\\|\\|")) {
+            for (IFile libJarFile : getLibJarFileList()) {
+                if (libJarFile.getName().equalsIgnoreCase(containJarName)) {
+                    fileList.add(libJarFile);
+                    break;
+                }
+            }
+        }
+        return fileList;
+    }
+
+    public static ReturnCode checkUDIDependency(File delFile) {
+        ReturnCode result = new ReturnCode(true);
+        IPath filePath = new Path(delFile.getPath());
+        if (!ResourceManager.getUDIJarFolder().getLocation().isPrefixOf(filePath)) {
+            // filePath.makeRelativeTo(ResourceManager.getRootFolderLocation()))) {
+            return result;
+        }
+        // for (IndicatorDefinition file : IndicatorResourceFileHelper.getInstance().getAllUDIs()) {
+        // EMFSharedResources.getInstance().reloadResource(file.eResource().getURI());
+        // }
+        // IndicatorResourceFileHelper.getInstance().clear();
+
+        for (IRepositoryNode indiDefNode : RepositoryNodeHelper.getUdisRepositoryNodes()) {
+            IndicatorDefinition indiDef = null;
+            Item item = indiDefNode.getObject().getProperty().getItem();
+            if (item instanceof TDQIndicatorDefinitionItem) {
+                indiDef = ((TDQIndicatorDefinitionItem) item).getIndicatorDefinition();
+            } else {
+                continue;
+            }
+            TaggedValue tv = TaggedValueHelper.getTaggedValue(PluginConstant.JAR_FILE_PATH, indiDef.getTaggedValue());
+            String[] strArray = tv.getValue().split("\\|\\|");
+            int index = Arrays.binarySearch(strArray, filePath.lastSegment());
+            if (tv != null && index >= 0) {
+                result.setMessage("The jar file(" + strArray[index] + ") has in use by UDI for " + indiDef.getName());//$NON-NLS-1$
+                result.setOk(false);
+                return result;
+    }
+}
+        return result;
+    }
+}
 /**
  * DOC xqliu class global comment. Detailled comment
  */
@@ -223,8 +369,8 @@ class UdiLabelProvider extends LabelProvider {
             boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
             ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
             if (!validStatus) {
-                ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-                        ISharedImages.IMG_OBJS_WARN_TSK);
+                ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages()
+                        .getImageDescriptor(ISharedImages.IMG_OBJS_WARN_TSK);
                 DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
                         IDecoration.BOTTOM_RIGHT);
                 imageDescriptor = icon;
@@ -232,8 +378,12 @@ class UdiLabelProvider extends LabelProvider {
             return imageDescriptor.createImage();
         }
 
-        return null;
-    }
+        if (element instanceof File) {
+            return ImageLib.getImage(ImageLib.JAR_FILE);
+        }
+
+            return null;
+        }
 
     @Override
     public String getText(Object element) {
@@ -249,6 +399,88 @@ class UdiLabelProvider extends LabelProvider {
             return ((IFolder) element).getName();
         }
 
-        return ""; //$NON-NLS-1$
-    }
+        if (element instanceof File) {
+            File file = (File) element;
+            return file.getName();
+        }
+
+            return ""; //$NON-NLS-1$
+        }
+
+
+   
 }
+
+
+/**
+ * 
+ * @author zshen
+ * 
+ */
+class UdiJarContentProvider implements ITreeContentProvider {
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+     */
+    public void dispose() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     * java.lang.Object)
+     */
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+     */
+    public Object[] getElements(Object inputElement) {
+
+        return getChildren(inputElement);
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
+     */
+    public Object[] getChildren(Object parentElement) {
+        if (parentElement instanceof IFolder) {
+            return Arrays.asList(((IFolder) parentElement).getLocation().toFile().listFiles()).toArray();
+        }
+        return null;
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+     */
+    public Object getParent(Object element) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
+     */
+    public boolean hasChildren(Object element) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+}
+

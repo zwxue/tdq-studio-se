@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.Dialog;
@@ -40,6 +41,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -56,7 +58,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
@@ -76,8 +77,10 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog;
+import org.talend.dataprofiler.core.ui.dialog.JavaUdiJarSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
@@ -86,10 +89,14 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
+import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -1276,16 +1283,40 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Button button = new Button(detailComp, SWT.PUSH);
         button.setText("Browse...");
         button.addSelectionListener(new SelectionAdapter() {
-
+//MOD by zshen for bug 18724 2011.02.23
             public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
-                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
-                String path = dialog.open();
-                if (path != null) {
+                String jarpathStr = jarPathText.getText();
+                JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(ResourceManager
+.getUDIJarFolder(), jarpathStr.split("\\|\\|"));
+                if (selectDialog.open() == Window.OK) {
+
+                    String path = "";
+                    for (Object obj : selectDialog.getResult()) {
+                        if (obj instanceof File) {
+
+                            IFile file = ResourceManager.getRoot().getFile(
+                                    new org.eclipse.core.runtime.Path(((File) obj).getPath()));
+
+                            if (!"".equalsIgnoreCase(path)) {
+                                path += "||";
+                            }
+                            path += file.getName();
+                            setDirty(true);
+                        }
+                    }
                     jarPathText.setText(path);
                     // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
                     validateJavaUDI(classNameText, jarPathText);
+                    ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
                 }
+                // FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
+                //                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
+                // String path = dialog.open();
+                // if (path != null) {
+                // jarPathText.setText(path);
+                // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+                // validateJavaUDI(classNameText, jarPathText);
+                // }
             }
         });
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
@@ -1584,18 +1615,40 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         jarPathText.addModifyListener(new NeedToSetDirtyListener());
         ((GridData) jarPathText.getLayoutData()).widthHint = 350;
         Button button = new Button(detailComp, SWT.PUSH);
-        button.setText("Browse...");
+        button.setText("Browse...");//$NON-NLS-1$
         button.addSelectionListener(new SelectionAdapter() {
-
+          //MOD by zshen for bug 18724 2011.02.23
             public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
-                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
-                String path = dialog.open();
-                if (path != null) {
+                JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(ResourceManager
+.getUDIJarFolder(), jarPathText.getText().split("\\|\\|"));
+                if (selectDialog.open() == Window.OK) {
+                    String path = "";
+                    for (Object obj : selectDialog.getResult()) {
+                        if (obj instanceof File) {
+
+                            IFile file = ResourceManager.getRoot().getFile(
+                                    new org.eclipse.core.runtime.Path(((File) obj).getPath()));
+
+                            if (!"".equalsIgnoreCase(path)) {
+                                path += "||";
+                            }
+                            path += file.getName();
+                            setDirty(true);
+                        }
+                    }
                     jarPathText.setText(path);
                     // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
                     validateJavaUDI(classNameText, jarPathText);
+                    ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
                 }
+                // FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
+                //                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
+                // String path = dialog.open();
+                // if (path != null) {
+                // jarPathText.setText(path);
+                // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+                // validateJavaUDI(classNameText, jarPathText);
+                // }
             }
         });
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
@@ -1907,8 +1960,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         saveDefinitionParameters(definition);
         ReturnCode rc = UDIHelper.validate(definition);
         if (rc.isOk()) {
+          //MOD by zshen for bug 18724 2011.02.23
             // EMFUtil.saveSingleResource(definition.eResource());
+            RepositoryNode indicatorNode = RepositoryNodeHelper.recursiveFind(definition);
+            ((TDQIndicatorDefinitionItem) indicatorNode.getObject().getProperty().getItem()).setIndicatorDefinition(definition);
             IndicatorResourceFileHelper.getInstance().save(definition);
+            // ElementWriterFactory.getInstance().createIndicatorDefinitionWriter()
+            // .save(indicatorNode.getObject().getProperty().getItem());
             this.isDirty = false;
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
@@ -1989,23 +2047,25 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
                 && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
-            File file = new File(jarPath);
-            TalendURLClassLoader cl;
-            try {
-                cl = new TalendURLClassLoader(new URL[] { file.toURL() });
-                cl.findClass(className);
-                return true;
-            } catch (MalformedURLException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            } catch (ClassNotFoundException e1) {
-                return false;
+          //MOD by zshen for bug 18724 2011.02.23
+            for (IFile file : UDIUtils.getContainJarFile(jarPath)) {
+//            File file = new File(jarPath);
+                TalendURLClassLoader cl;
+                try {
+                    cl = new TalendURLClassLoader(new URL[] { file.getLocation().toFile().toURI().toURL() });
+                    Class<?> theClass = cl.findClass(className);
+                    if (theClass != null) {
+                        return true;
+                    }
+                } catch (MalformedURLException e1) {
+                    e1.printStackTrace();
+                } catch (ClassNotFoundException e1) {
+                }
             }
+            return false;
         } else {
             return false;
         }
-
-        return false;
     }
 
     /**

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -37,11 +39,14 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -49,6 +54,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class ItemRecord {
 
     private static Logger log = Logger.getLogger(ItemRecord.class);
+
+    private static final String JARFILEEXTENSION = "jar";//$NON-NLS-1$
 
     private File file;
 
@@ -94,6 +101,9 @@ public class ItemRecord {
         URI itemURI = URI.createFileURI(file.getAbsolutePath());
         URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
+        if(ItemRecord.JARFILEEXTENSION.equals(itemURI.fileExtension())){
+            return;
+        }
         elementEName = EElementEName.findENameByExt(itemURI.fileExtension());
 
         try {
@@ -194,7 +204,15 @@ public class ItemRecord {
             List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
 
             ModelElementHelper.iterateClientDependencies(element, dependencyElements);
-
+            //MOD by zshen for bug 18724 2011.02.23
+            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, element.getTaggedValue());
+            if (tv != null) {
+                for (IFile udiJarFile : UDIUtils.getLibJarFileList()) {
+                    if (Arrays.binarySearch(tv.getValue().split("\\|\\|"), udiJarFile.getName()) >= 0) {
+                        dependencyMap.put(udiJarFile.getLocation().toFile(), null);
+                    }
+                }
+            }
             for (ModelElement dElement : dependencyElements) {
 
                 EcoreUtil.resolveAll(dElement);
@@ -369,7 +387,8 @@ public class ItemRecord {
 
         File propFile = propPath.toFile();
 
-        return propFile.exists() && !StringUtils.equals(path.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION);
+        return JARFILEEXTENSION.equals(path.getFileExtension()) || propFile.exists()
+                && !StringUtils.equals(path.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION);//$NON-NLS-1$
     }
 
     /**

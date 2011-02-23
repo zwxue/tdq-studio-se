@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.jface.viewers.Viewer;
+import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
@@ -62,7 +63,12 @@ public class FolderObjFilter extends AbstractViewerFilter {
                     }
                     return false;
                 }
-
+                // MOD zshen 2011-1-16 18724: Java UDI enhancements to hide lib folder.
+                else if (((IFolder) folder).getProjectRelativePath().toString()
+                        .startsWith(EResourceConstant.USER_DEFINED_INDICATORS.getPath())) {
+                    return false;
+                }
+                // ~18724
                 ResourceAttributes resourceAttributes = folder.getResourceAttributes();
                 if (resourceAttributes == null) {
                     return true;
@@ -72,6 +78,11 @@ public class FolderObjFilter extends AbstractViewerFilter {
                 }
             } else {
                 return true;
+            }
+        } else if (element instanceof UserDefIndicatorSubFolderRepNode) {
+            if (EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName().equalsIgnoreCase(
+                    ((UserDefIndicatorSubFolderRepNode) element).getObject().getLabel())) {//$NON-NLS-1$
+                return false;
             }
         }
         return true;

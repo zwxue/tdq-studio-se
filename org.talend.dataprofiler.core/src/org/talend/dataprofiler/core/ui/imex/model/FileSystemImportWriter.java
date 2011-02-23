@@ -138,7 +138,7 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     private void checkDependency(ItemRecord record) {
         for (ModelElement melement : record.getDependencyMap().values()) {
-            if (melement.eIsProxy()) {
+            if (melement != null && melement.eIsProxy()) {
                 InternalEObject inObject = (InternalEObject) melement;
                 record.addError("\"" + record.getName() + "\" missing dependented file : " + inObject.eProxyURI().toFileString());
             }
@@ -158,13 +158,21 @@ public class FileSystemImportWriter implements IImportWriter {
 
         if (record.isValid()) {
             Property property = record.getProperty();
-
-            IPath itemPath = PropertyHelper.getItemPath(property);
-
-            IPath itemDesPath = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath).getLocation();
+          //MOD by zshen for bug 18724 2011.02.23
+            IPath itemPath = null;
+            IPath itemDesPath = null;
+            if (property != null) {
+                itemPath = PropertyHelper.getItemPath(property);
+            } else {
+                itemPath = new Path(projectName).append(record.getFullPath().removeFirstSegments(1));
+            }
+            itemDesPath = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath).getLocation();
             IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
             toImportMap.put(record.getFilePath(), itemDesPath);
+            if (property == null) {
+                return toImportMap;
+            }
             toImportMap.put(record.getPropertyPath(), propDesPath);
 
             EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());

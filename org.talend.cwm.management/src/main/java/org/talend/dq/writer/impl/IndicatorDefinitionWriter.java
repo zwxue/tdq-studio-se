@@ -12,12 +12,17 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -28,6 +33,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class IndicatorDefinitionWriter extends AElementPersistance {
 
+    private Logger log = Logger.getLogger(IndicatorDefinitionWriter.class);
     /**
      * DOC bZhou SYSIndicatorWriter constructor comment.
      */
@@ -67,7 +73,24 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
     }
 
     public ReturnCode save(Item item) {
-        return null;
+        ReturnCode rc = new ReturnCode();
+        try {
+            TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
+            if (indicatorItem != null && indicatorItem.eIsProxy()) {
+                indicatorItem = (TDQIndicatorDefinitionItem) EObjectHelper.resolveObject(indicatorItem);
+                indicatorItem.getProperty().setLabel(indicatorItem.getIndicatorDefinition().getName());
+            }
+            IndicatorDefinition indiDefinition = indicatorItem.getIndicatorDefinition();
+            addDependencies(indiDefinition);
+            addResourceContent(indiDefinition.eResource(), indiDefinition);
+            indicatorItem.setIndicatorDefinition(indiDefinition);
+            ProxyRepositoryFactory.getInstance().save(indicatorItem);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
     }
 
     @Override

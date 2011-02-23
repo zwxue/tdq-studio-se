@@ -171,6 +171,10 @@ public final class DQStructureManager {
 
             Folder udiFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATORS, Path.EMPTY,
                     EResourceConstant.USER_DEFINED_INDICATORS.getName());
+            // MOD zhsne 18724: Java UDI enhancements add lib folder under UDI folder.
+            Folder udiLibFoler = ProxyRepositoryFactory.getInstance().createFolder(
+                    ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS, Path.EMPTY,
+                    EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
 
             Folder jrxmlFolder = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                     Path.EMPTY, EResourceConstant.JRXML_TEMPLATE.getName());

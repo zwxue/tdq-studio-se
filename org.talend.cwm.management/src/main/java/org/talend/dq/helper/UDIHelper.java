@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,6 +40,7 @@ import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -49,6 +49,8 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * DOC xqliu class global comment. Detailled comment
  */
 public final class UDIHelper {
+
+    public static final String JAREXTENSIONG = "jar";
 
     private static IndicatorSqlSwitch<UserDefIndicator> userDefIndSwitch = new IndicatorSqlSwitch<UserDefIndicator>() {
 
@@ -277,23 +279,31 @@ public final class UDIHelper {
                     jarPath = tv.getValue();
                 }
             }
-
+//MOD by zshen for feature 18724
             if (validateJavaUDI(userJavaClassName, jarPath)) {
-                File file = new File(jarPath);
-                TalendURLClassLoader cl;
-                cl = new TalendURLClassLoader(new URL[] { file.toURI().toURL() });
-                Class<?> clazz = cl.findClass(userJavaClassName);
-                if (clazz != null) {
-                    UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
-                    judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                    if (indicator instanceof JavaUserDefIndicator) {
-                        ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
-                    } else {
-                        JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
-                        judiTemplate.setJavaUserDefObject(judi);
-                        judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                        judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
-                        adaptedUDI = judiTemplate;
+                for (IFile file : getContainJarFile(jarPath)) {
+                    
+                    TalendURLClassLoader cl;
+                    cl = new TalendURLClassLoader(new URL[] { file.getLocation().toFile().toURI().toURL() });
+                    Class<?> clazz = null;
+                    try {
+                        clazz = cl.findClass(userJavaClassName);
+                    } catch (ClassNotFoundException e) {
+                        continue;
+                    }
+                    if (clazz != null) {
+                        UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
+                        judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                        if (indicator instanceof JavaUserDefIndicator) {
+                            ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
+                        } else {
+                            JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
+                            judiTemplate.setJavaUserDefObject(judi);
+                            judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                            judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
+                            adaptedUDI = judiTemplate;
+                        }
+                        break;
                     }
                 }
             }
@@ -331,6 +341,48 @@ public final class UDIHelper {
         boolean systemIndicator = definition != null && definition.eResource() != null
                 && definition.eResource().getURI().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
         return systemIndicator;
+    }
+
+    /**
+     * 
+     * zshen Comment method "getLibJarFileList".
+     * 
+     * @return
+     */
+    public static List<IFile> getLibJarFileList() {
+        List<IFile> fileList = new ArrayList<IFile>();
+        try {
+            for (org.eclipse.core.resources.IResource fileResource : ResourceManager.getUDIJarFolder().members()) {
+                if (IResource.FILE == fileResource.getType()
+                        && JAREXTENSIONG.equalsIgnoreCase(fileResource.getFullPath().getFileExtension())) {
+                    fileList.add((IFile) fileResource);
+                }
+            }
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+        return fileList;
+    }
+
+    /**
+     * 
+     * zshen Comment method "getContainJarFile".
+     * 
+     * @param jarPathStr
+     * @return
+     */
+    public static List<IFile> getContainJarFile(String jarPathStr) {
+        List<IFile> fileList = new ArrayList<IFile>();
+
+        for (String containJarName : jarPathStr.split("\\|\\|")) {
+            for (IFile libJarFile : getLibJarFileList()) {
+                if (libJarFile.getName().equalsIgnoreCase(containJarName)) {
+                    fileList.add(libJarFile);
+                    break;
+                }
+            }
+        }
+        return fileList;
     }
 
 }
