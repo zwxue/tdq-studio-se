@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -32,6 +31,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -45,6 +45,8 @@ import org.talend.dataprofiler.core.service.IJobService;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
@@ -57,10 +59,8 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -287,16 +287,12 @@ public abstract class ModelElementTreeMenuProvider {
             IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY);
             PatternMatchingIndicator indicator = (PatternMatchingIndicator) indicatorUnit.getIndicator();
             Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
-            IFolder patternFolder = ResourceManager.getPatternFolder();
-            IFolder sqlPatternFolder = ResourceManager.getPatternSQLFolder();
-            IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
-                    new IFolder[] { patternFolder, sqlPatternFolder });
-            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            try {
-                activePage.openEditor(new FileEditorInput(file), "org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor"); //$NON-NLS-1$
-            } catch (PartInitException e1) {
-                log.error(e1, e1);
-            }
+            // MOD klliu 2011-02-23 bug 19094 use the unified method to open the file,the parameter is
+            // PatternItemEditorInput.
+            RepositoryNode patternRecursiveFind = RepositoryNodeHelper.recursiveFind(pattern);
+            Item item = patternRecursiveFind.getObject().getProperty().getItem();
+            PatternItemEditorInput analysisEditorInput = new PatternItemEditorInput(item);
+            CorePlugin.getDefault().openEditor(analysisEditorInput, PatternEditor.class.getName());
         }
     }
 
