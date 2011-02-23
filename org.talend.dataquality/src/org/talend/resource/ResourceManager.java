@@ -184,6 +184,16 @@ public final class ResourceManager {
     }
 
     /**
+     * 
+     * zshen Comment method "getUDIJarFolder".
+     * 
+     * @return
+     */
+    public static IFolder getUDIJarFolder() {
+        return getOneFolder(EResourceConstant.USER_DEFINED_INDICATORS_LIB);
+    }
+
+    /**
      * DOC bZhou Comment method "getJRXMLFolder".
      * 
      * @return

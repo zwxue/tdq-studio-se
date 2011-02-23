@@ -65,6 +65,8 @@ public enum EResourceConstant {
                             "User Defined Indicators",
                             "TDQ_Libraries/Indicators/User Defined Indicators",
                             ResourceConstant.READONLY),
+    // MOD zhsne 18724: Java UDI enhancements add lib folder under UDI folder.
+    USER_DEFINED_INDICATORS_LIB("lib", "TDQ_Libraries/Indicators/User Defined Indicators/lib", ResourceConstant.READONLY),
     SYSTEM_INDICATORS("System Indicators", "TDQ_Libraries/Indicators/System Indicators", ResourceConstant.READONLY),
     SYSTEM_INDICATORS_ADVANCED_STATISTICS(
                                           "Advanced Statistics",
