@@ -100,6 +100,9 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             // MetadataTable mTable = null;
             // label: for (String rowValues[] : rows) {
             label: while (csvReader.readRecord()) {
+                if (con.isFirstLineCaption() && csvReader.getCurrentRecord() == Long.valueOf("0")) {
+                    continue;
+                }
                 String[] rowValues = csvReader.getValues();
                 Object object = null;
                 element: for (int i = 0; i < analysisElementList.size(); i++) {
