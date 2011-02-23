@@ -13,28 +13,23 @@
 package org.talend.dataprofiler.core.pattern;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
+import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
-import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dq.analysis.parameters.PatternParameter;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.pattern.PatternBuilder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -181,19 +176,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
     @Override
     public void openEditor(Item item) {
-        TDQPatternItem patternItem = (TDQPatternItem) item;
-        String subfolderPath = patternItem.getState().getPath();
-        String folderPath = ResourceManager.getIndicatorFolder().getFullPath().toString();
-        Path path = new Path(folderPath);
-        Path append = (Path) path.append(new Path(subfolderPath)).append(new Path(patternItem.getFilename()));
-        IPath removeLastSegments = append.removeFirstSegments(1);
-        IFile fileEditorInput = ResourceManager.getRootProject().getFile(removeLastSegments);
-        try {
-            IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileEditorInput, true);
-        } catch (PartInitException e) {
-            log.error(e, e);
-        }
-        // PatternItemEditorInput analysisEditorInput = new PatternItemEditorInput(item);
-        // CorePlugin.getDefault().openEditor(analysisEditorInput, PatternEditor.class.getName());
+        PatternItemEditorInput analysisEditorInput = new PatternItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(analysisEditorInput, PatternEditor.class.getName());
     }
 }

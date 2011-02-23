@@ -13,32 +13,26 @@
 package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
+import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.UDIndicatorBuilder;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -182,19 +176,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     @Override
     public void openEditor(Item item) {
-        TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
-        String subfolderPath = indicatorItem.getState().getPath();
-        String folderPath = ResourceManager.getIndicatorFolder().getFullPath().toString();
-        Path path = new Path(folderPath);
-        Path append = (Path) path.append(new Path(subfolderPath)).append(new Path(indicatorItem.getFilename()));
-        IPath removeLastSegments = append.removeFirstSegments(1);
-        IFile fileEditorInput = ResourceManager.getRootProject().getFile(removeLastSegments);
-        try {
-            IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileEditorInput, true);
-        } catch (PartInitException e) {
-            log.error(e, e);
-        }
-        // IndicatorDefinitionItemEditorInput udiEditorInput = new IndicatorDefinitionItemEditorInput(item);
-        // CorePlugin.getDefault().openEditor(udiEditorInput, IndicatorEditor.class.getName());
+        IndicatorDefinitionItemEditorInput udiEditorInput = new IndicatorDefinitionItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(udiEditorInput, IndicatorEditor.class.getName());
     }
 }

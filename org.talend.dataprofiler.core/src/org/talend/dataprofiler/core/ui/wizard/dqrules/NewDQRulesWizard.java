@@ -13,22 +13,17 @@
 package org.talend.dataprofiler.core.ui.wizard.dqrules;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
 import org.talend.dq.dqrule.DqRuleBuilder;
@@ -36,7 +31,6 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -144,22 +138,7 @@ public class NewDQRulesWizard extends AbstractWizard {
 
     @Override
     public void openEditor(Item item) {
-        TDQBusinessRuleItem ruleItem = (TDQBusinessRuleItem) item;
-        String folderPath = ruleItem.getState().getPath();
-        if (folderPath.equals("")) {
-            folderPath = ResourceManager.getRulesSQLFolder().toString();
-        }
-        Path path = new Path(folderPath);
-
-        Path append = (Path) path.append(new Path(ruleItem.getFilename()));
-        IPath removeLastSegments = append.removeFirstSegments(2);
-        IFile fileEditorInput = ResourceManager.getRootProject().getFile(removeLastSegments);
-        try {
-            IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileEditorInput, true);
-        } catch (PartInitException e) {
-            log.error(e, e);
-        }
-        // BusinessRuleItemEditorInput dqRuleEditorInput = new BusinessRuleItemEditorInput(item);
-        // CorePlugin.getDefault().openEditor(dqRuleEditorInput, DQRuleEditor.class.getName());
+        BusinessRuleItemEditorInput dqRuleEditorInput = new BusinessRuleItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(dqRuleEditorInput, DQRuleEditor.class.getName());
     }
 }
