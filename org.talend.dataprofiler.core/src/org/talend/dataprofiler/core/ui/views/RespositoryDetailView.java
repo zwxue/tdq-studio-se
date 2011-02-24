@@ -56,7 +56,6 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -74,7 +73,12 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.repository.model.IRepositoryNode;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -195,35 +199,53 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             StructuredSelection sel = (StructuredSelection) selection;
             // MOD by zshen for bug 15750 TODO 39(13) make Detail View can be used.
             Object fe = sel.getFirstElement();
-            if(fe instanceof IRepositoryNode){
-                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode((IRepositoryNode) fe);
-            }
+            // if(fe instanceof IRepositoryNode){
+            // fe = RepositoryNodeHelper.getModelElementFromRepositoryNode((IRepositoryNode) fe);
+            // }
+            //MOD klliu 2011-02-24 if choose diffirent node ,that will load diffirent child ,so that not use up.
             if (fe instanceof IFile) {
                 IFile fe2 = (IFile) fe;
                 is = createFileDetail(is, fe2);
             } else if (fe instanceof IRepositoryViewObject) {
                 is = createFileDetail(is, (IRepositoryViewObject) fe);
-            } else if (fe instanceof Connection) {
+            } else if (fe instanceof DBConnectionRepNode) {
+                DBConnectionRepNode connNode = (DBConnectionRepNode) fe;
+                connNode.getChildren();
+                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(connNode);
                 createDataProviderDetail((Connection) fe);
                 is = false;
-            } else if (fe instanceof Catalog) {
-
+            } else if (fe instanceof DBCatalogRepNode) {
+                DBCatalogRepNode catalogNode = (DBCatalogRepNode) fe;
+                catalogNode.getChildren().get(0).getChildren();
+                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(catalogNode);
                 Catalog catalog = (Catalog) fe;
                 createTdCatalogDetail(catalog);
                 is = false;
-            } else if (fe instanceof Schema) {
+            } else if (fe instanceof DBSchemaRepNode) {
+                DBSchemaRepNode schemaNode = (DBSchemaRepNode) fe;
+                schemaNode.getChildren().get(0).getChildren();
+                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(schemaNode);
                 Schema schema = (Schema) fe;
                 createTdSchemaDetail(schema);
                 is = false;
-            } else if (fe instanceof TdTable) {
+            } else if (fe instanceof DBTableRepNode) {
+                DBTableRepNode tableNode = (DBTableRepNode) fe;
+                tableNode.getChildren().get(0).getChildren();
+                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(tableNode);
                 ModelElement element = (ModelElement) fe;
                 createTableDetail((TdTable) element);
                 is = false;
-            } else if (fe instanceof TdView) {
+            } else if (fe instanceof DBViewRepNode) {
+                DBViewRepNode viewNode = (DBViewRepNode) fe;
+                viewNode.getChildren().get(0).getChildren();
+                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(viewNode);
                 ModelElement element = (ModelElement) fe;
                 createNameCommentDetail(element);
                 is = false;
-            } else if (fe instanceof TdColumn) {
+            } else if (fe instanceof DBColumnRepNode) {
+                DBColumnRepNode columnNode = (DBColumnRepNode) fe;
+                columnNode.getChildren().get(0).getChildren();
+                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(columnNode);
                 TdColumn column = (TdColumn) fe;
                 createTdColumn(column);
                 is = false;
