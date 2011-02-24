@@ -47,6 +47,13 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        // MOD qiongli 2011-2-22,bug 17588.override 'getChildren(boolean withDeleted)'. in this case,withDeleted is
+        // false.
+        return getChildren(false);
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
         try {
             super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
@@ -55,7 +62,7 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
             // MOD qiongli 2011-1-18.setProperties for every node
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.METADATA_CONNECTIONS);
-                if (folder.isDeleted()) {
+                if (!withDeleted && folder.isDeleted()) {
                     continue;
                 }
                 DBConnectionSubFolderRepNode childNodeFolder = new DBConnectionSubFolderRepNode(folder, this,
@@ -66,17 +73,20 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
             }
             // connection files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!viewObject.isDeleted()) {
-                    DBConnectionRepNode repNode = new DBConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                    repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
-                    repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
-                    viewObject.setRepositoryNode(repNode);
-                    super.getChildren().add(repNode);
+                if (!withDeleted && viewObject.isDeleted()) {
+                    continue;
                 }
+
+                DBConnectionRepNode repNode = new DBConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
+                viewObject.setRepositoryNode(repNode);
+                super.getChildren().add(repNode);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
         return super.getChildren();
+
     }
 }

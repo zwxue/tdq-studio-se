@@ -115,6 +115,25 @@ public final class EObjectHelper {
         }
     }
 
+    /**
+     * 
+     * DOC qiongli Comment method "removeDependencys".
+     * 
+     * @param elementToDelete
+     */
+    public static void removeDependencys(ModelElement elementToDelete) {
+        if (elementToDelete != null) {
+            List<Resource> modifiedResources = DependenciesHandler.getInstance().clearDependencies(elementToDelete);
+
+            // save now modified resources (that contain the Dependency objects)
+            for (Resource resource : modifiedResources) {
+                EMFUtil.saveSingleResource(resource);
+                // ElementWriterFactory.getInstance().createDataProviderWriter().save(modify);
+            }
+
+        }
+    }
+
     private static ModelElement getModelElement(IFile file) {
         ResourceFileMap resourceFileMap = ModelElementFileFactory.getResourceFileMap(file);
         return resourceFileMap != null ? resourceFileMap.getModelElement(file) : null;

@@ -397,7 +397,7 @@ public final class RepositoryNodeHelper {
     public static RepositoryNode recursiveFind(ModelElement modelElement) {
         if (modelElement instanceof Analysis) {
             Analysis analysis = (Analysis) modelElement;
-            List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes();
+            List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes(true);
             for (IRepositoryNode anaNode : dataprofilingNode) {
                 Item itemTemp = ((IRepositoryViewObject) anaNode.getObject()).getProperty().getItem();
                 if (itemTemp instanceof TDQAnalysisItem) {
@@ -416,7 +416,7 @@ public final class RepositoryNodeHelper {
             }
         } else if (modelElement instanceof TdReport) {
             TdReport report = (TdReport) modelElement;
-            List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes();
+            List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes(true);
             for (IRepositoryNode patternNode : dataprofilingNode) {
                 Item itemTemp = ((IRepositoryViewObject) patternNode.getObject()).getProperty().getItem();
                 if (itemTemp instanceof TDQReportItem) {
@@ -514,7 +514,7 @@ public final class RepositoryNodeHelper {
             }
         } else if (modelElement instanceof Connection) {
             Connection connection = (Connection) modelElement;
-            List<IRepositoryNode> connsNode = getConnectionRepositoryNodes();
+            List<IRepositoryNode> connsNode = getConnectionRepositoryNodes(true);
             for (IRepositoryNode connNode : connsNode) {
                 Item itemTemp = ((IRepositoryViewObject) connNode.getObject()).getProperty().getItem();
                 if (itemTemp instanceof ConnectionItem) {
@@ -533,7 +533,7 @@ public final class RepositoryNodeHelper {
             }
         } else if (modelElement instanceof Pattern) {
             Pattern pattern = (Pattern) modelElement;
-            List<IRepositoryNode> patternsNode = getPatternsRepositoryNodes();
+            List<IRepositoryNode> patternsNode = getPatternsRepositoryNodes(true);
             for (IRepositoryNode patternNode : patternsNode) {
                 Item itemTemp = ((IRepositoryViewObject) patternNode.getObject()).getProperty().getItem();
                 if (itemTemp instanceof TDQPatternItem) {
@@ -552,7 +552,7 @@ public final class RepositoryNodeHelper {
             }
         } else if (modelElement instanceof IndicatorDefinition) {
             IndicatorDefinition udi = (IndicatorDefinition) modelElement;
-            List<IRepositoryNode> udisNode = getUdisRepositoryNodes();
+            List<IRepositoryNode> udisNode = getUdisRepositoryNodes(true);
             for (IRepositoryNode udiNode : udisNode) {
                 Item itemTemp = ((IRepositoryViewObject) udiNode.getObject()).getProperty().getItem();
                 if (itemTemp instanceof TDQIndicatorDefinitionItem) {
@@ -705,7 +705,7 @@ public final class RepositoryNodeHelper {
      * ADD mzhao 15750 , build dq metadata tree, get connection root node.
      */
 
-    public static List<IRepositoryNode> getConnectionRepositoryNodes() {
+    public static List<IRepositoryNode> getConnectionRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
         List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
@@ -713,21 +713,21 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode subNode : childrens) {
                 if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode
                         || subNode instanceof MDMConnectionFolderRepNode) {
-                    connNodes.addAll(getModelElementFromFolder(subNode));
+                    connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
                 }
             }
         }
         return connNodes;
     }
 
-    public static List<IRepositoryNode> getDBConnectionRepositoryNodes() {
+    public static List<IRepositoryNode> getDBConnectionRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
         List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
                 if (subNode instanceof DBConnectionFolderRepNode) {
-                    connNodes.addAll(getModelElementFromFolder(subNode));
+                    connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
                 }
             }
         }
@@ -778,14 +778,14 @@ public final class RepositoryNodeHelper {
         return node;
     }
 
-    public static List<IRepositoryNode> getDataProfilingRepositoryNodes() {
+    public static List<IRepositoryNode> getDataProfilingRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING);// t.DATA_PROFILING.getName());
         List<IRepositoryNode> dataProfilingNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
                 if (subNode instanceof AnalysisFolderRepNode || subNode instanceof ReportFolderRepNode) {
-                    dataProfilingNodes.addAll(getModelElementFromFolder(subNode));
+                    dataProfilingNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
                 }
             }
         }
@@ -804,7 +804,7 @@ public final class RepositoryNodeHelper {
     // return repositoryNodeList;
     // }
 
-    public static List<IRepositoryNode> getPatternsRepositoryNodes() {
+    public static List<IRepositoryNode> getPatternsRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);// .LIBRARIES.getName());
         List<IRepositoryNode> patternsNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
@@ -814,7 +814,7 @@ public final class RepositoryNodeHelper {
                     List<IRepositoryNode> subChildren = subNode.getChildren();
                     for (IRepositoryNode patternsNode : subChildren) {
                         if (patternsNode instanceof PatternRegexFolderRepNode || patternsNode instanceof PatternSqlFolderRepNode) {
-                            patternsNodes.addAll(getModelElementFromFolder(patternsNode));
+                            patternsNodes.addAll(getModelElementFromFolder(patternsNode, withDeleted));
                         }
                     }
                     return patternsNodes;
@@ -826,7 +826,7 @@ public final class RepositoryNodeHelper {
         return patternsNodes;
     }
 
-    public static List<IRepositoryNode> getUdisRepositoryNodes() {
+    public static List<IRepositoryNode> getUdisRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);// EResourceConstant.LIBRARIES.getName());
         List<IRepositoryNode> udisNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
@@ -837,7 +837,7 @@ public final class RepositoryNodeHelper {
                     List<IRepositoryNode> subChildren = subNode.getChildren();
                     for (IRepositoryNode udisNode : subChildren) {
                         if (udisNode instanceof UserDefIndicatorFolderRepNode || udisNode instanceof RulesFolderRepNode) {
-                            udisNodes.addAll(getModelElementFromFolder(udisNode));
+                            udisNodes.addAll(getModelElementFromFolder(udisNode, withDeleted));
                         }
                     }
 
@@ -855,11 +855,12 @@ public final class RepositoryNodeHelper {
      * @param folderNode any node
      * @return
      */
-    private static List<IRepositoryNode> getModelElementFromFolder(IRepositoryNode folderNode) {
+    private static List<IRepositoryNode> getModelElementFromFolder(IRepositoryNode folderNode, boolean withDelted) {
+        // MOD qiongli 2011-2-23,bug 17588 ,add param withDeleted.
         List<IRepositoryNode> repositoryNodeList = new ArrayList<IRepositoryNode>();
         if (isFolderNode(folderNode.getType())) {
-            for (IRepositoryNode thefolderNode : folderNode.getChildren()) {
-                repositoryNodeList.addAll(getModelElementFromFolder(thefolderNode));
+            for (IRepositoryNode thefolderNode : folderNode.getChildren(withDelted)) {
+                repositoryNodeList.addAll(getModelElementFromFolder(thefolderNode, withDelted));
             }
         } else {
             repositoryNodeList.add(folderNode);

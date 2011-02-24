@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
@@ -28,6 +29,7 @@ import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -54,8 +56,9 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
         // DOC klliu feature 15750 connection property define
-        // DataManager connection = analysis.getContext().getConnection();
-        // DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+        // MOD qiongli 2011-2-24,bug 17588,add dependency.
+        DataManager connection = analysis.getContext().getConnection();
+        DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
         ConnectionItem connectionItem = (ConnectionItem) getParameter().getConnectionRepNode().getObject().getProperty()
                 .getItem();
         TypedReturnCode<Object> saveCWMFile = super.createAndSaveCWMFile(analysis);

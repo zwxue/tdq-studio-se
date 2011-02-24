@@ -190,7 +190,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // // MOD qiongli bug 14891 2010-9-20,Add MDM connections
         // Collection<Connection> mdmConne = ProxyRepositoryViewObject.getAllMDMConnections(true);
         // connections.addAll(mdmConne);
-        List<IRepositoryNode> allConnectionReposNodes = RepositoryNodeHelper.getConnectionRepositoryNodes();
+        List<IRepositoryNode> allConnectionReposNodes = RepositoryNodeHelper.getConnectionRepositoryNodes(true);
         // ~ 15685
         // ~ 14549
 

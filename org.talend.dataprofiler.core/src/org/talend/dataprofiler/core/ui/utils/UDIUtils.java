@@ -333,7 +333,7 @@ public final class UDIUtils {
         // }
         // IndicatorResourceFileHelper.getInstance().clear();
 
-        for (IRepositoryNode indiDefNode : RepositoryNodeHelper.getUdisRepositoryNodes()) {
+        for (IRepositoryNode indiDefNode : RepositoryNodeHelper.getUdisRepositoryNodes(true)) {
             IndicatorDefinition indiDef = null;
             Item item = indiDefNode.getObject().getProperty().getItem();
             if (item instanceof TDQIndicatorDefinitionItem) {

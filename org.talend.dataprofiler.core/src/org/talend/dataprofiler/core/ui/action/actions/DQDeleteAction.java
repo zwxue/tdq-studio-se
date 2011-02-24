@@ -22,9 +22,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.actions.ActionFactory;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
 import org.talend.dataprofiler.core.service.TDQResourceChangeHandler;
@@ -44,11 +44,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class DQDeleteAction extends DeleteAction {
 
-    private ModelElement currentDependencyModEle = null;
-
-    private ISelection originalUISelection = null;// record UI Selection elements
-
-    private boolean isUISelection = true;
+    private RepositoryNode currentNode = null;
 
     private static Logger log = Logger.getLogger(TDQResourceChangeHandler.class);
 
@@ -64,21 +60,11 @@ public class DQDeleteAction extends DeleteAction {
     @Override
     public ISelection getSelection() {
         ISelection selection = null;
-        // select by UI(tree)
-        if (isUISelection) {
-            if (originalUISelection == null) {
-                DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
-                originalUISelection = findView.getCommonViewer().getSelection();
-            }
-            selection = originalUISelection;
-
-        } else if (currentDependencyModEle != null) {
-            // new instance of selection for dependency modeleEelemnt.
-            RepositoryNode node = RepositoryNodeHelper.recursiveFind(currentDependencyModEle);
-            if (node == null) {
-                node = recursiveFindFromRecycleBin(currentDependencyModEle);
-            }
-            selection = new StructuredSelection(node);
+        if (currentNode == null) {
+            DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
+            selection = findView.getCommonViewer().getSelection();
+        } else {
+            selection = new StructuredSelection(currentNode);
         }
         return selection;
     }
@@ -93,16 +79,17 @@ public class DQDeleteAction extends DeleteAction {
     public void run() {
 
         ISelection selection = this.getSelection();
-        for (Object obj : ((IStructuredSelection) selection).toArray()) {
+        Object[] objs = ((IStructuredSelection) selection).toArray();
+        for (Object obj : objs) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
                 boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
                 if (!isStateDeleted) {
-                    if (node.getObject() != null) {
-                        CorePlugin.getDefault().closeEditorIfOpened(node.getObject().getProperty());
-                    }
-                    excuteSuperRun(true);
-                    continue;
+                    closeEditors(objs);
+                    currentNode = null;
+                    super.run();
+                    break;
+
                 }
                 // show dependency dialog and phisical delete dependencies just for phisical deleting.
                 if (node.getType() == ENodeType.SIMPLE_FOLDER) {
@@ -110,12 +97,15 @@ public class DQDeleteAction extends DeleteAction {
                     findRepNodesByFolderNode(node, newLs);
                     for (IRepositoryNode subNode : newLs) {
                         if (showDependenciesDialog((RepositoryNode) subNode)) {
-                            excuteSuperRun(true);
+                            currentNode = (RepositoryNode) subNode;
+                            super.run();
                         }
                     }
                 } else {
                     if (showDependenciesDialog(node)) {
-                        excuteSuperRun(true);
+                        EObjectHelper.removeDependencys(RepositoryNodeHelper.getModelElementFromRepositoryNode(node));
+                        currentNode = node;
+                        super.run();
                     }
                 }
             }
@@ -139,8 +129,9 @@ public class DQDeleteAction extends DeleteAction {
             return flag;
         }
         ModelElement modEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
+        String lable = node.getObject().getLabel() == null ? PluginConstant.EMPTY_STRING : node.getObject().getLabel();
         if (DeleteModelElementConfirmDialog.showDialog(null, modEle, dependencies.toArray(new ModelElement[dependencies.size()]),
-                DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther"))) {
+                DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable))) {
             if (!physicalDeleteDependencies(dependencies)) {
                 flag = false;
             }
@@ -169,24 +160,27 @@ public class DQDeleteAction extends DeleteAction {
                 if (!isSucceed) {
                     return false;
                 }
-                currentDependencyModEle = mod;
-                RepositoryNode dependecyNode = RepositoryNodeHelper.recursiveFind(mod);
-                if (dependecyNode != null && !RepositoryNodeHelper.isStateDeleted(dependecyNode)) {
+                currentNode = RepositoryNodeHelper.recursiveFind(mod);
+                if (currentNode != null && !RepositoryNodeHelper.isStateDeleted(currentNode)) {
                     // logcial delete dependcy element.
-                    excuteSuperRun(false);
-                    CorePlugin.getDefault().closeEditorIfOpened(dependecyNode.getObject().getProperty());
+                    if (currentNode.getObject() != null)
+                        CorePlugin.getDefault().closeEditorIfOpened(currentNode.getObject().getProperty());
+                    super.run();
                     CorePlugin.getDefault().refreshDQView();
                 }
                 // physical delete dependcy element.
-                excuteSuperRun(false);
-                IFile propertyFile = PropertyHelper.getPropertyFile(mod);
-                if (propertyFile != null && propertyFile.exists()) {
-                    isSucceed = false;
-                } else {
-                    DependenciesHandler.getInstance().clearDependencies(mod);
+                currentNode = findRepNodeInRecBin(currentNode);
+                if (currentNode != null) {
+                    super.run();
+                    IFile propertyFile = PropertyHelper.getPropertyFile(mod);
+                    if (propertyFile != null && propertyFile.exists()) {
+                        isSucceed = false;
+                    } else {
+                        EObjectHelper.removeDependencys(mod);
+                    }
                 }
-            }
 
+            }
         } catch (Exception exc) {
             log.error(exc, exc);
             return false;
@@ -215,28 +209,29 @@ public class DQDeleteAction extends DeleteAction {
 
     }
 
-    private void excuteSuperRun(boolean isUISelection) {
-        this.isUISelection = isUISelection;
-        super.run();
-    }
-
-    /**
-     * 
-     * find a RepositoryNode from RecycleBin.
-     * 
-     * @return
-     */
-    private RepositoryNode recursiveFindFromRecycleBin(ModelElement modelElement) {
-        RepositoryNode node = null;
-        List<IRepositoryNode> recylebinChildren = RecycleBinManager.getInstance().getRecycleBinChildren();
-        for (IRepositoryNode recNode : recylebinChildren) {
-            if (ResourceHelper.getUUID(modelElement).equals(
-                    ResourceHelper.getUUID(RepositoryNodeHelper.getModelElementFromRepositoryNode(recNode)))) {
-                node = (RepositoryNode) recNode;
+    private RepositoryNode findRepNodeInRecBin(RepositoryNode node) {
+        List<IRepositoryNode> nodeLs = RecycleBinManager.getInstance().getRecycleBinChildren();
+        RepositoryNode returnNode = null;
+        for (IRepositoryNode recNod : nodeLs) {
+            if (ResourceHelper.getUUID(RepositoryNodeHelper.getModelElementFromRepositoryNode(recNod)).equals(
+                    ResourceHelper.getUUID(RepositoryNodeHelper.getModelElementFromRepositoryNode(node)))) {
+                returnNode = (RepositoryNode) recNod;
                 break;
             }
         }
-        return node;
+        return returnNode;
+
+    }
+
+    private void closeEditors(Object[] selections) {
+        for (Object obj : selections) {
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) obj;
+                if (node.getObject() != null) {
+                    CorePlugin.getDefault().closeEditorIfOpened(node.getObject().getProperty());
+                }
+            }
+        }
     }
 
 }

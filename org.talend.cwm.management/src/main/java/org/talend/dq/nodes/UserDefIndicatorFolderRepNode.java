@@ -47,6 +47,19 @@ public class UserDefIndicatorFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        return getChildren(false);
+    }
+
+    @Override
+    public String getLabel() {
+        if (this.getObject() != null) {
+            return this.getObject().getLabel();
+        }
+        return super.getLabel();
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
         try {
             super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
@@ -54,7 +67,7 @@ public class UserDefIndicatorFolderRepNode extends RepositoryNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                if (folder.isDeleted()) {
+                if (!withDeleted&&folder.isDeleted()) {
                     continue;
                 }
                 UserDefIndicatorSubFolderRepNode childNodeFolder = new UserDefIndicatorSubFolderRepNode(folder, this,
@@ -65,27 +78,20 @@ public class UserDefIndicatorFolderRepNode extends RepositoryNode {
             }
             // rule files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!viewObject.isDeleted()) {
-                    SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
-                            ENodeType.REPOSITORY_ELEMENT);
-                    repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                    repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                    viewObject.setRepositoryNode(repNode);
-                    repNode.setSystemIndicator(true);
-                    super.getChildren().add(repNode);
+                if (!withDeleted && viewObject.isDeleted()) {
+                    continue;
                 }
+                SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
+                        ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
+                viewObject.setRepositoryNode(repNode);
+                repNode.setSystemIndicator(true);
+                super.getChildren().add(repNode);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
         return super.getChildren();
-    }
-
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
     }
 }

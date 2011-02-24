@@ -48,24 +48,11 @@ public class PatternRegexFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
-        ERepositoryObjectType contentType = this.getContentType();
-        try {
-            RootContainer<String, IRepositoryViewObject> patterns = ProxyRepositoryFactory.getInstance()
-                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-
-            // RootContainer<String, IRepositoryViewObject> patterns =
-            // ProxyRepositoryFactory.getInstance().getPatterns(contentType);
-            fetchRepositoryNodeByFolder(patterns, contentType, fetchNodeByFolder);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-
-        return fetchNodeByFolder.getChildren();
+        return getChildren(false);
     }
 
     public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,
-            RepositoryNode node) {
+            RepositoryNode node, boolean withDeleted) {
         RepositoryNode parent = node;
         for (Object object : patterns.getSubContainer()) {
             Container container = (Container) object;
@@ -76,7 +63,7 @@ public class PatternRegexFolderRepNode extends RepositoryNode {
                 itemType = parentItemType;
             }
             Folder folder = new Folder(((Property) property), itemType);
-            if (folder.isDeleted()) {
+            if (!withDeleted && folder.isDeleted()) {
                 continue;
             }
             PatternRegexSubFolderRepNode childNodeFolder = new PatternRegexSubFolderRepNode(folder, parent,
@@ -84,19 +71,20 @@ public class PatternRegexFolderRepNode extends RepositoryNode {
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
             childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
             parent.getChildren().add(childNodeFolder);
-            fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
+            fetchRepositoryNodeByFolder(container, itemType, childNodeFolder, withDeleted);
         }
         // not folder or folders have no subFolder
         for (Object obj : patterns.getMembers()) {
             RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
-            if (!viewObject.isDeleted()) {
-                PatternRepNode repNode = new PatternRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-                viewObject.setRepositoryNode(repNode);
-                parent.getChildren().add(repNode);
-
+            if (!withDeleted && viewObject.isDeleted()) {
+                continue;
             }
+            PatternRepNode repNode = new PatternRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
+            repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            viewObject.setRepositoryNode(repNode);
+            parent.getChildren().add(repNode);
+
         }
         return parent;
     }
@@ -107,5 +95,23 @@ public class PatternRegexFolderRepNode extends RepositoryNode {
             return this.getObject().getLabel();
         }
         return super.getLabel();
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
+        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
+        ERepositoryObjectType contentType = this.getContentType();
+        try {
+            RootContainer<String, IRepositoryViewObject> patterns = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+
+            // RootContainer<String, IRepositoryViewObject> patterns =
+            // ProxyRepositoryFactory.getInstance().getPatterns(contentType);
+            fetchRepositoryNodeByFolder(patterns, contentType, fetchNodeByFolder, withDeleted);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+
+        return fetchNodeByFolder.getChildren();
     }
 }

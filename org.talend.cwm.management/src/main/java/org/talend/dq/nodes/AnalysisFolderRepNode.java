@@ -49,6 +49,19 @@ public class AnalysisFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        return getChildren(false);
+    }
+
+    @Override
+    public String getLabel() {
+        if (this.getObject() != null) {
+            return this.getObject().getLabel();
+        }
+        return super.getLabel();
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
         try {
             super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
@@ -58,7 +71,7 @@ public class AnalysisFolderRepNode extends RepositoryNode {
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_ANALYSIS);
                 // MOD qiongli 2011-1-20.
-                if (folder.isDeleted()) {
+                if (!withDeleted && folder.isDeleted()) {
                     continue;
                 }
                 AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
@@ -70,7 +83,7 @@ public class AnalysisFolderRepNode extends RepositoryNode {
 
             // ana files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (viewObject.isDeleted()) {
+                if (!withDeleted && viewObject.isDeleted()) {
                     continue;
                 }
                 AnalysisRepNode anaNode = new AnalysisRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
@@ -83,14 +96,6 @@ public class AnalysisFolderRepNode extends RepositoryNode {
             log.error(e, e);
         }
         return super.getChildren();
-    }
-
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
     }
 
     public String getLabelWithCount() {

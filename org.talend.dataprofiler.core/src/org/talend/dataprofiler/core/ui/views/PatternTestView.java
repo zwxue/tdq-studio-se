@@ -185,7 +185,7 @@ public class PatternTestView extends ViewPart {
         dbCombo.setLayoutData(data);
         // IFolder folder = ResourceManager.getConnectionFolder();
 
-        listTdDataProviders = RepositoryNodeHelper.getDBConnectionRepositoryNodes();
+        listTdDataProviders = RepositoryNodeHelper.getDBConnectionRepositoryNodes(true);
 
         List<String> items = new ArrayList<String>();
         for (IRepositoryNode connRepNode : listTdDataProviders) {

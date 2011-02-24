@@ -47,6 +47,19 @@ public class RulesFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        return getChildren(false);
+    }
+
+    @Override
+    public String getLabel() {
+        if (this.getObject() != null) {
+            this.getObject().getLabel();
+        }
+        return super.getLabel();
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
         try {
             super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
@@ -54,7 +67,7 @@ public class RulesFolderRepNode extends RepositoryNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
-                if (folder.isDeleted()) {
+                if (!withDeleted && folder.isDeleted()) {
                     continue;
                 }
                 RulesSubFolderRepNode childNodeFolder = new RulesSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
@@ -64,25 +77,18 @@ public class RulesFolderRepNode extends RepositoryNode {
             }
             // rule files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!viewObject.isDeleted()) {
-                    RuleRepNode repNode = new RuleRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                    repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES);
-                    repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES);
-                    viewObject.setRepositoryNode(repNode);
-                    super.getChildren().add(repNode);
+                if (!withDeleted && viewObject.isDeleted()) {
+                    continue;
                 }
+                RuleRepNode repNode = new RuleRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES);
+                viewObject.setRepositoryNode(repNode);
+                super.getChildren().add(repNode);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
         return super.getChildren();
-    }
-
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            this.getObject().getLabel();
-        }
-        return super.getLabel();
     }
 }

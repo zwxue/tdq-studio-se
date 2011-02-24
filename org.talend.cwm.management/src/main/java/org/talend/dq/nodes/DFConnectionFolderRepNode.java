@@ -17,12 +17,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
+import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.RepositoryViewObject;
-import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -46,54 +47,45 @@ public class DFConnectionFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
-        ERepositoryObjectType contentType = this.getContentType();
-        Container<String, IRepositoryViewObject> container = null;
+        return getChildren(false);
+    }
+
+
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
         try {
-            container = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory().getMetadataFileDelimited();
-            fetchRepositoryNodeByFolder(container, contentType, fetchNodeByFolder);
+            super.getChildren().clear();
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+            // sub folders
+            // MOD qiongli 2011-1-18.setProperties for every node
+            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.METADATA_FILE_DELIMITED);
+                if (!withDeleted && folder.isDeleted()) {
+                    continue;
+                }
+                DFConnectionSubFolderRepNode childNodeFolder = new DFConnectionSubFolderRepNode(folder, this,
+                        ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+                super.getChildren().add(childNodeFolder);
+            }
+            // connection files
+            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+                if (!withDeleted && viewObject.isDeleted()) {
+                    continue;
+                }
+
+                DFConnectionRepNode repNode = new DFConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
+                viewObject.setRepositoryNode(repNode);
+                super.getChildren().add(repNode);
+            }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-
-        return fetchNodeByFolder.getChildren();
-    }
-
-    public RepositoryNode fetchRepositoryNodeByFolder(Container<String, IRepositoryViewObject> patterns,
-            ERepositoryObjectType parentItemType, RepositoryNode node) {
-        RepositoryNode parent = node;
-        for (Container<String, IRepositoryViewObject> container : patterns.getSubContainer()) {
-
-            Property property = (Property) container.getProperty();
-            ERepositoryObjectType itemType = ERepositoryObjectType.getTypeFromKey(property.getLabel());
-
-            if (itemType == null) {
-                itemType = parentItemType;
-            }
-            Folder folder = new Folder(((Property) property), itemType);
-            if (folder.isDeleted()) {
-                continue;
-            }
-            DFConnectionSubFolderRepNode childNodeFolder = new DFConnectionSubFolderRepNode(folder, parent,
-                    ENodeType.SIMPLE_FOLDER);
-            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
-            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
-            parent.getChildren().add(childNodeFolder);
-            fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
-        }
-        // not folder or folders have no subFolder
-        for (Object obj : patterns.getMembers()) {
-            RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
-            if (!viewObject.isDeleted()) {
-                DFConnectionRepNode repNode = new DFConnectionRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_FILE_DELIMITED);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_FILE_DELIMITED);
-                viewObject.setRepositoryNode(repNode);
-                parent.getChildren().add(repNode);
-
-            }
-        }
-        return parent;
+        return super.getChildren();
     }
 
 
