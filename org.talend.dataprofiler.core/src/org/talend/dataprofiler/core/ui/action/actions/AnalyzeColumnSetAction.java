@@ -22,6 +22,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -29,8 +33,10 @@ import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
@@ -86,27 +92,43 @@ public class AnalyzeColumnSetAction extends Action {
     @Override
     public void run() {
         PackagesAnalyisParameter packaFilterParameter = new PackagesAnalyisParameter();
-        DBTableFolderRepNode tFolder = (DBTableFolderRepNode) nodeColumns.getParent();
-        if (tFolder != null) {
-            IRepositoryNode node = tFolder.getParent();
 
-            if (node instanceof DBCatalogRepNode) {
-                IRepositoryNode connNode = ((DBCatalogRepNode) node).getParent();
-                packaFilterParameter.setConnectionRepNode((DBConnectionRepNode) connNode);
-                catalogs.add(node);
-                packaFilterParameter.setPackages(catalogs);
-            } else if (node instanceof DBSchemaRepNode) {
-                schemaNode = (DBSchemaRepNode) node;
-                RepositoryNode parent = schemaNode.getParent();
-                if (parent instanceof DBCatalogRepNode) {
-                    catalogs.add(parent);
-                } else {
-                    catalogs.add(schemaNode);
+        if (nodeColumns != null) {
+            DBTableFolderRepNode tFolder = (DBTableFolderRepNode) nodeColumns.getParent();
+            if (tFolder != null) {
+                IRepositoryNode node = tFolder.getParent();
+
+                if (node instanceof DBCatalogRepNode) {
+                    IRepositoryNode connNode = ((DBCatalogRepNode) node).getParent();
+                    packaFilterParameter.setConnectionRepNode((DBConnectionRepNode) connNode);
+                    catalogs.add(node);
+                    packaFilterParameter.setPackages(catalogs);
+                } else if (node instanceof DBSchemaRepNode) {
+                    schemaNode = (DBSchemaRepNode) node;
+                    RepositoryNode parent = schemaNode.getParent();
+                    if (parent instanceof DBCatalogRepNode) {
+                        catalogs.add(parent);
+                    } else {
+                        catalogs.add(schemaNode);
+                    }
+                    packaFilterParameter.setPackages(catalogs);
                 }
-                packaFilterParameter.setPackages(catalogs);
-            }
 
+            }
         }
+
+        if (needselection) {
+            IRepositoryNode firstElement = (RepositoryNode) this.selection.getFirstElement();
+            IRepositoryViewObject viewObject = firstElement.getObject();
+            Item item = viewObject.getProperty().getItem();
+
+            ConnectionItem connectionItem = (ConnectionItem) item;
+            Connection connection = connectionItem.getConnection();
+
+            IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+            packaFilterParameter.setConnectionRepNode(repositoryNode);
+        }
+
         if (opencolumnSetAnalysisDialog(packaFilterParameter) == Window.OK) {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
@@ -114,15 +136,15 @@ public class AnalyzeColumnSetAction extends Action {
             if (editor != null) {
                 ColumnSetMasterPage page = (ColumnSetMasterPage) editor.getMasterPage();
                 if (this.needselection && !this.selection.isEmpty()) {
-                    TdColumn[] tdColumns = new TdColumn[selection.size()];
+                    DBColumnRepNode[] nodeArray = new DBColumnRepNode[selection.size()];
                     Iterator it = this.selection.iterator();
 
                     int i = 0;
                     while (it.hasNext()) {
-                        tdColumns[i] = (TdColumn) it.next();
+                        nodeArray[i] = (DBColumnRepNode) it.next();
                         i++;
                     }
-                    page.getTreeViewer().setInput(tdColumns);
+                    page.getTreeViewer().setInput(nodeArray);
                 } else if (!this.needselection && null != this.nodeColumns) {
                     for (IRepositoryNode columnFolder : nodeColumns.getChildren()) {
                         if (columnFolder instanceof DBColumnFolderRepNode) {
@@ -138,11 +160,12 @@ public class AnalyzeColumnSetAction extends Action {
 
     public void setColumnSelection(TreeSelection selection) {
         this.selection = selection;
+        setEnabled(selection.toList().size() > 1);
     }
 
     private int opencolumnSetAnalysisDialog(PackagesAnalyisParameter packaFilterParameter) {
         Wizard wizard = WizardFactory.createAnalysisWizard(AnalysisType.COLUMN_SET, packaFilterParameter);
-        wizard.setForcePreviousAndNextButtons(true);
+        wizard.setForcePreviousAndNextButtons(!this.needselection);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);
 

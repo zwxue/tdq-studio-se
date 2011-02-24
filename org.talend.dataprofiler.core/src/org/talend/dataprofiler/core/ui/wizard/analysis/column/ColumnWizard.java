@@ -18,8 +18,8 @@ import java.util.List;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
-import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
@@ -125,12 +125,12 @@ public class ColumnWizard extends AbstractAnalysisWizard {
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
             if (editor != null) {
-                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) editor.getMasterPage();
+                AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
                 List<IRepositoryNode> nodes = this.selectionPage.nodes;
                 if (nodes.size() > 0) {
                     List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
                     nodeList.addAll(nodes);
-                    page.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
+                    masterPage.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
                 }
             }
         }

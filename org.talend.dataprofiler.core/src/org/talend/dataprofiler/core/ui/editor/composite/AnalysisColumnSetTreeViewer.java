@@ -104,6 +104,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private ExecutionLanguage language;
 
+    private AnalysisColumnSetTreeViewer setTreeViewer;
+
     // private Menu menu;
 
     // private MenuItem editPatternMenuItem;
@@ -119,6 +121,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         this.createButtonSection(parent.getParent());
         this.setElements(masterPage.getCurrentModelElementIndicators());
         this.setDirty(false);
+
+        AbstractColumnDropTree treeViewer = masterPage.getTreeViewer();
+        if (treeViewer != null && treeViewer instanceof AnalysisColumnSetTreeViewer) {
+            setTreeViewer = (AnalysisColumnSetTreeViewer) treeViewer;
+        }
     }
 
     /**
@@ -203,14 +210,14 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                moveElement(masterPage.getTreeViewer(), -1);
+                moveElement(setTreeViewer, -1);
             }
 
         });
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                moveElement(masterPage.getTreeViewer(), 1);
+                moveElement(setTreeViewer, 1);
             }
 
         });
@@ -219,7 +226,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             public void widgetSelected(SelectionEvent e) {
                 Tree currentTree = tree;
                 Object[] selectItem = currentTree.getSelection();
-                List<IRepositoryNode> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
+                List<IRepositoryNode> columnList = setTreeViewer.getColumnSetMultiValueList();
                 for (int i = 0; i < selectItem.length; i++) {
                     Object removeElement = ((TreeItem) selectItem[i])
                             .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
@@ -352,8 +359,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
 
             final MetadataColumn column = (MetadataColumn) ((MetadataColumnRepositoryObject) meIndicator
-                    .getModelElementRepositoryNode()
-                    .getObject()).getTdColumn();
+                    .getModelElementRepositoryNode().getObject()).getTdColumn();
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 
             MetadataHelper.setDataminingType(DataminingType.NOMINAL, column);
@@ -373,8 +379,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 // for presentation
             }
             final MetadataColumn tdColumn = (MetadataColumn) ((MetadataColumnRepositoryObject) meIndicator
-                    .getModelElementRepositoryNode()
-                    .getObject()).getTdColumn();
+                    .getModelElementRepositoryNode().getObject()).getTdColumn();
             DataminingType dataminingType = MetadataHelper.getDataminingType(tdColumn);
             if (meIndicator instanceof DelimitedFileIndicator) {
                 dataminingType = MetadataHelper.getDefaultDataminingType(meIndicator.getJavaType());
@@ -700,8 +705,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     public void createOneUnit(TreeItem treeItem, IndicatorUnit indicatorUnit) {
         super.createOneUnit(treeItem, indicatorUnit);
         treeItem.setExpanded(true);
-        masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().add(
-                (RegexpMatchingIndicator) indicatorUnit.getIndicator());
+        masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators()
+                .add((RegexpMatchingIndicator) indicatorUnit.getIndicator());
         masterPage.updateIndicatorSection();
     }
 

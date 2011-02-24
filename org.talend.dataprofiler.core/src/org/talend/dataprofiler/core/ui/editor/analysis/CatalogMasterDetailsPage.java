@@ -25,7 +25,6 @@ import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -75,7 +74,7 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         catalogIndicatorList.clear();
-        RepositoryNode connNode = getCurrentRepNodeOnUI();
+        IRepositoryNode connNode = getCurrentRepNodeOnUI();
         for (Indicator indicator : indicators) {
             for (IRepositoryNode catalogNode : connNode.getChildren()) {
                 String nodeUuid = ResourceHelper

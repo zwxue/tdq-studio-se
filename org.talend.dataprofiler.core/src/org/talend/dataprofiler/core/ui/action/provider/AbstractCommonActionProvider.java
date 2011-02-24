@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
@@ -22,6 +25,8 @@ import org.talend.dataprofiler.core.service.GlobalServiceRegister;
  */
 public class AbstractCommonActionProvider extends CommonActionProvider {
 
+    protected static final String NEW_MENU_NAME = "column.analysis.menu"; //$NON-NLS-1$
+
     public boolean isShowMenu() {
         // MOD mzhao user readonly role on svn repository mode.
         AbstractSvnRepositoryService svnReposService = GlobalServiceRegister.getDefault().getSvnRepositoryService(
@@ -30,5 +35,23 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
             return false;
         }
         return true;
+    }
+
+    /**
+     * DOC bZhou Comment method "getSubMenuManager".
+     * 
+     * @param subMenuId
+     * @return
+     */
+    public IMenuManager getSubMenuManager(IMenuManager topMenu, String subMenuId) {
+        if (topMenu != null) {
+            for (IContributionItem item : topMenu.getItems()) {
+                if (StringUtils.equals(item.getId(), subMenuId)) {
+                    return (IMenuManager) item;
+                }
+            }
+        }
+
+        return null;
     }
 }

@@ -270,9 +270,17 @@
             class="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.AnalyzeColumnProvider">
          <enablement>
-            <and>
-	            <instanceof value="org.talend.dq.nodes.DBColumnRepNode"/>           
-	        </and>
+            <or>
+               <instanceof
+                     value="org.talend.dq.nodes.DBColumnRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DFColumnRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.MDMXmlElementRepNode">
+               </instanceof>
+            </or>
          </enablement>
       </actionProvider> 
       

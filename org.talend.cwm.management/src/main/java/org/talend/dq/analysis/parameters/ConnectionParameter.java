@@ -17,7 +17,6 @@ import java.util.List;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -44,13 +43,13 @@ public class ConnectionParameter {
 
     private EParameterType paramType;
 
-    private DBConnectionRepNode connectionRepNode;
+    private IRepositoryNode connectionRepNode;
 
-    public DBConnectionRepNode getConnectionRepNode() {
+    public IRepositoryNode getConnectionRepNode() {
         return this.connectionRepNode;
     }
 
-    public void setConnectionRepNode(DBConnectionRepNode connectionRepNode) {
+    public void setConnectionRepNode(IRepositoryNode connectionRepNode) {
         this.connectionRepNode = connectionRepNode;
     }
 

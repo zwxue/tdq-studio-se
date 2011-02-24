@@ -52,6 +52,8 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractPagePart;
+import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
@@ -82,6 +84,8 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
     TableMasterDetailsPage masterPage;
 
+    AnalysisTableTreeViewer tableTreeViewer;
+
     private Section resultSection = null;
 
     /**
@@ -95,6 +99,11 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
         this.masterPage = (TableMasterDetailsPage) analysisEditor.getMasterPage();
+
+        AbstractPagePart treeViewer = masterPage.getTreeViewer();
+        if (treeViewer != null && treeViewer instanceof AnalysisTableTreeViewer) {
+            tableTreeViewer = (AnalysisTableTreeViewer) treeViewer;
+        }
     }
 
     @Override
@@ -119,7 +128,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        for (final TableIndicator tableIndicator : masterPage.getTreeViewer().getTableIndicator()) {
+        for (final TableIndicator tableIndicator : tableTreeViewer.getTableIndicator()) {
 
             ExpandableComposite exComp = toolkit.createExpandableComposite(sectionClient, ExpandableComposite.TWISTIE
                     | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
@@ -166,9 +175,8 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
-                    monitor
-                            .beginTask(
-                                    DefaultMessagesImpl.getString("TableAnalysisResultPage.createPreview", set.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                    monitor.beginTask(
+                            DefaultMessagesImpl.getString("TableAnalysisResultPage.createPreview", set.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 
                     Display.getDefault().asyncExec(new Runnable() {
 

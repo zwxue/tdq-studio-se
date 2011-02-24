@@ -25,7 +25,7 @@ import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -69,7 +69,7 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
 
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
         if (getAnalysisBuilder() != null) {
-            DBConnectionRepNode connectionRepNode = getParameter().getConnectionRepNode();
+            IRepositoryNode connectionRepNode = getParameter().getConnectionRepNode();
             ConnectionItem item = (ConnectionItem) connectionRepNode.getObject().getProperty().getItem();
             Connection tdProvider = item.getConnection();
             getAnalysisBuilder().setAnalysisConnection(tdProvider);

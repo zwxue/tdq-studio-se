@@ -68,6 +68,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
@@ -837,12 +838,13 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         }
     }
 
-    /**
-     * Getter for treeViewer.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the treeViewer
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
-    public AnalysisColumnSetTreeViewer getTreeViewer() {
+    @Override
+    public AbstractColumnDropTree getTreeViewer() {
         return this.treeViewer;
     }
 
@@ -874,7 +876,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     @Override
     protected ReturnCode canSave() {
         String message = null;
-        List<IRepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
 
         // MOD yyi 2011-02-16 17871:delimitefile
         List<ModelElement> columnList = new ArrayList<ModelElement>();
@@ -896,7 +898,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     protected ReturnCode canRun() {
-        List<IRepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
+        List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnSetMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
         }

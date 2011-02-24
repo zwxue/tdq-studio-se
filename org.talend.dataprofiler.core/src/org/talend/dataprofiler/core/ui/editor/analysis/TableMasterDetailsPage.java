@@ -71,6 +71,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.chart.ChartUtils;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
@@ -103,10 +104,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private String execLang = ExecutionLanguage.SQL.getLiteral();
 
     AnalysisTableTreeViewer treeViewer;
-
-    public AnalysisTableTreeViewer getTreeViewer() {
-        return treeViewer;
-    }
 
     DataFilterComp dataFilterComp;
 
@@ -625,10 +622,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         } else {
             tdProvider = (Connection) analysis.getContext().getConnection();
             if (tdProvider != null) {
-            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-            // analysis.getClientDependency().get(0)
-            analysis.getContext().setConnection(null);
-            analysis.getClientDependency().clear();
+                tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+                // analysis.getClientDependency().get(0)
+                analysis.getContext().setConnection(null);
+                analysis.getClientDependency().clear();
             }
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
@@ -703,5 +700,15 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (dataFilterComp != null) {
             this.dataFilterComp.removePropertyChangeListener(this);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
+     */
+    @Override
+    public AbstractColumnDropTree getTreeViewer() {
+        return this.treeViewer;
     }
 }

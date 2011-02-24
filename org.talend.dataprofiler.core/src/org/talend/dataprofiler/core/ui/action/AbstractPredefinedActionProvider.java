@@ -38,12 +38,19 @@ public abstract class AbstractPredefinedActionProvider extends AbstractCommonAct
         if (!isShowMenu()) {
             return;
         }
+
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
         if (action != null) {
             action.setSelection(currentSelection);
 
             if (action.isAllowed()) {
-                menu.add(action);
+
+                IMenuManager subMenuManager = getSubMenuManager(menu, NEW_MENU_NAME);
+                if (subMenuManager != null) {
+                    subMenuManager.add(action);
+                } else {
+                    menu.add(action);
+                }
             }
         }
     }

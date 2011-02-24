@@ -12,16 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import java.util.List;
-
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
+import org.eclipse.ui.navigator.ICommonMenuConstants;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnAction;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -33,6 +32,8 @@ import org.talend.repository.model.RepositoryNode;
 public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
 
     private AnalyzeColumnAction analyzeColumnAction;
+
+    private AnalyzeColumnSetAction analyzeColumnSetAction;
 
     public AnalyzeColumnProvider() {
 
@@ -48,6 +49,7 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
 
         if (site.getViewSite() instanceof ICommonViewerWorkbenchSite) {
             analyzeColumnAction = new AnalyzeColumnAction();
+            analyzeColumnSetAction = new AnalyzeColumnSetAction();
         }
     }
 
@@ -64,34 +66,56 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
             return;
         }
 
-        boolean showMenu = true;
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
-        List list = currentSelection.toList();
-        for (Object obj : list) {
+
+        if (isSelectedColumnLevel(currentSelection)) {
+            IMenuManager submenu = new MenuManager("Column Analysis", NEW_MENU_NAME);
+            menu.insertAfter(ICommonMenuConstants.GROUP_NEW, submenu);
+            analyzeColumnAction.setColumnSelection(currentSelection);
+            submenu.add(analyzeColumnAction);
+        }
+
+        if (isSelectedTdColumn(currentSelection)) {
+            analyzeColumnSetAction.setColumnSelection(currentSelection);
+            menu.add(analyzeColumnSetAction);
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "isSelectedColumnLevel".
+     * 
+     * @param currentSelection
+     * @return
+     */
+    private boolean isSelectedColumnLevel(TreeSelection currentSelection) {
+        for (Object obj : currentSelection.toList()) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
-                if (ENodeType.TDQ_REPOSITORY_ELEMENT.equals(node.getType())) {
-                    IRepositoryViewObject viewObject = node.getObject();
-                    if (viewObject instanceof MetadataColumnRepositoryObject) {
-                        showMenu = true;
-                    } else {
-                        showMenu = false;
-                        break;
-                    }
-                } else {
-                    showMenu = false;
-                    break;
+                if (node.hasChildren()) {
+                    return false;
                 }
             } else {
-                showMenu = false;
-                break;
+                return false;
             }
         }
 
-        if (showMenu) {
-            analyzeColumnAction.setColumnSelection(currentSelection);
-            menu.add(analyzeColumnAction);
+        return true;
+    }
+
+    /**
+     * DOC bZhou Comment method "isSelectedTdColumn".
+     * 
+     * @param currentSelection
+     * @return
+     */
+    private boolean isSelectedTdColumn(TreeSelection currentSelection) {
+        for (Object obj : currentSelection.toList()) {
+            if (!(obj instanceof DBColumnRepNode)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
 }

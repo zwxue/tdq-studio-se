@@ -24,7 +24,6 @@ import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -64,7 +63,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
         if (getAnalysisBuilder() != null) {
             // DOC klliu 15750 2011-1-05 add the repnode on parameter
             PackagesAnalyisParameter packageParameter = getParameter();
-            DBConnectionRepNode connectionRepNode = getParameter().getConnectionRepNode();
+            IRepositoryNode connectionRepNode = getParameter().getConnectionRepNode();
             ConnectionItem item = (ConnectionItem) connectionRepNode.getObject().getProperty().getItem();
             Connection tdProvider = item.getConnection();
             // Connection tdProvider = packageParameter.getTdDataProvider();

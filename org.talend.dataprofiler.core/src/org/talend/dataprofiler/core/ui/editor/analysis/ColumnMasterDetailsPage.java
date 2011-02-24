@@ -69,6 +69,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -843,12 +844,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
     }
 
-    /**
-     * Getter for treeViewer.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the treeViewer
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
-    public AnalysisColumnTreeViewer getTreeViewer() {
+    @Override
+    public AbstractColumnDropTree getTreeViewer() {
         return this.treeViewer;
     }
 

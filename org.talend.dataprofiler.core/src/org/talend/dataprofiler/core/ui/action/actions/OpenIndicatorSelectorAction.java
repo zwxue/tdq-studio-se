@@ -18,6 +18,8 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
+import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -44,7 +46,11 @@ public class OpenIndicatorSelectorAction extends Action implements ICheatSheetAc
     @Override
     public void run() {
 
-        page.getTreeViewer().openIndicatorSelectDialog(null);
+        AbstractColumnDropTree treeViewer = page.getTreeViewer();
+        if (treeViewer instanceof AnalysisColumnTreeViewer) {
+            AnalysisColumnTreeViewer columnTreeViewer = (AnalysisColumnTreeViewer) treeViewer;
+            columnTreeViewer.openIndicatorSelectDialog(null);
+        }
     }
 
     /*
