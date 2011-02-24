@@ -227,7 +227,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
         if (alias == null) {
             Collection<Connection> allDataProviders = new ArrayList<Connection>();
-            
+
             List<Connection> conns = new ArrayList<Connection>();
             try {
                 for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
@@ -237,9 +237,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 Log.error(e, e);
             }
             allDataProviders.addAll(conns);
-            
-            
-            
+
             for (Connection dataProvider : allDataProviders) {
                 // MOD xqliu 2010-10-13 bug 15756
                 // if (dataProvider.getId().equals(tdDataProvider.getId())) {
@@ -413,7 +411,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
                 } else if (editorInput instanceof ConnectionItemEditorInput) {
                     ConnectionItemEditorInput connectionInput = (ConnectionItemEditorInput) editorInput;
-                    if (property.equals(connectionInput.getItem().getProperty())) {
+                    if (property != null && property.equals(connectionInput.getItem().getProperty())) {
                         activePage.closeEditor(reference.getEditor(false), false);
                         // break;
                     }
