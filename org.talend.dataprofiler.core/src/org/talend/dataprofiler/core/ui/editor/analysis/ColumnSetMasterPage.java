@@ -160,6 +160,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private Text maxNumText;
 
+    private Button storeDataCheck;
+
     public ColumnSetMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
@@ -583,6 +585,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         final Composite javaEnginSection = createjavaEnginSection(sectionClient);
         if (ExecutionLanguage.SQL.equals(executionLanguage)) {
             javaEnginSection.setVisible(false);
+            GridData data = (GridData) javaEnginSection.getLayoutData();
+            data.heightHint = 10;
+            javaEnginSection.setLayoutData(data);
+            analysisParamSection.setExpanded(true);
         }
         execCombo.setText(executionLanguage.getLiteral());
         execLang = executionLanguage.getLiteral();
@@ -607,8 +613,16 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 // MOD zshen feature 12919 : hidden or display parameter of java engin.
                 if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang))) {
                     javaEnginSection.setVisible(false);
+                    GridData data = (GridData) javaEnginSection.getLayoutData();
+                    data.heightHint = 10;
+                    javaEnginSection.setLayoutData(data);
+                    analysisParamSection.setExpanded(true);
                 } else {
                     javaEnginSection.setVisible(true);
+                    GridData data = (GridData) javaEnginSection.getLayoutData();
+                    data.heightHint = 100;
+                    javaEnginSection.setLayoutData(data);
+                    analysisParamSection.setExpanded(true);
                 }
                 // 12919~
                 setDirty(true);
@@ -617,6 +631,20 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
 
         });
+
+        // MOD yyi 2011-02-24 18612: add store data option
+        toolkit.createLabel(sectionClient, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$ 
+        storeDataCheck = new Button(sectionClient, SWT.CHECK | SWT.RIGHT_TO_LEFT);
+        storeDataCheck.setSelection(simpleStatIndicator.isStoreData());
+
+        storeDataCheck.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
+                setDirty(true);
+            }
+        });
+
         analysisParamSection.setClient(sectionClient);
     }
 
