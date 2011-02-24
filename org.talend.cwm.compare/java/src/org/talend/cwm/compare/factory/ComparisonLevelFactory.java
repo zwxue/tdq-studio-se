@@ -21,6 +21,7 @@ import org.talend.cwm.compare.factory.comparisonlevel.RepositoryObjectComparison
 import org.talend.cwm.compare.factory.comparisonlevel.SelectedLocalComparison;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import orgomg.cwm.resource.relational.Catalog;
@@ -38,11 +39,14 @@ public final class ComparisonLevelFactory {
 
     public static IComparisonLevel creatComparisonLevel(Object selectedObject) {
         IComparisonLevel comparisonLevel = null;
-
-        if (selectedObject instanceof DBTableFolderRepNode) {
+        if (selectedObject instanceof DBConnectionRepNode) {
+            // MOD klliu 2011-02-24 bug 19015
+            IRepositoryViewObject resObject = ((DBConnectionRepNode) selectedObject).getObject();
+            comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
+        } else if (selectedObject instanceof DBTableFolderRepNode) {
             // MOD mzhao FolderNode param need to pass for later reloading from this folder.
             DBTableFolderRepNode dbFolderNode = (DBTableFolderRepNode) selectedObject;
-                comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
+            comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
 
         } else if (selectedObject instanceof DBViewFolderRepNode) {
             DBViewFolderRepNode dbFolderNode = (DBViewFolderRepNode) selectedObject;

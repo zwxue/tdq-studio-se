@@ -505,13 +505,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void reloadDataProvider() {
-
-        // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-        // final IRepositoryViewObject reposViewObj = ProxyRepositoryViewObject.getRepositoryViewObject(connection);
+        // MOD klliu 2011-02-24 bug 19015
+        final RepositoryNode connRecursiveFind = RepositoryNodeHelper.recursiveFind(connection);
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(connection);
+                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(connRecursiveFind);
                 Display.getDefault().asyncExec(new Runnable() {
 
                     public void run() {
@@ -528,7 +527,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             ProgressUI.popProgressDialog(op);
             CorePlugin.getDefault().refreshDQView();
             this.initialize(this.getEditor());
-            this.getEditor().close(false);
+            // MOD klliu this don't need to close the Editor
+            // this.getEditor().close(false);
         } catch (InvocationTargetException e) {
             MessageUI.openError(Messages.getString("ReloadDatabaseAction.checkConnectionFailured", e.getCause().getMessage())); //$NON-NLS-1$
             log.error(e, e);
