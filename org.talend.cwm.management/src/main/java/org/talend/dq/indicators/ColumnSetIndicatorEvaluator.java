@@ -55,8 +55,12 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     protected Analysis analysis = null;
 
+    // MOD yyi 2011-02-22 17871:delimitefile
+    protected boolean isDelimitedFile = false;
+
     public ColumnSetIndicatorEvaluator(Analysis analysis) {
         this.analysis = analysis;
+        this.isDelimitedFile = analysis.getContext().getConnection() instanceof DelimitedFileConnection;
     }
 
     @Override
@@ -65,22 +69,21 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         AnalysisResult anaResult = analysis.getResults();
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = anaResult.getIndicToRowMap();
         indicToRowMap.clear();
-        boolean isDelimitedFile = connection instanceof DelimitedFileConnection;
         if (isDelimitedFile) {
             ok = evaluateByDelimitedFile(sqlStatement, ok);
         } else {
             ok = evaluateBySql(sqlStatement, ok);
+            Statement statement = null;
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            statement.setFetchSize(fetchSize);
+            if (continueRun()) {
+                if (log.isInfoEnabled()) {
+                    log.info("Executing query: " + sqlStatement);
+                }
+                statement.execute(sqlStatement);
+            }
         }
 
-        Statement statement = null;
-        statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        statement.setFetchSize(fetchSize);
-        if (continueRun()) {
-            if (log.isInfoEnabled()) {
-                log.info("Executing query: " + sqlStatement);
-            }
-            statement.execute(sqlStatement);
-        }
         return ok;
     }
 
@@ -225,5 +228,31 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 indicator.handle(objectLs);
             }
         }
+    }
+
+    /*
+     * ADD yyi 2011-02-22 17871:delimitefile
+     * 
+     * @see org.talend.dq.indicators.Evaluator#checkConnection()
+     */
+    @Override
+    protected ReturnCode checkConnection() {
+        if (isDelimitedFile) {
+            return new ReturnCode();
+        }
+        return super.checkConnection();
+    }
+
+    /*
+     * ADD yyi 2011-02-24 17871:delimitefile
+     * 
+     * @see org.talend.dq.indicators.Evaluator#closeConnection()
+     */
+    @Override
+    protected ReturnCode closeConnection() {
+        if (isDelimitedFile) {
+            return new ReturnCode();
+        }
+        return super.closeConnection();
     }
 }

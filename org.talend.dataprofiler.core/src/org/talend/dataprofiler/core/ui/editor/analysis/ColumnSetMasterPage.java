@@ -54,9 +54,10 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
@@ -196,16 +197,32 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         initializeIndicator(simpleStatIndicator);
         List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
-        ModelElementIndicator currentIndicator;
+        ModelElementIndicator currentIndicator = null;
         for (ModelElement element : analyzedColumns) {
+
+            // MOD yyi 2011-02-16 17871:delimitefile
+            MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-            if (tdColumn == null) {
+
+            if (tdColumn == null && mdColumn == null) {
                 continue;
             }
-            MetadataHelper.setDataminingType(DataminingType.NOMINAL, tdColumn);
 
-            currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
-                    .recursiveFind(tdColumn));
+            if (tdColumn == null && mdColumn != null) {
+                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
+                        .recursiveFind(mdColumn));
+            } else if (tdColumn != null) {
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
+                        .recursiveFind(tdColumn));
+            }
+            // currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
+            // .recursiveFind(tdColumn));
+
+            DataminingType dataminingType = MetadataHelper.getDataminingType(element);
+            MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
+            // MetadataHelper.setDataminingType(dataminingType, tdColumn);
+            // DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
+
             Collection<Indicator> indicatorList = columnSetAnalysisHandler.getRegexMathingIndicators(element);
             currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
             meIndicatorList.add(currentIndicator);
@@ -302,16 +319,16 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisColSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.analyzeColumn"), null); //$NON-NLS-1$
+        analysisColSection = createSection(form, anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analyzeColumn"), null); //$NON-NLS-1$
 
         Composite topComp = toolkit.createComposite(analysisColSection);
         topComp.setLayout(new GridLayout());
         // ~ MOD mzhao 2009-05-05,Bug 6587.
         createConnBindWidget(topComp);
         // ~
-        Hyperlink clmnBtn = toolkit.createHyperlink(topComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
+        Hyperlink clmnBtn = toolkit.createHyperlink(topComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -370,8 +387,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
         refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
         refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
+        final Label message = toolkit.createLabel(sectionClient,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
@@ -394,8 +411,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
 
                 if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null, DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
+                    boolean returnCode = MessageDialog.openConfirm(null,
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("ColumnMasterDetailsPage.RunOrSeeSampleData")); //$NON-NLS-1$
 
                     if (returnCode) {
@@ -694,12 +711,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             analysis.getContext().setConnection(tdProvider);
 
-            List<TdColumn> columnList = new ArrayList<TdColumn>();
+            List<ModelElement> columnList = new ArrayList<ModelElement>();
             for (IRepositoryNode rd : repositoryNodes) {
                 reposObject = rd.getObject();
-                columnList.add(
-(TdColumn) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
+                columnList.add((ModelElement) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
             }
+
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
             columnSetAnalysisHandler.addIndicator(columnList, simpleStatIndicator);
             // ~ MOD mzhao feature 13040. 2010-05-21
@@ -726,9 +743,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         } else {
             tdProvider = (Connection) analysis.getContext().getConnection();
             if (tdProvider != null) {
-            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-            analysis.getContext().setConnection(null);
-            analysis.getClientDependency().clear();
+                tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+                analysis.getContext().setConnection(null);
+                analysis.getClientDependency().clear();
             }
         }
 
@@ -830,12 +847,14 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     protected ReturnCode canSave() {
         String message = null;
         List<IRepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
-        List<TdColumn> columnList = new ArrayList<TdColumn>();
+
+        // MOD yyi 2011-02-16 17871:delimitefile
+        List<ModelElement> columnList = new ArrayList<ModelElement>();
         for (IRepositoryNode rd : columnSetMultiValueList) {
-            columnList.add((TdColumn) ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
         }
         if (!columnSetMultiValueList.isEmpty()) {
-            if (!ColumnHelper.isFromSameTable(columnList)) {
+            if (!ModelElementHelper.isFromSameTable(columnList) && !"".equals(dataFilterComp.getDataFilterString())) {
                 message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
             }
         }

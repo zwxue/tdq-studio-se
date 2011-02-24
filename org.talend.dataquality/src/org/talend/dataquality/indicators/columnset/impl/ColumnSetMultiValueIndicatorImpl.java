@@ -40,6 +40,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.CompositeIndicatorImpl;
 import org.talend.utils.collections.Tuple;
 import org.talend.utils.sql.Java2SqlType;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Column Set Multi Value Indicator</b></em>'.
@@ -79,7 +80,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @generated
      * @ordered
      */
-    protected EList<TdColumn> analyzedColumns;
+    protected EList<ModelElement> analyzedColumns;
 
     /**
      * The default value of the '{@link #getListRows() <em>List Rows</em>}' attribute.
@@ -129,7 +130,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @generated
      * @ordered
      */
-    protected EList<TdColumn> dateColumns;
+    protected EList<ModelElement> dateColumns;
 
     /**
      * The default value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute.
@@ -248,9 +249,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public EList<TdColumn> getAnalyzedColumns() {
+    public EList<ModelElement> getAnalyzedColumns() {
         if (analyzedColumns == null) {
-            analyzedColumns = new EObjectResolvingEList<TdColumn>(TdColumn.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
+            analyzedColumns = new EObjectResolvingEList<ModelElement>(ModelElement.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
         }
         return analyzedColumns;
     }
@@ -290,11 +291,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<TdColumn> getNominalColumns() {
-        EList<TdColumn> nominalColumns = new BasicElistExtend<TdColumn>();// bug 10578 by zshen,fix the exception when
+    public EList<ModelElement> getNominalColumns() {
+        EList<ModelElement> nominalColumns = new BasicElistExtend<ModelElement>();// bug 10578 by zshen,fix the
+                                                                                  // exception when
         // correlation analysis to be move
         if (analyzedColumns != null) {
-            for (TdColumn column : analyzedColumns) {
+            for (ModelElement column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
                 if (column != null && tdColumn == null) {
                     log.error("Analyzed element should be a TdColumn instead of a Column. Analyzed element is "
@@ -320,11 +322,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<TdColumn> getNumericColumns() {
-        EList<TdColumn> computedColumns = new BasicElistExtend<TdColumn>();// bug 10578 by zshen,fix the exception when
+    public EList<ModelElement> getNumericColumns() {
+        EList<ModelElement> computedColumns = new BasicElistExtend<ModelElement>();// bug 10578 by zshen,fix the
+                                                                                   // exception when
         // correlation analysis to be move
         if (analyzedColumns != null) {
-            for (TdColumn column : analyzedColumns) {
+            for (ModelElement column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
                 // MOD mzhao bug 9605 If a column is removed out of tdq studio, here column would be a proxy. see {@link
                 // ReloadDatabaseAction#impactExistingAnalyses(DataProvider)
@@ -356,16 +359,16 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     public EList<String> getColumnHeaders() {
         EList<String> headers = new BasicEList<String>();
-        for (TdColumn column : this.getNominalColumns()) {
+        for (ModelElement column : this.getNominalColumns()) {
             headers.add(column.getName());
         }
-        for (TdColumn column : this.getNumericColumns()) {
+        for (ModelElement column : this.getNumericColumns()) {
             // call functions for each column
             for (String f : this.getNumericFunctions()) {
                 headers.add(MessageFormat.format(f, column.getName()));
             }
         }
-        for (TdColumn column : this.getDateColumns()) {
+        for (ModelElement column : this.getDateColumns()) {
             // call functions for each column
             for (String f : this.getDateFunctions()) {
                 headers.add(MessageFormat.format(f, column.getName()));
@@ -391,15 +394,20 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<TdColumn> getDateColumns() {
-        EList<TdColumn> dateColumns = new BasicEList<TdColumn>();
+    public EList<ModelElement> getDateColumns() {
+        EList<ModelElement> dateColumns = new BasicEList<ModelElement>();
         if (analyzedColumns != null) {
-            for (TdColumn column : analyzedColumns) {
+            for (ModelElement column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
-                final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
-                if (DataminingType.INTERVAL.equals(dmType)
-                        && Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
-                    dateColumns.add(tdColumn);
+                final ModelElement mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
+                if (tdColumn != null) {
+                    final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
+                    if (DataminingType.INTERVAL.equals(dmType)
+                            && Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
+                        dateColumns.add(tdColumn);
+                    }
+                } else if (mdColumn != null) {
+                    // TODO add flat file date type
                 }
             }
         }
@@ -757,7 +765,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         switch (featureID) {
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
                 getAnalyzedColumns().clear();
-                getAnalyzedColumns().addAll((Collection<? extends TdColumn>)newValue);
+                getAnalyzedColumns().addAll((Collection<? extends ModelElement>)newValue);
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
                 setListRows((List<Object[]>)newValue);
@@ -772,7 +780,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
                 getDateColumns().clear();
-                getDateColumns().addAll((Collection<? extends TdColumn>)newValue);
+                getDateColumns().addAll((Collection<? extends ModelElement>)newValue);
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
                 setUniqueCount((Long)newValue);

@@ -70,9 +70,8 @@ public final class AnalysisExecutorSelector {
             exec = new MultiColumnAnalysisExecutor();
             break;
         case COLUMN_SET:
-            exec = ExecutionLanguage.SQL.equals(executionEngine) ? new MultiColumnAnalysisExecutor()
-                    : new ColumnSetAnalysisExecutor();
-
+            // MOD yyi 2011-02-22 17871:delimitefile
+            exec = getColumnSetAnalysisExecutor(analysis, executionEngine);
             break;
         case TABLE:
             exec = ExecutionLanguage.SQL.equals(executionEngine) ? new TableAnalysisSqlExecutor() : new TableAnalysisExecutor();
@@ -105,6 +104,24 @@ public final class AnalysisExecutorSelector {
             return new DelimitedFileAnalysisExecutor();
         } else {
             return sql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
+        }
+    }
+
+    /**
+     * yyi 2011-02-22 17871:delimitefile
+     * 
+     * @param analysis
+     * @param executionEngine
+     * @return
+     */
+    private static AnalysisExecutor getColumnSetAnalysisExecutor(Analysis analysis, ExecutionLanguage executionEngine) {
+        boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection((DataProvider) analysis.getContext().getConnection());
+        boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
+
+        if (isDelimitedFile) {
+            return new ColumnSetAnalysisExecutor(true);
+        } else {
+            return sql ? new MultiColumnAnalysisExecutor() : new ColumnSetAnalysisExecutor(false);
         }
     }
 

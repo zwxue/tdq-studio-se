@@ -70,6 +70,7 @@ import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xzhao class global comment. Detailled comment
@@ -200,14 +201,14 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     private void createBubbleOrGanttChart(final ScrolledForm form, final Composite composite,
             final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         List<Composite> previewChartList = new ArrayList<Composite>();
-        List<TdColumn> bubOrGanttColumnList = new ArrayList<TdColumn>();
+        List<ModelElement> bubOrGanttColumnList = new ArrayList<ModelElement>();
         if (columnSetMultiValueIndicator instanceof CountAvgNullIndicator) {
             bubOrGanttColumnList = columnSetMultiValueIndicator.getNumericColumns();
         } else {
             bubOrGanttColumnList = columnSetMultiValueIndicator.getDateColumns();
         }
-        for (TdColumn column : bubOrGanttColumnList) {
-            final TdColumn tdColumn = (TdColumn) column;
+        for (ModelElement column : bubOrGanttColumnList) {
+            final ModelElement tdColumn = (ModelElement) column;
 
             final ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);

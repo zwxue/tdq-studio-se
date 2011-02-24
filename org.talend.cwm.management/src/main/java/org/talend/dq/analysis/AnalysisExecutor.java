@@ -45,7 +45,6 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -283,6 +282,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @param analyzedElement
      * @return the catalog or schema quoted name
      */
+    // MOD yyi 2011-02-22 17871:delimitefile
     protected String getQuotedCatalogName(ModelElement analyzedElement) {
         final Catalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
         return parentCatalog == null ? null : quote(parentCatalog.getName());
@@ -294,7 +294,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @param columnSetOwner
      * @return
      */
-    protected String getQuotedSchemaName(ColumnSet columnSetOwner) {
+    protected String getQuotedSchemaName(ModelElement columnSetOwner) {
         final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
         return (parentSchema == null) ? null : quote(parentSchema.getName());
     }

@@ -55,7 +55,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
      * @return
      */
 
-    public boolean addIndicator(List<TdColumn> columns, Indicator indicator) {
+    public boolean addIndicator(List<ModelElement> columns, Indicator indicator) {
         for (ModelElement tdColumn : columns) {
             if (!analysis.getContext().getAnalysedElements().contains(tdColumn)) {
                 analysis.getContext().getAnalysedElements().add(tdColumn);

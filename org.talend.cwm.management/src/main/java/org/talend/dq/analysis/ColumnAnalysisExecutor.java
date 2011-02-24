@@ -319,9 +319,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @param column a column
      * @return the quoted column name
      */
-    protected String getQuotedColumnName(TdColumn column) {
+    protected String getQuotedColumnName(ModelElement column) {
         if (column != null && column.eIsProxy()) {
-            column = (TdColumn) EObjectHelper.resolveObject(column);
+            column = (ModelElement) EObjectHelper.resolveObject(column);
         }
         assert column != null;
         String quotedColName = quote(column.getName());

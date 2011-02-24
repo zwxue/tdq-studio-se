@@ -31,6 +31,7 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
@@ -185,7 +186,7 @@ public abstract class DataExplorer implements IDataExplorer {
      * @param column
      * @return
      */
-    protected String getFullyQualifiedTableName(TdColumn column) {
+    protected String getFullyQualifiedTableName(ModelElement column) {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
         return getFullyQualifiedTableName(columnSetOwner);
     }

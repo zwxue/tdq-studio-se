@@ -29,12 +29,12 @@ import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC zshen class global comment. Detailled comment
@@ -69,14 +69,14 @@ public class PatternsSelectPage extends WizardPage {
      */
     public void createControl(Composite parent) {
 
-        List<TdColumn> analysisColumns = this.selectPatternsWizard.getSsIndicator().getAnalyzedColumns();
+        List<ModelElement> analysisColumns = this.selectPatternsWizard.getSsIndicator().getAnalyzedColumns();
         GridTableViewer tableView = new GridTableViewer(parent, SWT.NONE);
         this.table = tableView.getGrid();
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
-        for (TdColumn analysisColumn : analysisColumns) {
+        for (ModelElement analysisColumn : analysisColumns) {
             GridColumn tableCum = new GridColumn(table, SWT.CHECK);
             tableCum.setText(analysisColumn.getName());
         }
@@ -125,7 +125,7 @@ public class PatternsSelectPage extends WizardPage {
         if (allMatchIndicator == null) {
             return returnList;
         }
-        List<TdColumn> analysisColumns = this.selectPatternsWizard.getAllMatchIndicator().getAnalyzedColumns();
+        List<ModelElement> analysisColumns = this.selectPatternsWizard.getAllMatchIndicator().getAnalyzedColumns();
         List<RegexpMatchingIndicator> regexpMatchingIndicatorList = this.selectPatternsWizard.getAllMatchIndicator()
                 .getCompositeRegexMatchingIndicators();
 

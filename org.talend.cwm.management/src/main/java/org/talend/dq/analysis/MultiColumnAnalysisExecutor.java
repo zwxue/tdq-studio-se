@@ -19,13 +19,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -38,6 +39,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -78,23 +80,23 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private void instantiateQuery(Indicator indicator) {
         if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
             ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
-            final EList<TdColumn> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
+            final EList<ModelElement> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
             final EList<String> numericFunctions = initializeNumericFunctions(colSetMultValIndicator);
             final EList<String> dateFunctions = initializeDateFunctions(colSetMultValIndicator);
 
             // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
-            for (TdColumn column : colSetMultValIndicator.getNominalColumns()) {
+            for (ModelElement column : colSetMultValIndicator.getNominalColumns()) {
                 nominalColumns.add(getQuotedColumnName(column));
             }
             List<String> computedColumns = new ArrayList<String>();
-            for (TdColumn column : colSetMultValIndicator.getNumericColumns()) {
+            for (ModelElement column : colSetMultValIndicator.getNumericColumns()) {
                 // call functions for each column
                 for (String f : numericFunctions) {
                     computedColumns.add(replaceVariablesLow(f, getQuotedColumnName(column)));
                 }
             }
-            for (TdColumn column : colSetMultValIndicator.getDateColumns()) {
+            for (ModelElement column : colSetMultValIndicator.getDateColumns()) {
                 // call functions for each column
                 for (String f : dateFunctions) {
                     computedColumns.add(replaceVariablesLow(f, getQuotedColumnName(column)));
@@ -167,9 +169,22 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param analyzedColumns
      * @return the quoted table name
      */
-    private String getTableName(final EList<TdColumn> analyzedColumns) {
-        ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(analyzedColumns.get(0));
-        String tableName = columnSetOwner.getName();
+    private String getTableName(final EList<ModelElement> analyzedColumns) {
+        // MOD yyi 2011-02-22 17871:delimitefile
+        EObject owner = analyzedColumns.get(0).eContainer();
+        ColumnSet set = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
+        MetadataTable mdColumn = SwitchHelpers.METADATA_TABLE_SWITCH.doSwitch(owner);
+
+
+        String tableName = "";
+        ModelElement columnSetOwner = null;
+        if (null == set && mdColumn != null) {
+            tableName = mdColumn.getName();
+            columnSetOwner = mdColumn;
+        } else if (null != set) {
+            tableName = set.getName();
+            columnSetOwner = set;
+        }
 
         Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
         // ~ MOD mzhao feature 10082. Here differentiate case of MS SQL Sever(Catalog/schema).

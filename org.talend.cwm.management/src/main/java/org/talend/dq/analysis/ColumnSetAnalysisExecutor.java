@@ -51,6 +51,16 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
     private static Logger log = Logger.getLogger(ColumnSetAnalysisExecutor.class);
 
+    protected boolean isDelimitedFile = false;
+
+    /**
+     * DOC yyi 2011-02-24 17871:delimitefile
+     */
+    public ColumnSetAnalysisExecutor(boolean isDelimitedFile) {
+        super();
+        this.isDelimitedFile = isDelimitedFile;
+    }
+
     /*
      * (non-Jsdoc)
      * 
@@ -70,15 +80,21 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                 eval.storeIndicator(indicator.getName(), colSetMultValIndicator);
             }
         }
-        TypedReturnCode<java.sql.Connection> connection = getConnection(analysis);
-        if (!connection.isOk()) {
-            log.error(connection.getMessage());
-            this.errorMessage = connection.getMessage();
-            return false;
+
+        // MOD yyi 2011-02-22 17871:delimitefile
+        if (!isDelimitedFile) {
+
+            TypedReturnCode<java.sql.Connection> connection = getConnection(analysis);
+            if (!connection.isOk()) {
+                log.error(connection.getMessage());
+                this.errorMessage = connection.getMessage();
+                return false;
+            }
+
+            // set it into the evaluator
+            eval.setConnection(connection.getObject());
         }
 
-        // set it into the evaluator
-        eval.setConnection(connection.getObject());
         // when to close connection
         boolean closeAtTheEnd = true;
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
@@ -90,15 +106,24 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         return true;
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dq.analysis.AnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
     protected String createSqlStatement(Analysis analysis) {
+
+        // MOD yyi 2011-02-22 17871:delimitefile
+        if (isDelimitedFile) {
+            return "";
+        }
+        // ~
         this.cachedAnalysis = analysis;
         StringBuilder sql = new StringBuilder("SELECT ");
         EList<Indicator> indicators = analysis.getResults().getIndicators();
-        EList<TdColumn> analysedElements = null;
+        // MOD yyi 2011-02-22 17871:delimitefile
+        EList<ModelElement> analysedElements = null;
         for (Indicator indicator : indicators) {
             if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                 ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
@@ -116,7 +141,8 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             return null;
         }
         Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
-        final Iterator<TdColumn> iterator = analysedElements.iterator();
+        // MOD yyi 2011-02-22 17871:delimitefile, indiactor changed
+        final Iterator<ModelElement> iterator = analysedElements.iterator();
         while (iterator.hasNext()) { // for (ModelElement modelElement : analysedElements) {
             ModelElement modelElement = iterator.next();
             // --- preconditions
