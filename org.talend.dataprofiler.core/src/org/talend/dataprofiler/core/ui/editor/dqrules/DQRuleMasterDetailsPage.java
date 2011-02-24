@@ -62,7 +62,10 @@ import org.talend.dataprofiler.core.ui.views.WhereClauseDND;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.nodes.RuleRepNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -84,6 +87,19 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     final LocalSelectionTransfer transfer = LocalSelectionTransfer.getTransfer();
 
     private WhereRule whereRule;
+
+    protected RuleRepNode ruleRepNode;
+
+    public RuleRepNode getRuleRepNode() {
+        return this.ruleRepNode;
+    }
+
+    private void initRuleRepNode(WhereRule whereRule) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(whereRule);
+        if (recursiveFind != null && recursiveFind instanceof RuleRepNode) {
+            this.ruleRepNode = (RuleRepNode) recursiveFind;
+        }
+    }
 
     private ScrolledForm form;
 
@@ -135,6 +151,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             this.currentModelElement = input.getTDQBusinessRuleItem().getDqrule();
         }
         whereRule = (WhereRule) this.currentModelElement;
+        initRuleRepNode(whereRule);
         return whereRule;
     }
 
@@ -175,8 +192,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
      * @param comp
      */
     private void createDQRuleDefinitionSection(Composite comp) {
-        dqRuleDefinitionSection = createSection(form, comp, DefaultMessagesImpl
-                .getString("DQRuleMasterDetailsPage.dqRuleDefinition"), null); //$NON-NLS-1$
+        dqRuleDefinitionSection = createSection(form, comp,
+                DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.dqRuleDefinition"), null); //$NON-NLS-1$
 
         Label label = new Label(dqRuleDefinitionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("DQRuleMasterDetailsPage.text")); //$NON-NLS-1$

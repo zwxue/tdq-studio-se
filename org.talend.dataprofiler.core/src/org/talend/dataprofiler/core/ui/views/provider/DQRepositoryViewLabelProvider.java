@@ -186,7 +186,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             } else if (node instanceof AnalysisRepNode || node instanceof ReportRepNode
                     || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                     || node instanceof RuleRepNode) {
-                return node.getObject().getLabel() + " " + node.getObject().getVersion();
+                // return node.getObject().getLabel() + " " + node.getObject().getVersion();
+                return node.getLabel() + " " + node.getObject().getVersion();
             } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
                 return node.getObject().getLabel() + "(Unsupported)";
             } else if (node instanceof AnalysisFolderRepNode) {

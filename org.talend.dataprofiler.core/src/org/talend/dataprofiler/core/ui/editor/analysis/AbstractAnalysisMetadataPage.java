@@ -39,6 +39,7 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -53,6 +54,19 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     private static Logger log = Logger.getLogger(AbstractAnalysisMetadataPage.class);
 
     protected Analysis analysis;
+
+    protected AnalysisRepNode analysisRepNode;
+
+    public AnalysisRepNode getAnalysisRepNode() {
+        return this.analysisRepNode;
+    }
+
+    private void initAnalysisRepNode(Analysis analysis) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+        if (recursiveFind != null && recursiveFind instanceof AnalysisRepNode) {
+            this.analysisRepNode = (AnalysisRepNode) recursiveFind;
+        }
+    }
 
     protected AnalysisEditor currentEditor = null;
 
@@ -84,6 +98,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             currentModelElement = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
             analysis = (Analysis) currentModelElement;
         }
+        initAnalysisRepNode(analysis);
         return analysis;
     }
 

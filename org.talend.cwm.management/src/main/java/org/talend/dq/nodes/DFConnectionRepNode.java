@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
@@ -32,9 +31,8 @@ import orgomg.cwm.resource.record.RecordFile;
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class DFConnectionRepNode extends RepositoryNode {
+public class DFConnectionRepNode extends ConnectionRepNode {
 
-    private static Logger log = Logger.getLogger(DFConnectionRepNode.class);
     /**
      * DOC qiongli DelimitedFileConnectionRepNode constructor comment.
      * 
@@ -44,7 +42,6 @@ public class DFConnectionRepNode extends RepositoryNode {
      */
     public DFConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

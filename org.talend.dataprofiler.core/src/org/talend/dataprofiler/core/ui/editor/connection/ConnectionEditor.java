@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.editor.connection;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.editor.IFormPage;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
@@ -25,13 +24,10 @@ import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
  */
 public class ConnectionEditor extends CommonFormEditor {
 
-    private IFormPage masterPage;
+    private ConnectionInfoPage masterPage;
 
     private static final String ID = "ConnectionEditor.masterPage";//$NON-NLS-1$
 
-    /**
-     * 
-     */
     public ConnectionEditor() {
     }
 
@@ -42,14 +38,15 @@ public class ConnectionEditor extends CommonFormEditor {
         } catch (PartInitException e) {
             MessageBoxExceptionHandler.process(e);
         }
-        setPartName(((ConnectionInfoPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+        setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
     }
 
     public void doSave(IProgressMonitor monitor) {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
-            setPartName(((ConnectionInfoPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+            setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
         }
+        setEditorObject(masterPage.getConnectionRepNode());
         super.doSave(monitor);
     }
 

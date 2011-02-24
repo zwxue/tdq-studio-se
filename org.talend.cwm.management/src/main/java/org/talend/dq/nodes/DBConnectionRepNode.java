@@ -34,7 +34,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC klliu Database connection repository node displayed on repository view (UI).
  */
-public class DBConnectionRepNode extends RepositoryNode {
+public class DBConnectionRepNode extends ConnectionRepNode {
 
     private DatabaseConnection databaseConnection;
 

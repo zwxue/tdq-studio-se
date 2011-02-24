@@ -364,6 +364,10 @@ public class CorePlugin extends AbstractUIPlugin {
         getRepositoryView().getCommonViewer().refresh();
     }
 
+    public void refreshDQView(Object object) {
+        getRepositoryView().getCommonViewer().refresh(object);
+    }
+
     /**
      * DOC bzhou Comment method "getProductVersion".
      * 

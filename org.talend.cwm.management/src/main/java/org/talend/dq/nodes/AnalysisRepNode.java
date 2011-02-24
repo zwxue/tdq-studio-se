@@ -34,6 +34,10 @@ public class AnalysisRepNode extends RepositoryNode {
         return this.analysis;
     }
 
+    public void updateAnalysis(Analysis ana) {
+        this.analysis = ana;
+    }
+
     /**
      * DOC klliu AnalysisRepNode constructor comment.
      * 
@@ -53,10 +57,6 @@ public class AnalysisRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        return buildChildren();
-    }
-
-    public List<IRepositoryNode> buildChildren() {
         List<IRepositoryNode> anaElement = new ArrayList<IRepositoryNode>();
         RepositoryNode parent = this.getParent();
         if (!(parent instanceof ReportSubFolderRepNode)) {

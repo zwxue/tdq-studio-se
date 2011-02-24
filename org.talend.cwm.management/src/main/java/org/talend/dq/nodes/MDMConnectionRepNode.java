@@ -31,7 +31,7 @@ import orgomg.cwm.objectmodel.core.Package;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class MDMConnectionRepNode extends RepositoryNode {
+public class MDMConnectionRepNode extends ConnectionRepNode {
 
     private MDMConnection mdmConnection;
 

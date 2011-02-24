@@ -56,7 +56,10 @@ import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -67,6 +70,19 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     private static final String SQL = "SQL"; //$NON-NLS-1$
 
     private Pattern pattern;
+
+    private PatternRepNode patternRepNode;
+
+    protected PatternRepNode getPatternRepNode() {
+        return this.patternRepNode;
+    }
+
+    private void initPatternRepNode(Pattern pattern) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(pattern);
+        if (recursiveFind != null && recursiveFind instanceof PatternRepNode) {
+            this.patternRepNode = (PatternRepNode) recursiveFind;
+        }
+    }
 
     private Composite patternDefinitionSectionComp;
 
@@ -116,6 +132,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         PatternItemEditorInput input = (PatternItemEditorInput) editor.getEditorInput();
         this.pattern = input.getTDQPatternItem().getPattern();
         this.currentModelElement = pattern;
+        initPatternRepNode(pattern);
         return pattern;
     }
 

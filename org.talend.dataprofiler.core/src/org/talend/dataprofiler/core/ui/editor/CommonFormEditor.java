@@ -46,6 +46,16 @@ public abstract class CommonFormEditor extends FormEditor {
 
     private TdEditorBarWrapper editorBarWrap = null;
 
+    private Object editorObject;
+
+    public Object getEditorObject() {
+        return this.editorObject;
+    }
+
+    public void setEditorObject(Object editorObject) {
+        this.editorObject = editorObject;
+    }
+
     @Override
     protected void addPages() {
         // TODO Auto-generated method stub
@@ -183,7 +193,11 @@ public abstract class CommonFormEditor extends FormEditor {
     public void doSave(IProgressMonitor monitor) {
         this.isDirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
-        CorePlugin.getDefault().refreshDQView();
+        if (this.getEditorObject() != null) {
+            CorePlugin.getDefault().refreshDQView(this.getEditorObject());
+        } else {
+            CorePlugin.getDefault().refreshDQView();
+        }
         CorePlugin.getDefault().refreshWorkSpace();
     }
 

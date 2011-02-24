@@ -80,6 +80,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -98,6 +99,19 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private static Logger log = Logger.getLogger(ConnectionInfoPage.class);
 
     private Connection connection;
+
+    protected ConnectionRepNode connectionRepNode;
+
+    public ConnectionRepNode getConnectionRepNode() {
+        return this.connectionRepNode;
+    }
+
+    private void initConnectionRepNode(Connection conn) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(conn);
+        if (recursiveFind != null && recursiveFind instanceof ConnectionRepNode) {
+            this.connectionRepNode = (ConnectionRepNode) recursiveFind;
+        }
+    }
 
     private ConnectionItem connectionItem;
 
@@ -137,6 +151,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 connection = ((ConnectionItem) item).getConnection();
             }
         }
+        initConnectionRepNode(connection);
         return ConnectionUtils.fillConnectionInformation(connection);
     }
 

@@ -146,6 +146,7 @@ public class AnalysisEditor extends CommonFormEditor {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
         }
+        setEditorObject(masterPage.getAnalysisRepNode());
         super.doSave(monitor);
     }
 
@@ -153,7 +154,6 @@ public class AnalysisEditor extends CommonFormEditor {
         if (masterPage.isActive()) {
             // setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
             setRunActionButtonState(true);
-
             setSaveActionButtonState(masterPage.isDirty());
         }
         super.firePropertyChange(propertyId);

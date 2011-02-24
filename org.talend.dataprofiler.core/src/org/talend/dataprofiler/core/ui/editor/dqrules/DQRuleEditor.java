@@ -27,7 +27,7 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
  */
 public class DQRuleEditor extends CommonFormEditor {
 
-    private IFormPage masterPage;
+    private DQRuleMasterDetailsPage masterPage;
 
     private static final String ID = "DQRuleEditor.masterPage";//$NON-NLS-1$
 
@@ -59,8 +59,9 @@ public class DQRuleEditor extends CommonFormEditor {
     public void doSave(IProgressMonitor monitor) {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
-            setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+            setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
         }
+        setEditorObject(masterPage.getRuleRepNode());
         super.doSave(monitor);
 
     }

@@ -27,7 +27,7 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
  */
 public class PatternEditor extends CommonFormEditor {
 
-    private IFormPage masterPage;
+    private PatternMasterDetailsPage masterPage;
 
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
@@ -37,7 +37,7 @@ public class PatternEditor extends CommonFormEditor {
 
     protected void addPages() {
         masterPage = new PatternMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ 
-        setPartName(((PatternMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+        setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
@@ -58,6 +58,7 @@ public class PatternEditor extends CommonFormEditor {
             masterPage.doSave(monitor);
             setPartName(((PatternMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
         }
+        setEditorObject(masterPage.getPatternRepNode());
         super.doSave(monitor);
 
     }

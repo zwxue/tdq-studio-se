@@ -93,6 +93,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -131,6 +132,19 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private Label labelDetail;
 
     private IndicatorDefinition definition;
+
+    protected SysIndicatorDefinitionRepNode indicatorDefinitionRepNode;
+
+    public SysIndicatorDefinitionRepNode getIndicatorDefinitionRepNode() {
+        return this.indicatorDefinitionRepNode;
+    }
+
+    private void initIndicatorDefinitionRepNode(IndicatorDefinition indicatorDefinition) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(indicatorDefinition);
+        if (recursiveFind != null && recursiveFind instanceof SysIndicatorDefinitionRepNode) {
+            this.indicatorDefinitionRepNode = (SysIndicatorDefinitionRepNode) recursiveFind;
+        }
+    }
 
     private IndicatorCategory category;
 
@@ -285,6 +299,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         initTempExpressionList(definition);
         // ADD klliu 2010-07-14 feature 13429
         initTempIndicatorDefinitionParameter(definition);
+
+        initIndicatorDefinitionRepNode(definition);
     }
 
     /**
