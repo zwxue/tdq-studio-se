@@ -778,6 +778,25 @@ public final class RepositoryNodeHelper {
         return node;
     }
 
+    public static IRepositoryNode getLibrariesFolderNode(EResourceConstant folderConstant) {
+        String[] folderPathArray = folderConstant.getPath().split("/");
+        if (folderPathArray.length <= 0) {
+            return null;
+        }
+
+        IRepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);
+        for (int i = 1; folderPathArray.length > i; i++) {
+            for (IRepositoryNode childNode : node.getChildren()) {
+                if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
+                    node = childNode;
+                    break;
+                }
+            }
+        }
+
+        return node;
+    }
+
     public static List<IRepositoryNode> getDataProfilingRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING);// t.DATA_PROFILING.getName());
         List<IRepositoryNode> dataProfilingNodes = new ArrayList<IRepositoryNode>();
