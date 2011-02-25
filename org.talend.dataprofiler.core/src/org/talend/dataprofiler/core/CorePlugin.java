@@ -31,7 +31,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -57,6 +56,7 @@ import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.User;
@@ -72,11 +72,12 @@ import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.CWMPlugin;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.ResourceManager;
@@ -384,10 +385,11 @@ public class CorePlugin extends AbstractUIPlugin {
      * 
      * @param fileRes
      */
-    public void closeEditorIfOpened(Property property) {
+    public void closeEditorIfOpened(Item item) {
         IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
         IEditorReference[] editorReferences = activePage.getEditorReferences();
         IEditorInput editorInput = null;
+        Property property = item.getProperty();
         for (IEditorReference reference : editorReferences) {
             try {
                 editorInput = reference.getEditorInput();
@@ -395,9 +397,10 @@ public class CorePlugin extends AbstractUIPlugin {
                     FileEditorInput fileInput = (FileEditorInput) editorInput;
 
                     if (property.eResource() != null) {
-                        IPath propPath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension();
-                        IPath filePath = new Path(fileInput.getFile().getName()).removeFileExtension();
-                        if (filePath.equals(propPath)) {
+                        IPath itemPath = PropertyHelper.getItemPath(property);
+                        // IPath propPath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension();
+                        // IPath filePath = new Path(fileInput.getFile().getName()).removeFileExtension();
+                        if (itemPath != null && itemPath.equals(fileInput.getFile().getFullPath())) {
                             activePage.closeEditor(reference.getEditor(false), false);
                             break;
                         }
@@ -413,11 +416,11 @@ public class CorePlugin extends AbstractUIPlugin {
                         activePage.closeEditor(reference.getEditor(false), false);
                     }
 
-                } else if (editorInput instanceof ConnectionItemEditorInput) {
-                    ConnectionItemEditorInput connectionInput = (ConnectionItemEditorInput) editorInput;
-                    if (property != null && property.equals(connectionInput.getItem().getProperty())) {
+                } else if (editorInput instanceof AbstractItemEditorInput) {
+                    AbstractItemEditorInput input = (AbstractItemEditorInput) editorInput;
+                    Item it = input.getItem();
+                    if (it != null && item.equals(it)) {
                         activePage.closeEditor(reference.getEditor(false), false);
-                        // break;
                     }
                 }
             } catch (PartInitException e) {

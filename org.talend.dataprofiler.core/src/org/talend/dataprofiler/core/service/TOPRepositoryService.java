@@ -57,7 +57,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
 
         if (editorInput != null && clazz != null) {
-            CorePlugin.getDefault().closeEditorIfOpened(item.getProperty());
+            CorePlugin.getDefault().closeEditorIfOpened(item);
             CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
         }
     }

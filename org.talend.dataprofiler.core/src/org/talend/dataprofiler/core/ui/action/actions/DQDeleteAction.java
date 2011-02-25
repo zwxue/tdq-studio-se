@@ -22,11 +22,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.actions.ActionFactory;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
 import org.talend.dataprofiler.core.service.TDQResourceChangeHandler;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -61,9 +59,11 @@ public class DQDeleteAction extends DeleteAction {
     public ISelection getSelection() {
         ISelection selection = null;
         if (currentNode == null) {
+            // select by UI(tree)
             DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
             selection = findView.getCommonViewer().getSelection();
         } else {
+            // new instance of selection for dependency modeleEelemnt.
             selection = new StructuredSelection(currentNode);
         }
         return selection;
@@ -79,15 +79,13 @@ public class DQDeleteAction extends DeleteAction {
     public void run() {
 
         ISelection selection = this.getSelection();
-        Object[] objs = ((IStructuredSelection) selection).toArray();
-        for (Object obj : objs) {
+        for (Object obj : ((IStructuredSelection) selection).toArray()) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
                 boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
                 if (!isStateDeleted) {
-                    closeEditors(objs);
-                    currentNode = null;
-                    super.run();
+                    closeEditors(selection);
+                    excuteSuperRun(null);
                     break;
 
                 }
@@ -97,15 +95,14 @@ public class DQDeleteAction extends DeleteAction {
                     findRepNodesByFolderNode(node, newLs);
                     for (IRepositoryNode subNode : newLs) {
                         if (showDependenciesDialog((RepositoryNode) subNode)) {
-                            currentNode = (RepositoryNode) subNode;
-                            super.run();
+                            excuteSuperRun((RepositoryNode) subNode);
                         }
                     }
+                    excuteSuperRun(node);
                 } else {
                     if (showDependenciesDialog(node)) {
                         EObjectHelper.removeDependencys(RepositoryNodeHelper.getModelElementFromRepositoryNode(node));
-                        currentNode = node;
-                        super.run();
+                        excuteSuperRun(node);
                     }
                 }
             }
@@ -160,18 +157,19 @@ public class DQDeleteAction extends DeleteAction {
                 if (!isSucceed) {
                     return false;
                 }
-                currentNode = RepositoryNodeHelper.recursiveFind(mod);
-                if (currentNode != null && !RepositoryNodeHelper.isStateDeleted(currentNode)) {
+                RepositoryNode tempNode = RepositoryNodeHelper.recursiveFind(mod);
+                if (tempNode != null && !RepositoryNodeHelper.isStateDeleted(tempNode)) {
                     // logcial delete dependcy element.
-                    if (currentNode.getObject() != null)
-                        CorePlugin.getDefault().closeEditorIfOpened(currentNode.getObject().getProperty());
-                    super.run();
+                    if (tempNode.getObject() != null) {
+                        CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
+                    }
+                    excuteSuperRun(tempNode);
                     CorePlugin.getDefault().refreshDQView();
                 }
                 // physical delete dependcy element.
-                currentNode = findRepNodeInRecBin(currentNode);
-                if (currentNode != null) {
-                    super.run();
+                tempNode = RepositoryNodeHelper.recursiveFind(mod);
+                if (tempNode != null) {
+                    excuteSuperRun(tempNode);
                     IFile propertyFile = PropertyHelper.getPropertyFile(mod);
                     if (propertyFile != null && propertyFile.exists()) {
                         isSucceed = false;
@@ -209,29 +207,21 @@ public class DQDeleteAction extends DeleteAction {
 
     }
 
-    private RepositoryNode findRepNodeInRecBin(RepositoryNode node) {
-        List<IRepositoryNode> nodeLs = RecycleBinManager.getInstance().getRecycleBinChildren();
-        RepositoryNode returnNode = null;
-        for (IRepositoryNode recNod : nodeLs) {
-            if (ResourceHelper.getUUID(RepositoryNodeHelper.getModelElementFromRepositoryNode(recNod)).equals(
-                    ResourceHelper.getUUID(RepositoryNodeHelper.getModelElementFromRepositoryNode(node)))) {
-                returnNode = (RepositoryNode) recNod;
-                break;
-            }
-        }
-        return returnNode;
-
-    }
-
-    private void closeEditors(Object[] selections) {
-        for (Object obj : selections) {
+    private void closeEditors(ISelection selection) {
+        Object[] objs = ((IStructuredSelection) selection).toArray();
+        for (Object obj : objs) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
                 if (node.getObject() != null) {
-                    CorePlugin.getDefault().closeEditorIfOpened(node.getObject().getProperty());
+                    CorePlugin.getDefault().closeEditorIfOpened(node.getObject().getProperty().getItem());
                 }
             }
         }
+    }
+
+    private void excuteSuperRun(RepositoryNode currentNode) {
+        this.currentNode = currentNode;
+        super.run();
     }
 
 }
