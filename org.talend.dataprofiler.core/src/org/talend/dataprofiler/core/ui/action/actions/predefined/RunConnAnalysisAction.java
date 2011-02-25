@@ -19,7 +19,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -49,7 +49,7 @@ public class RunConnAnalysisAction extends AbstractPredefinedAnalysisAction {
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getPredefinedColumnIndicator()
      */
     @Override
-    protected ColumnIndicator[] getPredefinedColumnIndicator() {
+    protected ModelElementIndicator[] getPredefinedColumnIndicator() {
         return null;
     }
 

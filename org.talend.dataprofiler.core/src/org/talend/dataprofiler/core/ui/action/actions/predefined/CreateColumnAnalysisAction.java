@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -33,7 +33,7 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getPredefinedColumnIndicator()
      */
     @Override
-    protected ColumnIndicator[] getPredefinedColumnIndicator() {
+    protected ModelElementIndicator[] getPredefinedColumnIndicator() {
 
         IndicatorEnum[] allwedEnumes = new IndicatorEnum[1];
         allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;

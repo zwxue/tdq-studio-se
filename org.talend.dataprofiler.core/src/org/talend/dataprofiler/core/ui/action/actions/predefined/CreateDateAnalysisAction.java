@@ -19,9 +19,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
@@ -40,6 +40,7 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sql.TalendTypeConvert;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -58,7 +59,7 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getPredefinedColumnIndicator()
      */
     @Override
-    protected ColumnIndicator[] getPredefinedColumnIndicator() {
+    protected ModelElementIndicator[] getPredefinedColumnIndicator() {
 
         IndicatorEnum[] allwedEnumes = new IndicatorEnum[5];
         allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
@@ -67,14 +68,14 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
         allwedEnumes[3] = IndicatorEnum.LowFrequencyIndicatorEnum;
         allwedEnumes[4] = IndicatorEnum.FrequencyIndicatorEnum;
 
-        ColumnIndicator[] returnColumnIndicator = composePredefinedColumnIndicator(allwedEnumes);
+        ModelElementIndicator[] returnColumnIndicator = composePredefinedColumnIndicator(allwedEnumes);
 
         if (parameters != null) {
-            for (ColumnIndicator columnIndicator : returnColumnIndicator) {
+            for (ModelElementIndicator columnIndicator : returnColumnIndicator) {
                 for (Indicator indicator : columnIndicator.getIndicators()) {
                     if (indicator instanceof FrequencyIndicator) {
-                        indicator.getParameters().getDateParameters().setDateAggregationType(
-                                parameters.getDateParameters().getDateAggregationType());
+                        indicator.getParameters().getDateParameters()
+                                .setDateAggregationType(parameters.getDateParameters().getDateAggregationType());
                     }
                 }
             }
@@ -91,8 +92,11 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected boolean isAllowed() {
         for (IRepositoryNode repositoryNode : getColumns()) {
-            TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
-            if (!Java2SqlType.isDateInSQL(column.getSqlDataType().getJavaDataType())) {
+            MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+
+            int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
+
+            if (!Java2SqlType.isDateInSQL(javaSQLType)) {
                 return false;
             }
         }

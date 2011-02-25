@@ -21,6 +21,7 @@ import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnAction;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -110,7 +111,7 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
      */
     private boolean isSelectedTdColumn(TreeSelection currentSelection) {
         for (Object obj : currentSelection.toList()) {
-            if (!(obj instanceof DBColumnRepNode)) {
+            if (!(obj instanceof DBColumnRepNode) && !(obj instanceof DFColumnRepNode)) {
                 return false;
             }
         }

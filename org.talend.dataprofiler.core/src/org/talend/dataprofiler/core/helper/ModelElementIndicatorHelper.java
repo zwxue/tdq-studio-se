@@ -12,11 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -25,24 +23,27 @@ import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
 import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
 import org.talend.dataprofiler.core.model.impl.XmlElementIndicatorImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
-
 
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public final class ModelElementIndicatorHelper {
 
     private ModelElementIndicatorHelper() {
     }
 
-    public static final ModelElementIndicator createModelElementIndicator(RepositoryNode node) {
+    public static final ModelElementIndicator createModelElementIndicator(IRepositoryNode node) {
         if (node != null) {
-            if (node.getObject() instanceof MetadataColumnRepositoryObject) {
+            if (node instanceof DBColumnRepNode) {
                 return createColumnIndicator(node);
-            } else if (node.getObject() instanceof MetadataXmlElementTypeRepositoryObject) {
+            } else if (node instanceof MDMXmlElementRepNode) {
                 return createXmlElementIndicator(node);
+            } else if (node instanceof DFColumnRepNode) {
+                return createDFColumnIndicator(node);
             }
         }
         return null;

@@ -24,20 +24,20 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.metadata.MetadataXmlElementType;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
@@ -46,12 +46,11 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -86,7 +85,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
             IRepositoryNode obj = (IRepositoryNode) firstElement;
             IRepositoryViewObject reposObject = obj.getObject();
-            if (reposObject instanceof MetadataColumnRepositoryObject) {
+            if (reposObject instanceof MetadataColumnRepositoryObject || reposObject instanceof MetadataXmlElementType) {
                 IRepositoryNode[] column = new IRepositoryNode[getSelection().size()];
 
                 for (int i = 0; i < getSelection().size(); i++) {
@@ -94,8 +93,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 }
 
                 return column;
-            }
-            if (reposObject instanceof MetadataTableRepositoryObject) {
+            } else if (reposObject instanceof MetadataTableRepositoryObject) {
                 Object[] selections = getSelection().toArray();
                 for (Object currentObj : selections) {
                     IRepositoryNode columnSet = (IRepositoryNode) currentObj;
@@ -164,36 +162,58 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         // MOD klliu 2011-02-17 feature 15387
         AnalysisParameter parameter = null;
         Object firstElement = this.selection.getFirstElement();
-        if (firstElement instanceof DBTableRepNode) {
-            DBTableRepNode tableNode = (DBTableRepNode) firstElement;
-            TdTableRepositoryObject viewObject = (TdTableRepositoryObject) tableNode.getObject();
-            Item item = viewObject.getProperty().getItem();
-            DatabaseConnectionItem databaseConnectionItem = (DatabaseConnectionItem) item;
-            Connection connection = databaseConnectionItem.getConnection();
 
-            IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
-            parameter = new AnalysisParameter();
-            parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
-            return getStandardAnalysisWizardDialog(type, parameter);
+        if (firstElement instanceof IRepositoryNode) {
+            IRepositoryNode node = (IRepositoryNode) firstElement;
+            Item item = node.getObject().getProperty().getItem();
+            if (item instanceof ConnectionItem) {
+                ConnectionItem connectionItem = (ConnectionItem) item;
+                Connection connection = connectionItem.getConnection();
+
+                IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+                parameter = new AnalysisParameter();
+                parameter.setConnectionRepNode(repositoryNode);
+
+                return getStandardAnalysisWizardDialog(type, parameter);
+            }
         } else if (firstElement instanceof TdTable) {
             Connection connection = ConnectionHelper.getConnection((TdTable) firstElement);
             IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
             parameter = new AnalysisParameter();
             parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
             return getStandardAnalysisWizardDialog(type, parameter);
-        } else if (firstElement instanceof DBColumnRepNode) {
-            // MOD klliu 2011-02-23 feature 15387
-            DBColumnRepNode columnNode = (DBColumnRepNode) firstElement;
-            MetadataColumnRepositoryObject viewObject = (MetadataColumnRepositoryObject) columnNode.getObject();
-            Item item = viewObject.getProperty().getItem();
-            DatabaseConnectionItem databaseConnectionItem = (DatabaseConnectionItem) item;
-            Connection connection = databaseConnectionItem.getConnection();
-
-            IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
-            parameter = new AnalysisParameter();
-            parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
-            return getStandardAnalysisWizardDialog(type, parameter);
         }
+
+        // if (firstElement instanceof DBTableRepNode) {
+        // DBTableRepNode tableNode = (DBTableRepNode) firstElement;
+        // TdTableRepositoryObject viewObject = (TdTableRepositoryObject) tableNode.getObject();
+        // Item item = viewObject.getProperty().getItem();
+        // DatabaseConnectionItem databaseConnectionItem = (DatabaseConnectionItem) item;
+        // Connection connection = databaseConnectionItem.getConnection();
+        //
+        // IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+        // parameter = new AnalysisParameter();
+        // parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
+        // return getStandardAnalysisWizardDialog(type, parameter);
+        // } else if (firstElement instanceof TdTable) {
+        // Connection connection = ConnectionHelper.getConnection((TdTable) firstElement);
+        // IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+        // parameter = new AnalysisParameter();
+        // parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
+        // return getStandardAnalysisWizardDialog(type, parameter);
+        // } else if (firstElement instanceof DBColumnRepNode) {
+        // // MOD klliu 2011-02-23 feature 15387
+        // DBColumnRepNode columnNode = (DBColumnRepNode) firstElement;
+        // MetadataColumnRepositoryObject viewObject = (MetadataColumnRepositoryObject) columnNode.getObject();
+        // Item item = viewObject.getProperty().getItem();
+        // DatabaseConnectionItem databaseConnectionItem = (DatabaseConnectionItem) item;
+        // Connection connection = databaseConnectionItem.getConnection();
+        //
+        // IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+        // parameter = new AnalysisParameter();
+        // parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
+        // return getStandardAnalysisWizardDialog(type, parameter);
+        // }
 
         return getStandardAnalysisWizardDialog(type, null);
     }
@@ -219,14 +239,14 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         }
     }
 
-    protected ColumnIndicator[] composePredefinedColumnIndicator(IndicatorEnum[] allowedEnum) {
+    protected ModelElementIndicator[] composePredefinedColumnIndicator(IndicatorEnum[] allowedEnum) {
 
-        ColumnIndicator[] predefinedColumnIndicator = new ColumnIndicator[getColumns().length];
+        ModelElementIndicator[] predefinedColumnIndicator = new ModelElementIndicator[getColumns().length];
         ExecutionLanguage language = ExecutionLanguage.get(getMasterPage().getExecCombo().getText());
         for (int i = 0; i < getColumns().length; i++) {
 
             IRepositoryNode columnNode = getColumns()[i];
-            ColumnIndicator columnIndicator = ModelElementIndicatorHelper.createColumnIndicator(columnNode);
+            ModelElementIndicator columnIndicator = ModelElementIndicatorHelper.createModelElementIndicator(columnNode);
 
             for (IndicatorEnum oneEnum : allowedEnum) {
                 columnIndicator.addTempIndicatorEnum(oneEnum);
@@ -234,8 +254,16 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                     for (IndicatorEnum childEnum : oneEnum.getChildren()) {
                         // MOD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose by
                         // user.
-                        TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
-                        if (ModelElementIndicatorRule.patternRule(childEnum, column, language)) {
+                        IRepositoryViewObject object = columnNode.getObject();
+
+                        ModelElement element = null;
+                        if (object instanceof MetadataColumnRepositoryObject) {
+                            element = ((MetadataColumnRepositoryObject) object).getTdColumn();
+                        } else if (object instanceof MetadataXmlElementTypeRepositoryObject) {
+                            element = ((MetadataXmlElementTypeRepositoryObject) object).getModelElement();
+                        }
+
+                        if (element != null && ModelElementIndicatorRule.patternRule(childEnum, element, language)) {
                             columnIndicator.addTempIndicatorEnum(childEnum);
                         }
                     }
@@ -263,7 +291,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
             if (dialog.open() == Window.OK) {
 
-                ColumnIndicator[] predefinedColumnIndicator = getPredefinedColumnIndicator();
+                ModelElementIndicator[] predefinedColumnIndicator = getPredefinedColumnIndicator();
                 if (predefinedColumnIndicator != null) {
                     getMasterPage().getTreeViewer().addElements(predefinedColumnIndicator);
                     getMasterPage().doSave(null);
@@ -272,7 +300,7 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         }
     }
 
-    protected abstract ColumnIndicator[] getPredefinedColumnIndicator();
+    protected abstract ModelElementIndicator[] getPredefinedColumnIndicator();
 
     protected abstract WizardDialog getPredefinedDialog();
 

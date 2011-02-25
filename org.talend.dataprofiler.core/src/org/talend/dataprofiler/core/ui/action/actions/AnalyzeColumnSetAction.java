@@ -36,7 +36,6 @@ import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
-import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
@@ -136,12 +135,12 @@ public class AnalyzeColumnSetAction extends Action {
             if (editor != null) {
                 ColumnSetMasterPage page = (ColumnSetMasterPage) editor.getMasterPage();
                 if (this.needselection && !this.selection.isEmpty()) {
-                    DBColumnRepNode[] nodeArray = new DBColumnRepNode[selection.size()];
+                    IRepositoryNode[] nodeArray = new IRepositoryNode[selection.size()];
                     Iterator it = this.selection.iterator();
 
                     int i = 0;
                     while (it.hasNext()) {
-                        nodeArray[i] = (DBColumnRepNode) it.next();
+                        nodeArray[i] = (IRepositoryNode) it.next();
                         i++;
                     }
                     page.getTreeViewer().setInput(nodeArray);

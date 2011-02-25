@@ -14,13 +14,14 @@ package org.talend.dataprofiler.core.ui.action.actions.predefined;
 
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.cwm.relational.TdColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sql.TalendTypeConvert;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -41,7 +42,7 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getPredefinedColumnIndicator()
      */
     @Override
-    protected ColumnIndicator[] getPredefinedColumnIndicator() {
+    protected ModelElementIndicator[] getPredefinedColumnIndicator() {
         IndicatorEnum[] allowedEnumes = new IndicatorEnum[3];
         allowedEnumes[0] = IndicatorEnum.BoxIIndicatorEnum;
         allowedEnumes[1] = IndicatorEnum.RowCountIndicatorEnum;
@@ -69,8 +70,11 @@ public class CreateSummaryAnalysisAction extends AbstractPredefinedAnalysisActio
     protected boolean isAllowed() {
 
         for (IRepositoryNode repositoryNode : getColumns()) {
-            TdColumn column = (TdColumn) ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
-            if (!Java2SqlType.isNumbericInSQL(column.getSqlDataType().getJavaDataType())) {
+            MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+
+            int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
+
+            if (!Java2SqlType.isNumbericInSQL(javaSQLType)) {
                 return false;
             }
         }
