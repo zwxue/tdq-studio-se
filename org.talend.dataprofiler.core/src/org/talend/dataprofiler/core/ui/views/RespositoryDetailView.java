@@ -244,7 +244,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 is = false;
             } else if (fe instanceof DBColumnRepNode) {
                 DBColumnRepNode columnNode = (DBColumnRepNode) fe;
-                columnNode.getChildren().get(0).getChildren();
                 fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(columnNode);
                 TdColumn column = (TdColumn) fe;
                 createTdColumn(column);
