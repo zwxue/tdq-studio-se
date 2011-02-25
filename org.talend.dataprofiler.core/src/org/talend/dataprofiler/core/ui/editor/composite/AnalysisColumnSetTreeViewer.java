@@ -122,7 +122,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         this.setElements(masterPage.getCurrentModelElementIndicators());
         this.setDirty(false);
 
-        AbstractColumnDropTree treeViewer = masterPage.getTreeViewer();
+        // MOD yyi 2011-02-25 18868
+        AbstractColumnDropTree treeViewer = null == masterPage.getTreeViewer() ? this : masterPage.getTreeViewer();
         if (treeViewer != null && treeViewer instanceof AnalysisColumnSetTreeViewer) {
             setTreeViewer = (AnalysisColumnSetTreeViewer) treeViewer;
         }
@@ -224,16 +225,18 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         delButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                Tree currentTree = tree;
-                Object[] selectItem = currentTree.getSelection();
-                List<IRepositoryNode> columnList = setTreeViewer.getColumnSetMultiValueList();
-                for (int i = 0; i < selectItem.length; i++) {
-                    Object removeElement = ((TreeItem) selectItem[i])
-                            .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
-                    columnList.remove(removeElement);
+                // MOD yyi 2011-02-25 18868
+                TreeItem[] selection = tree.getSelection();
+                for (TreeItem treeItem : selection) {
+                    ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
+                    deleteColumnItems(meIndicator.getModelElementRepositoryNode());
+                    removeItemBranch(treeItem);
                 }
-                masterPage.getTreeViewer().setInput(convertList(columnList).toArray());
+                // MOD mzhao 2005-05-05 bug 6587.
+                // MOD mzhao 2009-06-8, bug 5887.
+                updateBindConnection(masterPage, tree);
                 enabledButtons(false);
+                tree.setFocus();
             }
         });
     }
