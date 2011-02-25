@@ -51,6 +51,7 @@ import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemE
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
@@ -196,6 +197,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
                 editorInput = new PatternItemEditorInput(item);
                 editorID = PatternEditor.class.getName();
+            } else if (ERepositoryObjectType.TDQ_REPORT_ELEMENT.getKey().equals(key)) {
+                editorInput = new ReportItemEditorInput(item);
+                editorID = "org.talend.dataprofiler.core.tdq.ui.editor.report.ReportEditror"; //$NON-NLS-1$
             }
         }
         return editorInput;

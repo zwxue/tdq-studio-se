@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -304,7 +305,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC klliu Comment method "initTempIndicatorDefinitionParameter".ADD klliu 2010-07-12 bug 13429
+     * DOC klliu Comment method "initTempIndicatorDefinitionParameter". ADD klliu 2010-07-12 bug 13429.
      * 
      * @param definition2
      */
@@ -320,7 +321,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC klliu Comment method "cloneIndicatorDefParameter".ADD klliu 2010-07-12 bug 13429
+     * DOC klliu Comment method "cloneIndicatorDefParameter".ADD klliu 2010-07-12 bug 13429.
      * 
      * @param indicatorDefParameter
      * @return
@@ -335,12 +336,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC klliu 2Comment method "checkJavaUDIBeforeOpen".ADD klliu 2010-06-02 bug 13451
+     * DOC klliu 2Comment method "checkJavaUDIBeforeOpen".ADD klliu 2010-06-02 bug 13451.
      * 
      * @return
      */
     private boolean checkJavaUDIBeforeOpen() {
-        // TODO Auto-generated method stub
         EList<TaggedValue> tvs = definition.getTaggedValue();
         for (TaggedValue tv : tvs) {
             if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT) || tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
@@ -431,13 +431,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC klliu Comment method "createDefinitionParametersComp" ADD klliu figure 13429 2010-07-12
+     * DOC klliu Comment method "createDefinitionParametersComp" ADD klliu figure 13429 2010-07-12.
      * 
      * @param definitionSection2
      * @return
      */
     private Composite createDefinitionParametersComp(Section parametersSection) {
-        // TODO Auto-generated method stub
         Composite composite = toolkit.createComposite(parametersSection);
         GridData parData = new GridData(GridData.FILL_BOTH);
         composite.setLayoutData(parData);
@@ -456,13 +455,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC klliu Comment method "createDefinitionParametersButton".ADD klliu figure 13429 2010-07-12
+     * DOC klliu Comment method "createDefinitionParametersButton".ADD klliu figure 13429 2010-07-12.
      * 
      * @param composite
      * @param parView
      */
     private void createDefinitionParametersButton(Composite comp, final TableViewer parView) {
-        // TODO Auto-generated method stub
         Composite composite = toolkit.createComposite(comp);
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
@@ -479,7 +477,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.addListener(SWT.MouseDown, new Listener() {
 
             public void handleEvent(Event event) {
-                // TODO Auto-generated method stub
                 IndicatorDefinitionParameter ip = DefinitionFactory.eINSTANCE.createIndicatorDefinitionParameter();
                 ip.setKey("paraKey");
                 ip.setValue("paraValue");
@@ -551,7 +548,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param titles
      */
     private void attachDefiniationParameterCellEditors(final TableViewer viewer, Composite table, String[] titles) {
-        // TODO Auto-generated method stub
         viewer.setCellModifier(new ICellModifier() {
 
             public boolean canModify(Object element, String property) {
@@ -1822,21 +1818,21 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
+        IEditorInput editorInputt = editor.getEditorInput();
+        IndicatorDefinition ind = null;
         // MOD klliu 2010-12-10
-        if (editor.getEditorInput() instanceof IndicatorEditorInput) {
-            IndicatorEditorInput editorInput = (IndicatorEditorInput) editor.getEditorInput();
-            return editorInput.getIndicatorDefinition();
-        } else if (editor.getEditorInput() instanceof FileEditorInput) {
-            FileEditorInput editorInput = (FileEditorInput) editor.getEditorInput();
-            return IndicatorResourceFileHelper.getInstance().findIndDefinition(editorInput.getFile());
-        } else if (editor.getEditorInput() instanceof IndicatorDefinitionItemEditorInput) {
-            IndicatorDefinitionItemEditorInput editorInput = (IndicatorDefinitionItemEditorInput) editor.getEditorInput();
-
-            TDQIndicatorDefinitionItem tdqIndicatorDefinitionItem = editorInput.getTDQIndicatorDefinitionItem();
-            IndicatorDefinition indicatorDefinition = tdqIndicatorDefinitionItem.getIndicatorDefinition();
-            return indicatorDefinition;
+        if (editorInputt instanceof IndicatorEditorInput) {
+            IndicatorEditorInput indicatorEditorInput = (IndicatorEditorInput) editorInputt;
+            ind = indicatorEditorInput.getIndicatorDefinition();
+        } else if (editorInputt instanceof FileEditorInput) {
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInputt;
+            ind = IndicatorResourceFileHelper.getInstance().findIndDefinition(fileEditorInput.getFile());
+        } else if (editorInputt instanceof IndicatorDefinitionItemEditorInput) {
+            IndicatorDefinitionItemEditorInput indicatorDefEditorInput = (IndicatorDefinitionItemEditorInput) editorInputt;
+            TDQIndicatorDefinitionItem tdqIndicatorDefinitionItem = indicatorDefEditorInput.getTDQIndicatorDefinitionItem();
+            ind = tdqIndicatorDefinitionItem.getIndicatorDefinition();
         }
-        return null;
+        return ind;
     }
 
     /*

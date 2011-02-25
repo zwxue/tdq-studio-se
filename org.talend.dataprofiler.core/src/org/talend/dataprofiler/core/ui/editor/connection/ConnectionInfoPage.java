@@ -144,7 +144,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             connection = input.getConnectionItem().getConnection();
         } else if (editorInput instanceof FileEditorInput) {
             Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
-            String fileLabel = proty.getLabel();
+            // String fileLabel = proty.getLabel();
             Item item = proty.getItem();
             if (item instanceof ConnectionItem) {
                 connectionItem = (ConnectionItem) item;
@@ -319,8 +319,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 if (node instanceof DBConnectionRepNode) {
                     wizard = new DatabaseWizard(PlatformUI.getWorkbench(), false, node, null);
                 } else if (node instanceof MDMConnectionRepNode) {
-                    if (PluginChecker.isMDMPluginLoaded() && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
-                        IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(IMDMProviderService.class);
+                    if (PluginChecker.isMDMPluginLoaded()
+                            && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
+                        IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(
+                                IMDMProviderService.class);
                         if (service != null) {
                             wizard = service.newMDMWizard(PlatformUI.getWorkbench(), false, node, null);
                         }
