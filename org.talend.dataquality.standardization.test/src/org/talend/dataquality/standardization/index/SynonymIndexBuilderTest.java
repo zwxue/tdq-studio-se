@@ -16,11 +16,14 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.lucene.search.TopDocs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.dataquality.standardization.record.SynonymRecordSearcher;
+import org.talend.dataquality.standardization.record.SynonymRecordSearcher.OutputRecord;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -36,7 +39,8 @@ public class SynonymIndexBuilderTest {
     private static String[][] synonyms = { { "I.B.M.", "IBM|International Business Machines|Big Blue" },
             { "ISDF", "IBM|International Business Machines|Big Blue" },
  { "IRTY", "IBM|International Business Machines" },
-            { "ANPE", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" }, { "Sécurité Sociale", "Sécu|SS|CPAM" },
+            { "ANPE", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" },
+            { "TEST", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" }, { "Sécurité Sociale", "Sécu|SS|CPAM" },
             { "IAIDQ", "International Association for Information & Data Quality|Int. Assoc. Info & DQ" }, };
 
     private static boolean useQueryParser = true;
@@ -175,6 +179,64 @@ public class SynonymIndexBuilderTest {
             // Document doc = builder.getSearcher().doc(docs.scoreDocs[i].doc);
             System.out.println("\tword: " + searcher.getWordByDocNumber(docNumber));
             System.out.println("\tsynonyms: " + Arrays.toString(searcher.getSynonymsByDocNumber(docNumber)));
+        }
+
+    }
+
+    @Test
+    public void testSearchInSeveralIndexes() throws IOException {
+        System.out.println("\n-----------Test SearchInSeveralIndexes----------");
+
+        // assume we have two fields to search
+        String row1Company = "ibm";
+        String row1Label = "ANPE";
+
+
+        // search
+        TopDocs docsField1 = searcher.searchDocumentBySynonym(row1Company);
+        System.out.println(docsField1.totalHits + " documents found for " + row1Company);
+
+        for (int i = 0; i < docsField1.totalHits; i++) {
+            int docNumber = docsField1.scoreDocs[i].doc;
+            System.out.print("\ndoc=" + docNumber + "\tscore=" + docsField1.scoreDocs[i].score);
+            // Document doc = builder.getSearcher().doc(docs.scoreDocs[i].doc);
+            System.out.println("\tword: " + searcher.getWordByDocNumber(docNumber));
+            System.out.println("\tsynonyms: " + Arrays.toString(searcher.getSynonymsByDocNumber(docNumber)));
+        }
+
+        TopDocs docsField2 = searcher.searchDocumentBySynonym(row1Label);
+        System.out.println(docsField2.totalHits + " documents found for " + row1Label);
+
+        for (int i = 0; i < docsField2.totalHits; i++) {
+            int docNumber = docsField2.scoreDocs[i].doc;
+            System.out.print("\ndoc=" + docNumber + "\tscore=" + docsField2.scoreDocs[i].score);
+            // Document doc = builder.getSearcher().doc(docs.scoreDocs[i].doc);
+            System.out.println("\tword: " + searcher.getWordByDocNumber(docNumber));
+            System.out.println("\tsynonyms: " + Arrays.toString(searcher.getSynonymsByDocNumber(docNumber)));
+        }
+
+        
+        // build output by a cross product of matched results
+        for (int i = 0; i < docsField1.totalHits; i++) {
+            int docNumber = docsField1.scoreDocs[i].doc;
+            String word1 = searcher.getWordByDocNumber(docNumber);
+            for (int j = 0; j < docsField2.totalHits; j++) {
+                int docNumber2 = docsField2.scoreDocs[j].doc;
+                String word2 = searcher.getWordByDocNumber(docNumber2);
+                System.out.println("output row = " + word1 + " , " + word2);
+            }
+        }        
+
+        System.out.println("   ----------   ");
+
+        // record to search
+        String[] record = new String[] { row1Company, row1Label };
+        SynonymRecordSearcher recsearcher = new SynonymRecordSearcher(record.length);
+        recsearcher.addSearcher(searcher, 0);
+        recsearcher.addSearcher(searcher, 1);
+        List<OutputRecord> output = recsearcher.search(3, record);
+        for (OutputRecord outputRecord : output) {
+            System.out.println("out= " + outputRecord);
         }
 
     }
