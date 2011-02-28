@@ -124,7 +124,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      */
     private IRepositoryNode getParentNode(RepositoryNode repNode) {
         IRepositoryNode node = repNode.getParent();
-        if (repNode instanceof DBColumnRepNode) {
+        if (repNode instanceof DBColumnRepNode || repNode instanceof DFColumnRepNode) {
             node = repNode.getParent().getParent();
         } else if (repNode instanceof MDMXmlElementRepNode) {
             node = repNode.getParent();
