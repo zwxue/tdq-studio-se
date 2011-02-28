@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
@@ -60,6 +61,8 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -68,23 +71,35 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.PatternRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.Schema;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * @author qzhang
@@ -159,9 +174,24 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createTechnicalDetail(IRepositoryViewObject reposViewObj) {
-        Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
-        if (connection != null) {
-            createTechnicalDetail(connection);
+        // Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
+        // if (connection != null) {
+        // createTechnicalDetail(connection);
+        // }
+        // MOD klliu the DQRepositoryview unified with tos, so refactor as follow bug 19154 2011-02-28
+        Item item = reposViewObj.getProperty().getItem();
+        if (item instanceof ConnectionItem) {
+            Connection conn = ((ConnectionItem) item).getConnection();
+            createTechnicalDetail(conn);
+        } else if (item instanceof TDQAnalysisItem) {
+            Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
+            createTechnicalDetail(analysis);
+        } else if (item instanceof TDQPatternItem) {
+            Pattern pattern = ((TDQPatternItem) item).getPattern();
+            createTechnicalDetail(pattern);
+        } else if (item instanceof TDQReportItem) {
+            Report report = ((TDQReportItem) item).getReport();
+            createTechnicalDetail((TdReport) report);
         }
     }
 
@@ -202,7 +232,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             // if(fe instanceof IRepositoryNode){
             // fe = RepositoryNodeHelper.getModelElementFromRepositoryNode((IRepositoryNode) fe);
             // }
-            //MOD klliu 2011-02-24 if choose diffirent node ,that will load diffirent child ,so that not use up.
+            // MOD klliu 2011-02-24 if choose diffirent node ,that will load diffirent child ,so that not use up.
+            if (fe instanceof AnalysisRepNode || fe instanceof ReportRepNode || fe instanceof SysIndicatorDefinitionRepNode
+                    || fe instanceof PatternRepNode || fe instanceof RuleRepNode) {
+                fe = ((IRepositoryNode) fe).getObject();
+            }
             if (fe instanceof IFile) {
                 IFile fe2 = (IFile) fe;
                 is = createFileDetail(is, fe2);
@@ -256,6 +290,17 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 // MOD mzhao 2009-04-20,Bug 6349.
                 RegularExpression regularExpression = (RegularExpression) fe;
                 createRegularExpression(regularExpression);
+                is = false;
+            } else if (fe instanceof SourceFileRepNode) {
+                // MOD klliu 2001-02-28 bug 19154
+                IPath filePath = WorkbenchUtils.getFilePath((SourceFileRepNode) fe);
+                IFile file = ResourceManager.getRootProject().getFile(filePath);
+                createSqlFileDetail(file);
+            } else if (fe instanceof ExchangeComponentRepNode) {
+                // MOD klliu 2001-02-28 bug 19154
+                IEcosComponent ecosComponent = ((ExchangeComponentRepNode) fe).getEcosComponent();
+                IEcosComponent component = (IEcosComponent) ecosComponent;
+                createEcosComponent(component);
                 is = false;
             }
 
@@ -346,10 +391,26 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private boolean createFileDetail(boolean is, IRepositoryViewObject reposViewObj) {
+        // MOD klliu 2001-02-28 bug 19154
         Item item = reposViewObj.getProperty().getItem();
         if (item instanceof ConnectionItem) {
             Connection conn = ((ConnectionItem) item).getConnection();
             createDataProviderDetail(conn);
+            is = false;
+        }
+        if (item instanceof TDQAnalysisItem) {
+            Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
+            createAnaysisDetail(analysis);
+            is = false;
+        }
+        if (item instanceof TDQPatternItem) {
+            Pattern pattern = ((TDQPatternItem) item).getPattern();
+            createPatternDetail(pattern);
+            is = false;
+        }
+        if (item instanceof TDQReportItem) {
+            Report report = ((TDQReportItem) item).getReport();
+            createReportDetail((TdReport) report);
             is = false;
         }
         return is;
