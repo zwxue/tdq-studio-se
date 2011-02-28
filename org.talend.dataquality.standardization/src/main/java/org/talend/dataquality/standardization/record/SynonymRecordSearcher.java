@@ -125,7 +125,11 @@ public class SynonymRecordSearcher {
         }
 
     }
-
+	/**
+	 * 
+	 * @author 
+	 *
+	 */
     public static class RecordResult {
 
         /**

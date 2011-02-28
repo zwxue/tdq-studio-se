@@ -58,6 +58,8 @@ public class SynonymIndexBuilder {
     private IndexWriter writer;
 
     private boolean usingCreateMode = false;
+    private boolean bCreatePath = false;
+    private Error error = new Error();
 
     private int topDocLimit;
 
@@ -86,6 +88,12 @@ public class SynonymIndexBuilder {
     public void setUsingCreateMode(boolean usingCreateMode) {
         this.usingCreateMode = usingCreateMode;
     }
+    public void setCreatePath(boolean createPath){
+    	this.bCreatePath = true;
+    }
+    public Error getError(){
+    	return this.error;
+    }
 
     /**
      * set a separator for a string which contains synonyms
@@ -106,21 +114,27 @@ public class SynonymIndexBuilder {
         this.path = path;
 
         try {
-            indexDir = FSDirectory.open(new File(path));
+        	File file = new File(path);
+        	
+        	if (this.bCreatePath && !file.exists()) {
+        		file.mkdirs();
+        	}
+            indexDir = FSDirectory.open(file);
             CheckIndex check = new CheckIndex(indexDir);
             Status status = check.checkIndex();
             if (status.missingSegments) {
-                System.out.println("Segments file not found. ");
+                
                 if (usingCreateMode) {
                     // initialize the segment of index with a simple commit.
-                    System.out.println("Initializing segments...");
+                	error.set(true, "Initialize an index...");
                     commit();
                 } else {
                     // propose to use create mode.
-                    System.err.println("Please use create mode");
+                	error.set(false, "Segments file not found, initialize an index first");
                 }
             }
         } catch (IOException e) {
+        	error.set(false, e.getMessage());
             e.printStackTrace();
         }
 
@@ -139,11 +153,15 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     private TopDocs searchDocumentByWord(String word) {
+    	if (word == null) {
+    		return null;
+    	}
         Query query = new TermQuery(new Term(F_WORD, word));
         TopDocs docs = null;
         try {
             docs = getSearcher().search(query, topDocLimit);
         } catch (IOException e) {
+        	error.set(false, e.getMessage());
             e.printStackTrace();
         }
         return docs;
@@ -162,7 +180,8 @@ public class SynonymIndexBuilder {
         try {
             docs = getSearcher().search(query, topDocLimit);
         } catch (IOException e) {
-            e.printStackTrace();
+            error.set(false, e.getMessage());
+        	e.printStackTrace();
         }
         return docs;
     }
@@ -180,9 +199,9 @@ public class SynonymIndexBuilder {
         if (searchDocumentByWord(word).totalHits == 0) {
             getWriter().addDocument(generateDocument(word, synonyms));
             getWriter().commit(); // avoid to insert duplicate document
-            System.out.println("The document <" + word + "> is now inserted.");
+            // System.out.println("The document <" + word + "> is now inserted.");
         } else {
-            System.err.println("The document <" + word + "> already exists and is ignored.");
+        	error.set(false, "<" + word + "> already exists and is ignored.");
         }
     }
 
@@ -199,7 +218,7 @@ public class SynonymIndexBuilder {
         TopDocs docs = searchDocumentByWord(word);
         switch (docs.totalHits) {
         case 0:
-            System.err.println("The document named <" + word + "> doesn't exist.");
+        	error.set(false, "<" + word + "> doesn't exist.");
             return 0;
         case 1:
             break;
@@ -213,7 +232,7 @@ public class SynonymIndexBuilder {
         // as an Update action contains a Delete action, we commit here as well
         // however, we don't need to commit for Add actions
         getWriter().commit();
-        System.out.println("The document named <" + word + "> has been updated.");
+        // System.out.println("The document named <" + word + "> has been updated.");
         return 1;
     }
 
@@ -227,12 +246,12 @@ public class SynonymIndexBuilder {
         TopDocs docs = searchDocumentByWord(word);
         switch (docs.totalHits) {
         case 0:
-            System.err.println("The document named <" + word + "> doesn't exist.");
+            error.set(false, "<" + word + "> doesn't exist.");
             return 0;
         case 1:
             getWriter().deleteDocuments(new Term(F_WORD, word));
             getWriter().commit();
-            System.out.println("The document named <" + word + "> has been deleted.");
+            //System.out.println("The document named <" + word + "> has been deleted.");
             return 1;
         default:
             break;
@@ -267,7 +286,7 @@ public class SynonymIndexBuilder {
             String[] synonyms = doc.getValues(F_SYN);
             for (String str : synonyms) {
                 if (str.toLowerCase().equals(newSynonym.toLowerCase())) {
-                    System.err.println("The synonym <" + newSynonym + "> is similar to <" + str + ">. Ignored.");
+                    error.set(false, "The synonym <" + newSynonym + "> is similar to <" + str + ">. Ignored.");
                     return 0;
                 }
             }
@@ -275,12 +294,10 @@ public class SynonymIndexBuilder {
             doc.add(new Field(F_SYN, newSynonym, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
             getWriter().updateDocument(new Term(F_WORD, word), doc);
             getWriter().commit();
-
-            System.out.println("The synonym <" + newSynonym + "> is added to word.");
+            //System.out.println("The synonym <" + newSynonym + "> is added to word.");
             return 1;
         } else {
-            System.err.println("The word <" + word + "> doesn't exist. Cannot add.");
-
+        	error.set(false, "The word <" + word + "> doesn't exist. Cannot add.");
             return 0;
         }
     }
@@ -293,7 +310,7 @@ public class SynonymIndexBuilder {
      */
     public int removeSynonymFromDocument(String word, String synonymToDelete) throws IOException {
         if (synonymToDelete.toLowerCase().equals(word.toLowerCase())) {
-            System.err.println("The synonym <" + synonymToDelete + "> is similar to the word and will not be removed");
+            error.set(false, "The synonym <" + synonymToDelete + "> is similar to the word and will not be removed");
             return 0;
         }
         int deleted = 0;
@@ -310,7 +327,7 @@ public class SynonymIndexBuilder {
                     // automatically in the method generateDocument().
                 } else if (str.toLowerCase().equals(synonymToDelete.toLowerCase())) {
                     // we don't require the synonymToDelete to be case sensitive.
-                    System.out.println("The synonym <" + synonymToDelete + "> is removed from the word.");
+                    // System.out.println("The synonym <" + synonymToDelete + "> is removed from the word.");
                     deleted++;
                 } else {
                     synonymList.add(str);
@@ -319,7 +336,7 @@ public class SynonymIndexBuilder {
 
             // if the value of deleted is 0, we can know that the synonymToDelete doesn't exist
             if (deleted == 0) {
-                System.err.println("The synonym <" + synonymToDelete + "> doesn't exist in the document. Ignored.");
+            	error.set(false, "The synonym <" + synonymToDelete + "> doesn't exist in the document. Ignored.");
             } else {
                 Document newDoc = generateDocument(word, synonymList);
                 getWriter().updateDocument(new Term(F_WORD, word), newDoc);
@@ -327,7 +344,7 @@ public class SynonymIndexBuilder {
             }
 
         } else {
-            System.err.println("The word <" + word + "> doesn't exist. Cannot remove.");
+        	error.set(false, "The word <" + word + "> doesn't exist. Cannot remove.");
             return 0;
         }
         return deleted;
@@ -342,7 +359,7 @@ public class SynonymIndexBuilder {
     private boolean deletefile(String delpath) {
         File file = new File(delpath);
         if (!file.exists()) {
-            System.err.println("file not found");
+        	System.err.println("file not found");
             return false;
         }
         if (file.isDirectory()) {
@@ -423,9 +440,11 @@ public class SynonymIndexBuilder {
         try {
             this.getWriter().commit();
         } catch (CorruptIndexException e) {
+        	error.set(false, e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+        	error.set(false, e.getMessage());
+        	e.printStackTrace();
         }
     }
 
@@ -473,7 +492,6 @@ public class SynonymIndexBuilder {
         searcher = new IndexSearcher(indexDir);
         return searcher;
     }
-
-
-
+    
+    
 }

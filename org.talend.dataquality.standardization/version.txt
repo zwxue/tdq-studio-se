@@ -1,3 +1,7 @@
+1.5.2 # ytao modified
+- add support to create index path
+- add support to return error messages
+
 1.5.1 # ytao modified
 - update java doc of deleteDocumentByWord process
 - modified insertDocument process,
