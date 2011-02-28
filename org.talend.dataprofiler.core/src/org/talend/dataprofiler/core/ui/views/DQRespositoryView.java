@@ -31,12 +31,17 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.TreeAdapter;
@@ -386,6 +391,29 @@ public class DQRespositoryView extends CommonNavigator {
                 }
             }
         });
+        getCommonViewer().getTree().addKeyListener(new KeyListener() {
+
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.CR) {
+                    Object source = e.getSource();
+                    Tree tree = (Tree) e.getSource();
+                    TreeItem[] selection = tree.getSelection();
+                    for (TreeItem item : selection) {
+                        Object data = item.getData();
+                        RepositoryNode repoNode = (RepositoryNode) data;
+                        if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
+                            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
+                            openItemEditorAction.run();
+                        }
+
+                    }
+                }
+            }
+
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
         // ~ADD mzhao for feature 6233 Load columns when selecting a table (or
         // view) in DQ Repository view
         getCommonViewer().addSelectionChangedListener(new ISelectionChangedListener() {
@@ -541,6 +569,22 @@ public class DQRespositoryView extends CommonNavigator {
             // LogicalDeleteFileHandle.setFinishScanAllFolders(false);
             getCommonViewer().refresh();
             super.run();
+        }
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.eclipse.ui.navigator.CommonNavigator#handleDoubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
+     */
+    @Override
+    protected void handleDoubleClick(DoubleClickEvent anEvent) {
+        IStructuredSelection selection = (IStructuredSelection) anEvent.getSelection();
+        Object element = selection.getFirstElement();
+        RepositoryNode repoNode = (RepositoryNode) element;
+        if (!(repoNode instanceof AnalysisRepNode || repoNode instanceof ReportRepNode
+                || repoNode instanceof SysIndicatorDefinitionRepNode || repoNode instanceof PatternRepNode || repoNode instanceof RuleRepNode)) {
+            super.handleDoubleClick(anEvent);
         }
     }
 
