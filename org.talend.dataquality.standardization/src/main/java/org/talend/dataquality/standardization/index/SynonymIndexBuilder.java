@@ -59,6 +59,9 @@ public class SynonymIndexBuilder {
 
     private boolean usingCreateMode = false;
     private boolean bCreatePath = false;
+
+    private boolean verifyDuplication = true;
+
     private Error error = new Error();
 
     private int topDocLimit;
@@ -75,6 +78,10 @@ public class SynonymIndexBuilder {
      */
     public SynonymIndexBuilder() {
         topDocLimit = 5;
+    }
+
+    public void setVerifyDuplication(boolean verifyDuplication) {
+        this.verifyDuplication = verifyDuplication;
     }
 
     /**
@@ -169,25 +176,6 @@ public class SynonymIndexBuilder {
     }
 
     /**
-     * search a document by one of the synonym (which may be the word). use only inside the builder.
-     * 
-     * @param synonym
-     * @return
-     * @throws IOException
-     */
-    private TopDocs searchDocumentBySynonym(String synonym) {
-        Query query = new TermQuery(new Term(F_SYN, synonym.toLowerCase()));
-        TopDocs docs = null;
-        try {
-            docs = getSearcher().search(query, topDocLimit);
-        } catch (IOException e) {
-            error.set(false, e.getMessage());
-        	e.printStackTrace();
-        }
-        return docs;
-    }
-
-    /**
      * insert an entire document into index.
      * 
      * @param word
@@ -196,14 +184,22 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     public void insertDocument(String word, String synonyms) throws IOException {
+        if (verifyDuplication) {
+            if (searchDocumentByWord(word).totalHits == 0) {
+                getWriter().addDocument(generateDocument(word, synonyms));
+                getWriter().commit();
+                // System.out.println("The document <" + word + "> is now inserted.");
+            } else {
+                error.set(false, "<" + word + "> already exists and is ignored.");
+            }
 
-        if (searchDocumentByWord(word).totalHits == 0) {
-            getWriter().addDocument(generateDocument(word, synonyms));
-            getWriter().commit(); // avoid to insert duplicate document
-            // System.out.println("The document <" + word + "> is now inserted.");
         } else {
-        	error.set(false, "<" + word + "> already exists and is ignored.");
+            // insert document without duplication verification
+            getWriter().addDocument(generateDocument(word, synonyms));
+            getWriter().commit();
+
         }
+
     }
 
     /**
@@ -493,6 +489,4 @@ public class SynonymIndexBuilder {
         searcher = new IndexSearcher(indexDir);
         return searcher;
     }
-    
-    
 }
