@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.action.actions.CreateDFConnectionAction;
 import org.talend.dataprofiler.core.ui.action.actions.CreateMDMConnectionAction;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
+import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -63,7 +64,7 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
             IAction action = null;
             if (node instanceof DBConnectionFolderRepNode) {
                 action = new CreateDBConnectionAction(node);
-            } else if (node instanceof DFConnectionFolderRepNode) {
+            } else if (node instanceof DFConnectionFolderRepNode || node instanceof DFConnectionSubFolderRepNode) {
                 action = new CreateDFConnectionAction(node);
             } else if (node instanceof MDMConnectionFolderRepNode) {
                 action = new CreateMDMConnectionAction(node);

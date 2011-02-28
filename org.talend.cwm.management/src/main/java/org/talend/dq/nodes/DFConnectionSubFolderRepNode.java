@@ -18,7 +18,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class DFConnectionSubFolderRepNode extends RepositoryNode {
+public class DFConnectionSubFolderRepNode extends DFConnectionFolderRepNode {
 
     /**
      * DOC qiongli DelimitedFileConnectionSubFolderRepNode constructor comment.
