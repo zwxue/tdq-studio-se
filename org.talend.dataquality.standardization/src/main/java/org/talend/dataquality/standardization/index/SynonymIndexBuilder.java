@@ -131,6 +131,7 @@ public class SynonymIndexBuilder {
                 } else {
                     // propose to use create mode.
                 	error.set(false, "Segments file not found, initialize an index first");
+                	System.out.println(error.getMessage());
                 }
             }
         } catch (IOException e) {
