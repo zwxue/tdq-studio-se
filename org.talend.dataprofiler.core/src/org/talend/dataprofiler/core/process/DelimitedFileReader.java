@@ -77,14 +77,14 @@ public class DelimitedFileReader {
 
     public boolean readRecord() throws IOException {
         if (splitRecord) {
-            return readRecord_SplitRecord();
+            return readRecordSplitRecord();
 
         } else {
-            return readRecord_SplitField();
+            return readRecordSplitField();
         }
     }
 
-    private boolean readRecord_SplitField() throws IOException {
+    private boolean readRecordSplitField() throws IOException {
 
         checkClosed();
 
@@ -132,7 +132,7 @@ public class DelimitedFileReader {
         }
 
         if (!hasReadRecord) {
-            if (!StaticSettings.ignoreFileEndWithOneRecordDelimiter && streamBuffer.fileEndWithRecordDelimiter) {// aaa;bbb#111;222#
+            if (!StaticSettings.IGNOREFILEENDWITHONERECORDDELIMITER && streamBuffer.fileEndWithRecordDelimiter) {// aaa;bbb#111;222#
                 streamBuffer.fileEndWithRecordDelimiter = false;
                 endColumn();
                 endRecord();
@@ -146,7 +146,7 @@ public class DelimitedFileReader {
 
     }
 
-    private boolean readRecord_SplitRecord() throws IOException {
+    private boolean readRecordSplitRecord() throws IOException {
 
         checkClosed();
 
@@ -194,7 +194,7 @@ public class DelimitedFileReader {
         }
 
         if (!hasReadRecord) {
-            if (!StaticSettings.ignoreFileEndWithOneRecordDelimiter && streamBuffer.fileEndWithRecordDelimiter) {// aaa;bbb#111;222#
+            if (!StaticSettings.IGNOREFILEENDWITHONERECORDDELIMITER && streamBuffer.fileEndWithRecordDelimiter) {// aaa;bbb#111;222#
                 streamBuffer.fileEndWithRecordDelimiter = false;
                 endColumn();
                 endRecord();
@@ -561,11 +561,11 @@ public class DelimitedFileReader {
             buffer = new char[StaticSettings.MAX_BUFFER_SIZE];
 
             if (recordDelimiterPara.equals("\\n")) {
-                if (StaticSettings.lineMode == LineMode.LINEFEED_ALL) {
+                if (StaticSettings.LINEMODE == LineMode.LINEFEED_ALL) {
                     // notice: here we set it "\r\n", neither "\n" nor "\r", becase there want max length
                     recordDelimiter = "\r\n".toCharArray();
                     lineFeedAll = true;
-                } else if (StaticSettings.lineMode == LineMode.LINEFEED_JRE) {
+                } else if (StaticSettings.LINEMODE == LineMode.LINEFEED_JRE) {
                     String lineSeparator = (String) java.security.AccessController
                             .doPrivileged(new sun.security.action.GetPropertyAction("line.separator"));
                     recordDelimiter = lineSeparator.toCharArray();
@@ -683,6 +683,10 @@ public class DelimitedFileReader {
         }
     }
 
+    /**
+     * 
+     * DOC Administrator DelimitedFileReader class global comment. Detailled comment
+     */
     public enum LineMode {
         // it means, if input recordDelimiter is "\n",
         // if JRE on windows, it will be "\r\n",
@@ -698,6 +702,10 @@ public class DelimitedFileReader {
         LINEFEED_NORMAL;
     }
 
+    /**
+     * 
+     * DOC Administrator DelimitedFileReader class global comment. Detailled comment
+     */
     private enum SplitWay {
 
         FIRSTSPLIT_RECORDSEPARATOR,
@@ -721,13 +729,13 @@ public class DelimitedFileReader {
         public static final int MAX_COLUMNS_IN_ONE_RECORD = 100000;
 
         // how do we process the "\n" as recordDelimiter
-        public static final LineMode lineMode = LineMode.LINEFEED_ALL;
+        public static final LineMode LINEMODE = LineMode.LINEFEED_ALL;
 
         // 1. how do we process the case, file end with one recordDelimiter, like the following case, 2 records or 3
         // records?aaa;bbb#111;222#
         // 2. notice: there only process the last one recordDelimiter, if this case: aaa;bbb#111;222####, we still focus
         // on the last recordDelimiter
-        public static final boolean ignoreFileEndWithOneRecordDelimiter = true;
+        public static final boolean IGNOREFILEENDWITHONERECORDDELIMITER = true;
 
         // public static final boolean autoReallocateForHuge = true;
     }

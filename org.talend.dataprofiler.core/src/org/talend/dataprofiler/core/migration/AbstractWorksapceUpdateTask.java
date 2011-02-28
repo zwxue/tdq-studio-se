@@ -119,7 +119,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
         return folderList;
     }
 
-    protected Collection<Analysis> searchAllAnalysis(IFolder folder) {
+    protected Collection<Analysis> searchAllAnalysis(IFolder folder) throws ClassNotFoundException {
         Collection<Analysis> analyses = new ArrayList<Analysis>();
 
         try {
@@ -134,7 +134,12 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
                 // MOD yyi 2010-11-04 16236: for split migration task
                 if (null != file.getFileExtension() && file.getFileExtension().equals(FactoriesUtil.ANA)) {
                     URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
-                    Resource eResource = EMFSharedResources.getInstance().getResource(uri, true);
+                    Resource eResource = null;
+                    try{
+                    eResource = EMFSharedResources.getInstance().getResource(uri, true);
+                    }catch(Exception e){
+                        eResource = EMFSharedResources.getInstance().getResource(uri, true);
+                    }
                     if (eResource.getContents().size() > 0) {
                         analyses.add((Analysis) eResource.getContents().get(0));
                     } else {
@@ -143,7 +148,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
                 }
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error(e, e);
         }
         return analyses;
     }

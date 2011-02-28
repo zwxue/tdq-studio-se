@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -48,8 +49,8 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
 
     @Override
     protected boolean doExecute() throws Exception {
-        boolean ok = true;
 
+        boolean ok = true;
         // Copy system indicators.
         DQStructureManager manager = DQStructureManager.getInstance();
         IFolder systemIndicatorFolder = ResourceManager.getSystemIndicatorFolder();
@@ -64,7 +65,10 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
         DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
 
         // Migration for analyses (indicator definition)
-        Collection<Analysis> analyses = searchAllAnalysis(ResourceManager.getAnalysisFolder());
+        Collection<Analysis> analyses = new ArrayList<Analysis>();
+
+            analyses = searchAllAnalysis(ResourceManager.getAnalysisFolder());
+
         AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
         for (Analysis ana : analyses) {
             try {
@@ -103,6 +107,7 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
         }
         // ~ 13676
         CwmResource indDefResource = (CwmResource) indicatorDefinition.eResource();
+
         if (indDefResource == null) {
             // MOD scorreia 2010-10-05 16030 set the link between indicators and their definition
             if (DefinitionHandler.getInstance().setDefaultIndicatorDefinition(ind)) {
