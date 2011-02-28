@@ -163,9 +163,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                         resContants.add(EResourceConstant.DB_CONNECTIONS);
                         resContants.add(EResourceConstant.MDM_CONNECTIONS);
-                        if (!PluginChecker.isOnlyTopLoaded()) {
-                            resContants.add(EResourceConstant.FILEDELIMITED);
-                        }
+                        resContants.add(EResourceConstant.FILEDELIMITED);
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                     } else if (node instanceof RecycleBinRepNode) {
                         RecycleBinManager.getInstance().loadChildren((RecycleBinRepNode) node);

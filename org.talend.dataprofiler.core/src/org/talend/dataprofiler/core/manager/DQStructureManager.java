@@ -140,10 +140,10 @@ public final class DQStructureManager {
                         EResourceConstant.MDM_CONNECTIONS.getName());
             }
 
-            // if (!project.getFolder(EResourceConstant.FILEDELIMITED.getPath()).exists()) {
-            // ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
-            // EResourceConstant.FILEDELIMITED.getName());
-            // }
+            if (!project.getFolder(EResourceConstant.FILEDELIMITED.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
+                        EResourceConstant.FILEDELIMITED.getName());
+            }
 
             ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
                     EResourceConstant.ANALYSIS.getName());
@@ -495,8 +495,7 @@ public final class DQStructureManager {
      */
     @SuppressWarnings("unchecked")
     public void copyFilesToFolder(Plugin plugin, String srcPath, boolean recurse, IFolder desFolder, String suffix,
-            boolean... isImportItem)
-            throws IOException, CoreException {
+            boolean... isImportItem) throws IOException, CoreException {
         if (plugin == null) {
             return;
         }
@@ -548,13 +547,5 @@ public final class DQStructureManager {
         IFolder newFolder = folder.getFolder(label);
         return !newFolder.exists();
     }
-
-
-
-
-
-
-
-
 
 }

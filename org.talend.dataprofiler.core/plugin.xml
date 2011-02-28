@@ -1368,5 +1368,12 @@
         </selectionEnablement>
      </linkHelper>
   </extension>
+  <extension
+        point="org.talend.core.runtime.filepreview_provider">
+     <preview
+           class="org.talend.dataprofiler.core.process.FilePreviewProcess"
+           language="java">
+     </preview>
+  </extension>
 
 </plugin>
