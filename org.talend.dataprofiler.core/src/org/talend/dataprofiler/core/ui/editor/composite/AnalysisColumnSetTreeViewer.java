@@ -69,6 +69,7 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.TalendTypeConvert;
@@ -686,6 +687,10 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     @Override
     public boolean canDrop(IRepositoryNode reposNode) {
+        // MOD qiongli 2011-3-1 bug 17869,temporary filter mdm connection for column set.
+        if (reposNode instanceof MDMXmlElementRepNode) {
+            return false;
+        }
         List<IRepositoryNode> existColumns = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode columnFromMultiValueList : this.getColumnSetMultiValueList()) {
             existColumns.add(columnFromMultiValueList);
