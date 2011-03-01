@@ -41,6 +41,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -213,6 +214,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         int index = 0;
         connCombo.removeAll();
         for (IRepositoryNode repNode : allConnectionReposNodes) {
+            // MOD qiongli 2011-3-1 bug 17869,temporary filter mdm connection except 'ColumnMasterDetailsPage'.
+            if (repNode instanceof MDMConnectionRepNode && !(currentEditor.getMasterPage() instanceof ColumnMasterDetailsPage)) {
+                continue;
+            }
             connCombo.add(repNode.getObject().getProperty().getLabel(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
             connCombo.setData(repNode.getObject().getProperty().getLabel(), index);
