@@ -30,6 +30,10 @@ import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
@@ -1067,55 +1071,91 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * DOC xqliu Comment method "runAnalysisIndicatorsParallel".
+     * 
+     * @param parent
+     * @param connection
+     * @param elementToIndicator
+     * @param indicator
+     * @return IStatus
+     * @throws
+     */
+    // TDQ Guodong bu 2011-2-25, feature 19107
+    class ExecutiveAnalysisJob extends Job {
+
+        ColumnAnalysisSqlExecutor parent;
+
+        Connection connection;
+
+        Map<ModelElement, List<Indicator>> elementToIndicator;
+
+        Indicator indicator;
+
+        String errorMessage;
+
+        public ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor parent, Connection connection,
+                Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator) {
+            super("");
+            this.parent = parent;
+            this.connection = connection;
+            this.elementToIndicator = elementToIndicator;
+            this.indicator = indicator;
+        }
+
+        /*
+         * (non-Jsdoc)
+         * 
+         * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+         */
+        @Override
+        protected IStatus run(IProgressMonitor monitor) {
+            // TODO Auto-generated method stub
+            ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
+                    connection, elementToIndicator, indicator);
+            columnSqlParallel.run();
+            if (columnSqlParallel.ok) {
+                return Status.OK_STATUS;
+            } else {
+                this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.AnalysisExecutionFailed"); //$NON-NLS-1$
+                return Status.CANCEL_STATUS;
+            }
+        }
+    }
+
+    /**
+     * 
+     * The original method have been removed,this is the rewriting method. The logic of the new approach by Job to
+     * executive indicators,replace the original thread in the thread way nested. Each indicator corresponds to a job,
+     * after all the indicators executed and then running the main thread.
      * 
      * @param connection
      * @param elementToIndicator
      * @param indicators
-     * @return
+     * @return ok(execution results)
      * @throws SQLException
      */
     private boolean runAnalysisIndicatorsParallel(Connection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
             Collection<Indicator> indicators) throws SQLException {
+        // TDQ Guodong bu 2011-2-25, feature 19107
         boolean ok = true;
-        List<Thread> runners = new ArrayList<Thread>();
-        List<ColumnAnalysisSqlParallelExecutor> columnSqlExecutor = new ArrayList<ColumnAnalysisSqlParallelExecutor>();
-        try {
-            for (Indicator indicator : indicators) {
-                ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(this,
-                        connection, elementToIndicator, indicator);
-                columnSqlExecutor.add(columnSqlParallel);
-                Thread thread = new Thread(columnSqlParallel);
-                runners.add(thread);
-                thread.start();
-            }
-            while (true) {
-                boolean stop = true;
-                for (Thread thread : runners) {
-                    if (thread.isAlive()) {
-                        stop = false;
-                        Thread.sleep(1000);
-                    }
-                }
-                if (stop) {
-                    break;
-                }
-            }
-
-        } catch (InterruptedException e) {
-            log.error(e, e);
+        List<ExecutiveAnalysisJob> excuteAnalysisJober = new ArrayList<ExecutiveAnalysisJob>();
+        for (Indicator indicator : indicators) {
+            ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(this, connection, elementToIndicator, indicator);
+            excuteAnalysisJober.add(eaj);
+            eaj.schedule();
         }
-        runners = null;
-        // ADD xqliu 2009-09-23 bug 9058
-        for (ColumnAnalysisSqlParallelExecutor executor : columnSqlExecutor) {
-            if (executor.getException() != null) {
-                columnSqlExecutor = null;
-                throw new SQLException(executor.getException().toString());
+        for (ExecutiveAnalysisJob exeAnaJober : excuteAnalysisJober) {
+            try {
+                exeAnaJober.join();
+            } catch (InterruptedException e) {
+                log.warn(e, e);
+            }
+            if (exeAnaJober.errorMessage != null) {
+                this.errorMessage = exeAnaJober.errorMessage;
+                ok = false;
             }
         }
-        columnSqlExecutor = null;
-        // ~
         return ok;
+        // ~
     }
 
     /**
@@ -1244,7 +1284,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * DOC scorreia Comment method "executeQuery".
      * 
      * @param catalogName (can be null)
      * @param connection
