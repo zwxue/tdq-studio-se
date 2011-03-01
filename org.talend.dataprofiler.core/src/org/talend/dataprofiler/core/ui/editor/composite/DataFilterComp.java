@@ -62,14 +62,19 @@ public class DataFilterComp extends AbstractPagePart {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
-                propertyChangeSupport.firePropertyChange(PluginConstant.DATAFILTER_PROPERTY, null, dataFilterText.getText());
+                propertyChangeSupport.firePropertyChange(PluginConstant.DATAFILTER_PROPERTY, null, getDataFilterString());
             }
 
         });
     }
 
+    // TDQ Guodong bu 2011-2-25, bug 19107
     public String getDataFilterString() {
-        return dataFilterText.getText();
+        String returnTest = dataFilterText.getText();
+        if (returnTest.trim().length() == 0) {
+            returnTest = returnTest.trim();
+        }
+        return returnTest;
     }
 
     public void addModifyListener(ModifyListener listener) {
