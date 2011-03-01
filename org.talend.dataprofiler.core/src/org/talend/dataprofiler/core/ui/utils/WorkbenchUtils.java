@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
@@ -30,6 +31,7 @@ import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
@@ -45,7 +47,6 @@ public final class WorkbenchUtils {
     private static Logger log = Logger.getLogger(WorkbenchUtils.class);
 
     private WorkbenchUtils() {
-
     }
 
     /**
@@ -59,6 +60,16 @@ public final class WorkbenchUtils {
             PlatformUI.getWorkbench().showPerspective(perspectiveID, activeWindow);
         } catch (WorkbenchException e) {
             log.error(e.getMessage(), e);
+        }
+    }
+
+    public static void autoChange2DataProfilerPerspective() {
+        IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getPerspective();
+        if (!PluginConstant.PERSPECTIVE_ID.equals(perspective.getId())) {
+            if (MessageUI.openConfirm(DefaultMessagesImpl.getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
+                changePerspective(PluginConstant.PERSPECTIVE_ID);
+            }
         }
     }
 

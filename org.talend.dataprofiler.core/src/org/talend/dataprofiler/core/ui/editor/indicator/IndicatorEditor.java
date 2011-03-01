@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 
@@ -146,5 +147,11 @@ public class IndicatorEditor extends CommonFormEditor {
         if (saveAction != null) {
             saveAction.setEnabled(state);
         }
+    }
+
+    @Override
+    public void setFocus() {
+        super.setFocus();
+        WorkbenchUtils.autoChange2DataProfilerPerspective();
     }
 }

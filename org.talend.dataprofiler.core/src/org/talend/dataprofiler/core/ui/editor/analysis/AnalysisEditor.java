@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
@@ -289,5 +290,11 @@ public class AnalysisEditor extends CommonFormEditor {
      */
     public ReturnCode canRun() {
         return masterPage.canRun();
+    }
+
+    @Override
+    public void setFocus() {
+        super.setFocus();
+        WorkbenchUtils.autoChange2DataProfilerPerspective();
     }
 }
