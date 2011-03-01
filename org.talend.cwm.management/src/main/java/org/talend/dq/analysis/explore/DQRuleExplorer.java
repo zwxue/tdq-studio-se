@@ -31,12 +31,10 @@ public class DQRuleExplorer extends DataExplorer {
 
         switch (this.indicatorEnum) {
         case WhereRuleIndicatorEnum:
-            // MOD xqliu 2009-10-30 bug 9702
             if (!includeJoinCondition(this.indicator)) {
-                map.put(MENU_VIEW_INVALID_ROWS, getRowsStatement(false));
+                map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getRowsStatement(false));
             }
-            // ~
-            map.put(MENU_VIEW_VALID_ROWS, getRowsStatement(true));
+            map.put(MENU_VIEW_VALID_ROWS, getComment(MENU_VIEW_VALID_ROWS) + getRowsStatement(true));
             break;
         default:
         }

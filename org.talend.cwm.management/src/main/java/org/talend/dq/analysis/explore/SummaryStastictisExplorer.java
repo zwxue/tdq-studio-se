@@ -118,14 +118,14 @@ public class SummaryStastictisExplorer extends DataExplorer {
             break;
         case IQRIndicatorEnum:
         case RangeIndicatorEnum:
-            map.put(MENU_ROWS_IN_RANGE, getInRangeRowsStatement());
-            map.put(MENU_ROWS_OUTSIDE_RANGE, getOutRangeRowsStatement());
+            map.put(MENU_ROWS_IN_RANGE, getComment(MENU_ROWS_IN_RANGE) + getInRangeRowsStatement());
+            map.put(MENU_ROWS_OUTSIDE_RANGE, getComment(MENU_ROWS_OUTSIDE_RANGE) + getOutRangeRowsStatement());
             break;
         default:
             if (entity.isOutOfRange(entity.getValue())) {
-                map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement());
+                map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement());
             }
-            map.put(MENU_VIEW_ROWS, getMatchingRowsStatement());
+            map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getMatchingRowsStatement());
         }
 
         return map;

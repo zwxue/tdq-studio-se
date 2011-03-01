@@ -36,11 +36,10 @@ public class RowMatchExplorer extends DataExplorer {
      * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
      */
     public Map<String, String> getQueryMap() {
-        // TODO Auto-generated method stub
         Map<String, String> map = new HashMap<String, String>();
-        map.put(MENU_VIEW_MATCH_ROWS, getRowsMatchStatement()); //$NON-NLS-1$
-        map.put(MENU_VIEW_NOT_MATCH_ROWS, getRowsNotMatchStatement()); //$NON-NLS-1$
-        map.put(MENU_VIEW_ROWS, getAllRowsStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_MATCH_ROWS, getComment(MENU_VIEW_MATCH_ROWS) + getRowsMatchStatement());
+        map.put(MENU_VIEW_NOT_MATCH_ROWS, getComment(MENU_VIEW_NOT_MATCH_ROWS) + getRowsNotMatchStatement());
+        map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getAllRowsStatement());
         return map;
     }
 

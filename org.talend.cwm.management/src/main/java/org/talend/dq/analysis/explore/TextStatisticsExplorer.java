@@ -54,7 +54,7 @@ public class TextStatisticsExplorer extends DataExplorer {
         case AverageLengthWithBlankIndicatorEnum:
         case AverageLengthWithNullBlankIndicatorEnum:
         case AverageLengthWithNullIndicatorEnum:
-            map.put(MENU_VIEW_ROWS, isSqlEngine ? getTextRowsStatement() : null);
+            map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getTextRowsStatement() : null);
             break;
         default:
         }

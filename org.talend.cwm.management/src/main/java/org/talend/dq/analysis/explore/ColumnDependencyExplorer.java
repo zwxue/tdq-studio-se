@@ -33,12 +33,13 @@ public class ColumnDependencyExplorer extends DataExplorer {
 
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        map.put(MENU_VIEW_VALID_VALUES, this.getValidValuesStatement());
-        map.put(MENU_VIEW_INVALID_VALUES, this.getInvalidValuesStatement());
-        map.put(MENU_VIEW_DETAILED_INVALID_VALUES, this.getDetailedInvalidValuesStatement());
-        map.put(MENU_VIEW_DETAILED_VALID_VALUES, this.getDetailedValidValuesStatement());
-        map.put(MENU_VIEW_VALID_ROWS, getValidRowsStatement()); //$NON-NLS-1$
-        map.put(MENU_VIEW_INVALID_ROWS, getInvalidRowsStatement()); //$NON-NLS-1$
+        map.put(MENU_VIEW_VALID_VALUES, getComment(MENU_VIEW_VALID_VALUES) + getValidValuesStatement());
+        map.put(MENU_VIEW_INVALID_VALUES, getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement());
+        map.put(MENU_VIEW_DETAILED_INVALID_VALUES, getComment(MENU_VIEW_DETAILED_INVALID_VALUES)
+                + getDetailedInvalidValuesStatement());
+        map.put(MENU_VIEW_DETAILED_VALID_VALUES, getComment(MENU_VIEW_DETAILED_VALID_VALUES) + getDetailedValidValuesStatement());
+        map.put(MENU_VIEW_VALID_ROWS, getComment(MENU_VIEW_VALID_ROWS) + getValidRowsStatement());
+        map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement());
         return map;
     }
 

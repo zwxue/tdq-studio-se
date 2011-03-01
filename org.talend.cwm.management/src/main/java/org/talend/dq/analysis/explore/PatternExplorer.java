@@ -64,11 +64,11 @@ public class PatternExplorer extends DataExplorer {
         // engin on result page
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
         // MOD zshen 10448 Add menus "view invalid values" and "view valid values" on pattern matching indicator
-        map.put(MENU_VIEW_INVALID_VALUES, isSqlEngine ? getInvalidValuesStatement() : null); //$NON-NLS-1$
-        map.put(MENU_VIEW_VALID_VALUES, isSqlEngine ? getValidValuesStatement() : null); //$NON-NLS-1$
+        map.put(MENU_VIEW_INVALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement() : null); //$NON-NLS-1$
+        map.put(MENU_VIEW_VALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALID_VALUES) + getValidValuesStatement() : null); //$NON-NLS-1$
         // ~10448
-        map.put(MENU_VIEW_INVALID_ROWS, isSqlEngine ? getInvalidRowsStatement() : null); //$NON-NLS-1$
-        map.put(MENU_VIEW_VALID_ROWS, isSqlEngine ? getValidRowsStatement() : null); //$NON-NLS-1$
+        map.put(MENU_VIEW_INVALID_ROWS, isSqlEngine ? getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement() : null); //$NON-NLS-1$
+        map.put(MENU_VIEW_VALID_ROWS, isSqlEngine ? getComment(MENU_VIEW_VALID_ROWS) + getValidRowsStatement() : null); //$NON-NLS-1$
 
         return map;
     }

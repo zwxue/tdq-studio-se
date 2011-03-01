@@ -38,20 +38,21 @@ public class SimpleStatisticsExplorer extends DataExplorer {
             case NullCountIndicatorEnum:
             case BlankCountIndicatorEnum:
             case DefValueCountIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getRowsStatement() : null);
+                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatement() : null);
                 break;
 
             case UniqueIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getRowsStatementWithSubQuery() : null);
-                map.put(MENU_VIEW_VALUES, isSqlEngine ? getValuesStatement(this.columnName) : null);
+                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
                 break;
             case DistinctCountIndicatorEnum:
-                map.put(MENU_VIEW_VALUES, isSqlEngine ? getDistinctValuesStatement(this.columnName) : null);
+                map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES)
+                        + getDistinctValuesStatement(this.columnName) : null);
                 break;
 
             case DuplicateCountIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getRowsStatementWithSubQuery() : null);
-                map.put(MENU_VIEW_VALUES, isSqlEngine ? getValuesStatement(this.columnName) : null);
+                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
                 break;
             default:
             }

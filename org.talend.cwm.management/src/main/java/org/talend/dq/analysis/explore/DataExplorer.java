@@ -23,6 +23,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -83,6 +84,8 @@ public abstract class DataExplorer implements IDataExplorer {
 
     protected IndicatorEnum indicatorEnum;
 
+    private static final boolean SHOW_COMMENT_BEFORE_STATEMENT = true;
+
     /**
      * Column name with quotes.
      */
@@ -95,6 +98,46 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     public DataExplorer() {
         super();
+    }
+
+    /**
+     * get the comment of analysis, if analysis is null, return "".
+     * 
+     * @param showing
+     * @return
+     */
+    protected String getComment(String showing) {
+        if (!SHOW_COMMENT_BEFORE_STATEMENT) {
+            return ""; //$NON-NLS-1$
+        }
+        StringBuffer sb = new StringBuffer();
+        if (this.analysis != null) {
+            String anaName = this.analysis.getName() == null ? "" : this.analysis.getName(); //$NON-NLS-1$
+            AnalysisType analysisType = AnalysisHelper.getAnalysisType(this.analysis);
+            String anaType = analysisType == null ? "" : analysisType.getLiteral() == null ? "" : analysisType.getLiteral(); //$NON-NLS-1$  //$NON-NLS-2$
+            String anaPurpose = AnalysisHelper.getPurpose(this.analysis);
+            String anaDescription = AnalysisHelper.getDescription(this.analysis);
+            String aeName = "";
+            String indName = "";
+            if (this.indicator != null) {
+                ModelElement analyzedElement = this.indicator.getAnalyzedElement();
+                if (analyzedElement != null) {
+                    aeName = analyzedElement.getName() == null ? "" : analyzedElement.getName();
+                }
+                indName = this.indicator.getName() == null ? "" : this.indicator.getName();
+            }
+            showing = showing == null ? "" : showing; //$NON-NLS-1$
+            sb.append("/*\n"); //$NON-NLS-1$
+            sb.append("Analysis: " + anaName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("Type of Analysis: " + anaType + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("Purpose: " + anaPurpose + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("Description: " + anaDescription + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("AnalyzedElement: " + aeName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("Indicator: " + indName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("Showing: " + showing + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("*/\n"); //$NON-NLS-1$
+        }
+        return sb.toString();
     }
 
     /**

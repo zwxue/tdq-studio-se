@@ -371,6 +371,28 @@ public final class AnalysisHelper {
         return TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.RELOAD_DATABASES, String.valueOf(reloadDatabases));
     }
 
+    public static String getPurpose(Analysis analysis) {
+        String purpose = "";
+        if (analysis != null) {
+            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PURPOSE, analysis.getTaggedValue());
+            if (taggedValue != null && taggedValue.getValue() != null) {
+                purpose = taggedValue.getValue();
+            }
+        }
+        return purpose;
+    }
+
+    public static String getDescription(Analysis analysis) {
+        String description = "";
+        if (analysis != null) {
+            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DESCRIPTION, analysis.getTaggedValue());
+            if (taggedValue != null && taggedValue.getValue() != null) {
+                description = taggedValue.getValue();
+            }
+        }
+        return description;
+    }
+
     // MOD scorreia 2009-10-07 User defined matching indicator is NOT a pattern matching indicator.
     // private static IndicatorCategory getIndicatorCategory(IndicatorDefinition indicatorDefinition) {
     // IndicatorCategory category = null;

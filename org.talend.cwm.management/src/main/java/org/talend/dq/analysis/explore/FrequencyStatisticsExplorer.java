@@ -219,7 +219,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         Map<String, String> map = new HashMap<String, String>();
         // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
-        map.put(MENU_VIEW_ROWS, isSqlEngine ? getFreqRowsStatement() : null);
+        map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getFreqRowsStatement() : null);
 
         return map;
     }
