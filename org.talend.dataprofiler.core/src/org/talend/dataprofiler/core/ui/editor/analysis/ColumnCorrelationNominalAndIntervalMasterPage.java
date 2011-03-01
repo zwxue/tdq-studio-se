@@ -55,6 +55,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -405,7 +406,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             }
         } else {
 
-            List<ModelElement> numericOrDateList = new ArrayList<ModelElement>();
+            List<MetadataColumn> numericOrDateList = new ArrayList<MetadataColumn>();
             if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
                 numericOrDateList = columnSetMultiIndicator.getNumericColumns();
             }
@@ -413,8 +414,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 numericOrDateList = columnSetMultiIndicator.getDateColumns();
             }
 
-            for (ModelElement column : numericOrDateList) {
-                final ModelElement tdColumn = (ModelElement) column;
+            for (MetadataColumn column : numericOrDateList) {
+                final MetadataColumn tdColumn = (MetadataColumn) column;
 
                 ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                         | ExpandableComposite.CLIENT_INDENT);

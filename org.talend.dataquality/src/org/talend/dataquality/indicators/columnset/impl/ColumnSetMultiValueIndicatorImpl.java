@@ -49,41 +49,24 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getAnalyzedColumns <em>
- * Analyzed Columns</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getListRows <em>List
- * Rows</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericFunctions <em>
- * Numeric Functions</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNominalColumns <em>
- * Nominal Columns</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericColumns <em>
- * Numeric Columns</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getColumnHeaders <em>
- * Column Headers</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateFunctions <em>
- * Date Functions</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateColumns <em>Date
- * Columns</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getUniqueCount <em>
- * Unique Count</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDistinctCount <em>
- * Distinct Count</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDuplicateCount <em>
- * Duplicate Count</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getRowCountIndicator
- * <em>Row Count Indicator</em>}</li>
- * <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getUniqueCountIndicator
- * <em>Unique Count Indicator</em>}</li>
- * <li>
- * {@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDistinctCountIndicator
- * <em>Distinct Count Indicator</em>}</li>
- * <li>
- * {@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDuplicateCountIndicator
- * <em>Duplicate Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getAnalyzedColumns <em>Analyzed Columns</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getListRows <em>List Rows</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericFunctions <em>Numeric Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNominalColumns <em>Nominal Columns</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getNumericColumns <em>Numeric Columns</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getColumnHeaders <em>Column Headers</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateFunctions <em>Date Functions</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDateColumns <em>Date Columns</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getUniqueCount <em>Unique Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDistinctCount <em>Distinct Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDuplicateCount <em>Duplicate Count</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getRowCountIndicator <em>Row Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getUniqueCountIndicator <em>Unique Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDistinctCountIndicator <em>Distinct Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.columnset.impl.ColumnSetMultiValueIndicatorImpl#getDuplicateCountIndicator <em>Duplicate Count Indicator</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl implements ColumnSetMultiValueIndicator {
@@ -98,12 +81,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @generated
      * @ordered
      */
-    protected EList<ModelElement> analyzedColumns;
+    protected EList<MetadataColumn> analyzedColumns;
 
     /**
-     * The default value of the '{@link #getListRows() <em>List Rows</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getListRows() <em>List Rows</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getListRows()
      * @generated
      * @ordered
@@ -111,9 +94,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected static final List<Object[]> LIST_ROWS_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getListRows() <em>List Rows</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getListRows() <em>List Rows</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getListRows()
      * @generated
      * @ordered
@@ -131,9 +114,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected EList<String> numericFunctions;
 
     /**
-     * The cached value of the '{@link #getDateFunctions() <em>Date Functions</em>}' attribute list. <!-- begin-user-doc
+     * The cached value of the '{@link #getDateFunctions() <em>Date Functions</em>}' attribute list.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @see #getDateFunctions()
      * @generated
      * @ordered
@@ -141,19 +124,19 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected EList<String> dateFunctions;
 
     /**
-     * The cached value of the '{@link #getDateColumns() <em>Date Columns</em>}' reference list. <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDateColumns() <em>Date Columns</em>}' reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getDateColumns()
      * @generated
      * @ordered
      */
-    protected EList<ModelElement> dateColumns;
+    protected EList<MetadataColumn> dateColumns;
 
     /**
-     * The default value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute. <!-- begin-user-doc -->
+     * The default value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getUniqueCount()
      * @generated
      * @ordered
@@ -161,9 +144,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected static final Long UNIQUE_COUNT_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getUniqueCount()
      * @generated
      * @ordered
@@ -171,9 +154,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected Long uniqueCount = UNIQUE_COUNT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getDistinctCount() <em>Distinct Count</em>}' attribute. <!-- begin-user-doc -->
+     * The default value of the '{@link #getDistinctCount() <em>Distinct Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getDistinctCount()
      * @generated
      * @ordered
@@ -181,9 +164,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected static final Long DISTINCT_COUNT_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getDistinctCount() <em>Distinct Count</em>}' attribute. <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDistinctCount() <em>Distinct Count</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * 
      * @see #getDistinctCount()
      * @generated
      * @ordered
@@ -191,9 +174,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected Long distinctCount = DISTINCT_COUNT_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getDuplicateCount() <em>Duplicate Count</em>}' attribute. <!-- begin-user-doc
+     * The default value of the '{@link #getDuplicateCount() <em>Duplicate Count</em>}' attribute.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @see #getDuplicateCount()
      * @generated
      * @ordered
@@ -203,7 +186,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     /**
      * The cached value of the '{@link #getRowCountIndicator() <em>Row Count Indicator</em>}' containment reference.
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @see #getRowCountIndicator()
      * @generated
      * @ordered
@@ -211,9 +193,8 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected RowCountIndicator rowCountIndicator;
 
     /**
-     * The cached value of the '{@link #getUniqueCountIndicator() <em>Unique Count Indicator</em>}' containment
-     * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * The cached value of the '{@link #getUniqueCountIndicator() <em>Unique Count Indicator</em>}' containment reference.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #getUniqueCountIndicator()
      * @generated
      * @ordered
@@ -221,9 +202,8 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected UniqueCountIndicator uniqueCountIndicator;
 
     /**
-     * The cached value of the '{@link #getDistinctCountIndicator() <em>Distinct Count Indicator</em>}' containment
-     * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * The cached value of the '{@link #getDistinctCountIndicator() <em>Distinct Count Indicator</em>}' containment reference.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #getDistinctCountIndicator()
      * @generated
      * @ordered
@@ -231,9 +211,8 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     protected DistinctCountIndicator distinctCountIndicator;
 
     /**
-     * The cached value of the '{@link #getDuplicateCountIndicator() <em>Duplicate Count Indicator</em>}' containment
-     * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * The cached value of the '{@link #getDuplicateCountIndicator() <em>Duplicate Count Indicator</em>}' containment reference.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #getDuplicateCountIndicator()
      * @generated
      * @ordered
@@ -252,7 +231,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected ColumnSetMultiValueIndicatorImpl() {
@@ -261,7 +239,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -271,20 +248,17 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
-    public EList<ModelElement> getAnalyzedColumns() {
+    public EList<MetadataColumn> getAnalyzedColumns() {
         if (analyzedColumns == null) {
-            analyzedColumns = new EObjectResolvingEList<ModelElement>(ModelElement.class, this,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
+            analyzedColumns = new EObjectResolvingEList<MetadataColumn>(MetadataColumn.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
         }
         return analyzedColumns;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public List<Object[]> getListRows() {
@@ -293,26 +267,22 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setListRows(List<Object[]> newListRows) {
         List<Object[]> oldListRows = listRows;
         listRows = newListRows;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS,
-                    oldListRows, listRows));
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS, oldListRows, listRows));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EList<String> getNumericFunctions() {
         if (numericFunctions == null) {
-            numericFunctions = new EDataTypeUniqueEList<String>(String.class, this,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS);
+            numericFunctions = new EDataTypeUniqueEList<String>(String.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS);
         }
         return numericFunctions;
     }
@@ -322,12 +292,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<ModelElement> getNominalColumns() {
-        EList<ModelElement> nominalColumns = new BasicElistExtend<ModelElement>();// bug 10578 by zshen,fix the
+    public EList<MetadataColumn> getNominalColumns() {
+        EList<MetadataColumn> nominalColumns = new BasicElistExtend<MetadataColumn>();// bug 10578 by zshen,fix the
                                                                                   // exception when
         // correlation analysis to be move
         if (analyzedColumns != null) {
-            for (ModelElement column : analyzedColumns) {
+            for (MetadataColumn column : analyzedColumns) {
                 // MOD yyi 2011-02-25 16660: edit connection, save it will get error
                 final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
@@ -355,12 +325,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<ModelElement> getNumericColumns() {
-        EList<ModelElement> computedColumns = new BasicElistExtend<ModelElement>();// bug 10578 by zshen,fix the
+    public EList<MetadataColumn> getNumericColumns() {
+        EList<MetadataColumn> computedColumns = new BasicElistExtend<MetadataColumn>();// bug 10578 by zshen,fix the
                                                                                    // exception when
         // correlation analysis to be move
         if (analyzedColumns != null) {
-            for (ModelElement column : analyzedColumns) {
+            for (MetadataColumn column : analyzedColumns) {
                 // MOD yyi 2011-02-25 16660: edit connection, save it will get error
                 final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
@@ -412,13 +382,11 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EList<String> getDateFunctions() {
         if (dateFunctions == null) {
-            dateFunctions = new EDataTypeUniqueEList<String>(String.class, this,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS);
+            dateFunctions = new EDataTypeUniqueEList<String>(String.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS);
         }
         return dateFunctions;
     }
@@ -428,12 +396,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<ModelElement> getDateColumns() {
-        EList<ModelElement> dateColumns = new BasicEList<ModelElement>();
+    public EList<MetadataColumn> getDateColumns() {
+        EList<MetadataColumn> dateColumns = new BasicEList<MetadataColumn>();
         if (analyzedColumns != null) {
-            for (ModelElement column : analyzedColumns) {
+            for (MetadataColumn column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
-                final ModelElement mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
+                final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
                 if (tdColumn != null) {
                     final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
                     if (DataminingType.INTERVAL.equals(dmType)
@@ -450,7 +418,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public Long getUniqueCount() {
@@ -459,20 +426,17 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setUniqueCount(Long newUniqueCount) {
         Long oldUniqueCount = uniqueCount;
         uniqueCount = newUniqueCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT, oldUniqueCount, uniqueCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT, oldUniqueCount, uniqueCount));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public Long getDistinctCount() {
@@ -481,15 +445,13 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setDistinctCount(Long newDistinctCount) {
         Long oldDistinctCount = distinctCount;
         distinctCount = newDistinctCount;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT, oldDistinctCount, distinctCount));
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT, oldDistinctCount, distinctCount));
     }
 
     /**
@@ -503,7 +465,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public RowCountIndicator getRowCountIndicator() {
@@ -512,50 +473,38 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public NotificationChain basicSetRowCountIndicator(RowCountIndicator newRowCountIndicator, NotificationChain msgs) {
         RowCountIndicator oldRowCountIndicator = rowCountIndicator;
         rowCountIndicator = newRowCountIndicator;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR, oldRowCountIndicator,
-                    newRowCountIndicator);
-            if (msgs == null)
-                msgs = notification;
-            else
-                msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR, oldRowCountIndicator, newRowCountIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setRowCountIndicator(RowCountIndicator newRowCountIndicator) {
         if (newRowCountIndicator != rowCountIndicator) {
             NotificationChain msgs = null;
             if (rowCountIndicator != null)
-                msgs = ((InternalEObject) rowCountIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-                        - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR, null, msgs);
+                msgs = ((InternalEObject)rowCountIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR, null, msgs);
             if (newRowCountIndicator != null)
-                msgs = ((InternalEObject) newRowCountIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-                        - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR, null, msgs);
+                msgs = ((InternalEObject)newRowCountIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR, null, msgs);
             msgs = basicSetRowCountIndicator(newRowCountIndicator, msgs);
-            if (msgs != null)
-                msgs.dispatch();
-        } else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR, newRowCountIndicator,
-                    newRowCountIndicator));
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR, newRowCountIndicator, newRowCountIndicator));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public UniqueCountIndicator getUniqueCountIndicator() {
@@ -564,50 +513,38 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public NotificationChain basicSetUniqueCountIndicator(UniqueCountIndicator newUniqueCountIndicator, NotificationChain msgs) {
         UniqueCountIndicator oldUniqueCountIndicator = uniqueCountIndicator;
         uniqueCountIndicator = newUniqueCountIndicator;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR, oldUniqueCountIndicator,
-                    newUniqueCountIndicator);
-            if (msgs == null)
-                msgs = notification;
-            else
-                msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR, oldUniqueCountIndicator, newUniqueCountIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setUniqueCountIndicator(UniqueCountIndicator newUniqueCountIndicator) {
         if (newUniqueCountIndicator != uniqueCountIndicator) {
             NotificationChain msgs = null;
             if (uniqueCountIndicator != null)
-                msgs = ((InternalEObject) uniqueCountIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-                        - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR, null, msgs);
+                msgs = ((InternalEObject)uniqueCountIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR, null, msgs);
             if (newUniqueCountIndicator != null)
-                msgs = ((InternalEObject) newUniqueCountIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-                        - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR, null, msgs);
+                msgs = ((InternalEObject)newUniqueCountIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR, null, msgs);
             msgs = basicSetUniqueCountIndicator(newUniqueCountIndicator, msgs);
-            if (msgs != null)
-                msgs.dispatch();
-        } else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR, newUniqueCountIndicator,
-                    newUniqueCountIndicator));
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR, newUniqueCountIndicator, newUniqueCountIndicator));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public DistinctCountIndicator getDistinctCountIndicator() {
@@ -616,7 +553,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public NotificationChain basicSetDistinctCountIndicator(DistinctCountIndicator newDistinctCountIndicator,
@@ -624,43 +560,32 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         DistinctCountIndicator oldDistinctCountIndicator = distinctCountIndicator;
         distinctCountIndicator = newDistinctCountIndicator;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR, oldDistinctCountIndicator,
-                    newDistinctCountIndicator);
-            if (msgs == null)
-                msgs = notification;
-            else
-                msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR, oldDistinctCountIndicator, newDistinctCountIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setDistinctCountIndicator(DistinctCountIndicator newDistinctCountIndicator) {
         if (newDistinctCountIndicator != distinctCountIndicator) {
             NotificationChain msgs = null;
             if (distinctCountIndicator != null)
-                msgs = ((InternalEObject) distinctCountIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-                        - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR, null, msgs);
+                msgs = ((InternalEObject)distinctCountIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR, null, msgs);
             if (newDistinctCountIndicator != null)
-                msgs = ((InternalEObject) newDistinctCountIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-                        - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR, null, msgs);
+                msgs = ((InternalEObject)newDistinctCountIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR, null, msgs);
             msgs = basicSetDistinctCountIndicator(newDistinctCountIndicator, msgs);
-            if (msgs != null)
-                msgs.dispatch();
-        } else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR, newDistinctCountIndicator,
-                    newDistinctCountIndicator));
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR, newDistinctCountIndicator, newDistinctCountIndicator));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public DuplicateCountIndicator getDuplicateCountIndicator() {
@@ -669,7 +594,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public NotificationChain basicSetDuplicateCountIndicator(DuplicateCountIndicator newDuplicateCountIndicator,
@@ -677,56 +601,45 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         DuplicateCountIndicator oldDuplicateCountIndicator = duplicateCountIndicator;
         duplicateCountIndicator = newDuplicateCountIndicator;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR, oldDuplicateCountIndicator,
-                    newDuplicateCountIndicator);
-            if (msgs == null)
-                msgs = notification;
-            else
-                msgs.add(notification);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR, oldDuplicateCountIndicator, newDuplicateCountIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
         }
         return msgs;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setDuplicateCountIndicator(DuplicateCountIndicator newDuplicateCountIndicator) {
         if (newDuplicateCountIndicator != duplicateCountIndicator) {
             NotificationChain msgs = null;
             if (duplicateCountIndicator != null)
-                msgs = ((InternalEObject) duplicateCountIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-                        - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR, null, msgs);
+                msgs = ((InternalEObject)duplicateCountIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR, null, msgs);
             if (newDuplicateCountIndicator != null)
-                msgs = ((InternalEObject) newDuplicateCountIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-                        - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR, null, msgs);
+                msgs = ((InternalEObject)newDuplicateCountIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR, null, msgs);
             msgs = basicSetDuplicateCountIndicator(newDuplicateCountIndicator, msgs);
-            if (msgs != null)
-                msgs.dispatch();
-        } else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET,
-                    ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR, newDuplicateCountIndicator,
-                    newDuplicateCountIndicator));
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR, newDuplicateCountIndicator, newDuplicateCountIndicator));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
-            return basicSetRowCountIndicator(null, msgs);
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
-            return basicSetUniqueCountIndicator(null, msgs);
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
-            return basicSetDistinctCountIndicator(null, msgs);
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
-            return basicSetDuplicateCountIndicator(null, msgs);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
+                return basicSetRowCountIndicator(null, msgs);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
+                return basicSetUniqueCountIndicator(null, msgs);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
+                return basicSetDistinctCountIndicator(null, msgs);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
+                return basicSetDuplicateCountIndicator(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -805,193 +718,186 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
-            return getAnalyzedColumns();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
-            return getListRows();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
-            return getNumericFunctions();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS:
-            return getNominalColumns();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
-            return getNumericColumns();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
-            return getColumnHeaders();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
-            return getDateFunctions();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-            return getDateColumns();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
-            return getUniqueCount();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
-            return getDistinctCount();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT:
-            return getDuplicateCount();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
-            return getRowCountIndicator();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
-            return getUniqueCountIndicator();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
-            return getDistinctCountIndicator();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
-            return getDuplicateCountIndicator();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
+                return getAnalyzedColumns();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
+                return getListRows();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+                return getNumericFunctions();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS:
+                return getNominalColumns();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
+                return getNumericColumns();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
+                return getColumnHeaders();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+                return getDateFunctions();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+                return getDateColumns();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+                return getUniqueCount();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+                return getDistinctCount();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT:
+                return getDuplicateCount();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
+                return getRowCountIndicator();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
+                return getUniqueCountIndicator();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
+                return getDistinctCountIndicator();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
+                return getDuplicateCountIndicator();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
-            getAnalyzedColumns().clear();
-            getAnalyzedColumns().addAll((Collection<? extends ModelElement>) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
-            setListRows((List<Object[]>) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
-            getNumericFunctions().clear();
-            getNumericFunctions().addAll((Collection<? extends String>) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
-            getDateFunctions().clear();
-            getDateFunctions().addAll((Collection<? extends String>) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-            getDateColumns().clear();
-            getDateColumns().addAll((Collection<? extends ModelElement>) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
-            setUniqueCount((Long) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
-            setDistinctCount((Long) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
-            setRowCountIndicator((RowCountIndicator) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
-            setUniqueCountIndicator((UniqueCountIndicator) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
-            setDistinctCountIndicator((DistinctCountIndicator) newValue);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
-            setDuplicateCountIndicator((DuplicateCountIndicator) newValue);
-            return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
+                getAnalyzedColumns().clear();
+                getAnalyzedColumns().addAll((Collection<? extends MetadataColumn>)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
+                setListRows((List<Object[]>)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+                getNumericFunctions().clear();
+                getNumericFunctions().addAll((Collection<? extends String>)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+                getDateFunctions().clear();
+                getDateFunctions().addAll((Collection<? extends String>)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+                getDateColumns().clear();
+                getDateColumns().addAll((Collection<? extends MetadataColumn>)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+                setUniqueCount((Long)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+                setDistinctCount((Long)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
+                setRowCountIndicator((RowCountIndicator)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
+                setUniqueCountIndicator((UniqueCountIndicator)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
+                setDistinctCountIndicator((DistinctCountIndicator)newValue);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
+                setDuplicateCountIndicator((DuplicateCountIndicator)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
-            getAnalyzedColumns().clear();
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
-            setListRows(LIST_ROWS_EDEFAULT);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
-            getNumericFunctions().clear();
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
-            getDateFunctions().clear();
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-            getDateColumns().clear();
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
-            setUniqueCount(UNIQUE_COUNT_EDEFAULT);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
-            setDistinctCount(DISTINCT_COUNT_EDEFAULT);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
-            setRowCountIndicator((RowCountIndicator) null);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
-            setUniqueCountIndicator((UniqueCountIndicator) null);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
-            setDistinctCountIndicator((DistinctCountIndicator) null);
-            return;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
-            setDuplicateCountIndicator((DuplicateCountIndicator) null);
-            return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
+                getAnalyzedColumns().clear();
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
+                setListRows(LIST_ROWS_EDEFAULT);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+                getNumericFunctions().clear();
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+                getDateFunctions().clear();
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+                getDateColumns().clear();
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+                setUniqueCount(UNIQUE_COUNT_EDEFAULT);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+                setDistinctCount(DISTINCT_COUNT_EDEFAULT);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
+                setRowCountIndicator((RowCountIndicator)null);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
+                setUniqueCountIndicator((UniqueCountIndicator)null);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
+                setDistinctCountIndicator((DistinctCountIndicator)null);
+                return;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
+                setDuplicateCountIndicator((DuplicateCountIndicator)null);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
-            return analyzedColumns != null && !analyzedColumns.isEmpty();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
-            return LIST_ROWS_EDEFAULT == null ? listRows != null : !LIST_ROWS_EDEFAULT.equals(listRows);
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
-            return numericFunctions != null && !numericFunctions.isEmpty();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS:
-            return !getNominalColumns().isEmpty();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
-            return !getNumericColumns().isEmpty();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
-            return !getColumnHeaders().isEmpty();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
-            return dateFunctions != null && !dateFunctions.isEmpty();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
-            return dateColumns != null && !dateColumns.isEmpty();
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
-            return UNIQUE_COUNT_EDEFAULT == null ? uniqueCount != null : !UNIQUE_COUNT_EDEFAULT.equals(uniqueCount);
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
-            return DISTINCT_COUNT_EDEFAULT == null ? distinctCount != null : !DISTINCT_COUNT_EDEFAULT.equals(distinctCount);
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT:
-            return DUPLICATE_COUNT_EDEFAULT == null ? getDuplicateCount() != null : !DUPLICATE_COUNT_EDEFAULT
-                    .equals(getDuplicateCount());
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
-            return rowCountIndicator != null;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
-            return uniqueCountIndicator != null;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
-            return distinctCountIndicator != null;
-        case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
-            return duplicateCountIndicator != null;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
+                return analyzedColumns != null && !analyzedColumns.isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
+                return LIST_ROWS_EDEFAULT == null ? listRows != null : !LIST_ROWS_EDEFAULT.equals(listRows);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_FUNCTIONS:
+                return numericFunctions != null && !numericFunctions.isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NOMINAL_COLUMNS:
+                return !getNominalColumns().isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__NUMERIC_COLUMNS:
+                return !getNumericColumns().isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__COLUMN_HEADERS:
+                return !getColumnHeaders().isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_FUNCTIONS:
+                return dateFunctions != null && !dateFunctions.isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
+                return dateColumns != null && !dateColumns.isEmpty();
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
+                return UNIQUE_COUNT_EDEFAULT == null ? uniqueCount != null : !UNIQUE_COUNT_EDEFAULT.equals(uniqueCount);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT:
+                return DISTINCT_COUNT_EDEFAULT == null ? distinctCount != null : !DISTINCT_COUNT_EDEFAULT.equals(distinctCount);
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT:
+                return DUPLICATE_COUNT_EDEFAULT == null ? getDuplicateCount() != null : !DUPLICATE_COUNT_EDEFAULT.equals(getDuplicateCount());
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ROW_COUNT_INDICATOR:
+                return rowCountIndicator != null;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT_INDICATOR:
+                return uniqueCountIndicator != null;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DISTINCT_COUNT_INDICATOR:
+                return distinctCountIndicator != null;
+            case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DUPLICATE_COUNT_INDICATOR:
+                return duplicateCountIndicator != null;
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy())
-            return super.toString();
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (listRows: ");

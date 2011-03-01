@@ -29,6 +29,7 @@ import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
@@ -69,7 +70,7 @@ public class PatternsSelectPage extends WizardPage {
      */
     public void createControl(Composite parent) {
 
-        List<ModelElement> analysisColumns = this.selectPatternsWizard.getSsIndicator().getAnalyzedColumns();
+        List<MetadataColumn> analysisColumns = this.selectPatternsWizard.getSsIndicator().getAnalyzedColumns();
         GridTableViewer tableView = new GridTableViewer(parent, SWT.NONE);
         this.table = tableView.getGrid();
 
@@ -125,7 +126,7 @@ public class PatternsSelectPage extends WizardPage {
         if (allMatchIndicator == null) {
             return returnList;
         }
-        List<ModelElement> analysisColumns = this.selectPatternsWizard.getAllMatchIndicator().getAnalyzedColumns();
+        List<MetadataColumn> analysisColumns = this.selectPatternsWizard.getAllMatchIndicator().getAnalyzedColumns();
         List<RegexpMatchingIndicator> regexpMatchingIndicatorList = this.selectPatternsWizard.getAllMatchIndicator()
                 .getCompositeRegexMatchingIndicators();
 

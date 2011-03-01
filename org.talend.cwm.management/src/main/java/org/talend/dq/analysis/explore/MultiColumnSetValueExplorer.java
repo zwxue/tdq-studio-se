@@ -16,6 +16,7 @@ package org.talend.dq.analysis.explore;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.utils.sql.Java2SqlType;
@@ -46,7 +47,7 @@ public final class MultiColumnSetValueExplorer extends DataExplorer {
         return null;
     }
 
-    public String getQueryStirng(ModelElement column, Analysis ana, EList<ModelElement> nominalList, String columnName,
+    public String getQueryStirng(MetadataColumn column, Analysis ana, EList<MetadataColumn> nominalList, String columnName,
             String columnValue) {
         setAnalysis(ana);
         // MOD by hcheng for 6530

@@ -30,6 +30,7 @@ import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.time.SimpleTimePeriod;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.utils.collections.DoubleValueAggregate;
@@ -91,8 +92,8 @@ public final class ChartDatasetUtils {
     public static Map<String, ValueAggregator> createXYZDatasets(ColumnSetMultiValueIndicator indicator,
             ModelElement numericColumn) {
 
-        final EList<ModelElement> nominalColumns = indicator.getNominalColumns();
-        final EList<ModelElement> numericColumns = indicator.getNumericColumns();
+        final EList<MetadataColumn> nominalColumns = indicator.getNominalColumns();
+        final EList<MetadataColumn> numericColumns = indicator.getNumericColumns();
         final EList<String> numericFunctions = indicator.getNumericFunctions();
 
         final int indexOfNumericCol = numericColumns.indexOf(numericColumn);
@@ -111,8 +112,8 @@ public final class ChartDatasetUtils {
     public static Map<String, DateValueAggregate> createGanttDatasets(ColumnSetMultiValueIndicator indicator,
             ModelElement dateColumn) {
 
-        final EList<ModelElement> nominalColumns = indicator.getNominalColumns();
-        final EList<ModelElement> dateColumns = indicator.getDateColumns();
+        final EList<MetadataColumn> nominalColumns = indicator.getNominalColumns();
+        final EList<MetadataColumn> dateColumns = indicator.getDateColumns();
         final EList<String> dateFunctions = indicator.getDateFunctions();
         final int indexOfDateCol = dateColumns.indexOf(dateColumn);
         assert indexOfDateCol != -1;
@@ -135,7 +136,7 @@ public final class ChartDatasetUtils {
      * @param firstNumericColumnIdx the index of the first numeric column
      * @return a map [key -> aggregated values] where identifies a level of aggregation
      */
-    private static Map<String, ValueAggregator> fillDataset(final EList<ModelElement> nominalColumns,
+    private static Map<String, ValueAggregator> fillDataset(final EList<MetadataColumn> nominalColumns,
             final List<Object[]> listRows,
             final int firstNumericColumnIdx) {
         Map<String, ValueAggregator> valueAggregators = new HashMap<String, ValueAggregator>();
@@ -173,7 +174,7 @@ public final class ChartDatasetUtils {
     /**
      * 
      */
-    private static Map<String, DateValueAggregate> fillGanttDataset(final EList<ModelElement> nominalColumns,
+    private static Map<String, DateValueAggregate> fillGanttDataset(final EList<MetadataColumn> nominalColumns,
             final List<Object[]> listRows, final int firstDateColumnIdx) {
         Map<String, DateValueAggregate> valueAggregators = new TreeMap<String, DateValueAggregate>();
 
@@ -206,7 +207,7 @@ public final class ChartDatasetUtils {
      * @param n
      * @return a key
      */
-    private static String createKey(EList<ModelElement> nominalColumns, int n) {
+    private static String createKey(EList<MetadataColumn> nominalColumns, int n) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < n; i++) {
             builder.append(nominalColumns.get(i).getName()).append(" "); //$NON-NLS-1$

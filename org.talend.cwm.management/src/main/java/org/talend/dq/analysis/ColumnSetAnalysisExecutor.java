@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -123,7 +124,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         StringBuilder sql = new StringBuilder("SELECT ");
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         // MOD yyi 2011-02-22 17871:delimitefile
-        EList<ModelElement> analysedElements = null;
+        EList<MetadataColumn> analysedElements = null;
         for (Indicator indicator : indicators) {
             if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                 ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
@@ -142,7 +143,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         }
         Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
         // MOD yyi 2011-02-22 17871:delimitefile, indiactor changed
-        final Iterator<ModelElement> iterator = analysedElements.iterator();
+        final Iterator<MetadataColumn> iterator = analysedElements.iterator();
         while (iterator.hasNext()) { // for (ModelElement modelElement : analysedElements) {
             ModelElement modelElement = iterator.next();
             // --- preconditions

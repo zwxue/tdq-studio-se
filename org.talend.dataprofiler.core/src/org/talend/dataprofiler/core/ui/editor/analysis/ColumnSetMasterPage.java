@@ -740,10 +740,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             analysis.getContext().setConnection(tdProvider);
 
-            List<ModelElement> columnList = new ArrayList<ModelElement>();
+            List<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
             for (IRepositoryNode rd : repositoryNodes) {
                 reposObject = rd.getObject();
-                columnList.add((ModelElement) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
+                columnList.add((MetadataColumn) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
             }
 
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);

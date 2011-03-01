@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -201,14 +202,14 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     private void createBubbleOrGanttChart(final ScrolledForm form, final Composite composite,
             final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         List<Composite> previewChartList = new ArrayList<Composite>();
-        List<ModelElement> bubOrGanttColumnList = new ArrayList<ModelElement>();
+        List<MetadataColumn> bubOrGanttColumnList = new ArrayList<MetadataColumn>();
         if (columnSetMultiValueIndicator instanceof CountAvgNullIndicator) {
             bubOrGanttColumnList = columnSetMultiValueIndicator.getNumericColumns();
         } else {
             bubOrGanttColumnList = columnSetMultiValueIndicator.getDateColumns();
         }
         for (ModelElement column : bubOrGanttColumnList) {
-            final ModelElement tdColumn = (ModelElement) column;
+            final MetadataColumn tdColumn = (MetadataColumn) column;
 
             final ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
