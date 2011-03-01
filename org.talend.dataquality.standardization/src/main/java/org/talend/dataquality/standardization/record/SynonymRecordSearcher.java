@@ -60,6 +60,7 @@ public class SynonymRecordSearcher {
          * The score of the match
          */
         float score;
+        
 
         /*
          * (non-Javadoc)
@@ -82,12 +83,17 @@ public class SynonymRecordSearcher {
         /**
          * The output record (words that have matched).
          */
-        String[] record;
+        public String[] record;
 
         /**
          * the score of the matched record.
          */
-        float score;
+        public float score;
+        
+        /**
+         * the score details of each index, combine by "|"
+         */
+        public String scores;
 
         /**
          * OutputRecord constructor..
@@ -110,6 +116,7 @@ public class SynonymRecordSearcher {
                 buf.append(record[i]).append(" ; ");
             }
             buf.append(" -> " + score);
+            buf.append("; ->" + scores);
             return buf.toString();
         }
 
@@ -163,6 +170,7 @@ public class SynonymRecordSearcher {
                 outputRecords.add(outputRec);
 
                 float score = 0;
+                StringBuffer scores = new StringBuffer();
                 for (int j = 0; j < recordLength; j++) { // field
                     List<WordResult> listwrec = wordResults.get(j);
 
@@ -171,7 +179,9 @@ public class SynonymRecordSearcher {
                     WordResult wordResult = listwrec.get(wResIdx);
                     outputRec.record[j] = wordResult.word;
                     score += wordResult.score; // TODO add multiplicative weight here if needed
+                    scores.append("|").append(wordResult.score);
                 }
+                outputRec.scores = new String(scores.deleteCharAt(0));
                 outputRec.score = score / recordLength;
             }
 
@@ -216,6 +226,7 @@ public class SynonymRecordSearcher {
         }
         List<OutputRecord> outputRecords = recRes.computeOutputRows();
         Collections.sort(outputRecords);
+        limit = Math.min(outputRecords.isEmpty() ? 0 : outputRecords.size(), limit);
         return outputRecords.subList(0, limit);
     }
 
