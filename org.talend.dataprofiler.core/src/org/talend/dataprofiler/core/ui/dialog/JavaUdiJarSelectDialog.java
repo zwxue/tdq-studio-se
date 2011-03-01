@@ -393,15 +393,20 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
             // TODO implements the listener
             public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(dialogComposite.getShell(), SWT.NONE);
+                FileDialog dialog = new FileDialog(dialogComposite.getShell(), SWT.NONE | SWT.MULTI);
                 dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
                 String path = dialog.open();
+
                 if (path != null) {
+                    String[] fileNames=dialog.getFileNames();
                     // jarPathText.setText(path);
                     // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
                     // validateJavaUDI(classNameText, jarPathText);
-                    IPath filePath = new Path(path);
                     try {
+                        for (String name : fileNames) {
+                            IPath filePath = new Path(path);
+                            filePath = filePath.removeLastSegments(1).append(name);
+
                         // File jarFile =
                         // ResourceManager.getUDIJarFolder().getFullPath().append(filePath.lastSegment()).toFile();
                         // boolean createNewFile = false;
@@ -413,10 +418,12 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                                 ResourceManager.getUDIJarFolder().getLocation().append(filePath.lastSegment()).toFile());
                         // ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
                         // }
+                        }
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
+
                 }
                 getTreeViewer().refresh();
                 getTreeViewer().setInput(ResourceManager.getUDIJarFolder());

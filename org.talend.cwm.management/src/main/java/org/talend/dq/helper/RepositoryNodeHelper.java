@@ -741,7 +741,7 @@ public final class RepositoryNodeHelper {
      * @param folderConstant
      * @return one RepositoryFolderNode which corresponding to the value of folderConstant
      */
-    public static IRepositoryNode getRepositoryFolderNode(EResourceConstant folderConstant) {
+    public static IRepositoryNode getMetadataFolderNode(EResourceConstant folderConstant) {
         String[] folderPathArray = folderConstant.getPath().split("/");
         if (folderPathArray.length <= 0) {
             return null;

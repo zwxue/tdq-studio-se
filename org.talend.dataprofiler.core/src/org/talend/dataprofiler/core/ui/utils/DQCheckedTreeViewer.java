@@ -15,8 +15,9 @@ package org.talend.dataprofiler.core.ui.utils;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
-import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -30,9 +31,10 @@ public class DQCheckedTreeViewer extends ContainerCheckedTreeViewer {
      */
     public DQCheckedTreeViewer(Composite parent) {
         super(parent);
-        setLabelProvider(new ResourceViewLabelProvider());
+        setLabelProvider(new DQRepositoryViewLabelProvider());
         setContentProvider(new ResourceViewContentProvider());
         addFilter(new DQFolderFliter(true));
+        addFilter(new FolderObjFilter());
     }
 
 }

@@ -86,7 +86,7 @@ public class UserDefIndicatorFolderRepNode extends RepositoryNode {
                 repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
                 repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
                 viewObject.setRepositoryNode(repNode);
-                repNode.setSystemIndicator(true);
+                repNode.setSystemIndicator(false);
                 super.getChildren().add(repNode);
             }
         } catch (PersistenceException e) {

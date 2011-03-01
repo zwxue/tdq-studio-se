@@ -342,9 +342,12 @@ public final class UDIUtils {
                 continue;
             }
             TaggedValue tv = TaggedValueHelper.getTaggedValue(PluginConstant.JAR_FILE_PATH, indiDef.getTaggedValue());
+            if (tv == null) {
+                continue;
+            }
             String[] strArray = tv.getValue().split("\\|\\|");
             int index = Arrays.binarySearch(strArray, filePath.lastSegment());
-            if (tv != null && index >= 0) {
+            if (index >= 0) {
                 result.setMessage("The jar file(" + strArray[index] + ") has in use by UDI for " + indiDef.getName());//$NON-NLS-1$
                 result.setOk(false);
                 return result;

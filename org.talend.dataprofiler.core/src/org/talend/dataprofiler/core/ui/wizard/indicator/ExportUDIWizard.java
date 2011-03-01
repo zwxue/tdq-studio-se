@@ -24,11 +24,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ExportFactory;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.utils.io.FilesUtils;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -61,6 +65,10 @@ public class ExportUDIWizard extends Wizard {
                 if (FactoriesUtil.DEFINITION.equalsIgnoreCase(file.getFileExtension())) {
                     seletedIndicators.add(IndicatorResourceFileHelper.getInstance().findIndDefinition(file));
                 }
+            } else if (element instanceof SysIndicatorDefinitionRepNode
+                    && !((SysIndicatorDefinitionRepNode) element).isSystemIndicator()) {
+                SysIndicatorDefinitionRepNode udiElement = (SysIndicatorDefinitionRepNode) element;
+                seletedIndicators.add(udiElement.getIndicatorDefinition());
             }
         }
 
@@ -82,7 +90,25 @@ public class ExportUDIWizard extends Wizard {
                     File idFile = new File(resource, id.getName() + ".csv"); //$NON-NLS-1$
                     if (idFile.isFile() && idFile.exists()) {
                         try {
-                            FilesUtils.zip(idFile, idFile.getPath() + ".zip"); //$NON-NLS-1$
+                            List<File> udiAndJarfiles=new ArrayList<File>();
+                            udiAndJarfiles.add(idFile);
+                            // MOD by zshen for bug 18724 2011.03.01
+                            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, id.getTaggedValue());
+                            if (tv != null) {
+                                for (IFile udiJarFile : UDIUtils.getLibJarFileList()) {
+                                    for (String jarName : tv.getValue().split("\\|\\|")) {
+                                        if (udiJarFile.getName().equals(jarName)) {
+                                        udiAndJarfiles.add(udiJarFile.getLocation().toFile());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            // ~
+                            
+                            
+                            
+                            FilesUtils.zips(udiAndJarfiles.toArray(new File[udiAndJarfiles.size()]), idFile.getPath() + ".zip"); //$NON-NLS-1$
                             idFile.delete();
 
                         } catch (Exception e) {

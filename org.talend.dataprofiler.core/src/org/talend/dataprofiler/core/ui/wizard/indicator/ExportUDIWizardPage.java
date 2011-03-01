@@ -36,6 +36,8 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.DQCheckedTreeViewer;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.resource.EResourceConstant;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -133,7 +135,7 @@ public class ExportUDIWizardPage extends WizardPage {
         group.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         selectedTree = new DQCheckedTreeViewer(group);
-        selectedTree.setInput(this.folder);
+        selectedTree.setInput(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS));
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedTree.getTree());
 

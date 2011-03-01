@@ -40,7 +40,7 @@ public class CreateDBConnectionAction extends AbstractMetadataCreationAction {
 
     public CreateDBConnectionAction() {
         // MOD by zshen for bug 15750 TODO 39(9) create connection exception by cheat sheet
-        RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.getRepositoryFolderNode(EResourceConstant.DB_CONNECTIONS);
+        RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
         super.node = node;
     }
 
