@@ -179,19 +179,21 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         // createTechnicalDetail(connection);
         // }
         // MOD klliu the DQRepositoryview unified with tos, so refactor as follow bug 19154 2011-02-28
-        Item item = reposViewObj.getProperty().getItem();
-        if (item instanceof ConnectionItem) {
-            Connection conn = ((ConnectionItem) item).getConnection();
-            createTechnicalDetail(conn);
-        } else if (item instanceof TDQAnalysisItem) {
-            Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
-            createTechnicalDetail(analysis);
-        } else if (item instanceof TDQPatternItem) {
-            Pattern pattern = ((TDQPatternItem) item).getPattern();
-            createTechnicalDetail(pattern);
-        } else if (item instanceof TDQReportItem) {
-            Report report = ((TDQReportItem) item).getReport();
-            createTechnicalDetail((TdReport) report);
+        if (reposViewObj.getProperty() != null) {
+            Item item = reposViewObj.getProperty().getItem();
+            if (item instanceof ConnectionItem) {
+                Connection conn = ((ConnectionItem) item).getConnection();
+                createTechnicalDetail(conn);
+            } else if (item instanceof TDQAnalysisItem) {
+                Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
+                createTechnicalDetail(analysis);
+            } else if (item instanceof TDQPatternItem) {
+                Pattern pattern = ((TDQPatternItem) item).getPattern();
+                createTechnicalDetail(pattern);
+            } else if (item instanceof TDQReportItem) {
+                Report report = ((TDQReportItem) item).getReport();
+                createTechnicalDetail((TdReport) report);
+            }
         }
     }
 
@@ -392,26 +394,28 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private boolean createFileDetail(boolean is, IRepositoryViewObject reposViewObj) {
         // MOD klliu 2001-02-28 bug 19154
-        Item item = reposViewObj.getProperty().getItem();
-        if (item instanceof ConnectionItem) {
-            Connection conn = ((ConnectionItem) item).getConnection();
-            createDataProviderDetail(conn);
-            is = false;
-        }
-        if (item instanceof TDQAnalysisItem) {
-            Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
-            createAnaysisDetail(analysis);
-            is = false;
-        }
-        if (item instanceof TDQPatternItem) {
-            Pattern pattern = ((TDQPatternItem) item).getPattern();
-            createPatternDetail(pattern);
-            is = false;
-        }
-        if (item instanceof TDQReportItem) {
-            Report report = ((TDQReportItem) item).getReport();
-            createReportDetail((TdReport) report);
-            is = false;
+        if (reposViewObj.getProperty() != null) {
+            Item item = reposViewObj.getProperty().getItem();
+            if (item instanceof ConnectionItem) {
+                Connection conn = ((ConnectionItem) item).getConnection();
+                createDataProviderDetail(conn);
+                is = false;
+            }
+            if (item instanceof TDQAnalysisItem) {
+                Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
+                createAnaysisDetail(analysis);
+                is = false;
+            }
+            if (item instanceof TDQPatternItem) {
+                Pattern pattern = ((TDQPatternItem) item).getPattern();
+                createPatternDetail(pattern);
+                is = false;
+            }
+            if (item instanceof TDQReportItem) {
+                Report report = ((TDQReportItem) item).getReport();
+                createReportDetail((TdReport) report);
+                is = false;
+            }
         }
         return is;
     }

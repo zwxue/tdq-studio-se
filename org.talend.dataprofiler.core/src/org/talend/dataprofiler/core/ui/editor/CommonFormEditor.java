@@ -36,6 +36,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -193,8 +194,18 @@ public abstract class CommonFormEditor extends FormEditor {
     public void doSave(IProgressMonitor monitor) {
         this.isDirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
-        if (this.getEditorObject() != null) {
-            CorePlugin.getDefault().refreshDQView(this.getEditorObject());
+        Object editorObject2 = this.getEditorObject();
+        if (editorObject2 != null) {
+            if (editorObject2 instanceof RepositoryNode) {
+                RepositoryNode node = (RepositoryNode) editorObject2;
+                if (node.getParent() != null) {
+                    CorePlugin.getDefault().refreshDQView(node.getParent());
+                } else {
+                    CorePlugin.getDefault().refreshDQView(node);
+                }
+            } else {
+                CorePlugin.getDefault().refreshDQView(editorObject2);
+            }
         } else {
             CorePlugin.getDefault().refreshDQView();
         }
