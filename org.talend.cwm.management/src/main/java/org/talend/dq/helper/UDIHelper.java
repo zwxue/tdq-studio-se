@@ -281,16 +281,16 @@ public final class UDIHelper {
             }
 //MOD by zshen for feature 18724
             if (validateJavaUDI(userJavaClassName, jarPath)) {
+                List<URL> jarUrls = new ArrayList<URL>();
                 for (IFile file : getContainJarFile(jarPath)) {
-                    
+                    jarUrls.add(file.getLocationURI().toURL());
+                }
                     TalendURLClassLoader cl;
-                    cl = new TalendURLClassLoader(new URL[] { file.getLocation().toFile().toURI().toURL() });
+                cl = new TalendURLClassLoader(jarUrls.toArray(new URL[jarUrls.size()]));// new URL[] {
+                                                                                        // file.getLocation().toFile().toURI().toURL()
+                                                                                        // });
                     Class<?> clazz = null;
-                    try {
-                        clazz = cl.findClass(userJavaClassName);
-                    } catch (ClassNotFoundException e) {
-                        continue;
-                    }
+                clazz = cl.findClass(userJavaClassName);
                     if (clazz != null) {
                         UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
                         judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
@@ -303,9 +303,8 @@ public final class UDIHelper {
                             judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
                             adaptedUDI = judiTemplate;
                         }
-                        break;
                     }
-                }
+
             }
         }
         return adaptedUDI;
