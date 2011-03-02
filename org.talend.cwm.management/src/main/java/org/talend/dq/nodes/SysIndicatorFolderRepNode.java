@@ -71,6 +71,7 @@ public class SysIndicatorFolderRepNode extends RepositoryNode {
                     repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
                     repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
                     viewObject.setRepositoryNode(repNode);
+                    repNode.setSystemIndicator(true);
                     super.getChildren().add(repNode);
                 }
             }
