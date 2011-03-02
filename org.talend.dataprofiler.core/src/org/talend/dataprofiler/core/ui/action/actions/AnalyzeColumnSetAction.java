@@ -159,7 +159,7 @@ public class AnalyzeColumnSetAction extends Action {
 
     public void setColumnSelection(TreeSelection selection) {
         this.selection = selection;
-        setEnabled(selection.toList().size() > 1);
+        // setEnabled(selection.toList().size() > 1);
     }
 
     private int opencolumnSetAnalysisDialog(PackagesAnalyisParameter packaFilterParameter) {
