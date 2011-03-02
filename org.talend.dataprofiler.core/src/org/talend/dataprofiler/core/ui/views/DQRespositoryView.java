@@ -65,8 +65,11 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
@@ -90,6 +93,7 @@ import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
@@ -107,6 +111,7 @@ import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -176,6 +181,7 @@ public class DQRespositoryView extends CommonNavigator {
             initToolBar();
 
             initWorkspace();
+            
         } catch (Exception e) {
             log.error(e, e);
         }
@@ -206,6 +212,8 @@ public class DQRespositoryView extends CommonNavigator {
         if (!defFile.exists()) {
             DefinitionHandler.getInstance();
         }
+        // MOD qiongli 2011-3-2 feature 17588.initilize all folder.
+        initAllFolders();
     }
 
     /**
@@ -590,6 +598,25 @@ public class DQRespositoryView extends CommonNavigator {
                 || repoNode instanceof RuleRepNode || repoNode instanceof DBConnectionRepNode
                 || repoNode instanceof DFConnectionRepNode || repoNode instanceof MDMConnectionRepNode)) {
             super.handleDoubleClick(anEvent);
+        }
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "initAllFolder".
+     */
+    private void initAllFolders() {
+        Project newProject = ProjectManager.getInstance().getCurrentProject();
+        List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(newProject.getEmfProject());
+        try {
+            for (FolderItem folder : new ArrayList<FolderItem>(folderItems)) {
+                if (WorkbenchUtils.isTDQOrMetadataRootFolder(folder)) {
+                    ERepositoryObjectType type = WorkbenchUtils.getFolderContentType(folder);
+                    ProxyRepositoryFactory.getInstance().getAll(type, true);
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
         }
     }
 

@@ -23,6 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
@@ -163,5 +164,59 @@ public final class WorkbenchUtils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 
+     * Add qiongli: get the detail ERepositoryObjectType of folderItem.
+     * 
+     * @param folderItem
+     * @return
+     */
+    public static ERepositoryObjectType getFolderContentType(FolderItem folderItem) {
+        if (!folderItem.getType().equals(FolderType.SYSTEM_FOLDER_LITERAL)) {
+            if (!(folderItem.getParent() instanceof FolderItem)) {
+                return null; // appears only for a folder for expression builder !
+            }
+            return getFolderContentType((FolderItem) folderItem.getParent());
+        }
+        for (ERepositoryObjectType objectType : ERepositoryObjectType.values()) {
+            String folderName;
+            try {
+                folderName = ERepositoryObjectType.getFolderName(objectType);
+            } catch (Exception e) {
+                // just catch exception to avoid the types who don't have folders
+                continue;
+            }
+            if (folderName.contains("/")) { //$NON-NLS-1$
+                String[] folders = folderName.split("/"); //$NON-NLS-1$
+                FolderItem currentFolderItem = folderItem;
+                boolean found = true;
+                for (int i = folders.length - 1; i >= 0; i--) {
+                    if (!currentFolderItem.getProperty().getLabel().equals(folders[i])) {
+                        found = false;
+                        break;
+                    }
+                    if (i > 0) {
+                        if (!(currentFolderItem.getParent() instanceof FolderItem)) {
+                            found = false;
+                            break;
+                        }
+                        currentFolderItem = (FolderItem) currentFolderItem.getParent();
+                    }
+                }
+                if (found) {
+                    return objectType;
+                }
+            } else {
+                if (folderName.equals(folderItem.getProperty().getLabel())) {
+                    return objectType;
+                }
+            }
+        }
+        if (folderItem.getParent() instanceof FolderItem) {
+            return getFolderContentType((FolderItem) folderItem.getParent());
+        }
+        return null;
     }
 }
