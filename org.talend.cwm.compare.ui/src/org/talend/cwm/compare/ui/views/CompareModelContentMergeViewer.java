@@ -24,17 +24,23 @@ import org.eclipse.compare.internal.CompareUIPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
+import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
 import org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer;
 import org.eclipse.emf.compare.ui.viewer.content.part.diff.ModelContentMergeDiffTab;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
@@ -57,6 +63,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
@@ -146,8 +154,8 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
             Menu menu = menuMgr.createContextMenu(diffTabLeft.getControl());
             diffTabLeft.getControl().setMenu(menu);
-            CompareUIPlugin.getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite().registerContextMenu(menuMgr,
-                    diffTabLeft);
+            CompareUIPlugin.getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite()
+                    .registerContextMenu(menuMgr, diffTabLeft);
             // Add key shortcut
             diffTabLeft.getTree().addKeyListener(new CompareKeyListener());
             diffTabLeft.getTree().addMouseListener(new CompareMouseListener());
@@ -319,8 +327,8 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                             .getString("CompareModelContentMergeViewer.CompareListOfTable") //$NON-NLS-1$
                             : Messages.getString("CompareModelContentMergeViewer.CompareListOfVeiw"), diffTabLeft, selectedOjbect, tableOrViewCompare); //$NON-NLS-1$
         } else if (selectedElement instanceof ColumnSet) {
-            subEleCompColumnAction = new SubelementCompareAction(Messages
-                    .getString("CompareModelContentMergeViewer.CompareListOfColumn"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
+            subEleCompColumnAction = new SubelementCompareAction(
+                    Messages.getString("CompareModelContentMergeViewer.CompareListOfColumn"), diffTabLeft, selectedOjbect, //$NON-NLS-1$
                     SubelementCompareAction.COLUMN_COMPARE);
         }
         if (subEleCompColumnAction != null) {
@@ -399,8 +407,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         IFile resourceFile = null;
         // File
         if (selectedOjbect instanceof IFile) {
-            TypedReturnCode<Connection> returnValue = PrvResourceFileHelper.getInstance()
-                    .findProvider((IFile) selectedOjbect);
+            TypedReturnCode<Connection> returnValue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedOjbect);
             modelElement = returnValue.getObject();
         } else if (selectedOjbect instanceof IRepositoryViewObject) {
             // MOD klliu 2010-10-08 bug 16173: get changes in "database compare" editor
@@ -442,11 +449,31 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         int diffItemsCount = ((ModelCompareInput) getInput()).getDiffAsList().size();
         try {
             super.copy(leftToRight);
+            // MOD klliu 2011-03-01 bug 17506
+            ModelCompareInput modelCompareInput = (ModelCompareInput) getInput();
+            if (!leftToRight && modelCompareInput.getDiffAsList().size() == 0) {
+                Resource leftResource = modelCompareInput.getLeftResource();
+                XmiResourceManager resourceManager = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                        .getResourceManager();
+                resourceManager.saveResource(leftResource);
+                // refactor the input
+                final MatchModel match = (MatchModel) modelCompareInput.getMatch();
+                EList<UnmatchElement> unmatchedElements = match.getUnmatchedElements();
+                for (UnmatchElement element : unmatchedElements) {
+                    int indexOf = unmatchedElements.indexOf(element);
+                    unmatchedElements.remove(indexOf);
+                }
+                final ComparisonResourceSnapshot snap = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+                snap.setDiff((DiffModel) ((ModelCompareInput) getInput()).getDiff());
+                snap.setMatch((MatchModel) ((ModelCompareInput) getInput()).getMatch());
+                configuration.setProperty(EMFCompareConstants.PROPERTY_CONTENT_INPUT_CHANGED, snap);
+            }
             // MOD mzhao 2009-03-11 copy from right to left.need reload the
             // currently selected element.
             if (!leftToRight && diffItemsCount > 0) {
                 new ReloadDatabaseAction(selectedOjbect, null).run();
             }
+
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
         }
@@ -456,4 +483,46 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
     private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight"; //$NON-NLS-1$
 
     private static final String COPY_RIGHT_TO_LEFT_ID = "org.eclipse.compare.copyAllRightToLeft"; //$NON-NLS-1$
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see
+     * org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer#fireSelectionChanged(org.eclipse.jface.viewers
+     * .SelectionChangedEvent)
+     */
+    // @Override
+    // protected void fireSelectionChanged(SelectionChangedEvent event) {
+    // EObject theElement = null;
+    // ModelCompareInput modelCompareInput = (ModelCompareInput) getInput();
+    // TreeSelection selection = (TreeSelection) event.getSelection();
+    // EObject element = (EObject) selection.getFirstElement();
+    // final MatchModel match = (MatchModel) modelCompareInput.getMatch();
+    // EList<UnmatchElement> unmatchedElements = match.getUnmatchedElements();
+    // unmatchedElements.remove(0);
+    // //
+    // final TreeIterator<EObject> iterator = match.eAllContents();
+    // while (iterator.hasNext()) {
+    // final Object object = iterator.next();
+    //
+    // if (object instanceof Match3Elements) {
+    // final Match3Elements matchElement = (Match3Elements) object;
+    // if (matchElement.getLeftElement().equals(element) || matchElement.getRightElement().equals(element)
+    // || matchElement.getOriginElement().equals(element)) {
+    // theElement = matchElement;
+    // }
+    // } else if (object instanceof Match2Elements) {
+    // final Match2Elements matchElement = (Match2Elements) object;
+    // if (matchElement.getLeftElement().equals(element) || matchElement.getRightElement().equals(element)) {
+    // theElement = matchElement;
+    // }
+    // } else if (object instanceof UnmatchElement) {
+    // final UnmatchElement unmatchElement = (UnmatchElement) object;
+    // if (unmatchElement.getElement().equals(element)) {
+    // theElement = unmatchElement;
+    // }
+    // }
+    // }
+    // super.fireSelectionChanged(event);
+    // }
 }

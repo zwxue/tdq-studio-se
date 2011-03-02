@@ -28,6 +28,7 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -57,7 +58,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
             Item connItem = ((RepositoryNode) selectedObj).getObject().getProperty().getItem();
             provider = ((ConnectionItem) connItem).getConnection();
         } else {
-        TypedReturnCode<Connection> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
+            TypedReturnCode<Connection> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
             provider = returnVlaue.getObject();
         }
         return provider;
@@ -65,7 +66,11 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected void saveReloadResult() {
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(oldDataProvider);
+        // MOD klliu 2001-03-01 bug 17506
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(oldDataProvider);
+        Item item = recursiveFind.getObject().getProperty().getItem();
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+        // ElementWriterFactory.getInstance().createDataProviderWriter().save(oldDataProvider);
         // ProxyRepositoryViewObject.save(oldDataProvider);
     }
 
