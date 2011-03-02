@@ -97,6 +97,9 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -583,7 +586,9 @@ public class DQRespositoryView extends CommonNavigator {
         Object element = selection.getFirstElement();
         RepositoryNode repoNode = (RepositoryNode) element;
         if (!(repoNode instanceof AnalysisRepNode || repoNode instanceof ReportRepNode
-                || repoNode instanceof SysIndicatorDefinitionRepNode || repoNode instanceof PatternRepNode || repoNode instanceof RuleRepNode)) {
+                || repoNode instanceof SysIndicatorDefinitionRepNode || repoNode instanceof PatternRepNode
+                || repoNode instanceof RuleRepNode || repoNode instanceof DBConnectionRepNode
+                || repoNode instanceof DFConnectionRepNode || repoNode instanceof MDMConnectionRepNode)) {
             super.handleDoubleClick(anEvent);
         }
     }
