@@ -12,9 +12,16 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
+import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.ui.actions.EmptyRecycleBinAction;
 
 /**
@@ -37,6 +44,21 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
 
     @Override
     public void run() {
+        // if these items in recycle bin are depended by others,show a warning dialog and return.
+        boolean hasDependencyItem = false;
+        List<IRepositoryNode> children = RecycleBinManager.getInstance().getRecycleBinChildren();
+        for (IRepositoryNode obj : children) {
+            if (RepositoryNodeHelper.hasDependencyClients(obj)) {
+                hasDependencyItem = true;
+                break;
+            }
+        }
+        if (hasDependencyItem) {
+            DeleteModelElementConfirmDialog.showDialog(null, children,
+                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));
+            return;
+        }
+
         super.run();
 
         CorePlugin.getDefault().refreshDQView();

@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -83,26 +82,30 @@ public class DQDeleteAction extends DeleteAction {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
                 boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
+                // logical delete
                 if (!isStateDeleted) {
                     closeEditors(selection);
+                    RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
                     excuteSuperRun(null);
                     break;
 
                 }
                 // show dependency dialog and phisical delete dependencies just for phisical deleting.
+                boolean hasDependency = false;
                 if (node.getType() == ENodeType.SIMPLE_FOLDER) {
-                    List<IRepositoryNode> newLs = new ArrayList<IRepositoryNode>();
-                    findRepNodesByFolderNode(node, newLs);
+                    List<IRepositoryNode> newLs = RepositoryNodeHelper.getRepositoryElementFromFolder(node, true);
                     for (IRepositoryNode subNode : newLs) {
-                        if (showDependenciesDialog((RepositoryNode) subNode)) {
+                        hasDependency = RepositoryNodeHelper.hasDependencyClients(subNode);
+                        if (!hasDependency || hasDependency && handleDependencies(subNode)) {
                             excuteSuperRun((RepositoryNode) subNode);
                         }
                     }
                     excuteSuperRun(node);
                 } else {
-                    if (showDependenciesDialog(node)) {
+                    hasDependency = RepositoryNodeHelper.hasDependencyClients(node);
+                    if (!hasDependency || hasDependency && handleDependencies(node)) {
                         EObjectHelper.removeDependencys(RepositoryNodeHelper.getModelElementFromRepositoryNode(node));
-                        excuteSuperRun(node);
+                        excuteSuperRun((RepositoryNode) node);
                     }
                 }
             }
@@ -112,29 +115,31 @@ public class DQDeleteAction extends DeleteAction {
         CorePlugin.getDefault().refreshWorkSpace();
     }
 
-    /**
-     * show dependency question dialog.
-     * 
-     * @param file
-     * @param dependencies
-     */
-    private boolean showDependenciesDialog(RepositoryNode node) {
-
+    private boolean handleDependencies(IRepositoryNode node) {
+        boolean flag = false;
         List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
-        boolean flag = true;
-        if (dependencies == null || dependencies.isEmpty()) {
-            return flag;
+        if (showDialog(node, dependencies)) {
+            if (physicalDeleteDependencies(dependencies)) {
+                flag = true;
+            }
         }
+        return flag;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "showDialog".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean showDialog(IRepositoryNode node, List<ModelElement> dependencies) {
+
         ModelElement modEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
         String lable = node.getObject().getLabel() == null ? PluginConstant.EMPTY_STRING : node.getObject().getLabel();
-        if (DeleteModelElementConfirmDialog.showDialog(null, modEle, dependencies.toArray(new ModelElement[dependencies.size()]),
-                DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable))) {
-            if (!physicalDeleteDependencies(dependencies)) {
-                flag = false;
-            }
-        } else {
-            flag = false;
-        }
+        boolean flag = DeleteModelElementConfirmDialog.showDialog(null, modEle,
+                dependencies.toArray(new ModelElement[dependencies.size()]),
+                DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable));
         return flag;
 
     }
@@ -188,25 +193,6 @@ public class DQDeleteAction extends DeleteAction {
 
     }
 
-    /**
-     * 
-     * find all REPOSITORY_ELEMENT by folderNode .
-     * 
-     * @param node
-     * @param elementNodes
-     */
-    private void findRepNodesByFolderNode(IRepositoryNode node, List<IRepositoryNode> elementNodes) {
-        List<IRepositoryNode> children = node.getChildren();
-        for (IRepositoryNode child : children) {
-            if (child.getType() == ENodeType.SIMPLE_FOLDER) {
-                findRepNodesByFolderNode(child, elementNodes);
-            } else {
-                elementNodes.add(child);
-            }
-        }
-
-    }
-
     private void closeEditors(ISelection selection) {
         Object[] objs = ((IStructuredSelection) selection).toArray();
         for (Object obj : objs) {
@@ -222,6 +208,14 @@ public class DQDeleteAction extends DeleteAction {
     private void excuteSuperRun(RepositoryNode currentNode) {
         this.currentNode = currentNode;
         super.run();
+        // because reuse tos codes.remove current node from its parent(simple folder) for phisical delete or logical
+        // delete dependency.
+        if (currentNode != null) {
+            RepositoryNode parent = currentNode.getParent();
+            if (parent != null && parent.getType() == ENodeType.SIMPLE_FOLDER) {
+                parent.getChildren(true).remove(currentNode);
+            }
+        }
     }
 
 }

@@ -43,6 +43,8 @@ public class TreeMessageInfoDialog extends MessageDialog {
 
     private boolean isChecked = false;
 
+    private boolean needCheckbox = false;
+
     public TreeMessageInfoDialog(Shell parentShell, String dialogTitle, Image dialogTitleImage, String dialogMessage,
             int dialogImageType, String[] dialogButtonLabels, int defaultIndex) {
         super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType, dialogButtonLabels, defaultIndex);
@@ -56,22 +58,24 @@ public class TreeMessageInfoDialog extends MessageDialog {
         layout.marginWidth = 0;
         layout.numColumns = 1;
         mainComposite.setLayout(layout);
-        Composite checkComp = new Composite(mainComposite, SWT.NONE);
-        GridLayout layout1 = new GridLayout();
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
-        layout.numColumns = 1;
-        checkComp.setLayout(layout1);
-        checkButton = new Button(checkComp, SWT.CHECK);
-        checkButton.setText(DefaultMessagesImpl.getString("DQDeleteAction.deleteAllDependency"));
-        checkButton.addSelectionListener(new SelectionAdapter() {
+        if (isNeedCheckbox()) {
+            Composite checkComp = new Composite(mainComposite, SWT.NONE);
+            GridLayout layout1 = new GridLayout();
+            layout.marginHeight = 0;
+            layout.marginWidth = 0;
+            layout.numColumns = 1;
+            checkComp.setLayout(layout1);
+            checkButton = new Button(checkComp, SWT.CHECK);
+            checkButton.setText(DefaultMessagesImpl.getString("DQDeleteAction.deleteAllDependency"));
+            checkButton.addSelectionListener(new SelectionAdapter() {
 
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                isChecked = true;
-            }
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    isChecked = true;
+                }
 
-        });
+            });
+        }
         TreeViewer viewer = new TreeViewer(mainComposite, SWT.BORDER);
         GridData gd = new GridData();
         gd.heightHint = 150;
@@ -99,6 +103,14 @@ public class TreeMessageInfoDialog extends MessageDialog {
 
     public boolean isChecked() {
         return this.isChecked;
+    }
+
+    public boolean isNeedCheckbox() {
+        return this.needCheckbox;
+    }
+
+    public void setNeedCheckbox(boolean needCheckbox) {
+        this.needCheckbox = needCheckbox;
     }
 
 }

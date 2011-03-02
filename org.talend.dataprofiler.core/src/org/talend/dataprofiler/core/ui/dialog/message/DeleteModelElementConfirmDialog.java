@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.dialog.message;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -27,6 +28,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -205,6 +209,7 @@ public class DeleteModelElementConfirmDialog {
      * @return
      */
     public static boolean showDialog(Shell parentShell, Object obj, ModelElement[] dependencyElements, String dialogMessage) {
+        // MOD qiongli 2011-3-1 feature 17588.return boolean,add 'dialog.setNeedCheckbox(true)'
         for (ModelElement element : dependencyElements) {
             ImpactNode node = new ImpactNode(element);
             if (!impactNodes.contains(node)) {
@@ -219,6 +224,7 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, DefaultMessagesImpl
                     .getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
+            dialog.setNeedCheckbox(true);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
@@ -229,6 +235,49 @@ public class DeleteModelElementConfirmDialog {
         }
 
         return isChecked;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "showDialog".
+     * 
+     * @param parentShell
+     * @param repositoryNodes
+     * @param dependencyElements
+     * @param dialogMessage
+     * @return
+     */
+    public static int showDialog(Shell parentShell, List<IRepositoryNode> repositoryNodes,
+            String dialogMessage) {
+        for (IRepositoryNode repNode : repositoryNodes) {
+            List<ModelElement> dependencies = EObjectHelper.getDependencyClients(repNode);
+            Object object=RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
+            for (ModelElement element : dependencies) {
+                ImpactNode node = new ImpactNode(element);
+                if (!impactNodes.contains(node)) {
+                    node.addRequireModelElement(object);
+                    impactNodes.add(node);
+                } else if (!Arrays.asList(node.getChildren()).contains(object)) {
+                    int index = impactNodes.indexOf(node);
+                    if (index != -1) {
+                        impactNodes.get(index).addRequireModelElement(object);
+                    }
+                }
+            } 
+        }
+        ImpactNode[] impactElements = getImpactNodes();
+        if (impactElements.length > 0) {
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell,
+                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
+                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
+            dialog.setContentProvider(new DialogContentProvider(impactElements));
+            dialog.setLabelProvider(getLabelProvider());
+            dialog.setInput(new Object());
+            clear();
+            return dialog.open();
+        }
+
+        return Window.CANCEL;
     }
 
     /**

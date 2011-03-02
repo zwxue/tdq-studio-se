@@ -1237,4 +1237,40 @@ public final class RepositoryNodeHelper {
         }
         return result.toArray();
     }
+
+    /**
+     * 
+     * DOC qiongli Comment method "hasDependences".
+     * 
+     * @param node
+     * @return
+     */
+    public static boolean hasDependencyClients(IRepositoryNode node) {
+        List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
+        if (dependencies == null || dependencies.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 
+     * Add qiongli:find all REPOSITORY_ELEMENT by folderNode.
+     * 
+     * @param folderNode
+     * @param withDelted
+     * @return
+     */
+    public static List<IRepositoryNode> getRepositoryElementFromFolder(IRepositoryNode folderNode, boolean withDelted) {
+        List<IRepositoryNode> elementNodes = new ArrayList<IRepositoryNode>();
+        if (isFolderNode(folderNode.getType())) {
+            for (IRepositoryNode subNode : folderNode.getChildren(withDelted)) {
+                elementNodes.addAll(getRepositoryElementFromFolder(subNode, withDelted));
+            }
+        } else {
+            elementNodes.add(folderNode);
+        }
+        return elementNodes;
+
+    }
 }
