@@ -15,22 +15,16 @@ package org.talend.dataquality.standardization.index;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 
 /**
  * @author scorreia A class to create an index with synonyms.
@@ -41,51 +35,40 @@ public class SynonymIndexSearcher {
 
     public static final String F_SYN = "syn";
 
-    private Directory indexDir;
 
     private IndexSearcher searcher;
 
-    private IndexWriter writer;
+    private int topDocLimit = 1;
 
-    private int topDocLimit = 5;
 
-    private Analyzer analyzer;
-
-    public void setTopDocLimit(int topDocLimit) {
-        this.topDocLimit = topDocLimit;
-    }
 
     /**
      * instantiate an index builder
-     * 
-     * DOC sizhaoliu SynonymIndexBuilder constructor comment.
      */
     public SynonymIndexSearcher() {
     }
 
     public SynonymIndexSearcher(String indexPath) {
-        initIndexInFS(indexPath);
-    }
-
-    public Directory getIndexDir() {
-        return indexDir;
-    }
-
-    public void initIndexInRAM() throws IOException {
-        indexDir = new RAMDirectory();
-    }
-
-    public void initIndexInFS(String path) {
         try {
-            indexDir = FSDirectory.open(new File(path));
-            CheckIndex check = new CheckIndex(indexDir);
-            Status status = check.checkIndex();
-            if (status.missingSegments) {
-                System.err.println("Cannot initialize searcher: Segments file not found. ");
-            }
+            initIndexInFS(indexPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // public void initIndexInRAM() throws IOException {
+    // // indexDir = new RAMDirectory();
+    // // FIXME this method is not tested and cannot work because the IndexSearcher is only a FS IndexSearcher.
+    // }
+
+    public void initIndexInFS(String path) throws IOException {
+        FSDirectory indexDir = FSDirectory.open(new File(path));
+        CheckIndex check = new CheckIndex(indexDir);
+        Status status = check.checkIndex();
+        if (status.missingSegments) {
+            System.err.println("Cannot initialize searcher: Segments file not found. ");
+        }
+        this.searcher = new IndexSearcher(indexDir);
     }
 
     /**
@@ -99,7 +82,7 @@ public class SynonymIndexSearcher {
         Query query = new TermQuery(new Term(F_WORD, word));
         TopDocs docs = null;
         try {
-            docs = getSearcher().search(query, topDocLimit);
+            docs = this.searcher.search(query, topDocLimit);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,51 +100,31 @@ public class SynonymIndexSearcher {
         Query query = new TermQuery(new Term(F_SYN, synonym.toLowerCase()));
         TopDocs docs = null;
         try {
-            docs = getSearcher().search(query, topDocLimit);
+            docs = this.searcher.search(query, topDocLimit);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return docs;
     }
 
-
-    /**
-     * Getter for analyzer.
-     * 
-     * @return the analyzer
-     * @throws IOException
-     */
-    private Analyzer getAnalyzer() throws IOException {
-        if (analyzer == null) {
-            // the entry and the synonyms are indexed as provided
-            // analyzer = new KeywordAnalyzer();
-
-            analyzer = new StandardAnalyzer(Version.LUCENE_30);
-
-            // analyzer = new SynonymAnalyzer();
-        }
-        return analyzer;
-    }
-
-    /**
-     * Getter for searcher a new searcher is instantiated every time.
-     * 
-     * DOC sizhaoliu Comment method "getSearcher".
-     * 
-     * @return
-     * @throws IOException
-     */
-    IndexSearcher getSearcher() {
-        try {
-            searcher = new IndexSearcher(indexDir);
-        } catch (CorruptIndexException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return searcher;
-    }
-
+    // TODO remove this code?
+    // /**
+    // * Getter for analyzer.
+    // *
+    // * @return the analyzer
+    // * @throws IOException
+    // */
+    // private Analyzer getAnalyzer() throws IOException {
+    // if (analyzer == null) {
+    // // the entry and the synonyms are indexed as provided
+    // // analyzer = new KeywordAnalyzer();
+    //
+    // analyzer = new StandardAnalyzer(Version.LUCENE_30);
+    //
+    // // analyzer = new SynonymAnalyzer();
+    // }
+    // return analyzer;
+    // }
 
     /**
      * Count synonyms of a document
@@ -175,9 +138,9 @@ public class SynonymIndexSearcher {
         Query query = new TermQuery(new Term("syn", str.toLowerCase()));
         TopDocs docs;
         try {
-            docs = getSearcher().search(query, topDocLimit);
+            docs = this.searcher.search(query, topDocLimit);
             if (docs.totalHits > 0) {
-                Document doc = getSearcher().doc(docs.scoreDocs[0].doc);
+                Document doc = this.searcher.doc(docs.scoreDocs[0].doc);
                 String[] synonyms = doc.getValues(F_SYN);
                 return synonyms.length;
             }
@@ -198,7 +161,7 @@ public class SynonymIndexSearcher {
     public Document getDocument(int i) {
         Document doc = null;
         try {
-            doc = getSearcher().doc(i);
+            doc = this.searcher.doc(i);
         } catch (CorruptIndexException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -216,7 +179,25 @@ public class SynonymIndexSearcher {
     }
 
     public int getNumDocs() {
-        return getSearcher().getIndexReader().numDocs();
+        return this.searcher.getIndexReader().numDocs();
+    }
+
+    /**
+     * Getter for topDocLimit.
+     * 
+     * @return the topDocLimit
+     */
+    public int getTopDocLimit() {
+        return this.topDocLimit;
+    }
+
+    /**
+     * Method "setTopDocLimit" set the maximum number of documents to return after a search.
+     * 
+     * @param topDocLimit the limit
+     */
+    public void setTopDocLimit(int topDocLimit) {
+        this.topDocLimit = topDocLimit;
     }
 
 }

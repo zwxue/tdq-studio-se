@@ -51,14 +51,16 @@ public class SynonymIndexBuilder {
 
     private IndexSearcher searcher;
 
-    private char separator;
+    /**
+     * Default synonym separator is '|'.
+     */
+    private char separator = '|';
 
     private Analyzer analyzer;
 
     private IndexWriter writer;
 
     private boolean usingCreateMode = false;
-    private boolean bCreatePath = false;
 
     private boolean verifyDuplication = true;
 
@@ -66,9 +68,6 @@ public class SynonymIndexBuilder {
 
     private int topDocLimit;
 
-    private SynonymAnalyzer synonymAnalyzer;
-
-    private String path;
 
 
     /**
@@ -88,16 +87,12 @@ public class SynonymIndexBuilder {
      * if the builder is using create mode. it will clear the old index files first before any other operation. This is
      * sometimes dangerous and will be replaced by manual segment check.
      * 
-     * DOC sizhaoliu Comment method "isUsingCreateMode".
-     * 
      * @return
      */
     public void setUsingCreateMode(boolean usingCreateMode) {
-        this.usingCreateMode = usingCreateMode;
+        this.usingCreateMode = usingCreateMode; // FIXME why do we need this?
     }
-    public void setCreatePath(boolean createPath){
-    	this.bCreatePath = true;
-    }
+
     public Error getError(){
     	return this.error;
     }
@@ -117,15 +112,19 @@ public class SynonymIndexBuilder {
         indexDir = new RAMDirectory();
     }
 
+    /**
+     * Method "initIndexInFS" initializes the lucene index folder.
+     * 
+     * @param path the path of the index (will be created if it does not exist)
+     */
     public void initIndexInFS(String path) {
-        this.path = path;
 
         try {
-        	File file = new File(path);
-        	
-        	if (this.bCreatePath && !file.exists()) {
-        		file.mkdirs();
-        	}
+            File file = new File(path);
+
+            if (!file.exists()) {
+                file.mkdirs();
+            }
             indexDir = FSDirectory.open(file);
             CheckIndex check = new CheckIndex(indexDir);
             Status status = check.checkIndex();
@@ -133,16 +132,16 @@ public class SynonymIndexBuilder {
                 
                 if (usingCreateMode) {
                     // initialize the segment of index with a simple commit.
-                	error.set(true, "Initialize an index...");
+                    error.set(true, "Initialize an index...");
                     commit();
                 } else {
                     // propose to use create mode.
-                	error.set(false, "Segments file not found, initialize an index first");
-                	System.out.println(error.getMessage());
+                    error.set(false, "Segments file not found, initialize an index first");
+                    System.out.println(error.getMessage());
                 }
             }
         } catch (IOException e) {
-        	error.set(false, e.getMessage());
+            error.set(false, e.getMessage());
             e.printStackTrace();
         }
 
@@ -187,7 +186,7 @@ public class SynonymIndexBuilder {
         if (verifyDuplication) {
             if (searchDocumentByWord(word).totalHits == 0) {
                 getWriter().addDocument(generateDocument(word, synonyms));
-                getWriter().commit();
+                getWriter().commit(); // FIXME could we do a bulk commit instead of committing each document?
                 // System.out.println("The document <" + word + "> is now inserted.");
             } else {
                 error.set(false, "<" + word + "> already exists and is ignored.");
@@ -347,41 +346,34 @@ public class SynonymIndexBuilder {
         return deleted;
     }
 
-    public void deleteIndexFromFS() {
-        // TODO not yet resolved.
-        // segment files are deleted but not the entire directory.
-        deletefile(path);
-    }
-
-    private boolean deletefile(String delpath) {
-        File file = new File(delpath);
-        if (!file.exists()) {
-        	System.err.println("file not found");
+    public boolean deleteIndexFromFS(String path) {
+        File folder = new File(path);
+        if (!folder.exists()) {
+            System.err.println("file not found");
             return false;
         }
-        if (file.isDirectory()) {
-            File[] filelist = file.listFiles();
+        if (folder.isDirectory()) {
+            File[] filelist = folder.listFiles();
             for (File f : filelist) {
-                deletefile(delpath + "/" + f.getName());
+                deleteIndexFromFS(f.getAbsolutePath());
             }
-        } else {
-            file.delete();
-        }
-        return true;
+        } // else folder is a file
+        return folder.delete();
     }
 
-    private void printSynonymDocument(Document doc) {
-        String[] word = doc.getValues("word");
-        for (String string : word) {
-            System.out.println("word=" + string);
-        }
-        String[] values = doc.getValues("syn");
-        for (String string : values) {
-            System.out.println("syn=" + string);
-        }
-        System.out.println();
-
-    }
+    // FIXME remove this method?
+    // private void printSynonymDocument(Document doc) {
+    // String[] word = doc.getValues("word");
+    // for (String string : word) {
+    // System.out.println("word=" + string);
+    // }
+    // String[] values = doc.getValues("syn");
+    // for (String string : values) {
+    // System.out.println("syn=" + string);
+    // }
+    // System.out.println();
+    //
+    // }
 
     private Document generateDocument(String word, String synonyms) {
         String[] split = StringUtils.split(synonyms, separator);

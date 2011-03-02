@@ -14,6 +14,7 @@ package org.talend.dataquality.standardization.index;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -33,9 +34,6 @@ public class SynonymIndexBuilderTest {
     // The abosolute path will be "path/to/svn/top/org.talend.dataquality.standardization.test/data/index
     private static String path = "data/index";
 
-
-    private static SynonymAnalyzer synonymAnalyzer;
-
     private static String[][] synonyms = { { "I.B.M.", "IBM|International Business Machines|Big Blue" },
             { "ISDF", "IBM|International Business Machines|Big Blue" },
  { "IRTY", "IBM|International Business Machines" },
@@ -43,28 +41,40 @@ public class SynonymIndexBuilderTest {
             { "TEST", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" }, { "Sécurité Sociale", "Sécu|SS|CPAM" },
             { "IAIDQ", "International Association for Information & Data Quality|Int. Assoc. Info & DQ" }, };
 
-    private static boolean useQueryParser = true;
-
-    private static boolean useAllDocCollector = false;
-
-    private static boolean useMemeryForIndex = false;
 
     private SynonymIndexBuilder builder;
-
-    private SynonymIndexSearcher searcher;
 
     @Before
     public void setUp() throws Exception {
         builder = new SynonymIndexBuilder();
 
+        // start with a clean index: delete previous index
+        builder.deleteIndexFromFS(path);
+
         builder.setUsingCreateMode(true);
         builder.initIndexInFS(path);
 
-        // builder.initIndexInRAM();
-        builder.setSynonymSeparator('|');
+        // insert docs
+        insertDocuments();
+
+        // no need because default is set
+        // builder.setSynonymSeparator('|');
         
-        searcher = new SynonymIndexSearcher();
-        searcher.initIndexInFS(path);
+
+        // searcher = new SynonymIndexSearcher();
+        // searcher.initIndexInFS(path);
+    }
+
+    private SynonymIndexSearcher getSearcher() {
+        SynonymIndexSearcher searcher = new SynonymIndexSearcher();
+        try {
+            searcher.initIndexInFS(path);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        searcher.setTopDocLimit(5);
+        return searcher;
     }
 
     @After
@@ -72,25 +82,33 @@ public class SynonymIndexBuilderTest {
         builder.closeIndex();
     }
 
-    @Test
-    public void testInsertDocuments() throws Exception {
-        System.out.println("---------------Test insertDocuments--------------");
-        builder.deleteAllDocuments();
+    private void insertDocuments() throws Exception {
         for (String[] syns : synonyms) {
             builder.insertDocument(syns[0], syns[1]);
         }
-        assertEquals(synonyms.length, searcher.getNumDocs());
     }
 
     @Test
-    public void testInsertSynonymDocument() throws IOException {
+    public void testInsertDocuments() throws Exception {
+        System.out.println("---------------Test insertDocuments--------------");
+        // builder.deleteAllDocuments();
+
+        assertEquals(synonyms.length, getSearcher().getNumDocs());
+    }
+
+    @Test
+    public void testInsertSynonymDocument() throws Exception {
         System.out.println("\n---------------Test addDocument------------------");
 
+        // this.testInsertDocuments();// insert documents first
         builder.insertDocument("ADD", "This|is|a|new|document");
+        SynonymIndexSearcher searcher = getSearcher();
         assertEquals(synonyms.length + 1, searcher.getNumDocs());
         builder.insertDocument("ANPE", "This|is|an|existing|document");
+        searcher = getSearcher();
         assertEquals(synonyms.length + 1, searcher.getNumDocs());
         builder.insertDocument("Irish Bar Managers", "IBM");
+        searcher = getSearcher();
         assertEquals(synonyms.length + 2, searcher.getNumDocs());
 
     }
@@ -99,28 +117,35 @@ public class SynonymIndexBuilderTest {
     public void testUpdateSynonymDocument() throws IOException {
         System.out.println("\n---------------Test updateDocument---------------");
         int updateCount = 0;
+        SynonymIndexSearcher searcher = getSearcher();
         assertEquals(0, searcher.searchDocumentBySynonym("updated").totalHits);
         updateCount += builder.updateDocument("Sécurité Sociale", "I|have|been|updated");
+        searcher = getSearcher();
         assertEquals(1, searcher.searchDocumentBySynonym("updated").totalHits);
         updateCount += builder.updateDocument("INEXIST", "I|don't|exist");
+        searcher = getSearcher();
         assertEquals(0, searcher.searchDocumentBySynonym("exist").totalHits);
     }
 
     @Test
     public void testDeleteSynonymDocument() throws IOException {
         System.out.println("\n---------------Test deleteDocument---------------");
+        SynonymIndexSearcher searcher = getSearcher();
         int docCount = searcher.getNumDocs();
 
         assertEquals(1, searcher.searchDocumentByWord("IAIDQ").totalHits);
 
         // the word to delete should be precise and case sensitive.
         builder.deleteDocumentByWord("iaidq");
+        searcher = getSearcher();
         assertEquals(docCount, searcher.getNumDocs());
 
         builder.deleteDocumentByWord("IAIDQ");
+        searcher = getSearcher();
         assertEquals(docCount - 1, searcher.getNumDocs());
 
         builder.deleteDocumentByWord("random");
+        searcher = getSearcher();
         assertEquals(docCount - 1, searcher.getNumDocs());
 
     }
@@ -129,16 +154,20 @@ public class SynonymIndexBuilderTest {
     public void testAddSynonymToWord() throws IOException {
 
         System.out.println("\n---------------Test addSynonymToWord-------------");
+        SynonymIndexSearcher searcher = getSearcher();
         assertEquals(0, searcher.searchDocumentBySynonym("another").totalHits);
 
         int synonymCount = searcher.getSynonymCount("anpe");
         builder.addSynonymToDocument("ANPE", "Another synonym of ANPE");
+        searcher = getSearcher();
         assertEquals(1, searcher.searchDocumentBySynonym("another").totalHits);
 
         builder.addSynonymToDocument("ANPE", "Anpe");
+        searcher = getSearcher();
         assertEquals(synonymCount + 1, searcher.getSynonymCount("anpe"));
 
         builder.addSynonymToDocument("ANPEEEE", "A.N.P.E");
+        searcher = getSearcher();
         assertEquals(0, searcher.searchDocumentByWord("ANPEEEE").totalHits);
 
     }
@@ -147,20 +176,21 @@ public class SynonymIndexBuilderTest {
     public void testRemoveSynonymFromWord() throws IOException {
         System.out.println("\n------------Test removeSynonymFromWord-----------");
 
-        int synonymCount = searcher.getSynonymCount("ANPE");
+        int synonymCount = getSearcher().getSynonymCount("ANPE");
         // the synonym to delete should be precise and case sensitive
-        builder.removeSynonymFromDocument("ANPE", "Another synonym of ANPE");
-        assertEquals(--synonymCount, searcher.getSynonymCount("ANPE"));
+        builder.removeSynonymFromDocument("ANPE", "Agence Nationale Pour l'Emploi");
+
+        assertEquals(--synonymCount, getSearcher().getSynonymCount("ANPE"));
 
         builder.removeSynonymFromDocument("ANPE", "Anpe");
-        assertEquals(synonymCount, searcher.getSynonymCount("ANPE"));
+        assertEquals(synonymCount, getSearcher().getSynonymCount("ANPE"));
 
         builder.removeSynonymFromDocument("ANPE", "A.N.P.E.");
         builder.removeSynonymFromDocument("ANPE", "A.N.P.E.");
-        assertEquals(--synonymCount, searcher.getSynonymCount("ANPE"));
+        assertEquals(--synonymCount, getSearcher().getSynonymCount("ANPE"));
 
         builder.removeSynonymFromDocument("ANPE", "Pôle Emploi");
-        assertEquals(--synonymCount, searcher.getSynonymCount("ANPE"));
+        assertEquals(--synonymCount, getSearcher().getSynonymCount("ANPE"));
 
         builder.removeSynonymFromDocument("ANPEEEE", "A.N.P.E");
 
@@ -169,17 +199,20 @@ public class SynonymIndexBuilderTest {
     @Test
     public void testSearchDocumentBySynonym() throws IOException {
         System.out.println("\n-----------Test searchDocumentBySynonym----------");
+        SynonymIndexSearcher searcher = getSearcher();
         TopDocs docs = searcher.searchDocumentBySynonym("ibm");
         System.out.println(docs.totalHits + " documents found.");
         
-
-        for (int i = 0; i < docs.totalHits; i++) {
+        assertEquals(3, docs.totalHits);
+        assertEquals(true, searcher.getTopDocLimit() >= docs.scoreDocs.length);
+        for (int i = 0; i < docs.scoreDocs.length; i++) {
             int docNumber = docs.scoreDocs[i].doc;
             System.out.print("\ndoc=" + docNumber + "\tscore=" + docs.scoreDocs[i].score);
             // Document doc = builder.getSearcher().doc(docs.scoreDocs[i].doc);
             System.out.println("\tword: " + searcher.getWordByDocNumber(docNumber));
             System.out.println("\tsynonyms: " + Arrays.toString(searcher.getSynonymsByDocNumber(docNumber)));
         }
+        // FIXME add other assertions here
 
     }
 
@@ -192,11 +225,12 @@ public class SynonymIndexBuilderTest {
         String row1Label = "ANPE";
 
 
+        SynonymIndexSearcher searcher = getSearcher();
         // search
         TopDocs docsField1 = searcher.searchDocumentBySynonym(row1Company);
         System.out.println(docsField1.totalHits + " documents found for " + row1Company);
 
-        for (int i = 0; i < docsField1.totalHits; i++) {
+        for (int i = 0; i < docsField1.scoreDocs.length; i++) {
             int docNumber = docsField1.scoreDocs[i].doc;
             System.out.print("\ndoc=" + docNumber + "\tscore=" + docsField1.scoreDocs[i].score);
             // Document doc = builder.getSearcher().doc(docs.scoreDocs[i].doc);
@@ -239,6 +273,8 @@ public class SynonymIndexBuilderTest {
             System.out.println("out= " + outputRecord);
         }
 
+        // FIXME add assertions here (or create a junit test for SynonymRecordSearcher instead)
+
     }
 
     @Test
@@ -253,8 +289,14 @@ public class SynonymIndexBuilderTest {
         System.out.println("\n-----------Test deleteIndexFromFS----------");
         // TODO not yet resolved.
         // segment files are deleted but not the entire directory.
-        builder.commit();
-        builder.deleteIndexFromFS();
+
+        String indexPath = "data/index2";
+        builder.initIndexInFS(indexPath);
+        File indexfile = new File(indexPath);
+        assertEquals(true, indexfile.exists());
+        builder.deleteIndexFromFS(indexPath);
+        assertEquals(false, indexfile.exists());
+
     }
 
 
