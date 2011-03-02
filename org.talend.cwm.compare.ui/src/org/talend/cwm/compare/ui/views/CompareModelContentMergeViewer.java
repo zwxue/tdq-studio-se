@@ -484,45 +484,4 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
     private static final String COPY_RIGHT_TO_LEFT_ID = "org.eclipse.compare.copyAllRightToLeft"; //$NON-NLS-1$
 
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see
-     * org.eclipse.emf.compare.ui.viewer.content.ModelContentMergeViewer#fireSelectionChanged(org.eclipse.jface.viewers
-     * .SelectionChangedEvent)
-     */
-    // @Override
-    // protected void fireSelectionChanged(SelectionChangedEvent event) {
-    // EObject theElement = null;
-    // ModelCompareInput modelCompareInput = (ModelCompareInput) getInput();
-    // TreeSelection selection = (TreeSelection) event.getSelection();
-    // EObject element = (EObject) selection.getFirstElement();
-    // final MatchModel match = (MatchModel) modelCompareInput.getMatch();
-    // EList<UnmatchElement> unmatchedElements = match.getUnmatchedElements();
-    // unmatchedElements.remove(0);
-    // //
-    // final TreeIterator<EObject> iterator = match.eAllContents();
-    // while (iterator.hasNext()) {
-    // final Object object = iterator.next();
-    //
-    // if (object instanceof Match3Elements) {
-    // final Match3Elements matchElement = (Match3Elements) object;
-    // if (matchElement.getLeftElement().equals(element) || matchElement.getRightElement().equals(element)
-    // || matchElement.getOriginElement().equals(element)) {
-    // theElement = matchElement;
-    // }
-    // } else if (object instanceof Match2Elements) {
-    // final Match2Elements matchElement = (Match2Elements) object;
-    // if (matchElement.getLeftElement().equals(element) || matchElement.getRightElement().equals(element)) {
-    // theElement = matchElement;
-    // }
-    // } else if (object instanceof UnmatchElement) {
-    // final UnmatchElement unmatchElement = (UnmatchElement) object;
-    // if (unmatchElement.getElement().equals(element)) {
-    // theElement = unmatchElement;
-    // }
-    // }
-    // }
-    // super.fireSelectionChanged(event);
-    // }
 }
