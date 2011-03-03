@@ -314,6 +314,8 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 DataminingType dataminingType = MetadataHelper.getDataminingType(column);
                 if (DataminingType.NOMINAL.equals(dataminingType)) {
                     nominalColumns.add(column);
+                } else if (null != mdColumn) {
+                    nominalColumns.add(column);
                 }
             }
         }
@@ -362,26 +364,47 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
     public EList<String> getColumnHeaders() {
         EList<String> headers = new BasicEList<String>();
         for (ModelElement column : this.getNominalColumns()) {
-            headers.add(column.getName());
+            headers.add(getColumnName(column));
         }
         for (ModelElement column : this.getNumericColumns()) {
             // call functions for each column
             for (String f : this.getNumericFunctions()) {
-                headers.add(MessageFormat.format(f, column.getName()));
+                headers.add(MessageFormat.format(f, getColumnName(column)));
             }
         }
         for (ModelElement column : this.getDateColumns()) {
             // call functions for each column
             for (String f : this.getDateFunctions()) {
-                headers.add(MessageFormat.format(f, column.getName()));
+                headers.add(MessageFormat.format(f, getColumnName(column)));
             }
         }
         headers.add(this.getCountAll());
+
         return headers;
     }
 
     /**
+     * ADD yyi 2011-03-03 17871:filter data
+     * 
+     * @param column
+     * @return
+     */
+    private String getColumnName(ModelElement column) {
+
+        MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
+        TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
+
+        if (tdColumn != null) {
+            return tdColumn.getName();
+        } else if (mdColumn != null) {
+            return mdColumn.getId();
+        }
+        return "";
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public EList<String> getDateFunctions() {

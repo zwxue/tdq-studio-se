@@ -30,6 +30,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
@@ -77,9 +79,17 @@ public class PatternsSelectPage extends WizardPage {
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
-        for (ModelElement analysisColumn : analysisColumns) {
+        for (ModelElement element : analysisColumns) {
             GridColumn tableCum = new GridColumn(table, SWT.CHECK);
-            tableCum.setText(analysisColumn.getName());
+            // MOD yyi 2011-03-03 17871:filter data
+            MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+
+            if (tdColumn != null) {
+                tableCum.setText(tdColumn.getName());
+            } else if (mdColumn != null) {
+                tableCum.setText(mdColumn.getId());
+            }
         }
 
         tableView.setContentProvider(new PatternSelectContentProvider());
