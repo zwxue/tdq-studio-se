@@ -205,10 +205,19 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      */
     private void handleTreeElementsChecked(RepositoryNode repNode, Boolean checkedFlag) {
         if (checkedFlag) {
-            List<IRepositoryNode> children = repNode.getChildren();
-            for (IRepositoryNode colFolderNode : children) {
-                for (IRepositoryNode colNode : colFolderNode.getChildren()) {
-                    modelElementCheckedMap.put(repNode, colNode);
+            // MOD klliu 2011-03-03 bug 19195 the MDM node is defferent from DF/DB connection Structure
+            // MDM does not have Column folder
+            if (repNode instanceof MDMXmlElementRepNode) {
+                Object[] children = sContentProvider.getElements(repNode);
+                for (Object colNode : children) {
+                        modelElementCheckedMap.put(repNode, colNode);
+                    }
+            } else {
+                List<IRepositoryNode> children = repNode.getChildren();
+                for (IRepositoryNode colFolderNode : children) {
+                    for (IRepositoryNode colNode : colFolderNode.getChildren()) {
+                        modelElementCheckedMap.put(repNode, colNode);
+                    }
                 }
             }
         } else {
