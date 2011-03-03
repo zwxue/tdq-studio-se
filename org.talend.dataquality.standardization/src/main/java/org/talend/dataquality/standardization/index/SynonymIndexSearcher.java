@@ -15,16 +15,21 @@ package org.talend.dataquality.standardization.index;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 /**
  * @author scorreia A class to create an index with synonyms.
@@ -35,25 +40,34 @@ public class SynonymIndexSearcher {
 
     public static final String F_SYN = "syn";
 
-
     private IndexSearcher searcher;
 
     private int topDocLimit = 1;
 
-
+    private Analyzer analyzer;
 
     /**
-     * instantiate an index builder
+     * instantiate an index searcher. A call to the index initialization method such as {@link #openIndexInFS(String)}
+     * is required before using any other method.
      */
     public SynonymIndexSearcher() {
     }
 
+    /**
+     * SynonymIndexSearcher constructor creates this searcher and initializes the index.
+     * 
+     * @param indexPath the path to the index.
+     */
     public SynonymIndexSearcher(String indexPath) {
         try {
-            initIndexInFS(indexPath);
+            openIndexInFS(indexPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    SynonymIndexSearcher(IndexSearcher indexSearcher) {
+        this.searcher = indexSearcher;
     }
 
     // public void initIndexInRAM() throws IOException {
@@ -61,7 +75,13 @@ public class SynonymIndexSearcher {
     // // FIXME this method is not tested and cannot work because the IndexSearcher is only a FS IndexSearcher.
     // }
 
-    public void initIndexInFS(String path) throws IOException {
+    /**
+     * Method "openIndexInFS" opens a FS folder index.
+     * 
+     * @param path the path of the index folder
+     * @throws IOException if file does not exist, or any other problem
+     */
+    public void openIndexInFS(String path) throws IOException {
         FSDirectory indexDir = FSDirectory.open(new File(path));
         CheckIndex check = new CheckIndex(indexDir);
         Status status = check.checkIndex();
@@ -79,11 +99,16 @@ public class SynonymIndexSearcher {
      * @throws IOException
      */
     public TopDocs searchDocumentByWord(String word) {
-        Query query = new TermQuery(new Term(F_WORD, word));
+        if (word == null) {
+            return null;
+        }
         TopDocs docs = null;
         try {
+            Query query = createWordQueryFor(word);
             docs = this.searcher.search(query, topDocLimit);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return docs;
@@ -97,47 +122,30 @@ public class SynonymIndexSearcher {
      * @throws IOException
      */
     public TopDocs searchDocumentBySynonym(String synonym) {
-        Query query = new TermQuery(new Term(F_SYN, synonym.toLowerCase()));
         TopDocs docs = null;
+
         try {
+            Query query = createQueryFor(synonym, F_SYN);
             docs = this.searcher.search(query, topDocLimit);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return docs;
     }
 
-    // TODO remove this code?
-    // /**
-    // * Getter for analyzer.
-    // *
-    // * @return the analyzer
-    // * @throws IOException
-    // */
-    // private Analyzer getAnalyzer() throws IOException {
-    // if (analyzer == null) {
-    // // the entry and the synonyms are indexed as provided
-    // // analyzer = new KeywordAnalyzer();
-    //
-    // analyzer = new StandardAnalyzer(Version.LUCENE_30);
-    //
-    // // analyzer = new SynonymAnalyzer();
-    // }
-    // return analyzer;
-    // }
 
     /**
      * Count synonyms of a document
-     * 
-     * DOC sizhaoliu Comment method "getSynonymCount".
      * 
      * @param str
      * @return
      */
     public int getSynonymCount(String str) {
-        Query query = new TermQuery(new Term("syn", str.toLowerCase()));
-        TopDocs docs;
         try {
+            Query query = createQueryFor(str, F_SYN);
+            TopDocs docs;
             docs = this.searcher.search(query, topDocLimit);
             if (docs.totalHits > 0) {
                 Document doc = this.searcher.doc(docs.scoreDocs[0].doc);
@@ -146,22 +154,22 @@ public class SynonymIndexSearcher {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return -1;
     }
 
     /**
-     * get a document from search result by the number
+     * Get a document from search result by its document number.
      * 
-     * DOC sizhaoliu Comment method "getDoc".
-     * 
-     * @param i
-     * @return
+     * @param docNum the doc number
+     * @return the document (can be null if any problem)
      */
-    public Document getDocument(int i) {
+    public Document getDocument(int docNum) {
         Document doc = null;
         try {
-            doc = this.searcher.doc(i);
+            doc = this.searcher.doc(docNum);
         } catch (CorruptIndexException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -170,14 +178,33 @@ public class SynonymIndexSearcher {
         return doc;
     }
 
+    /**
+     * Method "getWordByDocNumber".
+     * 
+     * @param docNo the document number
+     * @return the document or null
+     */
     public String getWordByDocNumber(int docNo) {
-        return getDocument(docNo).getValues(F_WORD)[0];
+        Document document = getDocument(docNo);
+        return document != null ? document.getValues(F_WORD)[0] : null;
     }
 
+    /**
+     * Method "getSynonymsByDocNumber".
+     * 
+     * @param docNo the doc number
+     * @return the synonyms or null if no document is found
+     */
     public String[] getSynonymsByDocNumber(int docNo) {
-        return getDocument(docNo).getValues(F_SYN);
+        Document document = getDocument(docNo);
+        return document != null ? document.getValues(F_SYN) : null;
     }
 
+    /**
+     * Method "getNumDocs".
+     * 
+     * @return the number of documents in the index
+     */
     public int getNumDocs() {
         return this.searcher.getIndexReader().numDocs();
     }
@@ -198,6 +225,45 @@ public class SynonymIndexSearcher {
      */
     public void setTopDocLimit(int topDocLimit) {
         this.topDocLimit = topDocLimit;
+    }
+
+    /**
+     * Method "setAnalyzer".
+     * 
+     * @param analyzer the analyzer to use in searches.
+     */
+    public void setAnalyzer(Analyzer analyzer) {
+        this.analyzer = analyzer;
+    }
+
+    /**
+     * 
+     * @return the analyzer used in searches (StandardAnalyzer by default)
+     */
+    public Analyzer getAnalyzer() {
+        if (analyzer == null) {
+            analyzer = new StandardAnalyzer(Version.LUCENE_30);
+        }
+        return this.analyzer;
+    }
+
+    private Query createWordQueryFor(String stringToSearch) throws ParseException {
+        PhraseQuery query = new PhraseQuery();
+        query.add(new Term(F_WORD, stringToSearch));
+        return query;
+    }
+
+    private Query createQueryFor(String stringToSearch, String field) throws ParseException {
+        int slop = 3; // FIXME put the slop as a parameter
+
+        QueryParser parser = new QueryParser(Version.LUCENE_30, field, this.getAnalyzer());
+        parser.setPhraseSlop(slop);
+        return parser.parse(stringToSearch);
+
+
+        // old code
+        // return new TermQuery(new Term(field, stringToSearch.toLowerCase()));
+
     }
 
 }

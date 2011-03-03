@@ -24,18 +24,13 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.TermVector;
-import org.apache.lucene.index.CheckIndex;
-import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
 /**
@@ -49,8 +44,6 @@ public class SynonymIndexBuilder {
 
     private Directory indexDir;
 
-    private IndexSearcher searcher;
-
     /**
      * Default synonym separator is '|'.
      */
@@ -60,39 +53,21 @@ public class SynonymIndexBuilder {
 
     private IndexWriter writer;
 
-    private boolean usingCreateMode = false;
-
-    private boolean verifyDuplication = true;
-
     private Error error = new Error();
 
-    private int topDocLimit;
-
-
 
     /**
-     * instantiate an index builder
-     * 
-     * DOC sizhaoliu SynonymIndexBuilder constructor comment.
+     * instantiate an index builder.
      */
     public SynonymIndexBuilder() {
-        topDocLimit = 5;
     }
 
-    public void setVerifyDuplication(boolean verifyDuplication) {
-        this.verifyDuplication = verifyDuplication;
-    }
 
     /**
-     * if the builder is using create mode. it will clear the old index files first before any other operation. This is
-     * sometimes dangerous and will be replaced by manual segment check.
+     * Method "getError".
      * 
-     * @return
+     * @return the last error
      */
-    public void setUsingCreateMode(boolean usingCreateMode) {
-        this.usingCreateMode = usingCreateMode; // FIXME why do we need this?
-    }
-
     public Error getError(){
     	return this.error;
     }
@@ -100,17 +75,16 @@ public class SynonymIndexBuilder {
     /**
      * set a separator for a string which contains synonyms
      * 
-     * DOC sizhaoliu Comment method "setSynonymSeparator".
-     * 
      * @param synonymSeparator
      */
     public void setSynonymSeparator(char synonymSeparator) {
         this.separator = synonymSeparator;
     }
 
-    public void initIndexInRAM() {
-        indexDir = new RAMDirectory();
-    }
+    // FIXME not used yet. Need to be implemented
+    // public void initIndexInRAM() {
+    // indexDir = new RAMDirectory();
+    // }
 
     /**
      * Method "initIndexInFS" initializes the lucene index folder.
@@ -126,53 +100,12 @@ public class SynonymIndexBuilder {
                 file.mkdirs();
             }
             indexDir = FSDirectory.open(file);
-            CheckIndex check = new CheckIndex(indexDir);
-            Status status = check.checkIndex();
-            if (status.missingSegments) {
-                
-                if (usingCreateMode) {
-                    // initialize the segment of index with a simple commit.
-                    error.set(true, "Initialize an index...");
-                    commit();
-                } else {
-                    // propose to use create mode.
-                    error.set(false, "Segments file not found, initialize an index first");
-                    System.out.println(error.getMessage());
-                }
-            }
         } catch (IOException e) {
             error.set(false, e.getMessage());
             e.printStackTrace();
         }
-
-        // After using create mode for segment creation, we should reset this value to false.
-        // If we don't do this, when the Writer is closed and needs to be re-opened,
-        // the builder will re-initialize the Writer in create mode, which will erase everything.
-        usingCreateMode = false;
-
     }
 
-    /**
-     * search a document by the word. use only inside the builder.
-     * 
-     * @param word
-     * @return
-     * @throws IOException
-     */
-    private TopDocs searchDocumentByWord(String word) {
-    	if (word == null) {
-    		return null;
-    	}
-        Query query = new TermQuery(new Term(F_WORD, word));
-        TopDocs docs = null;
-        try {
-            docs = getSearcher().search(query, topDocLimit);
-        } catch (IOException e) {
-        	error.set(false, e.getMessage());
-            e.printStackTrace();
-        }
-        return docs;
-    }
 
     /**
      * insert an entire document into index.
@@ -183,22 +116,24 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     public void insertDocument(String word, String synonyms) throws IOException {
-        if (verifyDuplication) {
-            if (searchDocumentByWord(word).totalHits == 0) {
-                getWriter().addDocument(generateDocument(word, synonyms));
-                getWriter().commit(); // FIXME could we do a bulk commit instead of committing each document?
-                // System.out.println("The document <" + word + "> is now inserted.");
-            } else {
-                error.set(false, "<" + word + "> already exists and is ignored.");
-            }
-
-        } else {
             // insert document without duplication verification
             getWriter().addDocument(generateDocument(word, synonyms));
-            getWriter().commit();
+    }
 
-        }
-
+    /**
+     * insert an entire document into index if it does not already exists.
+     * 
+     * @param word the reference string
+     * @param synonyms the synonyms
+     * @return true if inserted, false otherwise
+     * @throws IOException
+     */
+    public boolean insertDocumentIfNotExists(String word, String synonyms) throws IOException {
+        if (searchDocumentByWord(word).totalHits == 0) {
+            getWriter().addDocument(generateDocument(word, synonyms));
+            return true;
+        } // else
+        return false;
     }
 
     /**
@@ -219,10 +154,13 @@ public class SynonymIndexBuilder {
         case 1:
             break;
         default:
+            // FIXME maybe we need to avoid deleting several documents when we just want to update one document (to be
+            // tested)
             break;
         }
 
         getWriter().updateDocument(new Term(F_WORD, word), generateDocument(word, synonyms));
+        // TODO Do we really need to commit here?
         // lucene allow user to roll back the deletions
         // so we need to commit the change to bring our deletions into effect
         // as an Update action contains a Delete action, we commit here as well
@@ -246,6 +184,7 @@ public class SynonymIndexBuilder {
             return 0;
         case 1:
             getWriter().deleteDocuments(new Term(F_WORD, word));
+            // TODO do we really need to commit here?
             getWriter().commit();
             //System.out.println("The document named <" + word + "> has been deleted.");
             return 1;
@@ -262,7 +201,7 @@ public class SynonymIndexBuilder {
      */
     public void deleteAllDocuments() throws IOException {
         getWriter().deleteAll();
-        getWriter().commit();
+        // getWriter().commit();
     }
 
     /**
@@ -274,10 +213,15 @@ public class SynonymIndexBuilder {
      */
     public int addSynonymToDocument(String word, String newSynonym) throws IOException {
 
-        Query query = new TermQuery(new Term(F_WORD, word));
-        TopDocs docs = getSearcher().search(query, topDocLimit);
+        // reuse related synonym index search instead of created a new search
+        SynonymIndexSearcher idxSearcher = getNewSynIdxSearcher();
+        TopDocs docs = idxSearcher.searchDocumentByWord(word);
+
+        // Query query = new TermQuery(new Term(F_WORD, word));
+        // IndexSearcher newIndexSearcher = getNewIndexSearcher();
+        // TopDocs docs = newIndexSearcher.search(query, topDocLimit);
         if (docs.totalHits > 0) {
-            Document doc = getSearcher().doc(docs.scoreDocs[0].doc);
+            Document doc = idxSearcher.getDocument(docs.scoreDocs[0].doc);
 
             String[] synonyms = doc.getValues(F_SYN);
             for (String str : synonyms) {
@@ -289,7 +233,7 @@ public class SynonymIndexBuilder {
             // create a new document and replace the original one
             doc.add(new Field(F_SYN, newSynonym, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
             getWriter().updateDocument(new Term(F_WORD, word), doc);
-            getWriter().commit();
+            getWriter().commit(); // FIXME remove the commit here?
             //System.out.println("The synonym <" + newSynonym + "> is added to word.");
             return 1;
         } else {
@@ -310,10 +254,14 @@ public class SynonymIndexBuilder {
             return 0;
         }
         int deleted = 0;
-        Query query = new TermQuery(new Term(F_WORD, word));
-        TopDocs docs = getSearcher().search(query, topDocLimit);
+
+        SynonymIndexSearcher newSynIdxSearcher = getNewSynIdxSearcher();
+
+        // Query query = new TermQuery(new Term(F_WORD, word));
+        // IndexSearcher newIndexSearcher = getNewIndexSearcher();
+        TopDocs docs = newSynIdxSearcher.searchDocumentByWord(word);
         if (docs.totalHits > 0) {
-            Document doc = getSearcher().doc(docs.scoreDocs[0].doc);
+            Document doc = newSynIdxSearcher.getDocument(docs.scoreDocs[0].doc);
             String[] synonyms = doc.getValues(F_SYN);
             List<String> synonymList = new ArrayList<String>();
 
@@ -336,7 +284,7 @@ public class SynonymIndexBuilder {
             } else {
                 Document newDoc = generateDocument(word, synonymList);
                 getWriter().updateDocument(new Term(F_WORD, word), newDoc);
-                getWriter().commit();
+                getWriter().commit(); // FIXME remove commit here
             }
 
         } else {
@@ -375,44 +323,17 @@ public class SynonymIndexBuilder {
     //
     // }
 
-    private Document generateDocument(String word, String synonyms) {
-        String[] split = StringUtils.split(synonyms, separator);
-        return generateDocument(word, Arrays.asList(split));
-    }
-
-    /**
-     * generate a document
-     * 
-     * @param word
-     * @param synonyms
-     * @return
-     */
-    private Document generateDocument(String word, List<String> synonyms) {
-
-        Document doc = new Document();
-        Field field = new Field(F_WORD, word, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
-        doc.add(field);
-        if (synonyms != null) {
-            // --- store entry also in synonym list so that we can search for it too
-            // without the need to search in the word field
-            // TODO scorreia can we avoid this?
-            doc.add(new Field(F_SYN, word, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
-            for (String syn : synonyms) {
-                doc.add(new Field(F_SYN, syn, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
-            }
-        }
-        return doc;
-    }
-
     /**
      * ADDED BY ytao 2011/02/11 If only need to initialize the index, do nothing after fold open, but just invoke this
      * method at the end, index will be reset.
      * 
-     * (Ensure that usingCreateMode is true)
+     * (Ensure that usingCreateMode is true) // TODO where is it ensured? who wrote this sentence?
      * 
      * Not sure that the index is deleted and recreated, may be just delete all documents of index since the index files
      * are "_1a.cfs" and "segments.gen" and "segments_1e" currently, if these files are not exists, API will not work.
      * something need to TODO
+     * 
+     * TODO closing an index should not delete the documents!
      */
     public void closeIndex() {
         try {
@@ -425,6 +346,9 @@ public class SynonymIndexBuilder {
         }
     }
 
+    /**
+     * Commits all pending changes.
+     */
     public void commit() {
         try {
             this.getWriter().commit();
@@ -443,11 +367,12 @@ public class SynonymIndexBuilder {
      * @return the analyzer
      * @throws IOException
      */
-    private Analyzer getAnalyzer() throws IOException {
+    public Analyzer getAnalyzer() throws IOException {
         if (analyzer == null) {
             // the entry and the synonyms are indexed as provided
             // analyzer = new KeywordAnalyzer();
 
+            // most used analyzer in lucene
             analyzer = new StandardAnalyzer(Version.LUCENE_30);
 
             // analyzer = new SynonymAnalyzer();
@@ -464,21 +389,70 @@ public class SynonymIndexBuilder {
      */
     IndexWriter getWriter() throws IOException {
         if (writer == null) {
-            writer = new IndexWriter(indexDir, this.getAnalyzer(), usingCreateMode, IndexWriter.MaxFieldLength.UNLIMITED);
+            writer = new IndexWriter(indexDir, this.getAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
         }
         return this.writer;
     }
 
     /**
-     * Getter for searcher a new searcher is instantiated every time.
-     * 
-     * DOC sizhaoliu Comment method "getSearcher".
+     * Get a new read-only searcher at each call.
      * 
      * @return
      * @throws IOException
      */
-    IndexSearcher getSearcher() throws IOException {
-        searcher = new IndexSearcher(indexDir);
-        return searcher;
+    private IndexSearcher getNewIndexSearcher() throws IOException {
+        return new IndexSearcher(indexDir);
     }
+
+    private SynonymIndexSearcher getNewSynIdxSearcher() throws IOException {
+        return new SynonymIndexSearcher(getNewIndexSearcher());
+    }
+
+    private Document generateDocument(String word, String synonyms) {
+        String[] split = StringUtils.split(synonyms, separator);
+        return generateDocument(word, Arrays.asList(split));
+    }
+
+    /**
+     * generate a document
+     * 
+     * @param word
+     * @param synonyms
+     * @return
+     */
+    private Document generateDocument(String word, List<String> synonyms) {
+        Document doc = new Document();
+        Field field = new Field(F_WORD, word, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
+        field.setBoost(1.5F); // increase the importance of the reference word
+        doc.add(field);
+        if (synonyms != null) {
+            // --- store entry also in synonym list so that we can search for it too
+            // without the need to search in the word field (will be tokenized given the analyzer)
+            doc.add(new Field(F_SYN, word, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
+            for (String syn : synonyms) {
+                doc.add(new Field(F_SYN, syn, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
+            }
+        }
+        return doc;
+    }
+
+    /**
+     * search a document by the word. use only inside the builder.
+     * 
+     * @param word
+     * @return
+     * @throws IOException
+     */
+    private TopDocs searchDocumentByWord(String word) {
+        TopDocs docs = null;
+        try {
+            SynonymIndexSearcher newSynIdxSearcher = getNewSynIdxSearcher();
+            docs = newSynIdxSearcher.searchDocumentByWord(word);
+        } catch (IOException e) {
+            error.set(false, e.getMessage());
+            e.printStackTrace();
+        }
+        return docs;
+    }
+
 }
