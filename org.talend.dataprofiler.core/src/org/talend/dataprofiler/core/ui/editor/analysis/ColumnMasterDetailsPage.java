@@ -77,6 +77,7 @@ import org.talend.dataprofiler.core.ui.utils.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
@@ -706,12 +707,26 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @throws DataprofilerCoreException
      */
     public void saveAnalysis() throws DataprofilerCoreException {
+
+
         IRepositoryViewObject reposObject = null;
         analysisHandler.clearAnalysis();
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
         Connection tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
+
+        // ADD gdbu 2011-3-3 bug 19179
+
+        // remove the space from analysis name
+        this.analysis.setName(this.analysis.getName().replace(" ", ""));
+
+        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
+            domain.setName(this.analysis.getName());
+        }
+
+        // ~
+
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         // MOD zshen feature 12919 to save analysisParameter.
         if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang))) {
@@ -778,9 +793,18 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
+
         if (editorInput instanceof AnalysisItemEditorInput) {
+
             AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
+
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+
+            // ADD gdbu 2011-3-2 bug 19179
+            tdqAnalysisItem.getProperty().setLabel(analysisHandler.getName());
+            this.nameText.setText(analysisHandler.getName());
+            // ~
+
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
@@ -810,7 +834,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         treeViewer.setDirty(false);
         dataFilterComp.setDirty(false);
     }
-
+    
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
@@ -904,6 +928,28 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     protected ReturnCode canSave() {
+
+        // ADD gdbu 2011-3-3 bug 19179
+        this.nameText.setText(this.nameText.getText().replace(" ", ""));
+        if (this.nameText.getText().length() == 0) {
+            this.nameText.setText(this.analysis.getName());
+            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);
+        }
+        String elementName = this.nameText.getText();
+        List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
+        for (IRepositoryNode children : childrensname) {
+            if (elementName.equals(analysisHandler.getName())) {
+                // if new name equals itself's old name ,return true
+                break;
+            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {
+                // if new name equals one of tree-list's name,return false
+                this.nameText.setText(analysisHandler.getName());
+                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);
+            }
+        }
+
+        // ~
+
         // ADD xqliu 2010-01-22 bug 11200
         ReturnCode checkMdmExecutionEngine = checkMdmExecutionEngine();
         if (!checkMdmExecutionEngine.isOk()) {// FIXME: Here(checkMdmExecutionEngine) will always return true, why do

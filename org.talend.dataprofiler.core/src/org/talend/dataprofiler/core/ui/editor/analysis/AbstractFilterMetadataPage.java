@@ -787,11 +787,20 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     public void saveAnalysis() throws DataprofilerCoreException {
+        // ADD gdbu 2011-3-3 bug 19179
+        // remove the space from analysis name
+        this.analysis.setName(this.analysis.getName().replace(" ", ""));
+        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
+            domain.setName(this.analysis.getName());
+        }
+        // ~
+
         // ADD xqliu 2010-01-04 bug 10190
         if (isConnectionAnalysis()) { // MOD zshen 2010-03-19 bug 12041
             AnalysisHelper.setReloadDatabases(analysis, reloadDatabasesBtn.getSelection());
         }
         // ~
+
         EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
         if (!this.tableFilterText.getText().equals(latestTableFilterValue)) {
             DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());
@@ -810,6 +819,12 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         if (editorInput instanceof AnalysisItemEditorInput) {
             AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+
+            // ADD gdbu 2011-3-3 bug 19179
+            tdqAnalysisItem.getProperty().setLabel(analysis.getName());
+            this.nameText.setText(analysis.getName());
+            // ~
+
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
@@ -1197,6 +1212,28 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     @Override
     protected ReturnCode canSave() {
+
+        // ADD gdbu 2011-3-3 bug 19179
+
+        this.nameText.setText(this.nameText.getText().replace(" ", ""));
+        if (this.nameText.getText().length() == 0) {
+            this.nameText.setText(this.analysis.getName());
+            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);
+        }
+        String elementName = this.nameText.getText();
+        List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
+        for (IRepositoryNode children : childrensname) {
+            if (elementName.equals(this.analysis.getName())) {
+                // if new name equals itself's old name ,return true
+                return new ReturnCode(true);
+            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {
+                // if new name equals one of tree-list's name,return false
+                this.nameText.setText(this.analysis.getName());
+                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);
+            }
+        }
+
+        // ~
 
         return new ReturnCode(true);
     }

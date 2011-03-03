@@ -79,6 +79,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -716,6 +717,15 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      */
 
     public void saveAnalysis() throws DataprofilerCoreException {
+        // ADD gdbu 2011-3-3 bug 19179
+
+        // remove the space from analysis name
+        columnSetAnalysisHandler.setName(columnSetAnalysisHandler.getName().replace(" ", ""));
+        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
+            domain.setName(this.analysis.getName());
+        }
+        // ~
+
         IRepositoryViewObject reposObject = null;
         columnSetAnalysisHandler.clearAnalysis();
         simpleStatIndicator.getAnalyzedColumns().clear();
@@ -789,6 +799,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (editorInput instanceof AnalysisItemEditorInput) {
             AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+
+            // ADD gdbu 2011-3-2 bug 19179
+            tdqAnalysisItem.getProperty().setLabel(columnSetAnalysisHandler.getName());
+            this.nameText.setText(columnSetAnalysisHandler.getName());
+            // ~
+
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
@@ -876,6 +892,27 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     @Override
     protected ReturnCode canSave() {
         String message = null;
+        // ADD gdbu 2011-3-3 bug 19179
+        this.nameText.setText(this.nameText.getText().replace(" ", ""));
+        if (this.nameText.getText().length() == 0) {
+            // analysis can not without a name
+            this.nameText.setText(this.analysis.getName());
+            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);
+        }
+        String elementName = this.nameText.getText();
+        List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
+        for (IRepositoryNode children : childrensname) {
+            if (elementName.equals(columnSetAnalysisHandler.getName())) {
+                // if new name equals itself's old name ,return true
+                break;
+            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {
+                // if new name equals one of tree-list's name,return false
+                this.nameText.setText(columnSetAnalysisHandler.getName());
+                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);
+            }
+        }
+        // ~
+
         List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
 
         // MOD yyi 2011-02-16 17871:delimitefile

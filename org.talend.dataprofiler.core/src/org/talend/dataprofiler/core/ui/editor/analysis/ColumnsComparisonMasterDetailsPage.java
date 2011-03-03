@@ -45,6 +45,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -56,6 +57,7 @@ import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -249,6 +251,15 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
+        // ADD gdbu 2011-3-3 bug 19179
+
+        // remove the space from analysis name
+        this.analysis.setName(this.analysis.getName().replace(" ", ""));
+        // change 'ana' field's 'dataquality' tag content
+        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
+            domain.setName(this.analysis.getName());
+        }
+        // ~
         IRepositoryViewObject reposObject = null;
         getAnalysisHandler().clearAnalysis();
         List<ModelElement> analysedElements = new ArrayList<ModelElement>();
@@ -304,6 +315,12 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         if (editorInput instanceof AnalysisItemEditorInput) {
             AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
+
+            // ADD gdbu 2011-3-3 bug 19179
+            tdqAnalysisItem.getProperty().setLabel(analysis.getName());
+            this.nameText.setText(analysis.getName());
+            // ~
+
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
@@ -330,6 +347,28 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     @Override
     protected ReturnCode canSave() {
+
+        // ADD gdbu 2011-3-3 bug 19179
+        this.nameText.setText(this.nameText.getText().replace(" ", ""));
+        if (this.nameText.getText().length() == 0) {
+            // analysis can not without a name
+            this.nameText.setText(this.analysis.getName());
+            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);
+        }
+        String elementName = this.nameText.getText();
+        List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
+        for (IRepositoryNode children : childrensname) {
+            if (elementName.equals(this.analysis.getName())) {
+                // if new name equals itself's old name ,return true
+                break;
+            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {
+                // if new name equals one of tree-list's name,return false
+                this.nameText.setText(this.analysis.getName());
+                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);
+            }
+        }
+        // ~
+
         if (anaColumnCompareViewer.getColumnListA().size() != anaColumnCompareViewer.getColumnListB().size()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage"), false); //$NON-NLS-1$
         }
