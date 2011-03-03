@@ -206,11 +206,17 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createDefault() {
-        newText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
+        // feature 19053
+        if (!gContainer.isDisposed()) {
+            newText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
+        }
     }
 
     private void createExtDefault() {
-        newText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
+        // feature 19053
+        if (!tContainer.isDisposed()) {
+            newText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.noAvailable")); //$NON-NLS-1$
+        }
     }
 
     @Override
@@ -330,10 +336,12 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (is) {
             createDefault();
         }
-
-        gContainer.layout();
-        if (tContainer != null) {
-            tContainer.layout();
+        // feature 19053
+        if (!gContainer.isDisposed()) {
+            gContainer.layout();
+            if (tContainer != null) {
+                tContainer.layout();
+            }
         }
     }
 
