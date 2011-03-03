@@ -101,7 +101,7 @@ public class ItemRecord {
         URI itemURI = URI.createFileURI(file.getAbsolutePath());
         URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-        if(ItemRecord.JARFILEEXTENSION.equals(itemURI.fileExtension())){
+        if (ItemRecord.JARFILEEXTENSION.equals(itemURI.fileExtension())) {
             return;
         }
         elementEName = EElementEName.findENameByExt(itemURI.fileExtension());
@@ -204,7 +204,7 @@ public class ItemRecord {
             List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
 
             ModelElementHelper.iterateClientDependencies(element, dependencyElements);
-            //MOD by zshen for bug 18724 2011.02.23
+            // MOD by zshen for bug 18724 2011.02.23
             TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, element.getTaggedValue());
             if (tv != null) {
                 for (IFile udiJarFile : UDIUtils.getLibJarFileList()) {
@@ -352,10 +352,10 @@ public class ItemRecord {
      * @return
      */
     public String getName() {
-        if (element != null) {
-            return element.getName();
-        } else if (property != null) {
+        if (property != null) {
             return property.getLabel();
+        } else if (element != null) {
+            return element.getName();
         } else {
             return file.getName();
         }
@@ -405,8 +405,10 @@ public class ItemRecord {
                 if (filePath.toString().indexOf(constant.getPath()) > 0) {
                     String lastSeg = filePath.lastSegment();
                     if (constant == EResourceConstant.METADATA) {
+                        // MOD klliu bug 19164 2011-03-03 surpport FILEDELIMITED connection
                         return lastSeg.equals(constant.getName()) || lastSeg.equals(EResourceConstant.DB_CONNECTIONS.getName())
-                                || lastSeg.equals(EResourceConstant.MDM_CONNECTIONS.getName());
+                                || lastSeg.equals(EResourceConstant.MDM_CONNECTIONS.getName())
+                                || lastSeg.equals(EResourceConstant.FILEDELIMITED.getName());
                     } else if (constant == EResourceConstant.LIBRARIES) {
                         return !lastSeg.equals(EResourceConstant.JRXML_TEMPLATE.getName());
                     }

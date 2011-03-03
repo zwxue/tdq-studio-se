@@ -62,8 +62,13 @@ public class FileTreeLabelProvider extends LabelProvider {
                         image = ImageLib.getImage(ImageLib.EXCHANGE);
                         break;
                     case DB_CONNECTIONS:
-                    case MDM_CONNECTIONS:
                         image = ImageLib.getImage(ImageLib.CONNECTION);
+                        break;
+                    case MDM_CONNECTIONS:
+                        image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                        break;
+                    case FILEDELIMITED:
+                        image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
                         break;
 
                     default:
@@ -120,7 +125,6 @@ public class FileTreeLabelProvider extends LabelProvider {
             ItemRecord recored = (ItemRecord) element;
             return recored.getName();
         }
-
         return super.getText(element);
     }
 
