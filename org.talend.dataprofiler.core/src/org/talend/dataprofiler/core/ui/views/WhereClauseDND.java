@@ -26,9 +26,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
+import org.talend.dq.nodes.DBColumnRepNode;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -54,10 +54,10 @@ public final class WhereClauseDND {
             @Override
             public void dragEnter(DropTargetEvent event) {
                 Object obj = ((IStructuredSelection) commonViewer.getSelection()).getFirstElement();
-                if (!(obj instanceof TdColumn)) {
+                if (!(obj instanceof DBColumnRepNode)) {
                     event.detail = DND.DROP_NONE;
                 } else {
-                    event.detail = DND.DROP_MOVE;
+                    // event.detail = DND.DROP_MOVE;
                     event.feedback = DND.FEEDBACK_INSERT_AFTER;
                 }
             }
@@ -71,7 +71,7 @@ public final class WhereClauseDND {
                 if (event.detail != DND.DROP_NONE) {
                     IStructuredSelection selection = (IStructuredSelection) commonViewer.getSelection();
                     if (!selection.isEmpty()) {
-                        Iterator<TdColumn> it = selection.iterator();
+                        Iterator<DBColumnRepNode> it = selection.iterator();
                         IEditorPart currentActiveEditor = CorePlugin.getDefault().getCurrentActiveEditor();
                         if (currentActiveEditor instanceof DQRuleEditor) {
                             // DQRuleEditor editor = (DQRuleEditor) currentActiveEditor;
@@ -82,7 +82,9 @@ public final class WhereClauseDND {
                             // // Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
                             while (it.hasNext()) {
                                 // DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(lang, null);
-                                targetControl.insert(it.next().getName());
+                                DBColumnRepNode next = it.next();
+                                String name = next.getTdColumn().getName();
+                                targetControl.insert(name);
                                 targetControl.forceFocus();
                             }
                         }
