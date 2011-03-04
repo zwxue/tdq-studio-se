@@ -117,9 +117,12 @@ public class AnalysisHandler {
 
     public String getConnectionName() {
         DataManager connection = analysis.getContext().getConnection();
-        Property property = PropertyHelper.getProperty(connection);
-
-        return property == null ? "" : property.getLabel(); //$NON-NLS-1$
+        if (connection == null) {
+            return "";//$NON-NLS-1$
+        } else {
+            Property property = PropertyHelper.getProperty(connection);
+            return property == null ? "" : property.getLabel(); //$NON-NLS-1$
+        }
     }
 
     public String getTableNames() {
