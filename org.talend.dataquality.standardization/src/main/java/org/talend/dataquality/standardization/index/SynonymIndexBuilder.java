@@ -137,7 +137,12 @@ public class SynonymIndexBuilder {
     }
 
     /**
-     * update an entire synonym document.
+     * Update an entire synonym document if and only if it exists and it's unique.
+     * 
+     * WARNING If some changes in the index are not committed, this may cause trouble to find the document to update.
+     * Make sure that a commit has been done before calling this method except if you know exactly what you are doing.
+     * 
+     * WARNING Beware that if several documents match the word, nothing will be done.
      * 
      * @param word
      * @param synonyms
@@ -145,29 +150,25 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     public int updateDocument(String word, String synonyms) throws IOException {
-
+        int nbUpdatedDocuments = 0;
         TopDocs docs = searchDocumentByWord(word);
         switch (docs.totalHits) {
         case 0:
+            // FIXME should be create an insertOrUpdate method?
         	error.set(false, "<" + word + "> doesn't exist.");
-            return 0;
+            break;
         case 1:
+            getWriter().updateDocument(new Term(F_WORD, word), generateDocument(word, synonyms));
+            nbUpdatedDocuments = 1;
             break;
         default:
             // FIXME maybe we need to avoid deleting several documents when we just want to update one document (to be
             // tested)
+            error.set(false, "" + docs.totalHits + " matched the given reference word: " + word + ". No change is done.");
             break;
         }
+        return nbUpdatedDocuments;
 
-        getWriter().updateDocument(new Term(F_WORD, word), generateDocument(word, synonyms));
-        // TODO Do we really need to commit here?
-        // lucene allow user to roll back the deletions
-        // so we need to commit the change to bring our deletions into effect
-        // as an Update action contains a Delete action, we commit here as well
-        // however, we don't need to commit for Add actions
-        getWriter().commit();
-        // System.out.println("The document named <" + word + "> has been updated.");
-        return 1;
     }
 
     /**
@@ -205,22 +206,23 @@ public class SynonymIndexBuilder {
     }
 
     /**
-     * add a synonym to an existing document.
+     * Add a synonym to an existing document. If several documents are found given the input word, nothing is done.
      * 
-     * @param word
-     * @param newSynonym
+     * @param word a word
+     * @param newSynonym the new synonym to add to the list of synonyms
+     * @return 1 if added or 0 if no change has been done
      * @throws IOException
      */
     public int addSynonymToDocument(String word, String newSynonym) throws IOException {
+        if (newSynonym == null || newSynonym.length() == 0) {
+            return 0;
+        }
 
         // reuse related synonym index search instead of created a new search
         SynonymIndexSearcher idxSearcher = getNewSynIdxSearcher();
         TopDocs docs = idxSearcher.searchDocumentByWord(word);
 
-        // Query query = new TermQuery(new Term(F_WORD, word));
-        // IndexSearcher newIndexSearcher = getNewIndexSearcher();
-        // TopDocs docs = newIndexSearcher.search(query, topDocLimit);
-        if (docs.totalHits > 0) {
+        if (docs.totalHits == 1) { // don't do anything if several documents match
             Document doc = idxSearcher.getDocument(docs.scoreDocs[0].doc);
 
             String[] synonyms = doc.getValues(F_SYN);
@@ -231,13 +233,16 @@ public class SynonymIndexBuilder {
                 }
             }
             // create a new document and replace the original one
-            doc.add(new Field(F_SYN, newSynonym, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
+            doc.add(createSynField(newSynonym));
             getWriter().updateDocument(new Term(F_WORD, word), doc);
-            getWriter().commit(); // FIXME remove the commit here?
             //System.out.println("The synonym <" + newSynonym + "> is added to word.");
             return 1;
         } else {
-        	error.set(false, "The word <" + word + "> doesn't exist. Cannot add.");
+            if (docs.totalHits == 0) {
+                error.set(false, "The word <" + word + "> doesn't exist. Cannot add.");
+            } else {
+                error.set(false, "Several documents have been found given the word <" + word + ">. Cannot add.");
+            }
             return 0;
         }
     }
@@ -246,6 +251,7 @@ public class SynonymIndexBuilder {
      * remove a synonym from the document to which it belongs.
      * 
      * @param synonymToDelete
+     * @return the number of deleted synonyms
      * @throws IOException
      */
     public int removeSynonymFromDocument(String word, String synonymToDelete) throws IOException {
@@ -256,11 +262,8 @@ public class SynonymIndexBuilder {
         int deleted = 0;
 
         SynonymIndexSearcher newSynIdxSearcher = getNewSynIdxSearcher();
-
-        // Query query = new TermQuery(new Term(F_WORD, word));
-        // IndexSearcher newIndexSearcher = getNewIndexSearcher();
         TopDocs docs = newSynIdxSearcher.searchDocumentByWord(word);
-        if (docs.totalHits > 0) {
+        if (docs.totalHits == 1) { // don't do anything if more than one document is found
             Document doc = newSynIdxSearcher.getDocument(docs.scoreDocs[0].doc);
             String[] synonyms = doc.getValues(F_SYN);
             List<String> synonymList = new ArrayList<String>();
@@ -284,7 +287,6 @@ public class SynonymIndexBuilder {
             } else {
                 Document newDoc = generateDocument(word, synonymList);
                 getWriter().updateDocument(new Term(F_WORD, word), newDoc);
-                getWriter().commit(); // FIXME remove commit here
             }
 
         } else {
@@ -395,12 +397,28 @@ public class SynonymIndexBuilder {
     }
 
     /**
+     * Method "getNumDocs"
+     * 
+     * @return the number of documents or -1 if an error happened
+     */
+    public int getNumDocs() {
+        try {
+            return this.getWriter().numDocs();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    /**
      * Get a new read-only searcher at each call.
      * 
      * @return
      * @throws IOException
      */
     private IndexSearcher getNewIndexSearcher() throws IOException {
+        // FIXME optimization could be done if we use the IndexReader.reopen() method instead of creating a new object
+        // at each call.
         return new IndexSearcher(indexDir);
     }
 
@@ -428,12 +446,17 @@ public class SynonymIndexBuilder {
         if (synonyms != null) {
             // --- store entry also in synonym list so that we can search for it too
             // without the need to search in the word field (will be tokenized given the analyzer)
-            doc.add(new Field(F_SYN, word, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
+            doc.add(createSynField(word));
             for (String syn : synonyms) {
-                doc.add(new Field(F_SYN, syn, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
+                doc.add(createSynField(syn));
             }
         }
         return doc;
+    }
+
+
+    private Field createSynField(String synonym) {
+        return new Field(F_SYN, synonym, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);
     }
 
     /**

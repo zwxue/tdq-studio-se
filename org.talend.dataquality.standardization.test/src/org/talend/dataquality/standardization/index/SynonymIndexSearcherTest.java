@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 import org.junit.After;
@@ -210,7 +213,13 @@ public class SynonymIndexSearcherTest {
      */
     @Test
     public void testGetSynonymCount() {
-        fail("Not yet implemented");
+        SynonymIndexSearcher search = new SynonymIndexSearcher();
+        try {
+            search.openIndexInFS(SynonymIndexBuilderTest.path);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        assertEquals(2, search.getSynonymCount("IAIDQ"));
     }
 
     /**
@@ -218,7 +227,19 @@ public class SynonymIndexSearcherTest {
      */
     @Test
     public void testGetDocument() {
-        fail("Not yet implemented");
+        SynonymIndexSearcher search = new SynonymIndexSearcher();
+        try {
+            search.openIndexInFS(SynonymIndexBuilderTest.path);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        TopDocs docs = search.searchDocumentByWord("IAIDQ");
+        assertEquals(false, docs.totalHits == 0);
+        Document document = search.getDocument(docs.scoreDocs[0].doc);
+        assertEquals(false, document == null);
+        String[] values = document.getValues(SynonymIndexSearcher.F_WORD);
+        assertEquals(false, values == null);
+        assertEquals(1, values.length);
     }
 
     /**
@@ -227,7 +248,25 @@ public class SynonymIndexSearcherTest {
      */
     @Test
     public void testGetWordByDocNumber() {
-        fail("Not yet implemented");
+        SynonymIndexSearcher search = new SynonymIndexSearcher();
+        try {
+            search.openIndexInFS(SynonymIndexBuilderTest.path);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        String word = search.getWordByDocNumber(0);
+        Assert.assertNotNull(word);
+        Assert.assertNotSame(0, word.length());
+        // the word found should be one the input words
+        boolean wordFound = false;
+        for (int i = 0; i < SynonymIndexBuilderTest.synonyms.length; i++) {
+            String[] input = SynonymIndexBuilderTest.synonyms[i];
+            if (word.equals(input[0])) {
+                wordFound = true;
+                break;
+            }
+        }
+        Assert.assertTrue(wordFound);
     }
 
     /**
@@ -236,7 +275,28 @@ public class SynonymIndexSearcherTest {
      */
     @Test
     public void testGetSynonymsByDocNumber() {
-        fail("Not yet implemented");
+        SynonymIndexSearcher search = new SynonymIndexSearcher();
+        try {
+            search.openIndexInFS(SynonymIndexBuilderTest.path);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        String[] syns = search.getSynonymsByDocNumber(0);
+        Assert.assertNotNull(syns);
+        Assert.assertNotSame(0, syns.length);
+        // the synonyms found should be one the input synonyms
+        boolean synonymFound = false;
+        for (int i = 0; i < SynonymIndexBuilderTest.synonyms.length; i++) {
+            String[] input = SynonymIndexBuilderTest.synonyms[i];
+            for (int j = 0; j < syns.length; j++) {
+                String syn = syns[j];
+                if (input[1].contains(syn)) {
+                    synonymFound = true;
+                    break;
+                }
+            }
+        }
+        Assert.assertTrue(synonymFound);
     }
 
     /**
@@ -244,7 +304,14 @@ public class SynonymIndexSearcherTest {
      */
     @Test
     public void testGetNumDocs() {
-        fail("Not yet implemented");
+        SynonymIndexSearcher search = new SynonymIndexSearcher();
+        try {
+            search.openIndexInFS(SynonymIndexBuilderTest.path);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        int numDocs = search.getNumDocs();
+        assertEquals(SynonymIndexBuilderTest.synonyms.length, numDocs);
     }
 
 }

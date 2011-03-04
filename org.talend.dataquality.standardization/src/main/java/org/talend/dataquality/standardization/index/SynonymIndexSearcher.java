@@ -47,6 +47,12 @@ public class SynonymIndexSearcher {
     private Analyzer analyzer;
 
     /**
+     * by default, the slop factor is zero, meaning an exact phrase match.
+     */
+    private int slop = 0;
+
+    
+    /**
      * instantiate an index searcher. A call to the index initialization method such as {@link #openIndexInFS(String)}
      * is required before using any other method.
      */
@@ -135,22 +141,21 @@ public class SynonymIndexSearcher {
         return docs;
     }
 
-
     /**
-     * Count synonyms of a document
+     * Count the synonyms of the first document found by a query on word.
      * 
-     * @param str
-     * @return
+     * @param word
+     * @return the number of synonyms
      */
-    public int getSynonymCount(String str) {
+    public int getSynonymCount(String word) {
         try {
-            Query query = createQueryFor(str, F_SYN);
+            Query query = createWordQueryFor(word);
             TopDocs docs;
             docs = this.searcher.search(query, topDocLimit);
             if (docs.totalHits > 0) {
                 Document doc = this.searcher.doc(docs.scoreDocs[0].doc);
                 String[] synonyms = doc.getValues(F_SYN);
-                return synonyms.length;
+                return synonyms.length - 1; // we don't count the word which is added as the first synonym.
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -228,6 +233,25 @@ public class SynonymIndexSearcher {
     }
 
     /**
+     * Getter for slop. The slop is the maximum number of moves allowed to put the terms in order.
+     * 
+     * @return the slop
+     */
+    public int getSlop() {
+        return this.slop;
+    }
+
+    
+    /**
+     * Sets the slop.
+     * 
+     * @param slop the slop to set
+     */
+    public void setSlop(int slop) {
+        this.slop = slop;
+    }
+
+    /**
      * Method "setAnalyzer".
      * 
      * @param analyzer the analyzer to use in searches.
@@ -254,8 +278,6 @@ public class SynonymIndexSearcher {
     }
 
     private Query createQueryFor(String stringToSearch, String field) throws ParseException {
-        int slop = 3; // FIXME put the slop as a parameter
-
         QueryParser parser = new QueryParser(Version.LUCENE_30, field, this.getAnalyzer());
         parser.setPhraseSlop(slop);
         return parser.parse(stringToSearch);

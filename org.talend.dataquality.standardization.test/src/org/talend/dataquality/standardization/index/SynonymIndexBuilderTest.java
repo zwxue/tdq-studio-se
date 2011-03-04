@@ -17,6 +17,9 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -119,12 +122,77 @@ public class SynonymIndexBuilderTest {
         int updateCount = 0;
         SynonymIndexSearcher searcher = getSearcher();
         assertEquals(0, searcher.searchDocumentBySynonym("updated").totalHits);
+
         updateCount += builder.updateDocument("Sécurité Sociale", "I|have|been|updated");
+        builder.commit();
         searcher = getSearcher();
         assertEquals(1, searcher.searchDocumentBySynonym("updated").totalHits);
+
         updateCount += builder.updateDocument("INEXIST", "I|don't|exist");
+        builder.commit();
         searcher = getSearcher();
         assertEquals(0, searcher.searchDocumentBySynonym("exist").totalHits);
+        
+        // --- create a new index with several similar documents
+        SynonymIndexBuilder synIdxBuild = new SynonymIndexBuilder();
+        String idxPath = "data/test_update";
+        synIdxBuild.deleteIndexFromFS(idxPath);
+        synIdxBuild.initIndexInFS(idxPath);
+        int maxDoc = 4;
+        String word = "salut";
+        for (int i = 0; i < maxDoc; i++) {
+            synIdxBuild.insertDocument(word, "synonym|toto");            
+        }
+        String toupdate = "to update.";
+        synIdxBuild.insertDocument(toupdate, "this document will be updated");
+        int nbDocInIndex = maxDoc + 1;
+        assertEquals(nbDocInIndex, synIdxBuild.getNumDocs());
+        synIdxBuild.commit();
+
+        int nbUpdatedDocuments = synIdxBuild.updateDocument("unknown", "new syn");
+        assertEquals("there should be no document to update", 0, nbUpdatedDocuments);
+        assertEquals("The document should not be inserted here", nbDocInIndex, synIdxBuild.getNumDocs());
+
+        nbUpdatedDocuments = synIdxBuild.updateDocument(word, "new syn");
+        assertEquals("no update should be done because several documents match the word " + word, 0, nbUpdatedDocuments);
+
+        nbUpdatedDocuments = synIdxBuild.updateDocument(toupdate, "a new list of 3 synonyms|test|ok");
+        synIdxBuild.commit();
+        // synIdxBuild.closeIndex();
+        
+        SynonymIndexSearcher search = new SynonymIndexSearcher();
+        search.setTopDocLimit(maxDoc); // retrieve all possible documents
+        search.openIndexInFS(idxPath);
+        TopDocs salutDocs = search.searchDocumentByWord(word);
+        assertEquals(maxDoc, salutDocs.totalHits);
+        for (int i = 0; i < salutDocs.scoreDocs.length; i++) {
+            ScoreDoc scoreDoc = salutDocs.scoreDocs[i];
+            Document document = search.getDocument(scoreDoc.doc);
+            String syn = document.get(SynonymIndexSearcher.F_SYN);
+            assertEquals("the first synonym field should be the same as the word (after being analyzed)", word, syn);
+            String[] values = document.getValues(SynonymIndexSearcher.F_SYN);
+            // expect to see "salut" and "synonym" and "toto"
+            assertEquals(3, values.length);
+            assertEquals(word, values[0]);
+            assertEquals("synonym", values[1]);
+            assertEquals("toto", values[2]);
+        }
+        
+        TopDocs updatedDocs = search.searchDocumentByWord(toupdate);
+        assertEquals(1, updatedDocs.totalHits);
+        for (int i = 0; i < updatedDocs.scoreDocs.length; i++) {
+            ScoreDoc scoreDoc = updatedDocs.scoreDocs[i];
+            Document document = search.getDocument(scoreDoc.doc);
+            String syn = document.get(SynonymIndexSearcher.F_SYN);
+            assertEquals("the first synonym field should be the same as the word (after being analyzed)", toupdate, syn);
+            String[] values = document.getValues(SynonymIndexSearcher.F_SYN);
+            // expect to see "salut" and "synonym" and "toto"
+            assertEquals("there should 3 synonyms + the reference word", 4, values.length);
+            assertEquals(toupdate, values[0]);
+            assertEquals("a new list of 3 synonyms", values[1]);
+            assertEquals("test", values[2]);
+            assertEquals("ok", values[3]);
+        }
     }
 
     @Test
@@ -157,16 +225,19 @@ public class SynonymIndexBuilderTest {
         SynonymIndexSearcher searcher = getSearcher();
         assertEquals(0, searcher.searchDocumentBySynonym("another").totalHits);
 
-        int synonymCount = searcher.getSynonymCount("anpe");
+        int synonymCount = searcher.getSynonymCount("ANPE");
         builder.addSynonymToDocument("ANPE", "Another synonym of ANPE");
+        builder.commit();
         searcher = getSearcher();
         assertEquals(1, searcher.searchDocumentBySynonym("another").totalHits);
 
         builder.addSynonymToDocument("ANPE", "Anpe");
+        builder.commit();
         searcher = getSearcher();
-        assertEquals(synonymCount + 1, searcher.getSynonymCount("anpe"));
+        assertEquals(synonymCount + 1, searcher.getSynonymCount("ANPE"));
 
         builder.addSynonymToDocument("ANPEEEE", "A.N.P.E");
+        builder.commit();
         searcher = getSearcher();
         assertEquals(0, searcher.searchDocumentByWord("ANPEEEE").totalHits);
 
@@ -178,22 +249,33 @@ public class SynonymIndexBuilderTest {
 
         int synonymCount = getSearcher().getSynonymCount("ANPE");
         // the synonym to delete should be precise and case sensitive
-        builder.removeSynonymFromDocument("ANPE", "Agence Nationale Pour l'Emploi");
+        int removed = builder.removeSynonymFromDocument("ANPE", "Agence Nationale Pour l'Emploi");
+        assertEquals(1, removed);
+        builder.commit();
 
         assertEquals(--synonymCount, getSearcher().getSynonymCount("ANPE"));
 
-        builder.removeSynonymFromDocument("ANPE", "Anpe");
+        removed = builder.removeSynonymFromDocument("ANPE", "Anpe");
+        assertEquals(0, removed);
+        builder.commit();
         assertEquals(synonymCount, getSearcher().getSynonymCount("ANPE"));
 
-        builder.removeSynonymFromDocument("ANPE", "A.N.P.E.");
-        builder.removeSynonymFromDocument("ANPE", "A.N.P.E.");
+        removed = builder.removeSynonymFromDocument("ANPE", "A.N.P.E.");
+        assertEquals(1, removed);
+        removed = builder.removeSynonymFromDocument("ANPE", "A.N.P.E.");
+        assertEquals("We did not commit, so we still should find a synonym to delete here", 1, removed);
+        builder.commit();
+        removed = builder.removeSynonymFromDocument("ANPE", "A.N.P.E.");
+        assertEquals(0, removed);
         assertEquals(--synonymCount, getSearcher().getSynonymCount("ANPE"));
 
-        builder.removeSynonymFromDocument("ANPE", "Pôle Emploi");
+        removed = builder.removeSynonymFromDocument("ANPE", "Pôle Emploi");
+        assertEquals(1, removed);
+        builder.commit();
         assertEquals(--synonymCount, getSearcher().getSynonymCount("ANPE"));
 
-        builder.removeSynonymFromDocument("ANPEEEE", "A.N.P.E");
-
+        removed = builder.removeSynonymFromDocument("ANPEEEE", "A.N.P.E");
+        assertEquals(0, removed);
     }
 
     @Test
