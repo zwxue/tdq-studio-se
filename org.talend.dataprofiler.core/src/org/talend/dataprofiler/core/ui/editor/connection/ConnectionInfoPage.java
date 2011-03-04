@@ -312,6 +312,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         // }
 
         if (connectionItem != null) {
+            // MOD mzhao bug:19288
+            if (connectionItem.eIsProxy()) {
+                connectionItem = (ConnectionItem) EObjectHelper.resolveObject(connectionItem);
+            }
             RepositoryNode node = RepositoryNodeHelper.recursiveFind(connectionItem.getConnection());
 
             IWizard wizard = null;
