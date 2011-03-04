@@ -58,7 +58,9 @@ public class DQEditorLinkHelper implements ILinkHelper {
         RepositoryNode repNode = (RepositoryNode) aSelection.getFirstElement();
         OpenItemEditorAction openEditorAction = new OpenItemEditorAction(repNode.getObject());
         AbstractItemEditorInput absEditorInput = openEditorAction.computeEditorInput();
+		if (absEditorInput != null) {
         aPage.bringToTop(aPage.findEditor(absEditorInput));
+		}
     }
 
 }

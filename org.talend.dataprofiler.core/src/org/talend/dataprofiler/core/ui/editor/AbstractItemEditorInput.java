@@ -17,6 +17,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.talend.core.model.properties.Item;
+import org.talend.dq.helper.EObjectHelper;
 
 /**
  * 
@@ -81,6 +82,9 @@ public class AbstractItemEditorInput implements IEditorInput {
     }
 
     public Item getItem() {
+        if (item.eIsProxy()) {
+            item = (Item) EObjectHelper.resolveObject(item);
+        }
         return item;
     }
 }

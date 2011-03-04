@@ -113,7 +113,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         }
     }
 
-    private ConnectionItem connectionItem;
+    private Item connectionItem;
 
     private DBConnectionParameter tmpParam;
 
@@ -140,8 +140,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         IEditorInput editorInput = editor.getEditorInput();
         if (editorInput instanceof ConnectionItemEditorInput) {
             ConnectionItemEditorInput input = (ConnectionItemEditorInput) editorInput;
-            connectionItem = input.getConnectionItem();
-            connection = input.getConnectionItem().getConnection();
+            connectionItem = input.getItem();
+            connection = ((ConnectionItem) input.getItem()).getConnection();
         } else if (editorInput instanceof FileEditorInput) {
             Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
             // String fileLabel = proty.getLabel();
@@ -316,7 +316,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             if (connectionItem.eIsProxy()) {
                 connectionItem = (ConnectionItem) EObjectHelper.resolveObject(connectionItem);
             }
-            RepositoryNode node = RepositoryNodeHelper.recursiveFind(connectionItem.getConnection());
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(((ConnectionItem) connectionItem).getConnection());
 
             IWizard wizard = null;
             if (node != null) {

@@ -22,35 +22,20 @@ import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
  */
 public class ConnectionItemEditorInput extends AbstractItemEditorInput {
 
-    private ConnectionItem connectionItem = null;
 
     public ConnectionItemEditorInput(Item connItem) {
         super(connItem);
-        connectionItem = (ConnectionItem) connItem;
     }
 
     @Override
     public String getName() {
-        return getPath() + connectionItem.getConnection().getName();
+        return getPath() + ((ConnectionItem) item).getConnection().getName();
     }
 
     @Override
     public String getToolTipText() {
-        return getPath() + connectionItem.getConnection().getName();
+        return getPath() + ((ConnectionItem) item).getConnection().getName();
     }
 
-    /**
-     * 
-     * DOC mzhao Get connection item.
-     * 
-     * @return
-     */
-    public ConnectionItem getConnectionItem() {
-        return connectionItem;
-    }
-
-    public void setConnectionItem(ConnectionItem connectionItem) {
-        this.connectionItem = connectionItem;
-    }
 
 }
