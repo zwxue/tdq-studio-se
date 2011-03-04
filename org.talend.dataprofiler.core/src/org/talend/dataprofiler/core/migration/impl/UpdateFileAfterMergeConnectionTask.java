@@ -36,6 +36,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -43,7 +44,9 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.EObjectHelper;
@@ -224,11 +227,30 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         for (File propFile : fileList) {
             try {
                 handlePropertiesFile(propFile, folderMap, parentFolder);
+
             } catch (Exception e) {
                 log.warn(e, e);
             }
         }
+        if (isWorksapcePath()) {
+            collectConnectionID();
+        }
+    }
 
+    private void collectConnectionID() {
+        try {
+            RootContainer<String, IRepositoryViewObject> rc = ProxyRepositoryFactory.getInstance().getMetadataConnection();
+            for (IRepositoryViewObject repViewObj : rc.getMembers()) {
+                Connection conn = ((ConnectionItem) repViewObj.getProperty().getItem()).getConnection();
+                String uuid = ResourceHelper.getUUID(conn);
+                String connid = conn.getId();
+                if (connid != null && uuid != null) {
+                    getReplaceStringMap().put(connid, uuid);
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
     }
 
     private void handlePropertiesFile(File propFile, Map<File, File> folderMap, File parentFolder) throws PersistenceException,

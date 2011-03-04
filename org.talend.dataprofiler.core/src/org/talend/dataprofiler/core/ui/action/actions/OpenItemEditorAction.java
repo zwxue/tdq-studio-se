@@ -157,7 +157,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 RepositoryNode connectionRepositoryNode = null;
                 if (analysedElements.size() > 0) {
                     ModelElement modelElement = analysedElements.get(0);
-
+                    if (modelElement instanceof Connection) {
+                        connection = (Connection) modelElement;
+                    }
                     if (modelElement instanceof Catalog) {
                         Catalog catalog = SwitchHelpers.CATALOG_SWITCH.caseCatalog((Catalog) modelElement);
                         connection = ConnectionHelper.getConnection(catalog);
@@ -177,8 +179,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.caseTdColumn((TdColumn) modelElement);
                         connection = ConnectionHelper.getConnection(tdColumn);
                     }
-
                     connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+
+
                 }
                 // FIXME User UUID to find the right conn repository node.
                 // String label = conn.getLabel();

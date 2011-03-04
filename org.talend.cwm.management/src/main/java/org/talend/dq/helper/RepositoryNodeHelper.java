@@ -18,6 +18,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -513,12 +515,18 @@ public final class RepositoryNodeHelper {
                 }
             }
         } else if (modelElement instanceof Connection) {
+
             Connection connection = (Connection) modelElement;
             List<IRepositoryNode> connsNode = getConnectionRepositoryNodes(true);
             for (IRepositoryNode connNode : connsNode) {
                 Item itemTemp = ((IRepositoryViewObject) connNode.getObject()).getProperty().getItem();
                 if (itemTemp instanceof ConnectionItem) {
                     ConnectionItem item = (ConnectionItem) itemTemp;
+                    if (connection.eIsProxy()) {
+                        ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                                .getResourceManager().resourceSet;
+                        connection = (Connection) EcoreUtil.resolve(connection, resourceSet);
+                    }
                     if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(item.getConnection()))) {
                         return (RepositoryNode) connNode;
                     }
