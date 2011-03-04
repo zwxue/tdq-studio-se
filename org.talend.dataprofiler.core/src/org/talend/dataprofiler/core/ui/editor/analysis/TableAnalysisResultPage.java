@@ -99,11 +99,6 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
         this.masterPage = (TableMasterDetailsPage) analysisEditor.getMasterPage();
-
-        AbstractPagePart treeViewer = masterPage.getTreeViewer();
-        if (treeViewer != null && treeViewer instanceof AnalysisTableTreeViewer) {
-            tableTreeViewer = (AnalysisTableTreeViewer) treeViewer;
-        }
     }
 
     @Override
@@ -123,6 +118,14 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
     }
 
     protected void createResultSection(Composite parent) {
+
+        // ADD gdbu 2011-3-4 bug 19242
+        AbstractPagePart treeViewer = masterPage.getTreeViewer();
+        if (treeViewer != null && treeViewer instanceof AnalysisTableTreeViewer) {
+            tableTreeViewer = (AnalysisTableTreeViewer) treeViewer;
+        }
+        // ~
+
         resultSection = createSection(form, parent, DefaultMessagesImpl.getString("TableAnalysisResultPage.analysisResult"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout());
