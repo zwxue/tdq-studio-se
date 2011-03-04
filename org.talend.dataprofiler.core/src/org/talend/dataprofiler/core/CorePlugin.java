@@ -274,6 +274,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param file
      * @param editorId
      * @return
+     * @deprecated
      */
     public IEditorPart openEditor(IFile file, String editorId) {
         FileEditorInput input = new FileEditorInput(file);

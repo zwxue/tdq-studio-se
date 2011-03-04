@@ -94,11 +94,9 @@ import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
@@ -117,7 +115,6 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
-import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 
 /**
  * @author rli
@@ -181,7 +178,7 @@ public class DQRespositoryView extends CommonNavigator {
             initToolBar();
 
             initWorkspace();
-            
+
         } catch (Exception e) {
             log.error(e, e);
         }
@@ -337,17 +334,19 @@ public class DQRespositoryView extends CommonNavigator {
 
                     }
 
-                    if (obj instanceof Analysis) {
-                        Analysis analysis = (Analysis) obj;
-                        List<RenderedObject> tempList = new ArrayList<RenderedObject>();
-                        tempList.add(analysis);
-
-                        IFolder analysesFolder = ResourceManager.getAnalysisFolder();
-                        IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList, analysesFolder).get(0);
-
-                        CorePlugin.getDefault()
-                                .openEditor(file, "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"); //$NON-NLS-1$
-                    }
+                    // all object will be RepositoryNode, so these code is unused any more
+                    // if (obj instanceof Analysis) {
+                    //
+                    // Analysis analysis = (Analysis) obj;
+                    // List<RenderedObject> tempList = new ArrayList<RenderedObject>();
+                    // tempList.add(analysis);
+                    //
+                    // IFolder analysesFolder = ResourceManager.getAnalysisFolder();
+                    // IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList,
+                    // analysesFolder).get(0);
+                    //
+                    // CorePlugin.getDefault().openEditor(file, "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"); //$NON-NLS-1$
+                    // }
 
                     // ADD hcheng 07-28-2009,8243: open the indicator definition
                     // with a double-click.

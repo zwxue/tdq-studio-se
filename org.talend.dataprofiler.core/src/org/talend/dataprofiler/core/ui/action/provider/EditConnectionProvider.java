@@ -18,10 +18,14 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
-import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
+import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -75,7 +79,13 @@ public class EditConnectionProvider extends AbstractCommonActionProvider {
          * (non-Javadoc) Method declared on IAction.
          */
         public void run() {
-            CorePlugin.getDefault().openEditor(currentSelection, ConnectionEditor.class.getName());
+            // CorePlugin.getDefault().openEditor(currentSelection, ConnectionEditor.class.getName());
+            TypedReturnCode<Connection> findProvider = PrvResourceFileHelper.getInstance().findProvider(currentSelection);
+            Connection connection = findProvider.getObject();
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
+            if (recursiveFind != null) {
+                new ConnectionItemEditorInput(recursiveFind.getObject().getProperty().getItem());
+            }
         }
     }
 

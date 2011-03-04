@@ -74,11 +74,16 @@ public class AbstractItemEditorInput implements IEditorInput {
                         return true;
                     }
                 }
-            } else
+            } else {
                 return false;
+            }
         }
-
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     public Item getItem() {

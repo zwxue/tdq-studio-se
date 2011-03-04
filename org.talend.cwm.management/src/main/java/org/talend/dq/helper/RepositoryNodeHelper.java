@@ -759,7 +759,7 @@ public final class RepositoryNodeHelper {
         return node;
     }
 
-    public static IRepositoryNode getAnalysisFolderNode(EResourceConstant folderConstant) {
+    public static IRepositoryNode getDataProfilingFolderNode(EResourceConstant folderConstant) {
         String[] folderPathArray = folderConstant.getPath().split("/");
         if (folderPathArray.length <= 0) {
             return null;

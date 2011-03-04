@@ -47,7 +47,9 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -92,10 +94,18 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public void run() {
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
-        //MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
-		if (selectionFile != null)
-			editor = CorePlugin.getDefault().openEditor(selectionFile, AnalysisEditor.class.getName());
-		//~
+        // MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
+        if (selectionFile != null) {
+            // editor = CorePlugin.getDefault().openEditor(selectionFile, AnalysisEditor.class.getName());
+            analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+            if (recursiveFind != null) {
+                editor = CorePlugin.getDefault().openEditor(
+                        new AnalysisItemEditorInput(recursiveFind.getObject().getProperty().getItem()),
+                        AnalysisEditor.class.getName());
+            }
+        }
+        // ~
         if (editor == null) {
             analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
         } else {
@@ -120,13 +130,26 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         .getEditorReferences();
 
                 for (IEditorReference reference : editorReferences) {
-                    FileEditorInput finput;
+                    AnalysisItemEditorInput analysisItemEditorInput;
                     try {
                         // MOD qiongli bug 16505.
                         IEditorInput editorInput = reference.getEditorInput();
-                        if (editorInput instanceof FileEditorInput) {
-                            finput = (FileEditorInput) reference.getEditorInput();
-                            if (finput.getFile().equals(selectionFile)) {
+                        // if (editorInput instanceof FileEditorInput) {
+                        // finput = (FileEditorInput) reference.getEditorInput();
+                        // if (finput.getFile().equals(selectionFile)) {
+                        // IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true))
+                        // .getActivePageInstance();
+                        // // MOD qiongli bug 13880
+                        // // if (reference instanceof IRuningStatusListener) {
+                        // if (activePageInstance instanceof IRuningStatusListener) {
+                        // listener = (IRuningStatusListener) activePageInstance;
+                        // }
+                        // }
+                        // }
+                        if (editorInput instanceof AnalysisItemEditorInput) {
+                            analysisItemEditorInput = (AnalysisItemEditorInput) editorInput;
+                            Analysis ana = ((TDQAnalysisItem) analysisItemEditorInput.getItem()).getAnalysis();
+                            if (analysis.equals(ana)) {
                                 IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true))
                                         .getActivePageInstance();
                                 // MOD qiongli bug 13880
@@ -135,6 +158,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                     listener = (IRuningStatusListener) activePageInstance;
                                 }
                             }
+
                         }
                     } catch (PartInitException e) {
                         log.error(e, e);
@@ -270,10 +294,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             Display.getDefault().syncExec(new Runnable() {
 
                 public void run() {
-                    MessageDialogWithToggle
-                            .openError(
-                                    null,
-                                    DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialogWithToggle.openError(
+                            null,
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             });
         }

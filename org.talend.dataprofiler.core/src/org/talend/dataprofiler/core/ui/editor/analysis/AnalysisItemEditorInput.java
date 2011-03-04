@@ -18,7 +18,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
- * DOC klliu Analysis editor input
+ * DOC klliu Analysis editor input.
  */
 public class AnalysisItemEditorInput extends AbstractItemEditorInput {
 
