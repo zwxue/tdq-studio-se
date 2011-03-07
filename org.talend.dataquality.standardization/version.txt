@@ -1,3 +1,16 @@
+1.5.5 # scorreia
+- setMode marked as deprecated method (not useful)
+- avoid NPE when some synonyms are nulls
+- avoid to commit each time we delete a document
+- refactor OutputRecord in its own file + add accessors
+- search API throws exceptions that can be caught by the component
+
+1.5.4 # ytao
+- limit the number of returned results
+
+1.5.3 # scorreia
+- optimize synonym index builder and searcher
+
 1.5.2 # ytao modified
 - add support to create index path
 - add support to return error messages
@@ -8,5 +21,5 @@
  remove a clause and change to commit the document immediately
 - add java doc for closeIndex process
 
-# Talend firsName standardization library version
+# Talend standardization library version
 1.5.0

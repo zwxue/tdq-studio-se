@@ -51,7 +51,6 @@ public class SynonymIndexSearcher {
      */
     private int slop = 0;
 
-    
     /**
      * instantiate an index searcher. A call to the index initialization method such as {@link #openIndexInFS(String)}
      * is required before using any other method.
@@ -125,20 +124,12 @@ public class SynonymIndexSearcher {
      * 
      * @param synonym
      * @return
+     * @throws ParseException if the given synonym cannot be parsed as a lucene query.
      * @throws IOException
      */
-    public TopDocs searchDocumentBySynonym(String synonym) {
-        TopDocs docs = null;
-
-        try {
-            Query query = createQueryFor(synonym, F_SYN);
-            docs = this.searcher.search(query, topDocLimit);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return docs;
+    public TopDocs searchDocumentBySynonym(String synonym) throws ParseException, IOException {
+        Query query = createQueryFor(synonym, F_SYN);
+        return this.searcher.search(query, topDocLimit);
     }
 
     /**
@@ -241,7 +232,6 @@ public class SynonymIndexSearcher {
         return this.slop;
     }
 
-    
     /**
      * Sets the slop.
      * 
@@ -281,7 +271,6 @@ public class SynonymIndexSearcher {
         QueryParser parser = new QueryParser(Version.LUCENE_30, field, this.getAnalyzer());
         parser.setPhraseSlop(slop);
         return parser.parse(stringToSearch);
-
 
         // old code
         // return new TermQuery(new Term(field, stringToSearch.toLowerCase()));

@@ -12,10 +12,12 @@
 // ============================================================================
 package org.talend.dataquality.standardization.record;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.talend.dataquality.standardization.index.SynonymIndexSearcher;
@@ -44,7 +46,7 @@ public class SynonymRecordSearcher {
     /**
      * SynonymRecordSearcher represents a match in the index with its score and the input
      */
-    public static class WordResult {
+    private static class WordResult {
 
         /**
          * the input word searched in the index
@@ -75,80 +77,19 @@ public class SynonymRecordSearcher {
     } // EOC WordResult
 
     /**
-     * @author scorreia SynonymRecordSearcher: A record (= set of fields) that has been found after a search in several
-     * indexes.
+     * 
+     * @author scorreia
+     * 
+     * RecordResult: a class that transforms an input record into a list of output records.
+     * 
      */
-    public static class OutputRecord implements Comparable<OutputRecord> {
-
-        /**
-         * The output record (words that have matched).
-         */
-        public String[] record;
-
-        /**
-         * the score of the matched record.
-         */
-        public float score;
-        
-        /**
-         * the score details of each index, combine by "|"
-         */
-        public String scores;
-
-        /**
-         * OutputRecord constructor..
-         * 
-         * @param size the size of the record
-         */
-        public OutputRecord(int size) {
-            this.record = new String[size];
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Object#toString()
-         */
-        @Override
-        public String toString() {
-            StringBuffer buf = new StringBuffer();
-            for (int i = 0; i < record.length; i++) {
-                buf.append(record[i]).append(" ; ");
-            }
-            buf.append(" -> " + score);
-            buf.append("; ->" + scores);
-            return buf.toString();
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * Sorts in descending order.
-         * 
-         * @see java.lang.Comparable#compareTo(java.lang.Object)
-         */
-        public int compareTo(OutputRecord o) {
-            return -(int) (100 * (this.score - o.score));
-        }
-
-    }
-	/**
-	 * 
-	 * @author 
-	 *
-	 */
-    public static class RecordResult {
+    private static class RecordResult {
 
         /**
          * The input record.
          */
         String[] record;
         
-        /**
-         * The doc returns limit
-         */
-        int[] limits;
-
         /**
          * The results of a search.
          */
@@ -167,7 +108,7 @@ public class SynonymRecordSearcher {
             }
 
             // build each row
-            List<OutputRecord> outputRecords = new ArrayList<SynonymRecordSearcher.OutputRecord>();
+            List<OutputRecord> outputRecords = new ArrayList<OutputRecord>();
             int recordLength = record.length;
 
             for (int i = 0; i < nb; i++) { // row
@@ -197,10 +138,18 @@ public class SynonymRecordSearcher {
     /**
      * method "search".
      * 
-     * @param limit the number of results to return
+     * @param maxNbOutputResults the number of results to return
      * @param record a list of fields that will be search in the indexes (all fields of the record will be searched)
+     * @param limits the max number of results returned by each search. This argument must be of the same size as the
+     * number of records
+     * @throws IOException
+     * @throws ParseException if the searched field cannot be parsed as a query
      */
-    public List<OutputRecord> search(int limit, String[] record, int[] limits) {
+    public List<OutputRecord> search(int maxNbOutputResults, String[] record, int[] limits) throws ParseException, IOException {
+        assert record != null;
+        assert limits != null;
+        assert record.length == limits.length;
+
         // List<RecordResult> recResults = new ArrayList<SynonymRecordSearcher.RecordResult>();
         RecordResult recRes = new RecordResult();
 
@@ -233,8 +182,8 @@ public class SynonymRecordSearcher {
         }
         List<OutputRecord> outputRecords = recRes.computeOutputRows();
         Collections.sort(outputRecords);
-        limit = Math.min(outputRecords.isEmpty() ? 0 : outputRecords.size(), limit);
-        return outputRecords.subList(0, limit);
+        maxNbOutputResults = Math.min(outputRecords.isEmpty() ? 0 : outputRecords.size(), maxNbOutputResults);
+        return outputRecords.subList(0, maxNbOutputResults);
     }
 
     /**

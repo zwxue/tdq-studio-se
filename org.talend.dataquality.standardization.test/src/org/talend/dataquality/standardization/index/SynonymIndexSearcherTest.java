@@ -24,13 +24,14 @@ import junit.framework.Assert;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.dataquality.standardization.record.OutputRecord;
 import org.talend.dataquality.standardization.record.SynonymRecordSearcher;
-import org.talend.dataquality.standardization.record.SynonymRecordSearcher.OutputRecord;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -109,7 +110,7 @@ public class SynonymIndexSearcherTest {
     }
 
     @Test
-    public void testSearchDocumentBySynonym() throws IOException {
+    public void testSearchDocumentBySynonym() throws IOException, ParseException {
         System.out.println("\n-----------Test searchDocumentBySynonym----------");
         SynonymIndexSearcher searcher = getSearcher();
         searcher.setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
@@ -149,7 +150,7 @@ public class SynonymIndexSearcherTest {
     }
 
     @Test
-    public void testSearchInSeveralIndexes() throws IOException {
+    public void testSearchInSeveralIndexes() throws IOException, ParseException {
         System.out.println("\n-----------Test SearchInSeveralIndexes----------");
 
         // assume we have two fields to search
@@ -237,9 +238,9 @@ public class SynonymIndexSearcherTest {
         TopDocs docs = search.searchDocumentByWord("IAIDQ");
         assertEquals(false, docs.totalHits == 0);
         Document document = search.getDocument(docs.scoreDocs[0].doc);
-        assertEquals(false, document == null);
+        Assert.assertNotNull(document);
         String[] values = document.getValues(SynonymIndexSearcher.F_WORD);
-        assertEquals(false, values == null);
+        Assert.assertNotNull(values);
         assertEquals(1, values.length);
     }
 

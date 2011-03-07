@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.junit.After;
@@ -117,7 +118,7 @@ public class SynonymIndexBuilderTest {
     }
 
     @Test
-    public void testUpdateSynonymDocument() throws IOException {
+    public void testUpdateSynonymDocument() throws IOException, ParseException {
         System.out.println("\n---------------Test updateDocument---------------");
         int updateCount = 0;
         SynonymIndexSearcher searcher = getSearcher();
@@ -205,21 +206,27 @@ public class SynonymIndexBuilderTest {
 
         // the word to delete should be precise and case sensitive.
         builder.deleteDocumentByWord("iaidq");
+        builder.commit();
         searcher = getSearcher();
         assertEquals(docCount, searcher.getNumDocs());
 
         builder.deleteDocumentByWord("IAIDQ");
         searcher = getSearcher();
+        assertEquals(docCount, searcher.getNumDocs());
+
+        builder.commit();
+        searcher = getSearcher();
         assertEquals(docCount - 1, searcher.getNumDocs());
 
         builder.deleteDocumentByWord("random");
+        builder.commit();
         searcher = getSearcher();
         assertEquals(docCount - 1, searcher.getNumDocs());
 
     }
 
     @Test
-    public void testAddSynonymToWord() throws IOException {
+    public void testAddSynonymToWord() throws IOException, ParseException {
 
         System.out.println("\n---------------Test addSynonymToWord-------------");
         SynonymIndexSearcher searcher = getSearcher();

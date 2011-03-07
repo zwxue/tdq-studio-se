@@ -43,8 +43,9 @@ public class SynonymIndexBuilder {
     public static final String F_SYN = "syn";
 
     private Directory indexDir;
-    
-    private boolean bUseCreateMode = false;
+
+    // FIXME why is this useful? We should not force the creation.
+    // private boolean bUseCreateMode = false;
 
     /**
      * Default synonym separator is '|'.
@@ -57,21 +58,19 @@ public class SynonymIndexBuilder {
 
     private Error error = new Error();
 
-
     /**
      * instantiate an index builder.
      */
     public SynonymIndexBuilder() {
     }
 
-
     /**
      * Method "getError".
      * 
      * @return the last error
      */
-    public Error getError(){
-    	return this.error;
+    public Error getError() {
+        return this.error;
     }
 
     /**
@@ -82,9 +81,15 @@ public class SynonymIndexBuilder {
     public void setSynonymSeparator(char synonymSeparator) {
         this.separator = synonymSeparator;
     }
-    
-    public void setMode(boolean useCreateMode){
-    	bUseCreateMode = useCreateMode;
+
+    /**
+     * Method "setMode".
+     * 
+     * @deprecated this method is not useful and will be removed in a future release.
+     * @param useCreateMode
+     */
+    public void setMode(boolean useCreateMode) {
+        // bUseCreateMode = useCreateMode;
     }
 
     // FIXME not used yet. Need to be implemented
@@ -98,7 +103,7 @@ public class SynonymIndexBuilder {
      * @param path the path of the index (will be created if it does not exist)
      */
     public void initIndexInFS(String path) {
-    	
+
         try {
             File file = new File(path);
 
@@ -112,7 +117,6 @@ public class SynonymIndexBuilder {
         }
     }
 
-
     /**
      * insert an entire document into index.
      * 
@@ -122,8 +126,8 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     public void insertDocument(String word, String synonyms) throws IOException {
-            // insert document without duplication verification
-            getWriter().addDocument(generateDocument(word, synonyms));
+        // insert document without duplication verification
+        getWriter().addDocument(generateDocument(word, synonyms));
     }
 
     /**
@@ -162,7 +166,7 @@ public class SynonymIndexBuilder {
         switch (docs.totalHits) {
         case 0:
             // FIXME should be create an insertOrUpdate method?
-        	error.set(false, "<" + word + "> doesn't exist.");
+            error.set(false, "<" + word + "> doesn't exist.");
             break;
         case 1:
             getWriter().updateDocument(new Term(F_WORD, word), generateDocument(word, synonyms));
@@ -192,9 +196,7 @@ public class SynonymIndexBuilder {
             return 0;
         case 1:
             getWriter().deleteDocuments(new Term(F_WORD, word));
-            // TODO do we really need to commit here?
-            getWriter().commit();
-            //System.out.println("The document named <" + word + "> has been deleted.");
+            // System.out.println("The document named <" + word + "> has been deleted.");
             return 1;
         default:
             break;
@@ -242,7 +244,7 @@ public class SynonymIndexBuilder {
             // create a new document and replace the original one
             doc.add(createSynField(newSynonym));
             getWriter().updateDocument(new Term(F_WORD, word), doc);
-            //System.out.println("The synonym <" + newSynonym + "> is added to word.");
+            // System.out.println("The synonym <" + newSynonym + "> is added to word.");
             return 1;
         } else {
             if (docs.totalHits == 0) {
@@ -290,14 +292,14 @@ public class SynonymIndexBuilder {
 
             // if the value of deleted is 0, we can know that the synonymToDelete doesn't exist
             if (deleted == 0) {
-            	error.set(false, "The synonym <" + synonymToDelete + "> doesn't exist in the document. Ignored.");
+                error.set(false, "The synonym <" + synonymToDelete + "> doesn't exist in the document. Ignored.");
             } else {
                 Document newDoc = generateDocument(word, synonymList);
                 getWriter().updateDocument(new Term(F_WORD, word), newDoc);
             }
 
         } else {
-        	error.set(false, "The word <" + word + "> doesn't exist. Cannot remove.");
+            error.set(false, "The word <" + word + "> doesn't exist. Cannot remove.");
             return 0;
         }
         return deleted;
@@ -362,11 +364,11 @@ public class SynonymIndexBuilder {
         try {
             this.getWriter().commit();
         } catch (CorruptIndexException e) {
-        	error.set(false, e.getMessage());
+            error.set(false, e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-        	error.set(false, e.getMessage());
-        	e.printStackTrace();
+            error.set(false, e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -397,13 +399,14 @@ public class SynonymIndexBuilder {
      * @throws
      */
     IndexWriter getWriter() throws IOException {
-    	if (writer == null) {
-	        if (bUseCreateMode) {
-	            writer = new IndexWriter(indexDir, this.getAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
-	        } else {
-	        	writer = new IndexWriter(indexDir, this.getAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-	        }
-    	}
+        if (writer == null) {
+            // FIXME remove this commented code
+            // if (bUseCreateMode) {
+            // writer = new IndexWriter(indexDir, this.getAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+            // } else {
+            writer = new IndexWriter(indexDir, this.getAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+            // }
+        }
         return this.writer;
     }
 
@@ -438,7 +441,8 @@ public class SynonymIndexBuilder {
     }
 
     private Document generateDocument(String word, String synonyms) {
-        String[] split = StringUtils.split(synonyms, separator);
+        // System.out.println("\t Generating doc for " + word + " and " + synonyms);
+        String[] split = synonyms == null ? new String[0] : StringUtils.split(synonyms, separator);
         return generateDocument(word, Arrays.asList(split));
     }
 
@@ -454,17 +458,19 @@ public class SynonymIndexBuilder {
         Field field = new Field(F_WORD, word, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
         field.setBoost(1.5F); // increase the importance of the reference word
         doc.add(field);
+        // --- store entry also in synonym list so that we can search for it too
+        // without the need to search in the word field (will be tokenized given the analyzer)
+        doc.add(createSynField(word));
         if (synonyms != null) {
-            // --- store entry also in synonym list so that we can search for it too
-            // without the need to search in the word field (will be tokenized given the analyzer)
-            doc.add(createSynField(word));
             for (String syn : synonyms) {
-                doc.add(createSynField(syn));
+                if (syn != null && syn.length() > 0) {
+                    // add only non empty synonyms
+                    doc.add(createSynField(syn));
+                }
             }
         }
         return doc;
     }
-
 
     private Field createSynField(String synonym) {
         return new Field(F_SYN, synonym, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);
