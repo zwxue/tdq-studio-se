@@ -43,6 +43,8 @@ public class SynonymIndexBuilder {
     public static final String F_SYN = "syn";
 
     private Directory indexDir;
+    
+    private boolean bUseCreateMode = false;
 
     /**
      * Default synonym separator is '|'.
@@ -80,6 +82,10 @@ public class SynonymIndexBuilder {
     public void setSynonymSeparator(char synonymSeparator) {
         this.separator = synonymSeparator;
     }
+    
+    public void setMode(boolean useCreateMode){
+    	bUseCreateMode = useCreateMode;
+    }
 
     // FIXME not used yet. Need to be implemented
     // public void initIndexInRAM() {
@@ -92,7 +98,7 @@ public class SynonymIndexBuilder {
      * @param path the path of the index (will be created if it does not exist)
      */
     public void initIndexInFS(String path) {
-
+    	
         try {
             File file = new File(path);
 
@@ -133,6 +139,7 @@ public class SynonymIndexBuilder {
             getWriter().addDocument(generateDocument(word, synonyms));
             return true;
         } // else
+        error.set(false, "The document is existing, is ingored");
         return false;
     }
 
@@ -142,7 +149,7 @@ public class SynonymIndexBuilder {
      * WARNING If some changes in the index are not committed, this may cause trouble to find the document to update.
      * Make sure that a commit has been done before calling this method except if you know exactly what you are doing.
      * 
-     * WARNING Beware that if several documents match the word, nothing will be done.
+     * WARNING聽Beware that if several documents match the word, nothing will be done.
      * 
      * @param word
      * @param synonyms
@@ -390,9 +397,13 @@ public class SynonymIndexBuilder {
      * @throws
      */
     IndexWriter getWriter() throws IOException {
-        if (writer == null) {
-            writer = new IndexWriter(indexDir, this.getAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-        }
+    	if (writer == null) {
+	        if (bUseCreateMode) {
+	            writer = new IndexWriter(indexDir, this.getAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
+	        } else {
+	        	writer = new IndexWriter(indexDir, this.getAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+	        }
+    	}
         return this.writer;
     }
 

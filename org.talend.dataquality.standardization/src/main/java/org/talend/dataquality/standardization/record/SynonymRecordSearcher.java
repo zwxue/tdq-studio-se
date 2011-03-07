@@ -143,6 +143,11 @@ public class SynonymRecordSearcher {
          * The input record.
          */
         String[] record;
+        
+        /**
+         * The doc returns limit
+         */
+        int[] limits;
 
         /**
          * The results of a search.
@@ -195,7 +200,7 @@ public class SynonymRecordSearcher {
      * @param limit the number of results to return
      * @param record a list of fields that will be search in the indexes (all fields of the record will be searched)
      */
-    public List<OutputRecord> search(int limit, String[] record) {
+    public List<OutputRecord> search(int limit, String[] record, int[] limits) {
         // List<RecordResult> recResults = new ArrayList<SynonymRecordSearcher.RecordResult>();
         RecordResult recRes = new RecordResult();
 
@@ -206,8 +211,10 @@ public class SynonymRecordSearcher {
 
             // search this field in one index
             SynonymIndexSearcher searcher = searchers[i];
+            searcher.setTopDocLimit(limits[i]);
             TopDocs docs = searcher.searchDocumentBySynonym(field);
-            int nbDocs = Math.min(limit, docs.totalHits);
+            int nbDocs = Math.min(limits[i], docs.totalHits);
+            
             // store all found words in a list of results for this field
             for (int j = 0; j < nbDocs; j++) {
                 ScoreDoc scoreDoc = docs.scoreDocs[j];
