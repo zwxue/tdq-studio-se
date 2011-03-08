@@ -622,8 +622,8 @@ public class ColumnViewerDND {
                 super.dragEnter(event);
                 IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
                 Object object = selection.getFirstElement();
-
-                if (object instanceof TdColumn) {
+                // MOD klliu 2011-03-08 bug 19286
+                if (object instanceof DBColumnRepNode) {
                     receiver = new ColumnReceiverTable();
                 }
 
@@ -688,7 +688,8 @@ public class ColumnViewerDND {
                     .getSelection()).getFirstElement();
             IRepositoryViewObject repViewObj = firstElement.getObject();
             if (repViewObj instanceof MetadataColumnRepositoryObject) {
-                TdColumn column = (TdColumn) firstElement;
+                // MOD klliu 2011-03-08 bug 19286
+                DBColumnRepNode column = (DBColumnRepNode) firstElement;
                 Table table = (Table) ((DropTarget) event.widget).getControl();
                 AbstractColumnDropTree viewer = (AbstractColumnDropTree) table.getData();
                 if (viewer != null && viewer.canDrop(firstElement)) {
