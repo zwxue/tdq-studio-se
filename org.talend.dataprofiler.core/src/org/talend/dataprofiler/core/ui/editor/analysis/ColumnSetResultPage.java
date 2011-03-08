@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -61,6 +62,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
+import org.talend.dataprofiler.core.ui.wizard.patterns.DataFilterType;
 import org.talend.dataprofiler.core.ui.wizard.patterns.SelectPatternsWizard;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
@@ -96,6 +98,8 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     private TableViewer columnsElementViewer;
 
     private List<Map<Integer, RegexpMatchingIndicator>> tableFilterResult;
+
+    private DataFilterType filterType = DataFilterType.ALL_DATA;
 
     /**
      * @param editor
@@ -282,6 +286,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                 public void mouseDown(MouseEvent e) {
                     List<Indicator> indicatorsList = masterPage.analysis.getResults().getIndicators();
                     SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
+                    wizard.setFilterType(filterType);
                     wizard.setOldTableInputList(ColumnSetResultPage.this.tableFilterResult);
                     WizardDialog dialog = new WizardDialog(null, wizard);
                     dialog.setPageSize(300, 400);
@@ -290,7 +295,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                     if (WizardDialog.OK == dialog.open()) {
                         ColumnSetResultPage.this.tableFilterResult = ((SelectPatternsWizard) wizard).getPatternSelectPage()
                                 .getTableInputList();
-
+                        filterType = ((SelectPatternsWizard) wizard).getPatternSelectPage().getFilterType();
                         columnsElementViewer.refresh();
                     }
                 }
@@ -318,6 +323,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             columnsElementViewer.setContentProvider(provider);
             columnsElementViewer.setLabelProvider(provider);
             columnsElementViewer.setInput(tableRows);
+            columnsElementViewer.addFilter(new PatternDataFilter());
             for (int i = 0; i < tableColumnNames.size(); i++) {
                 table.getColumn(i).pack();
             }
@@ -351,7 +357,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     private Color bg = new Color(null, 249, 139, 121);
 
     /**
-     * DOC Administrator ColumnSetResultPage class global comment. Detailled comment
+     * DOC zshen ColumnSetResultPage class global comment. Detailled comment
      */
     class TableSectionViewerProvider implements IStructuredContentProvider, ITableLabelProvider, ITableColorProvider {
 
@@ -421,6 +427,50 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             return getMatchColor(element, columnIndex);
             // ~14000
         }
+    }
+
+    /**
+     * 
+     * zshen ColumnSetResultPage class global comment. Detailled comment
+     */
+    private class PatternDataFilter extends ViewerFilter {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+         * java.lang.Object)
+         */
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            if (DataFilterType.ALL_DATA.equals(filterType)) {
+                return true;
+            }
+                if (tableFilterResult != null) {
+                for (Map<Integer, RegexpMatchingIndicator> tableItem : ColumnSetResultPage.this.tableFilterResult) {
+                    if (element instanceof Object[]) {
+                        for (int index = 0; index < ((Object[]) element).length; index++) {
+                            RegexpMatchingIndicator regMatIndicator = tableItem.get(index);
+                        if (regMatIndicator == null)
+                            continue;
+                        String regex = regMatIndicator.getRegex();
+                        Pattern p = java.util.regex.Pattern.compile(regex);
+
+                            Object theElement = ((Object[]) element)[index];
+                            if (theElement == null) {
+                                theElement = "null";
+                            }
+                            Matcher m = p.matcher(String.valueOf(theElement));
+                            if (m.find() ^ DataFilterType.MATCHES.equals(filterType)) {
+                                return false;
+                            }
+                        }
+                    }
+                    }
+                }
+            return true;
+        }
+
     }
 
     /*
@@ -496,6 +546,14 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         return result;
     }
 
+    /**
+     * 
+     * zshen Comment method "getMatchColor".
+     * 
+     * @param element
+     * @param columnIndex
+     * @return get the color of the element.
+     */
     private Color getMatchColor(Object element, int columnIndex) {
         if (tableFilterResult != null) {
             for (Map<Integer, RegexpMatchingIndicator> tableItem : this.tableFilterResult) {
@@ -519,6 +577,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         }
         return new Color(null, 0, 0, 0);
     }
+
 
     public List<Map<Integer, RegexpMatchingIndicator>> getTableFilterResult() {
         return tableFilterResult;

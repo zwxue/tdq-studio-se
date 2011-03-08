@@ -27,8 +27,16 @@ import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Widget;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -47,6 +55,8 @@ public class PatternsSelectPage extends WizardPage {
     private SelectPatternsWizard selectPatternsWizard;
 
     private Grid table;
+
+    private DataFilterType filterType = null;
 
     private List<Map<Integer, RegexpMatchingIndicator>> tableInputList;
 
@@ -71,11 +81,21 @@ public class PatternsSelectPage extends WizardPage {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
+        GridLayout parentGridLayout = new GridLayout();
+        GridData data = new GridData();
+        data.horizontalAlignment = GridData.FILL;
+        data.verticalAlignment = GridData.FILL;
+        data.grabExcessHorizontalSpace = true;
+        data.grabExcessVerticalSpace = true;
+
+        parent.setLayout(parentGridLayout);
 
         List<MetadataColumn> analysisColumns = this.selectPatternsWizard.getSsIndicator().getAnalyzedColumns();
+        // add tableView
         GridTableViewer tableView = new GridTableViewer(parent, SWT.NONE);
-        this.table = tableView.getGrid();
 
+        this.table = tableView.getGrid();
+        this.table.setLayoutData(data);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
@@ -101,13 +121,51 @@ public class PatternsSelectPage extends WizardPage {
         for (GridColumn tableCum : table.getColumns()) {
             tableCum.pack();
         }
+        // add data filter section.
+        initDataFilterSection(parent);
 
         inItitemCheck();
+
 
         this.setControl(parent);
         this.setPageComplete(true);
     }
 
+    private void initDataFilterSection(Composite parent) {
+        
+        GridData data = new GridData();
+        data.horizontalAlignment = GridData.FILL;
+        data.grabExcessHorizontalSpace = true;
+        
+        FillLayout dataFilterSectionGridLayout = new FillLayout();
+
+        Composite dataFilterSection = new Composite(parent, SWT.NONE);
+        dataFilterSection.setLayoutData(data);
+        dataFilterSection.setLayout(dataFilterSectionGridLayout);
+
+        DataFilterListener dataFilterListener = new DataFilterListener();
+        Label displayLabel = new Label(dataFilterSection, SWT.CENTER | SWT.VERTICAL);
+        displayLabel.setText(DefaultMessagesImpl.getString("PatternsSelectPage.display"));//$NON-NLS-1$
+        Button dataRadio = null;
+        for (DataFilterType newfilterType : DataFilterType.values()) {
+            dataRadio = new Button(dataFilterSection, SWT.RADIO);
+            dataRadio.setText(newfilterType.getTextName());
+            dataRadio.addSelectionListener(dataFilterListener);
+            // set previous selection
+            if (filterType != null && newfilterType.equals(filterType)) {
+                dataRadio.setSelection(true);
+                // default selection
+            } else if (filterType == null && newfilterType.equals(DataFilterType.ALL_DATA.getTextName())) {
+                dataRadio.setSelection(true);
+            }
+
+        }
+    }
+
+    /**
+     * 
+     * zshen Comment method "inItitemCheck". initialization the table to decide which pattern has been selected.
+     */
     private void inItitemCheck() {
         int index = 0;
         for (GridItem theItem : this.table.getItems()) {
@@ -312,4 +370,51 @@ public class PatternsSelectPage extends WizardPage {
         this.oldTableInputList = oldTableInputList;
     }
 
+
+
+    public DataFilterType getFilterType() {
+        return filterType;
+    }
+
+    public void setFilterType(DataFilterType filterType) {
+        this.filterType = filterType;
+    }
+
+    /**
+     * 
+     * zshen PatternsSelectPage class global comment. Detailled comment
+     */
+    private class DataFilterListener implements SelectionListener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        public void widgetSelected(SelectionEvent e) {
+            Widget selectItem = e.widget;
+            if(selectItem instanceof Button && (selectItem.getStyle()|SWT.RADIO)!=0){
+                for(DataFilterType type:DataFilterType.values()){
+                    if (type.getTextName().equals(((Button) selectItem).getText())) {
+                        filterType = type;
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+         */
+        public void widgetDefaultSelected(SelectionEvent e) {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
 }
+
+

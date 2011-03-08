@@ -38,6 +38,8 @@ public class SelectPatternsWizard extends Wizard {
 
     private List<Map<Integer, RegexpMatchingIndicator>> oldTableInputList;
 
+    private DataFilterType filterType = null;
+
     public SelectPatternsWizard(List<Indicator> indicatorsList) {
         for (Indicator theIndicator : indicatorsList) {
             if (theIndicator instanceof AllMatchIndicatorImpl) {
@@ -49,12 +51,12 @@ public class SelectPatternsWizard extends Wizard {
                 continue;
             }
         }
-
     }
 
     @Override
     public void addPages() {
         patternSelectPage = new PatternsSelectPage(this);
+        patternSelectPage.setFilterType(filterType);
         patternSelectPage.setOldTableInputList(oldTableInputList);
         this.addPage(patternSelectPage);
 
@@ -118,6 +120,10 @@ public class SelectPatternsWizard extends Wizard {
 
     public SimpleStatIndicator getSsIndicator() {
         return ssIndicator;
+    }
+
+    public void setFilterType(DataFilterType filterType) {
+        this.filterType = filterType;
     }
 
 }
