@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.DQCheckedTreeViewer;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -55,6 +57,8 @@ public class ExportPatternsWizardPage extends WizardPage {
 
     private boolean isForExchange;
 
+    private RepositoryNode node;
+
     /**
      * DOC zqin ExportPatternsWizardPage constructor comment.
      */
@@ -71,6 +75,27 @@ public class ExportPatternsWizardPage extends WizardPage {
 
         this.isForExchange = isForExchange;
         this.folder = folder;
+    }
+
+    /**
+     * DOC klliu ExportPatternsWizardPage constructor comment.
+     * 
+     * @param node
+     * @param isForExchange
+     */
+    public ExportPatternsWizardPage(RepositoryNode node, boolean isForExchange) {
+        super(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternWizardPage")); //$NON-NLS-1$
+
+        if (isForExchange) {
+            setTitle(DefaultMessagesImpl.getString("ExportPatternsWizardPage.ExportPatternForExchange")); //$NON-NLS-1$
+            setDescription(DefaultMessagesImpl.getString("ExportPatternsWizardPage.ChooseFolder")); //$NON-NLS-1$
+        } else {
+            setTitle(DefaultMessagesImpl.getString("ExportPatternsWizardPage.exportPatternToFile")); //$NON-NLS-1$
+            setDescription(DefaultMessagesImpl.getString("ExportPatternsWizardPage.chooseFileToExportPattern")); //$NON-NLS-1$
+        }
+        this.node = node;
+        this.isForExchange = isForExchange;
+        this.folder = WorkbenchUtils.getFolder(node);
     }
 
     /*
@@ -146,7 +171,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
         selectedPatternsTree = new DQCheckedTreeViewer(group);
         selectedPatternsTree.addFilter(new DQFolderFliter(true));
-        selectedPatternsTree.setInput(this.folder);
+        selectedPatternsTree.setInput(this.node);
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedPatternsTree.getTree());
 

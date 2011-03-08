@@ -18,16 +18,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.wizard.Wizard;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.nodes.PatternRepNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.io.FilesUtils;
 
 /**
@@ -43,9 +43,23 @@ public class ExportPatternsWizard extends Wizard {
 
     private boolean isForExchange;
 
+    private RepositoryNode node;
+
     public ExportPatternsWizard(IFolder folder, boolean isForExchange) {
         this.folder = folder;
         this.isForExchange = isForExchange;
+    }
+
+    /**
+     * DOC klliu ExportPatternsWizard constructor comment.
+     * 
+     * @param node
+     * @param isForExchange
+     */
+    public ExportPatternsWizard(RepositoryNode node, boolean isForExchange) {
+        this.node = node;
+        this.isForExchange = isForExchange;
+        this.folder = WorkbenchUtils.getFolder(node);
     }
 
     /*
@@ -61,11 +75,11 @@ public class ExportPatternsWizard extends Wizard {
 
         List<Pattern> seletedPatterns = new ArrayList<Pattern>();
         for (Object element : elements) {
-            if (element instanceof IFile) {
-                IFile file = (IFile) element;
-                if (FactoriesUtil.PATTERN.equalsIgnoreCase(file.getFileExtension())) {
-                    seletedPatterns.add(PatternResourceFileHelper.getInstance().findPattern(file));
-                }
+            // MOD klliu 2011-03-08 bug 18657
+            if (element instanceof PatternRepNode) {
+                PatternRepNode patternNode = (PatternRepNode) element;
+                Pattern pattern = patternNode.getPattern();
+                seletedPatterns.add(pattern);
             }
         }
 
@@ -99,8 +113,8 @@ public class ExportPatternsWizard extends Wizard {
 
                 boolean isContinue = true;
                 if (resource.exists()) {
-                    isContinue = MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl
-                            .getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
+                    isContinue = MessageDialogWithToggle.openConfirm(null,
+                            DefaultMessagesImpl.getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("ExportPatternsWizard.fileAlreadyExist")); //$NON-NLS-1$
                 }
 
@@ -119,7 +133,7 @@ public class ExportPatternsWizard extends Wizard {
 
     @Override
     public void addPages() {
-        page = new ExportPatternsWizardPage(folder, isForExchange);
+        page = new ExportPatternsWizardPage(node, isForExchange);
         addPage(page);
     }
 
