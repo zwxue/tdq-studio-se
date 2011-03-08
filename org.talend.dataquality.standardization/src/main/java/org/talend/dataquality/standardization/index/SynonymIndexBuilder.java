@@ -56,7 +56,7 @@ public class SynonymIndexBuilder {
 
     private IndexWriter writer;
 
-    private Error error = new Error();
+    private final Error error = new Error();
 
     /**
      * instantiate an index builder.
@@ -231,29 +231,37 @@ public class SynonymIndexBuilder {
         SynonymIndexSearcher idxSearcher = getNewSynIdxSearcher();
         TopDocs docs = idxSearcher.searchDocumentByWord(word);
 
+        int nbDocs = 0;
         if (docs.totalHits == 1) { // don't do anything if several documents match
             Document doc = idxSearcher.getDocument(docs.scoreDocs[0].doc);
 
+            // search if synonym exists
+            boolean synExists = false;
             String[] synonyms = doc.getValues(F_SYN);
             for (String str : synonyms) {
                 if (str.toLowerCase().equals(newSynonym.toLowerCase())) {
                     error.set(false, "The synonym <" + newSynonym + "> is similar to <" + str + ">. Ignored.");
-                    return 0;
+                    synExists = true;
+                    break;
                 }
             }
-            // create a new document and replace the original one
-            doc.add(createSynField(newSynonym));
-            getWriter().updateDocument(new Term(F_WORD, word), doc);
-            // System.out.println("The synonym <" + newSynonym + "> is added to word.");
-            return 1;
+            // create a new document and replace the original one if synonym does not already exists
+            if (!synExists) {
+                doc.add(createSynField(newSynonym));
+                getWriter().updateDocument(new Term(F_WORD, word), doc);
+                // System.out.println("The synonym <" + newSynonym + "> is added to word.");
+                nbDocs = 1;
+            }
         } else {
             if (docs.totalHits == 0) {
                 error.set(false, "The word <" + word + "> doesn't exist. Cannot add.");
             } else {
                 error.set(false, "Several documents have been found given the word <" + word + ">. Cannot add.");
             }
-            return 0;
         }
+        // FIXME avoid use of idxSearcher?
+        idxSearcher.close();
+        return nbDocs;
     }
 
     /**
@@ -300,24 +308,40 @@ public class SynonymIndexBuilder {
 
         } else {
             error.set(false, "The word <" + word + "> doesn't exist. Cannot remove.");
-            return 0;
+            deleted = 0;
         }
+        newSynIdxSearcher.close();
         return deleted;
     }
 
+    /**
+     * Method "deleteIndexFromFS".
+     * 
+     * @param path the path of the index
+     * @return true if the path is deleted (and if the path did not exist)
+     */
     public boolean deleteIndexFromFS(String path) {
         File folder = new File(path);
         if (!folder.exists()) {
-            System.err.println("file not found");
-            return false;
+            // System.err.println("file not found");
+            return true;
         }
+        boolean allDeleted = true;
         if (folder.isDirectory()) {
             File[] filelist = folder.listFiles();
             for (File f : filelist) {
-                deleteIndexFromFS(f.getAbsolutePath());
+                if (!deleteIndexFromFS(f.getAbsolutePath()) && allDeleted) {
+                    error.set(false, "Could not delete all files: " + f.getAbsolutePath());
+                    allDeleted = false;
+                }
+
             }
         } // else folder is a file
-        return folder.delete();
+        allDeleted = folder.delete();
+        if (!allDeleted) {
+            error.set(false, "Could not delete all files: " + folder.getAbsolutePath());
+        }
+        return allDeleted;
     }
 
     // FIXME remove this method?
@@ -486,8 +510,10 @@ public class SynonymIndexBuilder {
     private TopDocs searchDocumentByWord(String word) {
         TopDocs docs = null;
         try {
+            // FIXME can we avoid the creation of a new searcher (use IndexReader.reopen?)
             SynonymIndexSearcher newSynIdxSearcher = getNewSynIdxSearcher();
             docs = newSynIdxSearcher.searchDocumentByWord(word);
+            newSynIdxSearcher.close();
         } catch (IOException e) {
             error.set(false, e.getMessage());
             e.printStackTrace();

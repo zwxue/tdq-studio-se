@@ -277,4 +277,12 @@ public class SynonymIndexSearcher {
 
     }
 
+    public void close() {
+        try {
+            searcher.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

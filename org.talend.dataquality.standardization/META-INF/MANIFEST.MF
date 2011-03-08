@@ -10,3 +10,4 @@ Require-Bundle: org.talend.libraries.apache.lucene;bundle-version="1.0.0",
  org.junit,
  org.apache.commons.lang
 Bundle-ClassPath: .
+Export-Package: org.talend.dataquality.standardization.index

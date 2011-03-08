@@ -53,6 +53,11 @@ public class SynonymIndexSearcherTest {
         // create the index
         this.synIdxBuilderTest = new SynonymIndexBuilderTest();
         synIdxBuilderTest.setUp();
+
+        SynonymIndexBuilder synonymIdxBuilder = new SynonymIndexBuilder();
+        synonymIdxBuilder.initIndexInFS(SynonymIndexBuilderTest.path);
+        synIdxBuilderTest.insertDocuments(synonymIdxBuilder);
+        synonymIdxBuilder.closeIndex();
     }
 
     @After
@@ -85,6 +90,7 @@ public class SynonymIndexSearcherTest {
         }
         assertEquals(true, idxFolder.exists());
         assertEquals(true, idxFolder.delete());
+        searcher.close();
     }
 
     /**
@@ -107,6 +113,8 @@ public class SynonymIndexSearcherTest {
             assertEquals("we should have found at least one document, check the list of synonyms or the code", false,
                     doc.totalHits == 0);
         }
+
+        searcher.close();
     }
 
     @Test
@@ -135,6 +143,8 @@ public class SynonymIndexSearcherTest {
 
         }
 
+        searcher.close();
+
         // TODO check that the best matching is the exact string.
         // float[] scores = new float[bigblue.length];
 
@@ -146,7 +156,16 @@ public class SynonymIndexSearcherTest {
      * @return
      */
     private SynonymIndexSearcher getSearcher() {
-        return synIdxBuilderTest.getSearcher();
+        SynonymIndexSearcher searcher = new SynonymIndexSearcher();
+        try {
+            // searcher.setAnalyzer(builder.getAnalyzer());
+            searcher.openIndexInFS(SynonymIndexBuilderTest.path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        searcher.setTopDocLimit(5);
+
+        return searcher;
     }
 
     @Test
@@ -196,7 +215,7 @@ public class SynonymIndexSearcherTest {
 
         // record to search
         String[] record = new String[] { row1Company, row1Label };
-        int[] limits = {1, 1};
+        int[] limits = { 1, 1 };
         SynonymRecordSearcher recsearcher = new SynonymRecordSearcher(record.length);
         recsearcher.addSearcher(searcher, 0);
         recsearcher.addSearcher(searcher, 1);
@@ -204,6 +223,8 @@ public class SynonymIndexSearcherTest {
         for (OutputRecord outputRecord : output) {
             System.out.println("out= " + outputRecord);
         }
+
+        searcher.close();
 
         // FIXME add assertions here (or create a junit test for SynonymRecordSearcher instead)
 
@@ -222,6 +243,7 @@ public class SynonymIndexSearcherTest {
             fail(e.getMessage());
         }
         assertEquals(2, search.getSynonymCount("IAIDQ"));
+        search.close();
     }
 
     /**
@@ -242,6 +264,7 @@ public class SynonymIndexSearcherTest {
         String[] values = document.getValues(SynonymIndexSearcher.F_WORD);
         Assert.assertNotNull(values);
         assertEquals(1, values.length);
+        search.close();
     }
 
     /**
@@ -269,6 +292,7 @@ public class SynonymIndexSearcherTest {
             }
         }
         Assert.assertTrue(wordFound);
+        search.close();
     }
 
     /**
@@ -299,6 +323,7 @@ public class SynonymIndexSearcherTest {
             }
         }
         Assert.assertTrue(synonymFound);
+        search.close();
     }
 
     /**
@@ -314,6 +339,7 @@ public class SynonymIndexSearcherTest {
         }
         int numDocs = search.getNumDocs();
         assertEquals(SynonymIndexBuilderTest.synonyms.length, numDocs);
+        search.close();
     }
 
 }
