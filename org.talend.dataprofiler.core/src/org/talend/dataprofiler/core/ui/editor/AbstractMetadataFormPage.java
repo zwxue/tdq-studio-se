@@ -39,12 +39,15 @@ import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -71,7 +74,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private static final String AUTHOR_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.author"); //$NON-NLS-1$
 
-    private static final String VERSION_LABEL = "Version:";
+    private static final String LOCKER_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.locker"); //$NON-NLS-1$
+
+    private static final String VERSION_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.version"); //$NON-NLS-1$
 
     private static final String STATUS_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.status"); //$NON-NLS-1$
 
@@ -83,6 +88,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected Text authorText;
 
+    protected Text lockerText;
+
     protected Text versionText;
 
     protected CCombo statusCombo;
@@ -92,6 +99,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected Section metadataSection;
 
     protected ModelElement currentModelElement;
+
+    protected RepositoryNode repositoryNode;
+
+    protected RepositoryViewObject repositoryViewObject;
 
     protected ScrolledForm form;
 
@@ -105,7 +116,14 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        currentModelElement = getCurrentModelElement(editor);
+        this.currentModelElement = getCurrentModelElement(editor);
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(currentModelElement);
+        if (recursiveFind != null) {
+            this.repositoryNode = recursiveFind;
+            if (this.repositoryNode.getObject() != null) {
+                this.repositoryViewObject = (RepositoryViewObject) this.repositoryNode.getObject();
+            }
+        }
     }
 
     @Override
@@ -179,14 +197,18 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // toolkit.createLabel(parent, VERSION_LABEL);
         // createVersionUI(parent);
 
+        lockerText = createMetadataTextFiled(LOCKER_LABEL, parent);
+
+        versionText = createMetadataVersionFiled(VERSION_LABEL, parent);
+
         toolkit.createLabel(parent, STATUS_LABEL); //$NON-NLS-1$
         statusCombo = new CCombo(parent, SWT.BORDER);
         statusCombo.setEditable(false);
 
         // MOD mzhao feature 7479 2009-10-16
         String statusValue = DevelopmentStatus.DRAFT.getLiteral();
-        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DEV_STATUS, getCurrentModelElement(
-                this.getEditor()).getTaggedValue());
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DEV_STATUS,
+                getCurrentModelElement(this.getEditor()).getTaggedValue());
         if (taggedValue != null) {
             statusValue = taggedValue.getValue();
         }
@@ -268,12 +290,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         return section;
     }
 
+    private Text createMetadataVersionFiled(String label, Composite parent) {
+        toolkit.createLabel(parent, label);
+        return createVersionUI(parent);
+    }
+
     /**
      * DOC bZhou Comment method "createVersionUI".
      * 
      * @param parent
      */
-    private void createVersionUI(Composite parent) {
+    private Text createVersionUI(Composite parent) {
         Composite versionContainer = new Composite(parent, SWT.NONE);
         versionContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         GridLayout versionLayout = new GridLayout(3, false);
@@ -282,9 +309,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         versionLayout.horizontalSpacing = 0;
         versionContainer.setLayout(versionLayout);
 
-        versionText = new Text(versionContainer, SWT.BORDER);
-        versionText.setEnabled(false);
-        versionText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        final Text text = new Text(versionContainer, SWT.BORDER);
+        text.setEnabled(false);
+        text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Button versionMajorBtn = new Button(versionContainer, SWT.PUSH);
         versionMajorBtn.setText("M"); //$NON-NLS-1$
@@ -296,9 +323,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                String version = versionText.getText();
+                String version = text.getText();
                 version = VersionUtils.upMajor(version);
-                versionText.setText(version);
+                text.setText(version);
             }
         });
 
@@ -306,11 +333,13 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                String version = versionText.getText();
+                String version = text.getText();
                 version = VersionUtils.upMinor(version);
-                versionText.setText(version);
+                text.setText(version);
             }
         });
+
+        return text;
     }
 
     /**
@@ -336,6 +365,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         String author = MetadataHelper.getAuthor(currentModelElement);
         String version = MetadataHelper.getVersion(currentModelElement);
         String devStatus = MetadataHelper.getDevStatus(currentModelElement);
+        String locker = RepositoryNodeHelper.getLocker(this.repositoryViewObject);
 
         if (currentModelElement instanceof Connection) {
             Property property = PropertyHelper.getProperty(currentModelElement);
@@ -353,7 +383,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
         descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
         authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
-        // versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
+        authorText.setEnabled(false);
+        lockerText.setText(locker == null ? PluginConstant.EMPTY_STRING : locker);
+        lockerText.setEnabled(false);
+        versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
         statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus);
     }
 

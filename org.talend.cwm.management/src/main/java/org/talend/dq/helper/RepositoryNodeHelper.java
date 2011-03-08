@@ -35,10 +35,13 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
@@ -1281,4 +1284,31 @@ public final class RepositoryNodeHelper {
         return elementNodes;
 
     }
+
+    public static String getLocker(RepositoryNode node) {
+        if (node != null) {
+            return getLocker((RepositoryViewObject) node.getObject());
+        }
+        return ""; //$NON-NLS-1$
+    }
+
+    public static String getLocker(RepositoryViewObject viewObject) {
+        if (viewObject != null) {
+            Property property = viewObject.getProperty();
+            if (property != null) {
+                Item item = property.getItem();
+                if (item != null) {
+                    ItemState state = item.getState();
+                    if (state != null) {
+                        User locker = state.getLocker();
+                        if (locker != null) {
+                            return locker.getLogin() == null ? "" : locker.getLogin(); //$NON-NLS-1$
+                        }
+                    }
+                }
+            }
+        }
+        return ""; //$NON-NLS-1$
+    }
+
 }
