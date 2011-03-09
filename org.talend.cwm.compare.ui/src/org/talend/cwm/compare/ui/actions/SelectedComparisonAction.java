@@ -25,7 +25,6 @@ import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.ImageLib;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 
@@ -80,7 +79,9 @@ public class SelectedComparisonAction extends Action {
         try {
             ProgressUI.popProgressDialog(op);
             if (selectedObj1 instanceof Connection && selectedObj2 instanceof Connection) {
-                CorePlugin.getDefault().getRepositoryView().refresh();
+                // FIXME scorreia 2011-03-09 where is this CorePlugin.getDefault().getRepositoryView().refresh() method
+                // now? Should we do something else?
+                // CorePlugin.getDefault().getRepositoryView().refresh();
             }
         } catch (InvocationTargetException e) {
             MessageUI.openError(Messages.getString("PopComparisonUIAction.checkConnectionFailure", e.getCause().getMessage())); //$NON-NLS-1$
