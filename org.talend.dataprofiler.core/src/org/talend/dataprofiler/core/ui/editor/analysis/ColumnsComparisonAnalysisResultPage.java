@@ -69,6 +69,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.RowMatchExplorer;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -367,11 +368,13 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         MenuItem itemNotMatch = new MenuItem(menu, SWT.PUSH);
         MenuItem itemRow = new MenuItem(menu, SWT.PUSH);
 
-        itemMatch.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ViewMatch")); //$NON-NLS-1$
+        itemMatch.setText(DataExplorer.MENU_VIEW_MATCH_ROWS);
         itemMatch.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-        itemNotMatch.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ViewNotMatch")); //$NON-NLS-1$
+
+        itemNotMatch.setText(DataExplorer.MENU_VIEW_NOT_MATCH_ROWS);
         itemNotMatch.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
-        itemRow.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ViewRows")); //$NON-NLS-1$
+
+        itemRow.setText(DataExplorer.MENU_VIEW_ROWS);
         itemRow.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
 
         itemMatch.addListener(SWT.Selection, new Listener() {

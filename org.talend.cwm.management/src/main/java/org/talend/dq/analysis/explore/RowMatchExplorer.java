@@ -99,7 +99,7 @@ public class RowMatchExplorer extends DataExplorer {
                     + ") B";
             query += clauseA + " LEFT JOIN " + clauseB + onClause + realWhereClause;
         }
-        return query;
+        return getComment(MENU_VIEW_NOT_MATCH_ROWS) + query;
     }
 
     /**
@@ -180,7 +180,7 @@ public class RowMatchExplorer extends DataExplorer {
                                     : AnalysisHelper.DATA_FILTER_B)) : andDataFilter(tableA, null));
         }
 
-        return query;
+        return getComment(MENU_VIEW_MATCH_ROWS) + query;
     }
 
     /**
@@ -193,7 +193,8 @@ public class RowMatchExplorer extends DataExplorer {
         String tableA = tablea.getName();
         Table tableb = (Table) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
         String tableB = tableb.getName();
-        return "SELECT * " + dbmsLanguage.from() + getFullyQualifiedTableName(tablea) + whereDataFilter(tableA.equals(tableB) ? null : tableA, null); //$NON-NLS-1$
+        return getComment(MENU_VIEW_ROWS)
+                + "SELECT * " + dbmsLanguage.from() + getFullyQualifiedTableName(tablea) + whereDataFilter(tableA.equals(tableB) ? null : tableA, null); //$NON-NLS-1$
     }
 
     /**
