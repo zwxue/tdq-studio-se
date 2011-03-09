@@ -58,7 +58,7 @@ import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -508,11 +508,6 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                     IRepositoryNode repoNode = (IRepositoryNode) parentElement;
                     return filterTableView(repoNode.getChildren()).toArray();
                 }
-                // MOD klliu 2001-03-08 bug 19243: In table selection wizard should filter mdm and file connection
-                if (!(parentElement instanceof DFConnectionFolderRepNode || parentElement instanceof MDMConnectionRepNode)) {
-
-                    return super.getChildren(parentElement);
-                }
             }
             return null;
         }
@@ -578,16 +573,19 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     public List<IRepositoryNode> filterTableView(List<IRepositoryNode> nodes) {
         List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode node : nodes) {
-            if (node instanceof DBTableFolderRepNode) {
-                if (TableSelectionType.TABLE.equals(getTableType()) || TableSelectionType.ALL.equals(getTableType())) {
+            // MOD klliu 2001-03-08 bug 19243: In table selection wizard should filter mdm and file connection
+            if (!(node instanceof DFConnectionFolderRepNode || node instanceof MDMConnectionFolderRepNode)) {
+                if (node instanceof DBTableFolderRepNode) {
+                    if (TableSelectionType.TABLE.equals(getTableType()) || TableSelectionType.ALL.equals(getTableType())) {
+                        list.add(node);
+                    }
+                } else if (node instanceof DBViewFolderRepNode) {
+                    if (TableSelectionType.VIEW.equals(getTableType()) || TableSelectionType.VIEW.equals(getTableType())) {
+                        list.add(node);
+                    }
+                } else {
                     list.add(node);
                 }
-            } else if (node instanceof DBViewFolderRepNode) {
-                if (TableSelectionType.VIEW.equals(getTableType()) || TableSelectionType.VIEW.equals(getTableType())) {
-                    list.add(node);
-                }
-            } else {
-                list.add(node);
             }
         }
         return list;
