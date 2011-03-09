@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.utils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -47,6 +48,10 @@ public final class WorkbenchUtils {
 
     private static Logger log = Logger.getLogger(WorkbenchUtils.class);
 
+    private static final int AUTO_CHANGE2DATA_PROFILER_TRUE = 1;
+
+    private static final int AUTO_CHANGE2DATA_PROFILER_FALSE = 2;
+
     private WorkbenchUtils() {
     }
 
@@ -68,8 +73,26 @@ public final class WorkbenchUtils {
         IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                 .getPerspective();
         if (!PluginConstant.PERSPECTIVE_ID.equals(perspective.getId())) {
-            if (MessageUI.openConfirm(DefaultMessagesImpl.getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
+            int autoChange = ResourcesPlugin.getPlugin().getPluginPreferences().getInt(PluginConstant.AUTO_CHANGE2DATA_PROFILER);
+            switch (autoChange) {
+            case AUTO_CHANGE2DATA_PROFILER_TRUE:
+                // change perspective automatically
                 changePerspective(PluginConstant.PERSPECTIVE_ID);
+                break;
+            case AUTO_CHANGE2DATA_PROFILER_FALSE:
+                // do nothing
+                break;
+            default:
+                // ask user what to do, and rember user's decision
+                if (MessageUI.openConfirm(DefaultMessagesImpl.getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
+                    ResourcesPlugin.getPlugin().getPluginPreferences()
+                            .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_TRUE);
+                    // change perspective
+                    changePerspective(PluginConstant.PERSPECTIVE_ID);
+                } else {
+                    ResourcesPlugin.getPlugin().getPluginPreferences()
+                            .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_FALSE);
+                }
             }
         }
     }
