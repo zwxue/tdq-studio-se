@@ -30,6 +30,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -173,7 +174,8 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 log.error(exc, exc);
             }
             if (mElement != null) {
-                return DqRepositoryViewService.buildElementName(mElement);
+                Property property = ProxyRepositoryFactory.getInstance().getProperty(mElement);
+                return DqRepositoryViewService.buildElementName(property);
             }
         }
         input = DQStructureMessage.getString(super.decorateText(input, element));
@@ -204,9 +206,12 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
             for (IResource resource : members) {
                 if (resource instanceof IFile) {
                     if (extensions.contains(((IFile) resource).getFileExtension())) {
-                        propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-                                ((IFile) resource).getFullPath().removeFileExtension().addFileExtension(
-                                        FactoriesUtil.PROPERTIES_EXTENSION));
+                        propFile = ResourcesPlugin
+                                .getWorkspace()
+                                .getRoot()
+                                .getFile(
+                                        ((IFile) resource).getFullPath().removeFileExtension()
+                                                .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
                         if (propFile.exists()) {
                             Property property = PropertyHelper.getProperty(propFile);
                             if (!property.getItem().getState().isDeleted())

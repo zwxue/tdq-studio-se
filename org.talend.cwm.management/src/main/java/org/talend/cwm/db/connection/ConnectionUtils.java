@@ -924,7 +924,7 @@ public final class ConnectionUtils {
                 }
             }
         }
-        if (saveFlag) {
+        if (saveFlag && conn != null) {
             ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
         }
         return conn;

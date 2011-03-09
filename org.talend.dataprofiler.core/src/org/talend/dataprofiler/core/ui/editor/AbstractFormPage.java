@@ -25,6 +25,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 
 /**
@@ -158,6 +159,17 @@ public abstract class AbstractFormPage extends FormPage {
     @Override
     public boolean isDirty() {
         return super.isDirty() || isDirty;
+    }
+
+    protected Property getProperty() {
+        if (getEditorInput() instanceof AbstractItemEditorInput) {
+            AbstractItemEditorInput editorInput = (AbstractItemEditorInput) getEditorInput();
+            if (editorInput.getItem() != null) {
+                return editorInput.getItem().getProperty();
+            }
+        }
+
+        return null;
     }
 
     /**

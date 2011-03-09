@@ -38,7 +38,9 @@ import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -50,7 +52,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -152,7 +153,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         if (currentModelElement == null) {
             currentModelElement = getCurrentModelElement(getEditor());
         }
-        return DqRepositoryViewService.buildElementName(currentModelElement);
+        return DqRepositoryViewService.buildElementName(getProperty());
     }
 
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
@@ -206,12 +207,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         statusCombo.setEditable(false);
 
         // MOD mzhao feature 7479 2009-10-16
-        String statusValue = DevelopmentStatus.DRAFT.getLiteral();
-        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DEV_STATUS,
-                getCurrentModelElement(this.getEditor()).getTaggedValue());
-        if (taggedValue != null) {
-            statusValue = taggedValue.getValue();
-        }
+        String statusValue = getProperty() != null ? getProperty().getStatusCode() : DevelopmentStatus.DRAFT.getLiteral();
 
         List<org.talend.core.model.properties.Status> statusList = MetadataHelper.getTechnicalStatus();
         if (statusList != null && statusList.size() > 0) {
@@ -359,35 +355,37 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     protected void initMetaTextFied() {
-        String name = currentModelElement.getName();
-        String purpose = MetadataHelper.getPurpose(currentModelElement);
-        String description = MetadataHelper.getDescription(currentModelElement);
-        String author = MetadataHelper.getAuthor(currentModelElement);
-        String version = MetadataHelper.getVersion(currentModelElement);
-        String devStatus = MetadataHelper.getDevStatus(currentModelElement);
-        String locker = RepositoryNodeHelper.getLocker(this.repositoryViewObject);
 
-        if (currentModelElement instanceof Connection) {
-            Property property = PropertyHelper.getProperty(currentModelElement);
-            if (property != null) {
-                name = property.getLabel();
-                purpose = property.getPurpose();
-                description = property.getDescription();
-                author = property.getAuthor().getLogin();
-                version = property.getVersion();
-                devStatus = property.getStatusCode();
+        Property property = getProperty();
+
+        if (property != null) {
+            String name = property.getLabel();
+            String purpose = property.getPurpose();
+            String description = property.getDescription();
+            String author = property.getAuthor().getLogin();
+            String version = property.getVersion();
+            String devStatus = property.getStatusCode();
+
+            String lockerStr = null;
+            ItemState state = property.getItem().getState();
+            if (state != null) {
+                User locker = state.getLocker();
+                if (locker != null) {
+                    lockerStr = locker.getLogin();
+                }
             }
-        }
 
-        nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
-        purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
-        descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
-        authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
-        authorText.setEnabled(false);
-        lockerText.setText(locker == null ? PluginConstant.EMPTY_STRING : locker);
-        lockerText.setEnabled(false);
-        versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
-        statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus);
+            nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
+            purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
+            descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
+            authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
+            authorText.setEnabled(false);
+            lockerText.setText(lockerStr == null ? PluginConstant.EMPTY_STRING : lockerStr);
+            lockerText.setEnabled(false);
+            // versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
+            statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus);
+
+        }
     }
 
     public void doSave(IProgressMonitor monitor) {
