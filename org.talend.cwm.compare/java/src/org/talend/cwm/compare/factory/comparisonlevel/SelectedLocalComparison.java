@@ -13,12 +13,16 @@
 
 package org.talend.cwm.compare.factory.comparisonlevel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.match.MatchOptions;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -30,6 +34,7 @@ import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.factory.IUIHandler;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -38,6 +43,7 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -184,6 +190,8 @@ public class SelectedLocalComparison implements IComparisonLevel {
                 if (item instanceof ConnectionItem) {
                     adaptedDataProvider = ((ConnectionItem) item).getConnection();
                 }
+            } else if (element instanceof Connection) {
+                adaptedDataProvider = ConnectionUtils.fillConnectionMetadataInformation((Connection) element);
             } else {
 
                 Package package1 = SwitchHelpers.PACKAGE_SWITCH.doSwitch((ModelElement) element);
@@ -215,6 +223,21 @@ public class SelectedLocalComparison implements IComparisonLevel {
                 rootElement = tdProvider.eResource();
             } else if (element instanceof IRepositoryViewObject) {
                 rootElement = tdProvider.eResource();
+            } else if (element instanceof Connection) {
+                Resource eResource = ((Connection) tdProvider).eResource();
+                EList<Package> contents = ((Connection) element).getDataPackage();// eResource().getContents();
+                eResource.getContents().clear();
+                List<EObject> objects = new ArrayList<EObject>();
+                for (EObject object : contents) {
+                    if (!(object instanceof Connection || object instanceof Component)) {
+                        objects.add(object);
+                    }
+                }
+                eResource.getContents().addAll(objects);
+                // ((Connection) element).getComponent().eResource().delete(options)
+                // eResource.
+                rootElement = eResource;
+
             } else {
                 Package package1 = SwitchHelpers.PACKAGE_SWITCH.doSwitch((ModelElement) element);
 

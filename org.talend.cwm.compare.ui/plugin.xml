@@ -65,7 +65,10 @@
            class="org.talend.cwm.compare.ui.actions.provider.SelectedCompareUIProvider"
            id="org.talend.cwm.compare.ui.actions.provider.SelectedCompareUIProvider">
         <enablement>
-           <or>
+          <instanceof
+                    value="org.talend.repository.model.RepositoryNode">
+              </instanceof>
+        <!--  <or>
               <instanceof
                     value="orgomg.cwm.objectmodel.core.Package">
               </instanceof>
@@ -92,7 +95,9 @@
               </instanceof>
               <instanceof
                     value="org.talend.core.model.repository.IRepositoryViewObject">
-              </instanceof></or>
+              </instanceof>
+              </or>
+            --> 
         </enablement>
      </actionProvider>        
    </extension>

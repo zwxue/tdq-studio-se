@@ -573,10 +573,15 @@ public final class DQStructureComparer {
         snapshot.setDiff(diff);
         IFile createDiffResourceFile = efmDiffResultFile;
         try {
+            // klliu
+            createDiffResourceFile.clearHistory(new NullProgressMonitor());
             final String fullPath = createDiffResourceFile.getLocation().toOSString();
+
             ModelUtils.save(snapshot, fullPath);
         } catch (IOException e) {
             throw new ReloadCompareException(e);
+        } catch (CoreException e) {
+            log.error(e);
         }
         if (guiHandler != null) {
             guiHandler.popComparisonUI(createDiffResourceFile.getLocation(), dbName, selectedObject, compareEachOther);

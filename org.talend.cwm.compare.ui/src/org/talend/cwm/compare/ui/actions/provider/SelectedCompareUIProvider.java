@@ -19,15 +19,25 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.SelectedComparisonAction;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * 
@@ -76,15 +86,32 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
             return;
         }
 
-        List<IRepositoryViewObject> objects = new ArrayList<IRepositoryViewObject>();
+        // List<IRepositoryViewObject> objects = new ArrayList<IRepositoryViewObject>();
+        List<Object> objects = new ArrayList<Object>();
         for (Object obj : selectedObj) {
             RepositoryNode node = (RepositoryNode) obj;
-            objects.add(node.getObject());
+            if (node instanceof DBConnectionRepNode) {
+                Property property = ((DBConnectionRepNode) node).getObject().getProperty();
+                DatabaseConnectionItem databaseConnectionItem = (DatabaseConnectionItem) property.getItem();
+                Connection databaseConnection = databaseConnectionItem.getConnection();
+                objects.add(databaseConnection);
+            } else if (node instanceof DBCatalogRepNode) {
+                Catalog catalog = ((DBCatalogRepNode) node).getCatalog();
+                objects.add(catalog);
+            } else if (node instanceof DBSchemaRepNode) {
+                Schema schema = ((DBSchemaRepNode) node).getSchema();
+                objects.add(schema);
+            } else if (node instanceof DBTableRepNode) {
+                TdTable tdTable = ((DBTableRepNode) node).getTdTable();
+                objects.add(tdTable);
+            } else if (node instanceof DBColumnRepNode) {
+                TdColumn tdColumn = ((DBColumnRepNode) node).getTdColumn();
+                objects.add(tdColumn);
+            }
         }
 
         selectionCompareAction.refreshSelectedObj(objects.get(0), objects.get(1));
         menu.add(selectionCompareAction);
 
     }
-
 }
