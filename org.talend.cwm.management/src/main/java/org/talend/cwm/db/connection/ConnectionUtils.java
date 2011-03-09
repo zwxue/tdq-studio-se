@@ -994,8 +994,10 @@ public final class ConnectionUtils {
                     sqlConn = (java.sql.Connection) MetadataConnectionUtils.checkConnection(metaConnection).getObject();
 
                     if (sqlConn != null) {
-                        MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, sqlConn.getMetaData(), getPackageFilter(dbConn));
-                        MetadataFillFactory.getDBInstance().fillSchemas(dbConn, sqlConn.getMetaData(), getPackageFilter(dbConn));
+                        MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, sqlConn.getMetaData(),
+                                MetadataConnectionUtils.getPackageFilter(dbConn));
+                        MetadataFillFactory.getDBInstance().fillSchemas(dbConn, sqlConn.getMetaData(),
+                                MetadataConnectionUtils.getPackageFilter(dbConn));
                     }
 
                 }
@@ -1221,37 +1223,6 @@ public final class ConnectionUtils {
                 packageFilter.add(dbName);
             }
         }
-        return packageFilter;
-    }
-
-    /**
-     * DOC bZhou Comment method "getPackageFilter".
-     * 
-     * @param connection
-     * @return
-     */
-    public static List<String> getPackageFilter(Connection connection) {
-        List<String> packageFilter = new ArrayList<String>();
-
-        if (isMdmConnection(connection)) {
-            // MDMConnection mdmConnection = (MDMConnection) connection;
-        } else {
-            DatabaseConnection dbConnection = (DatabaseConnection) connection;
-            String databaseType = dbConnection.getDatabaseType();
-
-            if (SupportDBUrlType.isOracle(databaseType)) {
-                String uiSchema = dbConnection.getUiSchema();
-                if (!StringUtils.isEmpty(uiSchema)) {
-                    packageFilter.add(uiSchema);
-                }
-            } else {
-                String sid = dbConnection.getSID();
-                if (!StringUtils.isEmpty(sid)) {
-                    packageFilter.add(sid);
-                }
-            }
-        }
-
         return packageFilter;
     }
 
