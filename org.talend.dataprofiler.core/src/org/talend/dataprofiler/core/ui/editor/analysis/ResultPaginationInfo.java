@@ -56,7 +56,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
-import org.talend.dataprofiler.core.ui.utils.UIPagination;
+import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
@@ -73,7 +73,7 @@ import org.talend.dq.pattern.PatternTransformer;
  * 
  * DOC mzhao UIPagination.MasterPaginationInfo class global comment. Detailled comment
  */
-public class ResultPaginationInfo extends PaginationInfo {
+public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     private ColumnMasterDetailsPage masterPage;
 

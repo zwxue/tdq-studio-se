@@ -10,14 +10,13 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.utils;
+package org.talend.dataprofiler.core.ui.utils.pagination;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -37,8 +36,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.analysis.PaginationInfo;
-import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 
 /**
  * 
@@ -46,15 +43,11 @@ import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
  */
 public class UIPagination {
 
-    private static Logger log = Logger.getLogger(UIPagination.class);
-
-    private static final int PAGE_SIZE = 5;
-
     private int totalPages;
 
     private int currentPage;
 
-    private List<PaginationInfo> pageCache = new ArrayList<PaginationInfo>();
+    private List<IPagination> pageCache = new ArrayList<IPagination>();
 
     private ImageHyperlink pageLastImgHypLnk = null;
 
@@ -76,6 +69,8 @@ public class UIPagination {
 
     private Composite pageNavComp;
 
+    private Viewer bandingViewer;
+
     public UIPagination(FormToolkit toolkit, Composite composite) {
         this.toolkit = toolkit;
         this.composite = composite;
@@ -86,13 +81,27 @@ public class UIPagination {
 
     public void init() {
         createNavComposite(composite);
+
+        refresh();
+    }
+
+    public void reset() {
+        pageCache.clear();
+        totalPages = 0;
+        currentPage = 0;
+    }
+
+    public void refresh() {
+        if (pageNavComp != null) {
+            pageNavComp.dispose();
+            createNavComposite(composite);
+        }
         initPageNav();
         notifyPageNavigator();
         // First show zero-indexed contents.
         if (pageCache.size() > 0) {
             pageCache.get(0).renderContents();
         }
-
     }
 
     public void pack() {
@@ -205,7 +214,7 @@ public class UIPagination {
         return valideChar;
     }
 
-    public void addPage(PaginationInfo pageInf) {
+    public void addPage(IPagination pageInf) {
         pageCache.add(pageInf);
         totalPages++;
     }
@@ -287,8 +296,8 @@ public class UIPagination {
     private void go() {
 
         if (!isNumeric(pageGoText.getText().trim())) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
-                    .getString("UIPagination.Error"), //$NON-NLS-1$
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("UIPagination.Error"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("UIPagination.PageNumBeValid")); //$NON-NLS-1$
             return;
         }
@@ -296,14 +305,14 @@ public class UIPagination {
         try {
             goNo = Integer.parseInt(pageGoText.getText().trim());
         } catch (Exception exc) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
-                    .getString("UIPagination.Err"), //$NON-NLS-1$
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("UIPagination.Err"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("UIPagination.NumNotInValidRange")); //$NON-NLS-1$
             return;
         }
         if (goNo < 1 || goNo > totalPages) {
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
-                    .getString("UIPagination.Errors"), //$NON-NLS-1$
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("UIPagination.Errors"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("UIPagination.NotInValidRange")); //$NON-NLS-1$
             return;
         }
@@ -361,16 +370,21 @@ public class UIPagination {
 
     private static final Image IMG_LNK_NAV_FIRST = ImageLib.getImage(ImageLib.ICON_PAGE_FIRST_LNK);
 
-    public static int getPageSize() {
-        try {
-            String defaultPageSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(
-                    EditorPreferencePage.ANALYZED_ITEMS_PER_PAGE);
-            if (!"".equals(defaultPageSize)) { //$NON-NLS-1$
-                return Integer.parseInt(defaultPageSize);
-            }
-        } catch (NumberFormatException e) {
-            log.error(e, e);
-        }
-        return PAGE_SIZE;
+    /**
+     * Sets the bandingViewer.
+     * 
+     * @param bandingViewer the bandingViewer to set
+     */
+    public void setBandingViewer(Viewer bandingViewer) {
+        this.bandingViewer = bandingViewer;
+    }
+
+    /**
+     * Getter for bandingViewer.
+     * 
+     * @return the bandingViewer
+     */
+    public Viewer getBandingViewer() {
+        return this.bandingViewer;
     }
 }

@@ -27,7 +27,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.ui.utils.UIPagination;
+import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dq.analysis.AnalysisHandler;
 
 /**
@@ -83,7 +83,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
         // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
         UIPagination uiPagination = new UIPagination(toolkit, sectionClient);
-        int pageSize = UIPagination.getPageSize();
+        int pageSize = IndicatorPaginationInfo.getPageSize();
         int totalPages = modelElementIndicatores.length / pageSize;
         List<ModelElementIndicator> modelElementIndLs = null;
         for (int index = 0; index < totalPages; index++) {
@@ -91,7 +91,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             for (int idx = 0; idx < pageSize; idx++) {
                 modelElementIndLs.add(modelElementIndicatores[index * pageSize + idx]);
             }
-            PaginationInfo pginfo = new ResultPaginationInfo(form, modelElementIndLs, masterPage, uiPagination);
+            IndicatorPaginationInfo pginfo = new ResultPaginationInfo(form, modelElementIndLs, masterPage, uiPagination);
             uiPagination.addPage(pginfo);
 
         }
@@ -101,7 +101,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             for (int leftIdx = 0; leftIdx < left; leftIdx++) {
                 modelElementIndLs.add(modelElementIndicatores[totalPages * pageSize + leftIdx]);
             }
-            PaginationInfo pginfo = new ResultPaginationInfo(form, modelElementIndLs, masterPage, uiPagination);
+            IndicatorPaginationInfo pginfo = new ResultPaginationInfo(form, modelElementIndLs, masterPage, uiPagination);
             uiPagination.addPage(pginfo);
             totalPages++;
         }
@@ -152,4 +152,5 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
         createFormContent(getManagedForm());
     }
+
 }

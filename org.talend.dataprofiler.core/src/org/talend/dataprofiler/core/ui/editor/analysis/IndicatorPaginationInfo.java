@@ -12,80 +12,42 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
-import org.talend.dataprofiler.core.ui.progress.ProgressUI;
-import org.talend.dataprofiler.core.ui.utils.UIPagination;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dataprofiler.core.ui.utils.pagination.PaginationInfo;
+import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 
 /**
  * 
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
-public abstract class PaginationInfo {
+public abstract class IndicatorPaginationInfo extends PaginationInfo {
 
-    private static Logger log = Logger.getLogger(PaginationInfo.class);
-
-    protected ScrolledForm form;
+    private static final int PAGE_SIZE = 5;
 
     protected List<? extends ModelElementIndicator> modelElementIndicators;
 
-    protected List<Widget> needDispostWidgets = new ArrayList<Widget>();
-
-    protected UIPagination uiPagination = null;
-
-    // public PaginationInfo(ScrolledForm form, List<ColumnIndicator> columnIndicatores, UIPagination uiPagination) {
-    // this.columnIndicatores = columnIndicatores;
-    // this.uiPagination = uiPagination;
-    // this.form = form;
-    // }
-
-    public PaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
+    public IndicatorPaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
             UIPagination uiPagination) {
+        super(form, modelElementIndicators, uiPagination);
         this.modelElementIndicators = modelElementIndicators;
-        this.uiPagination = uiPagination;
-        this.form = form;
     }
-
-    public void renderContents() {
-        IRunnableWithProgress rwp = new IRunnableWithProgress() {
-
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("Loading page...", modelElementIndicators.size());
-                uiPagination.notifyPageNavigator();
-                render();
-                uiPagination.updatePageInfoLabel();
-                monitor.done();
-                uiPagination.pack();
-                form.reflow(true);
-            }
-        };
-        try {
-            ProgressUI.popProgressDialog(rwp, false, true);
-        } catch (Exception ex) {
-            log.error(ex, ex);
-        }
-    }
-
-    protected abstract void render();
 
     protected void addListenerToChartComp(final ChartComposite chartComp, final IChartTypeStates chartTypeState) {
         chartComp.addChartMouseListener(new ChartMouseListener() {
@@ -117,10 +79,16 @@ public abstract class PaginationInfo {
         });
     }
 
-    public void dispose() {
-        for (Widget widget : needDispostWidgets) {
-            widget.dispose();
+    public static int getPageSize() {
+        try {
+            String defaultPageSize = ResourcesPlugin.getPlugin().getPluginPreferences()
+                    .getString(EditorPreferencePage.ANALYZED_ITEMS_PER_PAGE);
+            if (!"".equals(defaultPageSize)) { //$NON-NLS-1$
+                return Integer.parseInt(defaultPageSize);
+            }
+        } catch (NumberFormatException e) {
+            ExceptionHandler.process(e);
         }
-        needDispostWidgets.clear();
+        return PAGE_SIZE;
     }
 }

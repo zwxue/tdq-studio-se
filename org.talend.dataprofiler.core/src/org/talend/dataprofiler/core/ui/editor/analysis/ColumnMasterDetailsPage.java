@@ -73,7 +73,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
-import org.talend.dataprofiler.core.ui.utils.UIPagination;
+import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -480,7 +480,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         final ModelElementIndicator[] modelElementIndicatores = treeViewer.getModelElementIndicator();
         // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
         UIPagination uiPagination = new UIPagination(toolkit, composite);
-        int pageSize = UIPagination.getPageSize();
+        int pageSize = IndicatorPaginationInfo.getPageSize();
         int totalPages = modelElementIndicatores.length / pageSize;
         List<ModelElementIndicator> modelElementIndicators = null;
         for (int index = 0; index < totalPages; index++) {
@@ -488,7 +488,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             for (int idx = 0; idx < pageSize; idx++) {
                 modelElementIndicators.add(modelElementIndicatores[index * pageSize + idx]);
             }
-            PaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators, uiPagination);
+            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators,
+                    uiPagination);
             uiPagination.addPage(pginfo);
 
         }
@@ -498,7 +499,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             for (int leftIdx = 0; leftIdx < left; leftIdx++) {
                 modelElementIndicators.add(modelElementIndicatores[totalPages * pageSize + leftIdx]);
             }
-            PaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators, uiPagination);
+            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators,
+                    uiPagination);
             uiPagination.addPage(pginfo);
             totalPages++;
         }
@@ -708,7 +710,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      */
     public void saveAnalysis() throws DataprofilerCoreException {
 
-
         IRepositoryViewObject reposObject = null;
         analysisHandler.clearAnalysis();
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
@@ -834,7 +835,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         treeViewer.setDirty(false);
         dataFilterComp.setDirty(false);
     }
-    
+
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);

@@ -34,14 +34,14 @@ import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
-import org.talend.dataprofiler.core.ui.utils.UIPagination;
+import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
  * 
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
-public class MasterPaginationInfo extends PaginationInfo {
+public class MasterPaginationInfo extends IndicatorPaginationInfo {
 
     private List<ExpandableComposite> previewChartList;
 
@@ -50,6 +50,7 @@ public class MasterPaginationInfo extends PaginationInfo {
         super(form, modelElementIndicators, uiPagination);
         this.previewChartList = previewChartList;
     }
+
     @Override
     protected void render() {
         previewChartList.clear();
