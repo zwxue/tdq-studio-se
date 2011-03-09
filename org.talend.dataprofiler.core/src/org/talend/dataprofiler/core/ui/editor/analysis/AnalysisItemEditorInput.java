@@ -15,7 +15,9 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC klliu Analysis editor input.
@@ -27,6 +29,13 @@ public class AnalysisItemEditorInput extends AbstractItemEditorInput {
     private IRepositoryNode connectionNode;
 
     public IRepositoryNode getConnectionNode() {
+        // MOD mzhao bug 19244, when connection node wasn't set before, find it from analysis.
+        if (connectionNode == null) {
+            DataManager connection = item.getAnalysis().getContext().getConnection();
+            if (connection != null) {
+                connectionNode = RepositoryNodeHelper.recursiveFind(connection);
+            }
+        }
         return this.connectionNode;
     }
 
