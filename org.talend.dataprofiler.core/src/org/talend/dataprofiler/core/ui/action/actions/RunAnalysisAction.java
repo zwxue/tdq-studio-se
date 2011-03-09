@@ -49,6 +49,7 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -72,6 +73,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private IFile selectionFile;
 
+    private AnalysisRepNode node;
+
     public IFile getSelectionFile() {
         return selectionFile;
     }
@@ -80,6 +83,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         this.selectionFile = selectionFile;
     }
 
+    public void setSelectionNode(AnalysisRepNode node) {
+        this.node = node;
+    }
     public RunAnalysisAction() {
         super(DefaultMessagesImpl.getString("RunAnalysisAction.Run")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
@@ -107,7 +113,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
         // ~
         if (editor == null) {
-            analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
+            analysis = this.node.getAnalysis();// AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
         } else {
 
             if (editor.isDirty()) {
