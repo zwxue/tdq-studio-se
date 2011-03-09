@@ -15,6 +15,7 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 
 /**
@@ -31,6 +32,8 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         Map<String, String> map = new HashMap<String, String>();
         // MOD zshen feature 12919 adapt to pop-menu for Jave engin on result page
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
+        // MOD qiongli 2011-3-4,feature 19192:filter menue 'view rows' for columSet AnalysisType.
+        AnalysisType analysisType = this.analysis.getParameters().getAnalysisType();
         if (!isXml() || !isSqlEngine) {
 
             switch (this.indicatorEnum) {
@@ -42,7 +45,9 @@ public class SimpleStatisticsExplorer extends DataExplorer {
                 break;
 
             case UniqueIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                if (analysisType != AnalysisType.COLUMN_SET) {
+                    map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                }
                 map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
                 break;
             case DistinctCountIndicatorEnum:
@@ -51,7 +56,9 @@ public class SimpleStatisticsExplorer extends DataExplorer {
                 break;
 
             case DuplicateCountIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                if (analysisType != AnalysisType.COLUMN_SET) {
+                    map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                }
                 map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
                 break;
             default:

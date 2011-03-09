@@ -41,6 +41,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.CompositeIndicatorImpl;
 import org.talend.utils.collections.Tuple;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sql.TalendTypeConvert;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -311,8 +312,15 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                     }
                     continue;
                 }
-                DataminingType dataminingType = MetadataHelper.getDataminingType(column);
-                if (DataminingType.NOMINAL.equals(dataminingType)) {
+                // MOD qiongli 2011-3-8.fetature 19192,add mdColumn for MetadataColumn(delimited file)
+                DataminingType dataminingType = null;
+                if (tdColumn != null) {
+                    dataminingType = MetadataHelper.getDataminingType(column);
+                } else if (mdColumn != null) {
+                    int javaType = TalendTypeConvert.convertToJDBCType(mdColumn.getTalendType());
+                    dataminingType = MetadataHelper.getDefaultDataminingType(javaType);
+                }
+                if (dataminingType != null && DataminingType.NOMINAL.equals(dataminingType)) {
                     nominalColumns.add(column);
                 } else if (null != mdColumn) {
                     nominalColumns.add(column);
@@ -346,10 +354,19 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                     }
                     continue;
                 }
-                DataminingType dataminingType = MetadataHelper.getDataminingType(column);
-                if (DataminingType.INTERVAL.equals(dataminingType) && tdColumn != null
-                        && Java2SqlType.isNumbericInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
-                    computedColumns.add(column);
+                // MOD qiongli 2011-3-8.fetature 19192,,add mdColumn for MetadataColumn(delimited file)
+                if (tdColumn != null) {
+                    DataminingType dataminingType = MetadataHelper.getDataminingType(column);
+                    if (DataminingType.INTERVAL.equals(dataminingType)
+                            && Java2SqlType.isNumbericInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
+                        computedColumns.add(column);
+                    }
+                } else if (mdColumn != null) {
+                    int javaType = TalendTypeConvert.convertToJDBCType(mdColumn.getTalendType());
+                    DataminingType dataminingType = MetadataHelper.getDefaultDataminingType(javaType);
+                    if (DataminingType.INTERVAL.equals(dataminingType) && Java2SqlType.isNumbericInSQL(javaType)) {
+                        computedColumns.add(column);
+                    }
                 }
             }
         }
@@ -432,7 +449,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                         dateColumns.add(tdColumn);
                     }
                 } else if (mdColumn != null) {
-                    // TODO add flat file date type
+                    // MOD qiongli 2011-3-8.feature 19192
+                    int javaType = TalendTypeConvert.convertToJDBCType(mdColumn.getTalendType());
+                    DataminingType dmType = MetadataHelper.getDefaultDataminingType(javaType);
+                    if (DataminingType.INTERVAL.equals(dmType) && Java2SqlType.isDateInSQL(javaType)) {
+                        dateColumns.add(column);
+                    }
                 }
             }
         }

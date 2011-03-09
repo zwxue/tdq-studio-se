@@ -13,6 +13,9 @@
 package org.talend.dq.analysis.explore;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -21,11 +24,14 @@ import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -220,7 +226,38 @@ public abstract class DataExplorer implements IDataExplorer {
         this.entity = entity;
         this.indicator = entity.getIndicator();
         this.indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
-        this.columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
+        this.columnName = getAnalyzedElementName(indicator);
+    }
+
+    /**
+     * 
+     * Add qiongli handle ColumnSetMultiValueIndicator.
+     * 
+     * @return
+     */
+    protected String getAnalyzedElementName(Indicator ind) {
+        if (ind.getAnalyzedElement() != null) {
+            return dbmsLanguage.quote(ind.getAnalyzedElement().getName());
+        }
+        StringBuffer name = new StringBuffer(PluginConstant.EMPTY_STRING);
+        EObject object = ind.eContainer();
+        EList<MetadataColumn> eLs = null;
+        if (object != null && object instanceof ColumnSetMultiValueIndicator) {
+            eLs = ((ColumnSetMultiValueIndicator) object).getAnalyzedColumns();
+
+        } else if (ind instanceof AllMatchIndicator) {
+            eLs = ((AllMatchIndicator) ind).getAnalyzedColumns();
+        }
+        if (eLs != null && !eLs.isEmpty()) {
+            for (MetadataColumn mColumn : eLs) {
+                name.append(dbmsLanguage.quote(mColumn.getName())).append(",");
+            }
+            if (eLs.size() > 0) {
+                return org.apache.commons.lang.StringUtils.removeEnd(name.toString(), ",");
+            }
+        }
+
+        return name.toString();
     }
 
     /**

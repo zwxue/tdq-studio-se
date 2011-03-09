@@ -64,11 +64,13 @@ import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataprofiler.core.ui.wizard.patterns.DataFilterType;
 import org.talend.dataprofiler.core.ui.wizard.patterns.SelectPatternsWizard;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -192,7 +194,11 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         TableViewer tableviewer = chartTypeState.getTableForm(sectionClient);
         tableviewer.setInput(chartData);
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
-        ChartTableFactory.addMenuAndTip(tableviewer, chartTypeState.getDataExplorer(), masterPage.getAnalysis());
+        // MOD qiongli feature 19192.
+        if (masterPage.getAnalysis().getParameters() != null
+                && ExecutionLanguage.JAVA.equals(masterPage.getAnalysis().getParameters().getExecutionLanguage())) {
+            ChartTableFactory.addMenuAndTip(tableviewer, chartTypeState.getDataExplorer(), masterPage.getAnalysis());
+        }
 
         if (!EditorPreferencePage.isHideGraphics()) {
             JFreeChart chart = chartTypeState.getChart();
@@ -246,6 +252,12 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         TableViewer tableviewer = chartTypeState.getTableForm(composite);
         tableviewer.setInput(chartData);
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
+        // MOD qiongli feature 19192.
+        if (masterPage.getAnalysis().getParameters() != null
+                && ExecutionLanguage.JAVA.equals(masterPage.getAnalysis().getParameters().getExecutionLanguage())) {
+            DataExplorer dataExplorer = chartTypeState.getDataExplorer();
+            ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, this.getAnalysisHandler().getAnalysis());
+        }
 
         // create chart
         if (!EditorPreferencePage.isHideGraphics()) {

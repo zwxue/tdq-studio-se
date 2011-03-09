@@ -38,6 +38,7 @@ import org.talend.dataprofiler.core.service.IJobService;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -203,7 +204,8 @@ public final class ChartTableFactory {
                                 service.setIndicator(indicator);
                                 service.setAnalysis(analysis);
                                 MenuItem item = null;
-                                if (isDUDIndicator(indicator)) {
+                                if (isDUDIndicator(indicator)
+                                        && AnalysisType.COLUMN_SET != analysis.getParameters().getAnalysisType()) {
                                     item = new MenuItem(menu, SWT.PUSH);
                                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
                                 } else if (isPatternMatchingIndicator(indicator)) {

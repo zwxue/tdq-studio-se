@@ -36,6 +36,7 @@ import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
+import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -241,27 +242,77 @@ public class DrillDownEditorInput implements IEditorInput {
         }
         if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
             int offset = 0;
-            if (analysisElement instanceof TdColumn) {
-                List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysisElement
-                        .eContainer()));
+            // MOD qiongli 2011-3-3 feature 19192 drill down for columnSet with jave engine.
+            if (analysisElement == null && currIndicator.eContainer() instanceof SimpleStatIndicator) {
+                returnDataList = dataList;
 
-                offset = columnElementList.indexOf(analysisElement);
-            } else if (analysisElement instanceof TdXmlElementType) {
-                TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
-                        .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
-                List<TdXmlElementType> xmlElementList = org.talend.cwm.db.connection.ConnectionUtils
-                        .getXMLElements(parentElement);
-                offset = xmlElementList.indexOf(analysisElement);
+            } else {
+                if (analysisElement instanceof TdColumn) {
+                    List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysisElement
+                            .eContainer()));
+
+                    offset = columnElementList.indexOf(analysisElement);
+                } else if (analysisElement instanceof TdXmlElementType) {
+                    TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
+                            .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
+                    List<TdXmlElementType> xmlElementList = org.talend.cwm.db.connection.ConnectionUtils
+                            .getXMLElements(parentElement);
+                    offset = xmlElementList.indexOf(analysisElement);
+                }
+                for (Object[] obj : dataList) {
+                    Object[] newObj = new Object[1];
+                    newObj[0] = obj[offset];
+                    returnDataList.add(newObj);
+                }
             }
-            for (Object[] obj : dataList) {
-                Object[] newObj = new Object[1];
-                newObj[0] = obj[offset];
-                returnDataList.add(newObj);
-            }
+
         } else {
             returnDataList = dataList;
         }
         return returnDataList;
+    }
+
+    /**
+     * 
+     * create column header for columnSet analysis.
+     * 
+     * @param simpInd
+     * @param columnElementList
+     */
+    private List<String> columnHeaderForColumnSet(SimpleStatIndicator simpInd) {
+
+        List<String> columnElementList = new ArrayList<String>();
+        if (simpInd.getAnalyzedColumns().size() == 0) {
+            return columnElementList;
+        }
+        if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+            for (MetadataColumn mColumn : simpInd.getAnalyzedColumns()) {
+                columnElementList.add(mColumn.getLabel());
+            }
+        } else {
+            boolean isDelimitedFile = false;
+            for (MetadataColumn mColumn : simpInd.getAnalyzedColumns()) {
+                if (!(mColumn instanceof TdColumn)) {
+                    isDelimitedFile = true;
+                    break;
+                }
+            }
+            if (isDelimitedFile) {
+                List<MetadataColumn> columnList = ((MetadataTable) ColumnHelper.getColumnOwnerAsMetadataTable(simpInd
+                        .getAnalyzedColumns().get(0))).getColumns();
+                for (MetadataColumn mdColumn : columnList) {
+                    columnElementList.add(mdColumn.getLabel());
+                }
+            } else {
+                List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch((simpInd
+                        .getAnalyzedColumns().get(0).eContainer())));
+                for (TdColumn tdColumn : columnList) {
+                    columnElementList.add(tdColumn.getLabel());
+                }
+            }
+        }
+        return columnElementList;
+
     }
 
     public List<String> filterAdaptColumnHeader() {
@@ -271,30 +322,38 @@ public class DrillDownEditorInput implements IEditorInput {
         ModelElement analysisElement = indicator.getAnalyzedElement();
         String menuType = this.getMenuType();
         List<String> columnElementList = new ArrayList<String>();
-        // MOD qiongli 2011-1-9 feature 16796
-        if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALUE_TYPE)) {
+        // MOD qiongli 2011-3-3,feature 19192 ,drill down for columnSet with java engine .
+        if (analysisElement == null && indicator.eContainer() instanceof SimpleStatIndicator) {
+            columnElementList = columnHeaderForColumnSet((SimpleStatIndicator) indicator.eContainer());
 
-            columnElementList.add(ModelElementHelper.getName(indicator.getAnalyzedElement()));
-        } else if (analysisElement instanceof TdColumn) {
-            for (TdColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
-                    .eContainer()))) {
-                columnElementList.add(column.getName());
-            }
+        } else {
+            // MOD qiongli 2011-1-9 feature 16796
+            if (DrillDownEditorInput.judgeMenuType(menuType, DrillDownEditorInput.MENU_VALUE_TYPE)) {
 
-        } else if (analysisElement instanceof TdXmlElementType) {
-            TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
-                    .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
-            for (TdXmlElementType xmlElement : org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement)) {
-                if (!DqRepositoryViewService.hasChildren(xmlElement)) {
-                    columnElementList.add(xmlElement.getName());
+                columnElementList.add(ModelElementHelper.getName(indicator.getAnalyzedElement()));
+            } else if (analysisElement instanceof TdColumn) {
+                for (TdColumn column : TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement()
+                        .eContainer()))) {
+                    columnElementList.add(column.getName());
+                }
+
+            } else if (analysisElement instanceof TdXmlElementType) {
+                TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
+                        .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
+                for (TdXmlElementType xmlElement : org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement)) {
+                    if (!DqRepositoryViewService.hasChildren(xmlElement)) {
+                        columnElementList.add(xmlElement.getName());
+                    }
+                }
+            } else if (analysisElement instanceof MetadataColumn) {
+                MetadataTable mTable = (MetadataTable) ColumnHelper
+                        .getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
+                for (MetadataColumn mColumn : mTable.getColumns()) {
+                    columnElementList.add(mColumn.getLabel());
                 }
             }
-        } else if (analysisElement instanceof MetadataColumn) {
-            MetadataTable mTable = (MetadataTable) ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
-            for (MetadataColumn mColumn : mTable.getColumns()) {
-                columnElementList.add(mColumn.getLabel());
-            }
         }
+
         return columnElementList;
     }
 

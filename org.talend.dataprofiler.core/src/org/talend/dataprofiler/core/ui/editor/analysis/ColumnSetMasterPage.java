@@ -583,14 +583,18 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             execCombo.add(temp);
         }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
-        // MOD zshen feature 12919 : add allow drill down and max number row component for java engin.
+        // MOD qiongli 2011-2-28,feature 19192.create 'storeDataSection' only for sql engine.
         final Composite javaEnginSection = createjavaEnginSection(sectionClient);
+        final Composite storeDataSection = createStoreDataCheck(sectionClient);
         if (ExecutionLanguage.SQL.equals(executionLanguage)) {
             javaEnginSection.setVisible(false);
             GridData data = (GridData) javaEnginSection.getLayoutData();
             data.heightHint = 10;
             javaEnginSection.setLayoutData(data);
             analysisParamSection.setExpanded(true);
+            storeDataSection.setVisible(true);
+        } else {
+            storeDataSection.setVisible(false);
         }
         execCombo.setText(executionLanguage.getLiteral());
         execLang = executionLanguage.getLiteral();
@@ -599,11 +603,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         execCombo.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                // MOD xqliu 2009-08-24 bug 8776
                 execLang = execCombo.getText();
-
-                // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
-                // "analyzed Columns",ExecutionLanguage only is Java.
+                // when have a datePatternFreqIndicator in the "analyzed Columns",ExecutionLanguage only is Java.
                 if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {
                     MessageUI.openWarning(DefaultMessagesImpl
                             .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
@@ -611,16 +612,17 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                     execLang = execCombo.getText();
                     return;
                 }
-                // ~11104
-                // MOD zshen feature 12919 : hidden or display parameter of java engin.
+                // hidden or display parameter of java engin.
                 if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang))) {
                     javaEnginSection.setVisible(false);
+                    storeDataSection.setVisible(true);
                     GridData data = (GridData) javaEnginSection.getLayoutData();
                     data.heightHint = 10;
                     javaEnginSection.setLayoutData(data);
                     analysisParamSection.setExpanded(true);
                 } else {
                     javaEnginSection.setVisible(true);
+                    storeDataSection.setVisible(false);
                     GridData data = (GridData) javaEnginSection.getLayoutData();
                     data.heightHint = 100;
                     javaEnginSection.setLayoutData(data);
@@ -634,9 +636,22 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         });
 
-        // MOD yyi 2011-02-24 18612: add store data option
-        toolkit.createLabel(sectionClient, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$ 
-        storeDataCheck = new Button(sectionClient, SWT.CHECK | SWT.RIGHT_TO_LEFT);
+        analysisParamSection.setClient(sectionClient);
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "createStoreDataCheck".
+     * 
+     * @param sectionClient
+     */
+    private Composite createStoreDataCheck(Composite sectionClient) {
+        Composite storeDataSection = toolkit.createComposite(sectionClient);
+        GridLayout gridLayout = new GridLayout(2, false);
+        gridLayout.marginWidth = 0;
+        storeDataSection.setLayout(gridLayout);
+        toolkit.createLabel(storeDataSection, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$ 
+        storeDataCheck = new Button(storeDataSection, SWT.CHECK | SWT.RIGHT_TO_LEFT);
         storeDataCheck.setSelection(simpleStatIndicator.isStoreData());
 
         storeDataCheck.addSelectionListener(new SelectionAdapter() {
@@ -647,7 +662,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
         });
 
-        analysisParamSection.setClient(sectionClient);
+        return storeDataSection;
     }
 
     /**
@@ -676,11 +691,13 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
         drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);
         drillDownCheck.setSelection(true);
+        simpleStatIndicator.setStoreData(true);
         drillDownCheck.setSelection(anaParameters.isStoreData());
         drillDownCheck.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                simpleStatIndicator.setStoreData(drillDownCheck.getSelection());
                 setDirty(true);
             }
 
