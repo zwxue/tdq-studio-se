@@ -382,7 +382,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             authorText.setEnabled(false);
             lockerText.setText(lockerStr == null ? PluginConstant.EMPTY_STRING : lockerStr);
             lockerText.setEnabled(false);
-            // versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
+            versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
             statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus);
 
         }
