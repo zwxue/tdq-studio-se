@@ -382,13 +382,11 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             indicToRowMap.put(indicator, analyzedDataSet);
             analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
             analyzedDataSet.setRecordSize(0);
-        } else {
-            valueObjectList = analyzedDataSet.getData();
-            if (valueObjectList == null) {
-                valueObjectList = new ArrayList<Object[]>();
-                analyzedDataSet.setData(valueObjectList);
-            }
-
+        }
+        valueObjectList = analyzedDataSet.getData();
+        if (valueObjectList == null) {
+            valueObjectList = new ArrayList<Object[]>();
+            analyzedDataSet.setData(valueObjectList);
         }
 
         return valueObjectList;
