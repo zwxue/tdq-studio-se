@@ -582,6 +582,11 @@ public class DQRespositoryView extends CommonNavigator {
         }
     }
 
+    public void refresh() {
+        RefreshDQReponsitoryViewAction refresh = new RefreshDQReponsitoryViewAction();
+        refresh.run();
+    }
+
     /*
      * (non-Jsdoc)
      * 
