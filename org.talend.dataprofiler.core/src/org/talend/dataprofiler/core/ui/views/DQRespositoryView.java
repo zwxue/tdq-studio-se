@@ -22,6 +22,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
@@ -39,6 +40,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -443,6 +446,18 @@ public class DQRespositoryView extends CommonNavigator {
                         }
                     }
                 }
+            }
+
+        });
+
+        // MOD mzhao 2011-03-10 bug 19147: filter MDM entries.
+        getCommonViewer().addFilter(new ViewerFilter() {
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof IProject) {
+                    return false;
+                }
+                return true;
             }
 
         });
