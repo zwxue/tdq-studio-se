@@ -605,7 +605,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.IndicatorDefinitionActionProvider">
          <enablement>
             <instanceof
-                  value="org.talend.dq.nodes.IndicatorDefinitionRepNode">
+                  value="org.talend.dq.nodes.SysIndicatorDefinitionRepNode">
             </instanceof>
          </enablement>
       </actionProvider> 
