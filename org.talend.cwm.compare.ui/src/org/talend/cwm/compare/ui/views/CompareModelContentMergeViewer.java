@@ -33,7 +33,6 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.metamodel.UnmatchElement;
 import org.eclipse.emf.compare.ui.AbstractCompareAction;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.util.EMFCompareConstants;
@@ -458,11 +457,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 resourceManager.saveResource(leftResource);
                 // refactor the input
                 final MatchModel match = (MatchModel) modelCompareInput.getMatch();
-                EList<UnmatchElement> unmatchedElements = match.getUnmatchedElements();
-                for (UnmatchElement element : unmatchedElements) {
-                    int indexOf = unmatchedElements.indexOf(element);
-                    unmatchedElements.remove(indexOf);
-                }
+                match.getUnmatchedElements().clear();
                 final ComparisonResourceSnapshot snap = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
                 snap.setDiff((DiffModel) ((ModelCompareInput) getInput()).getDiff());
                 snap.setMatch((MatchModel) ((ModelCompareInput) getInput()).getMatch());
