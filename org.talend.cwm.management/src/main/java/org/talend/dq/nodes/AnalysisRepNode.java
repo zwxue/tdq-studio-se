@@ -75,4 +75,9 @@ public class AnalysisRepNode extends RepositoryNode {
         }
         return super.getLabel();
     }
+
+    @Override
+    public boolean canExpandForDoubleClick() {
+        return false;
+    }
 }

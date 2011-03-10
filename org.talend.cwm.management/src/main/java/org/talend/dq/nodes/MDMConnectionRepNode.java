@@ -94,4 +94,8 @@ public class MDMConnectionRepNode extends ConnectionRepNode {
         return super.getLabel();
     }
 
+    @Override
+    public boolean canExpandForDoubleClick() {
+        return false;
+    }
 }

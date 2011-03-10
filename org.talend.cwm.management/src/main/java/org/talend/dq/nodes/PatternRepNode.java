@@ -81,4 +81,8 @@ public class PatternRepNode extends RepositoryNode {
         return super.getLabel();
     }
 
+    @Override
+    public boolean canExpandForDoubleClick() {
+        return false;
+    }
 }

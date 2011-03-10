@@ -54,4 +54,8 @@ public class RuleRepNode extends RepositoryNode {
         return super.getLabel();
     }
 
+    @Override
+    public boolean canExpandForDoubleClick() {
+        return false;
+    }
 }

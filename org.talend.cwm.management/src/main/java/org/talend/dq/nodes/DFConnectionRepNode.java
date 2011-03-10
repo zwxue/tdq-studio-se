@@ -78,4 +78,8 @@ public class DFConnectionRepNode extends ConnectionRepNode {
         return nodes;
     }
 
+    @Override
+    public boolean canExpandForDoubleClick() {
+        return false;
+    }
 }
