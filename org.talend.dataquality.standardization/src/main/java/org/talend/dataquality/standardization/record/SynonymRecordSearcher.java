@@ -178,7 +178,7 @@ public class SynonymRecordSearcher {
             // create
             recRes.record = record;
             recRes.wordResults.add(wResults);
-
+            searcher.close();
         }
         List<OutputRecord> outputRecords = recRes.computeOutputRows();
         Collections.sort(outputRecords);
