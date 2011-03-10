@@ -1,3 +1,7 @@
+1.5.7 # scorreia
+- avoid SynonymRecordSearcher to return duplicates
+- removed the limit[] argument from the SynonymRecordSearcher.search method
+
 1.5.6 # scorreia sizhaoliu
 - add method close after utilisations of SynonymIndexSearcher.
 - fixed delete index from file system

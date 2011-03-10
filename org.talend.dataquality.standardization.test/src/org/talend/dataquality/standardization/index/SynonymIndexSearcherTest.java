@@ -215,11 +215,11 @@ public class SynonymIndexSearcherTest {
 
         // record to search
         String[] record = new String[] { row1Company, row1Label };
-        int[] limits = { 1, 1 };
+
         SynonymRecordSearcher recsearcher = new SynonymRecordSearcher(record.length);
         recsearcher.addSearcher(searcher, 0);
         recsearcher.addSearcher(searcher, 1);
-        List<OutputRecord> output = recsearcher.search(3, record, limits);
+        List<OutputRecord> output = recsearcher.search(3, record);
         for (OutputRecord outputRecord : output) {
             System.out.println("out= " + outputRecord);
         }

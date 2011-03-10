@@ -15,7 +15,9 @@ package org.talend.dataquality.standardization.record;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.ScoreDoc;
@@ -108,12 +110,11 @@ public class SynonymRecordSearcher {
             }
 
             // build each row
-            List<OutputRecord> outputRecords = new ArrayList<OutputRecord>();
+            Set<OutputRecord> outputRecords = new HashSet<OutputRecord>();
             int recordLength = record.length;
 
             for (int i = 0; i < nb; i++) { // row
                 OutputRecord outputRec = new OutputRecord(recordLength);
-                outputRecords.add(outputRec);
 
                 float score = 0;
                 StringBuffer scores = new StringBuffer();
@@ -129,9 +130,11 @@ public class SynonymRecordSearcher {
                 }
                 outputRec.scores = new String(scores.deleteCharAt(0));
                 outputRec.score = score / recordLength;
+                // add the record to the set
+                outputRecords.add(outputRec);
             }
 
-            return outputRecords;
+            return new ArrayList<OutputRecord>(outputRecords);
         }
     }
 
@@ -140,15 +143,11 @@ public class SynonymRecordSearcher {
      * 
      * @param maxNbOutputResults the number of results to return
      * @param record a list of fields that will be search in the indexes (all fields of the record will be searched)
-     * @param limits the max number of results returned by each search. This argument must be of the same size as the
-     * number of records
      * @throws IOException
      * @throws ParseException if the searched field cannot be parsed as a query
      */
-    public List<OutputRecord> search(int maxNbOutputResults, String[] record, int[] limits) throws ParseException, IOException {
+    public List<OutputRecord> search(int maxNbOutputResults, String[] record) throws ParseException, IOException {
         assert record != null;
-        assert limits != null;
-        assert record.length == limits.length;
 
         // List<RecordResult> recResults = new ArrayList<SynonymRecordSearcher.RecordResult>();
         RecordResult recRes = new RecordResult();
@@ -160,9 +159,8 @@ public class SynonymRecordSearcher {
 
             // search this field in one index
             SynonymIndexSearcher searcher = searchers[i];
-            searcher.setTopDocLimit(limits[i]);
             TopDocs docs = searcher.searchDocumentBySynonym(field);
-            int nbDocs = Math.min(limits[i], docs.totalHits);
+            int nbDocs = Math.min(searcher.getTopDocLimit(), docs.totalHits);
             
             // store all found words in a list of results for this field
             for (int j = 0; j < nbDocs; j++) {
@@ -178,7 +176,6 @@ public class SynonymRecordSearcher {
             // create
             recRes.record = record;
             recRes.wordResults.add(wResults);
-            searcher.close();
         }
         List<OutputRecord> outputRecords = recRes.computeOutputRows();
         Collections.sort(outputRecords);
@@ -194,7 +191,19 @@ public class SynonymRecordSearcher {
      */
     public void addSearcher(SynonymIndexSearcher searcher, int columnIndex) {
         assert columnIndex < this.recordSize;
+        if (searcher == null) {
+            throw new NullPointerException("tried to set a null Synonym index searcher at " + columnIndex);
+        }
         searchers[columnIndex] = searcher;
     }
 
+    /**
+     * Method "getSearcher".
+     * 
+     * @param columnIndex the column index
+     * @return the SynonymIndexSearcher added at this column index.
+     */
+    public SynonymIndexSearcher getSearcher(int columnIndex) {
+        return searchers[columnIndex];
+    }
 }

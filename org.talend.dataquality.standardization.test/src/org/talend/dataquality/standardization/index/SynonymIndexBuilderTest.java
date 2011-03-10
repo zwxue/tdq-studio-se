@@ -35,7 +35,7 @@ public class SynonymIndexBuilderTest {
     /**
      * ATTENTION: Be careful when changing this list of synonyms, they are also use in SynonymIndexSearcherTest.
      */
-    static String[][] synonyms = { { "I.B.M.", "IBM|International Business Machines|Big Blue" },
+    public static String[][] synonyms = { { "I.B.M.", "IBM|International Business Machines|Big Blue" },
             { "ISDF", "IBM|International Business Machines|Big Blue" }, { "IRTY", "IBM|International Business Machines" },
             { "ANPE", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" },
             { "TEST", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" }, { "Sécurité Sociale", "Sécu|SS|CPAM" },

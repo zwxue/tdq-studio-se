@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.standardization.record;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @author scorreia SynonymRecordSearcher: A record (= set of fields) that has been found after a search in several
@@ -58,6 +59,43 @@ public class OutputRecord implements Comparable<OutputRecord> {
         buf.append(" -> " + score);
         buf.append("; ->" + scores);
         return buf.toString();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        HashCodeBuilder b = new HashCodeBuilder();
+        b.append(record);
+        return b.toHashCode();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        OutputRecord other = (OutputRecord) obj;
+        for (int i = 0; i < record.length; i++) {
+            if (record[i] == null) {
+                if (other.record[i] != null) {
+                    return false;
+                }
+            } else { //
+                if (!record[i].equals(other.record[i])) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
