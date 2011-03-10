@@ -86,6 +86,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public void setSelectionNode(AnalysisRepNode node) {
         this.node = node;
     }
+
     public RunAnalysisAction() {
         super(DefaultMessagesImpl.getString("RunAnalysisAction.Run")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
@@ -100,6 +101,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public void run() {
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
+        // MOD klliu bug 19244 2011-03-10
+        if (node != null) {
+            editor = CorePlugin.getDefault().openEditor(new AnalysisItemEditorInput(node.getObject().getProperty().getItem()),
+                    AnalysisEditor.class.getName());
+        }
         // MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
         if (selectionFile != null) {
             // editor = CorePlugin.getDefault().openEditor(selectionFile, AnalysisEditor.class.getName());
