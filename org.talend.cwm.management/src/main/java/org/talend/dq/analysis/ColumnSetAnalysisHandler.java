@@ -19,7 +19,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -56,7 +55,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
      * @return
      */
 
-    public boolean addIndicator(List<MetadataColumn> columns, Indicator indicator) {
+    public boolean addIndicator(List<ModelElement> columns, Indicator indicator) {
         for (ModelElement tdColumn : columns) {
             if (!analysis.getContext().getAnalysedElements().contains(tdColumn)) {
                 analysis.getContext().getAnalysedElements().add(tdColumn);

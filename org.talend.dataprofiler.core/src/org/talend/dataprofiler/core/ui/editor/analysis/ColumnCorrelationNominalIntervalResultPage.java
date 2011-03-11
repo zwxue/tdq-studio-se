@@ -202,7 +202,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
     private void createBubbleOrGanttChart(final ScrolledForm form, final Composite composite,
             final ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
         List<Composite> previewChartList = new ArrayList<Composite>();
-        List<MetadataColumn> bubOrGanttColumnList = new ArrayList<MetadataColumn>();
+        List<ModelElement> bubOrGanttColumnList = new ArrayList<ModelElement>();
         if (columnSetMultiValueIndicator instanceof CountAvgNullIndicator) {
             bubOrGanttColumnList = columnSetMultiValueIndicator.getNumericColumns();
         } else {

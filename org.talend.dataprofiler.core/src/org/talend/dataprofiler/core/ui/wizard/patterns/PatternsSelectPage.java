@@ -90,7 +90,7 @@ public class PatternsSelectPage extends WizardPage {
 
         parent.setLayout(parentGridLayout);
 
-        List<MetadataColumn> analysisColumns = this.selectPatternsWizard.getSsIndicator().getAnalyzedColumns();
+        List<ModelElement> analysisColumns = this.selectPatternsWizard.getSsIndicator().getAnalyzedColumns();
         // add tableView
         GridTableViewer tableView = new GridTableViewer(parent, SWT.NONE);
 
@@ -194,7 +194,7 @@ public class PatternsSelectPage extends WizardPage {
         if (allMatchIndicator == null) {
             return returnList;
         }
-        List<MetadataColumn> analysisColumns = this.selectPatternsWizard.getAllMatchIndicator().getAnalyzedColumns();
+        List<ModelElement> analysisColumns = this.selectPatternsWizard.getAllMatchIndicator().getAnalyzedColumns();
         List<RegexpMatchingIndicator> regexpMatchingIndicatorList = this.selectPatternsWizard.getAllMatchIndicator()
                 .getCompositeRegexMatchingIndicators();
 

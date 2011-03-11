@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
@@ -81,7 +80,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private void instantiateQuery(Indicator indicator) {
         if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
             ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
-            final EList<MetadataColumn> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
+            final EList<ModelElement> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
             final EList<String> numericFunctions = initializeNumericFunctions(colSetMultValIndicator);
             final EList<String> dateFunctions = initializeDateFunctions(colSetMultValIndicator);
 
@@ -170,7 +169,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param analyzedColumns
      * @return the quoted table name
      */
-    private String getTableName(final EList<MetadataColumn> analyzedColumns) {
+    private String getTableName(final EList<ModelElement> analyzedColumns) {
         // MOD yyi 2011-02-22 17871:delimitefile
         EObject owner = analyzedColumns.get(0).eContainer();
         ColumnSet set = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);

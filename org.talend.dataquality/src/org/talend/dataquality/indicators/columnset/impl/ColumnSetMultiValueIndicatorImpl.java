@@ -82,7 +82,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @generated
      * @ordered
      */
-    protected EList<MetadataColumn> analyzedColumns;
+    protected EList<ModelElement> analyzedColumns;
 
     /**
      * The default value of the '{@link #getListRows() <em>List Rows</em>}' attribute.
@@ -132,7 +132,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * @generated
      * @ordered
      */
-    protected EList<MetadataColumn> dateColumns;
+    protected EList<ModelElement> dateColumns;
 
     /**
      * The default value of the '{@link #getUniqueCount() <em>Unique Count</em>}' attribute.
@@ -251,9 +251,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
-    public EList<MetadataColumn> getAnalyzedColumns() {
+    public EList<ModelElement> getAnalyzedColumns() {
         if (analyzedColumns == null) {
-            analyzedColumns = new EObjectResolvingEList<MetadataColumn>(MetadataColumn.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
+            analyzedColumns = new EObjectResolvingEList<ModelElement>(ModelElement.class, this, ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS);
         }
         return analyzedColumns;
     }
@@ -293,12 +293,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<MetadataColumn> getNominalColumns() {
-        EList<MetadataColumn> nominalColumns = new BasicElistExtend<MetadataColumn>();// bug 10578 by zshen,fix the
+    public EList<ModelElement> getNominalColumns() {
+        EList<ModelElement> nominalColumns = new BasicElistExtend<ModelElement>();// bug 10578 by zshen,fix the
                                                                                   // exception when
         // correlation analysis to be move
         if (analyzedColumns != null) {
-            for (MetadataColumn column : analyzedColumns) {
+            for (ModelElement column : analyzedColumns) {
                 // MOD yyi 2011-02-25 16660: edit connection, save it will get error
                 final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
@@ -335,12 +335,12 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<MetadataColumn> getNumericColumns() {
-        EList<MetadataColumn> computedColumns = new BasicElistExtend<MetadataColumn>();// bug 10578 by zshen,fix the
+    public EList<ModelElement> getNumericColumns() {
+        EList<ModelElement> computedColumns = new BasicElistExtend<ModelElement>();// bug 10578 by zshen,fix the
                                                                                    // exception when
         // correlation analysis to be move
         if (analyzedColumns != null) {
-            for (MetadataColumn column : analyzedColumns) {
+            for (ModelElement column : analyzedColumns) {
                 // MOD yyi 2011-02-25 16660: edit connection, save it will get error
                 final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
@@ -421,7 +421,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public EList<String> getDateFunctions() {
@@ -436,10 +435,10 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      * 
      * @generated NOT
      */
-    public EList<MetadataColumn> getDateColumns() {
-        EList<MetadataColumn> dateColumns = new BasicEList<MetadataColumn>();
+    public EList<ModelElement> getDateColumns() {
+        EList<ModelElement> dateColumns = new BasicEList<ModelElement>();
         if (analyzedColumns != null) {
-            for (MetadataColumn column : analyzedColumns) {
+            for (ModelElement column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
                 final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
                 if (tdColumn != null) {
@@ -812,7 +811,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         switch (featureID) {
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__ANALYZED_COLUMNS:
                 getAnalyzedColumns().clear();
-                getAnalyzedColumns().addAll((Collection<? extends MetadataColumn>)newValue);
+                getAnalyzedColumns().addAll((Collection<? extends ModelElement>)newValue);
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__LIST_ROWS:
                 setListRows((List<Object[]>)newValue);
@@ -827,7 +826,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__DATE_COLUMNS:
                 getDateColumns().clear();
-                getDateColumns().addAll((Collection<? extends MetadataColumn>)newValue);
+                getDateColumns().addAll((Collection<? extends ModelElement>)newValue);
                 return;
             case ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR__UNIQUE_COUNT:
                 setUniqueCount((Long)newValue);

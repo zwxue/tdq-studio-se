@@ -138,7 +138,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
                     try{
                     eResource = EMFSharedResources.getInstance().getResource(uri, true);
                     } catch (Exception e) {// MOD by zshen for ModelElement can not be find excetion.
-                    // eResource = EMFSharedResources.getInstance().getResource(uri, true);
+                        eResource = EMFSharedResources.getInstance().getResource(uri, true);
                     }
                     if (eResource.getContents().size() > 0) {
                         analyses.add((Analysis) eResource.getContents().get(0));

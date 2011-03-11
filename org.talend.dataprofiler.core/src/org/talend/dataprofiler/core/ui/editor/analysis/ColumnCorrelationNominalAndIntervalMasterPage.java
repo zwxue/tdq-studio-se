@@ -411,7 +411,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             }
         } else {
 
-            List<MetadataColumn> numericOrDateList = new ArrayList<MetadataColumn>();
+            List<ModelElement> numericOrDateList = new ArrayList<ModelElement>();
             if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
                 numericOrDateList = columnSetMultiIndicator.getNumericColumns();
             }
@@ -419,7 +419,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 numericOrDateList = columnSetMultiIndicator.getDateColumns();
             }
 
-            for (MetadataColumn column : numericOrDateList) {
+            for (ModelElement column : numericOrDateList) {
                 final MetadataColumn tdColumn = (MetadataColumn) column;
 
                 ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
