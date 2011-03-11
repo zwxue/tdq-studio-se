@@ -72,6 +72,7 @@ import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
@@ -227,28 +228,30 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // MOD xqliu 2009-07-01 bug 7068
         createAnalysisParamSection(form, topComp);
         // ~
+        if (!EditorPreferencePage.isHideGraphics()) {
+            Composite previewComp = toolkit.createComposite(sForm);
+            previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+            previewComp.setLayout(new GridLayout());
+            // add by hcheng for 0007290: Chart cannot auto compute it's size in
+            // DQRule analsyis Editor
+            previewComp.addControlListener(new ControlAdapter() {
 
-        Composite previewComp = toolkit.createComposite(sForm);
-        previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        previewComp.setLayout(new GridLayout());
-        // add by hcheng for 0007290: Chart cannot auto compute it's size in
-        // DQRule analsyis Editor
-        previewComp.addControlListener(new ControlAdapter() {
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
+                 */
+                @Override
+                public void controlResized(ControlEvent e) {
+                    super.controlResized(e);
+                    sForm.redraw();
+                    form.reflow(true);
+                }
+            });
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
-             */
-            @Override
-            public void controlResized(ControlEvent e) {
-                super.controlResized(e);
-                sForm.redraw();
-                form.reflow(true);
-            }
-        });
+            createPreviewSection(form, previewComp);
+        }
 
-        createPreviewSection(form, previewComp);
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {

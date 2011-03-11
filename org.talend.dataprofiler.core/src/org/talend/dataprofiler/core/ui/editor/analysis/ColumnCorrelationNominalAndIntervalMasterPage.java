@@ -70,6 +70,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalInt
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
@@ -252,41 +253,43 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         createDataFilterSection(form, topComp);
 
         // createAnalysisParamSection(form, topComp);
+        if (!EditorPreferencePage.isHideGraphics()) {
+            Composite previewComp = toolkit.createComposite(sForm);
+            previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+            previewComp.setLayout(new GridLayout());
+            // add by hcheng for 0007290: Chart cannot auto compute it's size in
+            // DQRule analsyis Editor
+            previewComp.addControlListener(new ControlAdapter() {
 
-        Composite previewComp = toolkit.createComposite(sForm);
-        previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        previewComp.setLayout(new GridLayout());
-        // add by hcheng for 0007290: Chart cannot auto compute it's size in
-        // DQRule analsyis Editor
-        previewComp.addControlListener(new ControlAdapter() {
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
+                 */
+                @Override
+                public void controlResized(ControlEvent e) {
+                    super.controlResized(e);
+                    sForm.redraw();
+                    form.reflow(true);
+                }
+            });
+            // ~
+            createPreviewSection(form, previewComp);
+        }
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
-             */
-            @Override
-            public void controlResized(ControlEvent e) {
-                super.controlResized(e);
-                sForm.redraw();
-                form.reflow(true);
-            }
-        });
-        // ~
-        createPreviewSection(form, previewComp);
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisColSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.analyzeColumn"), null); //$NON-NLS-1$
+        analysisColSection = createSection(form, anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analyzeColumn"), null); //$NON-NLS-1$
 
         Composite topComp = toolkit.createComposite(analysisColSection);
         topComp.setLayout(new GridLayout());
         // ~ MOD mzhao 2009-05-05,Bug 6587.
         createConnBindWidget(topComp);
         // ~
-        Hyperlink clmnBtn = toolkit.createHyperlink(topComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
+        Hyperlink clmnBtn = toolkit.createHyperlink(topComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
@@ -344,8 +347,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
         refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
         refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
+        final Label message = toolkit.createLabel(sectionClient,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
@@ -368,8 +371,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
 
                 if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null, DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
+                    boolean returnCode = MessageDialog.openConfirm(null,
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("ColumnMasterDetailsPage.RunOrSeeSampleData")); //$NON-NLS-1$
 
                     if (returnCode) {
@@ -540,8 +543,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * @param anasisDataComp
      */
     void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisParamSection = createSection(form, anasisDataComp, DefaultMessagesImpl
-                .getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        analysisParamSection = createSection(form, anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(2, false));
         toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
@@ -598,7 +601,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         // save analysis
         List<RepositoryNode> repositoryNodeList = treeViewer.getColumnSetMultiValueList();
 
-
         if (repositoryNodeList != null && repositoryNodeList.size() != 0) {
             reposObject = repositoryNodeList.get(0).getObject();
             tdProvider = ((ConnectionItem) reposObject.getProperty().getItem()).getConnection();
@@ -616,9 +618,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
             tdProvider = (Connection) analysis.getContext().getConnection();
             if (tdProvider != null) {
-            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-            analysis.getContext().setConnection(null);
-            analysis.getResults().getIndicators().clear();
+                tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+                analysis.getContext().setConnection(null);
+                analysis.getResults().getIndicators().clear();
             }
             // MOD by zshen for bug 12042.
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
@@ -799,7 +801,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             return new ReturnCode(true);
         }
 
-
         return new ReturnCode(message, false);
     }
 
@@ -857,8 +858,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     protected ReturnCode canRun() {
         List<RepositoryNode> columnSetMultiValueList = getTreeViewer().getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
-            return new ReturnCode(DefaultMessagesImpl
-                    .getString("ColumnCorrelationNominalAndIntervalMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
+            return new ReturnCode(
+                    DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
         }
 
         return new ReturnCode(true);

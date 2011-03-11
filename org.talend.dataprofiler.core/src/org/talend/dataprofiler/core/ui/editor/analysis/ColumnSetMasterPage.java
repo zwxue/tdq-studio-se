@@ -75,6 +75,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
@@ -214,10 +215,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             if (tdColumn == null && mdColumn != null) {
                 currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
-                        .recursiveFind(mdColumn));
+                        .recursiveFind2(mdColumn));
             } else if (tdColumn != null) {
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
-                        .recursiveFind(tdColumn));
+                        .recursiveFind2(tdColumn));
             }
             // currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
             // .recursiveFind(tdColumn));
@@ -277,28 +278,30 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         createAnalysisParamSection(form, topComp);
 
         // createAnalysisParamSection(form, topComp);
+        if (!EditorPreferencePage.isHideGraphics()) {
+            Composite previewComp = toolkit.createComposite(sForm);
+            previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+            previewComp.setLayout(new GridLayout());
+            // add by hcheng for 0007290: Chart cannot auto compute it's size in
+            // DQRule analsyis Editor
+            previewComp.addControlListener(new ControlAdapter() {
 
-        Composite previewComp = toolkit.createComposite(sForm);
-        previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        previewComp.setLayout(new GridLayout());
-        // add by hcheng for 0007290: Chart cannot auto compute it's size in
-        // DQRule analsyis Editor
-        previewComp.addControlListener(new ControlAdapter() {
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
+                 */
+                @Override
+                public void controlResized(ControlEvent e) {
+                    super.controlResized(e);
+                    sForm.redraw();
+                    form.reflow(true);
+                }
+            });
+            // ~
+            createPreviewSection(form, previewComp);
+        }
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
-             */
-            @Override
-            public void controlResized(ControlEvent e) {
-                super.controlResized(e);
-                sForm.redraw();
-                form.reflow(true);
-            }
-        });
-        // ~
-        createPreviewSection(form, previewComp);
     }
 
     /**
