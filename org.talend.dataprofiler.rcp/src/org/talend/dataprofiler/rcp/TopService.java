@@ -488,4 +488,24 @@ public class TopService implements ICoreService {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ICoreService#deleteBeanfile(org.talend.core.model.repository.IRepositoryViewObject)
+     */
+    public void deleteBeanfile(IRepositoryViewObject objToDelete) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ICoreService#syncAllBeans()
+     */
+    public void syncAllBeans() throws SystemException {
+        // TODO Auto-generated method stub
+
+    }
+
 }
