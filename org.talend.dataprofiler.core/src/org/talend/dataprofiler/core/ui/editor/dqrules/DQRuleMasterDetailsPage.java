@@ -59,12 +59,14 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.JoinConditionTableViewer;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.views.WhereClauseDND;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -90,6 +92,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     protected RuleRepNode ruleRepNode;
 
+    protected TDQBusinessRuleItem whereRuleItem;
+
     public RuleRepNode getRuleRepNode() {
         return this.ruleRepNode;
     }
@@ -98,6 +102,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(whereRule);
         if (recursiveFind != null && recursiveFind instanceof RuleRepNode) {
             this.ruleRepNode = (RuleRepNode) recursiveFind;
+            this.whereRuleItem = (TDQBusinessRuleItem) this.ruleRepNode.getObject().getProperty().getItem();
         }
     }
 
@@ -266,7 +271,9 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             whereRule.getJoins().clear();
             whereRule.getJoins().addAll(this.tempJoinElements);
 
-            ReturnCode rc = DQRuleResourceFileHelper.getInstance().save(whereRule);
+            // ReturnCode rc = DQRuleResourceFileHelper.getInstance().save(whereRule);
+            this.whereRuleItem.setDqrule(whereRule);
+            ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(this.whereRuleItem);
 
             ret = rc.isOk();
             this.joinConditionTableViewer.updateModelViewer();

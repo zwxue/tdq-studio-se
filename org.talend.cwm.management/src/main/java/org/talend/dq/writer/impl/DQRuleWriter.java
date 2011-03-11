@@ -12,12 +12,17 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -27,6 +32,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public class DQRuleWriter extends AElementPersistance {
+
+    static Logger log = Logger.getLogger(DQRuleWriter.class);
 
     /**
      * DOC bZhou DQRuleWriter constructor comment.
@@ -75,8 +82,22 @@ public class DQRuleWriter extends AElementPersistance {
     }
 
     public ReturnCode save(Item item) {
-        // TODO Auto-generated method stub
-        return null;
+        ReturnCode rc = new ReturnCode();
+        try {
+            TDQBusinessRuleItem ruleItem = (TDQBusinessRuleItem) item;
+            if (ruleItem != null && ruleItem.eIsProxy()) {
+                ruleItem = (TDQBusinessRuleItem) EObjectHelper.resolveObject(ruleItem);
+                ruleItem.getProperty().setLabel(ruleItem.getDqrule().getName());
+            }
+            DQRule rule = ruleItem.getDqrule();
+            addDependencies(rule);
+            ProxyRepositoryFactory.getInstance().save(ruleItem);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
     }
 
     @Override

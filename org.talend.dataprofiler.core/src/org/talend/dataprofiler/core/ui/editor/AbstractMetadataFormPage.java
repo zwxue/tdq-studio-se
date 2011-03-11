@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -118,7 +119,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         this.currentModelElement = getCurrentModelElement(editor);
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(currentModelElement);
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind2(currentModelElement);
         if (recursiveFind != null) {
             this.repositoryNode = recursiveFind;
             if (this.repositoryNode.getObject() != null) {
@@ -322,6 +323,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 String version = text.getText();
                 version = VersionUtils.upMajor(version);
                 text.setText(version);
+                Property property = getProperty();
+                if (property != null) {
+                    property.setVersion(version);
+                    property.setCreationDate(new Date());
+                }
+                setDirty(true);
             }
         });
 
@@ -332,6 +339,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 String version = text.getText();
                 version = VersionUtils.upMinor(version);
                 text.setText(version);
+                Property property = getProperty();
+                if (property != null) {
+                    property.setVersion(version);
+                    property.setCreationDate(new Date());
+                }
+                setDirty(true);
             }
         });
 
@@ -409,7 +422,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 property.setDescription(descriptionText.getText());
                 property.setStatusCode(statusCombo.getText());
                 property.getAuthor().setLogin(authorText.getText());
-                // property.setVersion(versionText.getText());
+                property.setVersion(versionText.getText());
             }
         }
     }

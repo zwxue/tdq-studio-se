@@ -95,6 +95,7 @@ import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -134,6 +135,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private IndicatorDefinition definition;
 
+    private TDQIndicatorDefinitionItem definitionItem;
+
     protected SysIndicatorDefinitionRepNode indicatorDefinitionRepNode;
 
     public SysIndicatorDefinitionRepNode getIndicatorDefinitionRepNode() {
@@ -141,7 +144,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     private void initIndicatorDefinitionRepNode(IndicatorDefinition indicatorDefinition) {
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(indicatorDefinition);
+        // RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(indicatorDefinition);
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind2(definition);
         if (recursiveFind != null && recursiveFind instanceof SysIndicatorDefinitionRepNode) {
             this.indicatorDefinitionRepNode = (SysIndicatorDefinitionRepNode) recursiveFind;
         }
@@ -251,6 +255,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         String[] supportTypes = PatternLanguageType.getAllLanguageTypes();
         // initialize user defined indicator category
         definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
+
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(supportTypes));
         // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
@@ -302,6 +307,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         initTempIndicatorDefinitionParameter(definition);
 
         initIndicatorDefinitionRepNode(definition);
+
+        if (this.indicatorDefinitionRepNode != null) {
+            this.definitionItem = (TDQIndicatorDefinitionItem) this.indicatorDefinitionRepNode.getObject().getProperty()
+                    .getItem();
+        }
     }
 
     /**
@@ -1295,11 +1305,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Button button = new Button(detailComp, SWT.PUSH);
         button.setText("Browse...");
         button.addSelectionListener(new SelectionAdapter() {
-//MOD by zshen for bug 18724 2011.02.23
+
+            // MOD by zshen for bug 18724 2011.02.23
             public void widgetSelected(SelectionEvent e) {
                 String jarpathStr = jarPathText.getText();
-                JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(ResourceManager
-.getUDIJarFolder(), jarpathStr.split("\\|\\|"));
+                JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(
+                        ResourceManager.getUDIJarFolder(), jarpathStr.split("\\|\\|"));
                 if (selectDialog.open() == Window.OK) {
 
                     String path = "";
@@ -1629,10 +1640,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Button button = new Button(detailComp, SWT.PUSH);
         button.setText("Browse...");//$NON-NLS-1$
         button.addSelectionListener(new SelectionAdapter() {
-          //MOD by zshen for bug 18724 2011.02.23
+
+            // MOD by zshen for bug 18724 2011.02.23
             public void widgetSelected(SelectionEvent e) {
-                JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(ResourceManager
-.getUDIJarFolder(), jarPathText.getText().split("\\|\\|"));
+                JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(
+                        ResourceManager.getUDIJarFolder(), jarPathText.getText().split("\\|\\|"));
                 if (selectDialog.open() == Window.OK) {
                     String path = "";
                     for (Object obj : selectDialog.getResult()) {
@@ -1736,7 +1748,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC yyi 2009-09-11 Feature:9030
+     * DOC yyi 2009-09-11 Feature:9030.
      * 
      * @param expressComp
      * @param patternText
@@ -1972,13 +1984,19 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         saveDefinitionParameters(definition);
         ReturnCode rc = UDIHelper.validate(definition);
         if (rc.isOk()) {
-          //MOD by zshen for bug 18724 2011.02.23
+            // MOD by zshen for bug 18724 2011.02.23
             // EMFUtil.saveSingleResource(definition.eResource());
-            RepositoryNode indicatorNode = RepositoryNodeHelper.recursiveFind(definition);
-            ((TDQIndicatorDefinitionItem) indicatorNode.getObject().getProperty().getItem()).setIndicatorDefinition(definition);
-            IndicatorResourceFileHelper.getInstance().save(definition);
-            // ElementWriterFactory.getInstance().createIndicatorDefinitionWriter()
-            // .save(indicatorNode.getObject().getProperty().getItem());
+            // CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.INDICATORS));
+            // RepositoryNode indicatorNode = RepositoryNodeHelper.recursiveFind(definition);
+            // if (indicatorNode != null) {
+            // ((TDQIndicatorDefinitionItem) indicatorNode.getObject().getProperty().getItem())
+            // .setIndicatorDefinition(definition);
+            // }
+            if (this.definitionItem != null) {
+                this.definitionItem.setIndicatorDefinition(definition);
+            }
+            // IndicatorResourceFileHelper.getInstance().save(definition);
+            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem);
             this.isDirty = false;
         } else {
             MessageDialog.openError(null, "error", rc.getMessage());
@@ -2059,9 +2077,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
                 && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
-          //MOD by zshen for bug 18724 2011.02.23
+            // MOD by zshen for bug 18724 2011.02.23
             for (IFile file : UDIUtils.getContainJarFile(jarPath)) {
-//            File file = new File(jarPath);
+                // File file = new File(jarPath);
                 TalendURLClassLoader cl;
                 try {
                     cl = new TalendURLClassLoader(new URL[] { file.getLocation().toFile().toURI().toURL() });

@@ -68,6 +68,7 @@ import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
@@ -1195,6 +1196,52 @@ public final class RepositoryNodeHelper {
         }
 
         return false;
+    }
+
+    public static RepositoryNode recursiveFind2(ModelElement modelElement) {
+        String uuid = ResourceHelper.getUUID(modelElement);
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+
+        if (modelElement instanceof Analysis) {
+            nodes.add(getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
+        } else if (modelElement instanceof TdReport) {
+            nodes.add(getDataProfilingFolderNode(EResourceConstant.REPORTS));
+        } else if (modelElement instanceof Connection || modelElement instanceof Catalog || modelElement instanceof Schema
+                || modelElement instanceof MetadataColumn || modelElement instanceof MetadataTable
+                || modelElement instanceof TdTable || modelElement instanceof TdView || modelElement instanceof TdColumn
+                || modelElement instanceof TdXmlElementType || modelElement instanceof TdXmlSchema) {
+            nodes.add(getMetadataFolderNode(EResourceConstant.METADATA));
+        } else if (modelElement instanceof Pattern) {
+            nodes.add(getLibrariesFolderNode(EResourceConstant.PATTERNS));
+        } else if (modelElement instanceof IndicatorDefinition) {
+            if (modelElement instanceof WhereRule) {
+                nodes.add(getLibrariesFolderNode(EResourceConstant.RULES));
+            } else {
+                nodes.add(getLibrariesFolderNode(EResourceConstant.INDICATORS));
+            }
+        }
+        return recursiveFindByUuid(uuid, nodes);
+    }
+
+    public static RepositoryNode recursiveFindByUuid(String uuid) {
+        return recursiveFind(uuid, getTdqRootNodes());
+    }
+
+    public static RepositoryNode recursiveFindByUuid(String uuid, List<IRepositoryNode> nodes) {
+        assert uuid != null;
+        assert nodes != null;
+        for (IRepositoryNode node : nodes) {
+            ModelElement modelElement = getModelElementFromRepositoryNode(node);
+            if (modelElement != null && uuid.equals(ResourceHelper.getUUID(modelElement))) {
+                return (RepositoryNode) node;
+            } else {
+                RepositoryNode recursiveFind = recursiveFindByUuid(uuid, node.getChildren());
+                if (recursiveFind != null) {
+                    return recursiveFind;
+                }
+            }
+        }
+        return null;
     }
 
     public static RepositoryNode recursiveFind(String nodeId) {

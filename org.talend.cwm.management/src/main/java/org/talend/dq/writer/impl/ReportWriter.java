@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -23,7 +24,9 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.RepositoryNode;
@@ -40,6 +43,8 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * This class saves the analysis.
  */
 public class ReportWriter extends AElementPersistance {
+
+    static Logger log = Logger.getLogger(ReportWriter.class);
 
     /**
      * DOC bZhou ReportWriter constructor comment.
@@ -106,21 +111,21 @@ public class ReportWriter extends AElementPersistance {
 
     public ReturnCode save(Item item) {
         ReturnCode rc = new ReturnCode();
-//        try {
-//            TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
-//            if (anaItem != null && anaItem.eIsProxy()) {
-//                anaItem = (TDQAnalysisItem) EObjectHelper.resolveObject(anaItem);
-//                anaItem.getProperty().setLabel(anaItem.getAnalysis().getName());
-//            }
-//            Analysis analysis = anaItem.getAnalysis();
-//            addDependencies(analysis);
-//            addResourceContent(analysis.eResource(), analysis);
-//            ProxyRepositoryFactory.getInstance().save(anaItem);
-//        } catch (PersistenceException e) {
-//            log.error(e, e);
-//            rc.setOk(Boolean.FALSE);
-//            rc.setMessage(e.getMessage());
-//        }
+        try {
+            TDQReportItem repItem = (TDQReportItem) item;
+            if (repItem != null && repItem.eIsProxy()) {
+                repItem = (TDQReportItem) EObjectHelper.resolveObject(repItem);
+                repItem.getProperty().setLabel(repItem.getReport().getName());
+            }
+            Report report = repItem.getReport();
+            addDependencies(report);
+            addResourceContent(report.eResource(), report);
+            ProxyRepositoryFactory.getInstance().save(repItem);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
         return rc;
     }
 
