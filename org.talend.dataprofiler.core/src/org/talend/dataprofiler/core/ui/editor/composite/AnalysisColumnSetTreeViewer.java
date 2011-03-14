@@ -226,18 +226,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         delButton.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                // MOD yyi 2011-02-25 18868
-                TreeItem[] selection = tree.getSelection();
-                for (TreeItem treeItem : selection) {
-                    ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
-                    deleteColumnItems(meIndicator.getModelElementRepositoryNode());
-                    removeItemBranch(treeItem);
-                }
-                // MOD mzhao 2005-05-05 bug 6587.
-                // MOD mzhao 2009-06-8, bug 5887.
-                updateBindConnection(masterPage, tree);
-                enabledButtons(false);
-                tree.setFocus();
+                removeSelectedElements();
             }
         });
     }
@@ -539,19 +528,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * @param newTree
      */
     private void removeSelectedElements(final Tree newTree) {
-        TreeItem[] selection = newTree.getSelection();
-        for (TreeItem item : selection) {
-            ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-
-            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-            if (indicatorUnit != null) {
-                deleteIndicatorItems(meIndicator, indicatorUnit);
-            } else {
-                RepositoryNode tdColumn = (RepositoryNode) item.getData(COLUMN_INDICATOR_KEY);
-                deleteColumnItems(tdColumn);
-            }
-            removeItemBranch(item);
-        }
+        removeSelectedElements();
     }
 
     private void addTreeListener(final Tree tree) {
@@ -794,5 +771,22 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     public void setLanguage(ExecutionLanguage language) {
         this.language = language;
+    }
+
+    /**
+     * DOC yyi 2011-03-14 19460:remove selected element form the tree
+     */
+    private void removeSelectedElements() {
+        TreeItem[] selection = tree.getSelection();
+        for (TreeItem treeItem : selection) {
+            ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
+            deleteColumnItems(meIndicator.getModelElementRepositoryNode());
+            removeItemBranch(treeItem);
+        }
+        // MOD mzhao 2005-05-05 bug 6587.
+        // MOD mzhao 2009-06-8, bug 5887.
+        updateBindConnection(masterPage, tree);
+        enabledButtons(false);
+        tree.setFocus();
     }
 }
