@@ -15,7 +15,6 @@ package org.talend.dq.analysis.explore;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
@@ -241,7 +240,7 @@ public abstract class DataExplorer implements IDataExplorer {
         }
         StringBuffer name = new StringBuffer(PluginConstant.EMPTY_STRING);
         EObject object = ind.eContainer();
-        EList<MetadataColumn> eLs = null;
+        EList<ModelElement> eLs = null;
         if (object != null && object instanceof ColumnSetMultiValueIndicator) {
             eLs = ((ColumnSetMultiValueIndicator) object).getAnalyzedColumns();
 
@@ -249,7 +248,7 @@ public abstract class DataExplorer implements IDataExplorer {
             eLs = ((AllMatchIndicator) ind).getAnalyzedColumns();
         }
         if (eLs != null && !eLs.isEmpty()) {
-            for (MetadataColumn mColumn : eLs) {
+            for (ModelElement mColumn : eLs) {
                 name.append(dbmsLanguage.quote(mColumn.getName())).append(",");
             }
             if (eLs.size() > 0) {

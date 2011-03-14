@@ -286,12 +286,12 @@ public class DrillDownEditorInput implements IEditorInput {
             return columnElementList;
         }
         if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
-            for (MetadataColumn mColumn : simpInd.getAnalyzedColumns()) {
-                columnElementList.add(mColumn.getLabel());
+            for (ModelElement mColumn : simpInd.getAnalyzedColumns()) {
+                columnElementList.add(((MetadataColumn)mColumn).getLabel());
             }
         } else {
             boolean isDelimitedFile = false;
-            for (MetadataColumn mColumn : simpInd.getAnalyzedColumns()) {
+            for (ModelElement mColumn : simpInd.getAnalyzedColumns()) {
                 if (!(mColumn instanceof TdColumn)) {
                     isDelimitedFile = true;
                     break;
