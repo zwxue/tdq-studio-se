@@ -27,8 +27,10 @@ import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.utils.security.CryptoHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -101,6 +103,11 @@ public class CWMPlugin extends Plugin {
                     assert password != null;
 
                     String url = JavaSqlFactory.getURL(connection);
+
+                    // gdbu 2011-3-14 bug 19539
+                     CryptoHelper crypthelper = new CryptoHelper(ConnectionHelper.PASSPHRASE);
+                     password=crypthelper.encrypt(password);
+                    // ~19539
 
                     User previousUser = new User(user, password);
                     alias.setDefaultUser(previousUser);
