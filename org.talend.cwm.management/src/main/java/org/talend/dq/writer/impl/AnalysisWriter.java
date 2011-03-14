@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -36,6 +38,8 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -56,6 +60,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class AnalysisWriter extends AElementPersistance {
 
     static Logger log = Logger.getLogger(AnalysisWriter.class);
+
     /**
      * DOC bZhou AnalysisWriter constructor comment.
      */
@@ -63,7 +68,7 @@ public class AnalysisWriter extends AElementPersistance {
         super();
     }
 
-    /**
+    /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
@@ -85,8 +90,7 @@ public class AnalysisWriter extends AElementPersistance {
                     if (dependencyReturn.isOk()) {
                         RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(udi);
                         if (repositoryNode != null) {
-                            TDQItem udiItem = (TDQItem) repositoryNode.getObject().getProperty()
-                                    .getItem();
+                            TDQItem udiItem = (TDQItem) repositoryNode.getObject().getProperty().getItem();
                             if (udiItem instanceof TDQIndicatorDefinitionItem) {
                                 ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
                             } else if (udiItem instanceof TDQBusinessRuleItem) {
@@ -108,8 +112,7 @@ public class AnalysisWriter extends AElementPersistance {
                     if (dependencyReturn.isOk()) {
                         RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(pattern);
                         if (repositoryNode != null) {
-                            TDQPatternItem patternItem = (TDQPatternItem) repositoryNode.getObject()
-                                    .getProperty().getItem();
+                            TDQPatternItem patternItem = (TDQPatternItem) repositoryNode.getObject().getProperty().getItem();
                             patternItem.setPattern(pattern);
                         }
                         ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
@@ -120,15 +123,15 @@ public class AnalysisWriter extends AElementPersistance {
                 }
             }
         } catch (PersistenceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 
-    /**
+    /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.writer.AElementPersistance#addResourceContent(orgomg.cwm.objectmodel.core.ModelElement)
+     * 
      * @deprecated
      */
     @Override
@@ -199,6 +202,7 @@ public class AnalysisWriter extends AElementPersistance {
             Project currentProject = ProjectManager.getInstance().getCurrentProject();
             ProxyRepositoryFactory.getInstance().save(currentProject, anaItem);
             // super.save(anaItem);
+            updateDependencies(analysis);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
@@ -211,6 +215,98 @@ public class AnalysisWriter extends AElementPersistance {
     @Override
     protected void notifyResourceChanges() {
         ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected void updateDependencies(ModelElement element) {
+        Analysis analysis = (Analysis) element;
+        // update supplier dependency
+        EList<Dependency> supplierDependency = analysis.getSupplierDependency();
+        try {
+            for (Dependency sDependency : supplierDependency) {
+                EList<ModelElement> client = sDependency.getClient();
+                for (ModelElement me : client) {
+                    if (me instanceof TdReport) {
+                        TdReport report = (TdReport) me;
+                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report,
+                                analysis);
+                        if (dependencyReturn.isOk()) {
+                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(report);
+                            if (repositoryNode != null) {
+                                TDQReportItem reportItem = (TDQReportItem) repositoryNode.getObject().getProperty().getItem();
+                                reportItem.setReport(report);
+                            }
+                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                    .saveResource(report.eResource());
+                        }
+                    }
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        // update client dependency
+        EList<Dependency> clientDependency = analysis.getClientDependency();
+        try {
+            for (Dependency cDependency : clientDependency) {
+                EList<ModelElement> supplier = cDependency.getSupplier();
+                for (ModelElement me : supplier) {
+                    if (me instanceof Connection) {
+                        Connection connection = (Connection) me;
+                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+                                analysis, connection);
+                        if (dependencyReturn.isOk()) {
+                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+                            if (repositoryNode != null) {
+                                ConnectionItem connectionItem = (ConnectionItem) repositoryNode.getObject().getProperty()
+                                        .getItem();
+                                connectionItem.setConnection(connection);
+                            }
+                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                    .saveResource(connection.eResource());
+                        }
+                    } else if (me instanceof IndicatorDefinition) {
+                        IndicatorDefinition udi = (IndicatorDefinition) me;
+                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+                                analysis, udi);
+                        if (dependencyReturn.isOk()) {
+                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(udi);
+                            if (repositoryNode != null) {
+                                TDQItem udiItem = (TDQItem) repositoryNode.getObject().getProperty().getItem();
+                                if (udiItem instanceof TDQIndicatorDefinitionItem) {
+                                    ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
+                                } else if (udiItem instanceof TDQBusinessRuleItem) {
+                                    ((TDQBusinessRuleItem) udiItem).setDqrule((DQRule) udi);
+                                }
+                            }
+                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                    .saveResource(udi.eResource());
+                        }
+                    } else if (me instanceof Pattern) {
+                        Pattern pattern = (Pattern) me;
+                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+                                analysis, pattern);
+                        if (dependencyReturn.isOk()) {
+                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(pattern);
+                            if (repositoryNode != null) {
+                                TDQPatternItem patternItem = (TDQPatternItem) repositoryNode.getObject().getProperty().getItem();
+                                patternItem.setPattern(pattern);
+                            }
+                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                    .saveResource(pattern.eResource());
+                        }
+                    }
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
 
     }
 }

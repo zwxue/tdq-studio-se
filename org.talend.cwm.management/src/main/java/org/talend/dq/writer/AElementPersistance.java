@@ -495,6 +495,13 @@ public abstract class AElementPersistance {
     protected abstract void addDependencies(ModelElement element);
 
     /**
+     * DOC bZhou Comment method "updateDependencies".
+     * 
+     * @param element
+     */
+    protected abstract void updateDependencies(ModelElement element);
+
+    /**
      * DOC bZhou Comment method "addResourceContent".
      * 
      * @param element

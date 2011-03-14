@@ -353,7 +353,7 @@ public final class DependenciesHandler {
     public void updateAnalysisClientDependencyConnection(Analysis analysis) {
         List<Dependency> realDependency = new ArrayList<Dependency>();
         EList<Dependency> clientDependency = analysis.getClientDependency();
-        DataManager connection = analysis.getContext().getConnection();
+        // DataManager connection = analysis.getContext().getConnection();
         if (clientDependency != null) {
             for (Dependency dependency : clientDependency) {
                 // MOD qiongli bug 15587
@@ -366,7 +366,7 @@ public final class DependenciesHandler {
                     if (modelElement != null) {
                         if (modelElement instanceof Connection) {
                             // if (modelElement.equals(connection)) {
-                                realDependency.add(dependency);
+                            realDependency.add(dependency);
                             // }
                         } else {
                             realDependency.add(dependency);

@@ -20,12 +20,19 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -85,6 +92,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
             addResourceContent(indiDefinition.eResource(), indiDefinition);
             indicatorItem.setIndicatorDefinition(indiDefinition);
             ProxyRepositoryFactory.getInstance().save(indicatorItem);
+            updateDependencies(indiDefinition);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
@@ -97,5 +105,43 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
     protected void notifyResourceChanges() {
         ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected void updateDependencies(ModelElement element) {
+        IndicatorDefinition definition = (IndicatorDefinition) element;
+        // update supplier dependency
+        EList<Dependency> supplierDependency = definition.getSupplierDependency();
+        try {
+            for (Dependency sDependency : supplierDependency) {
+                EList<ModelElement> client = sDependency.getClient();
+                for (ModelElement me : client) {
+                    if (me instanceof Analysis) {
+                        Analysis analysis = (Analysis) me;
+                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+                                analysis, definition);
+                        if (dependencyReturn.isOk()) {
+                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(analysis);
+                            if (repositoryNode != null) {
+                                TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
+                                        .getItem();
+                                analysisItem.setAnalysis(analysis);
+                            }
+                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                    .saveResource(analysis.eResource());
+                        }
+                    }
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        // update client dependency
+        // if IndicatorDefinition have client depencency, add codes here
     }
 }

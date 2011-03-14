@@ -39,7 +39,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -73,14 +72,25 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     private PatternRepNode patternRepNode;
 
+    private TDQPatternItem patternItem;
+
+    protected Pattern getPattern() {
+        return this.pattern;
+    }
+
     protected PatternRepNode getPatternRepNode() {
         return this.patternRepNode;
+    }
+
+    protected TDQPatternItem getPatternItem() {
+        return this.patternItem;
     }
 
     private void initPatternRepNode(Pattern pattern) {
         RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(pattern);
         if (recursiveFind != null && recursiveFind instanceof PatternRepNode) {
             this.patternRepNode = (PatternRepNode) recursiveFind;
+            this.patternItem = (TDQPatternItem) this.patternRepNode.getObject().getProperty().getItem();
         }
     }
 
@@ -147,8 +157,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     }
 
     private void creatPatternDefinitionSection(Composite topCmp) {
-        patternDefinitionSection = createSection(form, topCmp, DefaultMessagesImpl
-                .getString("PatternMasterDetailsPage.patternDefinition"), null); //$NON-NLS-1$
+        patternDefinitionSection = createSection(form, topCmp,
+                DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternDefinition"), null); //$NON-NLS-1$
 
         Label label = new Label(patternDefinitionSection, SWT.WRAP);
         label.setText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.text")); //$NON-NLS-1$
@@ -218,10 +228,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
                     remainDBTypeList.remove(languageName);
                 }
                 if (remainDBTypeList.size() == 0) {
-                    MessageDialog
-                            .openWarning(
-                                    null,
-                                    DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openWarning(
+                            null,
+                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
                     return;
                 }
 
@@ -366,13 +375,13 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             }
         }
         // EMFUtil.saveSingleResource(pattern.eResource());
-        Item patternItem = ((PatternItemEditorInput) this.getEditor().getEditorInput()).getItem();
-        ((TDQPatternItem) patternItem).setPattern(this.pattern);
-        ElementWriterFactory.getInstance().createPatternWriter().save(patternItem);
+        // Item patternItem = ((PatternItemEditorInput) this.getEditor().getEditorInput()).getItem();
+        // ((TDQPatternItem) patternItem).setPattern(this.pattern);
+        this.patternItem.setPattern(this.pattern);
+        ElementWriterFactory.getInstance().createPatternWriter().save(this.patternItem);
         // PatternResourceFileHelper.getInstance().save(pattern);
 
         return true;
 
     }
-
 }
