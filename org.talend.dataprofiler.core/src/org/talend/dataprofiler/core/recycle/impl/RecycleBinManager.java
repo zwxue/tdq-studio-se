@@ -42,7 +42,6 @@ public final class RecycleBinManager {
 
     private List<IRepositoryNode> recycleBinChildren = null;
 
-
     private RecycleBinManager() {
 
     }
@@ -156,7 +155,7 @@ public final class RecycleBinManager {
             }
             return getFolderContentType((FolderItem) folderItem.getParent());
         }
-        for (ERepositoryObjectType objectType : ERepositoryObjectType.values()) {
+        for (ERepositoryObjectType objectType : (ERepositoryObjectType[]) ERepositoryObjectType.values()) {
             String folderName;
             try {
                 folderName = ERepositoryObjectType.getFolderName(objectType);

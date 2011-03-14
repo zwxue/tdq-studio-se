@@ -330,28 +330,20 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
     private IPath getNodeFullPath(ERepositoryObjectType objectType) {
         IPath fullPath = null;
-        switch (objectType) {
-        case TDQ_JRXMLTEMPLATE:
+        if (objectType == ERepositoryObjectType.TDQ_JRXMLTEMPLATE) {
             fullPath = ResourceManager.getJRXMLFolder().getFullPath();
-            break;
-        case TDQ_PATTERN_REGEX:
+        } else if (objectType == ERepositoryObjectType.TDQ_PATTERN_REGEX) {
             fullPath = ResourceManager.getPatternRegexFolder().getFullPath();
-            break;
-        case TDQ_PATTERN_SQL:
+        } else if (objectType == ERepositoryObjectType.TDQ_PATTERN_SQL) {
             fullPath = ResourceManager.getPatternSQLFolder().getFullPath();
-            break;
-        case TDQ_SOURCE_FILES:
+        } else if (objectType == ERepositoryObjectType.TDQ_SOURCE_FILES) {
             fullPath = ResourceManager.getSourceFileFolder().getFullPath();
-            break;
-        case TDQ_RULES_SQL:
+        } else if (objectType == ERepositoryObjectType.TDQ_RULES_SQL) {
             fullPath = ResourceManager.getRulesSQLFolder().getFullPath();
-            break;
-        case TDQ_USERDEFINE_INDICATORS:
+        } else if (objectType == ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS) {
             fullPath = ResourceManager.getUDIFolder().getFullPath();
-            break;
-        case METADATA_CONNECTIONS:
+        } else if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
             fullPath = ResourceManager.getConnectionFolder().getFullPath();
-            break;
         }
         return fullPath;
     }

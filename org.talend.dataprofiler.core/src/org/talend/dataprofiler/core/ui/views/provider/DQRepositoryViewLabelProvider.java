@@ -243,31 +243,29 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         if (type == null) {
             return null;
         }
-
-        switch (type) {
-        case TDQ_ANALYSIS_ELEMENT:
+        if (type == ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT) {
             return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
-        case METADATA_MDMCONNECTION:
+        } else if (type == ERepositoryObjectType.METADATA_MDMCONNECTION) {
             return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-        case METADATA_CONNECTIONS:
+        } else if (type == ERepositoryObjectType.METADATA_CONNECTIONS) {
             return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
-        case METADATA_FILE_DELIMITED:
+        } else if (type == ERepositoryObjectType.METADATA_FILE_DELIMITED) {
             return ImageLib.getImage(ImageLib.FILE_DELIMITED);
-        case TDQ_REPORT_ELEMENT:
+        } else if (type == ERepositoryObjectType.TDQ_REPORT_ELEMENT) {
             return ImageLib.getImage(ImageLib.REPORT_OBJECT);
-        case TDQ_INDICATOR_ELEMENT:
+        } else if (type == ERepositoryObjectType.TDQ_INDICATOR_ELEMENT) {
             return ImageLib.getImage(ImageLib.IND_DEFINITION);
-        case TDQ_PATTERN_ELEMENT:
+        } else if (type == ERepositoryObjectType.TDQ_PATTERN_ELEMENT) {
             return ImageLib.getImage(ImageLib.PATTERN_REG);
-        case TDQ_RULES:
+        } else if (type == ERepositoryObjectType.TDQ_RULES) {
             return ImageLib.getImage(ImageLib.DQ_RULE);
-        case TDQ_RULES_SQL:
+        } else if (type == ERepositoryObjectType.TDQ_RULES_SQL) {
             return ImageLib.getImage(ImageLib.DQ_RULE);
-        case TDQ_SOURCE_FILE_ELEMENT:
+        } else if (type == ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT) {
             return ImageLib.getImage(ImageLib.SOURCE_FILE);
-        case TDQ_EXCHANGE:
+        } else if (type == ERepositoryObjectType.TDQ_EXCHANGE) {
             return ImageLib.getImage(ImageLib.EXCHANGE);
-        case FOLDER:
+        } else if (type == ERepositoryObjectType.FOLDER) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         }
         return null;
