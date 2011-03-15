@@ -42,6 +42,7 @@ import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.RecycleBinRepNode;
+import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -217,6 +218,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (node instanceof ExchangeComponentRepNode) {
                 // ExchangeComponentRepNode always don't have children
                 return false;
+            } else if (node instanceof SysIndicatorFolderRepNode) {
+                return true;
             }
         }
         if (element instanceof IEcosCategory) {
