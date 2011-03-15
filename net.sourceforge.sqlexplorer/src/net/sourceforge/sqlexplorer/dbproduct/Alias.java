@@ -155,13 +155,14 @@ public class Alias {
                             addUser(user);
                         }
                     }
+                }
                     String defaultUserName = root.elementText(DEFAULT_USER);
                     if (defaultUserName != null) {
                         User user = users.get(defaultUserName);
                         if (user != null)
                             defaultUser = user;
                     }
-                }
+
             }
         }
     }
