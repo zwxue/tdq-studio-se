@@ -285,19 +285,39 @@ public class DrillDownEditorInput implements IEditorInput {
         if (simpInd.getAnalyzedColumns().size() == 0) {
             return columnElementList;
         }
+        TdXmlElementType tdXmeElement = null;
         if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
-            for (ModelElement mColumn : simpInd.getAnalyzedColumns()) {
-                columnElementList.add(((MetadataColumn)mColumn).getLabel());
+            for (ModelElement mod : simpInd.getAnalyzedColumns()) {
+                tdXmeElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
+                if (tdXmeElement != null) {
+                    columnElementList.add(tdXmeElement.getName());
+                } else {
+                    columnElementList.add(ModelElementHelper.getName(mod));
+                }
+
             }
         } else {
             boolean isDelimitedFile = false;
+            boolean isMDM = false;
             for (ModelElement mColumn : simpInd.getAnalyzedColumns()) {
-                if (!(mColumn instanceof TdColumn)) {
+                tdXmeElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mColumn);
+                TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(mColumn);
+                if (tdXmeElement != null) {
+                    isMDM = true;
+                } else if (tdColumn == null) {
                     isDelimitedFile = true;
-                    break;
                 }
+                break;
             }
-            if (isDelimitedFile) {
+            if (isMDM) {
+                TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
+                        .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(tdXmeElement)));
+                List<TdXmlElementType> columnList = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
+                for (TdXmlElementType tdXmlElement : columnList) {
+                    columnElementList.add(tdXmlElement.getName());
+                }
+
+            } else if (isDelimitedFile) {
                 List<MetadataColumn> columnList = ((MetadataTable) ColumnHelper.getColumnOwnerAsMetadataTable(simpInd
                         .getAnalyzedColumns().get(0))).getColumns();
                 for (MetadataColumn mdColumn : columnList) {

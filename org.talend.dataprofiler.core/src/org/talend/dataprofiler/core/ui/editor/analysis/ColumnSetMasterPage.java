@@ -57,9 +57,11 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -97,6 +99,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -208,8 +211,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             // MOD yyi 2011-02-16 17871:delimitefile
             MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+            TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(element);
 
-            if (tdColumn == null && mdColumn == null) {
+            if (tdColumn == null && mdColumn == null && xmlElement == null) {
                 continue;
             }
 
@@ -219,6 +223,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             } else if (tdColumn != null) {
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
                         .recursiveFind2(tdColumn));
+            } else if (xmlElement != null) {
+                currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper
+                        .recursiveFind(xmlElement));
             }
             // currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
             // .recursiveFind(tdColumn));
@@ -589,6 +596,14 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // MOD qiongli 2011-2-28,feature 19192.create 'storeDataSection' only for sql engine.
         final Composite javaEnginSection = createjavaEnginSection(sectionClient);
         final Composite storeDataSection = createStoreDataCheck(sectionClient);
+        // MOD qiongli 2011-3-15 set DataFilterText disabled except TdColumn.
+        if (analyzedColumns != null && !analyzedColumns.isEmpty()) {
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumns.get(0));
+            dataFilterComp.getDataFilterText().setEnabled(tdColumn != null);
+            if (tdColumn == null) {
+                changeExecuteLanguageToJava(true);
+            }
+        }
         if (ExecutionLanguage.SQL.equals(executionLanguage)) {
             javaEnginSection.setVisible(false);
             GridData data = (GridData) javaEnginSection.getLayoutData();
@@ -700,6 +715,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                // storeDataCheck.setSelection(drillDownCheck.getSelection());
                 simpleStatIndicator.setStoreData(drillDownCheck.getSelection());
                 setDirty(true);
             }
@@ -773,7 +789,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             List<ModelElement> columnList = new ArrayList<ModelElement>();
             for (IRepositoryNode rd : repositoryNodes) {
                 reposObject = rd.getObject();
-                columnList.add((ModelElement) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
+                if (rd instanceof MDMXmlElementRepNode) {
+                    columnList.add((ModelElement) ((MetadataXmlElementTypeRepositoryObject) reposObject).getTdXmlElementType());
+                } else {
+                    columnList.add((ModelElement) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
+                }
             }
 
             simpleStatIndicator.getAnalyzedColumns().addAll(columnList);
@@ -938,7 +958,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // MOD yyi 2011-02-16 17871:delimitefile
         List<ModelElement> columnList = new ArrayList<ModelElement>();
         for (IRepositoryNode rd : columnSetMultiValueList) {
-            columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            // columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            columnList.add(RepositoryNodeHelper.getModelElementFromRepositoryNode(rd));
         }
         if (!columnSetMultiValueList.isEmpty()) {
             if (!ModelElementHelper.isFromSameTable(columnList)) {
@@ -996,5 +1017,35 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
         }
         return false;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "getDataFilterComp".
+     * 
+     * @return
+     */
+    public DataFilterComp getDataFilterComp() {
+        return this.dataFilterComp;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "chageExecuteLanguageToJava".
+     */
+    public void changeExecuteLanguageToJava(boolean isDisabled) {
+        if (!(ExecutionLanguage.JAVA.getLiteral().equals(this.execLang))) {
+            int i = 0;
+            for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
+                if (language.compareTo(ExecutionLanguage.JAVA) == 0) {
+                    execCombo.select(i);
+                } else {
+                    i++;
+                }
+            }
+        }
+        if (isDisabled) {
+            execCombo.setEnabled(false);
+        }
     }
 }

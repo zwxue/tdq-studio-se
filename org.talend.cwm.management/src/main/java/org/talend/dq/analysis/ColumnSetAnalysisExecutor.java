@@ -15,18 +15,26 @@ package org.talend.dq.analysis;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
@@ -53,12 +61,15 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
     protected boolean isDelimitedFile = false;
 
+    protected boolean isMdm = false;
+
     /**
      * DOC yyi 2011-02-24 17871:delimitefile
      */
-    public ColumnSetAnalysisExecutor(boolean isDelimitedFile) {
+    public ColumnSetAnalysisExecutor(boolean isDelimitedFile, boolean isMdm) {
         super();
         this.isDelimitedFile = isDelimitedFile;
+        this.isMdm = isMdm;
     }
 
     /*
@@ -73,16 +84,34 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         eval.setMonitor(getMonitor());
         // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
+        // MOD qiongli 2011-3-11 featue 17869.consider of mdm connection
         for (Indicator indicator : indicators) {
             if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                 ColumnSetMultiValueIndicator colSetMultValIndicator = (ColumnSetMultiValueIndicator) indicator;
                 colSetMultValIndicator.prepare();
                 eval.storeIndicator(indicator.getName(), colSetMultValIndicator);
+                if (isMdm) {
+                    EList<ModelElement> modelElementLs = colSetMultValIndicator.getAnalyzedColumns();
+                    for (ModelElement mod : modelElementLs) {
+                        TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
+                        if (tdXmlElement != null) {
+                            eval.setTdXmlDocument(tdXmlElement.getOwnedDocument());
+                            break;
+                        }
+                    }
+                }
             }
         }
 
         // MOD yyi 2011-02-22 17871:delimitefile
-        if (!isDelimitedFile) {
+        if (isMdm) {
+            TypedReturnCode<MdmWebserviceConnection> mdmReturnObj = getMdmConnection(analysis);
+            if (!mdmReturnObj.isOk()) {
+                log.error(mdmReturnObj.getMessage());
+                return false;
+            }
+            eval.setMdmWebserviceConn(mdmReturnObj.getObject());
+        } else if (!isDelimitedFile) {
 
             TypedReturnCode<java.sql.Connection> connection = getConnection(analysis);
             if (!connection.isOk()) {
@@ -116,7 +145,36 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
         // MOD yyi 2011-02-22 17871:delimitefile
         if (isDelimitedFile) {
-            return "";
+            return PluginConstant.EMPTY_STRING;
+        } else if (isMdm) {
+            EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+            if (analysedElements.isEmpty()) {
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
+                        analysis.getName());
+                return null;
+            }
+            StringBuilder sql = new StringBuilder("//");
+            for (ModelElement modelElement : analysedElements) {
+                TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
+                if (tdXmlElement == null) {
+                    this.errorMessage = "given element can't be used.";
+                    return null;
+                }
+                ModelElement parentElement = XmlElementHelper.getParentElement(tdXmlElement);
+                if (parentElement == null) {
+                    this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName()); //$NON-NLS-1$
+                }
+                TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
+                if (parentXmlElement == null) {
+                    this.errorMessage = Messages.getString(
+                            "ColumnAnalysisExecutor.NoContainerFound", parentElement.getName(), parentXmlElement); //$NON-NLS-1$
+                    return null;
+                }
+                sql.append(parentXmlElement.getName());
+                break;
+            }
+            return sql.toString();
+
         }
         // ~
         this.cachedAnalysis = analysis;
@@ -258,6 +316,20 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         return true;
     }
 
-
+    protected TypedReturnCode<MdmWebserviceConnection> getMdmConnection(Analysis analysis) {
+        TypedReturnCode<MdmWebserviceConnection> rc = new TypedReturnCode<MdmWebserviceConnection>(true);
+        MDMConnection dataProvider = (MDMConnection) analysis.getContext().getConnection();
+        Properties props = new Properties();
+        props.setProperty(TaggedValueHelper.USER, dataProvider.getUsername());
+        props.setProperty(TaggedValueHelper.PASSWORD, dataProvider.getPassword());
+        props.setProperty(TaggedValueHelper.UNIVERSE, dataProvider.getUniverse() == null ? PluginConstant.EMPTY_STRING
+                : dataProvider.getUniverse());
+        props.setProperty(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter(dataProvider));
+        MdmWebserviceConnection tempMdmConnection = new MdmWebserviceConnection(dataProvider.getPathname(), props);
+        rc.setObject(tempMdmConnection);
+        rc.setOk(tempMdmConnection.checkDatabaseConnection().isOk());
+        rc.setMessage(dataProvider.getPathname());
+        return rc;
+    }
 
 }

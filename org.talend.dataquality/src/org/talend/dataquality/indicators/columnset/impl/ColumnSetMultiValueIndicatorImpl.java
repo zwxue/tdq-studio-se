@@ -29,6 +29,7 @@ import org.talend.algorithms.AlgoUtils;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
@@ -302,8 +303,13 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 // MOD yyi 2011-02-25 16660: edit connection, save it will get error
                 final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
+                final TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(column);
 
-                if (tdColumn == null && mdColumn == null) {
+                if (tdXmlElement != null) {
+                    break;
+                }
+
+                if (tdColumn == null && mdColumn == null && tdXmlElement==null) {
                     if (column == null) {
                         log.error("The list of analyzed column contains a null column");
                     } else {
@@ -344,6 +350,11 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 // MOD yyi 2011-02-25 16660: edit connection, save it will get error
                 final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
+                final TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(column);
+
+                if (tdXmlElement != null) {
+                    break;
+                }
 
                 if (tdColumn == null && mdColumn == null) {
                     if (column == null) {
@@ -395,6 +406,15 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 headers.add(MessageFormat.format(f, getColumnName(column)));
             }
         }
+        // mdm DataminingType is 'other' not above three types.
+        if (analyzedColumns != null) {
+            for (ModelElement modEle : analyzedColumns) {
+                TdXmlElementType tdXmlElemnt = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modEle);
+                if (tdXmlElemnt != null) {
+                    headers.add(tdXmlElemnt.getName());
+                }
+            }
+        }
         headers.add(this.getCountAll());
 
         return headers;
@@ -441,6 +461,10 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
             for (ModelElement column : analyzedColumns) {
                 final TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(column);
                 final MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(column);
+                final TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(column);
+                if (tdXmlElement != null) {
+                    break;
+                }
                 if (tdColumn != null) {
                     final DataminingType dmType = MetadataHelper.getDataminingType(tdColumn);
                     if (DataminingType.INTERVAL.equals(dmType)

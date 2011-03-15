@@ -108,7 +108,7 @@ public final class AnalysisExecutorSelector {
     }
 
     /**
-     * yyi 2011-02-22 17871:delimitefile
+     * yyi 2011-02-22 17871:delimitefile.
      * 
      * @param analysis
      * @param executionEngine
@@ -116,12 +116,15 @@ public final class AnalysisExecutorSelector {
      */
     private static AnalysisExecutor getColumnSetAnalysisExecutor(Analysis analysis, ExecutionLanguage executionEngine) {
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection((DataProvider) analysis.getContext().getConnection());
+        boolean isMdm = ConnectionUtils.isMdmConnection((DataProvider) analysis.getContext().getConnection());
         boolean sql = ExecutionLanguage.SQL.equals(executionEngine);
 
         if (isDelimitedFile) {
-            return new ColumnSetAnalysisExecutor(true);
+            return new ColumnSetAnalysisExecutor(true, false);
+        } else if (isMdm) {
+            return new ColumnSetAnalysisExecutor(false, true);
         } else {
-            return sql ? new MultiColumnAnalysisExecutor() : new ColumnSetAnalysisExecutor(false);
+            return sql ? new MultiColumnAnalysisExecutor() : new ColumnSetAnalysisExecutor(false, false);
         }
     }
 

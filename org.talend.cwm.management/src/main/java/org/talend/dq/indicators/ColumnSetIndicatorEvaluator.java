@@ -15,12 +15,17 @@ package org.talend.dq.indicators;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -30,14 +35,20 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.cwm.db.connection.MdmStatement;
+import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
+import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -69,9 +80,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     // MOD yyi 2011-02-22 17871:delimitefile
     protected boolean isDelimitedFile = false;
 
+    protected boolean isMdm = false;
+
+    protected TdXmlSchema tdXmlDocument;
+
+    protected MdmWebserviceConnection mdmWebserviceConn;
+
     public ColumnSetIndicatorEvaluator(Analysis analysis) {
         this.analysis = analysis;
         this.isDelimitedFile = analysis.getContext().getConnection() instanceof DelimitedFileConnection;
+        this.isMdm = analysis.getContext().getConnection() instanceof MDMConnection;
     }
 
     @Override
@@ -82,6 +100,8 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         indicToRowMap.clear();
         if (isDelimitedFile) {
             ok = evaluateByDelimitedFile(sqlStatement, ok);
+        } else if (isMdm) {
+            ok = evaluateByMDM(sqlStatement, ok);
         } else {
             ok = evaluateBySql(sqlStatement, ok);
             Statement statement = null;
@@ -93,10 +113,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 }
                 statement.execute(sqlStatement);
             }
-        }
-        // MOD qiongli 2011-3-4 feature 19192
-        if (analysis.getParameters().isStoreData()) {
-            storeDataSet(indicToRowMap);
         }
 
         return ok;
@@ -153,9 +169,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
         indicToRowMap.clear();
         while (resultSet.next()) {
-            if (resultSet.getRow() >= analysis.getParameters().getMaxNumberRows()) {
-                continue;
-            }
             EList<Object> objectLs = new BasicEList<Object>();
             Iterator<String> it = columnNames.iterator();
             while (it.hasNext()) {
@@ -212,10 +225,10 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 if (con.isFirstLineCaption() && currentRow == Long.valueOf("0")) {
                     continue;
                 }
-                if (con.isFirstLineCaption() && currentRow > maxNumberRows || !con.isFirstLineCaption()
-                        && currentRow >= maxNumberRows) {
-                    break;
-                }
+                // if (con.isFirstLineCaption() && currentRow > maxNumberRows || !con.isFirstLineCaption()
+                // && currentRow >= maxNumberRows) {
+                // break;
+                // }
                 String[] rowValues = csvReader.getValues();
                 Object object = null;
                 EList<Object> objectLs = new BasicEList<Object>();
@@ -248,6 +261,76 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     /**
      * 
+     * DOC qiongli Comment method "evaluateByMDM".
+     * 
+     * @param sqlStatement
+     * @param returnCode
+     * @return
+     */
+    private ReturnCode evaluateByMDM(String sqlStatement, ReturnCode returnCode) {
+        if (mdmWebserviceConn == null || tdXmlDocument == null) {
+            returnCode.setOk(false);
+            return returnCode;
+        }
+        MdmStatement statement = mdmWebserviceConn.createStatement();
+        String[] resultSet = null;
+        // sqlStatement = "//" + tdXmlDocument.getName();
+        this.getAnalyzedElements();
+        if (continueRun()) {
+            try {
+                List<String> strResultList = new ArrayList<String>();
+                returnCode.setOk(true);
+                returnCode.setOk(returnCode.isOk() && statement.execute(tdXmlDocument, sqlStatement));
+                // resultSet = statement.getResultSet();
+                List<String> strResultListTemp = Arrays.asList(statement.getResultSet());
+                strResultList.addAll(strResultListTemp.subList(1, strResultListTemp.size()));
+                resultSet = strResultList.toArray(new String[strResultList.size()]);
+            } catch (RemoteException e) {
+                returnCode.setMessage(e.getMessage());
+            } catch (ServiceException e) {
+                returnCode.setMessage(e.getMessage());
+            }
+        }
+        if (resultSet == null) {
+            String mess = "No result set for this statement: " + sqlStatement;
+            log.warn(mess);
+            returnCode.setReturnCode(mess, false);
+            return returnCode;
+        }
+        List<Map<String, String>> resultSetList = new ArrayList<Map<String, String>>();
+        List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
+        TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
+                .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElementList.get(0))));
+        List<TdXmlElementType> columnList = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
+        if (analysis.getParameters().isStoreData()) {
+            resultSetList = statement.tidyResultSet(columnList.toArray(new ModelElement[columnList.size()]), resultSet);
+        } else {
+            resultSetList = statement.tidyResultSet(analysisElementList.toArray(new ModelElement[analysisElementList.size()]),
+                    resultSet);
+        }
+        List<String> columnNames = getAnalyzedElementsName();
+        for (int i = 0; i < resultSetList.size(); i++) {
+            Map<String, String> rowMap = (Map<String, String>) resultSetList.get(i);
+            EList<Object> objectLs = new BasicEList<Object>();
+            Iterator<String> it = columnNames.iterator();
+            while (it.hasNext()) {
+                Object obj = rowMap.get(it.next());
+                if (obj != null && (PluginConstant.EMPTY_STRING.equals(obj.toString().trim()))) {
+                    obj = obj.toString().trim();
+                }
+                objectLs.add(obj);
+            }
+            if (objectLs.size() == 0) {
+                continue;
+            }
+            handleObjects(rowMap, objectLs, columnList);
+
+        }
+        return returnCode;
+    }
+
+    /**
+     * 
      * DOC qiongli Comment method "handleObjects".
      * 
      * @param objectLs
@@ -265,12 +348,13 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 // feature 19192 ,save data for drill down RowCountIndicator.
                 if (indicator instanceof SimpleStatIndicator) {
                     for (Indicator leafIndicator : ((SimpleStatIndicator) indicator).getLeafIndicators()) {
-                        if (!(leafIndicator instanceof RowCountIndicator) || !analysis.getParameters().isStoreData()) {
+                        if (!(leafIndicator instanceof RowCountIndicator) || !indicator.isStoreData()) {
                             continue;
                         }
 
                         List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
                         recordIncrement = valueObjectList.size();
+                        if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                         for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
                             List<TdColumn> columnList = TableHelper
                                     .getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(((ColumnSetMultiValueIndicator) indicator)
@@ -281,7 +365,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                                     && newobject.toString().indexOf("TIMESTAMP") > -1) {
                                 newobject = resultSet.getTimestamp(newcol);
                             }
-                            if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                                // if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                                 if (recordIncrement < valueObjectList.size()) {
                                     valueObjectList.get(recordIncrement)[j] = newobject;
                                 } else {
@@ -289,6 +373,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                                     valueObject[j] = newobject;
                                     valueObjectList.add(valueObject);
                                 }
+                                // }
                             }
                         }
                     }
@@ -327,10 +412,12 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                         List<MetadataColumn> columnList = ((MetadataTable) ColumnHelper
                                 .getColumnOwnerAsMetadataTable(metadataColumn)).getColumns();
                         recordIncrement = valueObjectList.size();
+
                         Object[] valueObject = new Object[columnList.size()];
-                        for (int j = 0; j < columnList.size(); j++) {
-                            Object newobject = PluginConstant.EMPTY_STRING;
-                            if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                        if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                            for (int j = 0; j < columnList.size(); j++) {
+                                Object newobject = PluginConstant.EMPTY_STRING;
+                                // if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                                 if (j < rowValues.length) {
                                     newobject = rowValues[j];
                                 }
@@ -340,7 +427,55 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                                     valueObject[j] = newobject;
                                     valueObjectList.add(valueObject);
                                 }
+                                // }
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 
+     * handle Objects and store data for MDM.
+     * 
+     * @param rowMap
+     * @param objectLs
+     * @param columnList
+     */
+    private void handleObjects(Map<String, String> rowMap, EList<Object> objectLs, List<TdXmlElementType> columnList) {
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
+        int recordIncrement = 0;
+        for (Indicator indicator : indicators) {
+            if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
+                indicator.handle(objectLs);
+                if (indicator instanceof SimpleStatIndicator) {
+                    if (!indicator.isStoreData()) {
+                        break;
+                    }
+                    SimpleStatIndicator simpIndi = (SimpleStatIndicator) indicator;
+                    for (Indicator leafIndicator : simpIndi.getLeafIndicators()) {
+                        if (!(leafIndicator instanceof RowCountIndicator)) {
+                            continue;
+                        }
+                        List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
+                        recordIncrement = valueObjectList.size();
+
+                        int offset = 0;
+                        for (TdXmlElementType columnElement : columnList) {
+                            Object newobject = rowMap.get(columnElement.getName());
+                            if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                                if (recordIncrement < valueObjectList.size()) {
+                                    valueObjectList.get(recordIncrement)[offset] = newobject;
+                                } else {
+                                    Object[] valueObject = new Object[columnList.size()];
+                                    valueObject[offset] = newobject;
+                                    valueObjectList.add(valueObject);
+                                }
+                            }
+                            offset++;
                         }
                     }
                 }
@@ -357,6 +492,10 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     protected ReturnCode checkConnection() {
         if (isDelimitedFile) {
             return new ReturnCode();
+        } else if (isMdm) {
+            if (mdmWebserviceConn.checkDatabaseConnection().isOk()) {
+                return new ReturnCode(true);
+            }
         }
         return super.checkConnection();
     }
@@ -368,7 +507,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      */
     @Override
     protected ReturnCode closeConnection() {
-        if (isDelimitedFile) {
+        if (isDelimitedFile || isMdm) {
             return new ReturnCode();
         }
         return super.closeConnection();
@@ -398,13 +537,13 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      * 
      * @param indicToRowMap
      */
-    private void storeDataSet(EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
-
+    private void storeDataSet() {
+        EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
         for (Indicator indicator : analysis.getResults().getIndicators()) {
             if (indicator instanceof SimpleStatIndicator) {
                 SimpleStatIndicator simpleIndicator = (SimpleStatIndicator) indicator;
                 List<Object[]> listRows = simpleIndicator.getListRows();
-                if (listRows == null || listRows.isEmpty()) {
+                if (!indicator.isStoreData() || listRows == null || listRows.isEmpty()) {
                     break;
                 }
                 for (Indicator leafIndicator : simpleIndicator.getLeafIndicators()) {
@@ -444,5 +583,30 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 }
             }
         }
+    }
+
+    public TdXmlSchema getTdXmlDocument() {
+        return this.tdXmlDocument;
+    }
+
+    public void setTdXmlDocument(TdXmlSchema tdXmlDocument) {
+        this.tdXmlDocument = tdXmlDocument;
+    }
+
+    public MdmWebserviceConnection getMdmWebserviceConn() {
+        return this.mdmWebserviceConn;
+    }
+
+    public void setMdmWebserviceConn(MdmWebserviceConnection mdmWebserviceConn) {
+        this.mdmWebserviceConn = mdmWebserviceConn;
+    }
+
+    @Override
+    public ReturnCode evaluateIndicators(String sqlStatement, boolean closeConnection) {
+        // TODO Auto-generated method stub
+        ReturnCode returnCode= super.evaluateIndicators(sqlStatement, closeConnection);
+        storeDataSet();
+        return returnCode;
+
     }
 }

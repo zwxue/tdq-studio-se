@@ -45,10 +45,8 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdSqlDataType;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -327,6 +325,13 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             }
             // MOD yyi 2010-05-13 12828
             Collections.reverse(columnList);
+            // MOD qiongli 2011-3-15 set DataFilterText disabled except TdColumn.
+            if (masterPage.getDataFilterComp() != null) {
+                masterPage.getDataFilterComp().getDataFilterText().setEnabled(!columnList.isEmpty());
+                if (columnList.isEmpty()) {
+                    masterPage.changeExecuteLanguageToJava(true);
+                }
+            }
         }
         // ~
         super.setInput(objs);
@@ -351,16 +356,17 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         for (int i = 0; i < elements.length; i++) {
             final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
 
-            final MetadataColumn column = (MetadataColumn) ((MetadataColumnRepositoryObject) meIndicator
-                    .getModelElementRepositoryNode().getObject()).getTdColumn();
+            // MOD qiongli 2011-3-11,feature 17896,make columnSet support MDM.
+            final ModelElement modelElement = RepositoryNodeHelper
+                    .getSubModelElement(meIndicator.getModelElementRepositoryNode());
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 
-            MetadataHelper.setDataminingType(DataminingType.NOMINAL, column);
+            MetadataHelper.setDataminingType(DataminingType.NOMINAL, modelElement);
             columnSetMultiValueList.add(meIndicator.getModelElementRepositoryNode());
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
             treeItem.setText(0, getModelElemetnDisplayName(meIndicator)); //$NON-NLS-1$
-            treeItem.setData(COLUMN_INDICATOR_KEY, column);
+            treeItem.setData(COLUMN_INDICATOR_KEY, modelElement);
             treeItem.setData(MODELELEMENT_INDICATOR_KEY, meIndicator);
 
             // MOD mzhao feature 13040 , 2010-05-21
@@ -371,9 +377,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
                 // for presentation
             }
-            final MetadataColumn tdColumn = (MetadataColumn) ((MetadataColumnRepositoryObject) meIndicator
-                    .getModelElementRepositoryNode().getObject()).getTdColumn();
-            DataminingType dataminingType = MetadataHelper.getDataminingType(tdColumn);
+            // final MetadataColumn tdColumn = (MetadataColumn) ((MetadataColumnRepositoryObject) meIndicator
+            // .getModelElementRepositoryNode().getObject()).getTdColumn();
+            DataminingType dataminingType = MetadataHelper.getDataminingType(modelElement);
             if (meIndicator instanceof DelimitedFileIndicator) {
                 dataminingType = MetadataHelper.getDefaultDataminingType(meIndicator.getJavaType());
             }
@@ -386,7 +392,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             combo.addSelectionListener(new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
-                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), tdColumn);
+                    MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), modelElement);
                     setDirty(true);
                 }
 
@@ -664,10 +670,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     @Override
     public boolean canDrop(IRepositoryNode reposNode) {
-        // MOD qiongli 2011-3-1 bug 17869,temporary filter mdm connection for column set.
-        if (reposNode instanceof MDMXmlElementRepNode) {
-            return false;
-        }
         List<IRepositoryNode> existColumns = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode columnFromMultiValueList : this.getColumnSetMultiValueList()) {
             existColumns.add(columnFromMultiValueList);
@@ -710,7 +712,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
             typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";
         } else if (meIndicator instanceof XmlElementIndicator) {
-            typeName = ((TdXmlElementType) meIndicator.getModelElementRepositoryNode()).getJavaType();
+            typeName = ((MDMXmlElementRepNode) meIndicator.getModelElementRepositoryNode()).getTdXmlElementType().getJavaType();
         } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
             MetadataColumn mColumn = ((DelimitedFileIndicatorImpl) meIndicator).getMetadataColumn();
             typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());
