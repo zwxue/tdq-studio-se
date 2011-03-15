@@ -48,7 +48,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
     public ColumnAnalysisDOSelectionPage() {
         super(newAnaStr, chooseConnStr, connsStr, new ColumnContentProvider(), true); //$NON-NLS-1$
 
-        setPageComplete(false);
+        setPageComplete(true);
     }
 
     @Override
