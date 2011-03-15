@@ -14,8 +14,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.2.0",
  org.eclipse.ui.editors;bundle-version="3.2.0",
  org.talend.libraries.apache,
  org.apache.log4j;bundle-version="1.2.13",
- org.talend.utils;bundle-version="2.1.0",
- org.talend.model;bundle-version="2.2.0"
+ org.talend.utils,
+ org.talend.model
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: sqlexplorer.jar,
  lib/rowset.jar,
