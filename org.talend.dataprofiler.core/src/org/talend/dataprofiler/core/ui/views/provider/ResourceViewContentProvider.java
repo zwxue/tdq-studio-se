@@ -35,6 +35,9 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -205,6 +208,15 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 List<TdXmlElementType> xmlElements = org.talend.cwm.db.connection.ConnectionUtils
                         .getXMLElements(metadataXmlElementType.getTdXmlElementType());
                 return xmlElements.size() > 0;
+            } else if (node instanceof ExchangeFolderRepNode) {
+                // ExchangeFolderRepNode always have children
+                return true;
+            } else if (node instanceof ExchangeCategoryRepNode) {
+                // ExchangeCategoryRepNode always have children
+                return true;
+            } else if (node instanceof ExchangeComponentRepNode) {
+                // ExchangeComponentRepNode always don't have children
+                return false;
             }
         }
         if (element instanceof IEcosCategory) {
