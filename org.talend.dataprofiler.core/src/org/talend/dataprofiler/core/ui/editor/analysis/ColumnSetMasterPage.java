@@ -941,7 +941,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
         }
         if (!columnSetMultiValueList.isEmpty()) {
-            if (!ModelElementHelper.isFromSameTable(columnList) && !"".equals(dataFilterComp.getDataFilterString())) {
+            if (!ModelElementHelper.isFromSameTable(columnList)) {
                 message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
             }
         }
