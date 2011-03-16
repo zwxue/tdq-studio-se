@@ -345,6 +345,11 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         } else if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
             fullPath = ResourceManager.getConnectionFolder().getFullPath();
         }
+        // gdbu 2011-3-16 bug 19537
+        else if (objectType == ERepositoryObjectType.TDQ_ANALYSIS) {
+            fullPath = ResourceManager.getAnalysisFolder().getFullPath();
+        }
+        // ~19537
         return fullPath;
     }
 
