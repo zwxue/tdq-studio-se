@@ -37,7 +37,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.utils.VersionUtils;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
@@ -48,7 +47,6 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.CorePackage;
@@ -414,17 +412,18 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // MetadataHelper.setVersion(versionText.getText(), currentModelElement);
         MetadataHelper.setDevStatus(currentModelElement, statusCombo.getText());
 
-        if (currentModelElement instanceof Connection) {
-            Property property = PropertyHelper.getProperty(currentModelElement);
-            if (property != null) {
-                property.setLabel(nameText.getText());
-                property.setPurpose(purposeText.getText());
-                property.setDescription(descriptionText.getText());
-                property.setStatusCode(statusCombo.getText());
-                property.getAuthor().setLogin(authorText.getText());
-                property.setVersion(versionText.getText());
-            }
+        // if (currentModelElement instanceof Connection) {
+        // Property property = PropertyHelper.getProperty(currentModelElement);
+        Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
+        if (property != null) {
+            property.setLabel(nameText.getText());
+            property.setPurpose(purposeText.getText());
+            property.setDescription(descriptionText.getText());
+            property.setStatusCode(statusCombo.getText());
+            property.getAuthor().setLogin(authorText.getText());
+            property.setVersion(versionText.getText());
         }
+        // }
     }
 
     public boolean performGlobalAction(String actionId) {
