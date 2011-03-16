@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.DelimitedFileConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.cwm.constants.ConstantsFactory;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.RelationalPackage;
@@ -31,6 +35,14 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQJrxmlItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.dataquality.properties.util.PropertiesSwitch;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.rules.RulesFactory;
@@ -378,6 +390,79 @@ public final class FactoriesUtil {
             }
 
             return UNKNOWN;
+        }
+
+        /**
+         * DOC bZhou Comment method "getElementEName".
+         * 
+         * @param item
+         * @return
+         */
+        public static EElementEName getElementEName(Item item) {
+            EElementEName elementEName = getElementENameFromTDQ(item);
+            if (elementEName != null) {
+                return elementEName;
+            } else {
+                return (EElementEName) new org.talend.core.model.properties.util.PropertiesSwitch() {
+
+                    @Override
+                    public Object caseDatabaseConnectionItem(DatabaseConnectionItem object) {
+                        return ITEM;
+                    }
+
+                    @Override
+                    public Object caseMDMConnectionItem(MDMConnectionItem object) {
+                        return ITEM;
+                    }
+
+                    @Override
+                    public Object caseDelimitedFileConnectionItem(DelimitedFileConnectionItem object) {
+                        return ITEM;
+                    }
+
+                }.doSwitch(item);
+            }
+
+        }
+
+        private static EElementEName getElementENameFromTDQ(Item item) {
+            return (EElementEName) new PropertiesSwitch<Object>() {
+
+                @Override
+                public Object caseTDQReportItem(TDQReportItem object) {
+                    return REPORT;
+                }
+
+                @Override
+                public Object caseTDQAnalysisItem(TDQAnalysisItem object) {
+                    return ANALYSIS;
+                }
+
+                @Override
+                public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
+                    return RULE;
+                }
+
+                @Override
+                public Object caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
+                    return DEFINITION;
+                }
+
+                @Override
+                public Object caseTDQPatternItem(TDQPatternItem object) {
+                    return PATTERN;
+                }
+
+                @Override
+                public Object caseTDQJrxmlItem(TDQJrxmlItem object) {
+                    return JRXML;
+                }
+
+                @Override
+                public Object caseTDQSourceFileItem(TDQSourceFileItem object) {
+                    return SQL;
+                }
+            }.doSwitch(item);
         }
     }
 }

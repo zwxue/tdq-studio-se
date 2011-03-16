@@ -22,12 +22,14 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -270,7 +272,7 @@ public final class PropertyHelper {
         assert item != null;
 
         EResourceConstant rc = EResourceConstant.getTypedConstant(item);
-        return rc != null ? new Path(rc.getPath()) : null;
+        return rc != null ? new Path(rc.getPath()) : Path.EMPTY;
     }
 
     /**
@@ -284,29 +286,38 @@ public final class PropertyHelper {
      * @return
      */
     public static IPath getItemStatePath(Property property) {
-        if (property.eIsProxy()) {
-            property = (Property) EObjectHelper.resolveObject(property);
-        }
         Item item = property.getItem();
-        URI propURI;
-        if (property.eIsProxy()) {
-            propURI = ((InternalEObject) property).eProxyURI();
-        } else {
-            propURI = property.eResource().getURI();
-        }
 
         String statePathStr = null;
         if (item.getState() != null) {
             statePathStr = item.getState().getPath();
+        } else {
+            URI propURI = getURI(property);
+
+            if (StringUtils.isBlank(statePathStr) && propURI.isPlatformResource()) {
+                IPath propPath = new Path(propURI.toPlatformString(true)).removeLastSegments(1);
+                IPath typedPath = ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property));
+                return propPath.makeRelativeTo(typedPath);
+            }
         }
 
-        if (StringUtils.isBlank(statePathStr) && propURI.isPlatformResource()) {
-            IPath propPath = new Path(propURI.toPlatformString(true)).removeLastSegments(1);
-            IPath typedPath = ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property));
-            return propPath.makeRelativeTo(typedPath);
+        return statePathStr != null ? new Path(statePathStr) : Path.EMPTY;
+    }
+
+    public static URI getURI(EObject object) {
+        if (object == null) {
+            return null;
         }
 
-        return statePathStr != null ? new Path(statePathStr) : null;
+        URI uri = null;
+
+        if (object.eIsProxy()) {
+            uri = ((InternalEObject) object).eProxyURI();
+        } else {
+            uri = object.eResource().getURI();
+        }
+
+        return uri;
     }
 
     /**
@@ -320,21 +331,20 @@ public final class PropertyHelper {
      * @return
      */
     public static IPath getItemPath(Property property) {
+        URI uri = getURI(property);
+
         Item item = property.getItem();
-		// MOD qiongli 2010-11-23,bug 17009.
-		if (property.eIsProxy()) {
-			property = (Property) EObjectHelper.resolveObject(property);
-		}
-        if (item instanceof TDQItem) {
-            TDQItem tdqItem = (TDQItem) item;
+
+        EElementEName elementEName = EElementEName.getElementEName(item);
+        if (elementEName != null) {
+            IPath path = new Path(uri.lastSegment());
+            path = path.removeFileExtension().addFileExtension(elementEName.getFileExt());
+
             return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property))
-                    .append(getItemStatePath(property)).append(tdqItem.getFilename());
-        } else {
-            IPath itemFilePath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension().addFileExtension(
-                    FactoriesUtil.ITEM_EXTENSION);
-            return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property)).append(
-                    getItemStatePath(property)).append(itemFilePath);
+                    .append(getItemStatePath(property)).append(path);
         }
+
+        return Path.EMPTY;
     }
 
     /**
