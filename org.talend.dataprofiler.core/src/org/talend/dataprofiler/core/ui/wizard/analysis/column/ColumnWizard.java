@@ -127,7 +127,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
             if (editor != null) {
                 AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
                 List<IRepositoryNode> nodes = this.selectionPage.nodes;
-                if (nodes.size() > 0) {
+                if (nodes != null && nodes.size() > 0) {
                     List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
                     nodeList.addAll(nodes);
                     masterPage.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));

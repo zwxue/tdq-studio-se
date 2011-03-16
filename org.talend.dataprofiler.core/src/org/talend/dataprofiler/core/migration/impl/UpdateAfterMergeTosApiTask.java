@@ -166,15 +166,15 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     private boolean reloadModelElementCache() {
         try {
             // 1) clear and unload element
-             AnaResourceFileHelper.getInstance().clear();
-             RepResourceFileHelper.getInstance().clear();
-             IndicatorResourceFileHelper.getInstance().clear();
-             PatternResourceFileHelper.getInstance().clear();
-             DQRuleResourceFileHelper.getInstance().clear();
+            AnaResourceFileHelper.getInstance().clear();
+            RepResourceFileHelper.getInstance().clear();
+            IndicatorResourceFileHelper.getInstance().clear();
+            PatternResourceFileHelper.getInstance().clear();
+            DQRuleResourceFileHelper.getInstance().clear();
             PrvResourceFileHelper.getInstance().clear();
             // EMFSharedResources.getInstance().unloadResources();
             // 2) reload from file
-             ResourceFileMap.getAll();
+            ResourceFileMap.getAll();
         } catch (Exception e) {
             log.error(e, e);
             return false;

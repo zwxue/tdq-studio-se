@@ -764,7 +764,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         } else {
             tdProvider = (Connection) analysis.getContext().getConnection();
             if (tdProvider != null) {
-                tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+                if (tdProvider.getSupplierDependency().size() > 0) {
+                    tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+                }
                 analysis.getContext().setConnection(null);
                 analysis.getClientDependency().clear();
             }

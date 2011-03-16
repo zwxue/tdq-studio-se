@@ -40,6 +40,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedColumnSetsSynDialog;
@@ -66,6 +67,7 @@ import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -243,6 +245,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
             }
             // Refresh analysis editor viewer.
             AnaResourceFileHelper.getInstance().save(synAnalysis);
+            // Refresh the repository tree view to adapt for the new analysis
+            CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
         } else {
             return new ReturnCode(Boolean.FALSE);
         }

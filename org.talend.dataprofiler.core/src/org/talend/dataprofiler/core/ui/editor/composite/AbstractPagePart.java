@@ -91,8 +91,7 @@ public abstract class AbstractPagePart {
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ModelElementIndicator[] indicators, Tree tree) {
         if (indicators != null && indicators.length != 0) {
             // MOD mzhao 2010-07-24, avoid a NPE, feature 13221
-            DataManager connection = masterPage.getAnalysis().getContext()
-                    .getConnection();
+            DataManager connection = masterPage.getAnalysis().getContext().getConnection();
             Connection tdProvider = null;
             if (connection != null) {
                 tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(connection);
@@ -116,8 +115,7 @@ public abstract class AbstractPagePart {
         // ArrayList<TdDataProvider>();
         Connection tdProvider = null;
         if (indicators != null && indicators.length != 0) {
-            tdProvider = ConnectionHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH
-                    .doSwitch(indicators[0].getColumnSet()));
+            tdProvider = ConnectionHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicators[0].getColumnSet()));
 
             setConnectionState(masterPage, tdProvider);
         }
@@ -280,7 +278,7 @@ public abstract class AbstractPagePart {
 
     /**
      * 
-     * ADD mzhao 2009-05-05 bug:6587
+     * ADD mzhao 2009-05-05 bug:6587.
      */
     private boolean isAnalyzedColumnsEmpty(Tree tree) {
         boolean isEmpty = false;
