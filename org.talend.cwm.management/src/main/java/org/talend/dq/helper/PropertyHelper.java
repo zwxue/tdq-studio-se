@@ -85,7 +85,7 @@ public final class PropertyHelper {
 
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
-        String platformString = modelElement.eResource().getURI().toPlatformString(false);
+        String platformString = modelElement.eResource().getURI().toPlatformString(true);
         IPath propPath = new Path(platformString).removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
         return root.getFile(propPath);
@@ -331,20 +331,39 @@ public final class PropertyHelper {
      * @return
      */
     public static IPath getItemPath(Property property) {
-        URI uri = getURI(property);
-
         Item item = property.getItem();
+
+        IPath path = null;
+        String fileName = null;
 
         EElementEName elementEName = EElementEName.getElementEName(item);
         if (elementEName != null) {
-            IPath path = new Path(uri.lastSegment());
-            path = path.removeFileExtension().addFileExtension(elementEName.getFileExt());
+            URI uri = getURI(property);
+            if (uri.isFile()) {
+                path = new Path(uri.toFileString());
+            } else if (uri.isPlatform()) {
+                path = new Path(uri.toPlatformString(false));
+            } else {
+                path = new Path(uri.lastSegment());
+            }
 
-            return ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property))
-                    .append(getItemStatePath(property)).append(path);
+            path = new Path(path.lastSegment());
+            fileName = path.removeFileExtension().addFileExtension(elementEName.getFileExt()).toString();
+
+        } else if (item instanceof TDQItem) {
+            TDQItem dqItem = (TDQItem) item;
+
+            if (!StringUtils.isBlank(dqItem.getFilename())) {
+                fileName = dqItem.getFilename();
+            }
         }
 
-        return Path.EMPTY;
+        if (fileName != null) {
+            path = ResourceManager.getRootProject().getFullPath().append(getItemTypedPath(property))
+                    .append(getItemStatePath(property)).append(fileName);
+        }
+
+        return path;
     }
 
     /**

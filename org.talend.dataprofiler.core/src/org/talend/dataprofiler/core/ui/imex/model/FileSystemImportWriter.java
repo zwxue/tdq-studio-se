@@ -123,10 +123,14 @@ public class FileSystemImportWriter implements IImportWriter {
         Property property = record.getProperty();
         if (property != null) {
             IPath itemPath = PropertyHelper.getItemPath(property);
-            IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
+            if (itemPath != null) {
+                IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
 
-            if (itemFile.exists()) {
-                record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());
+                if (itemFile.exists()) {
+                    record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());
+                }
+            } else {
+                record.addError("\"" + record.getName() + "\" can't analyze the path ! ");
             }
         }
     }
@@ -158,7 +162,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
         if (record.isValid()) {
             Property property = record.getProperty();
-          //MOD by zshen for bug 18724 2011.02.23
+            // MOD by zshen for bug 18724 2011.02.23
             IPath itemPath = null;
             IPath itemDesPath = null;
             if (property != null) {
@@ -338,8 +342,7 @@ public class FileSystemImportWriter implements IImportWriter {
                 }
             }
         };
-        
-        
+
         workUnit.setAvoidUnloadResources(Boolean.TRUE);
         ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
     }
