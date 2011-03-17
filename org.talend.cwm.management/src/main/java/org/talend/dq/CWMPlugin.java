@@ -30,7 +30,6 @@ import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.utils.security.CryptoHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -95,7 +94,9 @@ public class CWMPlugin extends Plugin {
                     // String clearTextUser = ConnectionUtils.getUsername(connection);
                     // String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
                     String user = JavaSqlFactory.getUsernameDefault(connection);
-                    String password = JavaSqlFactory.getPasswordDefault(connection);
+                    // MOD gdbu 2011-3-17 bug 19539
+                    String password = ConnectionHelper.getEncryptPassword(JavaSqlFactory.getPassword(connection));
+                    // ~19539
                     // ~ 14593
 
                     // MOD scorreia 2010-07-24 set empty string instead of null password so that database xml file is
@@ -103,11 +104,6 @@ public class CWMPlugin extends Plugin {
                     assert password != null;
 
                     String url = JavaSqlFactory.getURL(connection);
-
-                    // gdbu 2011-3-14 bug 19539
-                     CryptoHelper crypthelper = new CryptoHelper(ConnectionHelper.PASSPHRASE);
-                     password=crypthelper.encrypt(password);
-                    // ~19539
 
                     User previousUser = new User(user, password);
                     alias.setDefaultUser(previousUser);

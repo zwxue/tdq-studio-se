@@ -23,8 +23,6 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
-import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.utils.security.CryptoHelper;
 
 /**
  * Represents a configured Alias, maintaining a pool of available connections
@@ -143,15 +141,9 @@ public class Alias {
             if (usersElem != null) {
                 List<Element> list = usersElem.elements(User.USER);
                 if (list != null) {
-                    // gdbu 2011-3-14 bug 19539
-                    CryptoHelper chelper = new CryptoHelper(ConnectionHelper.PASSPHRASE);
-                    // ~19539
                     for (Element userElem : list) {
                         User user = new User(userElem);
                         if (user.getUserName() != null && user.getUserName().trim().length() > 0) {
-                            // gdbu 2011-3-14 bug 19539
-                            user.setPassword(chelper.decrypt(user.getPassword()));
-                            // ~19539
                             addUser(user);
                         }
                     }

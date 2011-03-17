@@ -17,6 +17,7 @@ import net.sourceforge.squirrel_sql.fw.util.beanwrapper.StringWrapper;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.talend.cwm.helper.ConnectionHelper;
 
 /**
  * Manages a JDBC Driver
@@ -190,8 +191,9 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
 		if (user.getUserName() != null)
 			props.put("user", user.getUserName());
 		if (user.getPassword() != null)
-			props.put("password", user.getPassword());
-
+            // MOD gdbu 2011-3-17 bug 19539
+            props.put("password", ConnectionHelper.getDecryptPassword(user.getPassword()));
+        // ~19539
 		if (!isDriverClassLoaded())
 			try {
 				registerSQLDriver();
