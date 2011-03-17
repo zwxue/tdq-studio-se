@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
@@ -33,6 +36,11 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.ui.action.actions.handle.JrxmlHandle;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -101,6 +109,10 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     private Map<String, String> replaceStringMapCommonFolders;
 
+    // MOD klliu 2011-03-17 bug 19085
+    private Map<String, String> replaceDefnitionNameInAnaMap;
+
+
     public UpdateAfterMergeTosApiTask() {
         init();
     }
@@ -116,6 +128,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         this.replaceStringMapRules = new HashMap<String, String>();
         this.replaceStringMapJrxmlTemplates = new HashMap<String, String>();
         this.replaceStringMapAnalysis = new HashMap<String, String>();
+        this.replaceDefnitionNameInAnaMap = new HashMap<String, String>();
         this.replaceStringMapReports = new HashMap<String, String>();
         // common folder(TDQ_DATAPROFILING, TDQ_LIBRARIES) need to be replace also
         this.replaceStringMapCommonFolders = new HashMap<String, String>();
@@ -315,6 +328,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         // replace map
         Map<String, String> replaceMap = new HashMap<String, String>();
         replaceMap.putAll(this.replaceStringMapCommonFolders);
+        // MOD klliu 2011-03-17 bug 19085
+        replaceMap.putAll(this.replaceDefnitionNameInAnaMap);
         replaceMap.putAll(this.replaceStringMapIndicators);
         replaceMap.putAll(this.replaceStringMapPatterns);
         replaceMap.putAll(this.replaceStringMapRules);
@@ -626,12 +641,19 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                     }
                 }
             } else {
+                // if parentFile is file as ana/rep
                 if (parentFile.getName().endsWith(fileExtension)) {
                     // get the ModelElement
                     ModelElement modelElement = getModelElement(parentFile);
                     if (modelElement != null) {
                         // get new file's full path folder
                         IFolder fullPathFolder = getFullPathFolder(baseFolder, baseFile, parentFile);
+                        // MOD klliu 2011-03-17 bug 19085
+                        // check is ana file ,if the definition's name is old,then replace it
+                        if (fileExtension.equals(FactoriesUtil.ANA)) {
+                            setReplaceChildNameForAna(modelElement);
+                        }
+                        // ~
                         // create new file
                         ElementWriterFactory.getInstance().createPatternWriter().create(modelElement, fullPathFolder, isImport);
                         // record the replace information
@@ -648,6 +670,30 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             return false;
         }
         return true;
+    }
+
+    // MOD klliu 2011-03-17 bug 19085
+    private void setReplaceChildNameForAna(ModelElement modelElement) {
+        Analysis analysis = (Analysis) modelElement;
+        AnalysisResult results = analysis.getResults();
+        assert results != null;
+        Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
+        for (Indicator indicator : leafIndicators) {
+            String fragment = null;
+            IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+            if (indicatorDefinition.eIsProxy()) {
+                URI uri = ((InternalEObject) indicatorDefinition).eProxyURI();
+                fragment = uri.lastSegment();
+            } else {
+                fragment = indicatorDefinition.eResource().getURI().lastSegment();
+            }
+
+            if (fragment != null) {
+
+                String replace = fragment.replace(" ", "_").replace(".", "_0.1.");//$NON-NLS-2$
+                replaceDefnitionNameInAnaMap.put(fragment, replace);
+            }
+        }
     }
 
     /**
