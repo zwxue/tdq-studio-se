@@ -88,4 +88,11 @@ public class MDMXmlElementRepNode extends RepositoryNode {
         return getChildren().size() > 0;
     }
 
+    @Override
+    public String getLabel() {
+        if (this.getTdXmlElementType() != null) {
+            return this.getTdXmlElementType().getName();
+        }
+        return super.getLabel();
+    }
 }

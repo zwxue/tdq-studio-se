@@ -18,8 +18,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -28,7 +26,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -44,15 +41,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
-import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -85,6 +73,7 @@ import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.JrxmlTempFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
@@ -93,6 +82,7 @@ import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.PatternSqlFolderRepNode;
+import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
@@ -100,6 +90,7 @@ import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.RulesFolderRepNode;
+import org.talend.dq.nodes.SourceFileFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
@@ -110,9 +101,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -401,219 +390,254 @@ public final class RepositoryNodeHelper {
      * @return
      */
     public static RepositoryNode recursiveFind(ModelElement modelElement) {
-        if (modelElement instanceof Analysis) {
-            Analysis analysis = (Analysis) modelElement;
-            List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes(true);
-            for (IRepositoryNode anaNode : dataprofilingNode) {
-                Item itemTemp = ((IRepositoryViewObject) anaNode.getObject()).getProperty().getItem();
-                if (itemTemp instanceof TDQAnalysisItem) {
-                    TDQAnalysisItem item = (TDQAnalysisItem) itemTemp;
-                    if (ResourceHelper.getUUID(analysis).equals(ResourceHelper.getUUID(item.getAnalysis()))) {
-                        return (RepositoryNode) anaNode;
-                    }
-                } else if (itemTemp instanceof FolderItem) {
-                    List<TDQAnalysisItem> anaItems = getAnalysisItemsFromFolderItem((FolderItem) itemTemp);
-                    for (TDQAnalysisItem anaItem : anaItems) {
-                        if (ResourceHelper.getUUID(analysis).equals(ResourceHelper.getUUID(anaItem.getAnalysis()))) {
-                            return (RepositoryNode) anaNode;
-                        }
-                    }
-                }
-            }
-        } else if (modelElement instanceof TdReport) {
-            TdReport report = (TdReport) modelElement;
-            List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes(true);
-            for (IRepositoryNode patternNode : dataprofilingNode) {
-                Item itemTemp = ((IRepositoryViewObject) patternNode.getObject()).getProperty().getItem();
-                if (itemTemp instanceof TDQReportItem) {
-                    TDQReportItem item = (TDQReportItem) itemTemp;
-                    if (ResourceHelper.getUUID(report).equals(ResourceHelper.getUUID(item.getReport()))) {
-                        return (RepositoryNode) patternNode;
-                    }
-                } else if (itemTemp instanceof FolderItem) {
-                    List<TDQReportItem> reportItems = getReportItemsFromFolderItem((FolderItem) itemTemp);
-                    for (TDQReportItem patternItem : reportItems) {
-                        if (ResourceHelper.getUUID(report).equals(ResourceHelper.getUUID(patternItem.getReport()))) {
-                            return (RepositoryNode) patternNode;
-                        }
-                    }
-                }
-            }
-        } else if (modelElement instanceof TdColumn) {
-            TdColumn column = (TdColumn) modelElement;
-            IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsColumnSet(column));
-            for (IRepositoryNode columnNode : columnSetNode.getChildren().get(0).getChildren()) {
-                TdColumn columnOnUI = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
-                if (ResourceHelper.getUUID(column).equals(ResourceHelper.getUUID(columnOnUI))) {
-                    return (RepositoryNode) columnNode;
-                }
-            }
-        } else if (modelElement instanceof TdTable) {
-            TdTable table = (TdTable) modelElement;
-            IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(modelElement));
-            for (IRepositoryNode tableNode : schemaOrCatalogNode.getChildren().get(0).getChildren()) {
-                TdTable tableOnUI = (TdTable) ((TdTableRepositoryObject) tableNode.getObject()).getTdTable();
-                if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
-                    return (RepositoryNode) tableNode;
-                }
-            }
-        } else if (modelElement instanceof TdView) {
-            TdView view = (TdView) modelElement;
-            IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(modelElement));
-            for (IRepositoryNode viewNode : schemaOrCatalogNode.getChildren().get(1).getChildren()) {
-                TdView viewOnUI = (TdView) ((TdViewRepositoryObject) viewNode.getObject()).getTdView();
-                if (ResourceHelper.getUUID(view).equals(ResourceHelper.getUUID(viewOnUI))) {
-                    return (RepositoryNode) viewNode;
-                }
-            }
-        } else if (modelElement instanceof MetadataColumn) {
-            // MOD qiongli 2011-1-12 for delimted file
-            MetadataColumn column = (MetadataColumn) modelElement;
-            IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsMetadataTable(column));
-            for (IRepositoryNode columnNode : columnSetNode.getChildren().get(0).getChildren()) {
-                MetadataColumn columnOnUI = ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
-                if (ResourceHelper.getUUID(column).equals(ResourceHelper.getUUID(columnOnUI))) {
-                    return (RepositoryNode) columnNode;
-                }
-            }
-        } else if (modelElement instanceof MetadataTable) {
-            // MOD qiongli 2011-1-12 for delimted file
-            MetadataTable table = (MetadataTable) modelElement;
-            if (table.getNamespace() instanceof RecordFile) {
-                IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(table));
-                for (IRepositoryNode tableNode : connNode.getChildren()) {
-                    MetadataTable tableOnUI = (MetadataTable) ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
-                    if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
-                        return (RepositoryNode) tableNode;
-                    }
-                }
-            }
-        } else if (modelElement instanceof Catalog) {
-            Catalog catalog = (Catalog) modelElement;
-            IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(catalog));
-            for (IRepositoryNode catalogNode : connNode.getChildren()) {
-                Catalog catalogOnUI = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
-                if (ResourceHelper.getUUID(catalog).equals(ResourceHelper.getUUID(catalogOnUI))) {
-                    return (RepositoryNode) catalogNode;
-                }
-            }
-        } else if (modelElement instanceof Schema) {
-            Schema schema = (Schema) modelElement;
-            Catalog catalog = CatalogHelper.getParentCatalog(schema);
-            // Schema's parent is catalog (MS SQL Server)
-            if (catalog != null) {
-                IRepositoryNode catalogNode = recursiveFind(catalog);
-                for (IRepositoryNode schemaNode : catalogNode.getChildren()) {
-                    Schema schemaOnUI = ((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema();
-                    if (ResourceHelper.getUUID(schema).equals(ResourceHelper.getUUID(schemaOnUI))) {
-                        return (RepositoryNode) schemaNode;
-                    }
-                }
-            }
-            // schema's parent is connection (e.g Oracle)
-            IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(schema));
-            for (IRepositoryNode schemaNode : connNode.getChildren()) {
-                Schema schemaOnUI = ((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema();
-                if (ResourceHelper.getUUID(schema).equals(ResourceHelper.getUUID(schemaOnUI))) {
-                    return (RepositoryNode) schemaNode;
-                }
-            }
-        } else if (modelElement instanceof Connection) {
+        String uuid = ResourceHelper.getUUID(modelElement);
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
 
-            Connection connection = (Connection) modelElement;
-            List<IRepositoryNode> connsNode = getConnectionRepositoryNodes(true);
-            for (IRepositoryNode connNode : connsNode) {
-                Item itemTemp = ((IRepositoryViewObject) connNode.getObject()).getProperty().getItem();
-                if (itemTemp instanceof ConnectionItem) {
-                    ConnectionItem item = (ConnectionItem) itemTemp;
-                    if (connection.eIsProxy()) {
-                        ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
-                                .getResourceManager().resourceSet;
-                        connection = (Connection) EcoreUtil.resolve(connection, resourceSet);
-                    }
-                    if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(item.getConnection()))) {
-                        return (RepositoryNode) connNode;
-                    }
-                } else if (itemTemp instanceof FolderItem) {
-                    List<ConnectionItem> connItems = getConnectionItemsFromFolderItem((FolderItem) itemTemp);
-                    for (ConnectionItem connItem : connItems) {
-                        if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(connItem.getConnection()))) {
-                            return (RepositoryNode) connNode;
-                        }
-                    }
-                }
-            }
+        if (modelElement instanceof Analysis) {
+            nodes.add(getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
+        } else if (modelElement instanceof TdReport) {
+            nodes.add(getDataProfilingFolderNode(EResourceConstant.REPORTS));
+        } else if (modelElement instanceof Connection || modelElement instanceof Catalog || modelElement instanceof Schema
+                || modelElement instanceof MetadataColumn || modelElement instanceof MetadataTable
+                || modelElement instanceof TdTable || modelElement instanceof TdView || modelElement instanceof TdColumn
+                || modelElement instanceof TdXmlElementType || modelElement instanceof TdXmlSchema) {
+            nodes.add(getMetadataFolderNode(EResourceConstant.METADATA));
         } else if (modelElement instanceof Pattern) {
-            Pattern pattern = (Pattern) modelElement;
-            List<IRepositoryNode> patternsNode = getPatternsRepositoryNodes(true);
-            for (IRepositoryNode patternNode : patternsNode) {
-                Item itemTemp = ((IRepositoryViewObject) patternNode.getObject()).getProperty().getItem();
-                if (itemTemp instanceof TDQPatternItem) {
-                    TDQPatternItem item = (TDQPatternItem) itemTemp;
-                    if (ResourceHelper.getUUID(pattern).equals(ResourceHelper.getUUID(item.getPattern()))) {
-                        return (RepositoryNode) patternNode;
-                    }
-                } else if (itemTemp instanceof FolderItem) {
-                    List<TDQPatternItem> patternItems = getPatternsItemsFromFolderItem((FolderItem) itemTemp);
-                    for (TDQPatternItem patternItem : patternItems) {
-                        if (ResourceHelper.getUUID(pattern).equals(ResourceHelper.getUUID(patternItem.getPattern()))) {
-                            return (RepositoryNode) patternNode;
-                        }
-                    }
-                }
-            }
+            nodes.add(getLibrariesFolderNode(EResourceConstant.PATTERNS));
         } else if (modelElement instanceof IndicatorDefinition) {
-            IndicatorDefinition udi = (IndicatorDefinition) modelElement;
-            List<IRepositoryNode> udisNode = getUdisRepositoryNodes(true);
-            for (IRepositoryNode udiNode : udisNode) {
-                Item itemTemp = ((IRepositoryViewObject) udiNode.getObject()).getProperty().getItem();
-                if (itemTemp instanceof TDQIndicatorDefinitionItem) {
-                    TDQIndicatorDefinitionItem item = (TDQIndicatorDefinitionItem) itemTemp;
-                    if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(item.getIndicatorDefinition()))) {
-                        return (RepositoryNode) udiNode;
-                    }
-                } else if (itemTemp instanceof TDQBusinessRuleItem) {
-                    TDQBusinessRuleItem item = (TDQBusinessRuleItem) itemTemp;
-                    if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(item.getDqrule()))) {
-                        return (RepositoryNode) udiNode;
-                    }
-                } else if (itemTemp instanceof FolderItem) {
-                    List<TDQIndicatorDefinitionItem> udiItems = getIndicatorItemsFromFolderItem((FolderItem) itemTemp);
-                    for (TDQIndicatorDefinitionItem udiItem : udiItems) {
-                        if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(udiItem.getIndicatorDefinition()))) {
-                            return (RepositoryNode) udiNode;
-                        }
-                    }
-                }
-            }
-        } else if (modelElement instanceof TdXmlElementType) {
-            TdXmlElementType xmlElementType = (TdXmlElementType) modelElement;
-            TdXmlSchema ownedDocument = xmlElementType.getOwnedDocument();
-            if (ownedDocument != null) {
-                RepositoryNode xmlSchemaNode = recursiveFind(ownedDocument);
-                if (xmlSchemaNode != null) {
-                    return recursiveFindXmlElementType(xmlSchemaNode.getChildren(), xmlElementType);
-                }
-            }
-        } else if (modelElement instanceof TdXmlSchema) {
-            TdXmlSchema xmlSchema = (TdXmlSchema) modelElement;
-            EList<DataManager> dataManager = xmlSchema.getDataManager();
-            if (dataManager.size() > 0) {
-                RepositoryNode connNode = recursiveFind(dataManager.get(0));
-                if (connNode != null) {
-                    for (IRepositoryNode xmlSchemaNode : connNode.getChildren()) {
-                        if (xmlSchemaNode instanceof MDMSchemaRepNode) {
-                            TdXmlSchema tdXmlSchemaOnUi = ((MDMSchemaRepNode) xmlSchemaNode).getTdXmlSchema();
-                            if (ResourceHelper.getUUID(xmlSchema).equals(ResourceHelper.getUUID(tdXmlSchemaOnUi))) {
-                                return (RepositoryNode) xmlSchemaNode;
-                            }
-                        }
-                    }
-                }
+            if (modelElement instanceof WhereRule) {
+                nodes.add(getLibrariesFolderNode(EResourceConstant.RULES));
+            } else {
+                nodes.add(getLibrariesFolderNode(EResourceConstant.INDICATORS));
             }
         }
-        return null;
+        return recursiveFindByUuid(uuid, nodes);
+        // RepositoryNode repNode = recursiveFindByUuid(uuid, nodes);
+        // if (repNode != null) {
+        // System.out.println("[class name: " + repNode.getClass().getName() + "][uuid: " + uuid + "][id: " +
+        // repNode.getId()
+        // + "][label: " + repNode.getLabel() + "]");
+        // } else {
+        // System.out.println("[class name: " + modelElement.getClass().getName() + "][uuid: " + uuid + "][name: "
+        // + modelElement.getName() + "] NOT FOUND!!!");
+        // }
+        // return repNode;
     }
+
+    // public static RepositoryNode recursiveFind(ModelElement modelElement) {
+    // if (modelElement instanceof Analysis) {
+    // Analysis analysis = (Analysis) modelElement;
+    // List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes(true);
+    // for (IRepositoryNode anaNode : dataprofilingNode) {
+    // Item itemTemp = ((IRepositoryViewObject) anaNode.getObject()).getProperty().getItem();
+    // if (itemTemp instanceof TDQAnalysisItem) {
+    // TDQAnalysisItem item = (TDQAnalysisItem) itemTemp;
+    // if (ResourceHelper.getUUID(analysis).equals(ResourceHelper.getUUID(item.getAnalysis()))) {
+    // return (RepositoryNode) anaNode;
+    // }
+    // } else if (itemTemp instanceof FolderItem) {
+    // List<TDQAnalysisItem> anaItems = getAnalysisItemsFromFolderItem((FolderItem) itemTemp);
+    // for (TDQAnalysisItem anaItem : anaItems) {
+    // if (ResourceHelper.getUUID(analysis).equals(ResourceHelper.getUUID(anaItem.getAnalysis()))) {
+    // return (RepositoryNode) anaNode;
+    // }
+    // }
+    // }
+    // }
+    // } else if (modelElement instanceof TdReport) {
+    // TdReport report = (TdReport) modelElement;
+    // List<IRepositoryNode> dataprofilingNode = getDataProfilingRepositoryNodes(true);
+    // for (IRepositoryNode patternNode : dataprofilingNode) {
+    // Item itemTemp = ((IRepositoryViewObject) patternNode.getObject()).getProperty().getItem();
+    // if (itemTemp instanceof TDQReportItem) {
+    // TDQReportItem item = (TDQReportItem) itemTemp;
+    // if (ResourceHelper.getUUID(report).equals(ResourceHelper.getUUID(item.getReport()))) {
+    // return (RepositoryNode) patternNode;
+    // }
+    // } else if (itemTemp instanceof FolderItem) {
+    // List<TDQReportItem> reportItems = getReportItemsFromFolderItem((FolderItem) itemTemp);
+    // for (TDQReportItem patternItem : reportItems) {
+    // if (ResourceHelper.getUUID(report).equals(ResourceHelper.getUUID(patternItem.getReport()))) {
+    // return (RepositoryNode) patternNode;
+    // }
+    // }
+    // }
+    // }
+    // } else if (modelElement instanceof TdColumn) {
+    // TdColumn column = (TdColumn) modelElement;
+    // IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsColumnSet(column));
+    // for (IRepositoryNode columnNode : columnSetNode.getChildren().get(0).getChildren()) {
+    // TdColumn columnOnUI = (TdColumn) ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
+    // if (ResourceHelper.getUUID(column).equals(ResourceHelper.getUUID(columnOnUI))) {
+    // return (RepositoryNode) columnNode;
+    // }
+    // }
+    // } else if (modelElement instanceof TdTable) {
+    // TdTable table = (TdTable) modelElement;
+    // IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(modelElement));
+    // for (IRepositoryNode tableNode : schemaOrCatalogNode.getChildren().get(0).getChildren()) {
+    // TdTable tableOnUI = (TdTable) ((TdTableRepositoryObject) tableNode.getObject()).getTdTable();
+    // if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
+    // return (RepositoryNode) tableNode;
+    // }
+    // }
+    // } else if (modelElement instanceof TdView) {
+    // TdView view = (TdView) modelElement;
+    // IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(modelElement));
+    // for (IRepositoryNode viewNode : schemaOrCatalogNode.getChildren().get(1).getChildren()) {
+    // TdView viewOnUI = (TdView) ((TdViewRepositoryObject) viewNode.getObject()).getTdView();
+    // if (ResourceHelper.getUUID(view).equals(ResourceHelper.getUUID(viewOnUI))) {
+    // return (RepositoryNode) viewNode;
+    // }
+    // }
+    // } else if (modelElement instanceof MetadataColumn) {
+    // // MOD qiongli 2011-1-12 for delimted file
+    // MetadataColumn column = (MetadataColumn) modelElement;
+    // IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsMetadataTable(column));
+    // for (IRepositoryNode columnNode : columnSetNode.getChildren().get(0).getChildren()) {
+    // MetadataColumn columnOnUI = ((MetadataColumnRepositoryObject) columnNode.getObject()).getTdColumn();
+    // if (ResourceHelper.getUUID(column).equals(ResourceHelper.getUUID(columnOnUI))) {
+    // return (RepositoryNode) columnNode;
+    // }
+    // }
+    // } else if (modelElement instanceof MetadataTable) {
+    // // MOD qiongli 2011-1-12 for delimted file
+    // MetadataTable table = (MetadataTable) modelElement;
+    // if (table.getNamespace() instanceof RecordFile) {
+    // IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(table));
+    // for (IRepositoryNode tableNode : connNode.getChildren()) {
+    // MetadataTable tableOnUI = (MetadataTable) ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
+    // if (ResourceHelper.getUUID(table).equals(ResourceHelper.getUUID(tableOnUI))) {
+    // return (RepositoryNode) tableNode;
+    // }
+    // }
+    // }
+    // } else if (modelElement instanceof Catalog) {
+    // Catalog catalog = (Catalog) modelElement;
+    // IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(catalog));
+    // for (IRepositoryNode catalogNode : connNode.getChildren()) {
+    // Catalog catalogOnUI = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
+    // if (ResourceHelper.getUUID(catalog).equals(ResourceHelper.getUUID(catalogOnUI))) {
+    // return (RepositoryNode) catalogNode;
+    // }
+    // }
+    // } else if (modelElement instanceof Schema) {
+    // Schema schema = (Schema) modelElement;
+    // Catalog catalog = CatalogHelper.getParentCatalog(schema);
+    // // Schema's parent is catalog (MS SQL Server)
+    // if (catalog != null) {
+    // IRepositoryNode catalogNode = recursiveFind(catalog);
+    // for (IRepositoryNode schemaNode : catalogNode.getChildren()) {
+    // Schema schemaOnUI = ((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema();
+    // if (ResourceHelper.getUUID(schema).equals(ResourceHelper.getUUID(schemaOnUI))) {
+    // return (RepositoryNode) schemaNode;
+    // }
+    // }
+    // }
+    // // schema's parent is connection (e.g Oracle)
+    // IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(schema));
+    // for (IRepositoryNode schemaNode : connNode.getChildren()) {
+    // Schema schemaOnUI = ((MetadataSchemaRepositoryObject) schemaNode.getObject()).getSchema();
+    // if (ResourceHelper.getUUID(schema).equals(ResourceHelper.getUUID(schemaOnUI))) {
+    // return (RepositoryNode) schemaNode;
+    // }
+    // }
+    // } else if (modelElement instanceof Connection) {
+    //
+    // Connection connection = (Connection) modelElement;
+    // List<IRepositoryNode> connsNode = getConnectionRepositoryNodes(true);
+    // for (IRepositoryNode connNode : connsNode) {
+    // Item itemTemp = ((IRepositoryViewObject) connNode.getObject()).getProperty().getItem();
+    // if (itemTemp instanceof ConnectionItem) {
+    // ConnectionItem item = (ConnectionItem) itemTemp;
+    // if (connection.eIsProxy()) {
+    // ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+    // .getResourceManager().resourceSet;
+    // connection = (Connection) EcoreUtil.resolve(connection, resourceSet);
+    // }
+    // if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(item.getConnection()))) {
+    // return (RepositoryNode) connNode;
+    // }
+    // } else if (itemTemp instanceof FolderItem) {
+    // List<ConnectionItem> connItems = getConnectionItemsFromFolderItem((FolderItem) itemTemp);
+    // for (ConnectionItem connItem : connItems) {
+    // if (ResourceHelper.getUUID(connection).equals(ResourceHelper.getUUID(connItem.getConnection()))) {
+    // return (RepositoryNode) connNode;
+    // }
+    // }
+    // }
+    // }
+    // } else if (modelElement instanceof Pattern) {
+    // Pattern pattern = (Pattern) modelElement;
+    // List<IRepositoryNode> patternsNode = getPatternsRepositoryNodes(true);
+    // for (IRepositoryNode patternNode : patternsNode) {
+    // Item itemTemp = ((IRepositoryViewObject) patternNode.getObject()).getProperty().getItem();
+    // if (itemTemp instanceof TDQPatternItem) {
+    // TDQPatternItem item = (TDQPatternItem) itemTemp;
+    // if (ResourceHelper.getUUID(pattern).equals(ResourceHelper.getUUID(item.getPattern()))) {
+    // return (RepositoryNode) patternNode;
+    // }
+    // } else if (itemTemp instanceof FolderItem) {
+    // List<TDQPatternItem> patternItems = getPatternsItemsFromFolderItem((FolderItem) itemTemp);
+    // for (TDQPatternItem patternItem : patternItems) {
+    // if (ResourceHelper.getUUID(pattern).equals(ResourceHelper.getUUID(patternItem.getPattern()))) {
+    // return (RepositoryNode) patternNode;
+    // }
+    // }
+    // }
+    // }
+    // } else if (modelElement instanceof IndicatorDefinition) {
+    // IndicatorDefinition udi = (IndicatorDefinition) modelElement;
+    // List<IRepositoryNode> udisNode = getUdisRepositoryNodes(true);
+    // for (IRepositoryNode udiNode : udisNode) {
+    // Item itemTemp = ((IRepositoryViewObject) udiNode.getObject()).getProperty().getItem();
+    // if (itemTemp instanceof TDQIndicatorDefinitionItem) {
+    // TDQIndicatorDefinitionItem item = (TDQIndicatorDefinitionItem) itemTemp;
+    // if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(item.getIndicatorDefinition()))) {
+    // return (RepositoryNode) udiNode;
+    // }
+    // } else if (itemTemp instanceof TDQBusinessRuleItem) {
+    // TDQBusinessRuleItem item = (TDQBusinessRuleItem) itemTemp;
+    // if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(item.getDqrule()))) {
+    // return (RepositoryNode) udiNode;
+    // }
+    // } else if (itemTemp instanceof FolderItem) {
+    // List<TDQIndicatorDefinitionItem> udiItems = getIndicatorItemsFromFolderItem((FolderItem) itemTemp);
+    // for (TDQIndicatorDefinitionItem udiItem : udiItems) {
+    // if (ResourceHelper.getUUID(udi).equals(ResourceHelper.getUUID(udiItem.getIndicatorDefinition()))) {
+    // return (RepositoryNode) udiNode;
+    // }
+    // }
+    // }
+    // }
+    // } else if (modelElement instanceof TdXmlElementType) {
+    // TdXmlElementType xmlElementType = (TdXmlElementType) modelElement;
+    // TdXmlSchema ownedDocument = xmlElementType.getOwnedDocument();
+    // if (ownedDocument != null) {
+    // RepositoryNode xmlSchemaNode = recursiveFind(ownedDocument);
+    // if (xmlSchemaNode != null) {
+    // return recursiveFindXmlElementType(xmlSchemaNode.getChildren(), xmlElementType);
+    // }
+    // }
+    // } else if (modelElement instanceof TdXmlSchema) {
+    // TdXmlSchema xmlSchema = (TdXmlSchema) modelElement;
+    // EList<DataManager> dataManager = xmlSchema.getDataManager();
+    // if (dataManager.size() > 0) {
+    // RepositoryNode connNode = recursiveFind(dataManager.get(0));
+    // if (connNode != null) {
+    // for (IRepositoryNode xmlSchemaNode : connNode.getChildren()) {
+    // if (xmlSchemaNode instanceof MDMSchemaRepNode) {
+    // TdXmlSchema tdXmlSchemaOnUi = ((MDMSchemaRepNode) xmlSchemaNode).getTdXmlSchema();
+    // if (ResourceHelper.getUUID(xmlSchema).equals(ResourceHelper.getUUID(tdXmlSchemaOnUi))) {
+    // return (RepositoryNode) xmlSchemaNode;
+    // }
+    // }
+    // }
+    // }
+    // }
+    // }
+    // return null;
+    // }
 
     /**
      * recursive find the ReopsitoryNode accroding to xmlElementType under nodes.
@@ -1198,35 +1222,59 @@ public final class RepositoryNodeHelper {
         return false;
     }
 
+    /**
+     * find the RepositoryNode according to the ModelElement.
+     * 
+     * @param modelElement
+     * @return a RepositoryNode or null
+     * @deprecated use recursiveFind(ModelElement) instead
+     */
     public static RepositoryNode recursiveFind2(ModelElement modelElement) {
-        String uuid = ResourceHelper.getUUID(modelElement);
-        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-
-        if (modelElement instanceof Analysis) {
-            nodes.add(getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
-        } else if (modelElement instanceof TdReport) {
-            nodes.add(getDataProfilingFolderNode(EResourceConstant.REPORTS));
-        } else if (modelElement instanceof Connection || modelElement instanceof Catalog || modelElement instanceof Schema
-                || modelElement instanceof MetadataColumn || modelElement instanceof MetadataTable
-                || modelElement instanceof TdTable || modelElement instanceof TdView || modelElement instanceof TdColumn
-                || modelElement instanceof TdXmlElementType || modelElement instanceof TdXmlSchema) {
-            nodes.add(getMetadataFolderNode(EResourceConstant.METADATA));
-        } else if (modelElement instanceof Pattern) {
-            nodes.add(getLibrariesFolderNode(EResourceConstant.PATTERNS));
-        } else if (modelElement instanceof IndicatorDefinition) {
-            if (modelElement instanceof WhereRule) {
-                nodes.add(getLibrariesFolderNode(EResourceConstant.RULES));
-            } else {
-                nodes.add(getLibrariesFolderNode(EResourceConstant.INDICATORS));
-            }
-        }
-        return recursiveFindByUuid(uuid, nodes);
+        return recursiveFind(modelElement);
+        // String uuid = ResourceHelper.getUUID(modelElement);
+        // List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        //
+        // if (modelElement instanceof Analysis) {
+        // nodes.add(getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
+        // } else if (modelElement instanceof TdReport) {
+        // nodes.add(getDataProfilingFolderNode(EResourceConstant.REPORTS));
+        // } else if (modelElement instanceof Connection || modelElement instanceof Catalog || modelElement instanceof
+        // Schema
+        // || modelElement instanceof MetadataColumn || modelElement instanceof MetadataTable
+        // || modelElement instanceof TdTable || modelElement instanceof TdView || modelElement instanceof TdColumn
+        // || modelElement instanceof TdXmlElementType || modelElement instanceof TdXmlSchema) {
+        // nodes.add(getMetadataFolderNode(EResourceConstant.METADATA));
+        // } else if (modelElement instanceof Pattern) {
+        // nodes.add(getLibrariesFolderNode(EResourceConstant.PATTERNS));
+        // } else if (modelElement instanceof IndicatorDefinition) {
+        // if (modelElement instanceof WhereRule) {
+        // nodes.add(getLibrariesFolderNode(EResourceConstant.RULES));
+        // } else {
+        // nodes.add(getLibrariesFolderNode(EResourceConstant.INDICATORS));
+        // }
+        // }
+        // return recursiveFindByUuid(uuid, nodes);
     }
 
+    /**
+     * find the RepositoryNode according to the ModelElement's uuid.
+     * 
+     * @param uuid
+     * @return a RepositoryNode or null
+     * @deprecated this method is too slow, please use recursiveFindByUuid(String uuid, List<IRepositoryNode> nodes)
+     * instead
+     */
     public static RepositoryNode recursiveFindByUuid(String uuid) {
         return recursiveFind(uuid, getTdqRootNodes());
     }
 
+    /**
+     * find the RepositoryNode according to the ModelElement's uuid which be included in the nodes and those children.
+     * 
+     * @param uuid
+     * @param nodes
+     * @return a RepositoryNode or null
+     */
     public static RepositoryNode recursiveFindByUuid(String uuid, List<IRepositoryNode> nodes) {
         assert uuid != null;
         assert nodes != null;
@@ -1235,19 +1283,52 @@ public final class RepositoryNodeHelper {
             if (modelElement != null && uuid.equals(ResourceHelper.getUUID(modelElement))) {
                 return (RepositoryNode) node;
             } else {
-                RepositoryNode recursiveFind = recursiveFindByUuid(uuid, node.getChildren());
-                if (recursiveFind != null) {
-                    return recursiveFind;
+                if (needFindInChildren(node)) {
+                    RepositoryNode recursiveFind = recursiveFindByUuid(uuid, node.getChildren());
+                    if (recursiveFind != null) {
+                        return recursiveFind;
+                    }
                 }
             }
         }
         return null;
     }
 
+    /**
+     * should to find ModelElement in the node's children or not.
+     * 
+     * @param node
+     * @return
+     */
+    private static boolean needFindInChildren(IRepositoryNode node) {
+        boolean result = true;
+        String exchangeFolderClassName = "org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode";
+        if (node instanceof AnalysisRepNode || node instanceof ReportRepNode
+                || exchangeFolderClassName.equals(node.getClass().getName()) || node instanceof SysIndicatorDefinitionRepNode
+                || node instanceof PatternRepNode || node instanceof RuleRepNode || node instanceof SourceFileFolderRepNode
+                || node instanceof RecycleBinRepNode || node instanceof DBColumnRepNode || node instanceof DFColumnRepNode
+                || node instanceof JrxmlTempFolderRepNode) {
+            result = false;
+        }
+        return result;
+    }
+
+    /**
+     * find the RepositoryNode according to the nodeId.
+     * 
+     * @param nodeId
+     * @return a RepositoryNode or null
+     */
     public static RepositoryNode recursiveFind(String nodeId) {
         return recursiveFind(nodeId, getTdqRootNodes());
     }
 
+    /**
+     * find the RepositoryNode according to the nodeId which be included in the nodes and those children..
+     * 
+     * @param nodeId
+     * @return a RepositoryNode or null
+     */
     public static RepositoryNode recursiveFind(String nodeId, List<IRepositoryNode> nodes) {
         assert nodeId != null;
         assert nodes != null;
@@ -1255,9 +1336,11 @@ public final class RepositoryNodeHelper {
             if (nodeId.equals(node.getId())) {
                 return (RepositoryNode) node;
             } else {
-                RepositoryNode recursiveFind = recursiveFind(nodeId, node.getChildren());
-                if (recursiveFind != null) {
-                    return recursiveFind;
+                if (needFindInChildren(node)) {
+                    RepositoryNode recursiveFind = recursiveFind(nodeId, node.getChildren());
+                    if (recursiveFind != null) {
+                        return recursiveFind;
+                    }
                 }
             }
         }

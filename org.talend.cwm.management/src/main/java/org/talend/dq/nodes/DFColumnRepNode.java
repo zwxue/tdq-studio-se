@@ -50,4 +50,11 @@ public class DFColumnRepNode extends RepositoryNode {
         return this.metadataColumn;
     }
 
+    @Override
+    public String getLabel() {
+        if (this.getMetadataColumn() != null) {
+            return this.getMetadataColumn().getName();
+        }
+        return super.getLabel();
+    }
 }

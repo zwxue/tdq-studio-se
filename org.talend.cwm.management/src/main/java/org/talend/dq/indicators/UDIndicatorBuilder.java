@@ -32,7 +32,7 @@ public class UDIndicatorBuilder {
     public boolean initializeUDIndicatorBuilder(String udiName) {
 
         if (initialized) {
-            log.warn("User Defined Indicator already initialized. ");
+            log.warn("User Defined Indicator already initialized. "); //$NON-NLS-1$
             return false;
         }
 

@@ -59,4 +59,11 @@ public class DBColumnRepNode extends RepositoryNode {
         return super.getChildren();
     }
 
+    @Override
+    public String getLabel() {
+        if (this.getTdColumn() != null) {
+            return this.getTdColumn().getName();
+        }
+        return super.getLabel();
+    }
 }

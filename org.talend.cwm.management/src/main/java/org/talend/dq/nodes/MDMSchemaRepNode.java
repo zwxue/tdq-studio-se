@@ -85,4 +85,13 @@ public class MDMSchemaRepNode extends RepositoryNode {
     public boolean hasChildren() {
         return getChildren().size() > 0;
     }
+
+    @Override
+    public String getLabel() {
+        if (this.getTdXmlSchema() != null) {
+            return this.getTdXmlSchema().getName();
+        }
+        return super.getLabel();
+    }
+
 }
