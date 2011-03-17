@@ -532,6 +532,10 @@ public final class ConnectionUtils {
      * @return
      */
     public static boolean isMdmConnection(IRepositoryViewObject reposViewObj) {
+        // MOD qiongli 2011-3-17,bug 19530.avoid NPE.
+        if (reposViewObj == null) {
+            return false;
+        }
         Item item = reposViewObj.getProperty().getItem();
         return item instanceof MDMConnectionItem;
     }
