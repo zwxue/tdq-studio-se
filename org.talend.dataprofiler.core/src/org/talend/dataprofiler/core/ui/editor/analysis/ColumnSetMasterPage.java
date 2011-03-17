@@ -962,8 +962,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             columnList.add(RepositoryNodeHelper.getModelElementFromRepositoryNode(rd));
         }
         if (!columnSetMultiValueList.isEmpty()) {
-            if (!ModelElementHelper.isFromSameTable(columnList)) {
-                message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
+            // MOD klliu bug 19464,file delimit connection does not need to check from one table.
+            if (columnList.get(0) instanceof TdColumn) {
+                if (!ModelElementHelper.isFromSameTable(columnList)) {
+                    message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
+                }
             }
         }
         if (message == null) {
