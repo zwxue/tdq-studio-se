@@ -931,7 +931,24 @@ public final class ConnectionUtils {
         if (saveFlag && conn != null) {
             ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
         }
+        updateRetrieveAllFlag(conn);
         return conn;
+    }
+
+    /**
+     * update the RETRIEVE_ALL tagged value of this connection.
+     * 
+     * @param conn
+     */
+    private static void updateRetrieveAllFlag(Connection conn) {
+        if (conn != null && conn instanceof DatabaseConnection) {
+            String sid = ((DatabaseConnection) conn).getSID();
+            if (sid != null && sid.trim().length() > 0) {
+                TaggedValueHelper.setTaggedValue(conn, TaggedValueHelper.RETRIEVE_ALL, "false");
+            } else {
+                TaggedValueHelper.setTaggedValue(conn, TaggedValueHelper.RETRIEVE_ALL, "true");
+            }
+        }
     }
 
     /**
