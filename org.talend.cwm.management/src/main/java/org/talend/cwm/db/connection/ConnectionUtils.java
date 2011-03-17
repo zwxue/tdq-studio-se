@@ -1038,8 +1038,10 @@ public final class ConnectionUtils {
         connectionParam.setJdbcUrl(JavaSqlFactory.getURL(conn));
         connectionParam.setHost(ConnectionUtils.getServerName(conn));
         connectionParam.setPort(ConnectionUtils.getPort(conn));
+
         if (conn instanceof DatabaseConnection) {
             connectionParam.setSqlTypeName(((DatabaseConnection) conn).getDatabaseType());
+            connectionParam.setDbmsId(((DatabaseConnection) conn).getDbmsId());
         }
         // MOD klliu if oracle set schema to other parameter
         if (conn instanceof DatabaseConnection) {

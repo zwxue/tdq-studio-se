@@ -42,6 +42,8 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     private String dbName;
 
+    private String dbmsId;
+
     // ADD kllliu 2010-10-09 feature 15821
     private String otherParameter;
 
@@ -231,6 +233,14 @@ public class DBConnectionParameter extends ConnectionParameter {
      */
     public void setADDParameter(String aDDParameter) {
         this.aDDParameter = aDDParameter;
+    }
+
+    public String getDbmsId() {
+        return dbmsId;
+    }
+
+    public void setDbmsId(String dbmsId) {
+        this.dbmsId = dbmsId;
     }
 
 }
