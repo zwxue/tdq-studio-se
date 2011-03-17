@@ -94,17 +94,25 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                     DBTableRepNode recursiveFind = (DBTableRepNode) RepositoryNodeHelper.recursiveFind(
                             (TdTable) setList.get(0));
                     RepositoryNode parent = recursiveFind.getParent().getParent();
-                    if (parent instanceof DBSchemaRepNode) {
+                    // MOD qiongli 2011-3-16 bug 19475
+                    RepositoryNode catalogNode = parent;
+                    if(parent instanceof DBCatalogRepNode){
                         parent = parent.getParent();
+                    } else if (parent instanceof DBSchemaRepNode) {
+                        parent = parent.getParent();
+                        if(parent instanceof DBCatalogRepNode){
+                            catalogNode = parent;
+                            parent = parent.getParent();
+                        }
                     }
                     // TdTableRepositoryObject tableViewObject = (TdTableRepositoryObject) recursiveFind.getObject();
                     // IRepositoryViewObject viewObject = parent.getObject();
-                    DBConnectionRepNode connNode = (DBConnectionRepNode) parent.getParent();
+                    DBConnectionRepNode connNode = (DBConnectionRepNode) parent;
                     paraneter.setConnectionRepNode(connNode);
                     Connection connection = ConnectionHelper.getConnection((TdTable) setList.get(0));
                     paraneter.setTdDataProvider(connection);
                     List<IRepositoryNode> packagesNode = new ArrayList<IRepositoryNode>();
-                    packagesNode.add((DBCatalogRepNode) parent);
+                    packagesNode.add(catalogNode);
                     paraneter.setPackages(packagesNode);
                     setPageComplete(true);
                 } else {
