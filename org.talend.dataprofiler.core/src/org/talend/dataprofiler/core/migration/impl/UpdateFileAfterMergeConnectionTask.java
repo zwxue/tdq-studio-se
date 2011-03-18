@@ -239,7 +239,8 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private void collectConnectionID() {
         try {
-            RootContainer<String, IRepositoryViewObject> rc = ProxyRepositoryFactory.getInstance().getMetadataConnection();
+            RootContainer<String, IRepositoryViewObject> rc = ProxyRepositoryFactory.getInstance().getMetadata(
+                    ERepositoryObjectType.METADATA_CONNECTIONS);
             for (IRepositoryViewObject repViewObj : rc.getMembers()) {
                 Connection conn = ((ConnectionItem) repViewObj.getProperty().getItem()).getConnection();
                 String uuid = ResourceHelper.getUUID(conn);
@@ -259,8 +260,8 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
         Resource resource = resourceSet.getResource(uri, true);
 
-        Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE
-                .getProperty());
+        Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(),
+                PropertiesPackage.eINSTANCE.getProperty());
 
         if (property != null) {
             File targetFolder = folderMap.get(parentFolder);
@@ -338,13 +339,13 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
         String connName = null;
 
-        File destItemFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter).addFileExtension(
-                FactoriesUtil.ITEM_EXTENSION).toFile();
-        File destPropFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter).addFileExtension(
-                FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+        File destItemFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter)
+                .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
+        File destPropFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter)
+                .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
 
-        File srcItemFile = new Path(propFile.getAbsolutePath()).removeFileExtension().addFileExtension(
-                FactoriesUtil.ITEM_EXTENSION).toFile();
+        File srcItemFile = new Path(propFile.getAbsolutePath()).removeFileExtension()
+                .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
         File srcPropFile = propFile;
         Item item = property.getItem();
         // MOD by zshen to resolve repetitious name question(any time it should't come in here)
@@ -409,8 +410,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
             Resource propResource = getResource(destPropFile.getAbsolutePath());
 
             Property newProperty = (Property) EcoreUtil.getObjectByType(propResource.getContents(),
-                    PropertiesPackage.eINSTANCE
-                    .getProperty());
+                    PropertiesPackage.eINSTANCE.getProperty());
             newProperty.setAuthor(property.getAuthor());
             newProperty.setLabel(connectionItem.getConnection().getName());
             newProperty.setItem(item);

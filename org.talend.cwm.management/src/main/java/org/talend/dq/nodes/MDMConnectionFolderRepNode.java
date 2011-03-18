@@ -51,7 +51,7 @@ public class MDMConnectionFolderRepNode extends RepositoryNode {
         ERepositoryObjectType contentType = this.getContentType();
         Container container = null;
         try {
-            container = ProxyRepositoryFactory.getInstance().getMetadataMDM();
+            container = ProxyRepositoryFactory.getInstance().getMetadata(ERepositoryObjectType.METADATA_MDMCONNECTION);
             fetchRepositoryNodeByFolder(container, contentType, fetchNodeByFolder);
         } catch (PersistenceException e) {
             log.error(e, e);
