@@ -580,7 +580,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                         list.add(node);
                     }
                 } else if (node instanceof DBViewFolderRepNode) {
-                    if (TableSelectionType.VIEW.equals(getTableType()) || TableSelectionType.VIEW.equals(getTableType())) {
+                    if (TableSelectionType.VIEW.equals(getTableType()) || TableSelectionType.ALL.equals(getTableType())) {
                         list.add(node);
                     }
                 } else {
