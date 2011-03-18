@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -147,6 +146,8 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
     public Collection<TdXmlSchema> createConnection(Connection dataProvider) {
         // initialize database driver
         List<TdXmlSchema> xmlDocs = new ArrayList<TdXmlSchema>();
+        MDMConnection mdmConn = (MDMConnection) dataProvider;
+        String datamodel = mdmConn.getDatamodel();
         try {
             XtentisBindingStub stub = getXtentisBindingStub();
             WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(""));
@@ -156,9 +157,14 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             String techXSDFolderName = getTechXSDFolderName();
             // ~ 15756
             for (WSDataModelPK pk : pks) {
-                if (dataFilter == null || dataFilter.equals("") || Arrays.asList(dataFilter.split(",")).contains((pk.getPk()))) {
+                // MOD klliu feature 19138:add filter for mdm connection 2011-03-18
+                if (datamodel.equals(pk.getPk())) {
                     adaptToCWMDocument(xmlDocs, stub, pk.getPk(), techXSDFolderName, dataProvider);
                 }
+                // if (dataFilter == null || dataFilter.equals("") ||
+                // Arrays.asList(dataFilter.split(",")).contains((pk.getPk()))) {
+                // adaptToCWMDocument(xmlDocs, stub, pk.getPk(), techXSDFolderName, dataProvider);
+                // }
             }
         } catch (Exception e) {
             log.error(e);
@@ -211,8 +217,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
      * @throws CoreException
      */
     private void adaptToCWMDocument(List<TdXmlSchema> xmlDocCollection, XtentisPort stub, String resName,
-            String providerTechName, Connection dataProvider)
-            throws RemoteException, CoreException {
+            String providerTechName, Connection dataProvider) throws RemoteException, CoreException {
         // MOD xqliu 2010-10-18 bug 16161
         String resXSD = null;
         try {
