@@ -575,6 +575,16 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             String temp = language.getLiteral();
             execCombo.add(temp);
         }
+        // MOD qiongli 2011-3-17 set DataFilterText disabled except TdColumn.
+        if (analysisHandler.getAnalyzedColumns() != null && !analysisHandler.getAnalyzedColumns().isEmpty()) {
+            ModelElement mod = analysisHandler.getAnalyzedColumns().get(0);
+            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(mod);
+            TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
+            dataFilterComp.getDataFilterText().setEnabled((xmlElement != null || tdColumn != null) ? true : false);
+            if (tdColumn == null) {
+                chageExecuteLanguageToJava(true);
+            }
+        }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
         // MOD zshen feature 12919 : add allow drill down and max number row component for java engin.
         final Composite javaEnginSection = createjavaEnginSection(sectionClient);
@@ -1025,7 +1035,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * 
      * DOC zshen Comment method "chageExecuteLanguageToJava". change ExecutionLanuage to Java.
      */
-    public void chageExecuteLanguageToJava() {
+    public void chageExecuteLanguageToJava(boolean isDisabled) {
         if (!(ExecutionLanguage.JAVA.getLiteral().equals(this.execLang))) {
             int i = 0;
             for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
@@ -1036,20 +1046,20 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 }
             }
         }
+        if (isDisabled) {
+            execCombo.setEnabled(false);
+        }
     }
+
 
     /**
      * 
-     * DOC qiongli make the cause text and the language commbo disabled.
+     * DOC qiongli Comment method "getDataFilterComp".
+     * 
+     * @return
      */
-    public void changeStateForDelimitedFile() {
-        if (execCombo != null) {
-            chageExecuteLanguageToJava();
-            execCombo.setEnabled(false);
-        }
-        if (dataFilterComp != null) {
-            dataFilterComp.getDataFilterText().setEnabled(false);
-        }
+    public DataFilterComp getDataFilterComp() {
+        return this.dataFilterComp;
     }
 
 }

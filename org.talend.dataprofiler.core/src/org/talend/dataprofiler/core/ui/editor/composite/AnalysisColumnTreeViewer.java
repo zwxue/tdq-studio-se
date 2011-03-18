@@ -51,7 +51,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -92,6 +91,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -426,10 +426,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
                 connection = tdDataProvider;
             }
-        }
-        // change to java engine for delimited file connection
-        if (connection != null && (connection instanceof DelimitedFileConnection)) {
-            masterPage.changeStateForDelimitedFile();
         }
     }
 
@@ -908,5 +904,24 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             removeSelectedElements(tree);
         }
 
+    }
+
+    @Override
+    public void setInput(Object[] objs) {
+        super.setInput(objs);
+        boolean isDelimtedFile = false;
+        for (Object obj : objs) {
+            if (obj instanceof DFColumnRepNode) {
+                isDelimtedFile = true;
+                break;
+            }
+        }
+        DataFilterComp dataFilterComp = masterPage.getDataFilterComp();
+        if (isDelimtedFile && dataFilterComp != null) {
+            dataFilterComp.getDataFilterText().setEnabled(false);
+            masterPage.chageExecuteLanguageToJava(true);
+        } else {
+            masterPage.getExecCombo().setEditable(true);
+        }
     }
 }

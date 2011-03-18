@@ -30,6 +30,7 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -58,7 +59,6 @@ import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -178,6 +178,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     } else if (modelElement instanceof TdColumn) {
                         TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.caseTdColumn((TdColumn) modelElement);
                         connection = ConnectionHelper.getConnection(tdColumn);
+                    } else if (modelElement instanceof MetadataColumn) {
+                        MetadataColumn mColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(modelElement);
+                        connection = ConnectionHelper.getTdDataProvider(mColumn);
                     }
                     connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
 
@@ -188,7 +191,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 // IRepositoryNode connectionRepositoryNode =
                 // DQStructureManager.getInstance().getConnectionRepositoryNode(label);
 
-                ((AnalysisItemEditorInput) editorInput).setConnectionNode((DBConnectionRepNode) connectionRepositoryNode);
+                ((AnalysisItemEditorInput) editorInput).setConnectionNode(connectionRepositoryNode);
                 // }
                 editorID = AnalysisEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
