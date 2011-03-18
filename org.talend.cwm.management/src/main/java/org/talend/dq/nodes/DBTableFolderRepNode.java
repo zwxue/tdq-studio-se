@@ -29,12 +29,13 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC klliu Folder node node displayed on repository view (UI), knowing exact folder type by folder
- * object:TDQFolderObject
+ * object:TDQFolderObject.
  */
 public class DBTableFolderRepNode extends RepositoryNode {
 
@@ -52,6 +53,22 @@ public class DBTableFolderRepNode extends RepositoryNode {
 
     private List<IRepositoryNode> children;
 
+    public Catalog getCatalog() {
+        return this.catalog;
+    }
+
+    public ConnectionItem getItem() {
+        return this.item;
+    }
+
+    public Connection getConnection() {
+        return this.connection;
+    }
+
+    public Schema getSchema() {
+        return this.schema;
+    }
+
     /**
      * DOC klliu FolderRepNode constructor comment.
      * 
@@ -62,7 +79,6 @@ public class DBTableFolderRepNode extends RepositoryNode {
     public DBTableFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         children = new ArrayList<IRepositoryNode>();
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -140,6 +156,15 @@ public class DBTableFolderRepNode extends RepositoryNode {
     }
 
     public String getNodeName() {
-        return "Tables";
+        return "Tables"; //$NON-NLS-1$
+    }
+
+    /**
+     * return the Catalog or Schema, or null.
+     * 
+     * @return
+     */
+    public Package getPackage() {
+        return this.getCatalog() != null ? this.getCatalog() : this.getSchema();
     }
 }

@@ -26,7 +26,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
@@ -397,11 +399,16 @@ public final class RepositoryNodeHelper {
             nodes.add(getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
         } else if (modelElement instanceof TdReport) {
             nodes.add(getDataProfilingFolderNode(EResourceConstant.REPORTS));
-        } else if (modelElement instanceof Connection || modelElement instanceof Catalog || modelElement instanceof Schema
-                || modelElement instanceof MetadataColumn || modelElement instanceof MetadataTable
-                || modelElement instanceof TdTable || modelElement instanceof TdView || modelElement instanceof TdColumn
-                || modelElement instanceof TdXmlElementType || modelElement instanceof TdXmlSchema) {
-            nodes.add(getMetadataFolderNode(EResourceConstant.METADATA));
+        } else if (modelElement instanceof DatabaseConnection || modelElement instanceof Catalog
+                || modelElement instanceof Schema || modelElement instanceof TdTable || modelElement instanceof TdView
+                || modelElement instanceof TdColumn) {
+            nodes.add(getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS));
+        } else if (modelElement instanceof MDMConnection || modelElement instanceof TdXmlElementType
+                || modelElement instanceof TdXmlSchema) {
+            nodes.add(getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS));
+        } else if (modelElement instanceof DelimitedFileConnection || modelElement instanceof MetadataColumn
+                || modelElement instanceof MetadataTable) {
+            nodes.add(getMetadataFolderNode(EResourceConstant.FILEDELIMITED));
         } else if (modelElement instanceof Pattern) {
             nodes.add(getLibrariesFolderNode(EResourceConstant.PATTERNS));
         } else if (modelElement instanceof IndicatorDefinition) {
@@ -412,6 +419,7 @@ public final class RepositoryNodeHelper {
             }
         }
         return recursiveFindByUuid(uuid, nodes);
+        // following codes are testing codes, please don't delete them, thanks
         // RepositoryNode repNode = recursiveFindByUuid(uuid, nodes);
         // if (repNode != null) {
         // System.out.println("[class name: " + repNode.getClass().getName() + "][uuid: " + uuid + "][id: " +
@@ -1276,17 +1284,17 @@ public final class RepositoryNodeHelper {
      * @return a RepositoryNode or null
      */
     public static RepositoryNode recursiveFindByUuid(String uuid, List<IRepositoryNode> nodes) {
-        assert uuid != null;
-        assert nodes != null;
-        for (IRepositoryNode node : nodes) {
-            ModelElement modelElement = getModelElementFromRepositoryNode(node);
-            if (modelElement != null && uuid.equals(ResourceHelper.getUUID(modelElement))) {
-                return (RepositoryNode) node;
-            } else {
-                if (needFindInChildren(node)) {
-                    RepositoryNode recursiveFind = recursiveFindByUuid(uuid, node.getChildren());
-                    if (recursiveFind != null) {
-                        return recursiveFind;
+        if (uuid != null && nodes != null) {
+            for (IRepositoryNode node : nodes) {
+                ModelElement modelElement = getModelElementFromRepositoryNode(node);
+                if (modelElement != null && uuid.equals(ResourceHelper.getUUID(modelElement))) {
+                    return (RepositoryNode) node;
+                } else {
+                    if (needFindInChildren(node)) {
+                        RepositoryNode recursiveFind = recursiveFindByUuid(uuid, node.getChildren());
+                        if (recursiveFind != null) {
+                            return recursiveFind;
+                        }
                     }
                 }
             }

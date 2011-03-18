@@ -32,6 +32,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -53,6 +54,41 @@ public class DBColumnFolderRepNode extends RepositoryNode {
     private TdView tdView;
 
     private List<IRepositoryNode> children;
+
+    private boolean reload = false;
+
+    public boolean isReload() {
+        return this.reload;
+    }
+
+    public void setReload(boolean reload) {
+        this.reload = reload;
+    }
+
+    public void setObject(IRepositoryViewObject object) {
+        this.object = object;
+    }
+
+    public ConnectionItem getItem() {
+        return this.item;
+    }
+
+    public Connection getConnection() {
+        return this.connection;
+    }
+
+    public EList<MetadataColumn> getColumns() {
+        return this.columns;
+    }
+
+    public TdTable getTdTable() {
+        return this.tdTable;
+    }
+
+    public TdView getTdView() {
+        return this.tdView;
+    }
+
     /**
      * DOC klliu DBColumnFolderRepNode constructor comment.
      * 
@@ -63,12 +99,11 @@ public class DBColumnFolderRepNode extends RepositoryNode {
     public DBColumnFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         children = new ArrayList<IRepositoryNode>();
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        if (!children.isEmpty()) {
+        if (!this.isReload() && !children.isEmpty()) {
             return children;
         }
 
@@ -106,6 +141,7 @@ public class DBColumnFolderRepNode extends RepositoryNode {
             }
         }
         createTdcolumnsNode(tdcolumns, children);
+        this.setReload(false);
         return children;
     }
 
@@ -126,5 +162,14 @@ public class DBColumnFolderRepNode extends RepositoryNode {
             metadataColumn.setRepositoryNode(columnNode);
             repsNodes.add(columnNode);
         }
+    }
+
+    /**
+     * return the TdTable or TdView, or null.
+     * 
+     * @return
+     */
+    public ColumnSet getColumnSet() {
+        return this.getTdTable() != null ? this.getTdTable() : this.getTdView();
     }
 }

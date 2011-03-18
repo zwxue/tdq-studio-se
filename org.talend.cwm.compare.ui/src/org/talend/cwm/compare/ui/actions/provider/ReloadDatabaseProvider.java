@@ -67,7 +67,8 @@ public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
                 } else if (node instanceof DBColumnFolderRepNode) {
                     menuText = RELOADCOLUMNS_MENUTEXT;
                 }
-                menu.add(new ReloadDatabaseAction(node.getObject(), menuText));
+                // menu.add(new ReloadDatabaseAction(node.getObject(), menuText));
+                menu.add(new ReloadDatabaseAction(node, menuText));
             }
         }
     }

@@ -47,15 +47,12 @@ public final class ComparisonLevelFactory {
             // MOD mzhao FolderNode param need to pass for later reloading from this folder.
             DBTableFolderRepNode dbFolderNode = (DBTableFolderRepNode) selectedObject;
             comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
-
         } else if (selectedObject instanceof DBViewFolderRepNode) {
             DBViewFolderRepNode dbFolderNode = (DBViewFolderRepNode) selectedObject;
             comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
         } else if (selectedObject instanceof DBColumnFolderRepNode) {
             DBColumnFolderRepNode dbFolderNode = (DBColumnFolderRepNode) selectedObject;
-
             comparisonLevel = new TableViewComparisonLevel(dbFolderNode);
-
         } else if (selectedObject instanceof IFile) {
             comparisonLevel = new DataProviderComparisonLevel(selectedObject);
         }
@@ -70,6 +67,7 @@ public final class ComparisonLevelFactory {
             // SQL Server.
             comparisonLevel = new CatalogComparisonLevel((Catalog) selectedObject);
         } else if (selectedObject instanceof IRepositoryViewObject) {
+            // TODO never should be IRepositoryViewObject, it has been instead by DBConnectionRepNode
             comparisonLevel = new RepositoryObjectComparisonLevel(selectedObject);
         } else {
             comparisonLevel = null;

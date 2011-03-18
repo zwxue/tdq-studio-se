@@ -105,7 +105,6 @@ public class ReloadDatabaseAction extends Action {
                             // analysis.
                             impactExistingAnalyses(oldDataProvider);
                         } catch (ReloadCompareException e) {
-                            // TODO Auto-generated catch block
                             log.error(e, e);
                         } catch (PartInitException e) {
                             log.error(e, e);

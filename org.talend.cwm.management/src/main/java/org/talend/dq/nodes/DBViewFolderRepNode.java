@@ -29,6 +29,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -48,6 +49,22 @@ public class DBViewFolderRepNode extends RepositoryNode {
     private Connection connection;
 
     private Schema schema;
+
+    public Catalog getCatalog() {
+        return this.catalog;
+    }
+
+    public ConnectionItem getItem() {
+        return this.item;
+    }
+
+    public Connection getConnection() {
+        return this.connection;
+    }
+
+    public Schema getSchema() {
+        return this.schema;
+    }
 
     /**
      * DOC klliu ViewFolderRepNode constructor comment.
@@ -78,31 +95,31 @@ public class DBViewFolderRepNode extends RepositoryNode {
     private void createRepositoryNodeViewFolderNode(List<IRepositoryNode> node, IRepositoryViewObject metadataObject) {
         List<TdView> views = new ArrayList<TdView>();
         try {
-        if (metadataObject instanceof MetadataCatalogRepositoryObject) {
-            viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
-            catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
-            item = (ConnectionItem) viewObject.getProperty().getItem();
-            connection = item.getConnection();
-            views = PackageHelper.getViews(catalog);
-            if (views.isEmpty()) {
-                views = DqRepositoryViewService.getViews(connection, catalog, null, true);
+            if (metadataObject instanceof MetadataCatalogRepositoryObject) {
+                viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
+                catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
+                item = (ConnectionItem) viewObject.getProperty().getItem();
+                connection = item.getConnection();
+                views = PackageHelper.getViews(catalog);
+                if (views.isEmpty()) {
+                    views = DqRepositoryViewService.getViews(connection, catalog, null, true);
                     if (views.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
                     }
-            }
-        } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
-            viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
-            schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
-            item = (ConnectionItem) viewObject.getProperty().getItem();
-            connection = item.getConnection();
-            views = PackageHelper.getViews(schema);
-            if (views.isEmpty()) {
+                }
+            } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
+                viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
+                schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
+                item = (ConnectionItem) viewObject.getProperty().getItem();
+                connection = item.getConnection();
+                views = PackageHelper.getViews(schema);
+                if (views.isEmpty()) {
                     views = DqRepositoryViewService.getViews(connection, schema, null, true);
                     if (views.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
                     }
+                }
             }
-        }
 
         } catch (Exception e) {
             log.error(e, e);
@@ -110,8 +127,6 @@ public class DBViewFolderRepNode extends RepositoryNode {
 
         createTableRepositoryNode(views, node);
     }
-
-
 
     /**
      * DOC klliu Comment method "createTableRepositoryNode".
@@ -136,6 +151,15 @@ public class DBViewFolderRepNode extends RepositoryNode {
     }
 
     public String getNodeName() {
-        return "Views";
+        return "Views"; //$NON-NLS-1$
+    }
+
+    /**
+     * return the Catalog or Schema, or null.
+     * 
+     * @return
+     */
+    public Package getPackage() {
+        return this.getCatalog() != null ? this.getCatalog() : this.getSchema();
     }
 }

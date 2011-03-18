@@ -73,13 +73,52 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         }
     }
 
+    /**
+     * get the Package from the Object.
+     * 
+     * @param object
+     * @return a Package or null
+     */
+    private Package getPackageFromObject(Object object) {
+        Package result = null;
+        if (object instanceof RepositoryNode) {
+            result = getPackageFromRepositoryNode((RepositoryNode) object);
+        } else if (object instanceof Package) {
+            result = (Package) object;
+        }
+        return result;
+    }
+
+    /**
+     * get the Package from the RepositoryNode.
+     * 
+     * @param node
+     * @return a Package or null
+     */
+    private Package getPackageFromRepositoryNode(RepositoryNode node) {
+        Package result = null;
+        if (node instanceof DBTableFolderRepNode) {
+            DBTableFolderRepNode tableFolderRepNode = (DBTableFolderRepNode) node;
+            result = tableFolderRepNode.getPackage();
+        } else if (node instanceof DBViewFolderRepNode) {
+            DBViewFolderRepNode viewFolderRepNode = (DBViewFolderRepNode) node;
+            result = viewFolderRepNode.getPackage();
+        } else {
+            result = (Package) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
+        }
+        return result;
+    }
+
     @Override
     protected Connection findDataProvider() {
         Connection provider = null;
         if (selectedObj instanceof RepositoryNode) {
+            if (selectedObj instanceof DBTableFolderRepNode || selectedObj instanceof DBViewFolderRepNode) {
+                provider = ConnectionHelper.getTdDataProvider(getPackageFromObject(selectedObj));
+            }
             Item connItem = ((RepositoryNode) selectedObj).getObject().getProperty().getItem();
             provider = ((ConnectionItem) connItem).getConnection();
-        } else {
+        } else if (selectedObj instanceof Package) {
             provider = ConnectionHelper.getTdDataProvider((Package) selectedObj);
         }
         return provider;
@@ -91,7 +130,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         // MOD scorreia 2009-01-16 option initialized in CTOR
         MatchModel match = null;
         try {
-            match = MatchService.doContentMatch((Package) selectedObj, getSavedReloadObject(), options);
+            match = MatchService.doContentMatch(getPackageFromObject(selectedObj), getSavedReloadObject(), options);
         } catch (InterruptedException e) {
             log.error(e, e);
             return false;
@@ -118,7 +157,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected EObject getSavedReloadObject() throws ReloadCompareException {
-        Package selectedPackage = (Package) selectedObj;
+        Package selectedPackage = getPackageFromObject(selectedObj);
         // MOD mzhao 2009-01-20 Extract method findMatchedPackage to
         // DQStructureComparer class
         // for common use.
@@ -129,12 +168,12 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected Resource getLeftResource() throws ReloadCompareException {
-        Package selectedPackage = null;
-        if (selectedObj instanceof RepositoryNode) {
-            selectedPackage = (Package) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
-        } else {
-            selectedPackage = (Package) selectedObj;
-        }
+        Package selectedPackage = getPackageFromObject(selectedObj);
+        // if (selectedObj instanceof RepositoryNode) {
+        // selectedPackage = (Package) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
+        // } else {
+        // selectedPackage = (Package) selectedObj;
+        // }
         // MOD mzhao 2009-01-20 Extract method findMatchedPackage to
         // DQStructureComparer class
         // for common use.
@@ -168,12 +207,12 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected Resource getRightResource() throws ReloadCompareException {
-        Package selectedPackage = null;
-        if (selectedObj instanceof RepositoryNode) {
-            selectedPackage = (Package) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
-        } else {
-            selectedPackage = (Package) selectedObj;
-        }
+        Package selectedPackage = getPackageFromObject(selectedObj);
+        // if (selectedObj instanceof RepositoryNode) {
+        // selectedPackage = (Package) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
+        // } else {
+        // selectedPackage = (Package) selectedObj;
+        // }
         // MOD Extract method findMatchedPackage to DQStructureComparer class
         // for common use.
         Package toReloadObj = DQStructureComparer.findMatchedPackage(selectedPackage, tempReloadProvider);
@@ -257,7 +296,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         if (columnSetSwitch != null) {
 
             if (isValidTableHandle(columnSetSwitch) || isValidViewHandle(columnSetSwitch)) {
-                PackageHelper.addColumnSet(columnSetSwitch, (Package) selectedObj);
+                PackageHelper.addColumnSet(columnSetSwitch, getPackageFromObject(selectedObj));
             }
         }
     }
@@ -269,7 +308,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
             popRemoveElementConfirm();
 
             if (isValidTableHandle(removeColumnSet) || isValidViewHandle(removeColumnSet)) {
-                PackageHelper.removeColumnSet(removeColumnSet, (Package) selectedObj);
+                PackageHelper.removeColumnSet(removeColumnSet, getPackageFromObject(selectedObj));
             }
         }
     }
