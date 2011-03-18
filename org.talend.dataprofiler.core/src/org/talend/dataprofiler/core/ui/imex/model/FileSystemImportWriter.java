@@ -42,6 +42,9 @@ import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.helper.RepositoryObjectTypeHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -106,12 +109,38 @@ public class FileSystemImportWriter implements IImportWriter {
                 checkExisted(record);
             }
 
+            checkConflict(record);
+
             if (!record.isValid()) {
                 inValidRecords.add(record);
             }
         }
 
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
+    }
+
+    /**
+     * DOC bZhou Comment method "checkConflict".
+     * 
+     * @param record
+     */
+    private void checkConflict(ItemRecord record) {
+        Property property = record.getProperty();
+        if (property != null) {
+            try {
+                for (ERepositoryObjectType type : RepositoryObjectTypeHelper.getDQResourceTypeList()) {
+                    List<IRepositoryViewObject> typedObjectList = ProxyRepositoryFactory.getInstance().getAll(type);
+                    for (IRepositoryViewObject object : typedObjectList) {
+                        Property property2 = object.getProperty();
+                        if (property.getId().equals(property2.getId())) {
+                            record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                record.addError("\"" + record.getName() + "\" check item conflict failed!");
+            }
+        }
     }
 
     /**
