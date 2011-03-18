@@ -84,7 +84,9 @@ public class ColumnWizard extends AbstractAnalysisWizard {
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
         AnalysisParameter parameter = (AnalysisParameter) getParameter();
-        if (parameter.getConnectionRepNode() == null && parameter.getAnalysisType().equals(AnalysisType.MULTIPLE_COLUMN)) {
+        if (parameter.getConnectionRepNode() == null
+                && (parameter.getAnalysisType().equals(AnalysisType.MULTIPLE_COLUMN) || parameter.getAnalysisType().equals(
+                        AnalysisType.COLUMN_SET))) {
             selectionPage = new ColumnAnalysisDOSelectionPage();
             addPage(selectionPage);
         }
