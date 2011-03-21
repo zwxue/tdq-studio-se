@@ -57,7 +57,6 @@ import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -348,26 +347,12 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     @Override
     protected ReturnCode canSave() {
 
-        // ADD gdbu 2011-3-3 bug 19179
-        this.nameText.setText(this.nameText.getText().replace(" ", ""));
-        if (this.nameText.getText().length() == 0) {
-            // analysis can not without a name
-            this.nameText.setText(this.analysis.getName());
-            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);
+        // MOD by gdbu 2011-3-21 bug 19179
+        ReturnCode canModRetCode = canModifyAnalysisName();
+        if (!canModRetCode.isOk()) {
+            return canModRetCode;
         }
-        String elementName = this.nameText.getText();
-        List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
-        for (IRepositoryNode children : childrensname) {
-            if (elementName.equals(this.analysis.getName())) {
-                // if new name equals itself's old name ,return true
-                break;
-            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {
-                // if new name equals one of tree-list's name,return false
-                this.nameText.setText(this.analysis.getName());
-                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);
-            }
-        }
-        // ~
+        // ~19179
 
         if (anaColumnCompareViewer.getColumnListA().size() != anaColumnCompareViewer.getColumnListB().size()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsSameMessage"), false); //$NON-NLS-1$
