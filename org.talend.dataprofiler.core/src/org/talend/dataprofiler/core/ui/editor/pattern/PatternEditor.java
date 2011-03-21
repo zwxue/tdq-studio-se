@@ -38,9 +38,10 @@ public class PatternEditor extends CommonFormEditor {
 
     protected void addPages() {
         masterPage = new PatternMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ 
-        setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+        // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind method 'addPage(...)'
         try {
             addPage(masterPage);
+            setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }

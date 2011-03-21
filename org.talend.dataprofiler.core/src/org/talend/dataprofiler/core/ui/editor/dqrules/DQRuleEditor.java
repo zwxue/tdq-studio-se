@@ -39,11 +39,10 @@ public class DQRuleEditor extends CommonFormEditor {
 
     protected void addPages() {
         masterPage = new DQRuleMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
-
-        setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
-
+        // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind the method 'addPage(...)'
         try {
             addPage(masterPage);
+            setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
