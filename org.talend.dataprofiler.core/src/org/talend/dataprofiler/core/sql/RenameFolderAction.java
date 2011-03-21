@@ -21,7 +21,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
@@ -36,6 +39,8 @@ public class RenameFolderAction extends Action {
 
     private IFolder obj;
 
+    private RepositoryNode node;
+
     /**
      * DOC qzhang RenameFolderAction constructor comment.
      * 
@@ -43,6 +48,12 @@ public class RenameFolderAction extends Action {
      */
     public RenameFolderAction(IFolder obj) {
         this.obj = obj;
+        setText(DefaultMessagesImpl.getString("RenameFolderAction.renameFolder")); //$NON-NLS-1$
+    }
+
+    public RenameFolderAction(RepositoryNode node) {
+        this.node = node;
+        this.obj = WorkbenchUtils.getFolder(node);
         setText(DefaultMessagesImpl.getString("RenameFolderAction.renameFolder")); //$NON-NLS-1$
     }
 
@@ -68,6 +79,9 @@ public class RenameFolderAction extends Action {
             try {
                 obj.move(folder.getFullPath(), true, null);
                 ProxyRepositoryManager.getInstance().save();
+                if (node != null && node.getParent() != null) {
+                    CorePlugin.getDefault().refreshDQView(node.getParent());
+                }
             } catch (CoreException e) {
                 log.error(e, e);
             }

@@ -54,13 +54,13 @@ public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
         List<IFile> selectedFiles = new ArrayList<IFile>();
         if (treeSelection.size() == 1) {
             RepositoryNode node = (RepositoryNode) treeSelection.getFirstElement();
-            if (node instanceof SourceFileFolderRepNode) {
+            if (node instanceof SourceFileSubFolderNode) {
                 menu.add(new AddSqlFileAction(WorkbenchUtils.getFolder(node)));
                 menu.add(new ImportSqlFileAction(WorkbenchUtils.getFolder(node)));
-            } else if (node instanceof SourceFileSubFolderNode) {
+                menu.add(new RenameFolderAction(node));
+            } else if (node instanceof SourceFileFolderRepNode) {
                 menu.add(new AddSqlFileAction(WorkbenchUtils.getFolder(node)));
                 menu.add(new ImportSqlFileAction(WorkbenchUtils.getFolder(node)));
-                menu.add(new RenameFolderAction(WorkbenchUtils.getFolder(node)));
             } else if (node instanceof SourceFileRepNode) {
                 IPath append = WorkbenchUtils.getFilePath(node);
                 IFile file = ResourceManager.getRootProject().getFile(append);
