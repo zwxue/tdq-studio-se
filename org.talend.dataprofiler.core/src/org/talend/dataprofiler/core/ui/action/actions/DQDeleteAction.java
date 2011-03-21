@@ -12,10 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -30,10 +35,12 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteAction;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -81,6 +88,12 @@ public class DQDeleteAction extends DeleteAction {
         for (Object obj : ((IStructuredSelection) selection).toArray()) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
+                // handle generating report file.bug 18805 .
+                if (node instanceof ReportFileRepNode) {
+                    deleteReportFile((ReportFileRepNode) node);
+                    continue;
+                }
+
                 boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
                 // logical delete
                 if (!isStateDeleted) {
@@ -216,6 +229,35 @@ public class DQDeleteAction extends DeleteAction {
                 parent.getChildren(true).remove(currentNode);
             }
         }
+    }
+
+    /**
+     * 
+     * physical delete generating report file.
+     * 
+     * @param repFileNode
+     */
+    private void deleteReportFile(ReportFileRepNode repFileNode) {
+        try {
+            IPath location = Path.fromOSString(repFileNode.getResource().getProjectRelativePath().toOSString());
+            IFile latestRepIFile = ResourceManager.getRootProject().getFile(location);
+            if (showConfirmDialog(repFileNode.getLabel())) {
+                if (latestRepIFile.isLinked()) {
+                    File file = new File(latestRepIFile.getRawLocation().toOSString());
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+                latestRepIFile.delete(true, null);
+            }
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+    }
+
+    private boolean showConfirmDialog(String reportFileName) {
+        return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteForeverTitle"), reportFileName
+                + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("DQDeleteAction.areYouDeleteForever"));
     }
 
 }
