@@ -783,12 +783,33 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         for (TreeItem treeItem : selection) {
             ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
             deleteColumnItems(meIndicator.getModelElementRepositoryNode());
+            deleteModelElementItems(meIndicator);
             removeItemBranch(treeItem);
         }
         // MOD mzhao 2005-05-05 bug 6587.
         // MOD mzhao 2009-06-8, bug 5887.
         updateBindConnection(masterPage, tree);
+        setElements(modelElementIndicators);
         enabledButtons(false);
         tree.setFocus();
+    }
+
+    /**
+     * DOC yyi 2011-03-21 19460:remove selected element form the tree
+     * 
+     * @param deleteModelElementIndiciator
+     */
+    private void deleteModelElementItems(ModelElementIndicator deleteModelElementIndiciator) {
+        ModelElementIndicator[] remainIndicators = new ModelElementIndicator[modelElementIndicators.length - 1];
+        int i = 0;
+        for (ModelElementIndicator indicator : modelElementIndicators) {
+            if (deleteModelElementIndiciator.equals(indicator)) {
+                continue;
+            } else {
+                remainIndicators[i] = indicator;
+                i++;
+            }
+        }
+        this.modelElementIndicators = remainIndicators;
     }
 }
