@@ -269,6 +269,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
+
         // MOD by zshen: change schemaName of sybase database to Table's owner.
         boolean isSybase = false;
         if (Arrays.asList(org.talend.utils.sql.ConnectionUtils.getSybaseDBProductsName()).contains(dbms().getDbmsName())) {
@@ -277,9 +278,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (isSybase) {
             schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
         }
+        // MOD by gdbu 2011-3-18 bug 19160
+        else {
+            table = dbms().toQualifiedName(catalogName, schemaName, table);
+        }
+        //~19160
         // ~11934
 
-        table = dbms().toQualifiedName(catalogName, schemaName, table);
+
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
