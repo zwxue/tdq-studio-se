@@ -206,8 +206,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         TableIndicator tableIndicator = SchemaFactory.eINSTANCE.createTableIndicator();
         // MOD xqliu 2009-1-21 feature 4715
         DefinitionHandler.getInstance().setDefaultIndicatorDefinition(tableIndicator);
-        // t is not stored in xmi file.
-        tableIndicator.setAnalyzedElement(t);
+        // t is not stored in xmi file. tableIndicator.setAnalyzedElement(t);
         tableIndicator.setTableName(t.getName());
         tableIndicator.setRowCount(rowCount);
         tableIndicator.setKeyCount(pkCount);
