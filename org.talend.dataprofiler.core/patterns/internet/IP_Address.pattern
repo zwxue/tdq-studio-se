@@ -14,4 +14,7 @@
   <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_8vGasgyEEd6OfvNiP9lrnQ" expressionType="REGEXP">
     <expression xmi:id="_8vGaswyEEd6OfvNiP9lrnQ" body="'^([01]?[[:digit:]][[:digit:]]?|2[0-4][[:digit:]]|25[0-5])\.([01]?[[:digit:]][[:digit:]]?|2[0-4][[:digit:]]|25[0-5])\.([01]?[[:digit:]][[:digit:]]?|2[0-4][[:digit:]]|25[0-5])\.([01]?[[:digit:]][[:digit:]]?|2[0-4][[:digit:]]|25[0-5])$'" language="Oracle"/>
   </components>
+  <components xsi:type="dataquality.domain.pattern:RegularExpression" xmi:id="_Kx99UFOoEeC9zOx-BAHRkg" expressionType="REGEXP">
+    <expression xmi:id="_Kx99UVOoEeC9zOx-BAHRkg" body="'^([01]?[\d][\d]?|2[0-4][\d]|25[0-5])\.([01]?[\d][\d]?|2[0-4][\d]|25[0-5])\.([01]?[\d][\d]?|2[0-4][\d]|25[0-5])\.([01]?[\d][\d]?|2[0-4][\d]|25[0-5])$'" language="Java"/>
+  </components>
 </dataquality.domain.pattern:Pattern>
