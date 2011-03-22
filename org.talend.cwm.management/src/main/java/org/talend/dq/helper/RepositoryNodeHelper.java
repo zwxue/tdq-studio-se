@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -113,6 +114,8 @@ import orgomg.cwm.resource.relational.Schema;
 public final class RepositoryNodeHelper {
 
     public static final String DQRESPOSITORYVIEW = "org.talend.dataprofiler.core.ui.views.DQRespositoryView"; //$NON-NLS-1$
+
+    public static final String DI_REPOSITORY_NAME = "Repository"; //$NON-NLS-1$
 
     private RepositoryNodeHelper() {
     }
@@ -979,6 +982,14 @@ public final class RepositoryNodeHelper {
      * @return
      */
     public static RepositoryNode getRootNode(ERepositoryObjectType nodeName) {
+        // MOD klliu bug 19138 In DI that can't find MDMConnectionFolderRepNode when create MDM connection
+        // ~2011-03-22
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchPart activePart = activeWorkbenchWindow.getActivePage().getActivePart();
+        if (activePart.getTitle().equals(DI_REPOSITORY_NAME)) {
+            return getRootNode(nodeName, true);
+        }
+        // ~
         return getRootNode(nodeName, false);
     }
 
