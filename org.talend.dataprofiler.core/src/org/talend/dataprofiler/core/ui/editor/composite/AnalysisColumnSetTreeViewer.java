@@ -730,15 +730,25 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      */
     @Override
     protected void removeItemBranch(TreeItem item) {
+        // MOD yyi 2011-03-22 19460: The "remove elements" option on the contextual menu does not work
         IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
         ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
+        deleteColumnItems(meIndicator.getModelElementRepositoryNode());
+        deleteModelElementItems(meIndicator);
 
-        super.removeItemBranch(item);
         if (null != unit) {
             meIndicator.removeIndicatorUnit(unit);
             masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
             masterPage.updateIndicatorSection();
         }
+
+        // MOD mzhao 2005-05-05 bug 6587.
+        // MOD mzhao 2009-06-8, bug 5887.
+        updateBindConnection(masterPage, tree);
+
+        super.removeItemBranch(item);
+        enabledButtons(false);
+        tree.setFocus();
     }
 
     /**
@@ -781,17 +791,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     private void removeSelectedElements() {
         TreeItem[] selection = tree.getSelection();
         for (TreeItem treeItem : selection) {
-            ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
-            deleteColumnItems(meIndicator.getModelElementRepositoryNode());
-            deleteModelElementItems(meIndicator);
             removeItemBranch(treeItem);
         }
-        // MOD mzhao 2005-05-05 bug 6587.
-        // MOD mzhao 2009-06-8, bug 5887.
-        updateBindConnection(masterPage, tree);
-        setElements(modelElementIndicators);
-        enabledButtons(false);
-        tree.setFocus();
     }
 
     /**
