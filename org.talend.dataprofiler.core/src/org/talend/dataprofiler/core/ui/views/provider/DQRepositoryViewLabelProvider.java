@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.ui.views.provider;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -190,6 +192,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return node.getLabel() + " " + node.getObject().getVersion();
             } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
                 return node.getObject().getLabel() + "(Unsupported)";
+            } else if (node instanceof DBCatalogRepNode) {
+                // MOD zshen to modify catalog name when connection is ODBC
+                String catalogName = node.getObject().getLabel();
+                IPath catalogPath = new Path(catalogName);
+                catalogName = catalogPath.removeFileExtension().lastSegment();
+                return catalogName;
             } else if (node instanceof AnalysisFolderRepNode) {
                 if (node instanceof AnalysisSubFolderRepNode) {
                     AnalysisSubFolderRepNode anaSubNode = (AnalysisSubFolderRepNode) node;
