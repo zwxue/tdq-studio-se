@@ -14,11 +14,12 @@ package org.talend.dataprofiler.core.ui.editor.connection;
 
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 
 /**
  * 
- * DOC mzhao Connection item editor input
+ * DOC mzhao Connection item editor input.
  */
 public class ConnectionItemEditorInput extends AbstractItemEditorInput {
 
@@ -37,5 +38,10 @@ public class ConnectionItemEditorInput extends AbstractItemEditorInput {
         return getPath() + ((ConnectionItem) item).getConnection().getName();
     }
 
-
+    public String getModelElementUuid() {
+        if (this.item != null) {
+            return ResourceHelper.getUUID(((ConnectionItem) item).getConnection());
+        }
+        return super.getModelElementUuid();
+    }
 }

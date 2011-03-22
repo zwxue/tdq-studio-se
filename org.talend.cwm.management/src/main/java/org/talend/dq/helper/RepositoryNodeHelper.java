@@ -83,8 +83,10 @@ import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
+import org.talend.dq.nodes.PatternRegexSubFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.PatternSqlFolderRepNode;
+import org.talend.dq.nodes.PatternSqlSubFolderRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
@@ -1460,4 +1462,81 @@ public final class RepositoryNodeHelper {
         return ""; //$NON-NLS-1$
     }
 
+    /**
+     * get SourceFileRepNodes which under the parentNode.
+     * 
+     * @param parentNode
+     * @param recursive
+     * @return
+     */
+    public static List<SourceFileRepNode> getSourceFileRepNodes(RepositoryNode parentNode, boolean recursive) {
+        List<SourceFileRepNode> result = new ArrayList<SourceFileRepNode>();
+        List<IRepositoryNode> children = parentNode.getChildren();
+        for (IRepositoryNode node : children) {
+            if (node instanceof SourceFileRepNode) {
+                result.add((SourceFileRepNode) node);
+            } else if (node instanceof SourceFileFolderRepNode) {
+                if (recursive) {
+                    result.addAll(getSourceFileRepNodes((SourceFileFolderRepNode) node, recursive));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * get RepositoryNode which contains a ModelElment(include: Analysis, Report, IndicatorDefinition, Pattern, DqRule)
+     * under the parentNode.
+     * 
+     * @param parentNode
+     * @param recursive
+     * @return
+     */
+    public static List<RepositoryNode> getModelElementRepNodes(RepositoryNode parentNode, boolean recursive) {
+        List<RepositoryNode> result = new ArrayList<RepositoryNode>();
+        List<IRepositoryNode> children = parentNode.getChildren();
+        for (IRepositoryNode node : children) {
+            ModelElement modelElementFromRepositoryNode = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
+            if (modelElementFromRepositoryNode != null) {
+                result.add((RepositoryNode) node);
+            } else {
+                boolean isFolder = false;
+                if (node instanceof AnalysisFolderRepNode) {
+                    AnalysisFolderRepNode anaFolderRepNode = (AnalysisFolderRepNode) node;
+                    isFolder = !anaFolderRepNode.isVirtualFolder();
+                } else if (node instanceof ReportFolderRepNode) {
+                    ReportFolderRepNode repFolderRepNode = (ReportFolderRepNode) node;
+                    isFolder = !repFolderRepNode.isVirtualFolder();
+                } else if (node instanceof UserDefIndicatorFolderRepNode || node instanceof PatternRegexFolderRepNode
+                        || node instanceof PatternRegexSubFolderRepNode || node instanceof PatternSqlFolderRepNode
+                        || node instanceof PatternSqlSubFolderRepNode || node instanceof RulesFolderRepNode) {
+                    isFolder = true;
+                }
+                if (isFolder && recursive) {
+                    result.addAll(getModelElementRepNodes((RepositoryNode) node, recursive));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * get the ModelElement uuid list from RepositoryNode list.
+     * 
+     * @param nodes
+     * @return
+     */
+    public static List<String> getUuids(List<? extends IRepositoryNode> nodes) {
+        List<String> result = new ArrayList<String>();
+        for (IRepositoryNode node : nodes) {
+            ModelElement metadataElement = RepositoryNodeHelper.getMetadataElement(node);
+            if (metadataElement != null) {
+                String uuid = ResourceHelper.getUUID(metadataElement);
+                if (uuid != null) {
+                    result.add(uuid);
+                }
+            }
+        }
+        return result;
+    }
 }

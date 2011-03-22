@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.indicator;
 
 import org.talend.core.model.properties.Item;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 
@@ -49,4 +50,10 @@ public class IndicatorDefinitionItemEditorInput extends AbstractItemEditorInput 
         return item;
     }
 
+    public String getModelElementUuid() {
+        if (this.item != null) {
+            return ResourceHelper.getUUID(this.item.getIndicatorDefinition());
+        }
+        return super.getModelElementUuid();
+    }
 }

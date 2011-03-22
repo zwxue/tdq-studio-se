@@ -92,4 +92,13 @@ public class AbstractItemEditorInput implements IEditorInput {
         }
         return item;
     }
+
+    /**
+     * get the Uuid of the ModelElement which included in this IEditorInput.
+     * 
+     * @return
+     */
+    public String getModelElementUuid() {
+        return null;
+    }
 }

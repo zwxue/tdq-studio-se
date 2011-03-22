@@ -152,4 +152,8 @@ public class ReportFolderRepNode extends RepositoryNode {
         return super.getChildren();
     }
 
+    public boolean isVirtualFolder() {
+        return false;
+    }
+
 }

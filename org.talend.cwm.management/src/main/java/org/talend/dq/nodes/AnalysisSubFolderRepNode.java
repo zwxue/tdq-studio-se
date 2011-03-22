@@ -157,4 +157,8 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
         }
         return "(0)";
     }
+
+    public boolean isVirtualFolder() {
+        return this.getObject() == null;
+    }
 }

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.dqrules;
 
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 
@@ -51,5 +52,10 @@ public class BusinessRuleItemEditorInput extends AbstractItemEditorInput {
         return item;
     }
 
-
+    public String getModelElementUuid() {
+        if (this.item != null) {
+            return ResourceHelper.getUUID(this.item.getDqrule());
+        }
+        return super.getModelElementUuid();
+    }
 }

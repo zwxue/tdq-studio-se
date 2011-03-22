@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.report;
 
 import org.talend.core.model.properties.Item;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataquality.properties.TDQReportItem;
 
@@ -42,5 +43,12 @@ public class ReportItemEditorInput extends AbstractItemEditorInput {
     }
     public TDQReportItem getTDQReportItem() {
         return reportItem;
+    }
+
+    public String getModelElementUuid() {
+        if (this.item != null) {
+            return ResourceHelper.getUUID(this.reportItem.getReport());
+        }
+        return super.getModelElementUuid();
     }
 }

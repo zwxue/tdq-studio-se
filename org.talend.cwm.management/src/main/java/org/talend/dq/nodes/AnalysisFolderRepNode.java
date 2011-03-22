@@ -154,4 +154,7 @@ public class AnalysisFolderRepNode extends RepositoryNode {
         return nodes;
     }
 
+    public boolean isVirtualFolder() {
+        return false;
+    }
 }

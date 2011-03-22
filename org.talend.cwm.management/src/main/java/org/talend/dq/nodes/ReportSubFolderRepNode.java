@@ -229,4 +229,8 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
             return null;
         }
     }
+
+    public boolean isVirtualFolder() {
+        return this.getReport() != null;
+    }
 }

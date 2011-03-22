@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.pattern;
 
 import org.talend.core.model.properties.Item;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataquality.properties.TDQPatternItem;
 
@@ -47,5 +48,10 @@ public class PatternItemEditorInput extends AbstractItemEditorInput {
         return item;
     }
 
-
+    public String getModelElementUuid() {
+        if (this.item != null) {
+            return ResourceHelper.getUUID(this.item.getParent());
+        }
+        return super.getModelElementUuid();
+    }
 }
