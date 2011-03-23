@@ -16,6 +16,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IViewPart;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -64,6 +65,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     public void fillMetadata(Connection connection) {
         ConnectionUtils.fillConnectionInformation(connection);
+    }
+
+    public void fillMetadata(ConnectionItem connItem) {
+        MetadataConnectionUtils.fillConnectionInformation(connItem);
     }
 
     public void refresh() {
