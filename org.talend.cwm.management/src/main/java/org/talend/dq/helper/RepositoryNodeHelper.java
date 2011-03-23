@@ -44,6 +44,10 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -59,14 +63,17 @@ import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -75,11 +82,13 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
@@ -95,10 +104,13 @@ import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.RulesFolderRepNode;
+import org.talend.dq.nodes.RulesSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
+import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -106,9 +118,12 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * Helper class for RepositoryNode.
@@ -397,34 +412,46 @@ public final class RepositoryNodeHelper {
      * @return
      */
     public static RepositoryNode recursiveFind(ModelElement modelElement) {
-        String uuid = ResourceHelper.getUUID(modelElement);
-        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-
+        RepositoryNode node = null;
         if (modelElement instanceof Analysis) {
-            nodes.add(getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
+            node = recursiveFindAnalysis((Analysis) modelElement);
         } else if (modelElement instanceof TdReport) {
-            nodes.add(getDataProfilingFolderNode(EResourceConstant.REPORTS));
-        } else if (modelElement instanceof DatabaseConnection || modelElement instanceof Catalog
-                || modelElement instanceof Schema || modelElement instanceof TdTable || modelElement instanceof TdView
-                || modelElement instanceof TdColumn) {
-            nodes.add(getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS));
-        } else if (modelElement instanceof MDMConnection || modelElement instanceof TdXmlElementType
-                || modelElement instanceof TdXmlSchema) {
-            nodes.add(getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS));
-        } else if (modelElement instanceof DelimitedFileConnection || modelElement instanceof MetadataColumn
-                || modelElement instanceof MetadataTable) {
-            nodes.add(getMetadataFolderNode(EResourceConstant.FILEDELIMITED));
+            node = recursiveFindReport((Report) modelElement);
+        } else if (modelElement instanceof DatabaseConnection) {
+            node = recursiveFindDatabaseConnection((DatabaseConnection) modelElement);
+        } else if (modelElement instanceof Catalog) {
+            node = recursiveFindCatalog((Catalog) modelElement);
+        } else if (modelElement instanceof Schema) {
+            node = recursiveFindSchema((Schema) modelElement);
+        } else if (modelElement instanceof TdTable) {
+            node = recursiveFindTdTable((TdTable) modelElement);
+        } else if (modelElement instanceof TdView) {
+            node = recursiveFindTdView((TdView) modelElement);
+        } else if (modelElement instanceof TdColumn) {
+            node = recursiveFindTdColumn((TdColumn) modelElement);
+        } else if (modelElement instanceof MDMConnection) {
+            node = recursiveFindMDMConnection((MDMConnection) modelElement);
+        } else if (modelElement instanceof TdXmlSchema) {
+            node = recursiveFindTdXmlSchema((TdXmlSchema) modelElement);
+        } else if (modelElement instanceof TdXmlElementType) {
+            node = recursiveFindTdXmlElementType((TdXmlElementType) modelElement);
+        } else if (modelElement instanceof DelimitedFileConnection) {
+            node = recursiveFindDFConnection((DelimitedFileConnection) modelElement);
+        } else if (modelElement instanceof MetadataTable) {
+            node = recursiveFindMetadataTable((MetadataTable) modelElement);
+        } else if (modelElement instanceof MetadataColumn) {
+            node = recursiveFindMetadataColumn((MetadataColumn) modelElement);
         } else if (modelElement instanceof Pattern) {
-            nodes.add(getLibrariesFolderNode(EResourceConstant.PATTERNS));
+            node = recursiveFindPattern((Pattern) modelElement);
         } else if (modelElement instanceof IndicatorDefinition) {
             if (modelElement instanceof WhereRule) {
-                nodes.add(getLibrariesFolderNode(EResourceConstant.RULES));
+                node = recursiveFindRule((WhereRule) modelElement);
             } else {
-                nodes.add(getLibrariesFolderNode(EResourceConstant.INDICATORS));
+                node = recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
             }
         }
-        return recursiveFindByUuid(uuid, nodes);
-        // following codes are testing codes, please don't delete them, thanks
+        return node;
+        // !!!following codes are testing codes, please don't delete them, thanks!!!
         // RepositoryNode repNode = recursiveFindByUuid(uuid, nodes);
         // if (repNode != null) {
         // System.out.println("[class name: " + repNode.getClass().getName() + "][uuid: " + uuid + "][id: " +
@@ -437,6 +464,583 @@ public final class RepositoryNodeHelper {
         // return repNode;
     }
 
+    public static List<DBConnectionRepNode> getDBConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+        List<DBConnectionRepNode> result = new ArrayList<DBConnectionRepNode>();
+        if (parrentNode != null
+                && (parrentNode instanceof DBConnectionFolderRepNode || parrentNode instanceof DBConnectionSubFolderRepNode)) {
+            List<IRepositoryNode> children = parrentNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode inode : children) {
+                    if (inode instanceof DBConnectionRepNode) {
+                        result.add((DBConnectionRepNode) inode);
+                    } else if (inode instanceof DBConnectionFolderRepNode || inode instanceof DBConnectionSubFolderRepNode) {
+                        if (recursiveFind) {
+                            result.addAll(getDBConnectionRepNodes(inode, recursiveFind));
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<MDMConnectionRepNode> getMDMConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+        List<MDMConnectionRepNode> result = new ArrayList<MDMConnectionRepNode>();
+        if (parrentNode != null
+                && (parrentNode instanceof MDMConnectionFolderRepNode || parrentNode instanceof MDMConnectionSubFolderRepNode)) {
+            List<IRepositoryNode> children = parrentNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode inode : children) {
+                    if (inode instanceof MDMConnectionRepNode) {
+                        result.add((MDMConnectionRepNode) inode);
+                    } else if (inode instanceof MDMConnectionFolderRepNode || inode instanceof MDMConnectionSubFolderRepNode) {
+                        if (recursiveFind) {
+                            result.addAll(getMDMConnectionRepNodes(inode, recursiveFind));
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<DFConnectionRepNode> getDFConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+        List<DFConnectionRepNode> result = new ArrayList<DFConnectionRepNode>();
+        if (parrentNode != null
+                && (parrentNode instanceof DFConnectionFolderRepNode || parrentNode instanceof DFConnectionSubFolderRepNode)) {
+            List<IRepositoryNode> children = parrentNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode inode : children) {
+                    if (inode instanceof DFConnectionRepNode) {
+                        result.add((DFConnectionRepNode) inode);
+                    } else if (inode instanceof DFConnectionFolderRepNode || inode instanceof DFConnectionSubFolderRepNode) {
+                        if (recursiveFind) {
+                            result.addAll(getDFConnectionRepNodes(inode, recursiveFind));
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<AnalysisRepNode> getAnalysisRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+        List<AnalysisRepNode> result = new ArrayList<AnalysisRepNode>();
+        if (parrentNode != null
+                && (parrentNode instanceof AnalysisFolderRepNode || parrentNode instanceof AnalysisSubFolderRepNode)) {
+            List<IRepositoryNode> children = parrentNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode inode : children) {
+                    if (inode instanceof AnalysisRepNode) {
+                        result.add((AnalysisRepNode) inode);
+                    } else if (inode instanceof AnalysisFolderRepNode || inode instanceof AnalysisSubFolderRepNode) {
+                        if (recursiveFind) {
+                            result.addAll(getAnalysisRepNodes(inode, recursiveFind));
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<ReportRepNode> getReportRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+        List<ReportRepNode> result = new ArrayList<ReportRepNode>();
+        if (parrentNode != null && (parrentNode instanceof ReportFolderRepNode || parrentNode instanceof ReportSubFolderRepNode)) {
+            List<IRepositoryNode> children = parrentNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode inode : children) {
+                    if (inode instanceof ReportRepNode) {
+                        result.add((ReportRepNode) inode);
+                    } else if (inode instanceof ReportFolderRepNode || inode instanceof ReportSubFolderRepNode) {
+                        if (recursiveFind) {
+                            result.addAll(getReportRepNodes(inode, recursiveFind));
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<SysIndicatorDefinitionRepNode> getIndicatorDefinitionRepNodes(IRepositoryNode parrentNode,
+            boolean recursiveFind) {
+        List<SysIndicatorDefinitionRepNode> result = new ArrayList<SysIndicatorDefinitionRepNode>();
+        if (parrentNode != null
+                && (parrentNode instanceof SysIndicatorFolderRepNode || parrentNode instanceof UserDefIndicatorFolderRepNode || parrentNode instanceof UserDefIndicatorSubFolderRepNode)) {
+            List<IRepositoryNode> children = parrentNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode inode : children) {
+                    if (inode instanceof SysIndicatorDefinitionRepNode) {
+                        result.add((SysIndicatorDefinitionRepNode) inode);
+                    } else if (inode instanceof SysIndicatorFolderRepNode || inode instanceof UserDefIndicatorFolderRepNode
+                            || inode instanceof UserDefIndicatorSubFolderRepNode) {
+                        if (recursiveFind) {
+                            result.addAll(getIndicatorDefinitionRepNodes(inode, recursiveFind));
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<PatternRepNode> getPatternRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+        List<PatternRepNode> result = new ArrayList<PatternRepNode>();
+        if (parrentNode != null
+                && (parrentNode instanceof PatternRegexFolderRepNode || parrentNode instanceof PatternRegexSubFolderRepNode
+                        || parrentNode instanceof PatternSqlFolderRepNode || parrentNode instanceof PatternSqlSubFolderRepNode)) {
+            List<IRepositoryNode> children = parrentNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode inode : children) {
+                    if (inode instanceof PatternRepNode) {
+                        result.add((PatternRepNode) inode);
+                    } else if (inode instanceof PatternRegexFolderRepNode || inode instanceof PatternRegexSubFolderRepNode
+                            || inode instanceof PatternSqlFolderRepNode || inode instanceof PatternSqlSubFolderRepNode) {
+                        if (recursiveFind) {
+                            result.addAll(getPatternRepNodes(inode, recursiveFind));
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<RuleRepNode> getRuleRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+        List<RuleRepNode> result = new ArrayList<RuleRepNode>();
+        if (parrentNode != null && (parrentNode instanceof RulesFolderRepNode || parrentNode instanceof RulesSubFolderRepNode)) {
+            List<IRepositoryNode> children = parrentNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode inode : children) {
+                    if (inode instanceof RuleRepNode) {
+                        result.add((RuleRepNode) inode);
+                    } else if (inode instanceof RulesFolderRepNode || inode instanceof RulesSubFolderRepNode) {
+                        if (recursiveFind) {
+                            result.addAll(getRuleRepNodes(inode, recursiveFind));
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public static DBConnectionRepNode recursiveFindDatabaseConnection(DatabaseConnection dbConn) {
+        if (dbConn == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(dbConn);
+        if (uuid == null) {
+            return null;
+        }
+        List<DBConnectionRepNode> dbConnectionRepNodes = getDBConnectionRepNodes(
+                getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS), true);
+        if (dbConnectionRepNodes.size() > 0) {
+            for (DBConnectionRepNode childNode : dbConnectionRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getDatabaseConnection()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static MDMConnectionRepNode recursiveFindMDMConnection(MDMConnection mdmConn) {
+        if (mdmConn == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(mdmConn);
+        if (uuid == null) {
+            return null;
+        }
+        List<MDMConnectionRepNode> mdmConnectionRepNodes = getMDMConnectionRepNodes(
+                getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS), true);
+        if (mdmConnectionRepNodes.size() > 0) {
+            for (MDMConnectionRepNode childNode : mdmConnectionRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getMdmConnection()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static DFConnectionRepNode recursiveFindDFConnection(DelimitedFileConnection dfConn) {
+        if (dfConn == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(dfConn);
+        if (uuid == null) {
+            return null;
+        }
+        List<DFConnectionRepNode> dfConnectionRepNodes = getDFConnectionRepNodes(
+                getMetadataFolderNode(EResourceConstant.FILEDELIMITED), true);
+        if (dfConnectionRepNodes.size() > 0) {
+            for (DFConnectionRepNode childNode : dfConnectionRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getDfConnection()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static AnalysisRepNode recursiveFindAnalysis(Analysis analysis) {
+        if (analysis == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(analysis);
+        if (uuid == null) {
+            return null;
+        }
+        List<AnalysisRepNode> analysisRepNodes = getAnalysisRepNodes(getDataProfilingFolderNode(EResourceConstant.ANALYSIS), true);
+        if (analysisRepNodes.size() > 0) {
+            for (AnalysisRepNode childNode : analysisRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getAnalysis()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static ReportRepNode recursiveFindReport(Report report) {
+        if (report == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(report);
+        if (uuid == null) {
+            return null;
+        }
+        List<ReportRepNode> reportRepNodes = getReportRepNodes(getDataProfilingFolderNode(EResourceConstant.REPORTS), true);
+        if (reportRepNodes.size() > 0) {
+            for (ReportRepNode childNode : reportRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getReport()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static SysIndicatorDefinitionRepNode recursiveFindIndicatorDefinition(IndicatorDefinition indDef) {
+        if (indDef == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(indDef);
+        if (uuid == null) {
+            return null;
+        }
+        List<SysIndicatorDefinitionRepNode> indicatorDefinitionRepNodes = getIndicatorDefinitionRepNodes(
+                getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS), true);
+        indicatorDefinitionRepNodes.addAll(getIndicatorDefinitionRepNodes(
+                getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS), true));
+        if (indicatorDefinitionRepNodes.size() > 0) {
+            for (SysIndicatorDefinitionRepNode childNode : indicatorDefinitionRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getIndicatorDefinition()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static PatternRepNode recursiveFindPattern(Pattern pattern) {
+        if (pattern == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(pattern);
+        if (uuid == null) {
+            return null;
+        }
+        List<PatternRepNode> patternRepNodes = getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX), true);
+        patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL), true));
+        if (patternRepNodes.size() > 0) {
+            for (PatternRepNode childNode : patternRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getPattern()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static RuleRepNode recursiveFindRule(DQRule rule) {
+        if (rule == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(rule);
+        if (uuid == null) {
+            return null;
+        }
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES), true);
+        if (ruleRepNodes.size() > 0) {
+            for (RuleRepNode childNode : ruleRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getRule()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static DBCatalogRepNode recursiveFindCatalog(Catalog catalog) {
+        if (catalog == null) {
+            return null;
+        }
+        String uuidCatalog = ResourceHelper.getUUID(catalog);
+        if (uuidCatalog == null) {
+            return null;
+        }
+        IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(catalog));
+        if (connNode == null) {
+            return null;
+        }
+        List<IRepositoryNode> children = connNode.getChildren();
+        if (children.size() > 0) {
+            IRepositoryNode iRepositoryNode = children.get(0);
+            if (iRepositoryNode != null && iRepositoryNode instanceof DBCatalogRepNode) {
+                for (IRepositoryNode childNode : children) {
+                    if (childNode != null && childNode instanceof DBCatalogRepNode) {
+                        DBCatalogRepNode dbCatalogRepNode = (DBCatalogRepNode) childNode;
+                        if (uuidCatalog.equals(ResourceHelper.getUUID(dbCatalogRepNode.getCatalog()))) {
+                            return dbCatalogRepNode;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static DBSchemaRepNode recursiveFindSchema(Schema schema) {
+        if (schema == null) {
+            return null;
+        }
+        String uuidSchema = ResourceHelper.getUUID(schema);
+        if (uuidSchema == null) {
+            return null;
+        }
+        Catalog catalog = CatalogHelper.getParentCatalog(schema);
+        // Schema's parent is catalog (MS SQL Server)
+        if (catalog != null) {
+            DBCatalogRepNode catalogNode = recursiveFindCatalog(catalog);
+            List<IRepositoryNode> children = catalogNode.getChildren();
+            if (children.size() > 0) {
+                IRepositoryNode iRepositoryNode = children.get(0);
+                if (iRepositoryNode != null && iRepositoryNode instanceof DBSchemaRepNode) {
+                    for (IRepositoryNode childNode : children) {
+                        if (childNode != null && childNode instanceof DBSchemaRepNode) {
+                            DBSchemaRepNode dbSchemaRepNode = (DBSchemaRepNode) childNode;
+                            if (uuidSchema.equals(ResourceHelper.getUUID(dbSchemaRepNode.getSchema()))) {
+                                return dbSchemaRepNode;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // schema's parent is connection (e.g Oracle)
+        IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(schema));
+        if (connNode != null) {
+            List<IRepositoryNode> children = connNode.getChildren();
+            if (children.size() > 0) {
+                IRepositoryNode iRepositoryNode = children.get(0);
+                if (iRepositoryNode != null && iRepositoryNode instanceof DBSchemaRepNode) {
+                    for (IRepositoryNode childNode : children) {
+                        if (childNode != null && childNode instanceof DBSchemaRepNode) {
+                            DBSchemaRepNode dbSchemaRepNode = (DBSchemaRepNode) childNode;
+                            if (uuidSchema.equals(ResourceHelper.getUUID(dbSchemaRepNode.getSchema()))) {
+                                return dbSchemaRepNode;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static DBTableRepNode recursiveFindTdTable(TdTable tdTable) {
+        if (tdTable == null) {
+            return null;
+        }
+        String uuidTdTable = ResourceHelper.getUUID(tdTable);
+        if (uuidTdTable == null) {
+            return null;
+        }
+        IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(tdTable));
+        if (schemaOrCatalogNode == null) {
+            return null;
+        }
+        List<IRepositoryNode> children = schemaOrCatalogNode.getChildren().get(0).getChildren();
+        if (children.size() > 0) {
+            IRepositoryNode iRepositoryNode = children.get(0);
+            if (iRepositoryNode != null && iRepositoryNode instanceof DBTableRepNode) {
+                for (IRepositoryNode childNode : children) {
+                    if (childNode != null && childNode instanceof DBTableRepNode) {
+                        DBTableRepNode dbTableRepNode = (DBTableRepNode) childNode;
+                        if (uuidTdTable.equals(ResourceHelper.getUUID(dbTableRepNode.getTdTable()))) {
+                            return dbTableRepNode;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static DBViewRepNode recursiveFindTdView(TdView tdView) {
+        if (tdView == null) {
+            return null;
+        }
+        String uuidTdView = ResourceHelper.getUUID(tdView);
+        if (uuidTdView == null) {
+            return null;
+        }
+        IRepositoryNode schemaOrCatalogNode = recursiveFind(ColumnSetHelper.getParentCatalogOrSchema(tdView));
+        if (schemaOrCatalogNode == null) {
+            return null;
+        }
+        List<IRepositoryNode> children = schemaOrCatalogNode.getChildren().get(1).getChildren();
+        if (children.size() > 0) {
+            IRepositoryNode iRepositoryNode = children.get(0);
+            if (iRepositoryNode != null && iRepositoryNode instanceof DBViewRepNode) {
+                for (IRepositoryNode childNode : children) {
+                    if (childNode != null && childNode instanceof DBViewRepNode) {
+                        DBViewRepNode dbViewRepNode = (DBViewRepNode) childNode;
+                        if (uuidTdView.equals(ResourceHelper.getUUID(dbViewRepNode.getTdView()))) {
+                            return dbViewRepNode;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static DBColumnRepNode recursiveFindTdColumn(TdColumn tdColumn) {
+        if (tdColumn == null) {
+            return null;
+        }
+        String uuidTdColumn = ResourceHelper.getUUID(tdColumn);
+        if (uuidTdColumn == null) {
+            return null;
+        }
+        IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsColumnSet(tdColumn));
+        if (columnSetNode == null) {
+            return null;
+        }
+        List<IRepositoryNode> children = columnSetNode.getChildren().get(0).getChildren();
+        IRepositoryNode iRepositoryNode = children.get(0);
+        if (iRepositoryNode != null && iRepositoryNode instanceof DBColumnRepNode) {
+            for (IRepositoryNode childNode : children) {
+                if (childNode != null && childNode instanceof DBColumnRepNode) {
+                    DBColumnRepNode dbColumnRepNode = (DBColumnRepNode) childNode;
+                    if (uuidTdColumn.equals(ResourceHelper.getUUID(dbColumnRepNode.getTdColumn()))) {
+                        return dbColumnRepNode;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static MDMSchemaRepNode recursiveFindTdXmlSchema(TdXmlSchema tdXmlSchema) {
+        if (tdXmlSchema == null) {
+            return null;
+        }
+        String uuidTdXmlSchema = ResourceHelper.getUUID(tdXmlSchema);
+        if (uuidTdXmlSchema == null) {
+            return null;
+        }
+        EList<DataManager> dataManager = tdXmlSchema.getDataManager();
+        if (dataManager.size() > 0) {
+            RepositoryNode connNode = recursiveFind(dataManager.get(0));
+            if (connNode != null) {
+                List<IRepositoryNode> children = connNode.getChildren();
+                if (children.size() > 0) {
+                    for (IRepositoryNode childNode : children) {
+                        if (childNode != null && childNode instanceof MDMSchemaRepNode) {
+                            MDMSchemaRepNode mdmSchemaRepNode = (MDMSchemaRepNode) childNode;
+                            if (uuidTdXmlSchema.equals(ResourceHelper.getUUID(mdmSchemaRepNode.getTdXmlSchema()))) {
+                                return mdmSchemaRepNode;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static MDMXmlElementRepNode recursiveFindTdXmlElementType(TdXmlElementType tdXmlElementType) {
+        if (tdXmlElementType == null) {
+            return null;
+        }
+        TdXmlSchema ownedDocument = tdXmlElementType.getOwnedDocument();
+        if (ownedDocument != null) {
+            RepositoryNode xmlSchemaNode = recursiveFind(ownedDocument);
+            if (xmlSchemaNode != null) {
+                return recursiveFindXmlElementType(xmlSchemaNode.getChildren(), tdXmlElementType);
+            }
+        }
+        return null;
+    }
+
+    public static DFTableRepNode recursiveFindMetadataTable(MetadataTable metadataTable) {
+        if (metadataTable == null) {
+            return null;
+        }
+        String uuidMetadataTable = ResourceHelper.getUUID(metadataTable);
+        if (uuidMetadataTable == null) {
+            return null;
+        }
+        if (metadataTable.getNamespace() instanceof RecordFile) {
+            IRepositoryNode connNode = recursiveFind(ConnectionHelper.getTdDataProvider(metadataTable));
+            List<IRepositoryNode> children = connNode.getChildren();
+            if (children.size() > 0) {
+                for (IRepositoryNode childNode : children) {
+                    if (childNode != null && childNode instanceof DFTableRepNode) {
+                        DFTableRepNode dfTableRepNode = (DFTableRepNode) childNode;
+                        if (uuidMetadataTable.equals(ResourceHelper.getUUID(dfTableRepNode.getMetadataTable()))) {
+                            return dfTableRepNode;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static DFColumnRepNode recursiveFindMetadataColumn(MetadataColumn metadataColumn) {
+        if (metadataColumn == null) {
+            return null;
+        }
+        String uuidMetadataColumn = ResourceHelper.getUUID(metadataColumn);
+        if (uuidMetadataColumn == null) {
+            return null;
+        }
+        IRepositoryNode columnSetNode = recursiveFind(ColumnHelper.getColumnOwnerAsMetadataTable(metadataColumn));
+        if (columnSetNode == null) {
+            return null;
+        }
+        List<IRepositoryNode> children = columnSetNode.getChildren().get(0).getChildren();
+        if (children.size() > 0) {
+            for (IRepositoryNode childNode : children) {
+                if (childNode != null && childNode instanceof DFColumnRepNode) {
+                    DFColumnRepNode dfColumnRepNode = (DFColumnRepNode) childNode;
+                    if (uuidMetadataColumn.equals(ResourceHelper.getUUID(dfColumnRepNode.getMetadataColumn()))) {
+                        return dfColumnRepNode;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    // !!!following codes are useful codes, please don't delete them, thanks!!!
     // public static RepositoryNode recursiveFind(ModelElement modelElement) {
     // if (modelElement instanceof Analysis) {
     // Analysis analysis = (Analysis) modelElement;
@@ -659,15 +1263,15 @@ public final class RepositoryNodeHelper {
      * @param xmlElementType
      * @return
      */
-    private static RepositoryNode recursiveFindXmlElementType(List<IRepositoryNode> nodes, TdXmlElementType xmlElementType) {
+    private static MDMXmlElementRepNode recursiveFindXmlElementType(List<IRepositoryNode> nodes, TdXmlElementType xmlElementType) {
         if (nodes != null && nodes.size() > 0) {
             for (IRepositoryNode node : nodes) {
                 if (node instanceof MDMXmlElementRepNode) {
                     TdXmlElementType tdXmlElementTypeOnUi = ((MDMXmlElementRepNode) node).getTdXmlElementType();
                     if (ResourceHelper.getUUID(xmlElementType).equals(ResourceHelper.getUUID(tdXmlElementTypeOnUi))) {
-                        return (RepositoryNode) node;
+                        return (MDMXmlElementRepNode) node;
                     } else {
-                        RepositoryNode recursiveFindXmlElementType = recursiveFindXmlElementType(node.getChildren(),
+                        MDMXmlElementRepNode recursiveFindXmlElementType = recursiveFindXmlElementType(node.getChildren(),
                                 xmlElementType);
                         if (recursiveFindXmlElementType != null) {
                             return recursiveFindXmlElementType;
@@ -679,76 +1283,76 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
-    /**
-     * get all the ConnectionItems from FolderItem (recursive).
-     * 
-     * @param folderItem
-     * @return
-     */
-    private static List<ConnectionItem> getConnectionItemsFromFolderItem(FolderItem folderItem) {
-        List<ConnectionItem> list = new ArrayList<ConnectionItem>();
-        EList objs = folderItem.getChildren();
-        for (Object obj : objs) {
-            if (obj instanceof FolderItem) {
-                list.addAll(getConnectionItemsFromFolderItem((FolderItem) obj));
-            } else if (obj instanceof ConnectionItem) {
-                list.add((ConnectionItem) obj);
-            }
-        }
-        return list;
-    }
-
-    private static List<TDQAnalysisItem> getAnalysisItemsFromFolderItem(FolderItem folderItem) {
-        List<TDQAnalysisItem> list = new ArrayList<TDQAnalysisItem>();
-        EList objs = folderItem.getChildren();
-        for (Object obj : objs) {
-            if (obj instanceof FolderItem) {
-                list.addAll(getAnalysisItemsFromFolderItem((FolderItem) obj));
-            } else if (obj instanceof TDQAnalysisItem) {
-                list.add((TDQAnalysisItem) obj);
-            }
-        }
-        return list;
-    }
-
-    private static List<TDQReportItem> getReportItemsFromFolderItem(FolderItem folderItem) {
-        List<TDQReportItem> list = new ArrayList<TDQReportItem>();
-        EList objs = folderItem.getChildren();
-        for (Object obj : objs) {
-            if (obj instanceof FolderItem) {
-                list.addAll(getReportItemsFromFolderItem((FolderItem) obj));
-            } else if (obj instanceof TDQAnalysisItem) {
-                list.add((TDQReportItem) obj);
-            }
-        }
-        return list;
-    }
-
-    private static List<TDQPatternItem> getPatternsItemsFromFolderItem(FolderItem folderItem) {
-        List<TDQPatternItem> list = new ArrayList<TDQPatternItem>();
-        EList objs = folderItem.getChildren();
-        for (Object obj : objs) {
-            if (obj instanceof FolderItem) {
-                list.addAll(getPatternsItemsFromFolderItem((FolderItem) obj));
-            } else if (obj instanceof TDQAnalysisItem) {
-                list.add((TDQPatternItem) obj);
-            }
-        }
-        return list;
-    }
-
-    private static List<TDQIndicatorDefinitionItem> getIndicatorItemsFromFolderItem(FolderItem folderItem) {
-        List<TDQIndicatorDefinitionItem> list = new ArrayList<TDQIndicatorDefinitionItem>();
-        EList objs = folderItem.getChildren();
-        for (Object obj : objs) {
-            if (obj instanceof FolderItem) {
-                list.addAll(getIndicatorItemsFromFolderItem((FolderItem) obj));
-            } else if (obj instanceof TDQIndicatorDefinitionItem) {
-                list.add((TDQIndicatorDefinitionItem) obj);
-            }
-        }
-        return list;
-    }
+    // /**
+    // * get all the ConnectionItems from FolderItem (recursive).
+    // *
+    // * @param folderItem
+    // * @return
+    // */
+    // private static List<ConnectionItem> getConnectionItemsFromFolderItem(FolderItem folderItem) {
+    // List<ConnectionItem> list = new ArrayList<ConnectionItem>();
+    // EList objs = folderItem.getChildren();
+    // for (Object obj : objs) {
+    // if (obj instanceof FolderItem) {
+    // list.addAll(getConnectionItemsFromFolderItem((FolderItem) obj));
+    // } else if (obj instanceof ConnectionItem) {
+    // list.add((ConnectionItem) obj);
+    // }
+    // }
+    // return list;
+    // }
+    //
+    // private static List<TDQAnalysisItem> getAnalysisItemsFromFolderItem(FolderItem folderItem) {
+    // List<TDQAnalysisItem> list = new ArrayList<TDQAnalysisItem>();
+    // EList objs = folderItem.getChildren();
+    // for (Object obj : objs) {
+    // if (obj instanceof FolderItem) {
+    // list.addAll(getAnalysisItemsFromFolderItem((FolderItem) obj));
+    // } else if (obj instanceof TDQAnalysisItem) {
+    // list.add((TDQAnalysisItem) obj);
+    // }
+    // }
+    // return list;
+    // }
+    //
+    // private static List<TDQReportItem> getReportItemsFromFolderItem(FolderItem folderItem) {
+    // List<TDQReportItem> list = new ArrayList<TDQReportItem>();
+    // EList objs = folderItem.getChildren();
+    // for (Object obj : objs) {
+    // if (obj instanceof FolderItem) {
+    // list.addAll(getReportItemsFromFolderItem((FolderItem) obj));
+    // } else if (obj instanceof TDQAnalysisItem) {
+    // list.add((TDQReportItem) obj);
+    // }
+    // }
+    // return list;
+    // }
+    //
+    // private static List<TDQPatternItem> getPatternsItemsFromFolderItem(FolderItem folderItem) {
+    // List<TDQPatternItem> list = new ArrayList<TDQPatternItem>();
+    // EList objs = folderItem.getChildren();
+    // for (Object obj : objs) {
+    // if (obj instanceof FolderItem) {
+    // list.addAll(getPatternsItemsFromFolderItem((FolderItem) obj));
+    // } else if (obj instanceof TDQAnalysisItem) {
+    // list.add((TDQPatternItem) obj);
+    // }
+    // }
+    // return list;
+    // }
+    //
+    // private static List<TDQIndicatorDefinitionItem> getIndicatorItemsFromFolderItem(FolderItem folderItem) {
+    // List<TDQIndicatorDefinitionItem> list = new ArrayList<TDQIndicatorDefinitionItem>();
+    // EList objs = folderItem.getChildren();
+    // for (Object obj : objs) {
+    // if (obj instanceof FolderItem) {
+    // list.addAll(getIndicatorItemsFromFolderItem((FolderItem) obj));
+    // } else if (obj instanceof TDQIndicatorDefinitionItem) {
+    // list.add((TDQIndicatorDefinitionItem) obj);
+    // }
+    // }
+    // return list;
+    // }
 
     /**
      * ADD mzhao 15750 , build dq metadata tree, get connection root node.
@@ -1529,7 +2133,7 @@ public final class RepositoryNodeHelper {
     public static List<String> getUuids(List<? extends IRepositoryNode> nodes) {
         List<String> result = new ArrayList<String>();
         for (IRepositoryNode node : nodes) {
-            ModelElement metadataElement = RepositoryNodeHelper.getMetadataElement(node);
+            ModelElement metadataElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
             if (metadataElement != null) {
                 String uuid = ResourceHelper.getUUID(metadataElement);
                 if (uuid != null) {
@@ -1538,5 +2142,26 @@ public final class RepositoryNodeHelper {
             }
         }
         return result;
+    }
+
+    /**
+     * get the ERepositoryObjectType of the RepositoryNode.
+     * 
+     * @param node
+     * @return
+     */
+    public static ERepositoryObjectType getERepositoryObjectType(RepositoryNode node) {
+
+        return null;
+    }
+
+    /**
+     * get the relative path of the RepositoryNode.
+     * 
+     * @param node
+     * @return
+     */
+    public static IPath getRelativePath(RepositoryNode node) {
+        return null;
     }
 }

@@ -52,6 +52,8 @@ public final class WorkbenchUtils {
 
     private static final int AUTO_CHANGE2DATA_PROFILER_FALSE = 2;
 
+    private static final boolean AUTO_CHANGE2DATA_PROFILER = true;
+
     private WorkbenchUtils() {
     }
 
@@ -70,6 +72,9 @@ public final class WorkbenchUtils {
     }
 
     public static void autoChange2DataProfilerPerspective() {
+        if (!AUTO_CHANGE2DATA_PROFILER) {
+            return;
+        }
         IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                 .getPerspective();
         if (!PluginConstant.PERSPECTIVE_ID.equals(perspective.getId())) {

@@ -17,8 +17,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DelimitedFileConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
@@ -33,6 +36,11 @@ import orgomg.cwm.resource.record.RecordFile;
  */
 public class DFConnectionRepNode extends ConnectionRepNode {
 
+    private DelimitedFileConnection dfConnection;
+
+    public DelimitedFileConnection getDfConnection() {
+        return this.dfConnection;
+    }
     /**
      * DOC qiongli DelimitedFileConnectionRepNode constructor comment.
      * 
@@ -42,6 +50,12 @@ public class DFConnectionRepNode extends ConnectionRepNode {
      */
     public DFConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        if (object != null && object.getProperty() != null) {
+            Item item = object.getProperty().getItem();
+            if (item != null && item instanceof DelimitedFileConnectionItem) {
+                this.dfConnection = (DelimitedFileConnection) ((DelimitedFileConnectionItem) item).getConnection();
+            }
+        }
     }
 
     @Override
