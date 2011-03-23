@@ -1279,6 +1279,12 @@
            name="update the value of path on the property files"
            version="4.1.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.ModelIndicatorTdColumnToModelElementTask"
+           id="org.talend.dataprofiler.core.migration.impl.ModelIndicatorTdColumnToModelElementTask"
+           name="Indicator#getAnalyzedElement model (TdColumn-&gt;ModelElement)"
+           version="4.2.0">
+     </workspacetask>
      
 
   </extension>

@@ -15,12 +15,10 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -267,26 +265,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
         return true;
     }
 
-    /**
-     * DOC sgandon Comment method "getAllFilesFromFolder".
-     * 
-     * @param sampleFolder
-     * @param arrayList
-     * @param filenameFilter
-     */
-    private void getAllFilesFromFolder(File sampleFolder, ArrayList<File> fileList, FilenameFilter filenameFilter) {
-        File[] folderFiles = sampleFolder.listFiles(filenameFilter);
-        Collections.addAll(fileList, folderFiles);
-        File[] allFolders = sampleFolder.listFiles(new FileFilter() {
 
-            public boolean accept(File arg0) {
-                return arg0.isDirectory();
-            }
-        });
-        for (File folder : allFolders) {
-            getAllFilesFromFolder(folder, fileList, filenameFilter);
-        }
-    }
 
     /*
      * (non-Javadoc)

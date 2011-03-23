@@ -13,8 +13,11 @@
 package org.talend.dataprofiler.core.migration;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -151,6 +154,27 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
             log.error(e, e);
         }
         return analyses;
+    }
+
+    /**
+     * DOC sgandon Comment method "getAllFilesFromFolder".
+     * 
+     * @param sampleFolder
+     * @param arrayList
+     * @param filenameFilter
+     */
+    protected void getAllFilesFromFolder(File sampleFolder, ArrayList<File> fileList, FilenameFilter filenameFilter) {
+        File[] folderFiles = sampleFolder.listFiles(filenameFilter);
+        Collections.addAll(fileList, folderFiles);
+        File[] allFolders = sampleFolder.listFiles(new FileFilter() {
+
+            public boolean accept(File arg0) {
+                return arg0.isDirectory();
+            }
+        });
+        for (File folder : allFolders) {
+            getAllFilesFromFolder(folder, fileList, filenameFilter);
+        }
     }
 
 }

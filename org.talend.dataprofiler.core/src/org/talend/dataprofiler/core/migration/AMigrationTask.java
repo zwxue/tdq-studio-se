@@ -113,6 +113,8 @@ public abstract class AMigrationTask implements IMigrationTask {
                 || "org.talend.dataprofiler.core.migration.impl.UpdateAnalysisWithMinLengthIndicator".equals(getId())//$NON-NLS-1$
                 || "org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask".equals(getId())//$NON-NLS-1$
                 || "org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask".equals(getId())//$NON-NLS-1$
-                || "update the value of path on the property files".equals(getId());//$NON-NLS-1$
+                || "update the value of path on the property files".equals(getId())
+                // ADD mzhao model task for indicator.
+                || "org.talend.dataprofiler.core.migration.impl.ModelIndicatorTdColumnToModelElementTask".equals(getId()); //$NON-NLS-1$
     }
 }
