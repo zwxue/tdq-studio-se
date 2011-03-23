@@ -91,7 +91,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -425,7 +424,16 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             if (connection == null) {
                 tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
                 connection = tdDataProvider;
+                if (tdDataProvider != null && masterPage.getExecCombo() != null) {
+                    if (ConnectionUtils.isDelimitedFileConnection(tdDataProvider)) {
+                        masterPage.setWhereClauseDisabled();
+                        masterPage.changeExecuteLanguageToJava(true);
+                    } else if (ConnectionUtils.isMdmConnection(tdDataProvider)) {
+                        masterPage.setWhereClauseDisabled();
+                    }
+                }
             }
+
         }
     }
 
@@ -904,24 +912,5 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             removeSelectedElements(tree);
         }
 
-    }
-
-    @Override
-    public void setInput(Object[] objs) {
-        super.setInput(objs);
-        boolean isDelimtedFile = false;
-        for (Object obj : objs) {
-            if (obj instanceof DFColumnRepNode) {
-                isDelimtedFile = true;
-                break;
-            }
-        }
-        DataFilterComp dataFilterComp = masterPage.getDataFilterComp();
-        if (isDelimtedFile && dataFilterComp != null) {
-            dataFilterComp.getDataFilterText().setEnabled(false);
-            masterPage.chageExecuteLanguageToJava(true);
-        } else {
-            masterPage.getExecCombo().setEditable(true);
-        }
     }
 }

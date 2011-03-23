@@ -1025,6 +1025,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * DOC qiongli Comment method "chageExecuteLanguageToJava".
      */
     public void changeExecuteLanguageToJava(boolean isDisabled) {
+        if (execCombo == null) {
+            return;
+        }
         if (!(ExecutionLanguage.JAVA.getLiteral().equals(this.execLang))) {
             int i = 0;
             for (ExecutionLanguage language : ExecutionLanguage.VALUES) {

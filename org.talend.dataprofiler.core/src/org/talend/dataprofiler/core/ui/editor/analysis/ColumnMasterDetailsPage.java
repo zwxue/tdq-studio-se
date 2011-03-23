@@ -581,8 +581,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(mod);
             TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
             dataFilterComp.getDataFilterText().setEnabled((xmlElement != null || tdColumn != null) ? true : false);
-            if (tdColumn == null) {
-                chageExecuteLanguageToJava(true);
+            if (xmlElement != null) {
+                setWhereClauseDisabled();
+            } else if (tdColumn == null) {
+                setWhereClauseDisabled();
+                changeExecuteLanguageToJava(true);
             }
         }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
@@ -1021,7 +1024,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * 
      * DOC zshen Comment method "chageExecuteLanguageToJava". change ExecutionLanuage to Java.
      */
-    public void chageExecuteLanguageToJava(boolean isDisabled) {
+    public void changeExecuteLanguageToJava(boolean isDisabled) {
+        if (this.execCombo == null) {
+            return;
+        }
         if (!(ExecutionLanguage.JAVA.getLiteral().equals(this.execLang))) {
             int i = 0;
             for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
@@ -1046,6 +1052,16 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      */
     public DataFilterComp getDataFilterComp() {
         return this.dataFilterComp;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "setWhereClauseDisabled".
+     */
+    public void setWhereClauseDisabled() {
+        if (dataFilterComp != null) {
+            dataFilterComp.getDataFilterText().setEnabled(false);
+        }
     }
 
 }
