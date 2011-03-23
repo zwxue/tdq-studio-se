@@ -12,16 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.sql;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.action.AbstractImportSourceFileAction;
-import org.talend.resource.ResourceManager;
-import org.talend.utils.io.FilesUtils;
+import org.talend.dataquality.properties.PropertiesFactory;
+import org.talend.dataquality.properties.TDQFileItem;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -33,39 +29,9 @@ public class ImportSqlFileAction extends AbstractImportSourceFileAction {
     /**
      * DOC bZhou ImportSqlFileAction constructor comment.
      */
-    public ImportSqlFileAction(IFolder folder) {
-        super(folder);
+    public ImportSqlFileAction(RepositoryNode node) {
+        super(node);
         setText("Import SQL");
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.AbstractImportSourceFileAction#doImport(java.io.File, java.io.File)
-     */
-    @Override
-    protected void doImport(File sourceFile, File targetFile) throws Exception {
-        IFile iFile = folder.getFile(targetFile.getName());
-
-        boolean isImport = true;
-        if (iFile.exists()) {
-            isImport = MessageDialog.openConfirm(null, "Import Conform",
-                    "A item with the same name already exists, do you want to replace the existing items by the new one?");
-        }
-
-        if (isImport) {
-            FilesUtils.copyFile(new FileInputStream(sourceFile), targetFile);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.action.AbstractImportSourceFileAction#getTypedFolder()
-     */
-    @Override
-    protected IFolder getTypedFolder() {
-        return ResourceManager.getSourceFileFolder();
     }
 
     /*
@@ -76,5 +42,25 @@ public class ImportSqlFileAction extends AbstractImportSourceFileAction {
     @Override
     protected String[] getFilterExtensions() {
         return new String[] { "*.sql" };
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractImportFileAction#getRepositoryType()
+     */
+    @Override
+    public ERepositoryObjectType getRepositoryType() {
+        return ERepositoryObjectType.TDQ_SOURCE_FILES;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.action.AbstractImportSourceFileAction#createTDQFileItem()
+     */
+    @Override
+    protected TDQFileItem createTDQFileItem() {
+        return PropertiesFactory.eINSTANCE.createTDQSourceFileItem();
     }
 }

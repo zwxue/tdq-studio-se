@@ -13,25 +13,26 @@
 package org.talend.dataprofiler.core.ui.action;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.jface.action.Action;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.cheatsheets.ICheatSheetAction;
-import org.eclipse.ui.cheatsheets.ICheatSheetManager;
-import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.core.model.properties.ByteArray;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataquality.properties.TDQFileItem;
+import org.talend.dq.helper.FileUtils;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public abstract class AbstractImportSourceFileAction extends Action implements ICheatSheetAction {
-
-    protected IFolder folder;
+public abstract class AbstractImportSourceFileAction extends AbstractImportFileAction {
 
     private static String historyFilePath = "./";
 
@@ -40,48 +41,18 @@ public abstract class AbstractImportSourceFileAction extends Action implements I
      * 
      * @param folder
      */
-    public AbstractImportSourceFileAction(IFolder folder) {
-        this();
-        this.folder = folder;
-    }
-
-    /**
-     * 
-     * DOC zshen AddSqlFileAction constructor comment.
-     * 
-     */
-    public AbstractImportSourceFileAction() {
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.IMPORT));
-        this.folder = getTypedFolder();
+    public AbstractImportSourceFileAction(RepositoryNode node) {
+        super(node);
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.jface.action.Action#run()
+     * @see org.talend.dataprofiler.core.ui.action.AbstractImportFileAction#computeFilePath()
      */
     @Override
-    public void run() {
-        if (folder != null) {
-            try {
-
-                File[] files = computeFiles();
-
-                if (files != null) {
-                    for (File sourceFile : files) {
-                        File targetFile = folder.getFile(sourceFile.getName()).getLocation().toFile();
-                        doImport(sourceFile, targetFile);
-                    }
-                }
-            } catch (Exception e) {
-                ExceptionHandler.process(e);
-            }
-
-            saveAndRefresh();
-        }
-    }
-
-    protected File[] computeFiles() throws IOException {
+    public Map<File, IPath> computeFilePath() throws Exception {
+        Map<File, IPath> resultMap = new HashMap<File, IPath>();
         FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
 
         if (historyFilePath != null) {
@@ -97,34 +68,33 @@ public abstract class AbstractImportSourceFileAction extends Action implements I
             File file = new File(path);
             historyFilePath = file.getParent();
 
-            return new File[] { file };
+            IFolder folder = WorkbenchUtils.getFolder(node);
+            IPath filePath = folder.getFullPath().makeRelativeTo(ResourceManager.getSourceFileFolder().getFullPath());
+            resultMap.put(file, filePath);
         }
 
-        return null;
-    }
-
-    /**
-     * DOC bZhou Comment method "saveAndRefresh".
-     */
-    private void saveAndRefresh() {
-        ProxyRepositoryManager.getInstance().save();
-        CorePlugin.getDefault().refreshDQView();
-        CorePlugin.getDefault().refreshWorkSpace();
+        return resultMap;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
-     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
+     * @see org.talend.dataprofiler.core.ui.action.AbstractImportFileAction#initItem(java.io.File)
      */
-    public void run(String[] params, ICheatSheetManager manager) {
-        run();
+    @Override
+    public Item initItem(File srcFile) throws Exception {
+        TDQFileItem fileItem = createTDQFileItem();
+
+        fileItem.setExtension(FileUtils.getExtension(srcFile));
+        fileItem.setName(FileUtils.getName(srcFile));
+        ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
+        byteArray.setInnerContentFromFile(srcFile);
+        fileItem.setContent(byteArray);
+
+        return fileItem;
     }
 
-    protected abstract void doImport(File sourceFile, File targetFile) throws Exception;
-
-    protected abstract IFolder getTypedFolder();
+    protected abstract TDQFileItem createTDQFileItem();
 
     protected abstract String[] getFilterExtensions();
 }
