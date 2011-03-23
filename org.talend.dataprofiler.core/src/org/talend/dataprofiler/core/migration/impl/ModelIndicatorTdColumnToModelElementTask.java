@@ -25,7 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Path;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.model.migration.TopDataqualityMigrationFrom410to420usingGenericVM;
 
 /**
  * 
@@ -36,7 +35,7 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
 
     private static Logger log = Logger.getLogger(ModelIndicatorTdColumnToModelElementTask.class);
 
-    private TopDataqualityMigrationFrom410to420usingGenericVM indicatorModelMigration = null;
+    // private TopDataqualityMigrationFrom410to420usingGenericVM indicatorModelMigration = null;
 
     private static final String MIGRATION_FILE_EXT = ".mig"; //$NON-NLS-1$
 
@@ -62,9 +61,9 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
 
     @Override
     protected boolean doExecute() throws Exception {
-        if (indicatorModelMigration == null) {
-            indicatorModelMigration = new TopDataqualityMigrationFrom410to420usingGenericVM();
-        }
+        // if (indicatorModelMigration == null) {
+        // indicatorModelMigration = new TopDataqualityMigrationFrom410to420usingGenericVM();
+        // }
 
         File rawFile = getWorkspacePath().append(TDQ_DATAPROFILING).toFile();
         if (rawFile.exists()) {
