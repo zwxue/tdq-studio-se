@@ -681,17 +681,19 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         for (Indicator indicator : leafIndicators) {
             String fragment = null;
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-            if (indicatorDefinition.eIsProxy()) {
-                URI uri = ((InternalEObject) indicatorDefinition).eProxyURI();
-                fragment = uri.lastSegment();
-            } else {
-                fragment = indicatorDefinition.eResource().getURI().lastSegment();
-            }
+            if (indicatorDefinition != null) {
+                if (indicatorDefinition.eIsProxy()) {
+                    URI uri = ((InternalEObject) indicatorDefinition).eProxyURI();
+                    fragment = uri.lastSegment();
+                } else {
+                    fragment = indicatorDefinition.eResource().getURI().lastSegment();
+                }
 
-            if (fragment != null) {
+                if (fragment != null) {
 
-                String replace = fragment.replace(" ", "_").replace(".", "_0.1.");//$NON-NLS-2$
-                replaceDefnitionNameInAnaMap.put(fragment, replace);
+                    String replace = fragment.replace(" ", "_").replace(".", "_0.1.");//$NON-NLS-2$
+                    replaceDefnitionNameInAnaMap.put(fragment, replace);
+                }
             }
         }
     }
