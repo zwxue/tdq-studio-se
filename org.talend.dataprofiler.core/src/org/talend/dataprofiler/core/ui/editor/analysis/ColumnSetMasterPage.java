@@ -16,7 +16,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -99,6 +101,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -955,6 +958,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 if (!ModelElementHelper.isFromSameTable(columnList)) {
                     message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
                 }
+            } else if (columnList.get(0) instanceof MetadataColumn) {
+                if (!isFromSameTableByDFColumn(columnSetMultiValueList)) {
+                    message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
+                }
             }
         }
         if (message == null) {
@@ -965,15 +972,56 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         return new ReturnCode(message, false);
     }
 
+
+    private boolean isFromSameTableByDFColumn(List<IRepositoryNode> columnSetMultiValueList) {
+        Set<String> folderItemIds = new HashSet<String>();
+        for (IRepositoryNode node : columnSetMultiValueList) {
+            RepositoryNode parent = node.getParent();
+            if (parent instanceof DFColumnFolderRepNode) {
+                DFColumnFolderRepNode folderNode = (DFColumnFolderRepNode) parent;
+                String id = folderNode.getmTable().getId();
+                folderItemIds.add(id);
+            }
+        }
+        return folderItemIds.size() == 1;
+    }
+
     @Override
     protected ReturnCode canRun() {
+        String message = "";//$NON-NLS-1$
         List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnSetMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
+        } else {
+            message = isFormSameTable(columnSetMultiValueList);//$NON-NLS-1$
+            if (!"".equals(message)) {
+                return new ReturnCode(message, false);
+            }
         }
+
         resetResultPageData();
         return new ReturnCode(true);
 
+    }
+
+    private String isFormSameTable(List<IRepositoryNode> columnSetMultiValueList) {
+        String message = "";//$NON-NLS-1$
+        List<ModelElement> columnList = new ArrayList<ModelElement>();
+        for (IRepositoryNode rd : columnSetMultiValueList) {
+            // columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            columnList.add(RepositoryNodeHelper.getModelElementFromRepositoryNode(rd));
+        }
+        if (!columnSetMultiValueList.isEmpty()) {
+            // MOD klliu bug 19464,file delimit connection does not need to check from one table.
+            if (columnList.get(0) instanceof TdColumn) {
+                if (!ModelElementHelper.isFromSameTable(columnList)) {
+                    message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
+                }
+            } else if (!isFromSameTableByDFColumn(columnSetMultiValueList)) {
+                message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
+            }
+        }
+        return message;
     }
 
     public AllMatchIndicator getAllMatchIndicator() {

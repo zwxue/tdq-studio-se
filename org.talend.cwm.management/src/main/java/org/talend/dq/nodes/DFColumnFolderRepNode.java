@@ -88,4 +88,8 @@ public class DFColumnFolderRepNode extends RepositoryNode {
         }
     }
 
+    public MetadataTable getmTable() {
+        return this.mTable;
+    }
+
 }
