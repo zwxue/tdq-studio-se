@@ -68,9 +68,9 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
 
             public void modifyText(ModifyEvent e) {
                 getParameter().setName(nameText.getText());
-                setPageComplete(nameText.getText() != null && !"".equals(nameText.getText().trim())); //$NON-NLS-1$
+                String text = nameText.getText();
+                setPageComplete(text != null && !"".equals(text.trim()) && !text.contains(" ")); //$NON-NLS-1$ //$NON-NLS-1$
             }
         });
     }
-
 }
