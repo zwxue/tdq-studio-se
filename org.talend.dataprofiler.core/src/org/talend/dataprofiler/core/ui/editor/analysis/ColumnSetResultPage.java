@@ -69,6 +69,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
+import org.talend.dataquality.indicators.columnset.impl.AllMatchIndicatorImpl;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
@@ -289,6 +290,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             Button filterDataBt = new Button(sectionTableComp, SWT.NONE);
             filterDataBt.setText(DefaultMessagesImpl.getString("ColumnSetResultPage.filterData"));
             filterDataBt.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+            filterDataBt.setEnabled(containAllMatchIndicator());
             filterDataBt.addMouseListener(new MouseListener() {
 
                 public void mouseDoubleClick(MouseEvent e) {
@@ -536,6 +538,16 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         return previewChartCompsites;
     }
 
+    private boolean containAllMatchIndicator() {
+        List<Indicator> indicatorsList = masterPage.analysis.getResults().getIndicators();
+        for (Indicator theIndicator : indicatorsList) {
+            if (theIndicator instanceof AllMatchIndicatorImpl) {
+                return true;
+            }
+
+        }
+        return false;
+    }
     @Override
     public void dispose() {
         if (bg != null) {
