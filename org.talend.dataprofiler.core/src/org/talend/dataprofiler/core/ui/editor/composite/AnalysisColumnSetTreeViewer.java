@@ -742,11 +742,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             masterPage.updateIndicatorSection();
         }
 
+        super.removeItemBranch(item);
         // MOD mzhao 2005-05-05 bug 6587.
         // MOD mzhao 2009-06-8, bug 5887.
         updateBindConnection(masterPage, tree);
 
-        super.removeItemBranch(item);
         enabledButtons(false);
         tree.setFocus();
     }
