@@ -151,4 +151,8 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
         fileReader = null;
     }
 
+    @Override
+    public Boolean isModelTask() {
+        return Boolean.TRUE;
+    }
 }
