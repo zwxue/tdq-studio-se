@@ -155,7 +155,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         correlationAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = correlationAnalysisHandler.getStringDataFilter();
         analyzedColumns = correlationAnalysisHandler.getAnalyzedColumns();
-        if (correlationAnalysisHandler.getIndicator() == null) {
+        if (correlationAnalysisHandler.getIndicator() == null && columnSetMultiIndicator != null) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             // MOD qiongli 2010-6-18 bug 12766
             if (ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator() == columnSetMultiIndicator.eClass()) {
@@ -173,6 +173,11 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         } else {
             columnSetMultiIndicator = (ColumnSetMultiValueIndicator) correlationAnalysisHandler.getIndicator();
         }
+
+        if (columnSetMultiIndicator == null) {
+            columnSetMultiIndicator = ColumnsetFactory.eINSTANCE.createCountAvgNullIndicator();
+        }
+
         initializeIndicator(columnSetMultiIndicator);
         columnSetMultiIndicator.setStoreData(true);
         for (ModelElement element : analyzedColumns) {
@@ -184,6 +189,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             DataminingType dataminingType = correlationAnalysisHandler.getDatamingType(tdColumn);
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, tdColumn);
         }
+
     }
 
     /**
