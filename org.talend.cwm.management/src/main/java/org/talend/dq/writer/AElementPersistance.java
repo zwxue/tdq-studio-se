@@ -268,7 +268,9 @@ public abstract class AElementPersistance {
         String version = MetadataHelper.getVersion(modelElement);
         String status = MetadataHelper.getDevStatus(modelElement);
 
+        if (property.getId() == null) {
         property.setId(EcoreUtil.generateUUID());
+        }
         // MOD qiongli 2011-1-7 delimitedfile connection dosen't use modelElement.getName().
         if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(modelElement) == null) {
             property.setLabel(WorkspaceUtils.normalize(modelElement.getName()));
