@@ -208,7 +208,8 @@ public class DeleteModelElementConfirmDialog {
      * @param dialogMessage
      * @return
      */
-    public static boolean showDialog(Shell parentShell, Object obj, ModelElement[] dependencyElements, String dialogMessage) {
+    public static boolean showDialog(Shell parentShell, Object obj, ModelElement[] dependencyElements, String dialogMessage,
+            boolean isNeedCheckbox) {
         // MOD qiongli 2011-3-1 feature 17588.return boolean,add 'dialog.setNeedCheckbox(true)'
         for (ModelElement element : dependencyElements) {
             ImpactNode node = new ImpactNode(element);
@@ -224,7 +225,7 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, DefaultMessagesImpl
                     .getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
-            dialog.setNeedCheckbox(true);
+            dialog.setNeedCheckbox(isNeedCheckbox);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());

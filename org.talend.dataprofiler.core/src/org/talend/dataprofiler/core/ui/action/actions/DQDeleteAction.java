@@ -134,6 +134,9 @@ public class DQDeleteAction extends DeleteAction {
         if (showDialog(node, dependencies)) {
             if (physicalDeleteDependencies(dependencies)) {
                 flag = true;
+            } else {
+                MessageDialog.openError(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteFailTitle"),
+                        DefaultMessagesImpl.getString("DQDeleteAction.deleteFailMessage"));
             }
         }
         return flag;
@@ -152,7 +155,7 @@ public class DQDeleteAction extends DeleteAction {
         String lable = node.getObject().getLabel() == null ? PluginConstant.EMPTY_STRING : node.getObject().getLabel();
         boolean flag = DeleteModelElementConfirmDialog.showDialog(null, modEle,
                 dependencies.toArray(new ModelElement[dependencies.size()]),
-                DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable));
+                DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable), true);
         return flag;
 
     }
@@ -171,11 +174,14 @@ public class DQDeleteAction extends DeleteAction {
                 List<ModelElement> subDependences = EObjectHelper.getDependencyClients(mod);
                 if (subDependences != null && !subDependences.isEmpty()) {
                     isSucceed = physicalDeleteDependencies(subDependences);
-                }
-                if (!isSucceed) {
-                    return false;
+                    if (!isSucceed) {
+                        return false;
+                    }
                 }
                 RepositoryNode tempNode = RepositoryNodeHelper.recursiveFind(mod);
+                if (tempNode == null) {
+                    tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
+                }
                 if (tempNode != null && !RepositoryNodeHelper.isStateDeleted(tempNode)) {
                     // logcial delete dependcy element.
                     if (tempNode.getObject() != null) {
@@ -185,7 +191,7 @@ public class DQDeleteAction extends DeleteAction {
                     CorePlugin.getDefault().refreshDQView();
                 }
                 // physical delete dependcy element.
-                tempNode = RepositoryNodeHelper.recursiveFind(mod);
+                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
                 if (tempNode != null) {
                     excuteSuperRun(tempNode);
                     IFile propertyFile = PropertyHelper.getPropertyFile(mod);
@@ -201,7 +207,6 @@ public class DQDeleteAction extends DeleteAction {
             log.error(exc, exc);
             return false;
         }
-
         return isSucceed;
 
     }

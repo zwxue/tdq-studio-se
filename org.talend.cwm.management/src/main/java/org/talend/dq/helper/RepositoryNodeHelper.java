@@ -1040,6 +1040,26 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+    /**
+     * 
+     * find a node from recycle bin.
+     * 
+     * @param modelElement
+     * @return
+     */
+    public static RepositoryNode recursiveFindRecycleBin(ModelElement modelElement) {
+        if (modelElement == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(modelElement);
+        RepositoryNode recyBinNode = getRecycleBinRootNode();
+        if (uuid == null || recyBinNode == null) {
+            return null;
+        }
+        List<IRepositoryNode> children = recyBinNode.getChildren();
+        return recursiveFindByUuid(uuid, children);
+    }
+
     // !!!following codes are useful codes, please don't delete them, thanks!!!
     // public static RepositoryNode recursiveFind(ModelElement modelElement) {
     // if (modelElement instanceof Analysis) {
@@ -1618,6 +1638,27 @@ public final class RepositoryNodeHelper {
                     if (viewFolderID.equals(folderID)) {
                         return node;
                     }
+                }
+            }
+        }
+        return node;
+    }
+
+    /**
+     * 
+     * get recycle bin node.
+     * 
+     * @return
+     */
+    public static RepositoryNode getRecycleBinRootNode() {
+        RepositoryNode node = null;
+        CommonViewer commonViewer = getDQCommonViewer(false);
+        if (commonViewer != null) {
+            TreeItem[] items = commonViewer.getTree().getItems();
+            for (TreeItem item : items) {
+                node = (RepositoryNode) item.getData();
+                if (node.isBin()) {
+                    break;
                 }
             }
         }
