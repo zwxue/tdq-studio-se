@@ -91,4 +91,8 @@ public class FilePreviewProcess implements IPreview {
 
     }
 
+    public boolean isTopPreview() {
+        return true;
+    }
+
 }
