@@ -299,6 +299,27 @@ public final class IndicatorHelper {
     }
 
     /**
+     * Method "getIndicators".
+     * 
+     * @param result
+     * @return
+     */
+    public static List<Indicator> getIndicators(AnalysisResult result) {
+        List<Indicator> indicators = new ArrayList<Indicator>();
+
+        for (Indicator indicator : result.getIndicators()) {
+            List<Indicator> indicatorLeaves = getIndicatorLeaves(indicator);
+            if (indicator instanceof CompositeIndicator) {
+                indicators.add(indicator);
+            }
+
+            indicators.addAll(indicatorLeaves);
+        }
+
+        return indicators;
+    }
+
+    /**
      * Method "getExpectedValue".
      * 
      * @param indicator usually a mode indicator

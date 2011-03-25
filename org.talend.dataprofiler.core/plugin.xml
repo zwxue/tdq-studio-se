@@ -1270,7 +1270,7 @@
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateAfterMergeTosApiTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateAfterMergeTosApiTask"
-           name="org.talend.dataprofiler.core.migration.impl.UpdateAfterMergeTosApiTask"
+           name="Update Elements After Merge Task"
            version="4.2.0">
      </workspacetask>
      <workspacetask
@@ -1289,6 +1289,12 @@
            class="org.talend.dataprofiler.core.migration.impl.SqlSourceFileUpdateTask"
            id="org.talend.dataprofiler.core.migration.impl.SqlSourceFileUpdateTask"
            name="Update SQL Source File (add property file)"
+           version="4.2.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDatabaseTypeTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDatabaseTypeTask"
+           name="Update Database Type Task (JDBC, SYBASE)"
            version="4.2.0">
      </workspacetask>
      

@@ -112,7 +112,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     // MOD klliu 2011-03-17 bug 19085
     private Map<String, String> replaceDefnitionNameInAnaMap;
 
-
     public UpdateAfterMergeTosApiTask() {
         init();
     }
@@ -677,8 +676,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         Analysis analysis = (Analysis) modelElement;
         AnalysisResult results = analysis.getResults();
         assert results != null;
-        Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
-        for (Indicator indicator : leafIndicators) {
+        Collection<Indicator> indicators = IndicatorHelper.getIndicators(results);
+        for (Indicator indicator : indicators) {
             String fragment = null;
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
             if (indicatorDefinition != null) {
