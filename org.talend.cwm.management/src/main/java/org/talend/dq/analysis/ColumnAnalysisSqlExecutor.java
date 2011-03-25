@@ -278,11 +278,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (isSybase) {
             schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
         }
-        // MOD by gdbu 2011-3-18 bug 19160
-        else {
-            table = dbms().toQualifiedName(catalogName, schemaName, table);
-        }
-        //~19160
+        table = dbms().toQualifiedName(catalogName, schemaName, table);
         // ~11934
 
 
