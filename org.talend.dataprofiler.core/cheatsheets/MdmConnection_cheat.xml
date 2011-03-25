@@ -7,10 +7,11 @@
       </description>
    </intro>
    <item
-         title="Set the connection metadata.">
+         title="Set the connection metadata." dialog="true" skip="false">
       <description>
          Enter the connection metadata in the corresponding fields (name, purpose, description...), then enter the authentication information (Login, Password, Hostname...) and click Finish.
       </description>
-       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="1"/>
+       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateMDMConnectionAction" pluginId="org.talend.dataprofiler.core"   confirm="false" param1="1">
+      </action>
    </item>
 </cheatsheet>

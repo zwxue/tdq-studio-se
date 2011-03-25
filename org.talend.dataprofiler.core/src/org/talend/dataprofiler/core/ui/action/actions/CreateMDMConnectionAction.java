@@ -20,7 +20,9 @@ import org.talend.core.PluginChecker;
 import org.talend.core.ui.IMDMProviderService;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 
 
 /**
@@ -34,6 +36,12 @@ public class CreateMDMConnectionAction extends AbstractMetadataCreationAction {
      */
     public CreateMDMConnectionAction(RepositoryNode node) {
         super(node);
+    }
+
+    public CreateMDMConnectionAction() {
+        // MOD qiongli bug 18642,create mdm connection by cheat sheet
+        RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS);
+        super.node = node;
     }
 
     /* (non-Javadoc)
