@@ -19,15 +19,13 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dq.CWMPlugin;
 
-
 /**
- * DOC bZhou  class global comment. Detailled comment
+ * DOC bZhou class global comment. Detailled comment
  */
 public class TOPRepositoryService implements ITDQRepositoryService {
 
@@ -61,10 +59,6 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             CorePlugin.getDefault().closeEditorIfOpened(item);
             CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
         }
-    }
-
-    public void fillMetadata(Connection connection) {
-        ConnectionUtils.fillConnectionInformation(connection);
     }
 
     public void fillMetadata(ConnectionItem connItem) {
