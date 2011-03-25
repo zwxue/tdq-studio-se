@@ -406,6 +406,21 @@ public final class RepositoryNodeHelper {
     }
 
     /**
+     * find RepositoryNode by property, if no RepositoryNode, return null.
+     * 
+     * @param property
+     * @return
+     */
+    public static RepositoryNode recursiveFind(Property property) {
+        ModelElement resourceModelElement = getResourceModelElement(property.getItem());
+        if (resourceModelElement != null) {
+            return recursiveFind(resourceModelElement);
+        }
+
+        return null;
+    }
+
+    /**
      * find RepositoryNode by ModelElement, if no RepositoryNode, return null.
      * 
      * @param modelElement
@@ -1611,9 +1626,11 @@ public final class RepositoryNodeHelper {
         // MOD klliu bug 19138 In DI that can't find MDMConnectionFolderRepNode when create MDM connection
         // ~2011-03-22
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        IWorkbenchPart activePart = activeWorkbenchWindow.getActivePage().getActivePart();
-        if (activePart.getTitle().equals(DI_REPOSITORY_NAME)) {
-            return getRootNode(nodeName, true);
+        if (activeWorkbenchWindow != null) {
+            IWorkbenchPart activePart = activeWorkbenchWindow.getActivePage().getActivePart();
+            if (activePart != null && activePart.getTitle().equals(DI_REPOSITORY_NAME)) {
+                return getRootNode(nodeName, true);
+            }
         }
         // ~
         return getRootNode(nodeName, false);
@@ -1779,25 +1796,36 @@ public final class RepositoryNodeHelper {
                 if (object != null) {
                     Property property = object.getProperty();
                     if (property != null) {
-                        Item item = property.getItem();
-                        if (item != null && item instanceof TDQItem) {
-                            if (item instanceof TDQAnalysisItem) {
-                                return ((TDQAnalysisItem) item).getAnalysis();
-                            } else if (item instanceof TDQBusinessRuleItem) {
-                                return ((TDQBusinessRuleItem) item).getDqrule();
-                            } else if (item instanceof TDQIndicatorDefinitionItem) {
-                                return ((TDQIndicatorDefinitionItem) item).getIndicatorDefinition();
-                            } else if (item instanceof TDQPatternItem) {
-                                return ((TDQPatternItem) item).getPattern();
-                            } else if (item instanceof TDQReportItem) {
-                                return ((TDQReportItem) item).getReport();
-                            }
-                        } else if (item != null && item instanceof ConnectionItem) {
-                            return ((ConnectionItem) item).getConnection();
-                        }
+                        return getResourceModelElement(property.getItem());
                     }
                 }
             }
+        }
+        return null;
+    }
+
+    /**
+     * get the (Resource) ModelElement from a item(include: connection, analysis, business rule, indicator definition,
+     * pattern, report), if there have not ModelElement return null.
+     * 
+     * @param item
+     * @return
+     */
+    public static ModelElement getResourceModelElement(Item item) {
+        if (item != null && item instanceof TDQItem) {
+            if (item instanceof TDQAnalysisItem) {
+                return ((TDQAnalysisItem) item).getAnalysis();
+            } else if (item instanceof TDQBusinessRuleItem) {
+                return ((TDQBusinessRuleItem) item).getDqrule();
+            } else if (item instanceof TDQIndicatorDefinitionItem) {
+                return ((TDQIndicatorDefinitionItem) item).getIndicatorDefinition();
+            } else if (item instanceof TDQPatternItem) {
+                return ((TDQPatternItem) item).getPattern();
+            } else if (item instanceof TDQReportItem) {
+                return ((TDQReportItem) item).getReport();
+            }
+        } else if (item != null && item instanceof ConnectionItem) {
+            return ((ConnectionItem) item).getConnection();
         }
         return null;
     }

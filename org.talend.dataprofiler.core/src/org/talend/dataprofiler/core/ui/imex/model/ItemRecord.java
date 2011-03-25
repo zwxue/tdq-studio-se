@@ -44,10 +44,14 @@ import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
+/**
+ * DOC bZhou class global comment. Detailled comment
+ */
 /**
  * DOC bZhou class global comment. Detailled comment
  */
@@ -62,6 +66,8 @@ public class ItemRecord {
     private ModelElement element;
 
     private Property property;
+
+    private IRepositoryNode conflictNode;
 
     private Map<File, ModelElement> dependencyMap = new HashMap<File, ModelElement>();
 
@@ -463,4 +469,23 @@ public class ItemRecord {
     public static List<ItemRecord> getAllItemRecords() {
         return allItemRecords;
     }
+
+    /**
+     * Sets the conflictNode.
+     * 
+     * @param conflictNode the conflictNode to set
+     */
+    public void setConflictNode(IRepositoryNode conflictNode) {
+        this.conflictNode = conflictNode;
+    }
+
+    /**
+     * Getter for conflictNode.
+     * 
+     * @return the conflictNode
+     */
+    public IRepositoryNode getConflictNode() {
+        return this.conflictNode;
+    }
+
 }

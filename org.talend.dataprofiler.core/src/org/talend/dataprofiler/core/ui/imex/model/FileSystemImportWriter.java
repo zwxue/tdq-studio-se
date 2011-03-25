@@ -31,20 +31,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
-import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.helper.RepositoryObjectTypeHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -56,10 +54,13 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.RepositoryWorkUnit;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -107,9 +108,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
             if (checkExisted) {
                 checkExisted(record);
+                checkConflict(record);
             }
-
-            checkConflict(record);
 
             if (!record.isValid()) {
                 inValidRecords.add(record);
@@ -128,15 +128,14 @@ public class FileSystemImportWriter implements IImportWriter {
         Property property = record.getProperty();
         if (property != null) {
             try {
-                for (ERepositoryObjectType type : RepositoryObjectTypeHelper.getDQResourceTypeList()) {
-                    List<IRepositoryViewObject> typedObjectList = ProxyRepositoryFactory.getInstance().getAll(type);
-                    for (IRepositoryViewObject object : typedObjectList) {
-                        Property property2 = object.getProperty();
-                        if (property.getId().equals(property2.getId())) {
-                            record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");
-                        }
-                    }
+
+                RepositoryNode node = RepositoryNodeHelper.recursiveFind(property);
+
+                if (node != null) {
+                    record.setConflictNode(node);
+                    record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");
                 }
+
             } catch (Exception e) {
                 record.addError("\"" + record.getName() + "\" check item conflict failed!");
             }
@@ -296,16 +295,6 @@ public class FileSystemImportWriter implements IImportWriter {
                     if (log.isDebugEnabled()) {
                         log.debug("property file for " + desIFile + " = " + property.getLabel());
                     }
-
-                    Item item = property.getItem();
-
-                    EResourceConstant typedConstant = EResourceConstant.getTypedConstant(item);
-                    if (typedConstant == EResourceConstant.DB_CONNECTIONS || typedConstant == EResourceConstant.MDM_CONNECTIONS) {
-                        // Connection connection = ((ConnectionItem) property.getItem()).getConnection();
-
-                        // IRepositoryViewObject object = new RepositoryViewObject(property);
-                        // ProxyRepositoryViewObject.registerReposViewObj(connection, object);
-                    }
                 } else {
                     log.error("Loading property error: " + desIFile.getFullPath().toString());
                 }
@@ -348,13 +337,22 @@ public class FileSystemImportWriter implements IImportWriter {
                         if (record.isValid()) {
                             log.info("Importing " + record.getFile().getAbsolutePath());
 
+                            // Delete the conflict node before import.
+                            IRepositoryNode conflictNode = record.getConflictNode();
+                            if (conflictNode != null) {
+                                IRepositoryViewObject object = conflictNode.getObject();
+                                ProxyRepositoryFactory.getInstance().deleteObjectPhysical(object);
+                            }
+
                             for (IPath resPath : toImportMap.keySet()) {
                                 IPath desPath = toImportMap.get(resPath);
-                                synchronized (ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
-                                        .getResourceManager().resourceSet) {
+                                ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                                        .getResourceManager().resourceSet;
+                                synchronized (resourceSet) {
                                     write(resPath, desPath);
                                 }
                             }
+
                         } else {
                             for (String error : record.getErrors()) {
                                 log.error(error);
