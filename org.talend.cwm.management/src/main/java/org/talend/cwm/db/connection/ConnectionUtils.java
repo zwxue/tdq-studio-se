@@ -931,7 +931,7 @@ public final class ConnectionUtils {
         if (saveFlag && conn != null) {
             ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
         }
-        updateRetrieveAllFlag(conn);
+        // updateRetrieveAllFlag(conn);
         return conn;
     }
 
