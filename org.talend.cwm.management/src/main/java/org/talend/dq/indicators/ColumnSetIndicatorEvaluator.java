@@ -278,12 +278,10 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         this.getAnalyzedElements();
         if (continueRun()) {
             try {
-                List<String> strResultList = new ArrayList<String>();
                 returnCode.setOk(true);
                 returnCode.setOk(returnCode.isOk() && statement.execute(tdXmlDocument, sqlStatement));
                 // resultSet = statement.getResultSet();
-                List<String> strResultListTemp = Arrays.asList(statement.getResultSet());
-                strResultList.addAll(strResultListTemp.subList(1, strResultListTemp.size()));
+                List<String> strResultList = Arrays.asList(statement.getResultSet());
                 resultSet = strResultList.toArray(new String[strResultList.size()]);
             } catch (RemoteException e) {
                 returnCode.setMessage(e.getMessage());
