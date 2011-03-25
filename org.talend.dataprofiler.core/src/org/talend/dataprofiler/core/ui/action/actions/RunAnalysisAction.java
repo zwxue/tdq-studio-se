@@ -210,7 +210,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 Connection conntion = (Connection) analysis.getContext().getConnection();
                 if (conntion != null) {
                     try {
-                        ComparisonLevelFactory.creatComparisonLevel(conntion).reloadCurrentLevelElement();
+                        RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
+                        ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
                     } catch (ReloadCompareException e) {
                         log.error(e, e);
                     }
