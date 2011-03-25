@@ -154,6 +154,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     };
 
+    private SashForm sForm;
+
+    private Composite previewComp;
+
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
@@ -210,7 +214,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         Composite body = form.getBody();
 
         body.setLayout(new GridLayout());
-        final SashForm sForm = new SashForm(body, SWT.NULL);
+        sForm = new SashForm(body, SWT.NULL);
         sForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         topComp = toolkit.createComposite(sForm);
@@ -229,7 +233,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         createAnalysisParamSection(form, topComp);
         // ~
         if (!EditorPreferencePage.isHideGraphics()) {
-            Composite previewComp = toolkit.createComposite(sForm);
+            previewComp = toolkit.createComposite(sForm);
             previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             previewComp.setLayout(new GridLayout());
             // add by hcheng for 0007290: Chart cannot auto compute it's size in
@@ -521,17 +525,52 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     public void refresh() {
-        if (chartComposite != null) {
-            try {
-                for (Control control : chartComposite.getChildren()) {
-                    control.dispose();
-                }
+        // if (chartComposite != null) {
+        // try {
+        // for (Control control : chartComposite.getChildren()) {
+        // control.dispose();
+        // }
+        //
+        // createPreviewCharts(form, chartComposite, true);
+        // chartComposite.getParent().layout();
+        // chartComposite.layout();
+        // } catch (Exception ex) {
+        // log.error(ex, ex);
+        // }
+        // }
+        if (EditorPreferencePage.isHideGraphics()) {
+            if (sForm.getChildren().length > 1) {
+                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
+                    sForm.getChildren()[1].dispose();
+                topComp.getParent().layout();
+                topComp.layout();
+            }
 
-                createPreviewCharts(form, chartComposite, true);
-                chartComposite.getParent().layout();
-                chartComposite.layout();
-            } catch (Exception ex) {
-                log.error(ex, ex);
+        } else {
+            if (chartComposite != null && !chartComposite.isDisposed()) {
+                try {
+                    for (Control control : chartComposite.getChildren()) {
+                        control.dispose();
+                    }
+                    createPreviewCharts(form, chartComposite, true);
+                    chartComposite.getParent().layout();
+                    chartComposite.layout();
+                } catch (Exception ex) {
+                    log.error(ex, ex);
+                }
+            } else {
+                previewComp = toolkit.createComposite(sForm);
+                previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+                previewComp.setLayout(new GridLayout());
+                previewComp.addControlListener(new ControlAdapter() {
+
+                    public void controlResized(ControlEvent e) {
+                        super.controlResized(e);
+                        sForm.redraw();
+                        form.reflow(true);
+                    }
+                });
+                createPreviewSection(form, previewComp);
             }
         }
     }

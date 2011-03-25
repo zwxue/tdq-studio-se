@@ -101,7 +101,9 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -170,6 +172,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     private Text maxNumText;
 
     private Button storeDataCheck;
+
+    private SashForm sForm;
+
+    private Composite previewComp;
 
     public ColumnSetMasterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -267,7 +273,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         Composite body = form.getBody();
 
         body.setLayout(new GridLayout());
-        final SashForm sForm = new SashForm(body, SWT.NULL);
+        sForm = new SashForm(body, SWT.NULL);
         sForm.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         topComp = toolkit.createComposite(sForm);
@@ -289,7 +295,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         // createAnalysisParamSection(form, topComp);
         if (!EditorPreferencePage.isHideGraphics()) {
-            Composite previewComp = toolkit.createComposite(sForm);
+            previewComp = toolkit.createComposite(sForm);
             previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
             previewComp.setLayout(new GridLayout());
             // add by hcheng for 0007290: Chart cannot auto compute it's size in
@@ -539,19 +545,54 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     public void refresh() {
-        if (chartComposite != null) {
-            try {
-                for (Control control : chartComposite.getChildren()) {
-                    control.dispose();
-                }
-
-                createPreviewCharts(form, chartComposite, true);
-                chartComposite.layout();
-                getForm().reflow(true);
-            } catch (Exception ex) {
-                log.error(ex, ex);
+        // if (chartComposite != null) {
+        // try {
+        // for (Control control : chartComposite.getChildren()) {
+        // control.dispose();
+        // }
+        //
+        // createPreviewCharts(form, chartComposite, true);
+        // chartComposite.layout();
+        // getForm().reflow(true);
+        // } catch (Exception ex) {
+        // log.error(ex, ex);
+        // }
+        //
+        // }
+        if (EditorPreferencePage.isHideGraphics()) {
+            if (sForm.getChildren().length > 1) {
+                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
+                    sForm.getChildren()[1].dispose();
+                topComp.getParent().layout();
+                topComp.layout();
             }
 
+        } else {
+            if (chartComposite != null && !chartComposite.isDisposed()) {
+                try {
+                    for (Control control : chartComposite.getChildren()) {
+                        control.dispose();
+                    }
+                    createPreviewCharts(form, chartComposite, true);
+                    chartComposite.getParent().layout();
+                    chartComposite.layout();
+                } catch (Exception ex) {
+                    log.error(ex, ex);
+                }
+            } else {
+                previewComp = toolkit.createComposite(sForm);
+                previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+                previewComp.setLayout(new GridLayout());
+                previewComp.addControlListener(new ControlAdapter() {
+
+                    public void controlResized(ControlEvent e) {
+                        super.controlResized(e);
+                        sForm.redraw();
+                        form.reflow(true);
+                    }
+                });
+                createPreviewSection(form, previewComp);
+            }
         }
     }
 
@@ -1007,13 +1048,24 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     private String isFormSameTable(List<IRepositoryNode> columnSetMultiValueList) {
         String message = "";//$NON-NLS-1$
         List<ModelElement> columnList = new ArrayList<ModelElement>();
-        for (IRepositoryNode rd : columnSetMultiValueList) {
-            // columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
-            columnList.add(RepositoryNodeHelper.getModelElementFromRepositoryNode(rd));
-        }
+        Set<String> nodeTypeName = new HashSet<String>();
         if (!columnSetMultiValueList.isEmpty()) {
+            for (IRepositoryNode rd : columnSetMultiValueList) {
+                if (rd instanceof DBColumnRepNode) {
+                    nodeTypeName.add(rd.getLabel());
+                } else if (rd instanceof DFColumnRepNode) {
+                    nodeTypeName.add(rd.getLabel());
+                } else if (rd instanceof MDMXmlElementRepNode) {
+                    nodeTypeName.add(rd.getLabel());
+                }
+                // columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+                columnList.add(RepositoryNodeHelper.getModelElementFromRepositoryNode(rd));
+            }
+            if (nodeTypeName.size() > 1) {
+                return message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
+            }
             // MOD klliu bug 19464,file delimit connection does not need to check from one table.
-            if (columnList.get(0) instanceof TdColumn) {
+            if (columnList.get(0) instanceof TdColumn || columnList.get(0) instanceof TdXmlElementType) {
                 if (!ModelElementHelper.isFromSameTable(columnList)) {
                     message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
                 }
