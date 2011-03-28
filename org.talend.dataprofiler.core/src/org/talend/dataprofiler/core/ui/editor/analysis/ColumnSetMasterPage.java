@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
@@ -101,9 +102,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
-import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
-import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -989,9 +988,17 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         // MOD yyi 2011-02-16 17871:delimitefile
         List<ModelElement> columnList = new ArrayList<ModelElement>();
+        // MOD klliu 2001-03-28 19464 filter column from same table
+        Set<EObject> nodeTypeName = new HashSet<EObject>();
         for (IRepositoryNode rd : columnSetMultiValueList) {
             // columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
+            ModelElement modelElementFromRepositoryNode = RepositoryNodeHelper.getModelElementFromRepositoryNode(rd);
+            EObject eContainer = modelElementFromRepositoryNode.eContainer();
+            nodeTypeName.add(eContainer);
             columnList.add(RepositoryNodeHelper.getModelElementFromRepositoryNode(rd));
+        }
+        if (nodeTypeName.size() > 1) {
+            return new ReturnCode(DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"), false); //$NON-NLS-1$
         }
         if (!columnSetMultiValueList.isEmpty()) {
             // MOD klliu bug 19464,file delimit connection does not need to check from one table.
@@ -1029,51 +1036,17 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     protected ReturnCode canRun() {
-        String message = "";//$NON-NLS-1$
         List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
+        ReturnCode canSave = canSave();
+        if (!canSave.isOk()) {
+            return canSave;
+        }
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnSetMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
-        } else {
-            message = isFormSameTable(columnSetMultiValueList);//$NON-NLS-1$
-            if (!"".equals(message)) {
-                return new ReturnCode(message, false);
-            }
         }
-
         resetResultPageData();
         return new ReturnCode(true);
 
-    }
-
-    private String isFormSameTable(List<IRepositoryNode> columnSetMultiValueList) {
-        String message = "";//$NON-NLS-1$
-        List<ModelElement> columnList = new ArrayList<ModelElement>();
-        Set<String> nodeTypeName = new HashSet<String>();
-        if (!columnSetMultiValueList.isEmpty()) {
-            for (IRepositoryNode rd : columnSetMultiValueList) {
-                if (rd instanceof DBColumnRepNode) {
-                    nodeTypeName.add(rd.getLabel());
-                } else if (rd instanceof DFColumnRepNode) {
-                    nodeTypeName.add(rd.getLabel());
-                } else if (rd instanceof MDMXmlElementRepNode) {
-                    nodeTypeName.add(rd.getLabel());
-                }
-                // columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
-                columnList.add(RepositoryNodeHelper.getModelElementFromRepositoryNode(rd));
-            }
-            if (nodeTypeName.size() > 1) {
-                return message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
-            }
-            // MOD klliu bug 19464,file delimit connection does not need to check from one table.
-            if (columnList.get(0) instanceof TdColumn || columnList.get(0) instanceof TdXmlElementType) {
-                if (!ModelElementHelper.isFromSameTable(columnList)) {
-                    message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
-                }
-            } else if (!isFromSameTableByDFColumn(columnSetMultiValueList)) {
-                message = DefaultMessagesImpl.getString("ColumnSetMasterPage.CannotCreateAnalysis"); //$NON-NLS-1$
-            }
-        }
-        return message;
     }
 
     public AllMatchIndicator getAllMatchIndicator() {
