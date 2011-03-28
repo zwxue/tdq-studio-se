@@ -75,30 +75,34 @@ public final class WorkbenchUtils {
         if (!AUTO_CHANGE2DATA_PROFILER) {
             return;
         }
-        IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .getPerspective();
-        if (!PluginConstant.PERSPECTIVE_ID.equals(perspective.getId())) {
-            int autoChange = ResourcesPlugin.getPlugin().getPluginPreferences().getInt(PluginConstant.AUTO_CHANGE2DATA_PROFILER);
-            switch (autoChange) {
-            case AUTO_CHANGE2DATA_PROFILER_TRUE:
-                // change perspective automatically
-                changePerspective(PluginConstant.PERSPECTIVE_ID);
-                break;
-            case AUTO_CHANGE2DATA_PROFILER_FALSE:
-                // do nothing
-                break;
-            default:
-                // ask user what to do, and rember user's decision
-                if (MessageUI.openConfirm(DefaultMessagesImpl.getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
-                    ResourcesPlugin.getPlugin().getPluginPreferences()
-                            .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_TRUE);
-                    // change perspective
+        try {
+            IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                    .getPerspective();
+            if (!PluginConstant.PERSPECTIVE_ID.equals(perspective.getId())) {
+                int autoChange = ResourcesPlugin.getPlugin().getPluginPreferences().getInt(PluginConstant.AUTO_CHANGE2DATA_PROFILER);
+                switch (autoChange) {
+                case AUTO_CHANGE2DATA_PROFILER_TRUE:
+                    // change perspective automatically
                     changePerspective(PluginConstant.PERSPECTIVE_ID);
-                } else {
-                    ResourcesPlugin.getPlugin().getPluginPreferences()
-                            .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_FALSE);
+                    break;
+                case AUTO_CHANGE2DATA_PROFILER_FALSE:
+                    // do nothing
+                    break;
+                default:
+                    // ask user what to do, and rember user's decision
+                    if (MessageUI.openConfirm(DefaultMessagesImpl.getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
+                        ResourcesPlugin.getPlugin().getPluginPreferences()
+                                .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_TRUE);
+                        // change perspective
+                        changePerspective(PluginConstant.PERSPECTIVE_ID);
+                    } else {
+                        ResourcesPlugin.getPlugin().getPluginPreferences()
+                                .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_FALSE);
+                    }
                 }
             }
+        } catch (Exception e) {
+            log.warn(e, e);
         }
     }
 
