@@ -536,7 +536,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
                     public void run() {
                         try {
-                            creatComparisonLevel.reloadCurrentLevelElement();
+                            if (creatComparisonLevel != null) {
+                                creatComparisonLevel.reloadCurrentLevelElement();
+                            }
                         } catch (ReloadCompareException e) {
                             log.error(e, e);
                         }
