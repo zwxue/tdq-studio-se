@@ -30,7 +30,6 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -130,22 +129,26 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
-        final EList<ModelElement> analyzedElements = synAnalysis.getContext().getAnalysedElements();
+        final EList<ModelElement> analyzedElements = synAnalysis.getContext() == null ? null : synAnalysis.getContext()
+                .getAnalysedElements();
         if (analyzedElements == null || analyzedElements.size() == 0) {
             return new ReturnCode(Boolean.TRUE);
         }
 
         // MOD qiongli 2011-1-10,feature 16796.
         if (analyzedElements.get(0) instanceof TdXmlElementType || oldDataProvider instanceof DelimitedFileConnection) {
-            MessageDialog.openInformation(shell, DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"),
-                    "Can't change this connection!");
-            return new ReturnCode(Boolean.FALSE);
+            // MessageDialog.openInformation(shell,
+            // DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"),
+            // "Can't change this connection!");
+            if (!MessageDialog.openConfirm(shell, DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnectionTips"))) { //$NON-NLS-1$
+                return new ReturnCode(Boolean.FALSE);
+            }
         }
 
-
         // Open synchronized dialog.
-        boolean retCode = MessageDialog.openQuestion(shell, DefaultMessagesImpl
-                .getString("ChangeConnectionAction.ChangeConnection"), //$NON-NLS-1$
+        boolean retCode = MessageDialog.openQuestion(shell,
+                DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("ChangeConnectionAction.MayCauseAsynProblem")); //$NON-NLS-1$
         if (retCode) {
 
@@ -155,19 +158,14 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 anaEleSynDialog = new AnalyzedColumnSetsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
             } else if (analyzedElements.get(0) instanceof Package) {
                 anaEleSynDialog = new AnalyzedPackageSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
-            } else if (analyzedElements.get(0) instanceof MetadataColumn) {
-                // MOD qiongli 2010-11-8 feature 16796
-                MessageDialog.openInformation(shell, DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"),
-                        "Can't change this connection!");
-                return new ReturnCode(Boolean.FALSE);
             }
 
-            final List<SynTreeModel> treeModelLs = anaEleSynDialog.getSynInputModel();
+            final List<SynTreeModel> treeModelLs = anaEleSynDialog == null ? null : anaEleSynDialog.getSynInputModel();
             if (treeModelLs != null && treeModelLs.size() > 0) {
                 // Make attempt to reload from db before showing asyned
                 // message.
-                boolean isReload = MessageDialog.openQuestion(shell, DefaultMessagesImpl
-                        .getString("ChangeConnectionAction.ReloadFromDatabase"), //$NON-NLS-1$
+                boolean isReload = MessageDialog.openQuestion(shell,
+                        DefaultMessagesImpl.getString("ChangeConnectionAction.ReloadFromDatabase"), //$NON-NLS-1$
                         DefaultMessagesImpl.getString("ChangeConnectionAction.ExistElementAsynchronuos")); //$NON-NLS-1$
                 if (isReload) {
                     ModelElement newDataProviderModel = treeModelLs.get(0).getNewDataProvElement();
@@ -303,7 +301,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
     private boolean synAnalyzedElements(AnalyzedElementSynDialog anaEleSynDialog, Analysis synAnalysis,
             Connection oldDataProvider, Connection newDataProv) {
         // Change connection uuid.
-        Map<ModelElement, ModelElement> synEleMap = anaEleSynDialog.getSynedEleMap();
+        Map<ModelElement, ModelElement> synEleMap = anaEleSynDialog == null ? null : anaEleSynDialog.getSynedEleMap();
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(synAnalysis);
         synAnalysis.getContext().setConnection(newDataProv);
@@ -327,7 +325,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
             System.arraycopy(meLs.toArray(), 0, mes, 0, meLs.size());
             synAnalysis.getContext().getAnalysedElements().clear();
             for (int i = 0; i < mes.length; i++) {
-                if (synEleMap.get(mes[i]) != null) {
+                if (synEleMap != null && synEleMap.get(mes[i]) != null) {
                     TdColumn newColumn = (TdColumn) synEleMap.get(mes[i]);
                     synAnalysis.getContext().getAnalysedElements().add(newColumn);
                     isExistSynedElement = true;
@@ -348,7 +346,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 ((ColumnSetMultiValueIndicator) indicator).getAnalyzedColumns().toArray(mes);
                 compositeInd.getAnalyzedColumns().clear();
                 for (ModelElement me : mes) {
-                    if (synEleMap.get(me) != null) {
+                    if (synEleMap != null && synEleMap.get(me) != null) {
                         TdColumn newColumn = (TdColumn) synEleMap.get(me);
                         DataminingType dataminingType = MetadataHelper.getDataminingType((TdColumn) me);
                         if (dataminingType == null) {
@@ -374,7 +372,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 compInd.getColumnSetA().toArray(mesA);
                 compInd.getColumnSetA().clear();
                 for (ModelElement me : mesA) {
-                    if (synEleMap.get(me) != null) {
+                    if (synEleMap != null && synEleMap.get(me) != null) {
                         TdColumn newColumn = (TdColumn) synEleMap.get(me);
                         compInd.getColumnSetA().add(newColumn);
                         anaBuilder.addElementToAnalyze(newColumn, indicator);
@@ -386,7 +384,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 compInd.getColumnSetB().toArray(mesB);
                 compInd.getColumnSetB().clear();
                 for (ModelElement me : mesB) {
-                    if (synEleMap.get(me) != null) {
+                    if (synEleMap != null && synEleMap.get(me) != null) {
                         TdColumn newColumn = (TdColumn) synEleMap.get(me);
                         compInd.getColumnSetB().add(newColumn);
                         anaBuilder.addElementToAnalyze(newColumn, indicator);
@@ -399,12 +397,12 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 ColumnSet oldColSetA = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) mesA[0]);
                 ColumnSet oldColSetB = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) mesB[0]);
                 if (oldColSetA == oldAnaEle) {
-                    if (synEleMap.get(mesA[0]) != null) {
+                    if (synEleMap != null && synEleMap.get(mesA[0]) != null) {
                         compInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) synEleMap.get(mesA[0])));
                     }
                 }
                 if (oldColSetB == oldAnaEle) {
-                    if (synEleMap.get(mesB[0]) != null) {
+                    if (synEleMap != null && synEleMap.get(mesB[0]) != null) {
                         compInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) synEleMap.get(mesB[0])));
                     }
                 }
@@ -415,7 +413,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                     return false;
                 }
                 // Column A
-                if (synEleMap.get(funDepInd.getColumnA()) != null) {
+                if (synEleMap != null && synEleMap.get(funDepInd.getColumnA()) != null) {
                     TdColumn newColumn = (TdColumn) synEleMap.get(funDepInd.getColumnA());
                     funDepInd.setColumnA(newColumn);
                     anaBuilder.addElementToAnalyze(newColumn, indicator);
@@ -423,7 +421,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 }
 
                 // Column B
-                if (synEleMap.get(funDepInd.getColumnB()) != null) {
+                if (synEleMap != null && synEleMap.get(funDepInd.getColumnB()) != null) {
                     TdColumn newColumn = (TdColumn) synEleMap.get(funDepInd.getColumnB());
                     funDepInd.setColumnB(newColumn);
                     anaBuilder.addElementToAnalyze(newColumn, indicator);
@@ -436,13 +434,13 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 ColumnSet oldColSetA = ColumnHelper.getColumnOwnerAsColumnSet(funDepInd.getColumnA());
                 ColumnSet oldColSetB = ColumnHelper.getColumnOwnerAsColumnSet(funDepInd.getColumnB());
                 if (oldColSetA == oldAnaEle) {
-                    if (synEleMap.get(funDepInd.getColumnA()) != null) {
+                    if (synEleMap != null && synEleMap.get(funDepInd.getColumnA()) != null) {
                         funDepInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) synEleMap.get(funDepInd
                                 .getColumnA())));
                     }
                 }
                 if (oldColSetB == oldAnaEle) {
-                    if (synEleMap.get(funDepInd.getColumnB()) != null) {
+                    if (synEleMap != null && synEleMap.get(funDepInd.getColumnB()) != null) {
                         funDepInd.setAnalyzedElement(ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) synEleMap.get(funDepInd
                                 .getColumnB())));
                     }
@@ -450,7 +448,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
             } else {
                 ModelElement me = indicator.getAnalyzedElement();
-                if (synEleMap.get(me) != null) {
+                if (synEleMap != null && synEleMap.get(me) != null) {
                     indicator.setAnalyzedElement(synEleMap.get(me));
                     if (analysisType == AnalysisType.MULTIPLE_COLUMN) {
                         synAnalysis.getResults().getIndicators().add(indicator);
