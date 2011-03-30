@@ -168,7 +168,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);
             }
         }
-
+        // MOD klliu bug 19995 question2
+        // After checking nametext contain empty string,must setUp FormPage's dirty is false in saving
+        // process
+        setDirty(false);
+        // ~
         return new ReturnCode(true);
         // ~19179
     }
@@ -189,7 +193,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public void fireRuningItemChanged(boolean status) {
         currentEditor.setRunActionButtonState(status);
         currentEditor.setRefreshResultPage(status);
-
         if (status) {
             refresh();
         }

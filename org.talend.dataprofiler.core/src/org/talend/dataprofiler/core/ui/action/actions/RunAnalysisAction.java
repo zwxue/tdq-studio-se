@@ -124,7 +124,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
             AnalysisEditor anaEditor = (AnalysisEditor) editor;
             if (editor.isDirty()) {
-                editor.doSave(null);
+                anaEditor.doSave(null);
                 // MOD klliu bug 19991 3td 2011-03-29
                 ReturnCode canSave = anaEditor.getMasterPage().canSave();
                 if (!canSave.isOk()) {
