@@ -44,6 +44,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
@@ -291,6 +292,10 @@ public final class DQStructureComparer {
         // ADD xqliu 2010-03-04 feature 11412
         connectionParameters.setDbName(ConnectionUtils.getSID(prevDataProvider));
         connectionParameters.setRetrieveAllMetadata(ConnectionHelper.getRetrieveAllMetadata(prevDataProvider));
+        if (prevDataProvider instanceof DatabaseConnection) {
+            DatabaseConnection dbConn = (DatabaseConnection) prevDataProvider;
+            connectionParameters.setOtherParameter(dbConn.getUiSchema());
+        }
         // ~11412
         // MOD xqliu 2010-03-29 bug 11951 have mod by zshen 2010/11/29
         IMetadataConnection metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(

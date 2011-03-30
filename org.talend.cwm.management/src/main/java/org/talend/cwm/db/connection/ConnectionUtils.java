@@ -601,9 +601,17 @@ public final class ConnectionUtils {
     public static boolean isPostgresql(Connection connection) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn != null) {
-            String databaseType = dbConn.getDatabaseType() == null ? "" : dbConn.getDatabaseType();
+            String databaseType = dbConn.getDatabaseType() == null ? "" : dbConn.getDatabaseType(); //$NON-NLS-1$
             return EDriverName.POSTGRESQLEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
                     || EDatabaseTypeName.PSQL.getDisplayName().equalsIgnoreCase(databaseType);
+        }
+        return false;
+    }
+
+    public static boolean isPostgresql(DBConnectionParameter connectionParam) {
+        String sqlTypeName = connectionParam == null ? null : connectionParam.getSqlTypeName();
+        if (sqlTypeName != null) {
+            return sqlTypeName.toLowerCase().contains("postgres"); //$NON-NLS-1$
         }
         return false;
     }
@@ -1229,24 +1237,45 @@ public final class ConnectionUtils {
             if (!connectionParam.isRetrieveAllMetadata()) {
                 packageFilter = new ArrayList<String>();
                 String dbName = connectionParam.getDbName();
-                if (connectionParam.getSqlTypeName()
-                        .equalsIgnoreCase(SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL.getDBKey())
-                        || connectionParam.getSqlTypeName().equalsIgnoreCase(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getDBKey())) {
-                    String otherParameter = null; // MOD scorreia 2010-10-20 bug
-                                                  // 16562 avoid NPE
-                    if (connectionParam != null && connectionParam.getOtherParameter() != null) {
-                        otherParameter = connectionParam.getOtherParameter().toUpperCase();
-                    }
-                    if (otherParameter != null) {
-                        dbName = otherParameter;
-                    } else {
-                        dbName = connectionParam.getParameters().getProperty(TaggedValueHelper.USER).toUpperCase();
-                    }
+                // String otherParameter = null; // MOD scorreia 2010-10-20 bug 16562 avoid NPE
+                if (isOracle(connectionParam) || isPostgresql(connectionParam)) {
+                    dbName = getDbName(connectionParam);
                 }
-                packageFilter.add(dbName);
+                if (dbName != null) {
+                    packageFilter.add(dbName);
+                }
             }
         }
         return packageFilter;
+    }
+
+    private static boolean isOracle(DBConnectionParameter connectionParam) {
+        if (connectionParam == null) {
+            return false;
+        } else {
+            return connectionParam.getSqlTypeName().equalsIgnoreCase(SupportDBUrlType.ORACLEWITHSERVICENAMEDEFAULTURL.getDBKey())
+                    || connectionParam.getSqlTypeName().equalsIgnoreCase(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getDBKey());
+        }
+    }
+
+    /**
+     * get the DbName from DBConnectionParameter, this value is for package filter only.
+     * 
+     * @param connectionParam
+     * @return
+     */
+    private static String getDbName(DBConnectionParameter connectionParam) {
+        String dbName = null;
+        String otherParameter = null;
+        if (connectionParam != null && connectionParam.getOtherParameter() != null) {
+            otherParameter = connectionParam.getOtherParameter().toUpperCase();
+        }
+        if (otherParameter != null) {
+            dbName = otherParameter;
+        } else {
+            dbName = connectionParam.getParameters().getProperty(TaggedValueHelper.USER).toUpperCase();
+        }
+        return dbName;
     }
 
     public static List<ModelElement> getXMLElements(TdXmlSchema document) {

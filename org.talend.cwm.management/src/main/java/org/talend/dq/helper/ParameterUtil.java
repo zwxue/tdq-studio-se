@@ -95,6 +95,7 @@ public final class ParameterUtil {
         parameterMap.put("version", parameter.getVersion());
         parameterMap.put("universe", parameter.getParameters().getProperty(TaggedValueHelper.UNIVERSE));
         parameterMap.put("datafilter", parameter.getParameters().getProperty(TaggedValueHelper.DATA_FILTER));
+        parameterMap.put(TaggedValueHelper.RETRIEVE_ALL, String.valueOf(parameter.isRetrieveAllMetadata()));
         parameterMap.put(TaggedValueHelper.PASSWORD, parameter.getParameters().getProperty(TaggedValueHelper.PASSWORD));
         parameterMap.put(TaggedValueHelper.USER, parameter.getParameters().getProperty(TaggedValueHelper.USER));
         return parameterMap;
