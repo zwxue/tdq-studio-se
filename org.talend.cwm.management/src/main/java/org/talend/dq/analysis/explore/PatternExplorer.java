@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 
 /**
  * @author scorreia
@@ -61,6 +62,10 @@ public class PatternExplorer extends DataExplorer {
 
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();// MOD zshen feature 12919 adapt to pop-menu for Jave
+        // MOD qiongli 2011-3-30,feature 19192,filter this menu and query for ColumnSet AllMatchIndicator
+        if (ColumnsetPackage.eINSTANCE.getAllMatchIndicator().isSuperTypeOf(indicator.eClass())) {
+            return map;
+        }
         // engin on result page
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
         // MOD zshen 10448 Add menus "view invalid values" and "view valid values" on pattern matching indicator

@@ -64,7 +64,7 @@ import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataprofiler.core.ui.wizard.patterns.DataFilterType;
 import org.talend.dataprofiler.core.ui.wizard.patterns.SelectPatternsWizard;
-import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
@@ -196,10 +196,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         tableviewer.setInput(chartData);
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
         // MOD qiongli feature 19192.
-        if (masterPage.getAnalysis().getParameters() != null
-                && ExecutionLanguage.JAVA.equals(masterPage.getAnalysis().getParameters().getExecutionLanguage())) {
-            ChartTableFactory.addMenuAndTip(tableviewer, chartTypeState.getDataExplorer(), masterPage.getAnalysis());
-        }
+        ChartTableFactory.addMenuAndTip(tableviewer, chartTypeState.getDataExplorer(), masterPage.getAnalysis());
 
         if (!EditorPreferencePage.isHideGraphics()) {
             JFreeChart chart = chartTypeState.getChart();
@@ -254,11 +251,9 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         tableviewer.setInput(chartData);
         TableUtils.addTooltipOnTableItem(tableviewer.getTable());
         // MOD qiongli feature 19192.
-        if (masterPage.getAnalysis().getParameters() != null
-                && ExecutionLanguage.JAVA.equals(masterPage.getAnalysis().getParameters().getExecutionLanguage())) {
-            DataExplorer dataExplorer = chartTypeState.getDataExplorer();
-            ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, this.getAnalysisHandler().getAnalysis());
-        }
+        DataExplorer dataExplorer = chartTypeState.getDataExplorer();
+        Analysis analysis = this.getAnalysisHandler().getAnalysis();
+        ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
         // create chart
         if (!EditorPreferencePage.isHideGraphics()) {
@@ -272,6 +267,8 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                 gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
                 gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
                 cc.setLayoutData(gd);
+                // MOD qiongli 2011-3-28 feature 19192.allow drill down for chart.
+                addMouseListenerForChart(cc, dataExplorer, analysis);
             }
         }
     }

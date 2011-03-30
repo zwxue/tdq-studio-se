@@ -302,7 +302,8 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         createFormContent(getManagedForm());
     }
 
-    private void addMouseListenerForChart(final ChartComposite chartComp, final IDataExplorer explorer, final Analysis analysis) {
+    @Override
+    protected void addMouseListenerForChart(final ChartComposite chartComp, final IDataExplorer explorer, final Analysis analysis) {
         chartComp.addChartMouseListener(new ChartMouseListener() {
 
             @SuppressWarnings("unchecked")

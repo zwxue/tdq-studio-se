@@ -36,6 +36,7 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -126,6 +127,20 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
             indicator.setInstantiatedExpression(BooleanExpressionHelper.createTdExpression(sqlGenericExpression.getLanguage(),
                     sqlExpr));
+            // MOD qiongli 2011-3-30 feature 19192.allow drill down for sql engine.
+            if (ColumnsetPackage.eINSTANCE.getSimpleStatIndicator().isSuperTypeOf(indicator.eClass())) {
+                SimpleStatIndicator simpleIndicator = (SimpleStatIndicator) indicator;
+                String columnsName = createSelect(nominalColumns, new ArrayList<String>());
+                for (Indicator leafIndicator : simpleIndicator.getLeafIndicators()) {
+                    final Expression leafSqlGenericExpression = dbms().getSqlExpression(leafIndicator.getIndicatorDefinition());
+                    String leafSqlExpr = dbms().fillGenericQueryWithColumnTableAndAlias(leafSqlGenericExpression.getBody(),
+                            columnsName, tableName, grpByClause);
+                    leafSqlExpr = dbms().addWhereToStatement(leafSqlExpr, stringDataFilter);
+                    leafIndicator.setInstantiatedExpression(BooleanExpressionHelper.createTdExpression(
+                            leafSqlGenericExpression.getLanguage(), leafSqlExpr));
+
+                }
+            }
         }
     }
 
