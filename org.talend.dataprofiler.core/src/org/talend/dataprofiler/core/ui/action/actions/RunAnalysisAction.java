@@ -122,11 +122,16 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             analysis = this.node.getAnalysis();// AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
         } else {
 
+            AnalysisEditor anaEditor = (AnalysisEditor) editor;
             if (editor.isDirty()) {
                 editor.doSave(null);
+                // MOD klliu bug 19991 3td 2011-03-29
+                ReturnCode canSave = anaEditor.getMasterPage().canSave();
+                if (!canSave.isOk()) {
+                    return;
+                }
+                // ~
             }
-
-            AnalysisEditor anaEditor = (AnalysisEditor) editor;
 
             ReturnCode canRun = anaEditor.canRun();
             if (!canRun.isOk()) {

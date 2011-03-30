@@ -139,7 +139,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         return null;
     }
 
-    protected abstract ReturnCode canSave();
+    public abstract ReturnCode canSave();
 
     /**
      * Analysis of whether the name check can be modified

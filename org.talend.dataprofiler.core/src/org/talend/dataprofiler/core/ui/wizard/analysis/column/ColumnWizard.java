@@ -26,6 +26,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -131,7 +132,12 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                 List<IRepositoryNode> nodes = this.selectionPage.nodes;
                 if (nodes != null && nodes.size() > 0) {
                     List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
-                    nodeList.addAll(nodes);
+                    for (IRepositoryNode repNode : nodes) {
+                        repNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper
+                                .getModelElementFromRepositoryNode(repNode));
+                        nodeList.add(repNode);
+                    }
+
                     masterPage.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
                 }
             }

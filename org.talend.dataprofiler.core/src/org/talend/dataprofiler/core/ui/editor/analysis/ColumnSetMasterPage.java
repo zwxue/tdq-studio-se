@@ -973,7 +973,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     @Override
-    protected ReturnCode canSave() {
+    public ReturnCode canSave() {
 
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = canModifyAnalysisName();
@@ -1037,10 +1037,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     @Override
     protected ReturnCode canRun() {
         List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
-        ReturnCode canSave = canSave();
-        if (!canSave.isOk()) {
-            return canSave;
-        }
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnSetMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
         }

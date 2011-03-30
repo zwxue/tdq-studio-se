@@ -1211,7 +1211,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     @Override
-    protected ReturnCode canSave() {
+    public ReturnCode canSave() {
 
         // ADD gdbu 2011-3-3 bug 19179
 

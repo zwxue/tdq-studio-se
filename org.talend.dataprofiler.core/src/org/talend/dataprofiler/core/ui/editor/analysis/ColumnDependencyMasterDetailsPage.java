@@ -199,7 +199,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canSave()
      */
     @Override
-    protected ReturnCode canSave() {
+    public ReturnCode canSave() {
         // do some validator.
         return validator(columnListA, columnListB);
     }

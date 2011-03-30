@@ -786,7 +786,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     @Override
-    protected ReturnCode canSave() {
+    public ReturnCode canSave() {
 
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = canModifyAnalysisName();

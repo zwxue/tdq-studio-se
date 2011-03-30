@@ -15,11 +15,14 @@ package org.talend.dataprofiler.core.ui.editor.composite;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -670,11 +673,23 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     @Override
     public boolean canDrop(IRepositoryNode reposNode) {
+        // MOD klliu bug 19991 note 0077019 2011-03-29
+        Set<EObject> nodeTypeName = new HashSet<EObject>();
+        for (IRepositoryNode rd : columnSetMultiValueList) {
+            ModelElement modelElementFromRepositoryNode = RepositoryNodeHelper.getModelElementFromRepositoryNode(rd);
+            EObject eContainer = modelElementFromRepositoryNode.eContainer();
+            nodeTypeName.add(eContainer);
+        }
+        ModelElement modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(reposNode);
+        nodeTypeName.add(modelElement.eContainer());
+        if (nodeTypeName.size() > 1) {
+            return false;
+        }
+        // ~
         List<IRepositoryNode> existColumns = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode columnFromMultiValueList : this.getColumnSetMultiValueList()) {
             existColumns.add(columnFromMultiValueList);
         }
-
         if (existColumns.contains(reposNode)) {
             return false;
         }

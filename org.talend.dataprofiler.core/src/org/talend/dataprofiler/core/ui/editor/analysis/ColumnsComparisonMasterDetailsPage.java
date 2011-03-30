@@ -345,7 +345,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     }
 
     @Override
-    protected ReturnCode canSave() {
+    public ReturnCode canSave() {
 
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = canModifyAnalysisName();
