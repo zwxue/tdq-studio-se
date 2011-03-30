@@ -8,5 +8,13 @@
             type="comp">
       </parser>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.match.engine">
+      <matchengine
+            engineClass="org.talend.cwm.compare.ModelElementMatchEngine"
+            label="org.talend.cwm.compare.ModelElementMatchEngine"
+            priority="normal">
+      </matchengine>
+   </extension>
 
 </plugin>
