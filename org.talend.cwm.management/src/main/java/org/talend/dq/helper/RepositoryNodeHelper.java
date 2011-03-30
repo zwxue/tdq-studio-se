@@ -460,7 +460,7 @@ public final class RepositoryNodeHelper {
             node = recursiveFindPattern((Pattern) modelElement);
         } else if (modelElement instanceof IndicatorDefinition) {
             if (modelElement instanceof WhereRule) {
-                node = recursiveFindRule((WhereRule) modelElement);
+                node = recursiveFindRuleSql((WhereRule) modelElement);
             } else {
                 node = recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
             }
@@ -781,7 +781,7 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
-    public static RuleRepNode recursiveFindRule(DQRule rule) {
+    public static RuleRepNode recursiveFindRuleSql(DQRule rule) {
         if (rule == null) {
             return null;
         }
@@ -789,7 +789,7 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES), true);
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_SQL), true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getRule()))) {

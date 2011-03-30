@@ -94,6 +94,19 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     protected TDQBusinessRuleItem whereRuleItem;
 
+    public TDQBusinessRuleItem getWhereRuleItem() {
+        if (this.whereRuleItem == null) {
+            if (this.whereRule != null) {
+                initRuleRepNode(this.whereRule);
+            }
+        }
+        return this.whereRuleItem;
+    }
+
+    public void setWhereRuleItem(TDQBusinessRuleItem whereRuleItem) {
+        this.whereRuleItem = whereRuleItem;
+    }
+
     public RuleRepNode getRuleRepNode() {
         return this.ruleRepNode;
     }
@@ -272,8 +285,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             whereRule.getJoins().addAll(this.tempJoinElements);
 
             // ReturnCode rc = DQRuleResourceFileHelper.getInstance().save(whereRule);
-            this.whereRuleItem.setDqrule(whereRule);
-            ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(this.whereRuleItem);
+            this.getWhereRuleItem().setDqrule(whereRule);
+            ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(this.getWhereRuleItem());
 
             ret = rc.isOk();
             this.joinConditionTableViewer.updateModelViewer();
