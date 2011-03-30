@@ -95,4 +95,12 @@ public class MDMXmlElementRepNode extends RepositoryNode {
         }
         return super.getLabel();
     }
+
+    public String getNodeDataType() {
+        if (!hasChildren()) {
+            return tdXmlElementType.getJavaType();
+        }
+        return "";
+
+    }
 }

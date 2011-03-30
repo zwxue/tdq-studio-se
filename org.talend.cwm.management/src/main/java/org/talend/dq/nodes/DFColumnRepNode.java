@@ -19,6 +19,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sql.TalendTypeConvert;
 
 /**
  * DOC qiongli class global comment. Detailled comment
@@ -56,5 +57,11 @@ public class DFColumnRepNode extends RepositoryNode {
             return this.getMetadataColumn().getName();
         }
         return super.getLabel();
+    }
+
+    public String getNodeDataType() {
+        String convertToJavaType = TalendTypeConvert.convertToJavaType(this.getMetadataColumn().getTalendType());
+        return convertToJavaType;
+
     }
 }

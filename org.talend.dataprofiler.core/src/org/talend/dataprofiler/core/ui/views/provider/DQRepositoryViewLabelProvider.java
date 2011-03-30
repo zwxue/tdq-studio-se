@@ -72,6 +72,10 @@ import org.talend.resource.EResourceConstant;
  */
 public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
+    private static final String LEFT = "( ";//$NON-NLS-1$
+
+    private static final String RIGHT = ")";//$NON-NLS-1$
+
     public DQRepositoryViewLabelProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
     }
@@ -149,7 +153,13 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     return ImageLib.getImage(ImageLib.TABLE);
                 } else if (node instanceof DBViewRepNode) {
                     return ImageLib.getImage(ImageLib.VIEW);
-                } else if (node instanceof DBColumnRepNode || node instanceof DFColumnRepNode) {
+                } else if (node instanceof DBColumnRepNode) {
+                    if (((DBColumnRepNode) node).isKey()) {
+                        return ImageLib.getImage(ImageLib.PK_COLUMN);
+                    }
+                    return ImageLib.getImage(ImageLib.TD_COLUMN);
+                } else if (node instanceof DFColumnRepNode) {
+
                     return ImageLib.getImage(ImageLib.TD_COLUMN);
                 } else if (node instanceof MDMSchemaRepNode) {
                     return ImageLib.getImage(ImageLib.XML_DOC);
@@ -183,7 +193,24 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 return ((DBViewFolderRepNode) node).getNodeName();
             } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
                 return DefaultMessagesImpl.getString("ColumnFolderNode.columns");
-            } else if (node instanceof SourceFileRepNode) {
+            } // ~MOD klliu 2011-03-29 bug 19936
+            else if (node instanceof DBColumnRepNode) {
+                DBColumnRepNode columnNode = (DBColumnRepNode) node;
+                return columnNode.getLabel() + LEFT + columnNode.getNodeDataType() + RIGHT;
+            } else if (node instanceof DFColumnRepNode) {
+                DFColumnRepNode dfColumnRepNode = (DFColumnRepNode) node;
+                String nodeDataType = dfColumnRepNode.getNodeDataType();
+                return dfColumnRepNode.getId() + LEFT + nodeDataType + RIGHT;
+            } else if (node instanceof MDMXmlElementRepNode) {
+                MDMXmlElementRepNode mdmColumnRepNode = (MDMXmlElementRepNode) node;
+                String nodeDataType = mdmColumnRepNode.getNodeDataType();
+                if (!"".equals(nodeDataType)) {//$NON-NLS-1$
+                    return mdmColumnRepNode.getTdXmlElementType().getName() + LEFT + nodeDataType + RIGHT;
+                }
+                return mdmColumnRepNode.getTdXmlElementType().getName();
+            }
+            // ~
+            else if (node instanceof SourceFileRepNode) {
                 return ((SourceFileRepNode) node).getLabel();
             } else if (node instanceof AnalysisRepNode || node instanceof ReportRepNode
                     || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode

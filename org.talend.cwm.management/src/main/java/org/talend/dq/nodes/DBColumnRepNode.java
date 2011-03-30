@@ -17,6 +17,7 @@ import java.util.List;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -65,5 +66,15 @@ public class DBColumnRepNode extends RepositoryNode {
             return this.getTdColumn().getName();
         }
         return super.getLabel();
+    }
+
+    public String getNodeDataType() {
+        TdSqlDataType sqlDataType = this.getTdColumn().getSqlDataType();
+        return sqlDataType.getName();
+
+    }
+
+    public boolean isKey() {
+        return this.getTdColumn().isKey();
     }
 }
