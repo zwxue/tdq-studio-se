@@ -790,9 +790,9 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // ADD gdbu 2011-3-3 bug 19179
         // remove the space from analysis name
         this.analysis.setName(this.analysis.getName().replace(" ", ""));
-        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
-            domain.setName(this.analysis.getName());
-        }
+        // for (Domain domain : this.analysis.getParameters().getDataFilter()) {
+        // domain.setName(this.analysis.getName());
+        // }
         // ~
 
         // ADD xqliu 2010-01-04 bug 10190
@@ -802,11 +802,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // ~
 
         EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
-        if (!this.tableFilterText.getText().equals(latestTableFilterValue)) {
+        if (!this.tableFilterText.getText().equals(DomainHelper.getTablePattern(dataFilters))) {
             DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());
             latestTableFilterValue = this.tableFilterText.getText();
         }
-        if (!this.viewFilterText.getText().equals(latestViewFilterValue)) {
+        if (!this.viewFilterText.getText().equals(DomainHelper.getViewPattern(dataFilters))) {
             DomainHelper.setDataFilterViewPattern(dataFilters, viewFilterText.getText());
             latestViewFilterValue = this.viewFilterText.getText();
         }

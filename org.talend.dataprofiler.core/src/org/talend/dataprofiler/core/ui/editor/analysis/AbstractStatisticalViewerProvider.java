@@ -89,7 +89,7 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
     public Color getBackground(Object element, int columnIndex) {
         if (element instanceof OverviewIndUIElement) {
             SchemaIndicator indicator = (SchemaIndicator) ((OverviewIndUIElement) element).getOverviewIndicator();
-            if (indicator.getTableRowCount() == 0) {
+            if (indicator.getTableRowCount() == 0 && indicator.getViewCount() == 0) {
                 return zeroRowColor;
             }
         }
