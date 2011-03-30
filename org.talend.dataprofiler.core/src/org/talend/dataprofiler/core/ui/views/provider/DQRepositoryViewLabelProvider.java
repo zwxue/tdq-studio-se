@@ -36,6 +36,7 @@ import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -185,6 +186,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     || node instanceof ExchangeComponentRepNode) {
                 // virtual node, get the lable of node directly
                 return node.getLabel();
+            } else if (node instanceof DBConnectionSubFolderRepNode) {
+                return ((DBConnectionSubFolderRepNode) node).getObject().getLabel();
             } else if (node instanceof DBConnectionFolderRepNode) {
                 return "DB " + ((DBConnectionFolderRepNode) node).getObject().getLabel();
             } else if (node instanceof DBTableFolderRepNode) {

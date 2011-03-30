@@ -69,6 +69,7 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
                         ENodeType.SIMPLE_FOLDER);
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
+                folder.setRepositoryNode(childNodeFolder);
                 super.getChildren().add(childNodeFolder);
             }
             // connection files

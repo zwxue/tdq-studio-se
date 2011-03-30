@@ -71,7 +71,7 @@ public class TreeMessageInfoDialog extends MessageDialog {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    isChecked = true;
+                    isChecked = checkButton.getSelection();
                 }
 
             });
