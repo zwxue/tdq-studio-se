@@ -16,6 +16,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.talend.core.model.properties.Item;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
@@ -73,8 +76,8 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
      */
     @Override
     public void openEditor(Item item) {
-        // TODO Auto-generated method stub
-
+        AnalysisItemEditorInput itemEditorInput = new AnalysisItemEditorInput(item);
+        CorePlugin.getDefault().openEditor(itemEditorInput, AnalysisEditor.class.getName());
     }
     
     
