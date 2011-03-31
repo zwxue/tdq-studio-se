@@ -73,6 +73,11 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 for (Object object : tempList) {
                     if (object instanceof DBTableRepNode) {
                         DBTableRepNode tableNode = (DBTableRepNode) object;
+                        // MOD klliu if table node is not initialized , then init that . bug 20097 2011-03-31
+                        if (!tableNode.isInitialized()) {
+                            tableNode.getChildren().get(0).getChildren();
+                        }
+                        // ~
                         setList.add(tableNode.getTdTable());
                     }
 //                    if (object instanceof NamedColumnSet) {
