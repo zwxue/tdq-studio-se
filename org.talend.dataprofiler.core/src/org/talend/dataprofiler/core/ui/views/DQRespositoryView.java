@@ -621,7 +621,10 @@ public class DQRespositoryView extends CommonNavigator {
             for (FolderItem folder : new ArrayList<FolderItem>(folderItems)) {
                 if (WorkbenchUtils.isTDQOrMetadataRootFolder(folder)) {
                     ERepositoryObjectType type = WorkbenchUtils.getFolderContentType(folder);
+                    // MOD by zshen to avoid NullPointerException.
+                    if (type != null) {
                     ProxyRepositoryFactory.getInstance().getAll(type, true);
+                    }
                 }
             }
         } catch (PersistenceException e) {

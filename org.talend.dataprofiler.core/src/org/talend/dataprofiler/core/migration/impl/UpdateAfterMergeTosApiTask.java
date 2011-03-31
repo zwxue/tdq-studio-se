@@ -112,6 +112,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     // MOD klliu 2011-03-17 bug 19085
     private Map<String, String> replaceDefnitionNameInAnaMap;
 
+    // MOD zshen 2011-03-29 to resolve windows filename can't contain "< > : " ? | \ /" charactor.
+    private static final boolean WINDOWS = java.io.File.separatorChar == '\\';
+
     public UpdateAfterMergeTosApiTask() {
         init();
     }
@@ -653,6 +656,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                             setReplaceChildNameForAna(modelElement);
                         }
                         // ~
+                        String modelName = checkName(modelElement, fullPathFolder);
+                        modelElement.setName(modelName);
+
                         // create new file
                         ElementWriterFactory.getInstance().createPatternWriter().create(modelElement, fullPathFolder, isImport);
                         // record the replace information
@@ -669,6 +675,50 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 
+     * zshen Comment method "checkName".
+     * 
+     * @param fileName
+     * @return valid name under windows OS. to check whether fileName is adapt to windows OS and change add one after
+     * the name if the name has been exist.
+     */
+    private String checkName(ModelElement modelElement, IFolder baseFolder) {
+
+        if (modelElement == null || modelElement.eIsProxy() || modelElement.getName() == null) {
+            return "";
+        }
+        IPath filepath = new Path(modelElement.eResource().getURI().toPlatformString(false));
+        String fileName = modelElement.getName().toLowerCase();
+        String[] arrayStr = filepath.toOSString().split("_");
+        if(WINDOWS){
+            char[] characterStrArray = { '<', '>', ':', '"', '?', '|', '\\', '/', ' ' };
+            for (char replaceChar : characterStrArray) {
+                fileName = fileName.replace(replaceChar, '_');
+            }
+        }
+        if (fileName.equalsIgnoreCase("Column_Analysis")) {
+            System.out.println("");
+        }
+        while (baseFolder.findMember(fileName + "_" + arrayStr[arrayStr.length - 1]) != null) {
+            int len = fileName.length();
+            String lastChar = fileName.substring(len - 1);
+            // String lastSegmentStr = filepath.lastSegment();
+
+            try {
+
+                // fileName.substring(0, len - 1) + (++num);
+                int num = Integer.valueOf(lastChar);
+                // lastSegmentStr.replaceFirst(fileName, fileName.substring(0, len - 1) + (++num));
+                fileName = fileName.substring(0, len - 1) + (++num);
+            } catch (NumberFormatException e) {
+                // lastSegmentStr.replaceFirst(fileName, fileName + 1);
+                fileName = fileName + 1;
+            }
+        }
+        return fileName;
     }
 
     // MOD klliu 2011-03-17 bug 19085

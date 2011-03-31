@@ -325,7 +325,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                 ProxyRepositoryFactory.getInstance().create(item, path, true);
 
             } else {
-                connNameAfter = copyFile(targetFolder, propFile, property, path, connNameAfter, folderMap);
+                connNameAfter = copyFile(targetFolder, propFile, property, path, connNameAfter, connName, folderMap);
             }
 
             if (connNameBofore != null && connNameAfter != null) {
@@ -335,9 +335,10 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     }
 
     private String copyFile(File targetFolder, File propFile, Property property, IPath path, String connNameAfter,
+            String connName,
             Map<File, File> folderMap) throws IOException {
 
-        String connName = null;
+
 
         File destItemFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter)
                 .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
@@ -349,43 +350,44 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         File srcPropFile = propFile;
         Item item = property.getItem();
         // MOD by zshen to resolve repetitious name question(any time it should't come in here)
-        if (destItemFile.exists()) {
-            int num = 0;
-
-            if (item instanceof ConnectionItem) {
-
-                Resource itemResource = getResource(srcItemFile.getAbsolutePath());
-                Connection conn = null;
-                for (EObject object : itemResource.getContents()) {
-                    if (object instanceof Connection) {
-                        conn = (Connection) object;
-                        connName = conn.getName();
-
-                    }
-                }
-
-                // ~
-                while (destItemFile.exists() || destPropFile.exists()) {
-                    String version = property.getVersion();
-                    if (version == null) {
-                        version = "0.1";
-                    }
-
-                    connName = connName + String.valueOf(++num);
-                    conn.setName(connName);
-                    connNameAfter = connName + "_" + version;
-                    destItemFile = new Path(destItemFile.getPath()).removeLastSegments(1).append(connNameAfter)
-                            .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
-                    destPropFile = new Path(destPropFile.getPath()).removeLastSegments(1).append(connNameAfter)
-                            .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
-                    // TODO change connection property path
-
-                }
-                // EMFUtil.saveResource(itemResource);
-            }
-        }
         FileUtils.copyFile(srcItemFile, destItemFile);
         FileUtils.copyFile(srcPropFile, destPropFile);
+        // if (destItemFile.exists()) {
+        // int num = 0;
+        //
+        // if (item instanceof ConnectionItem) {
+        //
+        // Resource itemResource = getResource(srcItemFile.getAbsolutePath());
+        // Connection conn = null;
+        // for (EObject object : itemResource.getContents()) {
+        // if (object instanceof Connection) {
+        // conn = (Connection) object;
+        // connName = conn.getName();
+        // break;
+        // }
+        // }
+        //
+        // // ~
+        // while (destItemFile.exists() || destPropFile.exists()) {
+        // String version = property.getVersion();
+        // if (version == null) {
+        // version = "0.1";
+        // }
+        //
+        // connName = connName + String.valueOf(++num);
+        // conn.setName(connName);
+        // connNameAfter = connName + "_" + version;
+        // destItemFile = new Path(destItemFile.getPath()).removeLastSegments(1).append(connNameAfter)
+        // .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
+        // destPropFile = new Path(destPropFile.getPath()).removeLastSegments(1).append(connNameAfter)
+        // .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+        // // TODO change connection property path
+        //
+        // }
+        // // EMFUtil.saveResource(itemResource);
+        // }
+        // }
+
 
         if (item instanceof ConnectionItem) {
             ConnectionItem connectionItem = (ConnectionItem) item;

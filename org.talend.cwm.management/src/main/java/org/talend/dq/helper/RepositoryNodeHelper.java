@@ -1435,15 +1435,16 @@ public final class RepositoryNodeHelper {
             return null;
         }
         IRepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
-        for (int i = 1; folderPathArray.length > i; i++) {
-            for (IRepositoryNode childNode : node.getChildren()) {
-                if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
-                    node = childNode;
-                    break;
+        if (node != null) {
+            for (int i = 1; folderPathArray.length > i; i++) {
+                for (IRepositoryNode childNode : node.getChildren()) {
+                    if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
+                        node = childNode;
+                        break;
+                    }
                 }
             }
         }
-
         return node;
     }
 
@@ -1454,15 +1455,16 @@ public final class RepositoryNodeHelper {
         }
 
         IRepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING);
-        for (int i = 1; folderPathArray.length > i; i++) {
-            for (IRepositoryNode childNode : node.getChildren()) {
-                if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
-                    node = childNode;
-                    break;
+        if (node != null) {
+            for (int i = 1; folderPathArray.length > i; i++) {
+                for (IRepositoryNode childNode : node.getChildren()) {
+                    if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
+                        node = childNode;
+                        break;
+                    }
                 }
             }
         }
-
         return node;
     }
 
@@ -1473,15 +1475,16 @@ public final class RepositoryNodeHelper {
         }
 
         IRepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);
-        for (int i = 1; folderPathArray.length > i; i++) {
-            for (IRepositoryNode childNode : node.getChildren()) {
-                if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
-                    node = childNode;
-                    break;
+        if (node != null) {
+            for (int i = 1; folderPathArray.length > i; i++) {
+                for (IRepositoryNode childNode : node.getChildren()) {
+                    if (childNode.getObject().getLabel().equalsIgnoreCase(folderPathArray[i])) {
+                        node = childNode;
+                        break;
+                    }
                 }
             }
         }
-
         return node;
     }
 
@@ -1627,7 +1630,8 @@ public final class RepositoryNodeHelper {
         // ~2011-03-22
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (activeWorkbenchWindow != null) {
-            IWorkbenchPart activePart = activeWorkbenchWindow.getActivePage().getActivePart();
+            IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+            IWorkbenchPart activePart = activePage == null ? null : activePage.getActivePart();
             if (activePart != null && activePart.getTitle().equals(DI_REPOSITORY_NAME)) {
                 return getRootNode(nodeName, true);
             }
