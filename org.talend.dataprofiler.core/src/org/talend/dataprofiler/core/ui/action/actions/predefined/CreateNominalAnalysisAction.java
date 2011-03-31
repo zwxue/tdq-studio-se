@@ -36,6 +36,8 @@ import org.talend.utils.sql.TalendTypeConvert;
  */
 public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisAction {
 
+    private boolean addTextIndicator;
+
     public CreateNominalAnalysisAction() {
         super(DefaultMessagesImpl.getString("CreateNominalAnalysisAction.nominalAnalysis"), null); //$NON-NLS-1$
     }
@@ -43,12 +45,16 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
     @Override
     public ModelElementIndicator[] getPredefinedColumnIndicator() {
 
-        IndicatorEnum[] allwedEnumes = new IndicatorEnum[3];
-        allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
-        allwedEnumes[1] = IndicatorEnum.TextIndicatorEnum;
-        allwedEnumes[2] = IndicatorEnum.FrequencyIndicatorEnum;
+        // MOD qiongli 2011-3-31,bug 19810.if contain none-nominal data,don't add TextIndicator.
+        List<IndicatorEnum> allwedEnumeLs = new ArrayList<IndicatorEnum>();
+        allwedEnumeLs.add(IndicatorEnum.CountsIndicatorEnum);
+        allwedEnumeLs.add(IndicatorEnum.FrequencyIndicatorEnum);
+        if (addTextIndicator) {
+            allwedEnumeLs.add(IndicatorEnum.TextIndicatorEnum);
+        }
+        IndicatorEnum[] allwedEnumeArray = (IndicatorEnum[]) allwedEnumeLs.toArray(new IndicatorEnum[allwedEnumeLs.size()]);
 
-        return composePredefinedColumnIndicator(allwedEnumes);
+        return composePredefinedColumnIndicator(allwedEnumeArray);
     }
 
     @Override
@@ -60,12 +66,13 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
     @Override
     protected boolean preDo() {
         List<MetadataColumn> tempList = new ArrayList<MetadataColumn>();
-
+        addTextIndicator = true;
         for (IRepositoryNode repositoryNode : getColumns()) {
             MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
             int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
             if (!Java2SqlType.isTextInSQL(javaSQLType)) {
                 tempList.add(column);
+                addTextIndicator = false;
             }
         }
 
