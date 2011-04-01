@@ -89,6 +89,7 @@ import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
 import org.talend.dataprofiler.core.ui.ResoureceChangedListener;
+import org.talend.dataprofiler.core.ui.action.actions.EditFileDelimitedAction;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditorInput;
@@ -102,6 +103,7 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -111,6 +113,7 @@ import org.talend.dq.nodes.foldernode.AbstractFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -381,7 +384,13 @@ public class DQRespositoryView extends CommonNavigator {
                             } catch (Throwable e1) {
                                 log.error(e1, e1);
                             }
-                        } else {
+                        }
+                        // MOD gdbu 2011-4-1 bug 20051
+                        else if (obj instanceof DFConnectionRepNode) {
+                            new EditFileDelimitedAction((IRepositoryNode) obj).run();
+                        }
+                        // ~20051
+                        else {
                             RepositoryNode repoNode = (RepositoryNode) obj;
                             if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
                                 OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());

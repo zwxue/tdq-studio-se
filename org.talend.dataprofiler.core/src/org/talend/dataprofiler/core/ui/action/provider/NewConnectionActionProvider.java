@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDBConnectionAction;
@@ -56,11 +55,11 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
             return;
         }
 
-        Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+		//MOD gdbu 2011-4-1 bug 20051
+        RepositoryNode node = (RepositoryNode) getFistContextNode();
 
-        if (obj instanceof RepositoryNode) {
-            RepositoryNode node = (RepositoryNode) obj;
-
+        if (node != null) {
+		//~20051
             IAction action = null;
             if (node instanceof DBConnectionFolderRepNode) {
                 action = new CreateDBConnectionAction(node);

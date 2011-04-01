@@ -701,6 +701,15 @@
              </or>
           </enablement>
        </actionProvider>
+       <actionProvider
+             class="org.talend.dataprofiler.core.ui.action.provider.FileDelimitedContextActionProvider"
+             id="org.talend.dataprofiler.core.ui.action.provider.FileDelimitedContextActionProvider">
+          <enablement>
+             <instanceof
+                   value="org.talend.dq.nodes.DFConnectionRepNode">
+             </instanceof>
+          </enablement>
+       </actionProvider>
   </extension>
     
       

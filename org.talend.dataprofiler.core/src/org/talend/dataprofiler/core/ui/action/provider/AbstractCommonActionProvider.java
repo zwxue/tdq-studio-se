@@ -15,9 +15,11 @@ package org.talend.dataprofiler.core.ui.action.provider;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * 
@@ -50,6 +52,36 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
                     return (IMenuManager) item;
                 }
             }
+        }
+
+        return null;
+    }
+    
+    /**
+     * 
+     * MOD bzhou 2011-4-1 bug 20051
+     * 
+     * DOC bzhou Comment method "getContextObject".
+     * 
+     * @return
+     */
+    protected Object getContextObject() {
+        return ((TreeSelection) this.getContext().getSelection()).getFirstElement();
+    }
+
+    /**
+     * 
+     * MOD bzhou 2011-4-1 bug 20051
+     * 
+     * DOC bzhou Comment method "getFistContextNode".
+     * 
+     * @return
+     */
+    protected IRepositoryNode getFistContextNode() {
+        Object object = getContextObject();
+
+        if (object instanceof IRepositoryNode) {
+            return (IRepositoryNode) object;
         }
 
         return null;
