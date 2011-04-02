@@ -27,7 +27,6 @@ import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -95,7 +94,7 @@ public class CWMPlugin extends Plugin {
                     // String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
                     String user = JavaSqlFactory.getUsernameDefault(connection);
                     // MOD gdbu 2011-3-17 bug 19539
-                    String password = ConnectionHelper.getEncryptPassword(JavaSqlFactory.getPassword(connection));
+                    String password = JavaSqlFactory.getPassword(connection);
                     // ~19539
                     // ~ 14593
 

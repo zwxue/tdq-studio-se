@@ -29,6 +29,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.talend.cwm.helper.ConnectionHelper;
 
 /**
  * Represents a username and password combo used to connect to an alias; contains
@@ -107,7 +108,9 @@ public class User implements Comparable<User>, SessionEstablishedListener {
 	public Element describeAsXml() {
 		Element root = new DefaultElement(USER);
 		root.addElement(USER_NAME).setText(userName);
-		root.addElement(PASSWORD).setText(password);
+        // MOD mzhao bug:19539 Encript the password
+        root.addElement(PASSWORD).setText(ConnectionHelper.getEncryptPassword(password));
+        // ~19539
 		root.addAttribute(AUTO_COMMIT, Boolean.toString(autoCommit));
 		root.addAttribute(COMMIT_ON_CLOSE, Boolean.toString(commitOnClose));
 		return root;

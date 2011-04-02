@@ -36,6 +36,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultElement;
+import org.talend.cwm.helper.ConnectionHelper;
 
 /**
  * Maintains the list of Alias objects
@@ -65,14 +66,43 @@ public class AliasManager implements ConnectionListener {
 				if (root.getName().equals("Beans"))
 					root = convertToV350(root);
 				List<Element> list = root.elements(Alias.ALIAS);
+                // MOD mzhao bug:19539 Judge if the alias need to save again because it was not encripted in previouse
+                // workspace. (before
+                // 4.2)
+                Boolean needToSave = false;
 				if (list != null)
-					for (Element elem : list)
-						addAlias(new Alias(elem));
+                    for (Element elem : list) {
+                        Alias alias = new Alias(elem);
+                        Boolean needToSaveUnit = getDecryptUser(alias.getDefaultUser());
+                        if (!needToSave) {
+                            needToSave = needToSaveUnit;
+                        }
+                        addAlias(alias);
+                    }
+                if (needToSave) {
+                    saveAliases();
+                }
+                // ~ 19539
 			}
 		}catch(DocumentException e) {
 			throw new ExplorerException(e);
 		}
 	}
+
+    private Boolean getDecryptUser(User user) throws ExplorerException {
+        Boolean needToSave = Boolean.FALSE;
+        if (user.getPassword() == null || user.getPassword().trim().equals("")) { //$NON-NLS-1$ 
+            return needToSave;
+        }
+        String decPassword = ConnectionHelper.getDecryptPassword(user.getPassword());
+        if (decPassword != null) {
+            user.setPassword(ConnectionHelper.getDecryptPassword(user.getPassword()));
+        } else {
+            needToSave = Boolean.TRUE;
+        }
+        return needToSave;
+    }
+
 
 	/**
 	 * Saves all the Aliases to the users preferences
@@ -80,9 +110,9 @@ public class AliasManager implements ConnectionListener {
 	 */
 	public void saveAliases() throws ExplorerException {
 		DefaultElement root = new DefaultElement(Alias.ALIASES);
-		for (Alias alias : aliases.values())
+        for (Alias alias : aliases.values()) {
 			root.add(alias.describeAsXml());
-
+        }
 		try {
 			FileWriter writer = new FileWriter(new File(ApplicationFiles.USER_ALIAS_FILE_NAME));
 			OutputFormat format = OutputFormat.createPrettyPrint();
@@ -95,6 +125,7 @@ public class AliasManager implements ConnectionListener {
 		}
 	}
 	
+
 	/**
 	 * Adds an Alias
 	 * @param alias
