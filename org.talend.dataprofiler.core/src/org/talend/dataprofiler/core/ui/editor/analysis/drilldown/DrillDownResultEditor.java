@@ -52,6 +52,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 
 /**
  * 
@@ -305,8 +306,10 @@ public class DrillDownResultEditor extends EditorPart {
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
         public String getColumnText(Object element, int columnIndex) {
-            // TODO Auto-generated method stub
 
+            // MOD qiongli 2011-3-31,bug 20033,avoid ArrayIndexOutOfBoundsException
+            if (columnIndex >= ((Object[]) element).length)
+                return PluginConstant.EMPTY_STRING;
             Object object = ((Object[]) element)[columnIndex];
             if (object != null) {
                 return object.toString();

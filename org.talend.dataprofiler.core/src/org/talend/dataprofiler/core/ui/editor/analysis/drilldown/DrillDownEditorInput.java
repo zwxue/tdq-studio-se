@@ -194,7 +194,8 @@ public class DrillDownEditorInput implements IEditorInput {
             columnValue = new String[0][0];
             return new DataSet(columnHeader, columnValue);
         }
-        columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
+        // columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
+        columnValue = new String[newColumnElementList.size()][columnElementList.size()];
         int rowIndex = 0;
         for (Object[] tableRow : newColumnElementList) {
             int columnIndex = 0;
@@ -247,10 +248,9 @@ public class DrillDownEditorInput implements IEditorInput {
                 returnDataList = dataList;
 
             } else {
-                if (analysisElement instanceof TdColumn) {
-                    List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysisElement
-                            .eContainer()));
-
+                if (analysisElement instanceof MetadataColumn) {
+                    MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
+                    List<MetadataColumn> columnElementList = mTable.getColumns();
                     offset = columnElementList.indexOf(analysisElement);
                 } else if (analysisElement instanceof TdXmlElementType) {
                     TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper

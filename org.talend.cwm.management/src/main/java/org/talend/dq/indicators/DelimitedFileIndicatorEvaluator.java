@@ -16,17 +16,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
@@ -48,6 +52,8 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     private DelimitedFileConnection delimitedFileconnection = null;
 
+    private static Logger log = Logger.getLogger(DelimitedFileIndicatorEvaluator.class);
+
     /**
      * DOC qiongli DelimitedFileIndicatorEvaluator constructor comment.
      * 
@@ -64,9 +70,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         DelimitedFileConnection con = (DelimitedFileConnection) analysis.getContext().getConnection();
         String path = con.getFilePath();
         IPath iPath = new Path(path);
-        // IPath outPut = buildTempCSVFilename(iPath);
-        // CsvArray csvArray = new CsvArray();
-        // List<String[]> rows = null;
 
         CsvReader csvReader = null;
         try {
@@ -80,25 +83,16 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             }
             csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
                     encoding == null ? encoding : encoding)), separator.charAt(1));
-            csvReader.setRecordDelimiter('\n');
-            csvReader.setSkipEmptyRecords(true);
-            csvReader.setTextQualifier('"');
-            csvReader.setEscapeMode(com.csvreader.CsvReader.ESCAPE_MODE_DOUBLED);
-
-            // csvArray.setEncoding(con.getEncoding());
-            // csvArray = csvArray.createFrom(file, con.getEncoding(), separator.charAt(1));
-            //
-            // rows = csvArray.getRows();
-            // } catch (IOException e) {
-            // e.printStackTrace();
-            // }
+            initializeCsvReader(csvReader, con);
 
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
             int recordIncrement = 0;
             indicToRowMap.clear();
-            // MetadataTable mTable = null;
-            // label: for (String rowValues[] : rows) {
+
+            // MOD qiongli 2011-4-2,bug 20033
+            boolean isBablyForm = false;
+            List<MetadataColumn> columnElementList = new ArrayList<MetadataColumn>();
             label: while (csvReader.readRecord()) {
                 if (con.isFirstLineCaption() && csvReader.getCurrentRecord() == Long.valueOf("0")) {
                     continue;
@@ -107,17 +101,31 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 Object object = null;
                 element: for (int i = 0; i < analysisElementList.size(); i++) {
                     MetadataColumn mColumn = (MetadataColumn) analysisElementList.get(i);
-                    List<Indicator> indicators = getIndicators(mColumn.getLabel());
-                    MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
+                    if (columnElementList.size() == 0) {
+                        MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn);
+                        columnElementList = mTable == null ? columnElementList : mTable.getColumns();
+                    }
                     Integer position = ColumnHelper.getColumnIndex(mColumn);
-                    if (position == null || position >= rowValues.length)
+                    // warning with a file of badly form
+                    if (position == null || position >= rowValues.length) {
+                        log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData",
+                                StringUtils.join(rowValues, separator.charAt(1))));
+                        if (!isBablyForm) {
+                            isBablyForm = true;
+                            Display.getDefault().asyncExec(new Runnable() {
+
+                                public void run() {
+                                    MessageDialog.openWarning(null,
+                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),
+                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));
+                                }
+                            });
+                        }
                         continue;
-                    if (position >= rowValues.length) {
-                        object = PluginConstant.EMPTY_STRING;
-                    } else {
-                        object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
                     }
 
+                    object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
+                    List<Indicator> indicators = getIndicators(mColumn.getLabel());
                     for (Indicator indicator : indicators) {
                         if (!continueRun()) {
                             break label;
@@ -153,10 +161,9 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                                 && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
                             List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator)
                                     .getData();
-                            if (mTable == null) {
+                            if (columnElementList.size() == 0) {
                                 continue;
                             }
-                            List<MetadataColumn> columnElementList = mTable.getColumns();
                             int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
                             for (Object[] dataObject : removeValueObjectList) {
                                 if (dataObject[offsetting].equals(object)) {
@@ -172,6 +179,10 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (csvReader != null) {
+                csvReader.close();
+            }
         }
         return returnCode;
     }
@@ -197,6 +208,31 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             return new ReturnCode(Messages.getString("Evaluator.openNullConnection"), false); //$NON-NLS-1$
         }
         return new ReturnCode(true);
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "initializeCsvReader".
+     * 
+     * @param csvReader
+     * @param connection
+     */
+    private void initializeCsvReader(CsvReader csvReader, DelimitedFileConnection connection) {
+        csvReader.setRecordDelimiter('\n');
+        csvReader.setSkipEmptyRecords(true);
+        String textEnclosure = connection.getTextEnclosure();
+        if (textEnclosure != null && textEnclosure.length() > 0) {
+            csvReader.setTextQualifier(textEnclosure.charAt(0));
+        } else {
+            csvReader.setUseTextQualifier(false);
+        }
+        String escapeChar = connection.getEscapeChar();
+        if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) {
+            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
+        } else {
+            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
+        }
+
     }
 
 }

@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.xml.rpc.ServiceException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
@@ -34,6 +35,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -202,7 +205,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         File file = iPath.toFile();
         String separator = con.getFieldSeparatorValue();
         String encoding = con.getEncoding();
-        int maxNumberRows=analysis.getParameters().getMaxNumberRows();
         if (!file.exists()) {
             returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false);
             return returnCode;
@@ -214,21 +216,28 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
             csvReader.setRecordDelimiter('\n');
             csvReader.setSkipEmptyRecords(true);
-            csvReader.setTextQualifier('"');
-            csvReader.setEscapeMode(com.csvreader.CsvReader.ESCAPE_MODE_DOUBLED);
+            String textEnclosure = con.getTextEnclosure();
+            if (textEnclosure != null && textEnclosure.length() > 0) {
+                csvReader.setTextQualifier(textEnclosure.charAt(0));
+            } else {
+                csvReader.setUseTextQualifier(false);
+            }
+            String escapeChar = con.getEscapeChar();
+            if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) {
+                csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
+            } else {
+                csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
+            }
 
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
             indicToRowMap.clear();
+            boolean isBablyForm = false;
             while (csvReader.readRecord()) {
                 long currentRow = csvReader.getCurrentRecord();
                 if (con.isFirstLineCaption() && currentRow == Long.valueOf("0")) {
                     continue;
                 }
-                // if (con.isFirstLineCaption() && currentRow > maxNumberRows || !con.isFirstLineCaption()
-                // && currentRow >= maxNumberRows) {
-                // break;
-                // }
                 String[] rowValues = csvReader.getValues();
                 Object object = null;
                 EList<Object> objectLs = new BasicEList<Object>();
@@ -236,13 +245,24 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 for (int i = 0; i < analysisElementList.size(); i++) {
                     mColumn = (MetadataColumn) analysisElementList.get(i);
                     Integer position = ColumnHelper.getColumnIndex(mColumn);
-                    if (position == null)
+                    // MOD qiongli 2011-4-2,bug 20033,warning with a badly form file
+                    if (position == null || position >= rowValues.length) {
+                        log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData",
+                                StringUtils.join(rowValues, separator.charAt(1))));
+                        if (!isBablyForm) {
+                            isBablyForm = true;
+                            Display.getDefault().asyncExec(new Runnable() {
+
+                                public void run() {
+                                    MessageDialog.openWarning(null,
+                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),
+                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));
+                                }
+                            });
+                        }
                         continue;
-                    if (position >= rowValues.length) {
-                        object = PluginConstant.EMPTY_STRING;
-                    } else {
-                        object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
                     }
+                    object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
                     // if (object == null) {
                     // continue;
                     // }
