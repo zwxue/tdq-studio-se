@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
@@ -52,6 +53,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
@@ -70,10 +72,12 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -170,19 +174,27 @@ public final class PatternUtilities {
         if (theEdit != null && theEdit instanceof AnalysisEditor && analysis.getContext().getConnection() == null) {
             theEdit.doSave(null);
         }
-
+        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
-        boolean isJavaEngin = ExecutionLanguage.JAVA.equals(analysis.getParameters().getExecutionLanguage());
+        boolean isJavaEngin = ExecutionLanguage.JAVA.equals(executionLanguage);
         Expression returnExpression = dbmsLanguage.getRegexp(pattern, isJavaEngin);
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && returnExpression == null) {
-            // this is when we must tell the user that no regular expression
-            // exists for the selected database
-            // MessageDialogWithToggle.openInformation(null,
-            //                    DefaultMessagesImpl.getString("PatternUtilities.Pattern"), DefaultMessagesImpl //$NON-NLS-1$
-            //                            .getString("PatternUtilities.noRegexForDB")); //$NON-NLS-1$
+            String executeType = isJavaEngin ? executionLanguage.getName() : dbmsLanguage.getDbmsName();
+            boolean openPattern = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    "warning",
+ "no " + executeType + " expression found in this pattern. Would you like to add one?");
+            if (openPattern) {
+                RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.recursiveFind(pattern);
+                if (RepositoryNodeHelper.canOpenEditor(node)) {
+                    new OpenItemEditorAction(node).run();
+                }
+            }
             result.setOk(false);
-            result.setMessage(DefaultMessagesImpl.getString("PatternUtilities.noRegexForDB")); //$NON-NLS-1$
             return result;
+        }
+        String javaRexex = DomainHelper.getJavaRegexp(pattern);
+        if (javaRexex == null) {
+
         }
         // TODO Currently the previous condition checks only whether there exist
         // a regular expression for the analyzed

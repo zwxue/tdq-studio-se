@@ -285,7 +285,8 @@ public class ColumnViewerDND {
                         TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
                         if (trc.isOk()) {
                             ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, trc.getObject());
-                        } else {
+                        } else if (trc.getMessage() != null && !trc.getMessage().equals("")) {
+
                             MessageUI.openError(trc.getMessage());
                         }
                     } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
