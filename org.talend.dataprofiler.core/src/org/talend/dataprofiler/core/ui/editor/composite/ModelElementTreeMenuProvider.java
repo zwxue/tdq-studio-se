@@ -32,6 +32,7 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -57,6 +58,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -289,8 +291,15 @@ public abstract class ModelElementTreeMenuProvider {
             Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
             // MOD klliu 2011-02-23 bug 19094 use the unified method to open the file,the parameter is
             // PatternItemEditorInput.
+            Item item = null;
             RepositoryNode patternRecursiveFind = RepositoryNodeHelper.recursiveFind(pattern);
-            Item item = patternRecursiveFind.getObject().getProperty().getItem();
+            if (null == patternRecursiveFind) {
+                Property property = PropertyHelper.getProperty(pattern);
+                item = property.getItem();
+            } else {
+                item = patternRecursiveFind.getObject().getProperty().getItem();
+            }
+
             PatternItemEditorInput analysisEditorInput = new PatternItemEditorInput(item);
             CorePlugin.getDefault().openEditor(analysisEditorInput, PatternEditor.class.getName());
         }

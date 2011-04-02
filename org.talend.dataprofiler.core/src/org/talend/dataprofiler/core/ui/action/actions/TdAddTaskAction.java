@@ -80,6 +80,9 @@ public class TdAddTaskAction extends Action {
                 RepositoryNode node = (RepositoryNode) navObj;
                 modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
                 file = WorkspaceUtils.getModelElementResource(modelElement);
+            } else {
+                modelElement = (ModelElement) navObj;
+                file = WorkspaceUtils.getModelElementResource(modelElement);
             }
             if (modelElement != null) {
                 TdResourceModel tdResModel = new TdResourceModel(file.getFullPath(), (Workspace) file.getWorkspace(),

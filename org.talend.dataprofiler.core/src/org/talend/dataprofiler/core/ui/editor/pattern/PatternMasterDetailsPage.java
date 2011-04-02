@@ -39,6 +39,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -55,6 +56,7 @@ import org.talend.dataquality.domain.pattern.impl.RegularExpressionImpl;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -88,9 +90,13 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     private void initPatternRepNode(Pattern pattern) {
         RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(pattern);
+
         if (recursiveFind != null && recursiveFind instanceof PatternRepNode) {
             this.patternRepNode = (PatternRepNode) recursiveFind;
             this.patternItem = (TDQPatternItem) this.patternRepNode.getObject().getProperty().getItem();
+        } else {
+            Property property = PropertyHelper.getProperty(pattern);
+            this.patternItem = (TDQPatternItem) property.getItem();
         }
     }
 
