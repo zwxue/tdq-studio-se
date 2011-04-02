@@ -748,9 +748,13 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         // MOD yyi 2011-03-22 19460: The "remove elements" option on the contextual menu does not work
         IndicatorUnit unit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
         ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-        deleteColumnItems(meIndicator.getModelElementRepositoryNode());
-        deleteModelElementItems(meIndicator);
-
+        // MOD klliu check the item is column or pattern
+        if (item.getData(COLUMN_INDICATOR_KEY) != null) {
+            deleteColumnItems(meIndicator.getModelElementRepositoryNode());
+        }
+        // we need to romve the RegexMatchingIndicators,it's not ModelElementIndicator.
+        // deleteModelElementItems(meIndicator);
+        // ~
         if (null != unit) {
             meIndicator.removeIndicatorUnit(unit);
             masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
@@ -816,16 +820,15 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * @param deleteModelElementIndiciator
      */
     private void deleteModelElementItems(ModelElementIndicator deleteModelElementIndiciator) {
-        ModelElementIndicator[] remainIndicators = new ModelElementIndicator[modelElementIndicators.length - 1];
-        int i = 0;
+        List<ModelElementIndicator> remainIndicators = new ArrayList<ModelElementIndicator>();
         for (ModelElementIndicator indicator : modelElementIndicators) {
             if (deleteModelElementIndiciator.equals(indicator)) {
                 continue;
             } else {
-                remainIndicators[i] = indicator;
-                i++;
+                remainIndicators.add(indicator);
             }
         }
-        this.modelElementIndicators = remainIndicators;
+
+        this.modelElementIndicators = remainIndicators.toArray(new ModelElementIndicator[remainIndicators.size()]);
     }
 }
