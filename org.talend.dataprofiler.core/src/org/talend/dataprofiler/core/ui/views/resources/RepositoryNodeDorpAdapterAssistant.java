@@ -15,6 +15,9 @@ package org.talend.dataprofiler.core.ui.views.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -34,12 +37,13 @@ import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.jfree.util.Log;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -49,11 +53,15 @@ import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -78,6 +86,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC mzhao Handle drop event of repositoryNode on DQ repository viewer.
  */
 public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssistant {
+
+    protected static Logger log = Logger.getLogger(RepositoryNodeDorpAdapterAssistant.class);
 
     private static final IRepositoryNode[] NO_RESOURCES = new IRepositoryNode[0];
 
@@ -236,7 +246,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     private void moveConnectionRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         IRepositoryViewObject objectToMove = sourceNode.getObject();
         ConnectionItem item = (ConnectionItem) objectToMove.getProperty().getItem();
-        DatabaseConnection connection = (DatabaseConnection) item.getConnection();
+        Connection connection = item.getConnection();
         List<Analysis> analysisList = getAnalysises(connection);
         IPath fullPath = ResourceManager.getReportsFolder().getFullPath();
         if (targetNode.getType() == ENodeType.SIMPLE_FOLDER) {
@@ -267,10 +277,18 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
     private void moveCommonRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         IRepositoryViewObject objectToMove = sourceNode.getObject();
-        ERepositoryObjectType objectType = targetNode.getContentType();
-        IPath fullPath = getNodeFullPath(objectType);
+        ERepositoryObjectType targetObjectType = targetNode.getContentType();
+        IPath fullPath = getNodeFullPath(targetObjectType);
         IPath makeRelativeTo = fullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
         IPath removeLastSegments = makeRelativeTo.removeLastSegments(1);
+        if (ERepositoryObjectType.TDQ_RULES_SQL.equals(targetObjectType)
+                || ERepositoryObjectType.TDQ_ANALYSIS.equals(targetObjectType)
+                || ERepositoryObjectType.TDQ_REPORTS.equals(targetObjectType)
+                || ERepositoryObjectType.METADATA_CONNECTIONS.equals(targetObjectType)
+                || ERepositoryObjectType.METADATA_FILE_DELIMITED.equals(targetObjectType)
+                || ERepositoryObjectType.METADATA_MDMCONNECTION.equals(targetObjectType)) {
+            removeLastSegments = makeRelativeTo;
+        }
         if (targetNode.getType() == ENodeType.SIMPLE_FOLDER) {
             moveObject(objectToMove, sourceNode, targetNode, removeLastSegments);
         } else if (targetNode.getType() == ENodeType.SYSTEM_FOLDER) {
@@ -278,7 +296,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
     }
 
-    private void moveFolderRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+    public void moveFolderRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         FolderHelper folderHelper = instance.getFolderHelper();
         IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
@@ -317,6 +335,68 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         computePath(folderHelper, sourcePath, targetPath, makeRelativeTo, objectType);
     }
 
+    public void renameFolderRepNode(IRepositoryNode folderNode, String label) throws PersistenceException {
+        if (folderNode == null) {
+            return;
+        }
+        String path = null;
+        // IRepositoryViewObject viewObject = folderNode.getObject();
+        IRepositoryNode parentNode = folderNode.getParent();
+        ERepositoryObjectType objectType = folderNode.getContentType();
+        try {
+            // path = viewObject.getProperty().getItem().getState().getPath();
+            path = WorkbenchUtils.getPath(folderNode).makeRelativeTo(new Path(ERepositoryObjectType.getFolderName(objectType)))
+                    .removeLastSegments(1).toString();
+        } catch (Exception e) {
+            log.warn(e, e);
+        }
+        path = path == null ? "" : path;
+        path = path.startsWith(String.valueOf(IPath.SEPARATOR)) ? path : IPath.SEPARATOR + path;
+
+        // create target folder
+        Folder targetFoler = ProxyRepositoryFactory.getInstance()
+                .createFolder(folderNode.getContentType(), new Path(path), label);
+        RepositoryNode targetNode = new RepositoryNode(targetFoler, folderNode.getParent(), ENodeType.SIMPLE_FOLDER);
+        targetNode.setParent(folderNode.getParent());
+
+        // refresh the dq view (if the rename folder havs sub folders, must to refresh before move these sub folders)
+        CorePlugin.getDefault().refreshDQView(parentNode);
+
+        RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
+        FolderHelper folderHelper = instance.getFolderHelper();
+        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) folderNode);
+        String completeNewPath = ERepositoryObjectType.getFolderName(objectType) + path + IPath.SEPARATOR + label;
+
+        // move children from source folder to target folder
+        List<IRepositoryNode> children = folderNode.getChildren();
+        for (IRepositoryNode inode : children) {
+            if (inode.getObject() instanceof Folder) {
+                moveFolderRepNode(inode, targetNode);
+            } else if (inode.getObject() instanceof Connection) {
+                moveConnectionRepNode(inode, targetNode);
+            } else {
+                moveCommonRepNode(inode, targetNode);
+            }
+        }
+
+        // delete source folder
+        try {
+            IFolder folder = ResourceManager.getRootProject().getProject().getFolder(sourcePath);
+            if (folder != null && folder.exists()) {
+                folder.delete(true, null);
+            }
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+
+        // refresh the dq view again(refresh before compute dependencies of TDQ Elements)
+        CorePlugin.getDefault().refreshDQView(parentNode);
+
+        // update the dependencies
+        FolderItem emfFolder = folderHelper.getFolder(completeNewPath);
+        computeDependcy(emfFolder);
+    }
+
     private boolean isSameType(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
         IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
@@ -344,12 +424,15 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             fullPath = ResourceManager.getUDIFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
             fullPath = ResourceManager.getConnectionFolder().getFullPath();
-        }
-        // gdbu 2011-3-16 bug 19537
-        else if (objectType == ERepositoryObjectType.TDQ_ANALYSIS) {
+        } else if (objectType == ERepositoryObjectType.TDQ_ANALYSIS) { // gdbu 2011-3-16 bug 19537
             fullPath = ResourceManager.getAnalysisFolder().getFullPath();
+        } else if (objectType == ERepositoryObjectType.TDQ_REPORTS) {
+            fullPath = ResourceManager.getReportsFolder().getFullPath();
+        } else if (objectType == ERepositoryObjectType.METADATA_FILE_DELIMITED) {
+            fullPath = ResourceManager.getFileDelimitedFolder().getFullPath();
+        } else if (objectType == ERepositoryObjectType.METADATA_MDMCONNECTION) {
+            fullPath = ResourceManager.getMDMConnectionFolder().getFullPath();
         }
-        // ~19537
         return fullPath;
     }
 
@@ -395,13 +478,22 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                             IndicatorDefinition indicatorDefinition = defItem.getIndicatorDefinition();
                             List<Analysis> analysisList = getAnalysises(indicatorDefinition);
                             this.modifyAnaDependency(analysisList, indicatorDefinition);
+                        } else if (childrens[i] instanceof TDQBusinessRuleItem) {
+                            TDQBusinessRuleItem ruleItem = (TDQBusinessRuleItem) childrens[i];
+                            DQRule dqrule = ruleItem.getDqrule();
+                            List<Analysis> analysisList = getAnalysises(dqrule);
+                            this.modifyAnaDependency(analysisList, dqrule);
+                        } else if (childrens[i] instanceof TDQPatternItem) {
+                            TDQPatternItem patternItem = (TDQPatternItem) childrens[i];
+                            Pattern pattern = patternItem.getPattern();
+                            List<Analysis> analysisList = getAnalysises(pattern);
+                            this.modifyAnaDependency(analysisList, pattern);
+                        } else if (childrens[i] instanceof ConnectionItem) {
+                            ConnectionItem connItem = (ConnectionItem) childrens[i];
+                            Connection connection = connItem.getConnection();
+                            List<Analysis> analysisList = getAnalysises(connection);
+                            this.modifyAnaDependency(analysisList, connection);
                         }
-                        // else if (childrens[i] instanceof DatabaseConnectionItem) {
-                        // DatabaseConnectionItem connItem = (DatabaseConnectionItem) childrens[i];
-                        // DatabaseConnection connection = (DatabaseConnection) connItem.getConnection();
-                        // List<Analysis> analysisList = getAnalysises(connection);
-                        // this.modifyAnaDependency(analysisList, connection);
-                        // }
                     }
                 }
             }
@@ -418,8 +510,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             dependencyList = element.getClientDependency();
         } else if (element instanceof IndicatorDefinition) {
             dependencyList = element.getSupplierDependency();
-        } else if (element instanceof DatabaseConnection) {
-            dependencyList = ((DatabaseConnection) element).getSupplierDependency();
+        } else if (element instanceof Connection) {
+            dependencyList = ((Connection) element).getSupplierDependency();
+        } else if (element instanceof Pattern) {
+            dependencyList = ((Pattern) element).getSupplierDependency();
         }
         for (Dependency dep : dependencyList) {
             EList<ModelElement> client = null;
@@ -427,7 +521,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                 client = dep.getSupplier();
             } else if (element instanceof IndicatorDefinition) {
                 client = dep.getClient();
-            } else if (element instanceof DatabaseConnection) {
+            } else if (element instanceof Connection) {
+                client = dep.getClient();
+            } else if (element instanceof Pattern) {
                 client = dep.getClient();
             }
             for (ModelElement ele : client) {
@@ -480,6 +576,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             if (analysisList.size() > 0) {
                 for (Analysis analysis : analysisList) {
                     RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+                    if (recursiveFind == null) {
+                        continue;
+                    }
                     Property property = recursiveFind.getObject().getProperty();
                     TDQAnalysisItem anaItem = (TDQAnalysisItem) property.getItem();
                     // Property property = PropertyHelper.getProperty(analysis);
@@ -492,14 +591,14 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                         dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(anaItem.getAnalysis(),
                                 (IndicatorDefinition) element);
                     } else if (element instanceof DataManager) {
-                        anaItem.getAnalysis();
                         dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(anaItem.getAnalysis(),
                                 (DataManager) element);
+                    } else if (element instanceof Pattern) {
+                        dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(anaItem.getAnalysis(),
+                                (Pattern) element);
                     }
                     if (dependencyReturn.isOk()) {
-
                         factory.save(anaItem, null);
-
                     }
                 }
             }
@@ -584,5 +683,4 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             }
         }
     }
-
 }

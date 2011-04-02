@@ -112,7 +112,8 @@ public final class RepositoryNodeBuilder {
             node.getChildren().add(repFolderNode);
             return repFolderNode;
         case SYSTEM_INDICATORS:
-            SysIndicatorFolderRepNode systemIndicatorFolderNode = new SysIndicatorFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            SysIndicatorFolderRepNode systemIndicatorFolderNode = new SysIndicatorFolderRepNode(folder, node,
+                    ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(systemIndicatorFolderNode);
             node.getChildren().add(systemIndicatorFolderNode);
             return systemIndicatorFolderNode;

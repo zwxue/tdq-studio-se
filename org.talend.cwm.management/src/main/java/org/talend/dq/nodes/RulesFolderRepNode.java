@@ -71,8 +71,8 @@ public class RulesFolderRepNode extends RepositoryNode {
                     continue;
                 }
                 RulesSubFolderRepNode childNodeFolder = new RulesSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
-                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES);
-                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
                 super.getChildren().add(childNodeFolder);
             }
             // rule files
@@ -81,8 +81,8 @@ public class RulesFolderRepNode extends RepositoryNode {
                     continue;
                 }
                 RuleRepNode repNode = new RuleRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
                 viewObject.setRepositoryNode(repNode);
                 super.getChildren().add(repNode);
             }

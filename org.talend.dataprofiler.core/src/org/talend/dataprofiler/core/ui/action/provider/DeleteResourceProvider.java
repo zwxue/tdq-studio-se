@@ -17,6 +17,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.DQDeleteAction;
+import org.talend.dataprofiler.core.ui.action.actions.RenameTdqFolderAction;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -25,6 +26,7 @@ import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -32,13 +34,19 @@ import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
+import org.talend.dq.nodes.PatternRegexSubFolderRepNode;
+import org.talend.dq.nodes.PatternSqlSubFolderRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
+import org.talend.dq.nodes.RulesSubFolderRepNode;
+import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -65,9 +73,29 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
             if (shouldShowDeleteMenu(node)) {
                 // menu.add(new DeleteObjectsAction());
                 menu.add(new DQDeleteAction());
+                if (shouldShowRenameFolderMenu(node)) {
+                    menu.add(new RenameTdqFolderAction(node));
+                }
             }
             // }
         }
+    }
+
+    private boolean shouldShowRenameFolderMenu(RepositoryNode node) {
+        boolean show = false;
+        if (node instanceof AnalysisSubFolderRepNode) {
+            AnalysisSubFolderRepNode anaSubFolderNode = (AnalysisSubFolderRepNode) node;
+            show = !anaSubFolderNode.isVirtualFolder();
+        } else if (node instanceof ReportSubFolderRepNode) {
+            ReportSubFolderRepNode repSubFolderNode = (ReportSubFolderRepNode) node;
+            show = !repSubFolderNode.isVirtualFolder();
+        } else if (node instanceof UserDefIndicatorSubFolderRepNode || node instanceof PatternRegexSubFolderRepNode
+                || node instanceof PatternSqlSubFolderRepNode || node instanceof RulesSubFolderRepNode
+                || node instanceof DBConnectionSubFolderRepNode || node instanceof MDMConnectionSubFolderRepNode
+                || node instanceof DFConnectionSubFolderRepNode) {
+            show = true;
+        }
+        return show;
     }
 
     private boolean shouldShowDeleteMenu(RepositoryNode node) {

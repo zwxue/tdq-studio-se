@@ -12,19 +12,17 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import org.apache.log4j.Logger;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
-public class PatternSqlSubFolderRepNode extends RepositoryNode {
+public class PatternSqlSubFolderRepNode extends PatternSqlFolderRepNode {
 
-    private static Logger log = Logger.getLogger(PatternSqlSubFolderRepNode.class);
     /**
      * DOC klliu PatternSqlSubFolderRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type

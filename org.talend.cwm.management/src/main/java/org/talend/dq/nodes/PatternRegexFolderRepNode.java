@@ -22,7 +22,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -51,44 +50,6 @@ public class PatternRegexFolderRepNode extends RepositoryNode {
         return getChildren(false);
     }
 
-    public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,
-            RepositoryNode node, boolean withDeleted) {
-        RepositoryNode parent = node;
-        for (Object object : patterns.getSubContainer()) {
-            Container container = (Container) object;
-            Property property = (Property) container.getProperty();
-            // Item item = property.getItem();
-            ERepositoryObjectType itemType = ERepositoryObjectType.getTypeFromKey(property.getLabel());
-            if (itemType == null) {
-                itemType = parentItemType;
-            }
-            Folder folder = new Folder(((Property) property), itemType);
-            if (!withDeleted && folder.isDeleted()) {
-                continue;
-            }
-            PatternRegexSubFolderRepNode childNodeFolder = new PatternRegexSubFolderRepNode(folder, parent,
-                    ENodeType.SIMPLE_FOLDER);
-            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            parent.getChildren().add(childNodeFolder);
-            fetchRepositoryNodeByFolder(container, itemType, childNodeFolder, withDeleted);
-        }
-        // not folder or folders have no subFolder
-        for (Object obj : patterns.getMembers()) {
-            RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
-            if (!withDeleted && viewObject.isDeleted()) {
-                continue;
-            }
-            PatternRepNode repNode = new PatternRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-            repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            viewObject.setRepositoryNode(repNode);
-            parent.getChildren().add(repNode);
-
-        }
-        return parent;
-    }
-
     @Override
     public String getLabel() {
         if (this.getObject() != null) {
@@ -99,19 +60,36 @@ public class PatternRegexFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren(boolean withDeleted) {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
-        ERepositoryObjectType contentType = this.getContentType();
         try {
-            RootContainer<String, IRepositoryViewObject> patterns = ProxyRepositoryFactory.getInstance()
+            super.getChildren().clear();
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-
-            // RootContainer<String, IRepositoryViewObject> patterns =
-            // ProxyRepositoryFactory.getInstance().getPatterns(contentType);
-            fetchRepositoryNodeByFolder(patterns, contentType, fetchNodeByFolder, withDeleted);
+            // sub folders
+            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_PATTERN_REGEX);
+                if (!withDeleted && folder.isDeleted()) {
+                    continue;
+                }
+                PatternRegexSubFolderRepNode childNodeFolder = new PatternRegexSubFolderRepNode(folder, this,
+                        ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+                super.getChildren().add(childNodeFolder);
+            }
+            // pattern regex files
+            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+                if (!withDeleted && viewObject.isDeleted()) {
+                    continue;
+                }
+                PatternRepNode repNode = new PatternRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+                viewObject.setRepositoryNode(repNode);
+                super.getChildren().add(repNode);
+            }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-
-        return fetchNodeByFolder.getChildren();
+        return super.getChildren();
     }
 }

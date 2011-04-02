@@ -16,20 +16,19 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.widgets.Display;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * rename tdq folder action.
@@ -41,15 +40,6 @@ public class RenameTdqFolderAction extends Action {
     private IFolder obj;
 
     private RepositoryNode node;
-
-    /**
-     * @param obj a folder
-     * @deprecated
-     */
-    public RenameTdqFolderAction(IFolder obj) {
-        this.obj = obj;
-        setText(DefaultMessagesImpl.getString("RenameTdqFolderAction.renameFolder")); //$NON-NLS-1$
-    }
 
     /**
      * @param node a folder
@@ -73,20 +63,19 @@ public class RenameTdqFolderAction extends Action {
                 });
         if (dialog.open() == InputDialog.OK) {
             String value2 = dialog.getValue();
-            IFolder folder = obj.getParent().getFolder(new Path(value2));
             try {
                 // close opend editors
                 List<SourceFileRepNode> sourceFileRepNodes = RepositoryNodeHelper.getSourceFileRepNodes(node, true);
                 RepNodeUtils.closeModelElementEditor(sourceFileRepNodes, true);
 
-                obj.move(folder.getFullPath(), true, null);
-                ProxyRepositoryManager.getInstance().save();
+                RepositoryNodeDorpAdapterAssistant dndAsistant = new RepositoryNodeDorpAdapterAssistant();
+                dndAsistant.renameFolderRepNode(node, value2);
 
                 // refresh the dq repository view
                 if (node != null && node.getParent() != null) {
                     CorePlugin.getDefault().refreshDQView(node.getParent());
                 }
-            } catch (CoreException e) {
+            } catch (PersistenceException e) {
                 log.error(e, e);
             }
         }
