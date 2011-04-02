@@ -65,6 +65,7 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -212,13 +213,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         CsvReader csvReader = null;
         try {
             csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
-                    encoding == null ? encoding : encoding)), separator.charAt(1));
+                    encoding == null ? encoding : encoding)), ParameterUtil.trimParameter(separator).charAt(0));
 
-            csvReader.setRecordDelimiter('\n');
+            String rowSep = con.getRowSeparatorValue();
+            if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) {
+                csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
+            }
             csvReader.setSkipEmptyRecords(true);
             String textEnclosure = con.getTextEnclosure();
             if (textEnclosure != null && textEnclosure.length() > 0) {
-                csvReader.setTextQualifier(textEnclosure.charAt(0));
+                csvReader.setTextQualifier(ParameterUtil.trimParameter(textEnclosure).charAt(0));
             } else {
                 csvReader.setUseTextQualifier(false);
             }

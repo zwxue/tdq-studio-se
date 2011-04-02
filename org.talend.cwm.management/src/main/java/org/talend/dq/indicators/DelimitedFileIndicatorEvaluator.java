@@ -19,13 +19,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.talend.commons.utils.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -37,6 +37,7 @@ import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -67,23 +68,25 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
     @Override
     protected ReturnCode executeSqlQuery(String sqlStatement) {
         ReturnCode returnCode = new ReturnCode(true);
-        DelimitedFileConnection con = (DelimitedFileConnection) analysis.getContext().getConnection();
-        String path = con.getFilePath();
+        if (delimitedFileconnection == null) {
+            delimitedFileconnection = (DelimitedFileConnection) analysis.getContext().getConnection();
+        }
+        String path = delimitedFileconnection.getFilePath();
         IPath iPath = new Path(path);
 
         CsvReader csvReader = null;
         try {
             // File csvFile = outPut.toFile();
             File file = iPath.toFile();
-            String separator = con.getFieldSeparatorValue();
-            String encoding = con.getEncoding();
+            String separator = delimitedFileconnection.getFieldSeparatorValue();
+            String encoding = delimitedFileconnection.getEncoding();
             if (!file.exists()) {
                 returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false);
                 return returnCode;
             }
             csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
-                    encoding == null ? encoding : encoding)), separator.charAt(1));
-            initializeCsvReader(csvReader, con);
+                    encoding == null ? encoding : encoding)), ParameterUtil.trimParameter(separator).charAt(0));
+            initializeCsvReader(csvReader);
 
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
@@ -94,7 +97,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             boolean isBablyForm = false;
             List<MetadataColumn> columnElementList = new ArrayList<MetadataColumn>();
             label: while (csvReader.readRecord()) {
-                if (con.isFirstLineCaption() && csvReader.getCurrentRecord() == Long.valueOf("0")) {
+                if (delimitedFileconnection.isFirstLineCaption() && csvReader.getCurrentRecord() == Long.valueOf("0")) {
                     continue;
                 }
                 String[] rowValues = csvReader.getValues();
@@ -109,7 +112,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     // warning with a file of badly form
                     if (position == null || position >= rowValues.length) {
                         log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData",
-                                StringUtils.join(rowValues, separator.charAt(1))));
+                                StringUtils.join(rowValues, separator)));
                         if (!isBablyForm) {
                             isBablyForm = true;
                             Display.getDefault().asyncExec(new Runnable() {
@@ -217,16 +220,20 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
      * @param csvReader
      * @param connection
      */
-    private void initializeCsvReader(CsvReader csvReader, DelimitedFileConnection connection) {
-        csvReader.setRecordDelimiter('\n');
+    private void initializeCsvReader(CsvReader csvReader) {
+        String rowSep = delimitedFileconnection.getRowSeparatorValue();
+        if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) {
+            csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
+        }
+
         csvReader.setSkipEmptyRecords(true);
-        String textEnclosure = connection.getTextEnclosure();
+        String textEnclosure = delimitedFileconnection.getTextEnclosure();
         if (textEnclosure != null && textEnclosure.length() > 0) {
-            csvReader.setTextQualifier(textEnclosure.charAt(0));
+            csvReader.setTextQualifier(ParameterUtil.trimParameter(textEnclosure).charAt(0));
         } else {
             csvReader.setUseTextQualifier(false);
         }
-        String escapeChar = connection.getEscapeChar();
+        String escapeChar = delimitedFileconnection.getEscapeChar();
         if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) {
             csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
         } else {
