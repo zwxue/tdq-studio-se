@@ -84,7 +84,7 @@ public class FirstNameStandardize {
     }
 
     public TopDocs getFuzzySearch(String input) throws Exception {
-        Query q = new FuzzyQuery(new Term("name", input), 0.5f, 0);
+        Query q = new FuzzyQuery(new Term("name", input), 0.5f, 2);
         TopDocs matches = searcher.search(q, 10);
         return matches;
     }

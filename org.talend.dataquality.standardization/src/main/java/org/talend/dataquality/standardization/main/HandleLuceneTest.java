@@ -18,6 +18,8 @@ import org.apache.lucene.queryParser.ParseException;
 
 /**
  * DOC klliu class global comment.
+ * 
+ * TODO transform this class to a junit class and move it to the appropriate test project.
  */
 public final class HandleLuceneTest {
 
