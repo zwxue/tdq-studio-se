@@ -107,9 +107,9 @@ public class IndexBuilder {
         if (!new File(csvFileToIndex).exists() || !new File(directoryPath).isDirectory()) {
             throw new IOException(csvFileToIndex + " does not exist or" + directoryPath + " is not a directory");
         }
-        if ((index = FSDirectory.open(new File(directoryPath))) != null) {
-            // System.out.println("index successfully opened in file system");
-        }
+
+        index = FSDirectory.open(new File(directoryPath));
+
         // The same analyzer should be used for indexing and searching
         Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
         // Analyzer analyzer = new StandardAnalyzer();
@@ -158,7 +158,7 @@ public class IndexBuilder {
         }
 
         IndexBuilder ib = new IndexBuilder("data/indexes/" + indexPath);
-        int columnsToIndex[] = { 0, 1 };
+        int[] columnsToIndex = { 0, 1 };
         try {
             ib.initializeSynonymIndex("data/indexes/" + sourceFile, columnsToIndex);
         } catch (IOException e) {
@@ -174,7 +174,7 @@ public class IndexBuilder {
         }
 
         IndexBuilder ib = new IndexBuilder("data/indexes/" + indexPath);
-        int columnsToIndex[] = { 0 };
+        int[] columnsToIndex = { 0 };
         try {
             ib.initializeSynonymIndex("data/indexes/" + sourceFile, columnsToIndex);
         } catch (IOException e) {

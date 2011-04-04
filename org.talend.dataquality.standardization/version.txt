@@ -1,3 +1,6 @@
+1.5.8 # scorreia
+- code cleansing + javadoc added
+
 1.5.7 # scorreia
 - avoid SynonymRecordSearcher to return duplicates
 - removed the limit[] argument from the SynonymRecordSearcher.search method

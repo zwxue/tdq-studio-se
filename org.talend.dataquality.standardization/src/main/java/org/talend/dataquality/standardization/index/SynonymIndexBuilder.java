@@ -44,9 +44,6 @@ public class SynonymIndexBuilder {
 
     private Directory indexDir;
 
-    // FIXME why is this useful? We should not force the creation.
-    // private boolean bUseCreateMode = false;
-
     /**
      * Default synonym separator is '|'.
      */
@@ -120,9 +117,8 @@ public class SynonymIndexBuilder {
     /**
      * insert an entire document into index.
      * 
-     * @param word
-     * @param synonyms
-     * @param separator
+     * @param word the reference word: must not be null
+     * @param synonyms the list of synonyms separated by the separator (can be null)
      * @throws IOException
      */
     public void insertDocument(String word, String synonyms) throws IOException {
@@ -134,7 +130,7 @@ public class SynonymIndexBuilder {
      * insert an entire document into index if it does not already exists.
      * 
      * @param word the reference string
-     * @param synonyms the synonyms
+     * @param synonyms the synonyms (can be null)
      * @return true if inserted, false otherwise
      * @throws IOException
      */
@@ -153,11 +149,10 @@ public class SynonymIndexBuilder {
      * WARNING If some changes in the index are not committed, this may cause trouble to find the document to update.
      * Make sure that a commit has been done before calling this method except if you know exactly what you are doing.
      * 
-     * WARNING聽Beware that if several documents match the word, nothing will be done.
+     * WARNING! Beware that if several documents match the word, nothing will be done.
      * 
-     * @param word
-     * @param synonyms
-     * @param separator
+     * @param word the reference word
+     * @param synonyms the list of synonyms (can be null)
      * @throws IOException
      */
     public int updateDocument(String word, String synonyms) throws IOException {
@@ -215,14 +210,16 @@ public class SynonymIndexBuilder {
     }
 
     /**
-     * Add a synonym to an existing document. If several documents are found given the input word, nothing is done.
+     * Add a synonym to an existing document. If several documents are found given the input word, nothing is done. If
+     * the synonym is null, nothing is done.
      * 
-     * @param word a word
+     * @param word a word (must not be null)
      * @param newSynonym the new synonym to add to the list of synonyms
      * @return 1 if added or 0 if no change has been done
      * @throws IOException
      */
     public int addSynonymToDocument(String word, String newSynonym) throws IOException {
+        assert word != null;
         if (newSynonym == null || newSynonym.length() == 0) {
             return 0;
         }
@@ -272,6 +269,11 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     public int removeSynonymFromDocument(String word, String synonymToDelete) throws IOException {
+        assert word != null;
+        if (synonymToDelete == null) {
+            error.set(false, "The synonym of the word \"" + word + "\" is null");
+            return 0;
+        }
         if (synonymToDelete.toLowerCase().equals(word.toLowerCase())) {
             error.set(false, "The synonym <" + synonymToDelete + "> is similar to the word and will not be removed");
             return 0;
