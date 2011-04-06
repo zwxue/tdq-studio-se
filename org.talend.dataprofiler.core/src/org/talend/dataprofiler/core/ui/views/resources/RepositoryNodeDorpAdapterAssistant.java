@@ -296,7 +296,40 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
     }
 
+    /**
+     * MOD bu gdbu 2011-4-2 bug : 19537
+     * 
+     * DOC gdbu Comment method "canMoveNode".
+     * 
+     * Add the restrictions when Move the folder.
+     * 
+     * @param sourceNode
+     * @param targetNode
+     * @return
+     */
+    private boolean canMoveNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
+        String sourceNodeRelPath = RepositoryNodeHelper.getPath(sourceNode).toString().trim();
+        String targetNodeRelPath = RepositoryNodeHelper.getPath(targetNode).toString().trim();
+        if (sourceNodeRelPath.length() > targetNodeRelPath.length()) {
+            // Move a child node to parent node or child node to move to other branches, allowing moving.
+            return true;
+        }
+        if (sourceNodeRelPath.equals(targetNodeRelPath.substring(0, sourceNodeRelPath.length()))) {
+            // Move a child node to parent node is not allowed.
+            return false;
+        }
+        return true;
+    }
+
     public void moveFolderRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+
+        // MOD bu gdbu 2011-4-2 bug : 19537
+        if (!canMoveNode(sourceNode, targetNode)) {
+            // Doesn't allow the parent node moved to the child node
+            return;
+        }
+        // ~19537
+
         RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         FolderHelper folderHelper = instance.getFolderHelper();
         IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
