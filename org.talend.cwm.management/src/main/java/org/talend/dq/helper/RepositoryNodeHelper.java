@@ -479,18 +479,19 @@ public final class RepositoryNodeHelper {
         // return repNode;
     }
 
-    public static List<DBConnectionRepNode> getDBConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+    public static List<DBConnectionRepNode> getDBConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
+            boolean withDeleted) {
         List<DBConnectionRepNode> result = new ArrayList<DBConnectionRepNode>();
         if (parrentNode != null
                 && (parrentNode instanceof DBConnectionFolderRepNode || parrentNode instanceof DBConnectionSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren();
+            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof DBConnectionRepNode) {
                         result.add((DBConnectionRepNode) inode);
                     } else if (inode instanceof DBConnectionFolderRepNode || inode instanceof DBConnectionSubFolderRepNode) {
                         if (recursiveFind) {
-                            result.addAll(getDBConnectionRepNodes(inode, recursiveFind));
+                            result.addAll(getDBConnectionRepNodes(inode, recursiveFind, withDeleted));
                         }
                     }
                 }
@@ -499,18 +500,19 @@ public final class RepositoryNodeHelper {
         return result;
     }
 
-    public static List<MDMConnectionRepNode> getMDMConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+    public static List<MDMConnectionRepNode> getMDMConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
+            boolean withDeleted) {
         List<MDMConnectionRepNode> result = new ArrayList<MDMConnectionRepNode>();
         if (parrentNode != null
                 && (parrentNode instanceof MDMConnectionFolderRepNode || parrentNode instanceof MDMConnectionSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren();
+            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof MDMConnectionRepNode) {
                         result.add((MDMConnectionRepNode) inode);
                     } else if (inode instanceof MDMConnectionFolderRepNode || inode instanceof MDMConnectionSubFolderRepNode) {
                         if (recursiveFind) {
-                            result.addAll(getMDMConnectionRepNodes(inode, recursiveFind));
+                            result.addAll(getMDMConnectionRepNodes(inode, recursiveFind, withDeleted));
                         }
                     }
                 }
@@ -519,18 +521,19 @@ public final class RepositoryNodeHelper {
         return result;
     }
 
-    public static List<DFConnectionRepNode> getDFConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+    public static List<DFConnectionRepNode> getDFConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
+            boolean withDeleted) {
         List<DFConnectionRepNode> result = new ArrayList<DFConnectionRepNode>();
         if (parrentNode != null
                 && (parrentNode instanceof DFConnectionFolderRepNode || parrentNode instanceof DFConnectionSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren();
+            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof DFConnectionRepNode) {
                         result.add((DFConnectionRepNode) inode);
                     } else if (inode instanceof DFConnectionFolderRepNode || inode instanceof DFConnectionSubFolderRepNode) {
                         if (recursiveFind) {
-                            result.addAll(getDFConnectionRepNodes(inode, recursiveFind));
+                            result.addAll(getDFConnectionRepNodes(inode, recursiveFind, withDeleted));
                         }
                     }
                 }
@@ -539,18 +542,20 @@ public final class RepositoryNodeHelper {
         return result;
     }
 
-    public static List<AnalysisRepNode> getAnalysisRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+    // MOD qiongli 2011-4-6,bug 20218,Add parameter 'withDeleted'.
+    public static List<AnalysisRepNode> getAnalysisRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
+            boolean withDeleted) {
         List<AnalysisRepNode> result = new ArrayList<AnalysisRepNode>();
         if (parrentNode != null
                 && (parrentNode instanceof AnalysisFolderRepNode || parrentNode instanceof AnalysisSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren();
+            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof AnalysisRepNode) {
                         result.add((AnalysisRepNode) inode);
                     } else if (inode instanceof AnalysisFolderRepNode || inode instanceof AnalysisSubFolderRepNode) {
                         if (recursiveFind) {
-                            result.addAll(getAnalysisRepNodes(inode, recursiveFind));
+                            result.addAll(getAnalysisRepNodes(inode, recursiveFind, withDeleted));
                         }
                     }
                 }
@@ -559,17 +564,17 @@ public final class RepositoryNodeHelper {
         return result;
     }
 
-    public static List<ReportRepNode> getReportRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+    public static List<ReportRepNode> getReportRepNodes(IRepositoryNode parrentNode, boolean recursiveFind, boolean withDeleted) {
         List<ReportRepNode> result = new ArrayList<ReportRepNode>();
         if (parrentNode != null && (parrentNode instanceof ReportFolderRepNode || parrentNode instanceof ReportSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren();
+            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof ReportRepNode) {
                         result.add((ReportRepNode) inode);
                     } else if (inode instanceof ReportFolderRepNode || inode instanceof ReportSubFolderRepNode) {
                         if (recursiveFind) {
-                            result.addAll(getReportRepNodes(inode, recursiveFind));
+                            result.addAll(getReportRepNodes(inode, recursiveFind, withDeleted));
                         }
                     }
                 }
@@ -579,11 +584,11 @@ public final class RepositoryNodeHelper {
     }
 
     public static List<SysIndicatorDefinitionRepNode> getIndicatorDefinitionRepNodes(IRepositoryNode parrentNode,
-            boolean recursiveFind) {
+            boolean recursiveFind, boolean withDeleted) {
         List<SysIndicatorDefinitionRepNode> result = new ArrayList<SysIndicatorDefinitionRepNode>();
         if (parrentNode != null
                 && (parrentNode instanceof SysIndicatorFolderRepNode || parrentNode instanceof UserDefIndicatorFolderRepNode || parrentNode instanceof UserDefIndicatorSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren();
+            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof SysIndicatorDefinitionRepNode) {
@@ -591,7 +596,7 @@ public final class RepositoryNodeHelper {
                     } else if (inode instanceof SysIndicatorFolderRepNode || inode instanceof UserDefIndicatorFolderRepNode
                             || inode instanceof UserDefIndicatorSubFolderRepNode) {
                         if (recursiveFind) {
-                            result.addAll(getIndicatorDefinitionRepNodes(inode, recursiveFind));
+                            result.addAll(getIndicatorDefinitionRepNodes(inode, recursiveFind, withDeleted));
                         }
                     }
                 }
@@ -600,12 +605,12 @@ public final class RepositoryNodeHelper {
         return result;
     }
 
-    public static List<PatternRepNode> getPatternRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+    public static List<PatternRepNode> getPatternRepNodes(IRepositoryNode parrentNode, boolean recursiveFind, boolean withDeleted) {
         List<PatternRepNode> result = new ArrayList<PatternRepNode>();
         if (parrentNode != null
                 && (parrentNode instanceof PatternRegexFolderRepNode || parrentNode instanceof PatternRegexSubFolderRepNode
                         || parrentNode instanceof PatternSqlFolderRepNode || parrentNode instanceof PatternSqlSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren();
+            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof PatternRepNode) {
@@ -613,7 +618,7 @@ public final class RepositoryNodeHelper {
                     } else if (inode instanceof PatternRegexFolderRepNode || inode instanceof PatternRegexSubFolderRepNode
                             || inode instanceof PatternSqlFolderRepNode || inode instanceof PatternSqlSubFolderRepNode) {
                         if (recursiveFind) {
-                            result.addAll(getPatternRepNodes(inode, recursiveFind));
+                            result.addAll(getPatternRepNodes(inode, recursiveFind, withDeleted));
                         }
                     }
                 }
@@ -622,17 +627,17 @@ public final class RepositoryNodeHelper {
         return result;
     }
 
-    public static List<RuleRepNode> getRuleRepNodes(IRepositoryNode parrentNode, boolean recursiveFind) {
+    public static List<RuleRepNode> getRuleRepNodes(IRepositoryNode parrentNode, boolean recursiveFind, boolean withDeleted) {
         List<RuleRepNode> result = new ArrayList<RuleRepNode>();
         if (parrentNode != null && (parrentNode instanceof RulesFolderRepNode || parrentNode instanceof RulesSubFolderRepNode)) {
-            List<IRepositoryNode> children = parrentNode.getChildren();
+            List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof RuleRepNode) {
                         result.add((RuleRepNode) inode);
                     } else if (inode instanceof RulesFolderRepNode || inode instanceof RulesSubFolderRepNode) {
                         if (recursiveFind) {
-                            result.addAll(getRuleRepNodes(inode, recursiveFind));
+                            result.addAll(getRuleRepNodes(inode, recursiveFind, withDeleted));
                         }
                     }
                 }
@@ -650,7 +655,7 @@ public final class RepositoryNodeHelper {
             return null;
         }
         List<DBConnectionRepNode> dbConnectionRepNodes = getDBConnectionRepNodes(
-                getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS), true);
+                getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS), true, true);
         if (dbConnectionRepNodes.size() > 0) {
             for (DBConnectionRepNode childNode : dbConnectionRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getDatabaseConnection()))) {
@@ -670,7 +675,7 @@ public final class RepositoryNodeHelper {
             return null;
         }
         List<MDMConnectionRepNode> mdmConnectionRepNodes = getMDMConnectionRepNodes(
-                getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS), true);
+                getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS), true, true);
         if (mdmConnectionRepNodes.size() > 0) {
             for (MDMConnectionRepNode childNode : mdmConnectionRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getMdmConnection()))) {
@@ -690,7 +695,7 @@ public final class RepositoryNodeHelper {
             return null;
         }
         List<DFConnectionRepNode> dfConnectionRepNodes = getDFConnectionRepNodes(
-                getMetadataFolderNode(EResourceConstant.FILEDELIMITED), true);
+                getMetadataFolderNode(EResourceConstant.FILEDELIMITED), true, true);
         if (dfConnectionRepNodes.size() > 0) {
             for (DFConnectionRepNode childNode : dfConnectionRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getDfConnection()))) {
@@ -709,7 +714,9 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<AnalysisRepNode> analysisRepNodes = getAnalysisRepNodes(getDataProfilingFolderNode(EResourceConstant.ANALYSIS), true);
+        // MOD qiongli 2011-4-6,bug 20218,add parameter withDeleted(true), contain child is in recycle bin.
+        List<AnalysisRepNode> analysisRepNodes = getAnalysisRepNodes(getDataProfilingFolderNode(EResourceConstant.ANALYSIS),
+                true, true);
         if (analysisRepNodes.size() > 0) {
             for (AnalysisRepNode childNode : analysisRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getAnalysis()))) {
@@ -728,7 +735,7 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<ReportRepNode> reportRepNodes = getReportRepNodes(getDataProfilingFolderNode(EResourceConstant.REPORTS), true);
+        List<ReportRepNode> reportRepNodes = getReportRepNodes(getDataProfilingFolderNode(EResourceConstant.REPORTS), true, true);
         if (reportRepNodes.size() > 0) {
             for (ReportRepNode childNode : reportRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getReport()))) {
@@ -748,9 +755,9 @@ public final class RepositoryNodeHelper {
             return null;
         }
         List<SysIndicatorDefinitionRepNode> indicatorDefinitionRepNodes = getIndicatorDefinitionRepNodes(
-                getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS), true);
+                getLibrariesFolderNode(EResourceConstant.SYSTEM_INDICATORS), true, true);
         indicatorDefinitionRepNodes.addAll(getIndicatorDefinitionRepNodes(
-                getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS), true));
+                getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS), true, true));
         if (indicatorDefinitionRepNodes.size() > 0) {
             for (SysIndicatorDefinitionRepNode childNode : indicatorDefinitionRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getIndicatorDefinition()))) {
@@ -769,8 +776,9 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<PatternRepNode> patternRepNodes = getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX), true);
-        patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL), true));
+        List<PatternRepNode> patternRepNodes = getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX), true,
+                true);
+        patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL), true, true));
         if (patternRepNodes.size() > 0) {
             for (PatternRepNode childNode : patternRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getPattern()))) {
@@ -789,7 +797,7 @@ public final class RepositoryNodeHelper {
         if (uuid == null) {
             return null;
         }
-        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_SQL), true);
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_SQL), true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
                 if (uuid.equals(ResourceHelper.getUUID(childNode.getRule()))) {
