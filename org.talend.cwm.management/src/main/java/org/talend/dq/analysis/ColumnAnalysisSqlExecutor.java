@@ -281,8 +281,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         table = dbms().toQualifiedName(catalogName, schemaName, table);
         // ~11934
 
-
-
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
 
@@ -1013,7 +1011,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
             // MOD xqliu 2009-08-07 bug 6194
             if (canParallel()) {
-                ok = runAnalysisIndicatorsParallel(connection, elementToIndicator, indicators);
+                ok = runAnalysisIndicatorsParallel(analysis, elementToIndicator, indicators);
             } else {
                 ok = runAnalysisIndicators(connection, elementToIndicator, indicators);
             }
@@ -1110,7 +1108,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
          */
         @Override
         protected IStatus run(IProgressMonitor monitor) {
-            // TODO Auto-generated method stub
             ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
                     connection, elementToIndicator, indicator);
             columnSqlParallel.run();
@@ -1129,21 +1126,25 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * executive indicators,replace the original thread in the thread way nested. Each indicator corresponds to a job,
      * after all the indicators executed and then running the main thread.
      * 
-     * @param connection
+     * @param analysis
      * @param elementToIndicator
      * @param indicators
      * @return ok(execution results)
      * @throws SQLException
      */
-    private boolean runAnalysisIndicatorsParallel(Connection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
+    private boolean runAnalysisIndicatorsParallel(Analysis analysis, Map<ModelElement, List<Indicator>> elementToIndicator,
             Collection<Indicator> indicators) throws SQLException {
         // TDQ Guodong bu 2011-2-25, feature 19107
         boolean ok = true;
         List<ExecutiveAnalysisJob> excuteAnalysisJober = new ArrayList<ExecutiveAnalysisJob>();
         for (Indicator indicator : indicators) {
-            ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(this, connection, elementToIndicator, indicator);
-            excuteAnalysisJober.add(eaj);
-            eaj.schedule();
+            // create a new Connection for each ColumnAnalysisSqlParallelExecutor
+            TypedReturnCode<Connection> trcConn = this.getConnection(analysis);
+            if (trcConn.isOk()) {
+                ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(this, trcConn.getObject(), elementToIndicator, indicator);
+                excuteAnalysisJober.add(eaj);
+                eaj.schedule();
+            }
         }
         for (ExecutiveAnalysisJob exeAnaJober : excuteAnalysisJober) {
             try {
