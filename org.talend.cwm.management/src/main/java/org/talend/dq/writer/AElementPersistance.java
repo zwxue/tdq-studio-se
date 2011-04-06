@@ -269,7 +269,7 @@ public abstract class AElementPersistance {
         String status = MetadataHelper.getDevStatus(modelElement);
 
         if (property.getId() == null) {
-        property.setId(EcoreUtil.generateUUID());
+            property.setId(EcoreUtil.generateUUID());
         }
         // MOD qiongli 2011-1-7 delimitedfile connection dosen't use modelElement.getName().
         if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(modelElement) == null) {
@@ -369,28 +369,13 @@ public abstract class AElementPersistance {
 
         if (rc.isOk()) {
             rc.setMessage("save " + element.getName() + " is OK!");
-            notifyResourceChanges();
+            if (withProperty) {
+                notifyResourceChanges();
+            }
         } else {
             rc.setMessage(util.getLastErrorMessage());
         }
 
-        return rc;
-    }
-
-    public ReturnCode save(ModelElement element, boolean... withProperty) {
-        // MOD Use super method to create model element without property.
-        if (withProperty != null && withProperty.length > 0 && !withProperty[0]) {
-            return saveWithoutProperty(element, withProperty);
-        }
-        ReturnCode rc = new ReturnCode();
-        Item item = PropertyHelper.getProperty(element).getItem();
-        try {
-            ProxyRepositoryFactory.getInstance().save(item);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
-        }
         return rc;
     }
 
@@ -517,27 +502,6 @@ public abstract class AElementPersistance {
      * @return
      */
     protected abstract String getFileExtension();
-
-    public ReturnCode saveWithoutProperty(ModelElement element, boolean... withProperty) {
-        ReturnCode rc = new ReturnCode();
-
-        addDependencies(element);
-
-        addResourceContent(element);
-
-        rc.setOk(util.saveResource(element.eResource()));
-
-        updateProperty(element);
-
-        if (rc.isOk()) {
-            rc.setMessage("save " + element.getName() + " is OK!");
-            notifyResourceChanges();
-        } else {
-            rc.setMessage(util.getLastErrorMessage());
-        }
-
-        return rc;
-    }
 
     public abstract ReturnCode save(Item item);
 }

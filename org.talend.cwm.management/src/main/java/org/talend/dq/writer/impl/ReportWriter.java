@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
@@ -27,6 +28,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.RepositoryNode;
@@ -65,9 +67,9 @@ public class ReportWriter extends AElementPersistance {
             TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
             if (dependencyReturn.isOk()) {
                 try {
-                    RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(ana);
-                    if (repositoryNode != null) {
-                        TDQAnalysisItem anaItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty().getItem();
+                    Property property = PropertyHelper.getProperty(ana);
+                    if (property != null) {
+                        TDQAnalysisItem anaItem = (TDQAnalysisItem) property.getItem();
                         anaItem.setAnalysis(ana);
                     }
                     ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()

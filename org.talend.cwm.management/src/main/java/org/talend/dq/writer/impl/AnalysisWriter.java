@@ -25,6 +25,7 @@ import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -42,6 +43,7 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.ProjectManager;
@@ -88,9 +90,9 @@ public class AnalysisWriter extends AElementPersistance {
                     TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
                             udi);
                     if (dependencyReturn.isOk()) {
-                        RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(udi);
-                        if (repositoryNode != null) {
-                            TDQItem udiItem = (TDQItem) repositoryNode.getObject().getProperty().getItem();
+                        Property property = PropertyHelper.getProperty(udi);
+                        if (property != null) {
+                            TDQItem udiItem = (TDQItem) property.getItem();
                             if (udiItem instanceof TDQIndicatorDefinitionItem) {
                                 ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
                             } else if (udiItem instanceof TDQBusinessRuleItem) {
@@ -110,9 +112,9 @@ public class AnalysisWriter extends AElementPersistance {
                     TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(analysis,
                             pattern);
                     if (dependencyReturn.isOk()) {
-                        RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(pattern);
-                        if (repositoryNode != null) {
-                            TDQPatternItem patternItem = (TDQPatternItem) repositoryNode.getObject().getProperty().getItem();
+                        Property property = PropertyHelper.getProperty(pattern);
+                        if (property != null) {
+                            TDQPatternItem patternItem = (TDQPatternItem) property.getItem();
                             patternItem.setPattern(pattern);
                         }
                         ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
