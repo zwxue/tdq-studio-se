@@ -73,7 +73,7 @@ import org.talend.resource.EResourceConstant;
  */
 public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
 
-    private static final String LEFT = "( ";//$NON-NLS-1$
+    private static final String LEFT = "(";//$NON-NLS-1$
 
     private static final String RIGHT = ")";//$NON-NLS-1$
 
