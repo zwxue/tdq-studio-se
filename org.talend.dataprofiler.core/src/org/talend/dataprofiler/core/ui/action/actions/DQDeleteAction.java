@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.actions.ActionFactory;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -230,7 +231,9 @@ public class DQDeleteAction extends DeleteAction {
         // delete dependency.
         if (currentNode != null) {
             RepositoryNode parent = currentNode.getParent();
-            if (parent != null && parent.getType() == ENodeType.SIMPLE_FOLDER) {
+            if (parent != null
+                    && (parent.getType() == ENodeType.SIMPLE_FOLDER || parent.getLabel().equalsIgnoreCase(
+                            ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", " ")))) {
                 parent.getChildren(true).remove(currentNode);
             }
         }
