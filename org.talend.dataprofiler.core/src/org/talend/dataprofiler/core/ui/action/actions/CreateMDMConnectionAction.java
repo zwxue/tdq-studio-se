@@ -19,6 +19,7 @@ import org.talend.core.GlobalServiceRegister;
 import org.talend.core.PluginChecker;
 import org.talend.core.ui.IMDMProviderService;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
@@ -84,7 +85,7 @@ public class CreateMDMConnectionAction extends AbstractMetadataCreationAction {
      */
     @Override
     protected String getActionLabel() {
-        return "Create MDM Conntion";
+        return DefaultMessagesImpl.getString("CreateMDMConnection"); //$NON-NLS-1$
     }
 
 }
