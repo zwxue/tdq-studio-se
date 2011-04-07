@@ -661,7 +661,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         } else {
 
             tdProvider = (Connection) analysis.getContext().getConnection();
-            if (tdProvider != null) {
+            if (tdProvider != null && tdProvider.getSupplierDependency().size() > 0) {
                 tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
                 analysis.getContext().setConnection(null);
                 analysis.getResults().getIndicators().clear();

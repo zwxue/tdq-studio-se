@@ -274,7 +274,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             }
         } else {
             tdDataProvider = (Connection) analysis.getContext().getConnection();
-            if (tdDataProvider != null) {
+            if (tdDataProvider != null && tdDataProvider.getSupplierDependency().size() > 0) {
             tdDataProvider.getSupplierDependency().get(0).getClient().remove(analysis);
             analysis.getContext().setConnection(null);
             analysis.getClientDependency().clear();
