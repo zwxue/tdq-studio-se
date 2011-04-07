@@ -17,12 +17,14 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -62,6 +64,7 @@ import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
@@ -82,101 +85,109 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
     }
 
     public Image getImage(Object element) {
+        Image image = super.getImage(element);
+
         if (element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
             IRepositoryViewObject viewObject = node.getObject();
             ENodeType type = node.getType();
             if (node instanceof ReportAnalysisRepNode) {
-                return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+                image = ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
             }
             if (element instanceof RecycleBinRepNode) {
-                return ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
+                image = ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
             } else if (type.equals(ENodeType.SYSTEM_FOLDER)) {
                 if (viewObject.getLabel().equals(EResourceConstant.DATA_PROFILING.getName())) {
-                    return ImageLib.getImage(ImageLib.DATA_PROFILING);
+                    image = ImageLib.getImage(ImageLib.DATA_PROFILING);
                 } else if (viewObject.getLabel().equals(EResourceConstant.METADATA.getName())) {
-                    return ImageLib.getImage(ImageLib.METADATA);
+                    image = ImageLib.getImage(ImageLib.METADATA);
                 } else if (node instanceof DBConnectionFolderRepNode) {
-                    return ImageLib.getImage(ImageLib.CONNECTION);
+                    image = ImageLib.getImage(ImageLib.CONNECTION);
                 } else if (node instanceof MDMConnectionFolderRepNode) {
-                    return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                    image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
                 } else if (viewObject.getLabel().equals(EResourceConstant.FILEDELIMITED.getName())) {
-                    return ImageLib.getImage(ImageLib.FILE_DELIMITED);
+                    image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
                 } else if (viewObject.getLabel().equals(EResourceConstant.LIBRARIES.getName())) {
-                    return ImageLib.getImage(ImageLib.LIBRARIES);
+                    image = ImageLib.getImage(ImageLib.LIBRARIES);
                 } else if (viewObject.getLabel().equals(EResourceConstant.EXCHANGE.getName())) {
-                    return ImageLib.getImage(ImageLib.EXCHANGE);
+                    image = ImageLib.getImage(ImageLib.EXCHANGE);
+                } else {
+                    image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 }
-                return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             } else if (type.equals(ENodeType.SIMPLE_FOLDER)) {
-                return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+                image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             } else if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
                 if (node instanceof DBConnectionRepNode) {
                     if (!isSupportedConnection(node)) {
-                        return ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
+                        image = ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
                     }
-                    return ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+                    image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (node instanceof MDMConnectionRepNode) {
-                    return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                    image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
                 } else if (node instanceof DFConnectionRepNode) {
-                    return ImageLib.getImage(ImageLib.FILE_DELIMITED);
+                    image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
                 } else if (node instanceof AnalysisRepNode) {
-                    return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+                    image = ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
                 } else if (node instanceof ReportRepNode) {
-                    return ImageLib.getImage(ImageLib.REPORT_OBJECT);
+                    image = ImageLib.getImage(ImageLib.REPORT_OBJECT);
                 } else if (node instanceof SysIndicatorDefinitionRepNode) {
-                    return ImageLib.getImage(ImageLib.IND_DEFINITION);
+                    image = ImageLib.getImage(ImageLib.IND_DEFINITION);
                 } else if (node instanceof PatternRepNode) {
-                    return ImageLib.getImage(ImageLib.PATTERN_REG);
+                    image = ImageLib.getImage(ImageLib.PATTERN_REG);
                 } else if (node instanceof RuleRepNode) {
-                    return ImageLib.getImage(ImageLib.DQ_RULE);
+                    image = ImageLib.getImage(ImageLib.DQ_RULE);
                 } else if (node instanceof SourceFileRepNode) {
-                    return ImageLib.getImage(ImageLib.SOURCE_FILE);
+                    image = ImageLib.getImage(ImageLib.SOURCE_FILE);
                 } else if (node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode) {
-                    return ImageLib.getImage(ImageLib.EXCHANGE);
+                    image = ImageLib.getImage(ImageLib.EXCHANGE);
                 } else if (node instanceof RepositoryNode) {
                     // MOD qiongli 2011-1-18 get image for nodes in recycle bin
-                    Image image = getImageByContentType((RepositoryNode) node);
+                    Image imageNode = getImageByContentType((RepositoryNode) node);
                     if (image != null) {
-                        return image;
+                        image = imageNode;
                     }
+                }
+                // MOD yyi 2011-04-07 19696: "Lock element"
+                if (ERepositoryStatus.LOCK_BY_USER == ProxyRepositoryFactory.getInstance().getStatus(viewObject)) {
+                    image = ImageLib.createLockedIcon(ImageDescriptor.createFromImage(image)).createImage();
                 }
             } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
                 if (node instanceof DBCatalogRepNode) {
-                    return ImageLib.getImage(ImageLib.CATALOG);
+                    image = ImageLib.getImage(ImageLib.CATALOG);
                 } else if (node instanceof DBSchemaRepNode) {
-                    return ImageLib.getImage(ImageLib.SCHEMA);
+                    image = ImageLib.getImage(ImageLib.SCHEMA);
                 } else if (node instanceof DBTableFolderRepNode) {
-                    return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+                    image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 } else if (node instanceof DBViewFolderRepNode) {
-                    return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+                    image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 } else if (node instanceof DBTableRepNode || node instanceof DFTableRepNode) {
-                    return ImageLib.getImage(ImageLib.TABLE);
+                    image = ImageLib.getImage(ImageLib.TABLE);
                 } else if (node instanceof DBViewRepNode) {
-                    return ImageLib.getImage(ImageLib.VIEW);
+                    image = ImageLib.getImage(ImageLib.VIEW);
                 } else if (node instanceof DBColumnRepNode) {
                     if (((DBColumnRepNode) node).isKey()) {
-                        return ImageLib.getImage(ImageLib.PK_COLUMN);
+                        image = ImageLib.getImage(ImageLib.PK_COLUMN);
                     }
-                    return ImageLib.getImage(ImageLib.TD_COLUMN);
+                    image = ImageLib.getImage(ImageLib.TD_COLUMN);
                 } else if (node instanceof DFColumnRepNode) {
 
-                    return ImageLib.getImage(ImageLib.TD_COLUMN);
+                    image = ImageLib.getImage(ImageLib.TD_COLUMN);
                 } else if (node instanceof MDMSchemaRepNode) {
-                    return ImageLib.getImage(ImageLib.XML_DOC);
+                    image = ImageLib.getImage(ImageLib.XML_DOC);
                 } else if (node instanceof MDMXmlElementRepNode) {
-                    return ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
+                    image = ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
                 } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
-                    return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+                    image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
                 }
                 // else if (node instanceof PatternLanguageRepNode) {
                 // return ImageLib.getImage(ImageLib.);
                 // }
             }
+
         }
         // ~
 
-        return super.getImage(element);
+        return image;
     }
 
     public String getText(Object element) {
