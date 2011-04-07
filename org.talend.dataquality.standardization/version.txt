@@ -1,3 +1,6 @@
+1.5.10 # scorreia
+- missing classes added to file.
+
 1.5.9 # sizhaoliu
 - added information for execution error caused by no segments file
 - corrected some user information
