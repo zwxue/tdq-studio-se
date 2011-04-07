@@ -91,7 +91,7 @@ public class SynonymIndexSearcher {
         CheckIndex check = new CheckIndex(indexDir);
         Status status = check.checkIndex();
         if (status.missingSegments) {
-            System.err.println("Cannot initialize searcher: Segments file not found. ");
+            System.err.println("Failed to load index. Please make sure it's not empty.\n");
         }
         this.searcher = new IndexSearcher(indexDir);
     }

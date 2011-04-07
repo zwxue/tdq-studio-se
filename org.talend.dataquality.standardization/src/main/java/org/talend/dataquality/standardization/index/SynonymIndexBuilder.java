@@ -24,6 +24,8 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.TermVector;
+import org.apache.lucene.index.CheckIndex;
+import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
@@ -71,22 +73,12 @@ public class SynonymIndexBuilder {
     }
 
     /**
-     * set a separator for a string which contains synonyms
+     * set a separator for a string which contains synonyms.
      * 
      * @param synonymSeparator
      */
     public void setSynonymSeparator(char synonymSeparator) {
         this.separator = synonymSeparator;
-    }
-
-    /**
-     * Method "setMode".
-     * 
-     * @deprecated this method is not useful and will be removed in a future release.
-     * @param useCreateMode
-     */
-    public void setMode(boolean useCreateMode) {
-        // bUseCreateMode = useCreateMode;
     }
 
     // FIXME not used yet. Need to be implemented
@@ -101,16 +93,17 @@ public class SynonymIndexBuilder {
      */
     public void initIndexInFS(String path) {
 
-        try {
-            File file = new File(path);
+        File file = new File(path);
 
-            if (!file.exists()) {
-                file.mkdirs();
-            }
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        try {
             indexDir = FSDirectory.open(file);
         } catch (IOException e) {
-            error.set(false, e.getMessage());
-            e.printStackTrace();
+            error.set(false, "Failed to load index. Please make sure it's not empty.");
+            // e.printStackTrace();
         }
     }
 
@@ -139,7 +132,7 @@ public class SynonymIndexBuilder {
             getWriter().addDocument(generateDocument(word, synonyms));
             return true;
         } // else
-        error.set(false, "The document is existing, is ingored");
+        error.set(false, "A document with the same reference <" + word + "> exists in the index. Cannot insert.");
         return false;
     }
 
@@ -161,7 +154,7 @@ public class SynonymIndexBuilder {
         switch (docs.totalHits) {
         case 0:
             // FIXME should be create an insertOrUpdate method?
-            error.set(false, "<" + word + "> doesn't exist.");
+            error.set(false, "The document <" + word + "> doesn't exist. Cannot update.");
             break;
         case 1:
             getWriter().updateDocument(new Term(F_WORD, word), generateDocument(word, synonyms));
@@ -170,7 +163,7 @@ public class SynonymIndexBuilder {
         default:
             // FIXME maybe we need to avoid deleting several documents when we just want to update one document (to be
             // tested)
-            error.set(false, "" + docs.totalHits + " matched the given reference word: " + word + ". No change is done.");
+            error.set(false, docs.totalHits + " documents matched the given reference <" + word + ">. No changes have been made.");
             break;
         }
         return nbUpdatedDocuments;
@@ -187,7 +180,7 @@ public class SynonymIndexBuilder {
         TopDocs docs = searchDocumentByWord(word);
         switch (docs.totalHits) {
         case 0:
-            error.set(false, "<" + word + "> doesn't exist.");
+            error.set(false, "<" + word + "> doesn't exist. Cannot delete.");
             return 0;
         case 1:
             getWriter().deleteDocuments(new Term(F_WORD, word));
@@ -237,12 +230,13 @@ public class SynonymIndexBuilder {
             String[] synonyms = doc.getValues(F_SYN);
             for (String str : synonyms) {
                 if (str.toLowerCase().equals(newSynonym.toLowerCase())) {
-                    error.set(false, "The synonym <" + newSynonym + "> is similar to <" + str + ">. Ignored.");
+                    error.set(false, "The synonym <" + newSynonym + "> is equivalent to <" + str + ">. Ignored.");
+                    // FIXME should the synonym be rejected when an equivalent one already exists in the document?
                     synExists = true;
                     break;
                 }
             }
-            // create a new document and replace the original one if synonym does not already exists
+            // create a new document and replace the original one if synonym does not exist
             if (!synExists) {
                 doc.add(createSynField(newSynonym));
                 getWriter().updateDocument(new Term(F_WORD, word), doc);
@@ -251,9 +245,10 @@ public class SynonymIndexBuilder {
             }
         } else {
             if (docs.totalHits == 0) {
-                error.set(false, "The word <" + word + "> doesn't exist. Cannot add.");
+                error.set(false, "The document <" + word + "> doesn't exist. Cannot add any synonym.");
             } else {
-                error.set(false, "Several documents have been found given the word <" + word + ">. Cannot add.");
+                error.set(false, docs.totalHits + " documents matched the given reference <" + word
+                        + ">. No changes have been made.");
             }
         }
         // FIXME avoid use of idxSearcher?
@@ -275,7 +270,8 @@ public class SynonymIndexBuilder {
             return 0;
         }
         if (synonymToDelete.toLowerCase().equals(word.toLowerCase())) {
-            error.set(false, "The synonym <" + synonymToDelete + "> is similar to the word and will not be removed");
+            error.set(false, "The synonym <" + synonymToDelete + "> is equivalent to the reference <" + word
+                    + ">. It cannot be removed");
             return 0;
         }
         int deleted = 0;
@@ -309,7 +305,7 @@ public class SynonymIndexBuilder {
             }
 
         } else {
-            error.set(false, "The word <" + word + "> doesn't exist. Cannot remove.");
+            error.set(false, "The document <" + word + "> doesn't exist in the index. Cannot remove any synonym of it.");
             deleted = 0;
         }
         newSynIdxSearcher.close();
@@ -333,7 +329,6 @@ public class SynonymIndexBuilder {
             File[] filelist = folder.listFiles();
             for (File f : filelist) {
                 if (!deleteIndexFromFS(f.getAbsolutePath()) && allDeleted) {
-                    error.set(false, "Could not delete all files: " + f.getAbsolutePath());
                     allDeleted = false;
                 }
 
@@ -341,24 +336,10 @@ public class SynonymIndexBuilder {
         } // else folder is a file
         allDeleted = folder.delete();
         if (!allDeleted) {
-            error.set(false, "Could not delete all files: " + folder.getAbsolutePath());
+            error.set(false, "Could not delete all index files: " + folder.getAbsolutePath());
         }
         return allDeleted;
     }
-
-    // FIXME remove this method?
-    // private void printSynonymDocument(Document doc) {
-    // String[] word = doc.getValues("word");
-    // for (String string : word) {
-    // System.out.println("word=" + string);
-    // }
-    // String[] values = doc.getValues("syn");
-    // for (String string : values) {
-    // System.out.println("syn=" + string);
-    // }
-    // System.out.println();
-    //
-    // }
 
     /**
      * ADDED BY ytao 2011/02/11 If only need to initialize the index, do nothing after fold open, but just invoke this
@@ -437,7 +418,7 @@ public class SynonymIndexBuilder {
     }
 
     /**
-     * Method "getNumDocs"
+     * Method "getNumDocs".
      * 
      * @return the number of documents or -1 if an error happened
      */
@@ -454,11 +435,18 @@ public class SynonymIndexBuilder {
      * Get a new read-only searcher at each call.
      * 
      * @return
+     * @throws CorruptIndexException
      * @throws IOException
      */
     private IndexSearcher getNewIndexSearcher() throws IOException {
         // FIXME optimization could be done if we use the IndexReader.reopen() method instead of creating a new object
         // at each call.
+
+        CheckIndex check = new CheckIndex(indexDir);
+        Status status = check.checkIndex();
+        if (status.missingSegments) {
+            System.err.println("Failed to load index. Please make sure it's not empty.\n");
+        }
         return new IndexSearcher(indexDir);
     }
 
@@ -473,7 +461,7 @@ public class SynonymIndexBuilder {
     }
 
     /**
-     * generate a document
+     * generate a document.
      * 
      * @param word
      * @param synonyms
@@ -509,17 +497,12 @@ public class SynonymIndexBuilder {
      * @return
      * @throws IOException
      */
-    private TopDocs searchDocumentByWord(String word) {
+    private TopDocs searchDocumentByWord(String word) throws IOException {
         TopDocs docs = null;
-        try {
-            // FIXME can we avoid the creation of a new searcher (use IndexReader.reopen?)
-            SynonymIndexSearcher newSynIdxSearcher = getNewSynIdxSearcher();
-            docs = newSynIdxSearcher.searchDocumentByWord(word);
-            newSynIdxSearcher.close();
-        } catch (IOException e) {
-            error.set(false, e.getMessage());
-            e.printStackTrace();
-        }
+        // FIXME can we avoid the creation of a new searcher (use IndexReader.reopen?)
+        SynonymIndexSearcher newSynIdxSearcher = getNewSynIdxSearcher();
+        docs = newSynIdxSearcher.searchDocumentByWord(word);
+        newSynIdxSearcher.close();
         return docs;
     }
 

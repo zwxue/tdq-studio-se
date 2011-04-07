@@ -1,3 +1,8 @@
+1.5.9 # sizhaoliu
+- added information for execution error caused by no segments file
+- corrected some user information
+- removed the deprecated method setMode()
+
 1.5.8 # scorreia
 - code cleansing + javadoc added
 
