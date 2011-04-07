@@ -168,21 +168,24 @@ public final class PropertyHelper {
      * DOC bZhou Comment method "getProperty".
      * 
      * @param element
-     * @return
+     * @return property or null
      */
     public static Property getProperty(ModelElement element) {
         if (element != null && element.eIsProxy()) {
             element = (ModelElement) EObjectHelper.resolveObject(element);
         }
-        URI uri = element.eResource().getURI();
-        if (uri.isPlatform()) {
-            IFile propertyFile = PropertyHelper.getPropertyFile(element);
-            return getProperty(propertyFile);
-        } else {
-            File file = new Path(uri.toFileString()).removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION)
-                    .toFile();
-            return getProperty(file);
+        URI uri = element.eResource() == null ? null : element.eResource().getURI();
+        if (uri != null) {
+            if (uri.isPlatform()) {
+                IFile propertyFile = PropertyHelper.getPropertyFile(element);
+                return getProperty(propertyFile);
+            } else {
+                File file = new Path(uri.toFileString()).removeFileExtension()
+                        .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+                return getProperty(file);
+            }
         }
+        return null;
     }
 
     /**
