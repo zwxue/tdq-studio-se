@@ -155,8 +155,9 @@ public class AnalysisEditor extends CommonFormEditor {
         if (masterPage.isActive()) {
             // setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
             setRunActionButtonState(true);
-            setSaveActionButtonState(masterPage.isDirty());
         }
+        // MOD klliu 2011-04-08 if masterPage is dirty,then button of SaveAction can been used.
+        setSaveActionButtonState(masterPage.isDirty());
         super.firePropertyChange(propertyId);
     }
 
@@ -191,7 +192,6 @@ public class AnalysisEditor extends CommonFormEditor {
             if (masterPage.isDirty()) {
                 masterPage.doSave(null);
             }
-
             setSaveActionButtonState(false);
         }
 
