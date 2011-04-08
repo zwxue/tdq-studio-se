@@ -194,8 +194,12 @@ public class DrillDownEditorInput implements IEditorInput {
             columnValue = new String[0][0];
             return new DataSet(columnHeader, columnValue);
         }
-        // columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
-        columnValue = new String[newColumnElementList.size()][columnElementList.size()];
+        // MOD qiongli 2011-4-8,bug 19192.delimited file may has diffrent number of columns for every row.
+        if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
+            columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
+        } else {
+            columnValue = new String[newColumnElementList.size()][columnElementList.size()];
+        }
         int rowIndex = 0;
         for (Object[] tableRow : newColumnElementList) {
             int columnIndex = 0;
