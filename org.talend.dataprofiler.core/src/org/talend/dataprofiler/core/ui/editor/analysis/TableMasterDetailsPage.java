@@ -754,7 +754,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     @Override
     public boolean isDirty() {
-        return super.isDirty() || treeViewer.isDirty() || dataFilterComp.isDirty();
+        return super.isDirty() || (treeViewer != null && treeViewer.isDirty())
+                || (dataFilterComp != null && dataFilterComp.isDirty());
     }
 
     @Override

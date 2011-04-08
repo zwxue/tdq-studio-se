@@ -523,7 +523,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         if (graphicsAndTableComp != null && !graphicsAndTableComp.isDisposed()) {
             graphicsAndTableComp.dispose();
         }
-
+        masterPage.refresh();
         createFormContent(getManagedForm());
     }
 

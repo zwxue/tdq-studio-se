@@ -149,7 +149,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         if (resultComp != null && !resultComp.isDisposed()) {
             resultComp.dispose();
         }
-
+        masterPage.refresh();
         createFormContent(getManagedForm());
     }
 

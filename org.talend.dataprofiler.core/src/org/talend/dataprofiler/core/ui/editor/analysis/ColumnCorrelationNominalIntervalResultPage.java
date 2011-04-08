@@ -580,6 +580,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
 
         createFormContent(getManagedForm());
+        masterPage.refresh();
     }
 
     public Composite getChartComposite() {

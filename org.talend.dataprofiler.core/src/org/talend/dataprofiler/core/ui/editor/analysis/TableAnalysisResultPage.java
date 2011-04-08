@@ -300,6 +300,8 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         }
 
         createFormContent(getManagedForm());
+        masterPage.refresh();
+
     }
 
     @Override
