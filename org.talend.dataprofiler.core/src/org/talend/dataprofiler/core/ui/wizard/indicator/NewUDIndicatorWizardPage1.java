@@ -21,6 +21,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.resource.ResourceManager;
 
@@ -61,12 +62,21 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
         return ResourceManager.getIndicatorFolder();
     }
 
+    boolean checkName = true;
     @Override
     protected void addListeners() {
         super.addListeners();
         this.nameText.addModifyListener(new ModifyListener() {
-
             public void modifyText(ModifyEvent e) {
+                // MOD gdbu 2011-4-8 bug : 19976
+                if (checkName) {
+                    checkName = false;
+                    int x = nameText.getSelection().x;
+                    nameText.setText(WorkspaceUtils.normalize(nameText.getText()) + "");
+                    nameText.setSelection(x);
+                    checkName = true;
+                }
+                // ~
                 getParameter().setName(nameText.getText());
                 String text = nameText.getText();
                 setPageComplete(text != null && !"".equals(text.trim()) && !text.contains(" ")); //$NON-NLS-1$ //$NON-NLS-1$

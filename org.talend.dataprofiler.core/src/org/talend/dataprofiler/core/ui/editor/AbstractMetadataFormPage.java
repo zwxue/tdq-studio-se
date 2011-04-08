@@ -37,6 +37,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
@@ -405,7 +406,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     protected void saveTextChange() {
-        currentModelElement.setName(nameText.getText());
+        // MOD gdbu 2011-4-8 bug : 19976
+        nameText.setText(WorkspaceUtils.normalize(nameText.getText()));
+        currentModelElement.setName(WorkspaceUtils.normalize(nameText.getText()));
+        // ~19976
         MetadataHelper.setPurpose(purposeText.getText(), currentModelElement);
         MetadataHelper.setDescription(descriptionText.getText(), currentModelElement);
         MetadataHelper.setAuthor(currentModelElement, authorText.getText());
