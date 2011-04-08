@@ -78,9 +78,6 @@ public final class WorkbenchUtils {
             return;
         }
         try {
-            // sleep a while before auto change the perspective
-            Thread.sleep(SLEEP_TIME_MILLIS);
-
             IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getPerspective();
             if (!PluginConstant.PERSPECTIVE_ID.equals(perspective.getId())) {
@@ -89,6 +86,8 @@ public final class WorkbenchUtils {
 
                 switch (autoChange) {
                 case AUTO_CHANGE2DATA_PROFILER_TRUE:
+                    // sleep a while before auto change the perspective
+                    Thread.sleep(SLEEP_TIME_MILLIS);
                     // change perspective automatically
                     changePerspective(PluginConstant.PERSPECTIVE_ID);
                     break;
@@ -101,6 +100,8 @@ public final class WorkbenchUtils {
                             .getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
                         ResourcesPlugin.getPlugin().getPluginPreferences()
                                 .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_TRUE);
+                        // sleep a while before auto change the perspective
+                        Thread.sleep(SLEEP_TIME_MILLIS);
                         // change perspective
                         changePerspective(PluginConstant.PERSPECTIVE_ID);
                     } else {
