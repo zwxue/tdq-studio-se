@@ -323,6 +323,10 @@ public final class ImportFactory {
 
         String relativePath;
 
+        String javaClassName;
+
+        String javaJarPath;
+
         Map<String, String> regex;
 
         public PatternParameters() {
@@ -333,6 +337,8 @@ public final class ImportFactory {
             purpose = ""; //$NON-NLS-1$
             status = DevelopmentStatus.DRAFT.getLiteral();
             relativePath = ""; //$NON-NLS-1$
+            javaClassName = "";//$NON-NLS-1$
+            javaJarPath = "";//$NON-NLS-1$
             regex = new HashMap<String, String>();
         }
 
@@ -403,6 +409,8 @@ public final class ImportFactory {
                     udiParameters.purpose = reader.get(PatternToExcelEnum.Purpose.getLiteral());
                     udiParameters.relativePath = reader.get(PatternToExcelEnum.RelativePath.getLiteral());
                     udiParameters.category = reader.get(PatternToExcelEnum.Category.getLiteral());
+                    udiParameters.javaClassName = reader.get(PatternToExcelEnum.JavaClassName.getLiteral());
+                    udiParameters.javaJarPath = reader.get(PatternToExcelEnum.JavaJarPath.getLiteral());
 
                     for (PatternLanguageType languagetype : PatternLanguageType.values()) {
                         String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
@@ -534,7 +542,7 @@ public final class ImportFactory {
     private static void createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
 
         IndicatorDefinition id = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,
-                parameters.purpose, parameters.status, parameters.category);
+                parameters.purpose, parameters.status, parameters.category, parameters.javaClassName, parameters.javaJarPath);
 
         for (String key : parameters.regex.keySet()) {
             TdExpression expression = BooleanExpressionHelper.createTdExpression(key, parameters.regex.get(key));

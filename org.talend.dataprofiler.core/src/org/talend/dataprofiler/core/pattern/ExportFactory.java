@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -174,6 +175,13 @@ public final class ExportFactory {
             idMap.put(PatternToExcelEnum.Author, MetadataHelper.getAuthor(indicatorDefinition));
             idMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
             idMap.put(PatternToExcelEnum.Category, UDIHelper.getUDICategory(indicatorDefinition).getLabel());
+            idMap.put(PatternToExcelEnum.JavaClassName,
+                    TaggedValueHelper.getTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT, indicatorDefinition.getTaggedValue())
+                            .getValue());
+            idMap.put(PatternToExcelEnum.JavaJarPath,
+                    TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, indicatorDefinition.getTaggedValue())
+                            .getValue());
+
 
             for (PatternLanguageType languagetype : PatternLanguageType.values()) {
                 for (Expression expression : indicatorDefinition.getSqlGenericExpression()) {
@@ -185,6 +193,7 @@ public final class ExportFactory {
                 if (!idMap.containsKey(languagetype.getExcelEnum())) {
                     idMap.put(languagetype.getExcelEnum(), ""); //$NON-NLS-1$
                 }
+                
             }
         }
 

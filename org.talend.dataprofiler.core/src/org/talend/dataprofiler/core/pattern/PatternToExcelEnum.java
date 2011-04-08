@@ -37,7 +37,9 @@ public enum PatternToExcelEnum {
     JavaRegexp(16, "Java_Regexp"), //$NON-NLS-1$
     Category(17, "Category"), //$NON-NLS-1$
     Access(18, "Access"), //$NON-NLS-1$
-    AS400(19, "AS400"); //$NON-NLS-1$
+    AS400(19, "AS400"), //$NON-NLS-1$
+    JavaClassName(20, "CLASS_NAME_TEXT"), //$NON-NLS-1$
+    JavaJarPath(21, "JAR_FILE_PATH");//$NON-NLS-1$
 
     private String literal;
 

@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -117,7 +118,7 @@ public final class UDIHelper {
     }
 
     public static IndicatorDefinition createUDI(String name, String author, String description, String purpose, String status,
-            String category) {
+            String category, String javaClassName, String javaJarPath) {
         IndicatorDefinition id = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         id.setName(name);
         MetadataHelper.setAuthor(id, author == null ? "" : author); //$NON-NLS-1$
@@ -125,6 +126,8 @@ public final class UDIHelper {
         MetadataHelper.setPurpose(purpose == null ? "" : purpose, id); //$NON-NLS-1$
         // MOD mzhao feature 7479 2009-10-16
         MetadataHelper.setDevStatus(id, status == null ? "" : status); //$NON-NLS-1$
+        TaggedValueHelper.setTaggedValue(id, TaggedValueHelper.CLASS_NAME_TEXT, javaClassName);
+        TaggedValueHelper.setTaggedValue(id, TaggedValueHelper.JAR_FILE_PATH, javaJarPath);
         setUDICategory(id, category);
         return id;
     }
