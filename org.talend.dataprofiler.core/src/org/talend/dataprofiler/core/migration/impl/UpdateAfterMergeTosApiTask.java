@@ -791,13 +791,13 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         } else if (ResourceManager.getRulesSQLFolder().equals(baseFolder)) {
             return ERepositoryObjectType.TDQ_RULES_SQL;
         } else if (ResourceManager.getAnalysisFolder().equals(baseFolder)) {
-            return ERepositoryObjectType.TDQ_ANALYSIS;
+            return ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT;
         } else if (ResourceManager.getReportsFolder().equals(baseFolder)) {
-            return ERepositoryObjectType.TDQ_REPORTS;
+            return ERepositoryObjectType.TDQ_REPORT_ELEMENT;
         } else if (ResourceManager.getSourceFileFolder().equals(baseFolder)) {
-            return ERepositoryObjectType.TDQ_SOURCE_FILES;
+            return ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT;
         } else if (ResourceManager.getJRXMLFolder().equals(baseFolder)) {
-            return ERepositoryObjectType.TDQ_JRXMLTEMPLATE;
+            return ERepositoryObjectType.TDQ_JRAXML_ELEMENT;
         }
         return null;
     }
@@ -896,7 +896,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             this.prfInstance
                     .createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY, EResourceConstant.INDICATORS.getName());
 
-            this.prfInstance.createFolder(ERepositoryObjectType.TDQ_INDICATORS, Path.EMPTY,
+            this.prfInstance.createFolder(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT, Path.EMPTY,
                     EResourceConstant.SYSTEM_INDICATORS.getName());
             this.prfInstance.createFolder(ERepositoryObjectType.TDQ_SYSTEM_INDICATORS, Path.EMPTY,
                     EResourceConstant.SYSTEM_INDICATORS_ADVANCED_STATISTICS.getName());
@@ -923,7 +923,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             this.prfInstance.createFolder(ERepositoryObjectType.TDQ_SYSTEM_INDICATORS, Path.EMPTY,
                     EResourceConstant.SYSTEM_INDICATORS_TEXT_STATISTICS.getName());
 
-            this.prfInstance.createFolder(ERepositoryObjectType.TDQ_INDICATORS, Path.EMPTY,
+            this.prfInstance.createFolder(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT, Path.EMPTY,
                     EResourceConstant.USER_DEFINED_INDICATORS.getName());
 
             if (!PluginChecker.isOnlyTopLoaded()) {
@@ -931,11 +931,12 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                         EResourceConstant.JRXML_TEMPLATE.getName());
             }
 
-            this.prfInstance.createFolder(ERepositoryObjectType.TDQ_PATTERNS, Path.EMPTY,
+            this.prfInstance.createFolder(ERepositoryObjectType.TDQ_PATTERN_ELEMENT, Path.EMPTY,
                     EResourceConstant.PATTERN_REGEX.getName());
 
             this.prfInstance
-                    .createFolder(ERepositoryObjectType.TDQ_PATTERNS, Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
+.createFolder(ERepositoryObjectType.TDQ_PATTERN_ELEMENT, Path.EMPTY,
+                    EResourceConstant.PATTERN_SQL.getName());
 
             this.prfInstance.createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
                     EResourceConstant.SOURCE_FILES.getName());

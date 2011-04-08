@@ -87,7 +87,7 @@ public class ReportFolderRepNode extends RepositoryNode {
 
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_REPORTS);
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_REPORT_ELEMENT);
                 if (!withDelete && folder.isDeleted()) {
                     continue;
                 }
@@ -124,7 +124,7 @@ public class ReportFolderRepNode extends RepositoryNode {
 
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_REPORTS);
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_REPORT_ELEMENT);
                 // MOD qiongli 2011-1-20.
                 if (!withDeleted && folder.isDeleted()) {
                     continue;

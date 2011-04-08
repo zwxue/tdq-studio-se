@@ -180,7 +180,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_BUSINESS_RULE_ITEM:
                 fileExtension = FileConstants.RULE_EXTENSION;
                 itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
-                        ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT, false, fileExtension);
+                        ERepositoryObjectType.TDQ_RULES_SQL, false, fileExtension);
 
                 DQRule dqrule = ((TDQBusinessRuleItem) item).getDqrule();
                 DQRuleWriter createdRuleWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createdRuleWriter();

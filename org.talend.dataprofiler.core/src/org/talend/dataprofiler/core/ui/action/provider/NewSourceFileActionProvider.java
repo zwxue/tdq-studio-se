@@ -88,7 +88,7 @@ public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
         while (iterator.hasNext()) {
             RepositoryNode node = (RepositoryNode) iterator.next();
             IRepositoryViewObject viewObject = node.getObject();
-            if (ERepositoryObjectType.TDQ_SOURCE_FILES.equals(viewObject.getRepositoryObjectType())) {
+            if (ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.equals(viewObject.getRepositoryObjectType())) {
                 IPath append = WorkbenchUtils.getFilePath(node);
                 IFile file = ResourceManager.getRootProject().getFile(append);
                 selectedFiles.add(file);

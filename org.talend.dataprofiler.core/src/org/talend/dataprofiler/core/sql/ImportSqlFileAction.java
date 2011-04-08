@@ -51,7 +51,7 @@ public class ImportSqlFileAction extends AbstractImportSourceFileAction {
      */
     @Override
     public ERepositoryObjectType getRepositoryType() {
-        return ERepositoryObjectType.TDQ_SOURCE_FILES;
+        return ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT;
     }
 
     /*

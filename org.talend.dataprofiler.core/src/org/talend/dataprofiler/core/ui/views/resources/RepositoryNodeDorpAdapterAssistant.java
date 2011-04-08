@@ -305,8 +305,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         IPath makeRelativeTo = fullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
         IPath removeLastSegments = makeRelativeTo.removeLastSegments(1);
         if (ERepositoryObjectType.TDQ_RULES_SQL.equals(targetObjectType)
-                || ERepositoryObjectType.TDQ_ANALYSIS.equals(targetObjectType)
-                || ERepositoryObjectType.TDQ_REPORTS.equals(targetObjectType)
+                || ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.equals(targetObjectType)
+                || ERepositoryObjectType.TDQ_REPORT_ELEMENT.equals(targetObjectType)
                 || ERepositoryObjectType.METADATA_CONNECTIONS.equals(targetObjectType)
                 || ERepositoryObjectType.METADATA_FILE_DELIMITED.equals(targetObjectType)
                 || ERepositoryObjectType.METADATA_MDMCONNECTION.equals(targetObjectType)) {
@@ -461,13 +461,13 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
     private IPath getNodeFullPath(ERepositoryObjectType objectType) {
         IPath fullPath = null;
-        if (objectType == ERepositoryObjectType.TDQ_JRXMLTEMPLATE) {
+        if (objectType == ERepositoryObjectType.TDQ_JRAXML_ELEMENT) {
             fullPath = ResourceManager.getJRXMLFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.TDQ_PATTERN_REGEX) {
             fullPath = ResourceManager.getPatternRegexFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.TDQ_PATTERN_SQL) {
             fullPath = ResourceManager.getPatternSQLFolder().getFullPath();
-        } else if (objectType == ERepositoryObjectType.TDQ_SOURCE_FILES) {
+        } else if (objectType == ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT) {
             fullPath = ResourceManager.getSourceFileFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.TDQ_RULES_SQL) {
             fullPath = ResourceManager.getRulesSQLFolder().getFullPath();
@@ -475,9 +475,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             fullPath = ResourceManager.getUDIFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
             fullPath = ResourceManager.getConnectionFolder().getFullPath();
-        } else if (objectType == ERepositoryObjectType.TDQ_ANALYSIS) { // gdbu 2011-3-16 bug 19537
+        } else if (objectType == ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT) { // gdbu 2011-3-16 bug 19537
             fullPath = ResourceManager.getAnalysisFolder().getFullPath();
-        } else if (objectType == ERepositoryObjectType.TDQ_REPORTS) {
+        } else if (objectType == ERepositoryObjectType.TDQ_REPORT_ELEMENT) {
             fullPath = ResourceManager.getReportsFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.METADATA_FILE_DELIMITED) {
             fullPath = ResourceManager.getFileDelimitedFolder().getFullPath();

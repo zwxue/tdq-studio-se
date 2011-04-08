@@ -166,10 +166,12 @@ public final class DQStructureManager {
 
             Folder indicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                     Path.EMPTY, EResourceConstant.INDICATORS.getName());
-            Folder systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATORS,
+            Folder systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(
+                    ERepositoryObjectType.TDQ_INDICATOR_ELEMENT,
                     Path.EMPTY, EResourceConstant.SYSTEM_INDICATORS.getName());
 
-            Folder udiFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATORS, Path.EMPTY,
+            Folder udiFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT,
+                    Path.EMPTY,
                     EResourceConstant.USER_DEFINED_INDICATORS.getName());
             // MOD zhsne 18724: Java UDI enhancements add lib folder under UDI folder.
             Folder udiLibFoler = ProxyRepositoryFactory.getInstance().createFolder(
@@ -179,10 +181,11 @@ public final class DQStructureManager {
             Folder jrxmlFolder = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                     Path.EMPTY, EResourceConstant.JRXML_TEMPLATE.getName());
 
-            Folder patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERNS,
+            Folder patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(
+                    ERepositoryObjectType.TDQ_PATTERN_ELEMENT,
                     Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
 
-            Folder patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERNS,
+            Folder patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_ELEMENT,
                     Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
 
             Folder sourceFileFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
@@ -193,7 +196,7 @@ public final class DQStructureManager {
                     ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
             copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null, ERepositoryObjectType.TDQ_PATTERN_REGEX);
             copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
-            copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILES);
+            copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
             copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
 
             WorkspaceVersionHelper.storeVersion();
@@ -273,12 +276,12 @@ public final class DQStructureManager {
                 openStream = fileURL.openStream();
                 String folderName = null;
 
-                if (type.equals(ERepositoryObjectType.TDQ_PATTERNS)) {
+                if (type.equals(ERepositoryObjectType.TDQ_PATTERN_ELEMENT)) {
                     folderName = ERepositoryObjectType.getFolderName(type);
                 }
                 if (type.equals(ERepositoryObjectType.TDQ_RULES_SQL)) {
                     folderName = ERepositoryObjectType.getFolderName(type);
-                } else if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILES)) {
+                } else if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
                     folderName = ERepositoryObjectType.getFolderName(type);
                 } else {
                     folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel();
@@ -287,7 +290,7 @@ public final class DQStructureManager {
                     continue;
                 }
                 IFolder folder = project.getFolder(folderName);
-                if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILES)) {
+                if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
                     String name = file.getName();
                     int indexOf = name.indexOf(".");
                     String label = name.substring(0, indexOf);

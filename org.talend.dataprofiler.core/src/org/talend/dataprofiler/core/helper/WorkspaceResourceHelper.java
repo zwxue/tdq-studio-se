@@ -129,7 +129,7 @@ public final class WorkspaceResourceHelper {
             }
 
             String folderName = null;
-            if (type.equals(ERepositoryObjectType.TDQ_JRXMLTEMPLATE)) {
+            if (type.equals(ERepositoryObjectType.TDQ_JRAXML_ELEMENT)) {
                 folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel();
             }
             IFolder folder = project.getFolder(folderName);

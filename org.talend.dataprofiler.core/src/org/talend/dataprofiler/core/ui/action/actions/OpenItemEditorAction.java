@@ -197,7 +197,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
                 editorInput = new IndicatorDefinitionItemEditorInput(item);
                 editorID = IndicatorEditor.class.getName();
-            } else if (ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT.getKey().equals(key)) {
+            } else if (ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key)) {
                 editorInput = new BusinessRuleItemEditorInput(item);
                 editorID = DQRuleEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {

@@ -70,7 +70,7 @@ public class DuplicateResourceProvider extends AbstractCommonActionProvider {
         objectTypes.add(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
         objectTypes.add(ERepositoryObjectType.TDQ_REPORT_ELEMENT);
         objectTypes.add(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT);
-        objectTypes.add(ERepositoryObjectType.TDQ_BUSINESSRULE_ELEMENT);
+        objectTypes.add(ERepositoryObjectType.TDQ_RULES_SQL);
         objectTypes.add(ERepositoryObjectType.TDQ_PATTERN_ELEMENT);
         objectTypes.add(ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
         objectTypes.add(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);

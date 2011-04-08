@@ -174,15 +174,15 @@ public final class RepositoryNodeHelper {
         if (EResourceConstant.DATA_PROFILING.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_DATA_PROFILING;
         } else if (EResourceConstant.ANALYSIS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_ANALYSIS;
+            return ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT;
         } else if (EResourceConstant.REPORTS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_REPORTS;
+            return ERepositoryObjectType.TDQ_REPORT_ELEMENT;
         } else if (EResourceConstant.LIBRARIES.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_LIBRARIES;
         } else if (EResourceConstant.EXCHANGE.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_EXCHANGE;
         } else if (EResourceConstant.INDICATORS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_INDICATORS;
+            return ERepositoryObjectType.TDQ_INDICATOR_ELEMENT;
         } else if (EResourceConstant.SYSTEM_INDICATORS.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_SYSTEM_INDICATORS;
         } else if (EResourceConstant.SYSTEM_INDICATORS_ADVANCED_STATISTICS.getPath().equals(path)) {
@@ -212,9 +212,9 @@ public final class RepositoryNodeHelper {
         } else if (EResourceConstant.USER_DEFINED_INDICATORS.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
         } else if (EResourceConstant.JRXML_TEMPLATE.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_JRXMLTEMPLATE;
+            return ERepositoryObjectType.TDQ_JRAXML_ELEMENT;
         } else if (EResourceConstant.PATTERNS.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_PATTERNS;
+            return ERepositoryObjectType.TDQ_PATTERN_ELEMENT;
         } else if (EResourceConstant.PATTERN_REGEX.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_PATTERN_REGEX;
         } else if (EResourceConstant.PATTERN_SQL.getPath().equals(path)) {
@@ -224,7 +224,7 @@ public final class RepositoryNodeHelper {
         } else if (EResourceConstant.RULES_SQL.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_RULES_SQL;
         } else if (EResourceConstant.SOURCE_FILES.getPath().equals(path)) {
-            return ERepositoryObjectType.TDQ_SOURCE_FILES;
+            return ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT;
         } else if (EResourceConstant.METADATA.getPath().equals(path)) {
             return ERepositoryObjectType.METADATA;
         } else if (EResourceConstant.DB_CONNECTIONS.getPath().equals(path)) {

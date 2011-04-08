@@ -60,13 +60,13 @@ public class ReportRepNode extends RepositoryNode {
     public List<IRepositoryNode> getChildren() {
         List<IRepositoryNode> childrenNodes = new ArrayList<IRepositoryNode>();
         ReportSubFolderRepNode anaNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
-        anaNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORTS);
+        anaNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
         anaNodeFolder.setProperties(EProperties.LABEL, ANA_FLODER);
         anaNodeFolder.setReportSubFolderType(ReportSubFolderType.ANALYSIS);
         anaNodeFolder.setReport(this.getReport());
         childrenNodes.add(anaNodeFolder);
         ReportSubFolderRepNode grenNodeFolder = new ReportSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
-        grenNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORTS);
+        grenNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_REPORT_ELEMENT);
         grenNodeFolder.setProperties(EProperties.LABEL, GEN_FLODER);
         grenNodeFolder.setReportSubFolderType(ReportSubFolderType.GENERATED_DOCS);
         grenNodeFolder.setReport(this.getReport());

@@ -53,7 +53,7 @@ public class SourceFileFolderRepNode extends RepositoryNode {
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
             // sub folders
             for (Container<String, IRepositoryViewObject> container : sourceFiles.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_SOURCE_FILES);
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
                 if (folder.isDeleted()) {
                     continue;
                 }
