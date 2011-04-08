@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.repository.model.IRepositoryNode;
@@ -75,6 +76,6 @@ public class DBColumnRepNode extends RepositoryNode {
     }
 
     public boolean isKey() {
-        return this.getTdColumn().isKey();
+        return ColumnHelper.isPrimaryKey(this.getTdColumn());
     }
 }

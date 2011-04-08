@@ -167,8 +167,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                 } else if (node instanceof DBColumnRepNode) {
                     if (((DBColumnRepNode) node).isKey()) {
                         image = ImageLib.getImage(ImageLib.PK_COLUMN);
+                    } else {
+                        image = ImageLib.getImage(ImageLib.TD_COLUMN);
                     }
-                    image = ImageLib.getImage(ImageLib.TD_COLUMN);
                 } else if (node instanceof DFColumnRepNode) {
 
                     image = ImageLib.getImage(ImageLib.TD_COLUMN);
