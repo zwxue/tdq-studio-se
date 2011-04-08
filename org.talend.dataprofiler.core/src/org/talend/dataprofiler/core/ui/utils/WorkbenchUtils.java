@@ -101,8 +101,8 @@ public final class WorkbenchUtils {
                     }
                 }
             }
-        } catch (Exception e) {
-            log.warn(e, e);
+        } catch (Throwable t) {
+            log.warn(t, t);
         }
     }
 
