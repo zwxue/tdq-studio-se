@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -36,6 +37,11 @@ public final class MessageUI {
 
     public static boolean openConfirm(String message) {
         return MessageDialogWithToggle.openConfirm(CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
+                DefaultMessagesImpl.getString("MessageUI.Confirm"), message); //$NON-NLS-1$
+    }
+
+    public static boolean openYesNoQuestion(String message) {
+        return MessageDialog.openQuestion(CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
                 DefaultMessagesImpl.getString("MessageUI.Confirm"), message); //$NON-NLS-1$
     }
 

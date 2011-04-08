@@ -54,6 +54,8 @@ public final class WorkbenchUtils {
 
     private static final boolean AUTO_CHANGE2DATA_PROFILER = true;
 
+    private static final int SLEEP_TIME_MILLIS = 1000;
+
     private WorkbenchUtils() {
     }
 
@@ -76,10 +78,15 @@ public final class WorkbenchUtils {
             return;
         }
         try {
+            // sleep a while before auto change the perspective
+            Thread.sleep(SLEEP_TIME_MILLIS);
+
             IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getPerspective();
             if (!PluginConstant.PERSPECTIVE_ID.equals(perspective.getId())) {
-                int autoChange = ResourcesPlugin.getPlugin().getPluginPreferences().getInt(PluginConstant.AUTO_CHANGE2DATA_PROFILER);
+                int autoChange = ResourcesPlugin.getPlugin().getPluginPreferences()
+                        .getInt(PluginConstant.AUTO_CHANGE2DATA_PROFILER);
+
                 switch (autoChange) {
                 case AUTO_CHANGE2DATA_PROFILER_TRUE:
                     // change perspective automatically
@@ -90,7 +97,8 @@ public final class WorkbenchUtils {
                     break;
                 default:
                     // ask user what to do, and rember user's decision
-                    if (MessageUI.openConfirm(DefaultMessagesImpl.getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
+                    if (MessageUI.openYesNoQuestion(DefaultMessagesImpl
+                            .getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
                         ResourcesPlugin.getPlugin().getPluginPreferences()
                                 .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_TRUE);
                         // change perspective
