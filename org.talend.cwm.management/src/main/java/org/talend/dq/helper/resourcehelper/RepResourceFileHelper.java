@@ -93,7 +93,7 @@ public final class RepResourceFileHelper extends ResourceFileMap {
         if (checkFile(file)) {
             TdReport report = allRepMap.get(file);
             if (report == null) {
-                report = readFromFile(file);
+                report = retireReport(getFileResource(file, true));
             }
 
             return report;
