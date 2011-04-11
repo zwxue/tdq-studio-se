@@ -33,6 +33,7 @@ import org.talend.core.model.metadata.ColumnNameChanged;
 import org.talend.core.model.metadata.IMetadataTable;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.designer.core.model.utils.emf.talendfile.NodeType;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -459,8 +460,8 @@ public class TopService implements ICoreService {
     }
 
     public IPreferenceStore getPreferenceStore() {
-        // TODO Auto-generated method stub
-        return null;
+        // MOD qiongli 2011-4-11.bug 20115.
+        return CorePlugin.getDefault().getPreferenceStore();
     }
 
     public boolean isOpenedItemInEditor(IRepositoryViewObject object) {

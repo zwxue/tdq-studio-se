@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
@@ -62,6 +63,7 @@ import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.helper.StatusHelper;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
+import org.talend.core.prefs.ITalendCorePrefConstants;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -124,6 +126,8 @@ public class CorePlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
         getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
+        getPreferenceStore().setValue(ITalendCorePrefConstants.PREVIEW_LIMIT, "50");
+        getPreferenceStore().setValue(ITalendCorePrefConstants.LANGUAGE_SELECTOR, Locale.getDefault().getLanguage());
         try {
             for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
                 BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
