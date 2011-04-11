@@ -147,9 +147,13 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                         image = imageNode;
                     }
                 }
-                // MOD yyi 2011-04-07 19696: "Lock element"
-                if (ERepositoryStatus.LOCK_BY_USER == ProxyRepositoryFactory.getInstance().getStatus(viewObject)) {
-                    image = ImageLib.createLockedIcon(ImageDescriptor.createFromImage(image)).createImage();
+                // MOD klliu 2010-04-11 20468: Unfolder "exchange",get many NPE
+                // exchange folder did not contain viewObject.
+                if (viewObject != null) {
+                    // MOD yyi 2011-04-07 19696: "Lock element"
+                    if (ERepositoryStatus.LOCK_BY_USER == ProxyRepositoryFactory.getInstance().getStatus(viewObject)) {
+                        image = ImageLib.createLockedIcon(ImageDescriptor.createFromImage(image)).createImage();
+                    }
                 }
             } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
                 if (node instanceof DBCatalogRepNode) {
