@@ -471,7 +471,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         }
         schemaIndic.setViewCount(viewCount);
 
-        if (hasCatalog && hasSchema) {
+        if (hasCatalog && hasSchema && catalogIndic != null) {
             // add it to list of indicators
             this.addToConnectionIndicator(catalogIndic);
 
