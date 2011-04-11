@@ -115,7 +115,7 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
                     ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(child);
                     if (modelEle != null && modelEle instanceof TdReport) {
                         IFile file = ResourceManager.getReportsFolder().getFile(WorkbenchUtils.getFilePath(node));
-                        if (file.exists()) {
+                        if (file != null) {
                             RepResourceFileHelper.getInstance().remove(file);
                         }
                     }

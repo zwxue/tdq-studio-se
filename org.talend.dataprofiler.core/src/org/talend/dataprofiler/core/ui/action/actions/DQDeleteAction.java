@@ -126,7 +126,7 @@ public class DQDeleteAction extends DeleteAction {
                         // clear the memory variable of TdReport.(bug 19179)
                         if ( modelEle instanceof TdReport) {
                             IFile file = ResourceManager.getReportsFolder().getFile(WorkbenchUtils.getFilePath(node));
-                            if (file.exists()) {
+                            if (file != null) {
                               RepResourceFileHelper.getInstance().remove(file);
                             }
                         }
