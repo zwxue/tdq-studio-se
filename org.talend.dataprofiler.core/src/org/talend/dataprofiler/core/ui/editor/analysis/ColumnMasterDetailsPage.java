@@ -912,8 +912,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     public boolean isDirty() {
-        return super.isDirty() || treeViewer == null ? false : treeViewer.isDirty() || dataFilterComp == null ? false
-                : dataFilterComp.isDirty();
+        if (treeViewer == null ? false : treeViewer.isDirty()) {
+            this.setDirty(treeViewer.isDirty());
+        }
+        if (dataFilterComp == null ? false : dataFilterComp.isDirty()) {
+            this.setDirty(dataFilterComp.isDirty());
+        }
+        return super.isDirty();
     }
 
     @Override
