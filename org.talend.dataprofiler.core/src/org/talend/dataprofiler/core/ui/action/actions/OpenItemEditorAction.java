@@ -75,17 +75,17 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     protected static Logger log = Logger.getLogger(OpenItemEditorAction.class);
 
-    private IRepositoryViewObject reposViewObj = null;
+    private IRepositoryViewObject repViewObj = null;
 
     protected String editorID = null;
 
-    private AbstractItemEditorInput editorInput = null;
+    private AbstractItemEditorInput itemEditorInput = null;
 
-    private IFile fileEditorInput = null;
+    private IFile file = null;
 
     private Connection connection = null;
 
-    private IRepositoryNode repositoryNode = null;
+    private IRepositoryNode repNode = null;
 
     public OpenItemEditorAction() {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
@@ -93,61 +93,68 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     public OpenItemEditorAction(IRepositoryViewObject reposViewObj) {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
-        this.reposViewObj = reposViewObj;
+        this.repViewObj = reposViewObj;
     }
 
     public OpenItemEditorAction(IRepositoryNode repNode) {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
-        this.repositoryNode = repNode;
-        this.reposViewObj = repNode.getObject();
+        this.repNode = repNode;
+        this.repViewObj = repNode.getObject();
     }
 
     @Override
     public void run() {
-        computeEditorInput();
-        if (editorInput != null) {
-            CorePlugin.getDefault().openEditor(editorInput, editorID);
+        this.itemEditorInput = computeEditorInput();
+        if (itemEditorInput != null) {
+            // open ItemEditorInput
+            CorePlugin.getDefault().openEditor(itemEditorInput, editorID);
         } else {
-            if (reposViewObj == null) {
-                if (repositoryNode != null && repositoryNode instanceof ReportFileRepNode) {
-                    ReportFileRepNode reportFileNode = (ReportFileRepNode) repositoryNode;
+            // not find ItemEditorInput
+            if (repViewObj == null) {
+                // open Report's genetated doc file
+                if (repNode != null && repNode instanceof ReportFileRepNode) {
+                    ReportFileRepNode reportFileNode = (ReportFileRepNode) repNode;
                     IPath location = Path.fromOSString(reportFileNode.getResource().getRawLocation().toOSString());
                     IFile latestRepIFile = ResourceManager.getRootProject().getFile(location.lastSegment());
                     try {
                         latestRepIFile.createLink(location, IResource.REPLACE, null);
                         IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                         page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-                    } catch (Throwable e1) {
-                        log.error(e1, e1);
+                    } catch (Throwable e) {
+                        log.error(e, e);
                     }
                 }
             } else {
-                IPath append = WorkbenchUtils.getFilePath((RepositoryNode) reposViewObj.getRepositoryNode());
-                fileEditorInput = ResourceManager.getRootProject().getFile(append);
+                // if there don't found the correct ItemEditorInput and it is not Report's genetated doc file, try to
+                // open it as a File, this code will not be execute when method computeEditorInput() work well
+                IPath append = WorkbenchUtils.getFilePath((RepositoryNode) repViewObj.getRepositoryNode());
+                file = ResourceManager.getRootProject().getFile(append);
                 try {
-                    IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), fileEditorInput, true);
+                    IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, true);
                 } catch (PartInitException e) {
                     log.error(e, e);
                 }
             }
         }
-
     }
 
+    /**
+     * get the ItemEditorInput according to the reposViewObj, if there no ItemEditorInput return null.
+     * 
+     * @return
+     */
     public AbstractItemEditorInput computeEditorInput() {
-        // assert reposViewObj != null;
-        if (reposViewObj == null) {
-            editorInput = null;
-        } else {
+        AbstractItemEditorInput result = null;
+        if (repViewObj != null) {
             // Connection editor
-            String key = reposViewObj.getRepositoryObjectType().getKey();
-            Item item = reposViewObj.getProperty().getItem();
+            String key = repViewObj.getRepositoryObjectType().getKey();
+            Item item = repViewObj.getProperty().getItem();
             if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
                     || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
-                editorInput = new ConnectionItemEditorInput(item);
+                result = new ConnectionItemEditorInput(item);
                 editorID = ConnectionEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
-                editorInput = new AnalysisItemEditorInput(item);
+                result = new AnalysisItemEditorInput(item);
                 Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
                 AnalysisParameters parameters = analysis.getParameters();
                 AnalysisType analysisType = parameters.getAnalysisType();
@@ -168,7 +175,6 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         if (schema != null) {
                             connection = ConnectionHelper.getConnection(schema);
                         }
-
                     } else if (modelElement instanceof TdTable) {
                         TdTable tdTable = SwitchHelpers.TABLE_SWITCH.caseTdTable((TdTable) modelElement);
                         connection = ConnectionHelper.getConnection(tdTable);
@@ -183,32 +189,29 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         connection = ConnectionHelper.getTdDataProvider(mColumn);
                     }
                     connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
-
-
                 }
                 // FIXME User UUID to find the right conn repository node.
                 // String label = conn.getLabel();
                 // IRepositoryNode connectionRepositoryNode =
                 // DQStructureManager.getInstance().getConnectionRepositoryNode(label);
-
-                ((AnalysisItemEditorInput) editorInput).setConnectionNode(connectionRepositoryNode);
+                ((AnalysisItemEditorInput) result).setConnectionNode(connectionRepositoryNode);
                 // }
                 editorID = AnalysisEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
-                editorInput = new IndicatorDefinitionItemEditorInput(item);
+                result = new IndicatorDefinitionItemEditorInput(item);
                 editorID = IndicatorEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key)) {
-                editorInput = new BusinessRuleItemEditorInput(item);
+                result = new BusinessRuleItemEditorInput(item);
                 editorID = DQRuleEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
-                editorInput = new PatternItemEditorInput(item);
+                result = new PatternItemEditorInput(item);
                 editorID = PatternEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_REPORT_ELEMENT.getKey().equals(key)) {
-                editorInput = new ReportItemEditorInput(item);
+                result = new ReportItemEditorInput(item);
                 editorID = "org.talend.dataprofiler.core.tdq.ui.editor.report.ReportEditror"; //$NON-NLS-1$
             }
         }
-        return editorInput;
+        return result;
     }
 
     /**
@@ -250,7 +253,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
     private void initRepositoryViewObject(Properties params) {
         RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(params.getProperty("nodeId")); //$NON-NLS-1$
         if (repositoryNode != null) {
-            this.reposViewObj = repositoryNode.getObject();
+            this.repViewObj = repositoryNode.getObject();
         }
     }
 
