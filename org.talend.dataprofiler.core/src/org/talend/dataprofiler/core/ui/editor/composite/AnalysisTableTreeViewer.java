@@ -54,9 +54,10 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TableHelper;
@@ -74,6 +75,7 @@ import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
@@ -97,6 +99,7 @@ import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -1164,13 +1167,14 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 TableIndicatorUnit indicatorUnit = (TableIndicatorUnit) treeItem.getData(INDICATOR_UNIT_KEY);
                 WhereRuleIndicator indicator = (WhereRuleIndicator) indicatorUnit.getIndicator();
                 WhereRule whereRule = (WhereRule) indicator.getIndicatorDefinition();
-
-                IFolder whereRuleFolder = ResourceManager.getRulesFolder();
-                IFile file = DQRuleResourceFileHelper.getInstance()
-                        .getWhereRuleFile(whereRule, new IFolder[] { whereRuleFolder });
+                // MOD klliu 2011-04-12 bug 20472
+                Property property = PropertyHelper.getProperty(whereRule);
+                Item item = property.getItem();
+                BusinessRuleItemEditorInput itemEditorInput = new BusinessRuleItemEditorInput(item);
+                // ~
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 try {
-                    activePage.openEditor(new FileEditorInput(file),
+                    activePage.openEditor(itemEditorInput,
                             "org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"); //$NON-NLS-1$
                 } catch (PartInitException e1) {
                     log.error(e1, e1);
