@@ -154,7 +154,7 @@ public class SynonymIndexBuilder {
         switch (docs.totalHits) {
         case 0:
             // FIXME should be create an insertOrUpdate method?
-            error.set(false, "The document <" + word + "> doesn't exist. Cannot update.");
+            // error.set(false, "The document <" + word + "> doesn't exist. Cannot update.");
             break;
         case 1:
             getWriter().updateDocument(new Term(F_WORD, word), generateDocument(word, synonyms));
@@ -163,6 +163,7 @@ public class SynonymIndexBuilder {
         default:
             // FIXME maybe we need to avoid deleting several documents when we just want to update one document (to be
             // tested)
+            nbUpdatedDocuments = -1;// to avoid insertion by the component when nbUpdatedDocuments == 0
             error.set(false, docs.totalHits + " documents matched the given reference <" + word + ">. No changes have been made.");
             break;
         }
@@ -487,7 +488,7 @@ public class SynonymIndexBuilder {
     }
 
     private Field createSynField(String synonym) {
-        return new Field(F_SYN, synonym, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);
+        return new Field(F_SYN, synonym.trim(), Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);
     }
 
     /**

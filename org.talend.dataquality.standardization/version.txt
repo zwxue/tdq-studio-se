@@ -1,3 +1,8 @@
+1.5.11 # sizhaoliu
+- added trim() before inserting synonyms into index.
+- fixed a bug in SynonymRecordSearcher when result counts of different columns have factorization.
+- when several documents are matched, set the return value to -1 to avoid insertion by the component (when nbUpdatedDocuments == 0).
+
 1.5.10 # scorreia
 - missing classes added to file.
 

@@ -27,18 +27,34 @@ import org.talend.dataquality.standardization.index.SynonymIndexBuilder;
 import org.talend.dataquality.standardization.index.SynonymIndexBuilderTest;
 import org.talend.dataquality.standardization.index.SynonymIndexSearcher;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 public class SynonymRecordSearcherTest {
 
     /**
      * DOC scorreia Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+    }
+
+    private void initIdx(String path) {
+        SynonymIndexBuilder builder1 = new SynonymIndexBuilder();
+        builder1.deleteIndexFromFS(path);
+        builder1.initIndexInFS(path);
+        for (int i = 0; i < SynonymIndexBuilderTest.synonyms.length; i++) {
+            String[] synonyms = SynonymIndexBuilderTest.synonyms[i];
+            try {
+                builder1.insertDocument(synonyms[0], synonyms[1]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                fail("should not get an exception here");
+            }
+        }
+        builder1.closeIndex();
     }
 
     /**
@@ -50,45 +66,16 @@ public class SynonymRecordSearcherTest {
      */
     @Test
     public void testSearch() {
+
         // create two indexes
-
-        // index 1
-        String path1 = "data/idx1";
-        SynonymIndexBuilder builder1 = new SynonymIndexBuilder();
-        builder1.deleteIndexFromFS(path1);
-        builder1.initIndexInFS(path1);
-        for (int i = 0; i < SynonymIndexBuilderTest.synonyms.length; i++) {
-            String[] synonyms = SynonymIndexBuilderTest.synonyms[i];
-            try {
-                builder1.insertDocument(synonyms[0], synonyms[1]);
-            } catch (IOException e) {
-                e.printStackTrace();
-                fail("should not get an exception here");
-            }
-        }
-        builder1.closeIndex();
-
-        // index 2
-        String path2 = "data/idx2";
-        SynonymIndexBuilder builder2 = new SynonymIndexBuilder();
-        builder2.deleteIndexFromFS(path2);
-        builder2.initIndexInFS(path2);
-        for (int i = 0; i < SynonymIndexBuilderTest.synonyms.length; i++) {
-            String[] synonyms = SynonymIndexBuilderTest.synonyms[i];
-            try {
-                builder2.insertDocument(synonyms[0], synonyms[1]);
-            } catch (IOException e) {
-                e.printStackTrace();
-                fail("should not get an exception here");
-            }
-        }
-        builder2.closeIndex();
+        initIdx("data/idx1");
+        initIdx("data/idx2");
 
         // search in the two indexes
-        SynonymIndexSearcher searcher1 = new SynonymIndexSearcher(path1);
-        searcher1.setTopDocLimit(3);
-        SynonymIndexSearcher searcher2 = new SynonymIndexSearcher(path2);
-        searcher2.setTopDocLimit(3);
+        SynonymIndexSearcher searcher1 = new SynonymIndexSearcher("data/idx1");
+        searcher1.setTopDocLimit(5);
+        SynonymIndexSearcher searcher2 = new SynonymIndexSearcher("data/idx2");
+        searcher2.setTopDocLimit(5);
         SynonymRecordSearcher recSearcher = new SynonymRecordSearcher(2);
         recSearcher.addSearcher(searcher1, 0);
         recSearcher.addSearcher(searcher2, 1);
@@ -104,6 +91,7 @@ public class SynonymRecordSearcherTest {
                 Assert.assertEquals(record.length, resultingRecord.length);
 
                 System.out.println(StringUtils.join(resultingRecord, '|'));
+                System.out.println("\t" + outputRecord.getScore());
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -115,6 +103,124 @@ public class SynonymRecordSearcherTest {
         try {
             searcher1.close();
             searcher2.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("should not get an exception here");
+        }
+    }
+
+    @Test
+    public void testSearch2() {
+        System.out.println("\n");
+
+        // create two indexes
+        initIdx("data/idx1");
+        initIdx("data/idx2");
+
+        SynonymIndexBuilder builder1 = new SynonymIndexBuilder();
+        builder1.initIndexInFS("data/idx1");
+        try {
+            builder1.insertDocument("Institute of Business Management", "IBM");
+        } catch (IOException e1) {
+            fail("should not get an exception here");
+            e1.printStackTrace();
+        }
+        builder1.closeIndex();
+
+        // search in the two indexes
+        SynonymIndexSearcher searcher1 = new SynonymIndexSearcher("data/idx1");
+        searcher1.setTopDocLimit(5);
+        SynonymIndexSearcher searcher2 = new SynonymIndexSearcher("data/idx2");
+        searcher2.setTopDocLimit(5);
+        SynonymRecordSearcher recSearcher = new SynonymRecordSearcher(2);
+        recSearcher.addSearcher(searcher1, 0);
+        recSearcher.addSearcher(searcher2, 1);
+
+        String[] record = { "IBM", "ANpe" };
+        try {
+            List<OutputRecord> results = recSearcher.search(15, record);
+            Assert.assertNotNull(results);
+            Assert.assertFalse(results.isEmpty());
+            for (OutputRecord outputRecord : results) {
+                Assert.assertNotNull(outputRecord);
+                String[] resultingRecord = outputRecord.getRecord();
+                Assert.assertEquals(record.length, resultingRecord.length);
+
+                System.out.println(StringUtils.join(resultingRecord, '|'));
+                System.out.println("\t" + outputRecord.getScore());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail("should not get an exception here");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("should not get an exception here");
+        }
+        try {
+            searcher1.close();
+            searcher2.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("should not get an exception here");
+        }
+
+    }
+
+    @Test
+    public void testSearch3() {
+        System.out.println("\n");
+
+        // create two indexes
+        initIdx("data/idx1");
+        initIdx("data/idx2");
+        initIdx("data/idx3");
+
+        SynonymIndexBuilder builder1 = new SynonymIndexBuilder();
+        builder1.initIndexInFS("data/idx1");
+        try {
+            builder1.insertDocument("Institute of Business Management", "IBM");
+        } catch (IOException e1) {
+            fail("should not get an exception here");
+            e1.printStackTrace();
+        }
+        builder1.closeIndex();
+
+        // search in the three indexes
+        SynonymIndexSearcher searcher1 = new SynonymIndexSearcher("data/idx1");
+        searcher1.setTopDocLimit(5);
+        SynonymIndexSearcher searcher2 = new SynonymIndexSearcher("data/idx2");
+        searcher2.setTopDocLimit(5);
+        SynonymIndexSearcher searcher3 = new SynonymIndexSearcher("data/idx3");
+        searcher3.setTopDocLimit(5);
+        SynonymRecordSearcher recSearcher = new SynonymRecordSearcher(3);
+        recSearcher.addSearcher(searcher1, 0);
+        recSearcher.addSearcher(searcher2, 1);
+        recSearcher.addSearcher(searcher3, 2);
+
+        String[] record = { "IBM", "ANpe", "International" };
+        try {
+            List<OutputRecord> results = recSearcher.search(15, record);
+            Assert.assertNotNull(results);
+            Assert.assertFalse(results.isEmpty());
+            for (OutputRecord outputRecord : results) {
+                Assert.assertNotNull(outputRecord);
+                String[] resultingRecord = outputRecord.getRecord();
+                Assert.assertEquals(record.length, resultingRecord.length);
+
+                System.out.println(StringUtils.join(resultingRecord, '|'));
+                System.out.println("\t" + outputRecord.getScore());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail("should not get an exception here");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("should not get an exception here");
+        }
+        try {
+            searcher1.close();
+            searcher2.close();
+            searcher3.close();
         } catch (Exception e) {
             e.printStackTrace();
             fail("should not get an exception here");

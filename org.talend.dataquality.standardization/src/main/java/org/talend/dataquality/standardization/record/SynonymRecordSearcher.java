@@ -14,6 +14,7 @@ package org.talend.dataquality.standardization.record;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +36,8 @@ public class SynonymRecordSearcher {
 
     private int recordSize = 0;
 
+    static int counts[];
+
     /**
      * SynonymRecordSearcher constructor.
      * 
@@ -43,6 +46,7 @@ public class SynonymRecordSearcher {
     public SynonymRecordSearcher(int size) {
         this.recordSize = size;
         searchers = new SynonymIndexSearcher[recordSize];
+        counts = new int[size];
     }
 
     /**
@@ -64,7 +68,6 @@ public class SynonymRecordSearcher {
          * The score of the match
          */
         float score;
-        
 
         /*
          * (non-Javadoc)
@@ -91,7 +94,7 @@ public class SynonymRecordSearcher {
          * The input record.
          */
         String[] record;
-        
+
         /**
          * The results of a search.
          */
@@ -103,6 +106,59 @@ public class SynonymRecordSearcher {
          * @return the list of OutputRecords
          */
         public List<OutputRecord> computeOutputRows() {
+            // compute how many rows will be output
+            int[] limits = new int[wordResults.size()];
+            int[] counts = new int[wordResults.size()];
+            for (int i = 0; i < wordResults.size(); i++) {
+                limits[i] = wordResults.get(i).size();
+                counts[i] = 0;
+            }
+
+            Set<OutputRecord> outputRecords = new HashSet<OutputRecord>();
+            outputRecords = incrementalOutput(limits, outputRecords);
+
+            return new ArrayList<OutputRecord>(outputRecords);
+        }
+
+        public Set<OutputRecord> incrementalOutput(int[] limits, Set<OutputRecord> outputRecords) {
+
+            OutputRecord outputRec = new OutputRecord(limits.length);
+            float score = 0;
+            StringBuffer scores = new StringBuffer();
+            for (int j = 0; j < limits.length; j++) { // field
+                List<WordResult> listwrec = wordResults.get(j);
+                int wResIdx = counts[j];
+                WordResult wordResult = listwrec.get(wResIdx);
+                outputRec.record[j] = wordResult.word;
+                score += wordResult.score; // TODO add multiplicative weight here if needed
+                scores.append("|").append(wordResult.score);
+            }
+            outputRec.scores = new String(scores.deleteCharAt(0));
+            outputRec.score = score / limits.length;
+            // add the record to the set
+            outputRecords.add(outputRec);
+
+            counts[0]++;
+            for (int i = 0; i < limits.length; i++) {
+                if (counts[i] == limits[i]) {
+                    if (i == limits.length - 1) {
+                        return outputRecords;
+                    } else {
+                        counts[i] = 0;
+                        counts[i + 1]++;
+                        continue;
+                    }
+                }
+            }
+            return incrementalOutput(limits, outputRecords);
+        }
+
+        /**
+         * Old code
+         * 
+         * @return
+         */
+        public List<OutputRecord> computeOutputRows2() {
             // compute how many rows will be output
             int nb = 1;
             for (List<WordResult> wResults : wordResults) {
@@ -120,13 +176,15 @@ public class SynonymRecordSearcher {
                 StringBuffer scores = new StringBuffer();
                 for (int j = 0; j < recordLength; j++) { // field
                     List<WordResult> listwrec = wordResults.get(j);
-
-
+                    System.out.println(listwrec);
                     int wResIdx = i % listwrec.size();
                     WordResult wordResult = listwrec.get(wResIdx);
+                    System.out.println(wordResult.word);
                     outputRec.record[j] = wordResult.word;
                     score += wordResult.score; // TODO add multiplicative weight here if needed
                     scores.append("|").append(wordResult.score);
+                    System.out.println((i + 1) + ": " + Arrays.asList(outputRec.getRecord()));
+                    System.out.println("");
                 }
                 outputRec.scores = new String(scores.deleteCharAt(0));
                 outputRec.score = score / recordLength;
@@ -161,7 +219,7 @@ public class SynonymRecordSearcher {
             SynonymIndexSearcher searcher = searchers[i];
             TopDocs docs = searcher.searchDocumentBySynonym(field);
             int nbDocs = Math.min(searcher.getTopDocLimit(), docs.totalHits);
-            
+
             // store all found words in a list of results for this field
             for (int j = 0; j < nbDocs; j++) {
                 ScoreDoc scoreDoc = docs.scoreDocs[j];
