@@ -43,6 +43,8 @@ public class OutputRecord implements Comparable<OutputRecord> {
      */
     public OutputRecord(int size) {
         this.record = new String[size];
+        this.score = 0;
+        this.scores = "";
     }
 
     /*
@@ -80,7 +82,7 @@ public class OutputRecord implements Comparable<OutputRecord> {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if (obj == null || !(obj instanceof OutputRecord)) {
             return false;
         }
         OutputRecord other = (OutputRecord) obj;

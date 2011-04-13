@@ -1,3 +1,6 @@
+1.5.12 # scorreia
+- review implementation of computeRows and add new junit tests.
+ 
 1.5.11 # sizhaoliu
 - added trim() before inserting synonyms into index.
 - fixed a bug in SynonymRecordSearcher when result counts of different columns have factorization.

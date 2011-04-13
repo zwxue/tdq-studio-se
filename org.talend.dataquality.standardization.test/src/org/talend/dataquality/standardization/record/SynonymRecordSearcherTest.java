@@ -15,7 +15,9 @@ package org.talend.dataquality.standardization.record;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import junit.framework.Assert;
 
@@ -26,11 +28,130 @@ import org.junit.Test;
 import org.talend.dataquality.standardization.index.SynonymIndexBuilder;
 import org.talend.dataquality.standardization.index.SynonymIndexBuilderTest;
 import org.talend.dataquality.standardization.index.SynonymIndexSearcher;
+import org.talend.dataquality.standardization.record.SynonymRecordSearcher.RecordResult;
+import org.talend.dataquality.standardization.record.SynonymRecordSearcher.WordResult;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
 public class SynonymRecordSearcherTest {
+
+    private static final String[][] WORDRESULTS = { { "11", "12", "13", "14", "15" }, { "21", "22", "23" }, { "31", "32", "33" },
+            { "43" } };
+
+   // private static final String[][] WORDRESULTS = { { "11", "12" }, { "21", "22" }, { "31", "32" } };
+
+
+    @Test
+    public void testRecordResultCompute() {
+
+        // prepare wordresults
+        List<List<WordResult>> wordResults = new ArrayList<List<WordResult>>();
+        for (String[] elts : WORDRESULTS) {
+            List<WordResult> wrs = new ArrayList<WordResult>();
+            for (String elt : elts) {
+                WordResult wr = new WordResult();
+                wr.input = "input " + elt;
+                wr.word = "word " + elt;
+                wr.score = (float) Math.random();
+                wrs.add(wr);
+            }
+            wordResults.add(wrs);
+        }
+
+        // --- compute output results
+        RecordResult recRes = new RecordResult();
+        recRes.record = initializeRecordToSearch(WORDRESULTS);
+        recRes.wordResults = wordResults;
+
+        List<OutputRecord> expectedOutputRows = null;
+        expectedOutputRows = new ArrayList<OutputRecord>();
+        computeOutputRows(WORDRESULTS.length, new ArrayList<WordResult>(), recRes.wordResults, expectedOutputRows);
+        for (OutputRecord outputRecord : expectedOutputRows) {
+            System.out.println(outputRecord);
+        }
+
+        List<OutputRecord> outputRows = recRes.computeOutputRows();
+
+        // --- check some assertions
+
+        // verify number of results
+        int expectedNbOutput = 1;
+        for (String[] in : WORDRESULTS) {
+            expectedNbOutput *= in.length;
+        }
+
+        Assert.assertEquals(expectedNbOutput, expectedOutputRows.size());
+        Assert.assertTrue(expectedOutputRows.size() >= outputRows.size());
+
+        for (OutputRecord outputRecord : outputRows) {
+            boolean found = false;
+            for (OutputRecord expectedRecord : expectedOutputRows) {
+                if (expectedRecord.equals(outputRecord)) {
+                    found = true;
+                    break;
+                }
+            }
+            Assert.assertTrue("Record not found: " + outputRecord, found);
+        }
+
+    }
+
+    /**
+     * DOC scorreia Comment method "initializeRecordToSearch".
+     * 
+     * @param wordresults
+     * @return
+     */
+    private String[] initializeRecordToSearch(String[][] wordresults) {
+        Random rnd = new Random();
+        String[] init = new String[wordresults.length];
+        int i = 0;
+        for (String[] wr : wordresults) {
+            init[i++] = wr[rnd.nextInt(wr.length)];
+        }
+        return init;
+    }
+
+    /**
+     * Method "computeOutputRows".
+     * 
+     * @param recordLength the record length
+     * @param wordResults the list of word result that constitute the begining of the current output record
+     * @param wrs the list of remaining word results
+     * @param outputRows the output records (updated each time this method is called)
+     * @return
+     */
+    private void computeOutputRows(int recordLength, List<WordResult> wordResults, List<List<WordResult>> wrs,
+            List<OutputRecord> outputRows) {
+        // handle last vector of word results
+        if (wrs.size() == 1) {
+            List<WordResult> lastWR = wrs.get(0);
+            for (WordResult wordResult : lastWR) {
+                OutputRecord outputRec = new OutputRecord(recordLength);
+                for (int i = 0; i < wordResults.size(); i++) {
+                    updateOutputRec(outputRec, i, wordResults.get(i));
+                }
+                updateOutputRec(outputRec, wordResults.size(), wordResult);
+
+                outputRows.add(outputRec);
+            }
+        } else { // recusive call on a sublist
+            List<WordResult> firstWR = wrs.get(0);
+            List<List<WordResult>> sublist = wrs.subList(1, wrs.size());
+            for (WordResult wordResult : firstWR) {
+                List<WordResult> wr = new ArrayList<WordResult>(wordResults);
+                wr.add(wordResult);
+                computeOutputRows(recordLength, wr, sublist, outputRows);
+            }
+        }
+    }
+
+    private void updateOutputRec(OutputRecord outputRec, int idx, WordResult wordResult) {
+        outputRec.record[idx] = wordResult.word;
+        outputRec.score += wordResult.score; // TODO add multiplicative weight here if needed
+        outputRec.scores += "|" + wordResult.score;
+    }
 
     /**
      * DOC scorreia Comment method "setUp".
