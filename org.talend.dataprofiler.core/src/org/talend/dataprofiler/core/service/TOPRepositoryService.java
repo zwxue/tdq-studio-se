@@ -13,13 +13,17 @@
 package org.talend.dataprofiler.core.service;
 
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dq.CWMPlugin;
@@ -68,5 +72,18 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     public void refresh() {
         CorePlugin.getDefault().refreshWorkSpace();
         CorePlugin.getDefault().refreshDQView();
+    }
+
+    public void initProxyRepository() {
+        CorePlugin.getDefault().initProxyRepository();
+    }
+
+    public void addPartListener() {
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        // Calculate the extensions to register partListener.
+        IPartListener listener = PartListener.getPartListener();
+        if (listener != null) {
+            activePage.addPartListener(listener);
+        }
     }
 }
