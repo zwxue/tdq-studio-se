@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -63,6 +64,7 @@ import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
@@ -116,6 +118,9 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         if (recursiveFind != null && recursiveFind instanceof RuleRepNode) {
             this.ruleRepNode = (RuleRepNode) recursiveFind;
             this.whereRuleItem = (TDQBusinessRuleItem) this.ruleRepNode.getObject().getProperty().getItem();
+        } else {
+            Property property = PropertyHelper.getProperty(whereRule);
+            this.whereRuleItem = (TDQBusinessRuleItem) property.getItem();
         }
     }
 
