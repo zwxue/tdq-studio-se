@@ -132,15 +132,24 @@ public abstract class DataExplorer implements IDataExplorer {
                 indName = this.indicator.getName() == null ? "" : this.indicator.getName();
             }
             showing = showing == null ? "" : showing; //$NON-NLS-1$
-            sb.append("/*\n"); //$NON-NLS-1$
-            sb.append("Analysis: " + anaName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("Type of Analysis: " + anaType + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("Purpose: " + anaPurpose + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("Description: " + anaDescription + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("AnalyzedElement: " + aeName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("Indicator: " + indName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("Showing: " + showing + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("*/\n"); //$NON-NLS-1$
+            //            sb.append("/*\n"); //$NON-NLS-1$
+            //            sb.append("Analysis: " + anaName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            //            sb.append("Type of Analysis: " + anaType + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            //            sb.append("Purpose: " + anaPurpose + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            //            sb.append("Description: " + anaDescription + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            //            sb.append("AnalyzedElement: " + aeName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            //            sb.append("Indicator: " + indName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            //            sb.append("Showing: " + showing + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            //            sb.append("*/\n"); //$NON-NLS-1$
+
+            sb.append("--Analysis: " + anaName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("--Type of Analysis: " + anaType + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("--Purpose: " + anaPurpose + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("--Description: " + anaDescription + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("--AnalyzedElement: " + aeName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("--Indicator: " + indName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("--Showing: " + showing + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+
         }
         return sb.toString();
     }
