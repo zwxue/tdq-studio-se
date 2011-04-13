@@ -513,8 +513,15 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     private class CaseInsensitiveComparator implements Comparator<Object> {
 
         public int compare(Object element1, Object element2) {
-            TdColumn col1 = (TdColumn) element1;
-            TdColumn col2 = (TdColumn) element2;
+            TdColumn col1;
+            TdColumn col2;
+            if (element1 instanceof DBColumnRepNode && element2 instanceof DBColumnRepNode) {
+                col1 = ((DBColumnRepNode) element1).getTdColumn();
+                col2 = ((DBColumnRepNode) element2).getTdColumn();
+            } else {
+                col1 = (TdColumn) element1;
+                col2 = (TdColumn) element2;
+            }
             String lower1 = col1.getName().toLowerCase();
             String lower2 = col2.getName().toLowerCase();
             return lower1.compareTo(lower2);
