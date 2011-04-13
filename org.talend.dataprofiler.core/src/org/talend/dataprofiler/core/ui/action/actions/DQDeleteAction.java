@@ -32,13 +32,10 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.service.TDQResourceChangeHandler;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -124,12 +121,12 @@ public class DQDeleteAction extends DeleteAction {
                         ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
                         EObjectHelper.removeDependencys(modelEle);
                         // clear the memory variable of TdReport.(bug 19179)
-                        if ( modelEle instanceof TdReport) {
-                            IFile file = ResourceManager.getReportsFolder().getFile(WorkbenchUtils.getFilePath(node));
-                            if (file != null) {
-                              RepResourceFileHelper.getInstance().remove(file);
-                            }
-                        }
+                        // if ( modelEle instanceof TdReport) {
+                        // IFile file = ResourceManager.getReportsFolder().getFile(WorkbenchUtils.getFilePath(node));
+                        // if (file != null) {
+                        // RepResourceFileHelper.getInstance().remove(file);
+                        // }
+                        // }
                         excuteSuperRun((RepositoryNode) node);
                     }
                 }

@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,19 +26,15 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.EmptyRecycleBinAction;
-import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -113,12 +108,12 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
                     // remove client dependcy for supplier, .eg. delete analysis,should remove client dependecy in
                     // connection
                     ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(child);
-                    if (modelEle != null && modelEle instanceof TdReport) {
-                        IFile file = ResourceManager.getReportsFolder().getFile(WorkbenchUtils.getFilePath(node));
-                        if (file != null) {
-                            RepResourceFileHelper.getInstance().remove(file);
-                        }
-                    }
+                    // if (modelEle != null && modelEle instanceof TdReport) {
+                    // IFile file = ResourceManager.getReportsFolder().getFile(WorkbenchUtils.getFilePath(child));
+                    // if (file != null) {
+                    // RepResourceFileHelper.getInstance().remove(file);
+                    // }
+                    // }
                     EObjectHelper.removeDependencys(modelEle);
                 }
                 deleteElements(factory, (RepositoryNode) child);
