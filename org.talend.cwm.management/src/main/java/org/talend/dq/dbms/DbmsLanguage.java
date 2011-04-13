@@ -292,12 +292,17 @@ public class DbmsLanguage {
         StringBuffer qualName = new StringBuffer();
         if (catalog != null && catalog.trim().length() > 0) {
             qualName.append(this.quote(catalog));
-
             qualName.append(getDelimiter());
         }
         if (schema != null && schema.trim().length() > 0) {
             qualName.append(this.quote(schema));
-            qualName.append(getDelimiter());
+            // MOD gdbu 2011-4-11 bug : 18975
+            if (dbmsName.contains(DbmsLanguage.INFOMIX)) {
+                qualName.append(DbmsLanguage.DOT);
+            } else {
+                qualName.append(getDelimiter());
+            }
+            // ~18975
         }
 
         qualName.append(this.quote(table));

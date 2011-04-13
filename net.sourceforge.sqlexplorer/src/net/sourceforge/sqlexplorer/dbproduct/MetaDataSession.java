@@ -63,10 +63,16 @@ public class MetaDataSession extends Session {
 		try {
 			connection = grabConnection();
 			metaData = connection.getSQLMetaData();
-			if (metaData.supportsCatalogs())
-				catalogs = metaData.getCatalogs();
+            // MOD gdbu 2011-4-12 bug : 18975
 			databaseProductName = metaData.getDatabaseProductName();
 			dbModel = new DatabaseModel(this);
+            try {
+                if (metaData.supportsCatalogs())
+                    catalogs = metaData.getCatalogs();
+            } catch (Exception e) {
+                SQLExplorerPlugin.error(databaseProductName + " find catalogs error : " + e);
+            }
+            // ~18975
 		}finally {
 			if (connection != null)
 				releaseConnection(connection);
