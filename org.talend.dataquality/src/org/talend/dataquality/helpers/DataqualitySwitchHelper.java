@@ -13,6 +13,7 @@
 package org.talend.dataquality.helpers;
 
 import org.talend.cwm.relational.TdExpression;
+import org.talend.cwm.relational.util.RelationalSwitch;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
 import org.talend.dataquality.domain.DateValue;
@@ -24,7 +25,6 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.pattern.util.PatternSwitch;
 import org.talend.dataquality.domain.util.DomainSwitch;
-import org.talend.dataquality.expressions.util.ExpressionsSwitch;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -103,9 +103,9 @@ public final class DataqualitySwitchHelper {
 
     };
 
-    public static final ExpressionsSwitch<TdExpression> TDEXPRESSION_SWITCH = new ExpressionsSwitch<TdExpression>() {
+    public static final RelationalSwitch<TdExpression> TDEXPRESSION_SWITCH = new RelationalSwitch<TdExpression>() {
 
-        @SuppressWarnings("unused")
+        @Override
         public TdExpression caseTdExpression(TdExpression object) {
             return object;
         }
