@@ -15,15 +15,19 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -31,7 +35,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -43,6 +47,7 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
+    private static Logger log = Logger.getLogger(DataProviderComparisonLevel.class);
     public DataProviderComparisonLevel(Object selectedObj) {
         super(selectedObj);
     }
@@ -69,7 +74,15 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         // MOD klliu 2001-03-01 bug 17506
         RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(oldDataProvider);
         Item item = recursiveFind.getObject().getProperty().getItem();
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        // MOD mzhao bug 20523, only save the reloaded connection resource, the client dependency (analysis) should not
+        // save here, it will be handled later.
+        try {
+            ProxyRepositoryFactory.getInstance().save(currentProject, item);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        // ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
         // ElementWriterFactory.getInstance().createDataProviderWriter().save(oldDataProvider);
         // ProxyRepositoryViewObject.save(oldDataProvider);
     }

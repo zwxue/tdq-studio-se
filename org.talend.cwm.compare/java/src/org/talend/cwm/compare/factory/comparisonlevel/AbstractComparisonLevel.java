@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
+import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
@@ -72,6 +73,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected DiffSwitch<ReferenceChangeRightTarget> removeReferenceValueSwitch;
 
     protected DiffSwitch<ReferenceChangeLeftTarget> addReferenceValueSwitch;
+
+    protected DiffSwitch<DiffGroup> diffGroupSwitch;
 
     // MOD klliu bug 14689 2010-08-04
     protected CoreSwitch<Package> packageSwitch;
@@ -152,6 +155,12 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
             public Package casePackage(Package object) {
                 return object;
             }
+        };
+        diffGroupSwitch = new DiffSwitch<DiffGroup>() {
+
+            public DiffGroup caseDiffGroup(DiffGroup object) {
+                return object;
+            };
         };
     }
 
@@ -303,6 +312,16 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected abstract Resource getLeftResource() throws ReloadCompareException;
 
     protected void handleDiffPackageElement(DiffElement difElement) {
+        DiffGroup diffGroup = diffGroupSwitch.doSwitch(difElement);
+        if (diffGroup != null) {
+            EList<DiffElement> subDiffElements = diffGroup.getSubDiffElements();
+            // Handle diff group
+            for (DiffElement de : subDiffElements) {
+                handleDiffPackageElement(de);
+            }
+            return;
+        }
+
         ModelElementChangeRightTarget addElement = addModelSwitch.doSwitch(difElement);
         if (addElement != null) {
             handleAddElement(addElement);

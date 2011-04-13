@@ -236,14 +236,15 @@ public class DataProviderWriter extends AElementPersistance {
                                 TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
                                         .getItem();
                                 analysisItem.setAnalysis(analysis);
+                                ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem);
                             }
-                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                    .saveResource(analysis.eResource());
+                            // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                            // .saveResource(analysis.eResource());
                         }
                     }
                 }
             }
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             log.error(e, e);
         }
         // update client dependency

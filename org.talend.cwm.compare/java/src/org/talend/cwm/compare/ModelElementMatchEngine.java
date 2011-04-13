@@ -15,8 +15,6 @@ package org.talend.cwm.compare;
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.ecore.EObject;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.cwm.helper.SwitchHelpers;
 
 /**
  * yyi 2011-03-30 19137:reload database list on editing connection url
@@ -33,14 +31,15 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
      */
     @Override
     public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
-
-        DatabaseConnection connection1 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj1);
-        DatabaseConnection connection2 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj2);
-
-        if (connection1 != null && connection2 != null) {
-            isChangedconnectionUrl = connection1.getURL().equals(connection2.getURL());
-        }
-        return isChangedconnectionUrl ? false : super.isSimilar(obj1, obj2);
+        //
+        // DatabaseConnection connection1 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj1);
+        // DatabaseConnection connection2 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj2);
+        //
+        // if (connection1 != null && connection2 != null) {
+        // isChangedconnectionUrl = connection1.getURL().equals(connection2.getURL());
+        // }
+        // return isChangedconnectionUrl ? false : super.isSimilar(obj1, obj2);
+        return Boolean.TRUE;
     }
 
     /*
