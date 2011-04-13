@@ -140,7 +140,7 @@ public class DBTableFolderRepNode extends RepositoryNode {
      */
     private void createTableRepositoryNode(List<TdTable> tables, List<IRepositoryNode> node) {
         for (TdTable table : tables) {
-            table.setTableType("TABLE");
+            table.setTableType("TABLE"); //$NON-NLS-1$
             TdTableRepositoryObject metadataTable = new TdTableRepositoryObject(viewObject, table);
             metadataTable.setTableName(table.getName());
             metadataTable.setLabel(table.getName());
@@ -156,7 +156,15 @@ public class DBTableFolderRepNode extends RepositoryNode {
     }
 
     public String getNodeName() {
-        return "Tables"; //$NON-NLS-1$
+        return "Tables (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public int getChildrenCount() {
+        List<IRepositoryNode> children2 = this.getChildren();
+        if (children2 != null) {
+            return children2.size();
+        }
+        return 0;
     }
 
     /**

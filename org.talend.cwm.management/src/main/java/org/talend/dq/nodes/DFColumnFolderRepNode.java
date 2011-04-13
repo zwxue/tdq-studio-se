@@ -92,4 +92,15 @@ public class DFColumnFolderRepNode extends RepositoryNode {
         return this.mTable;
     }
 
+    public String getNodeName() {
+        return "Columns (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public int getChildrenCount() {
+        List<IRepositoryNode> children2 = this.getChildren();
+        if (children2 != null) {
+            return children2.size();
+        }
+        return 0;
+    }
 }

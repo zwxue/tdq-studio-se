@@ -124,7 +124,6 @@ public class DBViewFolderRepNode extends RepositoryNode {
         } catch (Exception e) {
             log.error(e, e);
         }
-
         createTableRepositoryNode(views, node);
     }
 
@@ -151,7 +150,15 @@ public class DBViewFolderRepNode extends RepositoryNode {
     }
 
     public String getNodeName() {
-        return "Views"; //$NON-NLS-1$
+        return "Views (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public int getChildrenCount() {
+        List<IRepositoryNode> children2 = this.getChildren();
+        if (children2 != null) {
+            return children2.size();
+        }
+        return 0;
     }
 
     /**

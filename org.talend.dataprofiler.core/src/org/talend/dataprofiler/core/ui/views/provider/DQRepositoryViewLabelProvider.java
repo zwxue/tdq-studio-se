@@ -208,14 +208,20 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             } else if (node instanceof DBConnectionSubFolderRepNode) {
                 return ((DBConnectionSubFolderRepNode) node).getObject().getLabel();
             } else if (node instanceof DBConnectionFolderRepNode) {
-                return "DB " + ((DBConnectionFolderRepNode) node).getObject().getLabel();
+                return "DB " + ((DBConnectionFolderRepNode) node).getObject().getLabel(); //$NON-NLS-1$
             } else if (node instanceof DBTableFolderRepNode) {
                 return ((DBTableFolderRepNode) node).getNodeName();
             } else if (node instanceof DBViewFolderRepNode) {
                 return ((DBViewFolderRepNode) node).getNodeName();
-            } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
-                return DefaultMessagesImpl.getString("ColumnFolderNode.columns");
-            } // ~MOD klliu 2011-03-29 bug 19936
+            } else if (node instanceof DBColumnFolderRepNode) {
+                return ((DBColumnFolderRepNode) node).getNodeName();
+            } else if (node instanceof DFColumnFolderRepNode) {
+                return ((DFColumnFolderRepNode) node).getNodeName();
+            }
+            // else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
+            //                return DefaultMessagesImpl.getString("ColumnFolderNode.columns"); //$NON-NLS-1$
+            // }
+            // ~MOD klliu 2011-03-29 bug 19936
             else if (node instanceof DBColumnRepNode) {
                 DBColumnRepNode columnNode = (DBColumnRepNode) node;
                 return columnNode.getLabel() + LEFT + columnNode.getNodeDataType() + RIGHT;
@@ -226,7 +232,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             } else if (node instanceof MDMXmlElementRepNode) {
                 MDMXmlElementRepNode mdmColumnRepNode = (MDMXmlElementRepNode) node;
                 String nodeDataType = mdmColumnRepNode.getNodeDataType();
-                if (!"".equals(nodeDataType)) {//$NON-NLS-1$
+                if (!"".equals(nodeDataType)) { //$NON-NLS-1$
                     return mdmColumnRepNode.getTdXmlElementType().getName() + LEFT + nodeDataType + RIGHT;
                 }
                 return mdmColumnRepNode.getTdXmlElementType().getName();
