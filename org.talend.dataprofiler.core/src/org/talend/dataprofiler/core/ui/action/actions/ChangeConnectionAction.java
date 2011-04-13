@@ -268,11 +268,12 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 .getFolderNode((Package) treeModelLs.get(0).getNewDataProvElement(), columnset);
         if (reloadFolder != null) {
             IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reloadFolder);
-            newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
+            if (creatComparisonLevel != null) {
+                newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
+            }
             // Recompute after reload
             treeModelLs = anaEleSynDialog.getSynInputModel();
         }
-
     }
 
     private void reloadByColumnFolderLevel(List<SynTreeModel> treeModelLs, AnalyzedElementSynDialog anaEleSynDialog,
@@ -292,7 +293,9 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         IFolderNode reloadFolder = FolderNodeHelper.getFolderNodes(columnset)[0];
         if (reloadFolder != null) {
             IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reloadFolder);
-            newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
+            if (creatComparisonLevel != null) {
+                newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
+            }
             // Recompute after reload
             treeModelLs = anaEleSynDialog.getSynInputModel();
         }
