@@ -430,6 +430,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /**
      * DOC zqin BinsDesignerForm class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class BinsLableProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -456,6 +458,8 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /**
      * DOC zqin BinsDesignerForm class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class BinsContentProvider implements IStructuredContentProvider {
 

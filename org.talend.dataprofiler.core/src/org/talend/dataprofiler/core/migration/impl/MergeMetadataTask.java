@@ -179,6 +179,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
                 fileWriter = null;
                 fileReader.close();
                 fileReader = null;
+                // FIXME why garbage collector is called here? Is it necessary? Explain.
                 System.gc();
             } catch (Exception e) {
                 error = e;

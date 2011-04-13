@@ -731,8 +731,7 @@ public final class DatabaseContentRetriever {
     }
 
     private static DatabaseMetaData getConnectionMetadata(java.sql.Connection connection) throws SQLException {
-        assert connection != null : "Connection should not be null in DatabaseContentRetriever.getConnectionMetadata() "
-                + getConnectionInformations(connection);
+        assert connection != null : "Connection should not be null in DatabaseContentRetriever.getConnectionMetadata() ";
         // MOD xqliu 2009-07-13 bug 7888
         return org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
     }

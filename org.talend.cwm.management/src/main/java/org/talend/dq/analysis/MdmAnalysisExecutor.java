@@ -136,6 +136,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             ModelElement parentElement = XmlElementHelper.getParentElement(tdXmlElement);
             if (parentElement == null) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName()); //$NON-NLS-1$
+                // FIXME should we not return null here?
             }
             TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
             if (parentXmlElement == null) {

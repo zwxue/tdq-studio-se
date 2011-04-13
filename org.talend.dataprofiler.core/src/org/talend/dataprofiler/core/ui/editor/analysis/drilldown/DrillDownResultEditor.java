@@ -281,11 +281,11 @@ public class DrillDownResultEditor extends EditorPart {
         return strs;
     }
 
-
-
     /**
      * 
      * DOC zshen DrillDownResultEditor class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      * 
      */
     private class DrillDownResultLabelProvider implements ITableLabelProvider {
@@ -364,6 +364,8 @@ public class DrillDownResultEditor extends EditorPart {
     /**
      * 
      * DOC zshen DrillDownResultEditor class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class DrillDownResultContentProvider implements IStructuredContentProvider {
 
@@ -416,6 +418,8 @@ public class DrillDownResultEditor extends EditorPart {
     /**
      * 
      * DOC zshen DrillDownResultEditor class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class ListenToTheAction extends SelectionAdapter {
 

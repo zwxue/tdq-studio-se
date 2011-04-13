@@ -46,10 +46,11 @@ public class PerspectiveMenuManager extends MenuManager {
         setRemoveAllWhenShown(true);
         add(new ChangePerspectiveAction(DefaultMessagesImpl.getString("PerspectiveMenuManager.dummy"))); //$NON-NLS-1$
     }
-    
+
     /**
      * @author rli
-     *
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class PerspectiveData {
 		private String refPerspectiveId;

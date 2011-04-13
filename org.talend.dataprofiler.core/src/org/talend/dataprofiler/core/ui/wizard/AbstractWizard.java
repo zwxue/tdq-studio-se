@@ -127,7 +127,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                         }
                     }
 
-                    if (theElementName.equals(elementName)) {
+                    if (elementName.equals(theElementName)) {
                         // MOD xqliu 2010-09-21 bug 15762
                         return new ReturnCode(UIMessages.MSG_ANALYSIS_SAME_NAME, false);
                         // if (!MessageUI.openConfirm(UIMessages.MSG_ANALYSIS_SAME_NAME)) {

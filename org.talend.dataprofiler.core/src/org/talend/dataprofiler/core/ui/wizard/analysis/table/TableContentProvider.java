@@ -88,6 +88,8 @@ public class TableContentProvider extends ResourceViewContentProvider {
 
     /**
      * This class will combine catlogName and columnSetName as a key.
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class CatalogSchemaKey {
 

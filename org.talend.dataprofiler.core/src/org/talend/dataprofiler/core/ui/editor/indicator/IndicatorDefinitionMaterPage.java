@@ -2203,6 +2203,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class AggregateDateExpression implements Cloneable {
 
@@ -2323,6 +2325,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class AggregateVO {
 
@@ -2495,6 +2499,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class CommonContentProvider implements IStructuredContentProvider {
 
@@ -2514,6 +2520,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class AggregateLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -2544,6 +2552,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class DateVO {
 
@@ -2732,6 +2742,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class DateLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -2828,6 +2840,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class CharactersMappingLabelProvider extends LabelProvider implements ITableLabelProvider {
 

@@ -41,9 +41,9 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle {
      */
     RepositoryViewObjectHandle(Property property) {
         if (property.eIsProxy()) {
+            // FIXME property is the argument. Do we really want to change the argument here? What effect is expected?
             property = (Property) EObjectHelper.resolveObject(property);
         }
-        this.repositoryObject = repositoryObject;
     }
 
     RepositoryViewObjectHandle(IRepositoryNode node) {

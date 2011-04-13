@@ -308,6 +308,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * @author rli
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class ModelElementContentProvider extends ResourceViewContentProvider {
 
@@ -351,6 +353,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * DOC zqin ColumnsSelectionDialog class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class DBTreeViewContentProvider extends ResourceViewContentProvider {
 

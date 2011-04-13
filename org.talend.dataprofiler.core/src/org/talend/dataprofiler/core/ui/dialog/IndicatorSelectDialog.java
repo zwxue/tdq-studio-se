@@ -164,6 +164,8 @@ public class IndicatorSelectDialog extends TrayDialog {
     /**
      * @author rli
      * 
+     * FIXME this inner class should be static. Confirm and fix the error.
+     * 
      */
     class TreeItemContainer extends TreeItem {
 

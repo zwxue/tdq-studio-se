@@ -452,6 +452,8 @@ public class HideSeriesChartComposite extends ChartComposite {
     /**
      * 
      * DOC zhaoxinyi class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class RowColumPair {
 

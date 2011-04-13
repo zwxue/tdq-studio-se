@@ -239,6 +239,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     /**
      * The provider for display the data of catalog table viewer.
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class CatalogViewerProvier extends AbstractStatisticalViewerProvider {
 
@@ -269,6 +271,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     /**
      * The provider for display the data of schema table viewer.
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class SchemaViewerProvier extends AbstractStatisticalViewerProvider {
 
@@ -297,6 +301,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     /**
      * The provider for display the data of catalog(contain schemas) table viewer.
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class CatalogSchemaViewerProvier extends AbstractStatisticalViewerProvider {
 
@@ -679,6 +685,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 // ~
             }
         } else {
+            // FIXME this code is not used. Remove it.
             indicatorList = new ArrayList<OverviewIndUIElement>();
         }
     }

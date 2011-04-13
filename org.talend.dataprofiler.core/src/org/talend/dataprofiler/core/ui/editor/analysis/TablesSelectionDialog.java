@@ -305,6 +305,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * This class will combine catlogName and/or schemaName as a key.
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class RepositoryNodeKey {
 
@@ -392,6 +394,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * @author xqliu
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class TableCheckedMap {
 
@@ -471,6 +475,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * label provider for table viewer.
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class TableLabelProvider extends LabelProvider {
 

@@ -85,7 +85,8 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 return returnCode;
             }
             csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
-                    encoding == null ? encoding : encoding)), ParameterUtil.trimParameter(separator).charAt(0));
+                    encoding == null ? /* FIXME do we really want to pass null here? */encoding : encoding)), ParameterUtil
+                    .trimParameter(separator).charAt(0));
             initializeCsvReader(csvReader);
 
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();

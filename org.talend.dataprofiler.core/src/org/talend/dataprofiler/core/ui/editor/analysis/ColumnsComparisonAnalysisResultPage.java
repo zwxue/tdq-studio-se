@@ -598,6 +598,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     /**
      * The provider for displaying the pair of <Code>Column</Code>.
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class ColumnPairsViewerProvider extends LabelProvider implements ITableLabelProvider, IStructuredContentProvider {
 

@@ -155,7 +155,7 @@ public class PatternsSelectPage extends WizardPage {
             if (filterType != null && newfilterType.equals(filterType)) {
                 dataRadio.setSelection(true);
                 // default selection
-            } else if (filterType == null && newfilterType.equals(DataFilterType.ALL_DATA.getTextName())) {
+            } else if (filterType == null && newfilterType.equals(DataFilterType.ALL_DATA)) {
                 dataRadio.setSelection(true);
             }
 
@@ -231,6 +231,8 @@ public class PatternsSelectPage extends WizardPage {
     /**
      * 
      * DOC zshen PatternsSelectPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class PatternSelectContentProvider implements IStructuredContentProvider {
 
@@ -273,6 +275,8 @@ public class PatternsSelectPage extends WizardPage {
     /**
      * 
      * DOC zshen PatternsSelectPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class PatternSelectLabelProvider implements ITableLabelProvider {
 

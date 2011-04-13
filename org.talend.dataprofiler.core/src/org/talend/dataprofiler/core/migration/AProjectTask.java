@@ -63,6 +63,7 @@ public abstract class AProjectTask extends AMigrationTask implements IProjectMig
      */
     public Date getOrder() {
         Calendar calender = Calendar.getInstance();
+        // FIXME month number 12 does not exist. Max is 11.
         calender.set(2999, 12, 12);
         return calender.getTime();
     }

@@ -199,6 +199,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
                 prov.setUsername(property);
             }
         }
+        // FIXME what is this assignment?
         dataProvider = prov;
         // DataProviderHelper.addProviderConnection(prov, dataProvider);
     }

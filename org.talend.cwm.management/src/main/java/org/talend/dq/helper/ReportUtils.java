@@ -251,8 +251,11 @@ public final class ReportUtils {
             saveReportListFile(repListFile, repList);
         }
     }
+
     /**
      * DOC xqliu ReportUtils class global comment. Detailled comment
+     * 
+     * // FIXME use a static inner class instead
      */
     private class ReportListParameters {
 

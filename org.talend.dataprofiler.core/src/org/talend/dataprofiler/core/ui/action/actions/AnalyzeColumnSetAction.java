@@ -53,10 +53,6 @@ public class AnalyzeColumnSetAction extends Action {
 
     TdColumn[] columns;
 
-    private DBConnectionRepNode connNode = null;
-
-    private DBCatalogRepNode cataNode = null;
-
     private DBSchemaRepNode schemaNode = null;
 
     IRepositoryNode nodeColumns;

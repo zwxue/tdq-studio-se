@@ -95,6 +95,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
 
     protected Section summarySection = null;
 
+    // FIXME this field masks a visible field in superclass. Remove it.
     protected CommonFormEditor currentEditor;
 
     public AbstractAnalysisResultPage(FormEditor editor, String id, String title) {

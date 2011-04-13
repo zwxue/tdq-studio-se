@@ -392,6 +392,8 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class JoinElementContentProvider implements IStructuredContentProvider {
 
@@ -414,6 +416,8 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class JoinElementLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -480,6 +484,8 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu JoinConditionTableViewer class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class JoinElementColumnDialog extends Dialog {
 

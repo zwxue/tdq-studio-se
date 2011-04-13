@@ -56,6 +56,8 @@ public class CsvFileTableViewer extends Composite {
 
     /**
      * DOC yyi CsvFileTableViewer class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     class ViewContentProvider implements IStructuredContentProvider {
 

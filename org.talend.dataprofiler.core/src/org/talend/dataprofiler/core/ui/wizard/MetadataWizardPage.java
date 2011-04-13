@@ -320,7 +320,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if (nameText.getText().trim() == "") { //$NON-NLS-1$
+        if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }

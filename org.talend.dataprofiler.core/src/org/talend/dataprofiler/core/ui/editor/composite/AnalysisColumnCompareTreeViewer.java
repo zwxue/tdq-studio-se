@@ -509,6 +509,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     /**
      * 
      * DOC xqliu ColumnsComparisonMasterDetailsPage class global comment. Detailled comment
+     * 
+     * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class CaseInsensitiveComparator implements Comparator<Object> {
 

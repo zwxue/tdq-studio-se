@@ -29,7 +29,7 @@ public class CorrelationDataSorter extends ViewerSorter {
     }
 
     public int compare(Viewer viewer, Object o1, Object o2) {
-        if (o1 instanceof Object[] && o1 instanceof Object[]) {
+        if (o1 instanceof Object[] && o2 instanceof Object[]) {
             Object[] objs1 = (Object[]) o1;
             Object obj1 = objs1[Math.abs(arrayIndex) - 1];
             Object[] objs2 = (Object[]) o2;
