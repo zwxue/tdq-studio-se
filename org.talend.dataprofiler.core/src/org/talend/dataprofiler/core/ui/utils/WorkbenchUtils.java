@@ -260,4 +260,16 @@ public final class WorkbenchUtils {
         }
         return null;
     }
+
+    public static boolean isLinux() {
+        return System.getProperty("os.name").toUpperCase().indexOf("LINUX") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public static boolean isWindows() {
+        return System.getProperty("os.name").toUpperCase().indexOf("WIN") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public static boolean isMac() {
+        return System.getProperty("os.name").toUpperCase().indexOf("MAC") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

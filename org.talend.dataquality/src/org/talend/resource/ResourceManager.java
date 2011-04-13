@@ -494,4 +494,18 @@ public final class ResourceManager {
     public static IFolder getFileDelimitedFolder() {
         return getOneFolder(EResourceConstant.FILEDELIMITED);
     }
+
+    /**
+     * get the absolute path relative to the current project.
+     * 
+     * @param path
+     * @return never null
+     */
+    public static String getAbsolutePathRelative2Project(String path) {
+        if (path != null && !"".equals(path)) { //$NON-NLS-1$
+            return getRootProject().getLocation().append(path).toOSString();
+        }
+        return ""; //$NON-NLS-1$
+    }
+
 }

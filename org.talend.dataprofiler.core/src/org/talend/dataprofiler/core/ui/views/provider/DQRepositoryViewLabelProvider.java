@@ -48,6 +48,7 @@ import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
@@ -183,6 +184,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
                     image = ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
                 } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
                     image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+                } else if (node instanceof JrxmlTempleteRepNode) {
+                    image = ImageLib.getImage(ImageLib.XML_DOC);
                 }
                 // else if (node instanceof PatternLanguageRepNode) {
                 // return ImageLib.getImage(ImageLib.);
@@ -321,6 +324,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
             return ImageLib.getImage(ImageLib.EXCHANGE);
         } else if (type == ERepositoryObjectType.FOLDER) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
+        } else if (type == ERepositoryObjectType.TDQ_JRAXML_ELEMENT) {
+            return ImageLib.getImage(ImageLib.XML_DOC);
         }
         return null;
 

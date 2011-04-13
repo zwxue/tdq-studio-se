@@ -22,7 +22,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -48,50 +47,44 @@ public class JrxmlTempFolderRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
-        ERepositoryObjectType contentType = this.getContentType();
+        return getChildren(false);
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
         try {
-            RootContainer<String, IRepositoryViewObject> jrxmlTemplates = ProxyRepositoryFactory.getInstance()
+            super.getChildren().clear();
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-            // RootContainer<String, IRepositoryViewObject> jrxmlTemplates =
-            // ProxyRepositoryFactory.getInstance().getJrxmlTemplates(
-            // contentType);
-            fetchRepositoryNodeByFolder(jrxmlTemplates, contentType, fetchNodeByFolder);
+
+            // sub folders
+            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+                if (!withDeleted && folder.isDeleted()) {
+                    continue;
+                }
+                JrxmlTempSubFolderNode childNodeFolder = new JrxmlTempSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+                folder.setRepositoryNode(childNodeFolder);
+                super.getChildren().add(childNodeFolder);
+            }
+
+            // jrxml templates
+            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+                if (!withDeleted && viewObject.isDeleted()) {
+                    continue;
+                }
+                JrxmlTempleteRepNode jrxmlNode = new JrxmlTempleteRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                jrxmlNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+                jrxmlNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+                viewObject.setRepositoryNode(jrxmlNode);
+                super.getChildren().add(jrxmlNode);
+            }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-
-        return fetchNodeByFolder.getChildren();
-    }
-
-    public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,
-            RepositoryNode node) {
-        RepositoryNode parent = node;
-        for (Object object : patterns.getSubContainer()) {
-            Container container = (Container) object;
-            Property property = (Property) container.getProperty();
-            // Item item = property.getItem();
-            ERepositoryObjectType itemType = ERepositoryObjectType.getTypeFromKey(property.getLabel());
-
-            if (itemType == null) {
-                itemType = parentItemType;
-            }
-            Folder folder = new Folder(((Property) property), itemType);
-            JrxmlTempSubFolderNode childNodeFolder = new JrxmlTempSubFolderNode(folder, parent, ENodeType.SIMPLE_FOLDER);
-            parent.getChildren().add(childNodeFolder);
-            fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
-        }
-        // not folder or folders have no subFolder
-        for (Object obj : patterns.getMembers()) {
-            RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
-            if (!viewObject.isDeleted()) {
-                JrxmlTempleteRepNode repNode = new JrxmlTempleteRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-                viewObject.setRepositoryNode(repNode);
-                parent.getChildren().add(repNode);
-
-            }
-        }
-        return parent;
+        return super.getChildren();
     }
 
     @Override
