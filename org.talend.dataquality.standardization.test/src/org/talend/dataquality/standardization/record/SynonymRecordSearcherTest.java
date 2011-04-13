@@ -23,7 +23,7 @@ import junit.framework.Assert;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.queryParser.ParseException;
-import org.junit.Before;
+import org.apache.lucene.search.TopDocs;
 import org.junit.Test;
 import org.talend.dataquality.standardization.index.SynonymIndexBuilder;
 import org.talend.dataquality.standardization.index.SynonymIndexBuilderTest;
@@ -39,8 +39,7 @@ public class SynonymRecordSearcherTest {
     private static final String[][] WORDRESULTS = { { "11", "12", "13", "14", "15" }, { "21", "22", "23" }, { "31", "32", "33" },
             { "43" } };
 
-   // private static final String[][] WORDRESULTS = { { "11", "12" }, { "21", "22" }, { "31", "32" } };
-
+    // private static final String[][] WORDRESULTS = { { "11", "12" }, { "21", "22" }, { "31", "32" } };
 
     @Test
     public void testRecordResultCompute() {
@@ -153,66 +152,53 @@ public class SynonymRecordSearcherTest {
         outputRec.scores += "|" + wordResult.score;
     }
 
-    /**
-     * DOC scorreia Comment method "setUp".
-     * 
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
     private void initIdx(String path) {
-        SynonymIndexBuilder builder1 = new SynonymIndexBuilder();
-        builder1.deleteIndexFromFS(path);
-        builder1.initIndexInFS(path);
+        SynonymIndexBuilder builder = new SynonymIndexBuilder();
+        builder.deleteIndexFromFS(path);
+        builder.initIndexInFS(path);
         for (int i = 0; i < SynonymIndexBuilderTest.synonyms.length; i++) {
             String[] synonyms = SynonymIndexBuilderTest.synonyms[i];
             try {
-                builder1.insertDocument(synonyms[0], synonyms[1]);
+                builder.insertDocument(synonyms[0], synonyms[1]);
             } catch (IOException e) {
                 e.printStackTrace();
                 fail("should not get an exception here");
             }
         }
-        builder1.closeIndex();
+        builder.closeIndex();
     }
 
-    /**
-     * Test method for
-     * {@link org.talend.dataquality.standardization.record.SynonymRecordSearcher#search(int, java.lang.String[], int[])}
-     * .
-     * 
-     * @throws IOException
-     */
-    @Test
-    public void testSearch() {
+    public void testSearch(String[] record, int topDocLimit, int resultLimit) {
+        SynonymRecordSearcher recSearcher = new SynonymRecordSearcher(record.length);
+        for (int i = 0; i < record.length; i++) {
+            initIdx("data/idx" + (i + 1));
+            SynonymIndexSearcher searcher = new SynonymIndexSearcher("data/idx" + (i + 1));
+            searcher.setTopDocLimit(topDocLimit);
+            recSearcher.addSearcher(searcher, i);
+        }
 
-        // create two indexes
-        initIdx("data/idx1");
-        initIdx("data/idx2");
-
-        // search in the two indexes
-        SynonymIndexSearcher searcher1 = new SynonymIndexSearcher("data/idx1");
-        searcher1.setTopDocLimit(5);
-        SynonymIndexSearcher searcher2 = new SynonymIndexSearcher("data/idx2");
-        searcher2.setTopDocLimit(5);
-        SynonymRecordSearcher recSearcher = new SynonymRecordSearcher(2);
-        recSearcher.addSearcher(searcher1, 0);
-        recSearcher.addSearcher(searcher2, 1);
-
-        String[] record = { "IBM", "ANpe" };
         try {
-            List<OutputRecord> results = recSearcher.search(15, record);
+            TopDocs topDocs;
+            int hits = 1;
+            for (int i = 0; i < record.length; i++) {
+                topDocs = recSearcher.getSearcher(i).searchDocumentBySynonym(record[i]);
+                hits *= topDocs.totalHits;
+            }
+
+            List<OutputRecord> results = recSearcher.search(resultLimit, record);
             Assert.assertNotNull(results);
             Assert.assertFalse(results.isEmpty());
             for (OutputRecord outputRecord : results) {
                 Assert.assertNotNull(outputRecord);
                 String[] resultingRecord = outputRecord.getRecord();
                 Assert.assertEquals(record.length, resultingRecord.length);
-
                 System.out.println(StringUtils.join(resultingRecord, '|'));
                 System.out.println("\t" + outputRecord.getScore());
+            }
+            Assert.assertEquals(Math.min(hits, resultLimit), results.size());
+
+            for (int i = 0; i < record.length; i++) {
+                recSearcher.getSearcher(i).close();
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -221,131 +207,27 @@ public class SynonymRecordSearcherTest {
             e.printStackTrace();
             fail("should not get an exception here");
         }
-        try {
-            searcher1.close();
-            searcher2.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("should not get an exception here");
-        }
+        System.out.println("");
+
+    }
+
+    @Test
+    public void testSearch1() {
+        String[] record = { "I.B.M." };
+        testSearch(record, 5, 15);
     }
 
     @Test
     public void testSearch2() {
-        System.out.println("\n");
-
-        // create two indexes
-        initIdx("data/idx1");
-        initIdx("data/idx2");
-
-        SynonymIndexBuilder builder1 = new SynonymIndexBuilder();
-        builder1.initIndexInFS("data/idx1");
-        try {
-            builder1.insertDocument("Institute of Business Management", "IBM");
-        } catch (IOException e1) {
-            fail("should not get an exception here");
-            e1.printStackTrace();
-        }
-        builder1.closeIndex();
-
-        // search in the two indexes
-        SynonymIndexSearcher searcher1 = new SynonymIndexSearcher("data/idx1");
-        searcher1.setTopDocLimit(5);
-        SynonymIndexSearcher searcher2 = new SynonymIndexSearcher("data/idx2");
-        searcher2.setTopDocLimit(5);
-        SynonymRecordSearcher recSearcher = new SynonymRecordSearcher(2);
-        recSearcher.addSearcher(searcher1, 0);
-        recSearcher.addSearcher(searcher2, 1);
-
         String[] record = { "IBM", "ANpe" };
-        try {
-            List<OutputRecord> results = recSearcher.search(15, record);
-            Assert.assertNotNull(results);
-            Assert.assertFalse(results.isEmpty());
-            for (OutputRecord outputRecord : results) {
-                Assert.assertNotNull(outputRecord);
-                String[] resultingRecord = outputRecord.getRecord();
-                Assert.assertEquals(record.length, resultingRecord.length);
-
-                System.out.println(StringUtils.join(resultingRecord, '|'));
-                System.out.println("\t" + outputRecord.getScore());
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-            fail("should not get an exception here");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("should not get an exception here");
-        }
-        try {
-            searcher1.close();
-            searcher2.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("should not get an exception here");
-        }
-
+        testSearch(record, 5, 15);
     }
 
     @Test
     public void testSearch3() {
-        System.out.println("\n");
-
-        // create two indexes
-        initIdx("data/idx1");
-        initIdx("data/idx2");
-        initIdx("data/idx3");
-
-        SynonymIndexBuilder builder1 = new SynonymIndexBuilder();
-        builder1.initIndexInFS("data/idx1");
-        try {
-            builder1.insertDocument("Institute of Business Management", "IBM");
-        } catch (IOException e1) {
-            fail("should not get an exception here");
-            e1.printStackTrace();
-        }
-        builder1.closeIndex();
-
-        // search in the three indexes
-        SynonymIndexSearcher searcher1 = new SynonymIndexSearcher("data/idx1");
-        searcher1.setTopDocLimit(5);
-        SynonymIndexSearcher searcher2 = new SynonymIndexSearcher("data/idx2");
-        searcher2.setTopDocLimit(5);
-        SynonymIndexSearcher searcher3 = new SynonymIndexSearcher("data/idx3");
-        searcher3.setTopDocLimit(5);
-        SynonymRecordSearcher recSearcher = new SynonymRecordSearcher(3);
-        recSearcher.addSearcher(searcher1, 0);
-        recSearcher.addSearcher(searcher2, 1);
-        recSearcher.addSearcher(searcher3, 2);
-
-        String[] record = { "IBM", "ANpe", "International" };
-        try {
-            List<OutputRecord> results = recSearcher.search(15, record);
-            Assert.assertNotNull(results);
-            Assert.assertFalse(results.isEmpty());
-            for (OutputRecord outputRecord : results) {
-                Assert.assertNotNull(outputRecord);
-                String[] resultingRecord = outputRecord.getRecord();
-                Assert.assertEquals(record.length, resultingRecord.length);
-
-                System.out.println(StringUtils.join(resultingRecord, '|'));
-                System.out.println("\t" + outputRecord.getScore());
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-            fail("should not get an exception here");
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("should not get an exception here");
-        }
-        try {
-            searcher1.close();
-            searcher2.close();
-            searcher3.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("should not get an exception here");
-        }
+        String[] record = { "IBM", "ANPE", "International" };
+        testSearch(record, 5, 15);
+        testSearch(record, 5, 100);
     }
 
     /**

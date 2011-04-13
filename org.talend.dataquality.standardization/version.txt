@@ -1,3 +1,7 @@
+1.5.13 # sizhaoliu
+- added some other junit tests for new implementation of computeRows
+- changed output contents for DOCUMENT_MATCHED
+
 1.5.12 # scorreia
 - review implementation of computeRows and add new junit tests.
  
