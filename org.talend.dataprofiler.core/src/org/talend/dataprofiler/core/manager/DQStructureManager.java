@@ -167,12 +167,10 @@ public final class DQStructureManager {
             Folder indicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                     Path.EMPTY, EResourceConstant.INDICATORS.getName());
             Folder systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(
-                    ERepositoryObjectType.TDQ_INDICATOR_ELEMENT,
-                    Path.EMPTY, EResourceConstant.SYSTEM_INDICATORS.getName());
+                    ERepositoryObjectType.TDQ_INDICATOR_ELEMENT, Path.EMPTY, EResourceConstant.SYSTEM_INDICATORS.getName());
 
             Folder udiFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT,
-                    Path.EMPTY,
-                    EResourceConstant.USER_DEFINED_INDICATORS.getName());
+                    Path.EMPTY, EResourceConstant.USER_DEFINED_INDICATORS.getName());
             // MOD zhsne 18724: Java UDI enhancements add lib folder under UDI folder.
             Folder udiLibFoler = ProxyRepositoryFactory.getInstance().createFolder(
                     ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS, Path.EMPTY,
@@ -182,8 +180,7 @@ public final class DQStructureManager {
                     Path.EMPTY, EResourceConstant.JRXML_TEMPLATE.getName());
 
             Folder patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(
-                    ERepositoryObjectType.TDQ_PATTERN_ELEMENT,
-                    Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
+                    ERepositoryObjectType.TDQ_PATTERN_ELEMENT, Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
 
             Folder patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_ELEMENT,
                     Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
@@ -322,15 +319,15 @@ public final class DQStructureManager {
         if (inputStream == null) {
             return;
         }
-        IFile element = folder.getFile(fileName);
-        if (!element.exists()) {
-            element.create(inputStream, false, null);
-            ModelElement modelElement = ModelElementFileFactory.getModelElement(element);
+        IFile elementFile = folder.getFile(fileName);
+        if (!elementFile.exists()) {
+            elementFile.create(inputStream, false, null);
+            ModelElement modelElement = ModelElementFileFactory.getModelElement(elementFile);
             if (modelElement != null) {
-                AElementPersistance writer = ElementWriterFactory.getInstance().create(element.getFileExtension());
+                AElementPersistance writer = ElementWriterFactory.getInstance().create(elementFile.getFileExtension());
                 if (writer != null) {
                     writer.create(modelElement, folder, isImportItem);
-                    element.delete(true, null);
+                    elementFile.delete(true, null);
                 }
             }
         }

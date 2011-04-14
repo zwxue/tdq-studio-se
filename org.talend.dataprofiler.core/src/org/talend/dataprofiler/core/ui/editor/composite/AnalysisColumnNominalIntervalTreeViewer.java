@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -76,12 +75,11 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
 
 /**
  * 
@@ -443,10 +441,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                         Pattern pattern = indicator.getParameters().getDataValidDomain().getPatterns().get(0);
                         // MOD mzhao 2009-03-13 Feature 6066 Move all folders
                         // into one project.
-                        IFolder patternFolder = ResourceManager.getPatternFolder();
-                        IFolder sqlPatternFolder = ResourceManager.getPatternSQLFolder();
-                        IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern,
-                                new IFolder[] { patternFolder, sqlPatternFolder });
+                        IFile file = ResourceFileMap.findCorrespondingFile(pattern);
                         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                         try {
                             activePage.openEditor(new FileEditorInput(file),
@@ -641,7 +636,6 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             removeItemBranch(item);
         }
     }
-
 
     private void addTreeListener(final Tree tree) {
         tree.addFocusListener(new FocusListener() {

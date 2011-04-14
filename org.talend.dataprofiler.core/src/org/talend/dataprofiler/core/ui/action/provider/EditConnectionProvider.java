@@ -25,7 +25,6 @@ import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInp
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -80,8 +79,7 @@ public class EditConnectionProvider extends AbstractCommonActionProvider {
          */
         public void run() {
             // CorePlugin.getDefault().openEditor(currentSelection, ConnectionEditor.class.getName());
-            TypedReturnCode<Connection> findProvider = PrvResourceFileHelper.getInstance().findProvider(currentSelection);
-            Connection connection = findProvider.getObject();
+            Connection connection = PrvResourceFileHelper.getInstance().findProvider(currentSelection);
             RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
             if (recursiveFind != null) {
                 new ConnectionItemEditorInput(recursiveFind.getObject().getProperty().getItem());

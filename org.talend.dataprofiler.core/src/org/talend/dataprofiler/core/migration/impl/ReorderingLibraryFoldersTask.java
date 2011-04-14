@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -175,14 +174,6 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
      */
     private void remove(IFile file) throws CoreException {
         file.delete(true, null);
-        String fileExt = file.getFileExtension();
-        if (StringUtils.equals(fileExt, FactoriesUtil.PATTERN)) {
-            PatternResourceFileHelper.getInstance().remove(file);
-        }
-
-        if (StringUtils.equals(fileExt, FactoriesUtil.DQRULE)) {
-            DQRuleResourceFileHelper.getInstance().remove(file);
-        }
     }
 
     /**

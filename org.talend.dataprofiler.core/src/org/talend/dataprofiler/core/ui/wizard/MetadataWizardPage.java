@@ -363,13 +363,13 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
             switch (getParameter().getParamType()) {
             case ANALYSIS:
-                modelElements.addAll(AnaResourceFileHelper.getInstance().getAllAnalysis(folderResource));
+                modelElements.addAll(AnaResourceFileHelper.getInstance().getAllElement(folderResource));
                 break;
             case REPORT:
-                modelElements.addAll(RepResourceFileHelper.getInstance().getAllReports(folderResource));
+                modelElements.addAll(RepResourceFileHelper.getInstance().getAllElement(folderResource));
                 break;
             case PATTERN:
-                modelElements.addAll(PatternResourceFileHelper.getInstance().getAllPatternes(folderResource));
+                modelElements.addAll(PatternResourceFileHelper.getInstance().getAllElement(folderResource));
                 break;
             case CONNECTION:
                 List<Connection> conns = new ArrayList<Connection>();
@@ -383,10 +383,10 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
                 modelElements.addAll(conns);
                 break;
             case DQRULE:
-                modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllDQRules(folderResource));
+                modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllElement(folderResource));
                 break;
             case UDINDICATOR:
-                modelElements.addAll(IndicatorResourceFileHelper.getInstance().getAllIndicators(folderResource));
+                modelElements.addAll(IndicatorResourceFileHelper.getInstance().getAllElement(folderResource));
                 break;
             default:
                 break;

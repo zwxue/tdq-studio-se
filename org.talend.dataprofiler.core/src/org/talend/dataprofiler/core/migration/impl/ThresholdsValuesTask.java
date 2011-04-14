@@ -67,7 +67,7 @@ public class ThresholdsValuesTask extends AbstractWorksapceUpdateTask {
     @Override
     protected boolean doExecute() throws Exception {
 
-        Collection<Analysis> allAnalysis = AnaResourceFileHelper.getInstance().getAllAnalysis();
+        Collection<Analysis> allAnalysis = (Collection<Analysis>) AnaResourceFileHelper.getInstance().getAllElement();
         for (Analysis analysis : allAnalysis) {
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             for (Indicator indicator : indicators) {

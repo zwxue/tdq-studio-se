@@ -125,7 +125,7 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                 // editor.
                 String editorTitle = Messages.getString("ModelElementCompareEditorLauncher.Compare"); //$NON-NLS-1$
                 if (selectedObject instanceof IFile) {
-                    editorTitle = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObject).getObject().getName();
+                    editorTitle = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObject).getName();
                 } else if (selectedObject instanceof IFolderNode) {
                     editorTitle = ((ModelElement) ((IFolderNode) selectedObject).getParent()).getName();
                 } else if (selectedObject instanceof Catalog) {

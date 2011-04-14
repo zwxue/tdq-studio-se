@@ -25,6 +25,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -86,8 +87,8 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
                 if (ReportSubFolderType.ANALYSIS.equals(getReportSubFolderType())) {
                     buildChildrenAnalysis(ReportHelper.getAnalyses(this.getReport()));
                 } else if (ReportSubFolderType.GENERATED_DOCS.equals(getReportSubFolderType())) {
-                    IResource[] repFiles = ReportUtils.getReportListFiles(RepResourceFileHelper.getInstance()
-                            .findCorrespondingFile(this.getReport()));
+                    IResource[] repFiles = ReportUtils
+                            .getReportListFiles(ResourceFileMap.findCorrespondingFile(this.getReport()));
                     if (repFiles == null || repFiles.length == 0) {
                         loadChildrenLocalFolder();
                     } else {

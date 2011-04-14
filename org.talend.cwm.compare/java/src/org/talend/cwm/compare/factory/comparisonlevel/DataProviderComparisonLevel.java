@@ -37,7 +37,6 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -63,8 +62,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
             Item connItem = ((RepositoryNode) selectedObj).getObject().getProperty().getItem();
             provider = ((ConnectionItem) connItem).getConnection();
         } else {
-            TypedReturnCode<Connection> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
-            provider = returnVlaue.getObject();
+            provider = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
         }
         return provider;
     }

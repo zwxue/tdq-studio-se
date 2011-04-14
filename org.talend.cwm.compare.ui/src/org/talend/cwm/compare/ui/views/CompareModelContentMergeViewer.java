@@ -78,7 +78,6 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -406,8 +405,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         IFile resourceFile = null;
         // File
         if (selectedOjbect instanceof IFile) {
-            TypedReturnCode<Connection> returnValue = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedOjbect);
-            modelElement = returnValue.getObject();
+            modelElement = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedOjbect);
         } else if (selectedOjbect instanceof IRepositoryViewObject) {
             // MOD klliu 2010-10-08 bug 16173: get changes in "database compare" editor
             ModelElement me = PropertyHelper.retrieveElement(((IRepositoryViewObject) selectedOjbect).getProperty().getItem());

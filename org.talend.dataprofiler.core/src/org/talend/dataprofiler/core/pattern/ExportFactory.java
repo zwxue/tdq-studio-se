@@ -35,8 +35,7 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import orgomg.cwm.objectmodel.core.Expression;
 
 import com.csvreader.CsvWriter;
@@ -165,7 +164,7 @@ public final class ExportFactory {
         Map<PatternToExcelEnum, String> idMap = new HashMap<PatternToExcelEnum, String>();
 
         if (folder != null) {
-            IFile file = IndicatorResourceFileHelper.getInstance().getIndicatorFile(indicatorDefinition);
+            IFile file = ResourceFileMap.findCorrespondingFile(indicatorDefinition);
             URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
 
             // get the basic information
@@ -182,7 +181,6 @@ public final class ExportFactory {
                     TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, indicatorDefinition.getTaggedValue())
                             .getValue());
 
-
             for (PatternLanguageType languagetype : PatternLanguageType.values()) {
                 for (Expression expression : indicatorDefinition.getSqlGenericExpression()) {
                     if (expression != null && expression.getLanguage().equalsIgnoreCase(languagetype.getLiteral())) {
@@ -193,7 +191,7 @@ public final class ExportFactory {
                 if (!idMap.containsKey(languagetype.getExcelEnum())) {
                     idMap.put(languagetype.getExcelEnum(), ""); //$NON-NLS-1$
                 }
-                
+
             }
         }
 
@@ -219,7 +217,7 @@ public final class ExportFactory {
         Map<PatternToExcelEnum, String> patternMap = new HashMap<PatternToExcelEnum, String>();
 
         if (folder != null) {
-            IFile file = PatternResourceFileHelper.getInstance().getPatternFile(pattern, new IFolder[] { folder });
+            IFile file = ResourceFileMap.findCorrespondingFile(pattern);
             URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
 
             // get the basic information

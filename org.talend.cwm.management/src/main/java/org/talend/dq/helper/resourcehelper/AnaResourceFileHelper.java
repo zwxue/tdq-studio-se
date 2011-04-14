@@ -12,36 +12,13 @@
 // ============================================================================
 package org.talend.dq.helper.resourcehelper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.util.AnalysisSwitch;
-import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.writer.EMFSharedResources;
-import org.talend.dq.writer.impl.AnalysisWriter;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -49,11 +26,14 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public final class AnaResourceFileHelper extends ResourceFileMap {
 
-    private static Logger log = Logger.getLogger(AnaResourceFileHelper.class);
-
     private static AnaResourceFileHelper instance;
 
-    private Map<IFile, Analysis> allAnalysisMap = new HashMap<IFile, Analysis>();
+    AnalysisSwitch<Analysis> analysisSwitch = new AnalysisSwitch<Analysis>() {
+
+        public Analysis caseAnalysis(Analysis object) {
+            return object;
+        }
+    };
 
     private AnaResourceFileHelper() {
         super();
@@ -66,191 +46,18 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
         return instance;
     }
 
-    public Collection<Analysis> getAllAnalysis(IFolder analysesFolder) {
-        try {
-            allAnalysisMap.clear();
-            searchAllAnalysis(analysesFolder);
-        } catch (CoreException e) {
-            log.error(e, e);
-        }
-        return allAnalysisMap.values();
-    }
-
-    public Collection<Analysis> getAllAnalysis() {
-        IFolder analysisFolder = ResourceManager.getDataProfilingFolder().getFolder("Analyses");
-        return getAllAnalysis(analysisFolder);
-    }
-
-    private void searchAllAnalysis(IFolder folder) throws CoreException {
-
-        for (IResource resource : folder.members()) {
-            if (resource.getType() == IResource.FOLDER) {
-                searchAllAnalysis(folder.getFolder(resource.getName()));
-                continue;
-            }
-            IFile file = (IFile) resource;
-            if (checkFile(file)) {
-                findAnalysis(file);
-            }
-        }
-    }
-
     /**
-     * DOC xy Comment method "findPathAnalysis".
+     * DOC bZhou Comment method "findAnalysis".
      * 
      * @param file
      * @return
      */
     public Analysis findAnalysis(IFile file) {
         if (checkFile(file)) {
-            Analysis analysisEntity = allAnalysisMap.get(file);
-            if (analysisEntity == null) {
-                analysisEntity = readFromFile(file);
-            }
-            return analysisEntity;
+            return (Analysis) getModelElement(file);
         }
 
         return null;
-    }
-
-    public Analysis readFromFile(IFile file) {
-        this.remove(file);
-        Resource fileResource = getFileResource(file);
-        Iterator<IFile> fileIterator = allAnalysisMap.keySet().iterator();
-        while (fileIterator.hasNext()) {
-            IFile key = fileIterator.next();
-            Analysis entity = allAnalysisMap.get(key);
-            Resource resourceObj = entity.eResource();
-            if (resourceObj == fileResource) {
-                registedResourceMap.remove(key);
-                allAnalysisMap.remove(key);
-                break;
-            }
-        }
-        Analysis analysis = retireAnalysis(fileResource);
-        if (analysis != null) {
-            allAnalysisMap.put(file, analysis);
-        }
-        return analysis;
-    }
-
-    public List<IFile> findCorrespondingFile(List<RenderedObject> renderObjs, IFolder analysesFolder) {
-        this.getAllAnalysis(analysesFolder);
-        List<IFile> fileList = new ArrayList<IFile>();
-        for (int i = 0; i < renderObjs.size(); i++) {
-            // if (this.registedResourceMap.containsValue(renderObjs.get(i).eResource())) {
-            Iterator<IFile> iterator = this.registedResourceMap.keySet().iterator();
-            RenderedObject renderedObject = renderObjs.get(i);
-            if (renderedObject.eIsProxy()) {
-                renderedObject = (RenderedObject) EObjectHelper.resolveObject(renderedObject);
-            }
-            Resource renderObjResource = renderedObject.eResource();
-            if (renderObjResource != null) {
-                while (iterator.hasNext()) {
-                    IFile next = iterator.next();
-                    if (registedResourceMap.get(next).getURI().toString().equals(renderObjResource.getURI().toString())) {
-                        // this.register(next, renderObjResource);
-                        fileList.add(next);
-                        break;
-                    }
-                }
-            }
-            // }
-        }
-        return fileList;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dq.helper.resourcehelper.ResourceFileMap#findCorrespondingFile(orgomg.cwm.objectmodel.core.ModelElement
-     * )
-     */
-    @Override
-    public IFile findCorrespondingFile(ModelElement element) {
-        if (allAnalysisMap == null || allAnalysisMap.isEmpty()) {
-            getAllAnalysis();
-        }
-
-        Iterator<IFile> iterator = allAnalysisMap.keySet().iterator();
-        while (iterator.hasNext()) {
-            IFile next = iterator.next();
-
-            if (ResourceHelper.areSame(element, allAnalysisMap.get(next))) {
-                return next;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * DOC rli Comment method "retireAnalysis".
-     * 
-     * @param fileResource
-     * @return
-     */
-    public Analysis retireAnalysis(Resource fileResource) {
-        EList<EObject> contents = fileResource.getContents();
-        if (contents.isEmpty()) {
-            log.error("No content in " + fileResource);
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("Nb elements in contents " + contents.size());
-        }
-        AnalysisSwitch<Analysis> mySwitch = new AnalysisSwitch<Analysis>() {
-
-            public Analysis caseAnalysis(Analysis object) {
-                return object;
-            }
-        };
-        Analysis analysis = null;
-        if (contents != null) {
-            Iterator<EObject> iter = contents.iterator();
-            while (iter.hasNext()) {
-                analysis = mySwitch.doSwitch(iter.next());
-                if (analysis != null) {
-                    break;
-                }
-            }
-        }
-        return analysis;
-    }
-
-    public void remove(IFile file) {
-        super.remove(file);
-        this.allAnalysisMap.remove(file);
-    }
-
-    public void clear() {
-     for (Analysis analysis : allAnalysisMap.values()) {
-            if (analysis.eIsProxy()) {
-                ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
-                        .getResourceManager().resourceSet;
-                analysis = (Analysis) EcoreUtil.resolve(analysis, resourceSet);
-            }
-            URI uri = analysis.eResource().getURI();
-            EMFSharedResources.getInstance().unloadResource(uri.toString());
-        }
-        super.clear();
-        this.allAnalysisMap.clear();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#deleteRelated(org.eclipse.core.resources.IFile)
-     */
-    @Override
-    protected void deleteRelated(IFile file) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public ReturnCode save(Analysis analysis) {
-        AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
-        ReturnCode saved = writer.save(analysis);
-        return saved;
     }
 
     /*
@@ -261,5 +68,25 @@ public final class AnaResourceFileHelper extends ResourceFileMap {
     @Override
     protected boolean checkFile(IFile file) {
         return file != null && FactoriesUtil.ANA.equalsIgnoreCase(file.getFileExtension());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#getTypedFolder()
+     */
+    @Override
+    public IFolder getTypedFolder() {
+        return ResourceManager.getAnalysisFolder();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#doSwitch(org.eclipse.emf.ecore.EObject)
+     */
+    @Override
+    public ModelElement doSwitch(EObject object) {
+        return analysisSwitch.doSwitch(object);
     }
 }

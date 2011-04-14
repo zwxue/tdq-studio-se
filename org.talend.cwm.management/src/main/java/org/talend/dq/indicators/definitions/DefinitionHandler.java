@@ -125,8 +125,7 @@ public final class DefinitionHandler {
     private void initializeDefinitions() {
         this.indicatorDefinitions.clear();
         this.indicatorCategories = loadDefinitionsFromFile().getCategories();
-        indicatorDefinitions.addAll(IndicatorResourceFileHelper.getInstance().getAllIndicators(
-                ResourceManager.getIndicatorFolder()));
+        indicatorDefinitions.addAll((List<IndicatorDefinition>) IndicatorResourceFileHelper.getInstance().getAllElement());
     }
 
     /**
@@ -176,7 +175,7 @@ public final class DefinitionHandler {
         IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(FILENAME);
         URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
         try { // load from workspace path
-            // do not create it here if it does not exist.
+              // do not create it here if it does not exist.
             definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
             if (log.isDebugEnabled()) {
                 log.debug("Definition of indicators loaded from " + uri);

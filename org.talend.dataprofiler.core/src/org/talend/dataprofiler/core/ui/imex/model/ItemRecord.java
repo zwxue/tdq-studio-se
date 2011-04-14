@@ -198,7 +198,7 @@ public class ItemRecord {
     private void computeDependencies() {
 
         if (isJRXml()) {
-            Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
+            Collection<TdReport> allReports = (Collection<TdReport>) RepResourceFileHelper.getInstance().getAllElement();
             for (TdReport report : allReports) {
                 for (AnalysisMap anaMap : report.getAnalysisMap()) {
                     if (StringUtils.equals(file.getAbsolutePath(), anaMap.getJrxmlSource())) {

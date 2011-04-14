@@ -32,11 +32,12 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * 
- * zshen add a RegularExpression for mysql lanagaue in the International_phone_number pattern if the pattern is exist and it
- * dont't contain a RegularExpression for mysql lanagaue.
+ * zshen add a RegularExpression for mysql lanagaue in the International_phone_number pattern if the pattern is exist
+ * and it dont't contain a RegularExpression for mysql lanagaue.
  */
 public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
 
@@ -80,11 +81,12 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
         componentsList.addAll(thePattern.getComponents());
         thePattern.getComponents().clear();
         thePattern.getComponents().addAll(componentsList);
-        boolean save = PatternResourceFileHelper.getInstance().save(thePattern);
-        PatternResourceFileHelper.getInstance().clear();
+
+        ReturnCode rc = PatternResourceFileHelper.getInstance().save(thePattern);
+
         uri = URI.createFileURI(updateFile.getAbsolutePath());
         EMFSharedResources.getInstance().reloadResource(uri);
-        return save;
+        return rc.isOk();
 
     }
 

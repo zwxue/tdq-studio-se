@@ -108,12 +108,6 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
                     // remove client dependcy for supplier, .eg. delete analysis,should remove client dependecy in
                     // connection
                     ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(child);
-                    // if (modelEle != null && modelEle instanceof TdReport) {
-                    // IFile file = ResourceManager.getReportsFolder().getFile(WorkbenchUtils.getFilePath(child));
-                    // if (file != null) {
-                    // RepResourceFileHelper.getInstance().remove(file);
-                    // }
-                    // }
                     EObjectHelper.removeDependencys(modelEle);
                 }
                 deleteElements(factory, (RepositoryNode) child);

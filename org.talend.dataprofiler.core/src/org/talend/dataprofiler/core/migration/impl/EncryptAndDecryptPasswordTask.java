@@ -49,7 +49,7 @@ public class EncryptAndDecryptPasswordTask extends AbstractWorksapceUpdateTask {
             for (IResource re : resource) {
                 if (re instanceof IFile) {
                     IFile file = (IFile) re;
-                    Connection tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
+                    Connection tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file);
                     encryptDataProvider(tdDataProvider);
                 }
 

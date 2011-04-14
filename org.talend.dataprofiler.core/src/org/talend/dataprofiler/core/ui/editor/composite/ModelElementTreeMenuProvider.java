@@ -60,7 +60,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -316,7 +316,7 @@ public abstract class ModelElementTreeMenuProvider {
             TreeItem treeItem = selection[0];
             IndicatorUnit indicatorUnit = (IndicatorUnit) treeItem.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY);
             UserDefIndicator indicator = (UserDefIndicator) indicatorUnit.getIndicator();
-            IFile file = IndicatorResourceFileHelper.getInstance().getIndicatorFile(indicator.getIndicatorDefinition());
+            IFile file = ResourceFileMap.findCorrespondingFile(indicator.getIndicatorDefinition());
             IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             try {
                 activePage.openEditor(new FileEditorInput(file),

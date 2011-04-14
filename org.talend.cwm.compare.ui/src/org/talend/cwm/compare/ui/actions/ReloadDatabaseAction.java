@@ -57,7 +57,6 @@ import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
  * DOC rli class global comment. Detailled comment
  */
@@ -153,28 +152,30 @@ public class ReloadDatabaseAction extends Action {
 
                 IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
                 // MOD by zshen for bug 12316 to avoid null argument.
-                Path path = new Path(analysis.getFileName() == null ? eResource.getURI().toPlatformString(false) : analysis
-                        .getFileName());
+                Path path = new Path(analysis.getFileName() == null ? eResource.getURI().toPlatformString(false)
+                        : analysis.getFileName());
                 IFile file = root.getFile(path);
-                analysis = AnaResourceFileHelper.getInstance().readFromFile(file);
+                analysis = (Analysis) AnaResourceFileHelper.getInstance().getModelElement(file);
                 // MOD qiongli 2010-8-17,bug 14977
-                eResource = analysis.eResource();
-                Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
-                Iterator<EObject> it = referenceMaps.keySet().iterator();
-                ModelElement eobj = null;
-                while (it.hasNext()) {
-                    eobj = (ModelElement) it.next();
-                    Collection<Setting> settings = referenceMaps.get(eobj);
-                    for (Setting setting : settings) {
-                        if (setting.getEObject() instanceof AnalysisContext) {
-                            analysis.getContext().getAnalysedElements().remove(eobj);
-                        } else if (setting.getEObject() instanceof Indicator) {
-                            analysis.getResults().getIndicators().remove(setting.getEObject());
+                if (analysis != null) {
+                    eResource = analysis.eResource();
+                    Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
+                    Iterator<EObject> it = referenceMaps.keySet().iterator();
+                    ModelElement eobj = null;
+                    while (it.hasNext()) {
+                        eobj = (ModelElement) it.next();
+                        Collection<Setting> settings = referenceMaps.get(eobj);
+                        for (Setting setting : settings) {
+                            if (setting.getEObject() instanceof AnalysisContext) {
+                                analysis.getContext().getAnalysedElements().remove(eobj);
+                            } else if (setting.getEObject() instanceof Indicator) {
+                                analysis.getResults().getIndicators().remove(setting.getEObject());
+                            }
                         }
-                    }
 
+                    }
+                    AnaResourceFileHelper.getInstance().save(analysis);
                 }
-                AnaResourceFileHelper.getInstance().save(analysis);
             }
         }
 
@@ -185,8 +186,8 @@ public class ReloadDatabaseAction extends Action {
             for (IEditorReference editorRef : editors) {
                 if (editorRef.getId().equals(ANALYSIS_EDITOR_ID)) {
                     boolean isConfirm = MessageDialog.openConfirm(
-                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages
-                                    .getString("ReloadDatabaseAction.ElementChange"), //$NON-NLS-1$
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            Messages.getString("ReloadDatabaseAction.ElementChange"), //$NON-NLS-1$
                             Messages.getString("ReloadDatabaseAction.RefreshCurrentEditor")); //$NON-NLS-1$
                     if (!isConfirm) {
                         return;

@@ -183,8 +183,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
 
             if (element instanceof IFile) {
                 // IFile
-                TypedReturnCode<Connection> returnVlaue = PrvResourceFileHelper.getInstance().findProvider((IFile) element);
-                adaptedDataProvider = returnVlaue.getObject();
+                adaptedDataProvider = PrvResourceFileHelper.getInstance().findProvider((IFile) element);
             } else if (element instanceof IRepositoryViewObject) {
                 Item item = ((IRepositoryViewObject) element).getProperty().getItem();
                 if (item instanceof ConnectionItem) {

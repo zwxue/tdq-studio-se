@@ -70,7 +70,7 @@ public class UniquePkAndFkTask extends AbstractWorksapceUpdateTask {
                 if (re instanceof IFile && FactoriesUtil.isProvFile(re.getFileExtension())) {
                     IFile file = (IFile) re;
                     boolean saveFalg = false;
-                    Connection tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file).getObject();
+                    Connection tdDataProvider = PrvResourceFileHelper.getInstance().findProvider(file);
                     List<orgomg.cwm.objectmodel.core.Package> dataManagerList = tdDataProvider.getDataPackage();
                     for (orgomg.cwm.objectmodel.core.Package firstLevelElement : dataManagerList) {
                         if (getTables(firstLevelElement).isOk()) {

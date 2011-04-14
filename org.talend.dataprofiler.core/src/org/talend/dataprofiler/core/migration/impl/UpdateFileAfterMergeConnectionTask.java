@@ -54,7 +54,6 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * 
@@ -126,9 +125,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
             }
         });
         for (File file : fileList) {
-            TypedReturnCode<Connection> findProvider = PrvResourceFileHelper.getInstance().findProvider(
-                    WorkspaceUtils.fileToIFile(file));
-            Connection connection = findProvider.getObject();
+            Connection connection = PrvResourceFileHelper.getInstance().findProvider(WorkspaceUtils.fileToIFile(file));
             connection.eResource().unload();
             EObjectHelper.resolveObject(connection);
         }
@@ -335,10 +332,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     }
 
     private String copyFile(File targetFolder, File propFile, Property property, IPath path, String connNameAfter,
-            String connName,
-            Map<File, File> folderMap) throws IOException {
-
-
+            String connName, Map<File, File> folderMap) throws IOException {
 
         File destItemFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter)
                 .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
@@ -387,7 +381,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         // // EMFUtil.saveResource(itemResource);
         // }
         // }
-
 
         if (item instanceof ConnectionItem) {
             ConnectionItem connectionItem = (ConnectionItem) item;

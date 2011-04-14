@@ -82,13 +82,12 @@ public class JrxmlHandle extends SimpleHandle {
         if ("jrxml".equalsIgnoreCase(fileExtension) || ".jasper".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$ //$NON-NLS-2$
             createJrxml(
                     newFile.getFullPath().removeLastSegments(1)
-                            .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1)),
-                    newLabel, WorkspaceUtils.ifileToFile(file), fileExtension);
+                            .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1)), newLabel,
+                    WorkspaceUtils.ifileToFile(file), fileExtension);
             return newFile;
         }
         return null;
     }
-
 
     /*
      * (non-Javadoc)
@@ -98,7 +97,7 @@ public class JrxmlHandle extends SimpleHandle {
     public List<ModelElement> getDependencies() {
         List<ModelElement> elementList = new ArrayList<ModelElement>();
 
-        Collection<TdReport> allReports = RepResourceFileHelper.getInstance().getAllReports();
+        Collection<TdReport> allReports = (Collection<TdReport>) RepResourceFileHelper.getInstance().getAllElement();
         for (TdReport report : allReports) {
             for (AnalysisMap anaMap : report.getAnalysisMap()) {
                 if (StringUtils.equals(file.getLocation().toOSString(), anaMap.getJrxmlSource())) {

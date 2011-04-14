@@ -44,11 +44,12 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -255,8 +256,8 @@ public final class ImportFactory {
 
     private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
 
-        Pattern pattern = PatternResourceFileHelper.getInstance().createPattern(parameters.name, parameters.auther,
-                parameters.description, parameters.purpose, parameters.status);
+        Pattern pattern = createPattern(parameters.name, parameters.auther, parameters.description, parameters.purpose,
+                parameters.status);
 
         for (String key : parameters.regex.keySet()) {
             RegularExpression regularExpr = BooleanExpressionHelper.createRegularExpression(key, parameters.regex.get(key), type);
@@ -290,6 +291,27 @@ public final class ImportFactory {
         ElementWriterFactory.getInstance().createPatternWriter().create(pattern, selectionFolder);
 
         return ResourceManager.getPatternFolder().getLocationURI().relativize(selectionFolder.getLocationURI()).toString();
+    }
+
+    /**
+     * DOC qzhang Comment method "createPattern".
+     * 
+     * @param name
+     * @param author
+     * @param description
+     * @param purpose
+     * @param status
+     * @return
+     */
+    private static Pattern createPattern(String name, String author, String description, String purpose, String status) {
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
+        pattern.setName(name);
+        MetadataHelper.setAuthor(pattern, author == null ? "" : author); //$NON-NLS-1$
+        MetadataHelper.setDescription(description == null ? "" : description, pattern); //$NON-NLS-1$
+        MetadataHelper.setPurpose(purpose == null ? "" : purpose, pattern); //$NON-NLS-1$
+        // MOD mzhao feature 7479 2009-10-16
+        MetadataHelper.setDevStatus(pattern, status == null ? "" : status); //$NON-NLS-1$
+        return pattern;
     }
 
     private static String getFileExtName(File file) {

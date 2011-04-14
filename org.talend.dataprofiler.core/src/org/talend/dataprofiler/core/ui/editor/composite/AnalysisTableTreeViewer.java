@@ -102,6 +102,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
@@ -509,8 +510,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             IndicatorDefinition indicatorDefinition = unit.getIndicator().getIndicatorDefinition();
             if (indicatorDefinition instanceof WhereRule) {
                 WhereRule wr = (WhereRule) indicatorDefinition;
-                IFile whereRuleFile = DQRuleResourceFileHelper.getInstance().getWhereRuleFile(wr,
-                        new IFolder[] { whereRuleFolder });
+                IFile whereRuleFile = ResourceFileMap.findCorrespondingFile(wr);
                 for (Object obj : removeList) {
                     IFile file = (IFile) obj;
                     if (whereRuleFile.equals(file)) {
@@ -562,7 +562,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             Object obj = indicator.getIndicatorDefinition();
             if (obj != null && obj instanceof WhereRule) {
                 WhereRule wr = (WhereRule) obj;
-                ret.add(DQRuleResourceFileHelper.getInstance().getWhereRuleFile(wr, new IFolder[] { whereRuleFolder }));
+                ret.add(ResourceFileMap.findCorrespondingFile(wr));
             }
         }
         return ret.toArray();
@@ -1174,8 +1174,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 // ~
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 try {
-                    activePage.openEditor(itemEditorInput,
-                            "org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"); //$NON-NLS-1$
+                    activePage.openEditor(itemEditorInput, "org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor"); //$NON-NLS-1$
                 } catch (PartInitException e1) {
                     log.error(e1, e1);
                 }

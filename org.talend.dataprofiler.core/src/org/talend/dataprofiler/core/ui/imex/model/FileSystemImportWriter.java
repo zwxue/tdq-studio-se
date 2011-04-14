@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
@@ -51,11 +53,9 @@ import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
-import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.RepositoryWorkUnit;
@@ -275,10 +275,6 @@ public class FileSystemImportWriter implements IImportWriter {
             if (isCovered) {
                 URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
                 EMFSharedResources.getInstance().reloadResource(uri);
-                ResourceFileMap resourceFileMap = ModelElementFileFactory.getResourceFileMap(desIFile);
-                if (resourceFileMap != null) {
-                    resourceFileMap.remove(desIFile);
-                }
             }
 
             String fileExtension = desIFile.getFileExtension();
@@ -407,6 +403,13 @@ public class FileSystemImportWriter implements IImportWriter {
             FileUtils.deleteDirectory(tempFolder);
         }
 
+        Iterator<Resource> it = EMFSharedResources.getInstance().getResourceSet().getResources().iterator();
+        while (it.hasNext()) {
+            Resource resource = it.next();
+            if (!resource.isLoaded() || resource.getContents().isEmpty()) {
+                it.remove();
+            }
+        }
     }
 
     /*

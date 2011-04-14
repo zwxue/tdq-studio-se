@@ -61,7 +61,6 @@ public class DQDeleteAction extends DeleteAction {
 
     }
 
-
     @Override
     public ISelection getSelection() {
         ISelection selection = null;
@@ -80,7 +79,6 @@ public class DQDeleteAction extends DeleteAction {
     public void init(TreeViewer viewer, IStructuredSelection selection) {
 
     }
-
 
     @Override
     public void run() {
@@ -120,13 +118,6 @@ public class DQDeleteAction extends DeleteAction {
                     if (!hasDependency || hasDependency && handleDependencies(node)) {
                         ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
                         EObjectHelper.removeDependencys(modelEle);
-                        // clear the memory variable of TdReport.(bug 19179)
-                        // if ( modelEle instanceof TdReport) {
-                        // IFile file = ResourceManager.getReportsFolder().getFile(WorkbenchUtils.getFilePath(node));
-                        // if (file != null) {
-                        // RepResourceFileHelper.getInstance().remove(file);
-                        // }
-                        // }
                         excuteSuperRun((RepositoryNode) node);
                     }
                 }
@@ -200,7 +191,7 @@ public class DQDeleteAction extends DeleteAction {
                     CorePlugin.getDefault().refreshDQView();
                 }
                 // physical delete dependcy element.
-                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
+                tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
                 if (tempNode != null) {
                     excuteSuperRun(tempNode);
                     IFile propertyFile = PropertyHelper.getPropertyFile(mod);

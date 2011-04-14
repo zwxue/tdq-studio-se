@@ -34,7 +34,6 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
-import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -44,12 +43,10 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.files.FileUtils;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -101,31 +98,52 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
         for (File file : fileList) {
 
-            updateIndicatorItem(file);
+            createNewItemFile(file);
 
-            createNewItem(file);
-
-            deleteOldItem(file);
+            deleteOldItemFile(file);
         }
 
-        updateFileByNewFileName();
-
-        reloadModelElementCache();
+        updateFile();
 
         return true;
     }
 
     /**
+     * DOC bZhou Comment method "updateFile".
+     */
+    private void updateFile() throws Exception {
+        for (File file : newFileList) {
+            updateFileByNewFileName(file);
+
+            updateIndicatorItem(file);
+
+            reloadFile(file);
+        }
+
+        ResourceService.refreshStructure();
+    }
+
+    /**
+     * DOC bZhou Comment method "reloadFile".
+     * 
+     * @param file
+     */
+    private void reloadFile(File file) {
+        IFile ifile = WorkspaceUtils.fileToIFile(file);
+        URI uri = URI.createPlatformResourceURI(ifile.getFullPath().toString(), false);
+        EMFSharedResources.getInstance().reloadResource(uri);
+    }
+
+    /**
      * DOC bZhou Comment method "updateFileByNewFileName".
      * 
+     * @param file
      * @throws IOException
      * @throws URISyntaxException
      */
-    private void updateFileByNewFileName() throws IOException, URISyntaxException {
-        for (File file : newFileList) {
-            for (String fragment : replaceMap.keySet()) {
-                FileUtils.replaceInFile(file.getAbsolutePath(), fragment, replaceMap.get(fragment));
-            }
+    private void updateFileByNewFileName(File file) throws IOException, URISyntaxException {
+        for (String fragment : replaceMap.keySet()) {
+            FileUtils.replaceInFile(file.getAbsolutePath(), fragment, replaceMap.get(fragment));
         }
     }
 
@@ -141,24 +159,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         ArrayList<File> fileList = findRawFiles(dapRawFile);
         fileList.addAll(findRawFiles(libRawFile));
         return fileList;
-    }
-
-    /**
-     * clear the cache of ModelElement.
-     * 
-     */
-    private void reloadModelElementCache() {
-        ResourceService.refreshStructure();
-
-        // 1) clear and unload element
-        AnaResourceFileHelper.getInstance().clear();
-        RepResourceFileHelper.getInstance().clear();
-        IndicatorResourceFileHelper.getInstance().clear();
-        PatternResourceFileHelper.getInstance().clear();
-        DQRuleResourceFileHelper.getInstance().clear();
-        PrvResourceFileHelper.getInstance().clear();
-        // 2) reload from file
-        ResourceFileMap.getAll();
     }
 
     /**
@@ -193,39 +193,11 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     }
 
     /**
-     * DOC bZhou Comment method "updateDependencyFile".
-     * 
-     * @param file
-     * @throws IOException
-     * @throws URISyntaxException
-     */
-    private void updateDependencyItem(File file) throws IOException, URISyntaxException {
-        ModelElement modelElement = getModelElement(file);
-        if (modelElement != null) {
-            List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
-
-            ModelElementHelper.iterateSupplyDependencies(modelElement, dependencyElements);
-
-            for (ModelElement depElement : dependencyElements) {
-                if (!depElement.eIsProxy()) {
-                    IFile depFile = ResourceManager.getRoot().getFile(
-                            new Path(depElement.eResource().getURI().toPlatformString(false)));
-                    File depSysFile = depFile.getLocation().toFile();
-
-                    String oldFileName = new Path(file.getAbsolutePath()).removeFileExtension().lastSegment();
-                    String newFileName = WorkspaceUtils.normalize(modelElement.getName()) + "_0.1";
-                    FileUtils.replaceInFile(depSysFile.getAbsolutePath(), oldFileName, newFileName);
-                }
-            }
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "createNewItem".
+     * DOC bZhou Comment method "createNewItemFile".
      * 
      * @param file
      */
-    private void createNewItem(File file) {
+    private void createNewItemFile(File file) {
         ModelElement modelElement = getModelElement(file);
 
         if (modelElement != null && !modelElement.eIsProxy()) {
@@ -240,6 +212,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                 IPath newFileNamePath = new Path(property.getLabel() + "_" + property.getVersion()).addFileExtension(iFile
                         .getFileExtension());
                 IFile newFile = parentFolder.getFile(newFileNamePath);
+
                 newFileList.add(newFile.getLocation().toFile());
                 replaceMap.put(file.getName(), newFile.getFullPath().lastSegment());
             }
@@ -250,6 +223,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
         // add all connection files to instead all old dependency link.
         newFileList.addAll(findRawConnectionFiles());
+
     }
 
     /**
@@ -257,7 +231,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * 
      * @param file
      */
-    private void deleteOldItem(File file) {
+    private void deleteOldItemFile(File file) {
         file.delete();
         File propFile = new Path(file.getAbsolutePath()).removeFileExtension()
                 .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
