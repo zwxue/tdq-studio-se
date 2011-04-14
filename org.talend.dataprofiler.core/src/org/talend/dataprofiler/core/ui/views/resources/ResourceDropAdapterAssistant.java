@@ -77,7 +77,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
      */
     @Override
     public IStatus handleDrop(CommonDropAdapter aDropAdapter, DropTargetEvent aDropTargetEvent, Object target) {
-        // FIXME_15750 Handle drag and drop events in case of repository node object.
+        // use RepositoryNodeDorpAdapterAssistant to handle drag&drop RepositoryNode.
         // alwaysOverwrite = false;
         if (aDropAdapter.getCurrentTarget() == null || aDropTargetEvent.data == null) {
             return Status.CANCEL_STATUS;
@@ -111,7 +111,6 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
                         anaList.add(findAnalysis);
                     }
                 }
-                // FIXME_15750 wrap analysis to item here.
                 // ReportHelper.addAnalyses(anaList, findReport);
                 RepResourceFileHelper.getInstance().save(findReport);
             }

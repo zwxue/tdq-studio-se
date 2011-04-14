@@ -478,15 +478,14 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     public void addElements(final ModelElementIndicator[] elements) {
         // this.addItemElements(elements);
-
         RepositoryNode[] columns = new RepositoryNode[elements.length];
         for (int i = 0; i < elements.length; i++) {
             columns[i] = (RepositoryNode) elements[i].getModelElementRepositoryNode();
         }
         List<IRepositoryNode> oriColumns = getColumnSetMultiValueList();
-        for (RepositoryNode column : columns) {// FIXME_15750 Caution: the direct instance comparison might not fittable
-                                               // here.
-            if (!oriColumns.contains(column)) {
+        for (RepositoryNode column : columns) {
+            // if (!oriColumns.contains(column)) {
+            if (!RepositoryNodeHelper.containsModelElementNode(oriColumns, column)) {
                 oriColumns.add(column);
             }
         }

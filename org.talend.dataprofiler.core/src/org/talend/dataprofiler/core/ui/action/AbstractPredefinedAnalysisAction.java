@@ -32,7 +32,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
@@ -82,60 +81,24 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
         Object firstElement = getSelection().getFirstElement();
         if (firstElement instanceof IRepositoryNode) {
-
-            IRepositoryNode obj = (IRepositoryNode) firstElement;
-            IRepositoryViewObject reposObject = obj.getObject();
-            if (reposObject instanceof MetadataColumnRepositoryObject || reposObject instanceof MetadataXmlElementType) {
+            IRepositoryNode repNode = (IRepositoryNode) firstElement;
+            IRepositoryViewObject repViewObject = repNode.getObject();
+            if (repViewObject instanceof MetadataColumnRepositoryObject || repViewObject instanceof MetadataXmlElementType) {
                 IRepositoryNode[] column = new IRepositoryNode[getSelection().size()];
-
                 for (int i = 0; i < getSelection().size(); i++) {
                     column[i] = (IRepositoryNode) getSelection().toArray()[i];
                 }
-
                 return column;
-            } else if (reposObject instanceof MetadataTableRepositoryObject) {
+            } else if (repViewObject instanceof MetadataTableRepositoryObject) {
                 Object[] selections = getSelection().toArray();
                 for (Object currentObj : selections) {
-                    IRepositoryNode columnSet = (IRepositoryNode) currentObj;
-                    IRepositoryViewObject columnSetObj = columnSet.getObject();
-                    TdTable table = (TdTable) ((MetadataTableRepositoryObject) columnSetObj).getTable();
-                    if (ColumnSetHelper.getColumns(table).size() > 0) {
-                        // Get column children of one selected column set.
-                        list.addAll(columnSet.getChildren().get(0).getChildren());
-                    } else {
-
-                        // FIXME_15750 If the columns are not being loaded, the tree viewer of dq repository should
-                        // reconstructed at first, then populate it.
-                        //
-                        // Connection conn = ((ConnectionItem)
-                        // columnSet.getObject().getProperty().getItem()).getConnection();
-                        // try {
-                        // List<TdColumn> columns = DqRepositoryViewService.getColumns(conn, columnSet, null, true);
-                        // // MOD scorreia 2009-01-29 columns are stored in the table
-                        // // ColumnSetHelper.addColumns(columnSet, columns);
-                        // list.addAll(columns);
-                        // ProxyRepositoryViewObject.save(conn);
-                        // } catch (TalendException e) {
-                        // MessageBoxExceptionHandler.process(e);
-                        // }
-
-                        // Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
-                        // Connection conn = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
-                        //
-                        // try {
-                        // List<TdColumn> columns = DqRepositoryViewService.getColumns(conn, columnSet, null, true);
-                        // // MOD scorreia 2009-01-29 columns are stored in the table
-                        // // ColumnSetHelper.addColumns(columnSet, columns);
-                        // list.addAll(columns);
-                        // ProxyRepositoryViewObject.save(conn);
-                        // } catch (Exception e) {
-                        // MessageBoxExceptionHandler.process(e);
-                        // }
-
+                    IRepositoryNode columnSetNode = (IRepositoryNode) currentObj;
+                    List<IRepositoryNode> children = columnSetNode.getChildren();
+                    if (children.size() > 0) {
+                        list.addAll(children.get(0).getChildren());
                     }
                 }
                 return list.toArray(new IRepositoryNode[list.size()]);
-
             }
         } else if (firstElement instanceof TdTable) {
             TdTable table = (TdTable) firstElement;

@@ -61,6 +61,7 @@ import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
@@ -393,17 +394,18 @@ public class ColumnViewerDND {
                     if (isAnalysisColumnTreeViewer) {
                         for (ModelElementIndicator modelElementIndicator : ((AnalysisColumnTreeViewer) viewer)
                                 .getModelElementIndicator()) {
-                            // FIXME_15750 Caution: DONT use repository instance for comparison.
-                            if (columns.contains(modelElementIndicator.getModelElementRepositoryNode())) {
+                            // if (columns.contains(modelElementIndicator.getModelElementRepositoryNode())) {
+                            if (RepositoryNodeHelper.containsModelElementNode(columns,
+                                    modelElementIndicator.getModelElementRepositoryNode())) {
                                 columns.remove(modelElementIndicator.getModelElementRepositoryNode());
                             }
                         }
                     } else if (isAnalysisColumnNominalIntervalTreeViewer) {
                         List<RepositoryNode> oriColumns = ((AnalysisColumnNominalIntervalTreeViewer) viewer)
                                 .getColumnSetMultiValueList();
-                        // FIXME_15750 Caution: DONT use repository instance for comparison.
                         for (RepositoryNode column : oriColumns) {
-                            if (columns.contains(column)) {
+                            // if (columns.contains(column)) {
+                            if (RepositoryNodeHelper.containsModelElementNode(columns, column)) {
                                 columns.remove(column);
                             }
                         }

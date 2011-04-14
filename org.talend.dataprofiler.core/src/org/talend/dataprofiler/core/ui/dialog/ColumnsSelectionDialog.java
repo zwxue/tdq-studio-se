@@ -210,8 +210,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (repNode instanceof MDMXmlElementRepNode) {
                 Object[] children = sContentProvider.getElements(repNode);
                 for (Object colNode : children) {
-                        modelElementCheckedMap.put(repNode, colNode);
-                    }
+                    modelElementCheckedMap.put(repNode, colNode);
+                }
             } else {
                 List<IRepositoryNode> children = repNode.getChildren();
                 for (IRepositoryNode colFolderNode : children) {
@@ -358,10 +358,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      */
     class DBTreeViewContentProvider extends ResourceViewContentProvider {
 
-        // FIXME_15750 This content provider might be reused with the DQ repository view tree viewer.
-        /**
-         * @param adapterFactory
-         */
         public DBTreeViewContentProvider() {
             super();
         }
@@ -375,7 +371,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 IRepositoryNode repoNode = (IRepositoryNode) parentElement;
                 return repoNode.getChildren().toArray();
             }
-
             return super.getChildren(parentElement);
         }
 
@@ -398,8 +393,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
                 return repoNode.hasChildren();
             }
-            return superHasChildren(element); // ???
-            // ~
+            return superHasChildren(element);
         }
 
         /**
@@ -417,9 +411,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     hasChildren = !hasChildren;
                 }
             }
-
             return hasChildren;
         }
-
     }
 }

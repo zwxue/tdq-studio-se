@@ -2245,4 +2245,33 @@ public final class RepositoryNodeHelper {
     public static IPath getRelativePath(RepositoryNode node) {
         return null;
     }
+
+    /**
+     * judge the nodeList contains the node, the node must own a ModelElement.
+     * 
+     * @param nodeList
+     * @param node
+     * @return
+     */
+    public static boolean containsModelElementNode(List<IRepositoryNode> nodeList, IRepositoryNode node) {
+        if (nodeList == null || nodeList.size() == 0 || node == null) {
+            return false;
+        } else {
+            ModelElement meNode = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
+            if (meNode != null) {
+                String uuid = ResourceHelper.getUUID(meNode);
+                if (uuid != null) {
+                    for (IRepositoryNode repNode : nodeList) {
+                        ModelElement meRepNode = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
+                        if (meRepNode != null) {
+                            if (uuid.equals(ResourceHelper.getUUID(meRepNode))) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
