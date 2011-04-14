@@ -178,8 +178,9 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
         if (!checkResults(objects, 1)) {
             return false;
         }
-        String c = String.valueOf(objects.get(0)[0]);
-        this.setDuplicateValueCount(Long.valueOf(c));
+        // MOD gdbu 2011-4-14 bug : 18975
+        this.setDuplicateValueCount(getLongFromObject(objects.get(0)[0]));
+        // ~18975
         return true;
     }
 

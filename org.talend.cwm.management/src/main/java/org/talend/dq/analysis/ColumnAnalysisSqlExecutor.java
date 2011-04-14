@@ -1323,13 +1323,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         while (resultSet.next()) {
             Object[] result = new Object[columnCount];
             for (int i = 0; i < columnCount; i++) {
-                // MOD gdbu 2011-4-12 bug : 18975
-                String toString = String.valueOf(resultSet.getObject(i + 1));
-                if (toString.contains(".")) {
-                    toString = toString.substring(0, toString.indexOf("."));
-                }
-                result[i] = toString;
-                // ~18975
+                result[i] = resultSet.getObject(i + 1);
             }
             myResultSet.add(result);
         }

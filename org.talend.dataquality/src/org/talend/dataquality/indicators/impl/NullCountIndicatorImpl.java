@@ -63,8 +63,9 @@ public class NullCountIndicatorImpl extends IndicatorImpl implements NullCountIn
         if (!checkResults(objects, 1)) {
             return false;
         }
-        String c = String.valueOf(objects.get(0)[0]);
-        this.setNullCount(Long.valueOf(c));
+        // MOD gdbu 2011-4-14 bug : 18975
+        this.setNullCount(getLongFromObject(objects.get(0)[0]));
+        // ~18975
         return true;
     }
 

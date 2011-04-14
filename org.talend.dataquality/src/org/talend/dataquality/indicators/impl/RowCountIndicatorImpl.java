@@ -63,8 +63,9 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
         if (!checkResults(objects, 1)) {
             return false;
         }
-        Long c = Long.valueOf(String.valueOf(objects.get(0)[0]));
-        this.setCount(c);
+        // MOD gdbu 2011-4-14 bug : 18975
+        this.setCount(getLongFromObject(objects.get(0)[0]));
+        // ~18975
         return true;
     }
 

@@ -201,8 +201,10 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
         if (lCount == null) {
             this.setCount(COUNT_EDEFAULT);
         } else {
-            String c = String.valueOf(lCount);
-            this.setCount(Long.valueOf(c));
+            // MOD gdbu 2011-4-14 bug : 18975
+            // String c = String.valueOf(lCount);
+            this.setCount(getLongFromObject(lCount));
+            // ~18975
         }
 
         Object lSum = objects.get(0)[0];

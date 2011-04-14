@@ -15,7 +15,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -1069,6 +1068,28 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         result.append(storeData);
         result.append(')');
         return result.toString();
+    }
+
+    /**
+     * MOD gdbu 2011-4-14 bug : 18975
+     * 
+     * DOC gdbu Comment method "getLongFromObject".
+     * 
+     * @param objects
+     * @return
+     */
+    public static Long getLongFromObject(Object objects) {
+        Long c = 0L;
+        String toString = String.valueOf(objects + "");
+        try {
+            c = Long.valueOf(toString);
+        } catch (Exception e) {
+            if (toString.contains(".")) {
+                toString = toString.substring(0, toString.indexOf("."));
+            }
+            c = Long.valueOf(toString);
+        }
+        return c;
     }
 
 } // IndicatorImpl

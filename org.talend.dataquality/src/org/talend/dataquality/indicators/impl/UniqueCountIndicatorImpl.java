@@ -178,9 +178,11 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
         if (!checkResults(objects, 1)) {
             return false;
         }
-        String c = String.valueOf(objects.get(0)[0]);
 
-        this.setUniqueValueCount(Long.valueOf(c));
+        // MOD gdbu 2011-4-14 bug : 18975
+        this.setUniqueValueCount(getLongFromObject(objects.get(0)[0]));
+        // ~18975
+
         return true;
     }
 

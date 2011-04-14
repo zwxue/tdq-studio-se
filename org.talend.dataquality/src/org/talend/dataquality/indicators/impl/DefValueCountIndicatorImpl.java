@@ -170,8 +170,10 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
         if (!super.checkResults(objects, 1)) {
             return false;
         }
-        Long c = Long.valueOf(String.valueOf(objects.get(0)[0]));
-        this.setDefaultValCount(c);
+        // MOD gdbu 2011-4-14 bug : 18975
+        this.setDefaultValCount(getLongFromObject(objects.get(0)[0]));
+        // ~18975
+
         return true;
     }
 

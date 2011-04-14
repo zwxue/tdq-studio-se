@@ -169,8 +169,9 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
             // Oracle treats empty strings as null values
             this.setLength(0L);
         } else {
-            Long c = Long.valueOf(String.valueOf(lLength));
-            this.setLength(c);
+            // MOD gdbu 2011-4-14 bug : 18975
+            this.setLength(getLongFromObject(lLength));
+            // ~18975
         }
         return true;
     }

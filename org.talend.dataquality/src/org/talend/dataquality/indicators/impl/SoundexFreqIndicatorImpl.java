@@ -213,9 +213,19 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
                 return false;
             }
             Object value = getValueFields(value2freq);
-            Long freq = Long.valueOf(String.valueOf(value2freq[nbColumns - 2]));
+
+            // MOD gdbu 2011-4-14 bug : 18975
+            // Long freq = Long.valueOf(String.valueOf(value2freq[nbColumns - 2]));
+            Long freq = getLongFromObject(value2freq[nbColumns - 2]);
+            // ~18975
+
             mapVal2Freq.put(value, freq);
-            Long distinctFreq = Long.valueOf(String.valueOf(value2freq[nbColumns - 1]));
+
+            // MOD gdbu 2011-4-14 bug : 18975
+            // Long distinctFreq = Long.valueOf(String.valueOf(value2freq[nbColumns - 1]));
+            Long distinctFreq = getLongFromObject(value2freq[nbColumns - 1]);
+            // ~18975
+
             mapVal2DistinctFreq.put(value, distinctFreq);
             if (debug) {
                 matrix.append("\n").append("\"").append(value).append("\"").append(",").append(freq);
