@@ -35,13 +35,17 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
     @Override
     public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
 
-        DatabaseConnection connection1 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj1);
-        DatabaseConnection connection2 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj2);
-
-        if (connection1 != null && connection2 != null) {
-            changeUrl = ConnectionHelper.isUrlChanged(connection1);
-        }
-        return changeUrl ? false : super.isSimilar(obj1, obj2);
+        // FIXME : revert r58560
+        
+//        DatabaseConnection connection1 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj1);
+//        DatabaseConnection connection2 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj2);
+//
+//        if (connection1 != null && connection2 != null) {
+//            changeUrl = ConnectionHelper.isUrlChanged(connection1);
+//        }
+//        return changeUrl ? false : super.isSimilar(obj1, obj2);
+        
+        return Boolean.TRUE;
     }
 
     /*

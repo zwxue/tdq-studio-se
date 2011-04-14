@@ -387,7 +387,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (node instanceof DBConnectionRepNode) {
                     ConnectionItem connectionItem = (ConnectionItem) node.getObject().getProperty().getItem();
                     if (connectionItem.getConnection() instanceof DatabaseConnection) {
-                        changeURL = ConnectionHelper.isUrlChanged(connectionItem.getConnection());
+                        
+                        //FIXME : revert r58560
+                        
+                        //changeURL = ConnectionHelper.isUrlChanged(connectionItem.getConnection());
+                        changeURL = true;
                     }
                 }
             }

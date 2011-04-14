@@ -177,20 +177,23 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         createTempConnectionFile();
 
         if (compareWithReloadObject()) {
-            updateTaggedValue();
+            // FIXME : revert r58560
+
+            // updateTaggedValue();
             saveReloadResult();
         }
 
         return oldDataProvider;
     }
 
-    private void updateTaggedValue() {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(oldDataProvider);
-        if (dbConn != null) {
-            ConnectionHelper.setUsingURL(oldDataProvider, dbConn.getURL());
-        }
-
-    }
+    // FIXME : revert r58560
+    // private void updateTaggedValue() {
+    // DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(oldDataProvider);
+    // if (dbConn != null) {
+    // ConnectionHelper.setUsingURL(oldDataProvider, dbConn.getURL());
+    // }
+    //
+    // }
 
     public void popComparisonUI(IUIHandler uiHandler) throws ReloadCompareException {
         this.guiHandler = uiHandler;
