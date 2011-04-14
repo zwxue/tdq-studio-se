@@ -58,7 +58,9 @@ public class ZipFileImportWriter extends FileSystemImportWriter {
     public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
         super.finish(records, monitor);
 
-        FilesUtils.removeFolder(sourcePath.toFile(), true);
+        if (sourcePath != null && sourcePath.toFile().exists()) {
+            FilesUtils.removeFolder(sourcePath.toFile(), true);
+        }
     }
 
     /*
