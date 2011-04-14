@@ -1,3 +1,6 @@
+1.5.15 # scorreia
+- in previous version, the score is not 0 when a field is not match. Hence, a nbMatch field is added to the Output record. 
+
 1.5.14 # scorreia
 - SynonymRecordSearch returns a result even when nothing is found. (score is 0 of course). 
 

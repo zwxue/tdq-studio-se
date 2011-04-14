@@ -28,7 +28,7 @@ public class OutputRecord implements Comparable<OutputRecord> {
     /**
      * the score of the matched record.
      */
-    float score;
+    float score = 0;
     
 
     /**
@@ -37,13 +37,17 @@ public class OutputRecord implements Comparable<OutputRecord> {
     String scores;
 
     /**
+     * The number of matches (max is the size of the record).
+     */
+    int nbMatch = 0;
+
+    /**
      * OutputRecord constructor..
      * 
      * @param size the size of the record
      */
     public OutputRecord(int size) {
         this.record = new String[size];
-        this.score = 0;
         this.scores = "";
     }
 
@@ -60,7 +64,8 @@ public class OutputRecord implements Comparable<OutputRecord> {
         }
         buf.deleteCharAt(buf.length() - 2);
         buf.append(" | score= " + score);
-        buf.append(" ->" + scores);
+        buf.append(" ->" + scores).append("| nb match=").append(nbMatch).append("/").append(record.length);
+
         return buf.toString();
     }
 

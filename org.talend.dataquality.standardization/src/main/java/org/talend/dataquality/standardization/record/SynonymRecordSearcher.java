@@ -168,6 +168,9 @@ public class SynonymRecordSearcher {
             outputRec.record[idx] = wordResult.word;
             outputRec.score += wordResult.score; // TODO add multiplicative weight here if needed
             outputRec.scores += "|" + wordResult.score;
+            if (wordResult.score != 0) {
+                outputRec.nbMatch++;
+            }
         }
 
     }
