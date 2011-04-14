@@ -18,13 +18,19 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IFontProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -75,14 +81,27 @@ import org.talend.resource.EResourceConstant;
 /**
  * @author rli
  */
-public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
+public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider implements IFontProvider {
 
     private static final String LEFT = "(";//$NON-NLS-1$
 
     private static final String RIGHT = ")";//$NON-NLS-1$
 
+    private static Font ITALIC_FONT = null;
+
     public DQRepositoryViewLabelProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
+
+        if (null == ITALIC_FONT) {
+
+            ITALIC_FONT = Display.getDefault().getSystemFont();
+            FontData[] exfds = ITALIC_FONT.getFontData();
+            if (exfds.length > 0) {
+                FontData fd = exfds[0];
+                fd.setStyle(SWT.ITALIC);
+                ITALIC_FONT = new Font(ITALIC_FONT.getDevice(), fd);
+            }
+        }
     }
 
     public Image getImage(Object element) {
@@ -350,5 +369,30 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider {
         }
 
         return false;
+    }
+
+    /*
+     * yyi 2011-04-14 20362:connection modified
+     * 
+     * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
+     */
+    @Override
+    public Font getFont(Object element) {
+        boolean changeURL = false;
+        if (element instanceof IRepositoryNode) {
+            IRepositoryNode node = (IRepositoryNode) element;
+            ENodeType type = node.getType();
+
+            if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
+                if (node instanceof DBConnectionRepNode) {
+                    ConnectionItem connectionItem = (ConnectionItem) node.getObject().getProperty().getItem();
+                    if (connectionItem.getConnection() instanceof DatabaseConnection) {
+                        changeURL = ConnectionHelper.isUrlChanged(connectionItem.getConnection());
+                    }
+                }
+            }
+        }
+
+        return changeURL ? ITALIC_FONT : super.getFont(element);
     }
 }
