@@ -16,8 +16,10 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -36,38 +38,68 @@ import org.talend.dataquality.standardization.record.SynonymRecordSearcher.WordR
  */
 public class SynonymRecordSearcherTest {
 
-    private static final String[][] WORDRESULTS = { { "11", "12", "13", "14", "15" }, { "21", "22", "23" }, { "31", "32", "33" },
-            { "43" } };
-
-    // private static final String[][] WORDRESULTS = { { "11", "12" }, { "21", "22" }, { "31", "32" } };
+    private static final String[][][] WORDRESULTS = { //
+    { { "11", "12", "13", "14", "15" }, { "21", "22", "23" }, { "31", "32", "33" }, { "41" } } // always at least one
+                                                                                               // match
+            , { { "11", "12" }, { "21", "22" }, { "31", "32" } } // several matches
+            , { {}, { "21", "22" }, { "31", "32" } } // first search does not match anything
+            , { { "11", "12" }, {}, { "31", "32" } } // second search does not match anything
+            , { { "11", "12" }, { "21", "22" }, {} } // last search does not match anything
+            , { { "11", "12" }, {}, {} } // 2 searches did not match
+            , { {}, {}, {} } // nothing matched at all
+            , { { "11", "11" }, { "21", "21" } } // matched are duplicate
+    };
 
     @Test
     public void testRecordResultCompute() {
+        int nbDup = 0;
+        for (String[][] wrs : WORDRESULTS) {
+            System.out.println();
+            System.out.println(" ###    Testing #### ");
+
+
+            nbDup += testRecordResultCompute(wrs);
+        }
+        Assert.assertEquals("last wordResult array should contain duplicates", 1, nbDup);
+    }
+
+    private int testRecordResultCompute(String[][] wordresults) {
+        int nbDuplicateFound = 0;
 
         // prepare wordresults
         List<List<WordResult>> wordResults = new ArrayList<List<WordResult>>();
-        for (String[] elts : WORDRESULTS) {
+        for (String[] elts : wordresults) {
             List<WordResult> wrs = new ArrayList<WordResult>();
             for (String elt : elts) {
                 WordResult wr = new WordResult();
                 wr.input = "input " + elt;
                 wr.word = "word " + elt;
-                wr.score = (float) Math.random();
+                wr.score = Integer.valueOf(elt);
                 wrs.add(wr);
             }
             wordResults.add(wrs);
         }
 
-        // --- compute output results
+        // --- compute output results as a list
         RecordResult recRes = new RecordResult();
-        recRes.record = initializeRecordToSearch(WORDRESULTS);
-        recRes.wordResults = wordResults;
+        recRes.record = initializeRecordToSearch(wordresults);
+        recRes.wordResults.addAll(wordResults);
 
         List<OutputRecord> expectedOutputRows = null;
         expectedOutputRows = new ArrayList<OutputRecord>();
-        computeOutputRows(WORDRESULTS.length, new ArrayList<WordResult>(), recRes.wordResults, expectedOutputRows);
+        SynonymRecordSearcher.RecordResult.computeOutputRows(wordresults.length, new ArrayList<WordResult>(), recRes.wordResults,
+                expectedOutputRows);
         for (OutputRecord outputRecord : expectedOutputRows) {
             System.out.println(outputRecord);
+        }
+
+
+        // --- test that duplicates are removed when using a set instead of a list
+        Set<OutputRecord> uniques = new HashSet<OutputRecord>();
+        uniques.addAll(expectedOutputRows);
+        Assert.assertTrue(uniques.size() <= expectedOutputRows.size());
+        if (uniques.size() < expectedOutputRows.size()) {
+            nbDuplicateFound++;
         }
 
         List<OutputRecord> outputRows = recRes.computeOutputRows();
@@ -76,8 +108,8 @@ public class SynonymRecordSearcherTest {
 
         // verify number of results
         int expectedNbOutput = 1;
-        for (String[] in : WORDRESULTS) {
-            expectedNbOutput *= in.length;
+        for (String[] in : wordresults) {
+            expectedNbOutput *= Math.max(in.length, 1);
         }
 
         Assert.assertEquals(expectedNbOutput, expectedOutputRows.size());
@@ -93,7 +125,7 @@ public class SynonymRecordSearcherTest {
             }
             Assert.assertTrue("Record not found: " + outputRecord, found);
         }
-
+        return nbDuplicateFound;
     }
 
     /**
@@ -107,50 +139,17 @@ public class SynonymRecordSearcherTest {
         String[] init = new String[wordresults.length];
         int i = 0;
         for (String[] wr : wordresults) {
-            init[i++] = wr[rnd.nextInt(wr.length)];
+            if (wr.length == 0) {
+                init[i] = "AAA";
+            } else {
+                init[i] = wr[rnd.nextInt(wr.length)];
+            }
+            i++;
         }
         return init;
     }
 
-    /**
-     * Method "computeOutputRows".
-     * 
-     * @param recordLength the record length
-     * @param wordResults the list of word result that constitute the begining of the current output record
-     * @param wrs the list of remaining word results
-     * @param outputRows the output records (updated each time this method is called)
-     * @return
-     */
-    private void computeOutputRows(int recordLength, List<WordResult> wordResults, List<List<WordResult>> wrs,
-            List<OutputRecord> outputRows) {
-        // handle last vector of word results
-        if (wrs.size() == 1) {
-            List<WordResult> lastWR = wrs.get(0);
-            for (WordResult wordResult : lastWR) {
-                OutputRecord outputRec = new OutputRecord(recordLength);
-                for (int i = 0; i < wordResults.size(); i++) {
-                    updateOutputRec(outputRec, i, wordResults.get(i));
-                }
-                updateOutputRec(outputRec, wordResults.size(), wordResult);
 
-                outputRows.add(outputRec);
-            }
-        } else { // recusive call on a sublist
-            List<WordResult> firstWR = wrs.get(0);
-            List<List<WordResult>> sublist = wrs.subList(1, wrs.size());
-            for (WordResult wordResult : firstWR) {
-                List<WordResult> wr = new ArrayList<WordResult>(wordResults);
-                wr.add(wordResult);
-                computeOutputRows(recordLength, wr, sublist, outputRows);
-            }
-        }
-    }
-
-    private void updateOutputRec(OutputRecord outputRec, int idx, WordResult wordResult) {
-        outputRec.record[idx] = wordResult.word;
-        outputRec.score += wordResult.score; // TODO add multiplicative weight here if needed
-        outputRec.scores += "|" + wordResult.score;
-    }
 
     private void initIdx(String path) {
         SynonymIndexBuilder builder = new SynonymIndexBuilder();

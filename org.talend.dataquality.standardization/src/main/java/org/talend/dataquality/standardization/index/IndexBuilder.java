@@ -183,7 +183,7 @@ public class IndexBuilder {
         }
     }
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
 
         createSynonymIndex("Salutory", "SalutorySynonyms.csv");
         createSynonymIndex("Address", "AddressSynonyms.csv");

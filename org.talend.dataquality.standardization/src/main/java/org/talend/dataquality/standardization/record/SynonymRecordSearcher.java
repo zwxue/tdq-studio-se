@@ -14,6 +14,7 @@ package org.talend.dataquality.standardization.record;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -35,9 +36,6 @@ public class SynonymRecordSearcher {
 
     private int recordSize = 0;
 
-    // FIXME can be removed
-    static int counts[];
-
     /**
      * SynonymRecordSearcher constructor.
      * 
@@ -46,7 +44,6 @@ public class SynonymRecordSearcher {
     public SynonymRecordSearcher(int size) {
         this.recordSize = size;
         searchers = new SynonymIndexSearcher[recordSize];
-        counts = new int[size];
     }
 
     /**
@@ -90,6 +87,7 @@ public class SynonymRecordSearcher {
      */
     static class RecordResult {
 
+        // The two following attributes are package protected because of junit tests.
         /**
          * The input record.
          */
@@ -98,106 +96,7 @@ public class SynonymRecordSearcher {
         /**
          * The results of a search.
          */
-        List<List<WordResult>> wordResults = new ArrayList<List<WordResult>>();
-
-        /**
-         * @deprecated
-         * 
-         * Method "computeOutputRows" computes the output rows
-         * 
-         * @return the list of OutputRecords
-         */
-        public List<OutputRecord> computeOutputRows3() {
-            // compute how many rows will be output
-            int[] limits = new int[wordResults.size()];
-            int[] counts = new int[wordResults.size()];
-            for (int i = 0; i < wordResults.size(); i++) {
-                limits[i] = wordResults.get(i).size();
-                counts[i] = 0;
-            }
-
-            Set<OutputRecord> outputRecords = new HashSet<OutputRecord>();
-            outputRecords = incrementalOutput(limits, outputRecords);
-
-            return new ArrayList<OutputRecord>(outputRecords);
-        }
-
-        public Set<OutputRecord> incrementalOutput(int[] limits, Set<OutputRecord> outputRecords) {
-
-            OutputRecord outputRec = new OutputRecord(limits.length);
-            float score = 0;
-            StringBuffer scores = new StringBuffer();
-            for (int j = 0; j < limits.length; j++) { // field
-                List<WordResult> listwrec = wordResults.get(j);
-                int wResIdx = counts[j];
-                WordResult wordResult = listwrec.get(wResIdx);
-                outputRec.record[j] = wordResult.word;
-                score += wordResult.score; // TODO add multiplicative weight here if needed
-                scores.append("|").append(wordResult.score);
-            }
-            outputRec.scores = new String(scores.deleteCharAt(0));
-            outputRec.score = score / limits.length;
-            // add the record to the set
-            outputRecords.add(outputRec);
-
-            counts[0]++;
-            for (int i = 0; i < limits.length; i++) {
-                if (counts[i] == limits[i]) {
-                    if (i == limits.length - 1) {
-                        return outputRecords;
-                    } else {
-                        counts[i] = 0;
-                        counts[i + 1]++;
-                        continue;
-                    }
-                }
-            }
-            return incrementalOutput(limits, outputRecords);
-        }
-
-        /**
-         * @deprecated
-         * 
-         * Old code
-         * 
-         * @return
-         */
-        public List<OutputRecord> computeOutputRows2() {
-            // compute how many rows will be output
-            int nb = 1;
-            for (List<WordResult> wResults : wordResults) {
-                nb = wResults.size() * nb;
-            }
-
-            // build each row
-            Set<OutputRecord> outputRecords = new HashSet<OutputRecord>();
-            int recordLength = record.length;
-
-            for (int i = 0; i < nb; i++) { // row
-                OutputRecord outputRec = new OutputRecord(recordLength);
-
-                float score = 0;
-                StringBuffer scores = new StringBuffer();
-                for (int j = 0; j < recordLength; j++) { // field
-                    List<WordResult> listwrec = wordResults.get(j);
-                    // System.out.println(listwrec);
-                    int wResIdx = i % listwrec.size();
-                    WordResult wordResult = listwrec.get(wResIdx);
-                    // System.out.println(wordResult.word);
-                    outputRec.record[j] = wordResult.word;
-                    score += wordResult.score; // TODO add multiplicative weight here if needed
-                    scores.append("|").append(wordResult.score);
-                    // System.out.println((i + 1) + ": " + Arrays.asList(outputRec.getRecord()));
-                    // System.out.println("");
-                }
-                outputRec.scores = new String(scores.deleteCharAt(0));
-                outputRec.score = score / recordLength;
-                // add the record to the set
-                outputRecords.add(outputRec);
-            }
-
-            return new ArrayList<OutputRecord>(outputRecords);
-        }
+        final List<List<WordResult>> wordResults = new ArrayList<List<WordResult>>();
 
         /**
          * Method "computeOutputRows" computes the output rows
@@ -218,24 +117,35 @@ public class SynonymRecordSearcher {
          * @param wrs the list of remaining word results
          * @param outputRows the output records (updated each time this method is called)
          */
-        private void computeOutputRows(int recordLength, List<WordResult> foundWords, List<List<WordResult>> wrs,
-                Set<OutputRecord> outputRows) {
+        static void computeOutputRows(int recordLength, List<WordResult> foundWords, List<List<WordResult>> wrs,
+                Collection<OutputRecord> outputRows) {
             assert !wrs.isEmpty();
             // handle last vector of word results
             if (wrs.size() == 1) {
                 List<WordResult> lastWR = wrs.get(0);
-                for (WordResult wordResult : lastWR) {
-                    OutputRecord outputRec = new OutputRecord(recordLength);
-                    for (int i = 0; i < foundWords.size(); i++) {
-                        updateOutputRec(outputRec, i, foundWords.get(i));
+                // handle case when no synonym reference has been found
+                // this is mainly for robustness and for tests as the search method of SynonymRecordSearcher already
+                // handles this case
+                if (lastWR.isEmpty()) {
+                    outputRows.add(createOutputRecord(recordLength, foundWords, createEmptyWordResult("")));
+                } else {
+                    // handle case when at least one synonym reference has been found (usual case)
+                    for (WordResult wordResult : lastWR) {
+                        outputRows.add(createOutputRecord(recordLength, foundWords, wordResult));
                     }
-                    updateOutputRec(outputRec, foundWords.size(), wordResult);
-
-                    outputRows.add(outputRec);
                 }
             } else { // recusive call on a sublist
                 List<WordResult> firstWR = wrs.get(0);
                 List<List<WordResult>> sublist = wrs.subList(1, wrs.size());
+                // handle case when no synonym reference has been found
+                // this is mainly for robustness and for tests as the search method of SynonymRecordSearcher already
+                // handles this case
+                if (firstWR.isEmpty()) {
+                    List<WordResult> wr = new ArrayList<WordResult>(foundWords);
+                    wr.add(createEmptyWordResult(""));
+                    computeOutputRows(recordLength, wr, sublist, outputRows);
+                }
+                // handle case when at least one synonym reference has been found (usual case)
                 for (WordResult wordResult : firstWR) {
                     List<WordResult> wr = new ArrayList<WordResult>(foundWords);
                     wr.add(wordResult);
@@ -244,7 +154,17 @@ public class SynonymRecordSearcher {
             }
         }
 
-        private void updateOutputRec(OutputRecord outputRec, int idx, WordResult wordResult) {
+        private static OutputRecord createOutputRecord(int recordLength, List<WordResult> foundWords, WordResult currentWordResult) {
+            OutputRecord outputRec = new OutputRecord(recordLength);
+            for (int i = 0; i < foundWords.size(); i++) {
+                updateOutputRec(outputRec, i, foundWords.get(i));
+            }
+            updateOutputRec(outputRec, foundWords.size(), currentWordResult);
+            return outputRec;
+
+        }
+        
+        private static void updateOutputRec(OutputRecord outputRec, int idx, WordResult wordResult) {
             outputRec.record[idx] = wordResult.word;
             outputRec.score += wordResult.score; // TODO add multiplicative weight here if needed
             outputRec.scores += "|" + wordResult.score;
@@ -286,6 +206,11 @@ public class SynonymRecordSearcher {
                 wordRes.score = scoreDoc.score;
                 wResults.add(wordRes);
             }
+            // handle case when nothing is found in the index
+            if (nbDocs == 0) {
+                WordResult wordRes = createEmptyWordResult(field);
+                wResults.add(wordRes);
+            }
 
             // create
             recRes.record = record;
@@ -320,4 +245,13 @@ public class SynonymRecordSearcher {
     public SynonymIndexSearcher getSearcher(int columnIndex) {
         return searchers[columnIndex];
     }
+
+    private static WordResult createEmptyWordResult(String input) {
+        WordResult emptyWordResult = new WordResult();
+        emptyWordResult.input = input;
+        emptyWordResult.score = 0;
+        emptyWordResult.word = "";
+        return emptyWordResult;
+    }
+
 }

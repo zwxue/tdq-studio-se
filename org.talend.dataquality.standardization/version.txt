@@ -1,3 +1,6 @@
+1.5.14 # scorreia
+- SynonymRecordSearch returns a result even when nothing is found. (score is 0 of course). 
+
 1.5.13 # sizhaoliu
 - added some other junit tests for new implementation of computeRows
 - changed output contents for DOCUMENT_MATCHED

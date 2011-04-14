@@ -38,7 +38,7 @@ import org.talend.dataquality.standardization.query.FirstNameStandardize;
  */
 public class HandleLuceneImpl implements HandleLucene {
 
-    private final int hitsPerPage = 10;
+    private static final int HITS_PER_PAGE = 10;
 
 
     private Map<String, String[]> hits = new HashMap<String, String[]>();
@@ -72,7 +72,7 @@ public class HandleLuceneImpl implements HandleLucene {
         if (inputName != null && folderName != null) {
             IndexSearcher searcher = getIndexSearcher(folderName);
             Analyzer searchAnalyzer = getAnalyzer();
-            FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+            FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, HITS_PER_PAGE);
             String countryText = null;
             String genderText = null;
             Set<String> indexKinds = information2value.keySet();
@@ -119,7 +119,7 @@ public class HandleLuceneImpl implements HandleLucene {
 
         Analyzer searchAnalyzer = getAnalyzer();
 
-        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, HITS_PER_PAGE);
 
         ScoreDoc[] docs;
         try {
@@ -195,7 +195,7 @@ public class HandleLuceneImpl implements HandleLucene {
         String result = null;
         IndexSearcher searcher = getIndexSearcher(folderName);
         Analyzer searchAnalyzer = getAnalyzer();
-        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, HITS_PER_PAGE);
         result = stdname.replaceName(inputName, fuzzyQuery);
         return result;
     }
@@ -211,7 +211,7 @@ public class HandleLuceneImpl implements HandleLucene {
         String result = null;
         IndexSearcher searcher = getIndexSearcher(folderName);
         Analyzer searchAnalyzer = getAnalyzer();
-        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, HITS_PER_PAGE);
         result = stdname.replaceNameWithCountryGenderInfo(inputName, inputCountry, inputGender, fuzzyQuery);
         return result;
     }
@@ -227,7 +227,7 @@ public class HandleLuceneImpl implements HandleLucene {
         String result = null;
         IndexSearcher searcher = getIndexSearcher(folderName);
         Analyzer searchAnalyzer = getAnalyzer();
-        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, HITS_PER_PAGE);
         result = stdname.replaceNameWithCountryInfo(inputName, inputCountry, fuzzyQuery);
         return result;
     }
@@ -243,7 +243,7 @@ public class HandleLuceneImpl implements HandleLucene {
         String result = null;
         IndexSearcher searcher = getIndexSearcher(folderName);
         Analyzer searchAnalyzer = getAnalyzer();
-        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, hitsPerPage);
+        FirstNameStandardize stdname = new FirstNameStandardize(searcher, searchAnalyzer, HITS_PER_PAGE);
         result = stdname.replaceNameWithGenderInfo(inputName, inputGender, fuzzyQuery);
         return result;
     }

@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.apache.lucene.queryParser.ParseException;
 import org.talend.dataquality.standardization.main.HandleLucene;
 import org.talend.dataquality.standardization.main.HandleLuceneImpl;
-
-import junit.framework.TestCase;
 
 public class HandLuceneImplTest extends TestCase {
 
@@ -35,19 +35,19 @@ public class HandLuceneImplTest extends TestCase {
         Map<String, String[]> hits = null;
         try {
             hits = hl.getSearchResult(indexfolder, "Edou", information2value, false);
+            String[] soreDocs = hits.get("Edou");
+            assertNotNull(soreDocs);
+            if (soreDocs != null) {
+                for (String doc : soreDocs) {
+                    System.out.println(doc);
+                }
+            }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-        String[] soreDocs = hits.get("Edou");
-        assertNotNull(soreDocs);
-        if (soreDocs != null) {
-            for (String doc : soreDocs) {
-                System.out.println(doc);
-            }
         }
 
     }

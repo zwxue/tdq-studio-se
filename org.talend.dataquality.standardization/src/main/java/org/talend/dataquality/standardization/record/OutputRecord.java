@@ -58,8 +58,9 @@ public class OutputRecord implements Comparable<OutputRecord> {
         for (int i = 0; i < record.length; i++) {
             buf.append(record[i]).append(" ; ");
         }
-        buf.append(" -> " + score);
-        buf.append("; ->" + scores);
+        buf.deleteCharAt(buf.length() - 2);
+        buf.append(" | score= " + score);
+        buf.append(" ->" + scores);
         return buf.toString();
     }
 

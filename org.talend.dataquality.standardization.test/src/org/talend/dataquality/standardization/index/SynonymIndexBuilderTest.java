@@ -36,6 +36,7 @@ public class SynonymIndexBuilderTest {
      * ATTENTION: Be careful when changing this list of synonyms, they are also use in SynonymIndexSearcherTest.
      */
     public static String[][] synonyms = { { "I.B.M.", "IBM|International Business Machines|Big Blue" },
+            { "IRTY", "IBM|International Business Machines" },
             { "ISDF", "IBM|International Business Machines|Big Blue" },
             { "ANPE", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" },
             { "TEST", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" }, { "Sécurité Sociale", "Sécu|SS|CPAM" },
@@ -96,9 +97,9 @@ public class SynonymIndexBuilderTest {
         build.commit();
     }
 
-    private SynonymIndexBuilder createNewIndexBuilder(String path) {
+    private SynonymIndexBuilder createNewIndexBuilder(String p) {
         SynonymIndexBuilder builder = new SynonymIndexBuilder();
-        builder.initIndexInFS(path);
+        builder.initIndexInFS(p);
         return builder;
     }
 
