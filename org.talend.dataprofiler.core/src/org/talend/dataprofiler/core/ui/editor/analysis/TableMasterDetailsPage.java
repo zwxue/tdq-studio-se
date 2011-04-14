@@ -748,6 +748,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     }
                 });
                 createPreviewSection(form, previewComp);
+                createPreviewCharts(form, chartComposite, true);
             }
         }
     }

@@ -591,6 +591,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                     }
                 });
                 createPreviewSection(form, previewComp);
+                createPreviewCharts(form, chartComposite, true);
             }
         }
     }

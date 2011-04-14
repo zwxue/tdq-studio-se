@@ -571,6 +571,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     }
                 });
                 createPreviewSection(form, previewComp);
+                createPreviewCharts(form, chartComposite, false);
             }
         }
     }

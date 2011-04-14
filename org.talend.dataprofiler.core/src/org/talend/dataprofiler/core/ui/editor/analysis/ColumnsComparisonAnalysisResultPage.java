@@ -578,7 +578,6 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             analysisResultsComp.dispose();
         }
         createFormContent(getManagedForm());
-        masterPage.refresh();
     }
 
     /*

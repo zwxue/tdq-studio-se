@@ -578,9 +578,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (graphicsAndTableComp != null && !graphicsAndTableComp.isDisposed()) {
             graphicsAndTableComp.dispose();
         }
-
-        createFormContent(getManagedForm());
         masterPage.refresh();
+        createFormContent(getManagedForm());
     }
 
     public Composite getChartComposite() {

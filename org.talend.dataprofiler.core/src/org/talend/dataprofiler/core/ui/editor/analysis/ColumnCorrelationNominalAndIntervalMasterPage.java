@@ -538,6 +538,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                     }
                 });
                 createPreviewSection(form, previewComp);
+                createPreviewCharts(form, chartComposite, true);
             }
         }
     }

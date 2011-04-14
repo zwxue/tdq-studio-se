@@ -134,7 +134,6 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         }
 
         createFormContent(getManagedForm());
-        masterPage.refresh();
     }
 
     /*
