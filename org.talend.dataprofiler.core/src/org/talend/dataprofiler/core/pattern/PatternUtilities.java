@@ -59,6 +59,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataprofiler.core.ui.utils.UDIFactory;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -76,7 +78,9 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -121,7 +125,14 @@ public final class PatternUtilities {
 
     public static TypedReturnCode<IndicatorUnit> createIndicatorUnit(IFile pfile, ModelElementIndicator modelElementIndicator,
             Analysis analysis) {
-        return createIndicatorUnit(pfile, modelElementIndicator, analysis, null);
+        return createIndicatorUnit(PatternResourceFileHelper.getInstance().findPattern(pfile), modelElementIndicator, analysis,
+                null);
+    }
+
+    public static TypedReturnCode<IndicatorUnit> createIndicatorUnit(Pattern pattern,
+            ModelElementIndicator modelElementIndicator,
+            Analysis analysis) {
+        return createIndicatorUnit(pattern, modelElementIndicator, analysis, null);
     }
 
     /**
@@ -133,12 +144,11 @@ public final class PatternUtilities {
      * @param indicatorDefinition
      * @return
      */
-    public static TypedReturnCode<IndicatorUnit> createIndicatorUnit(IFile pfile, ModelElementIndicator modelElementIndicator,
+    public static TypedReturnCode<IndicatorUnit> createIndicatorUnit(Pattern pattern,
+            ModelElementIndicator modelElementIndicator,
             Analysis analysis, IndicatorDefinition indicatorDefinition) {
 
         TypedReturnCode<IndicatorUnit> result = new TypedReturnCode<IndicatorUnit>();
-
-        Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(pfile);
 
         for (Indicator indicator : modelElementIndicator.getIndicators()) {
             // MOD xqliu 2009-08-12 bug 7810
@@ -181,8 +191,7 @@ public final class PatternUtilities {
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && returnExpression == null) {
             String executeType = isJavaEngin ? executionLanguage.getName() : dbmsLanguage.getDbmsName();
             boolean openPattern = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    "warning",
- "no " + executeType + " expression found in this pattern. Would you like to add one?");
+                    "warning", "no " + executeType + " expression found in this pattern. Would you like to add one?");
             if (openPattern) {
                 RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.recursiveFind(pattern);
                 if (RepositoryNodeHelper.canOpenEditor(node)) {
@@ -364,6 +373,7 @@ public final class PatternUtilities {
      * 
      * @param libProject
      * @return
+     * @deprecated
      */
     public static CheckedTreeSelectionDialog createPatternCheckedTreeSelectionDialog(IFolder libProject) {
         CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
@@ -415,10 +425,47 @@ public final class PatternUtilities {
         return dialog;
     }
 
+    /**
+     * create CheckedTreeSelectionDialog for patterns.
+     * 
+     * @param node Pattern root RepositoryNode.
+     * @return
+     */
+    public static CheckedTreeSelectionDialog createPatternCheckedTreeSelectionDialog(IRepositoryNode node) {
+        CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new DQRepositoryViewLabelProvider(),
+                new ResourceViewContentProvider());
+        dialog.setInput(node);
+        dialog.setValidator(new ISelectionStatusValidator() {
+
+            public IStatus validate(Object[] selection) {
+                IStatus status = Status.OK_STATUS;
+                for (Object patte : selection) {
+                    if (patte instanceof PatternRepNode) {
+                        PatternRepNode patternNode = (PatternRepNode) patte;
+                        Pattern findPattern = patternNode.getPattern();
+                        boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
+                        if (!validStatus) {
+                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                    .getString("AnalysisColumnTreeViewer.chooseValidPatterns")); //$NON-NLS-1$
+                        }
+                    }
+                }
+                return status;
+            }
+
+        });
+        dialog.setContainerMode(true);
+        dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patternSelector")); //$NON-NLS-1$
+        dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.patterns")); //$NON-NLS-1$
+        dialog.setSize(80, 30);
+        return dialog;
+    }
 }
 
 /**
  * DOC zqin AnalysisColumnTreeViewer class global comment. Detailled comment
+ * 
+ * @deprecated use DQRepositoryViewLabelProvider instead of
  */
 class PatternLabelProvider extends LabelProvider {
 
@@ -433,8 +480,8 @@ class PatternLabelProvider extends LabelProvider {
             boolean validStatus = TaggedValueHelper.getValidStatus(findPattern);
             ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.PATTERN_REG);
             if (!validStatus) {
-                ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-                        ISharedImages.IMG_OBJS_WARN_TSK);
+                ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages()
+                        .getImageDescriptor(ISharedImages.IMG_OBJS_WARN_TSK);
                 DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
                         IDecoration.BOTTOM_RIGHT);
                 imageDescriptor = icon;

@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.composite;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.MouseAdapter;
@@ -29,7 +27,10 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.resource.ResourceManager;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.PatternRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
@@ -76,9 +77,10 @@ public class PatternMouseAdapter extends MouseAdapter {
             }
         }
 
-        IFolder libProject = ResourceManager.getLibrariesFolder();
+        // IFolder libProject = ResourceManager.getLibrariesFolder();
+        IRepositoryNode patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);
 
-        CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(libProject);
+        CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(patternFolderNode);
 
         if (null != filters) {
             for (ViewerFilter filter : filters) {
@@ -91,15 +93,16 @@ public class PatternMouseAdapter extends MouseAdapter {
         // dialog.setInitialSelections(selectedFiles);
         if (dialog.open() == Window.OK) {
             for (Object obj : dialog.getResult()) {
-                if (obj instanceof IFile) {
-                    IFile file = (IFile) obj;
-                    TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(file, meIndicator, analysis);
+                if (obj instanceof PatternRepNode) {
+                    PatternRepNode patternNode = (PatternRepNode) obj;
+                    TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(patternNode.getPattern(),
+                            meIndicator, analysis);
                     if (trc.isOk()) {
                         columnDropTree.createOneUnit(treeItem, trc.getObject());
                         columnDropTree.setDirty(true);
                     } else if (trc.getMessage() != null && !trc.getMessage().equals("")) {
                         // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                        //                        MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
+                        // MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
                         // + pattern.getName());
                         MessageUI.openError(trc.getMessage());
                     }
