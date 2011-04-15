@@ -293,4 +293,19 @@ public final class EMFSharedResources {
 
         resource.setURI(newUri);
     }
+
+    public boolean isNeedReload(Resource resource) {
+        if (resource == null || resource.getContents().isEmpty()) {
+            return true;
+        }
+
+        Map<EObject, Collection<Setting>> referencerMap = EcoreUtil.CrossReferencer.find(resource.getContents());
+        for (EObject object : referencerMap.keySet()) {
+            if (object.eIsProxy()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

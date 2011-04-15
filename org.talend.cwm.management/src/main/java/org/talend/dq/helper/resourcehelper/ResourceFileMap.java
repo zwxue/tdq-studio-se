@@ -69,7 +69,7 @@ public abstract class ResourceFileMap {
 
             Resource res = EMFSharedResources.getInstance().getResource(uri, false);
 
-            if (res == null || res.getContents().isEmpty() || getModelElement(res) == null) {
+            if (EMFSharedResources.getInstance().isNeedReload(res)) {
                 res = EMFSharedResources.getInstance().reloadResource(uri);
             }
 
@@ -78,6 +78,7 @@ public abstract class ResourceFileMap {
 
         return null;
     }
+
 
     /**
      * DOC bZhou Comment method "findCorrespondingFile".
