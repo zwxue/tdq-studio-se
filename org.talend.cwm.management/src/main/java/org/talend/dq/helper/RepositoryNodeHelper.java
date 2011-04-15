@@ -35,10 +35,8 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
-import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
@@ -2134,13 +2132,7 @@ public final class RepositoryNodeHelper {
             if (property != null) {
                 Item item = property.getItem();
                 if (item != null) {
-                    ItemState state = item.getState();
-                    if (state != null) {
-                        User locker = state.getLocker();
-                        if (locker != null) {
-                            return locker.getLogin() == null ? "" : locker.getLogin(); //$NON-NLS-1$
-                        }
-                    }
+                    return ProxyRepositoryFactory.getInstance().getLockInfo(item).getUser();
                 }
             }
         }
