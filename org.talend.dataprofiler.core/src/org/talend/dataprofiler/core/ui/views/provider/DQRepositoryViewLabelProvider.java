@@ -87,19 +87,19 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     private static final String RIGHT = ")";//$NON-NLS-1$
 
-    private static Font ITALIC_FONT = null;
+    private static Font italicFont;
 
     public DQRepositoryViewLabelProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
 
-        if (null == ITALIC_FONT) {
+        if (null == italicFont) {
 
-            ITALIC_FONT = Display.getDefault().getSystemFont();
-            FontData[] exfds = ITALIC_FONT.getFontData();
+            italicFont = Display.getDefault().getSystemFont();
+            FontData[] exfds = italicFont.getFontData();
             if (exfds.length > 0) {
                 FontData fd = exfds[0];
                 fd.setStyle(SWT.ITALIC);
-                ITALIC_FONT = new Font(ITALIC_FONT.getDevice(), fd);
+                italicFont = new Font(italicFont.getDevice(), fd);
             }
         }
     }
@@ -387,16 +387,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (node instanceof DBConnectionRepNode) {
                     ConnectionItem connectionItem = (ConnectionItem) node.getObject().getProperty().getItem();
                     if (connectionItem.getConnection() instanceof DatabaseConnection) {
-                        
-                        //FIXME : revert r58560
-                        
-                        //changeURL = ConnectionHelper.isUrlChanged(connectionItem.getConnection());
-                        changeURL = true;
+                        changeURL = ConnectionHelper.isUrlChanged(connectionItem.getConnection());
                     }
                 }
             }
         }
 
-        return changeURL ? ITALIC_FONT : super.getFont(element);
+        return changeURL ? italicFont : super.getFont(element);
     }
 }
