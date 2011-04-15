@@ -1,3 +1,8 @@
+1.5.16 # ytao 2011/04/15
+- change word value of empty record from "" to null
+- remove first character '|' of scores
+- if input value is empty, create an empty record
+
 1.5.15 # scorreia
 - in previous version, the score is not 0 when a field is not match. Hence, a nbMatch field is added to the Output record. 
 

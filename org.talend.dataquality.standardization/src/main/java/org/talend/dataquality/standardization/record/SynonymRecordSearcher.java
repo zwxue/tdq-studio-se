@@ -193,26 +193,32 @@ public class SynonymRecordSearcher {
         for (int i = 0; i < record.length; i++) {
             List<WordResult> wResults = new ArrayList<WordResult>();
             String field = record[i];
-
-            // search this field in one index
-            SynonymIndexSearcher searcher = searchers[i];
-            TopDocs docs = searcher.searchDocumentBySynonym(field);
-            int nbDocs = Math.min(searcher.getTopDocLimit(), docs.totalHits);
-
-            // store all found words in a list of results for this field
-            for (int j = 0; j < nbDocs; j++) {
-                ScoreDoc scoreDoc = docs.scoreDocs[j];
-                String foundWord = searcher.getWordByDocNumber(scoreDoc.doc);
-                WordResult wordRes = new WordResult();
-                wordRes.input = field;
-                wordRes.word = foundWord;
-                wordRes.score = scoreDoc.score;
-                wResults.add(wordRes);
-            }
-            // handle case when nothing is found in the index
-            if (nbDocs == 0) {
-                WordResult wordRes = createEmptyWordResult(field);
-                wResults.add(wordRes);
+            
+            // if input value is empty, create an empty record
+            if (field == null || "".equals(field.trim())){
+            	wResults.add(createEmptyWordResult(field));
+            } else {
+	            // search this field in one index
+	            SynonymIndexSearcher searcher = searchers[i];
+	            TopDocs docs = searcher.searchDocumentBySynonym(field);
+	            
+	            int nbDocs = Math.min(searcher.getTopDocLimit(), docs.totalHits);
+	
+	            // store all found words in a list of results for this field
+	            for (int j = 0; j < nbDocs; j++) {
+	                ScoreDoc scoreDoc = docs.scoreDocs[j];
+	                String foundWord = searcher.getWordByDocNumber(scoreDoc.doc);
+	                WordResult wordRes = new WordResult();
+	                wordRes.input = field;
+	                wordRes.word = foundWord;
+	                wordRes.score = scoreDoc.score;
+	                wResults.add(wordRes);
+	            }
+	            // handle case when nothing is found in the index
+	            if (nbDocs == 0) {
+	                WordResult wordRes = createEmptyWordResult(field);
+	                wResults.add(wordRes);
+	            }
             }
 
             // create
@@ -253,7 +259,7 @@ public class SynonymRecordSearcher {
         WordResult emptyWordResult = new WordResult();
         emptyWordResult.input = input;
         emptyWordResult.score = 0;
-        emptyWordResult.word = "";
+        emptyWordResult.word = null;
         return emptyWordResult;
     }
 

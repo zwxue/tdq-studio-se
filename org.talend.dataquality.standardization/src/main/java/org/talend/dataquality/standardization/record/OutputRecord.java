@@ -125,6 +125,14 @@ public class OutputRecord implements Comparable<OutputRecord> {
         assert index >= 0 && index < record.length;
         return this.record[index];
     }
+    
+    /**
+     * Getter for nbMatch
+     * @return the nbMatch
+     */
+    public int getNbMatch(){
+    	return this.nbMatch;
+    }
 
     /**
      * Getter for score.
@@ -141,6 +149,9 @@ public class OutputRecord implements Comparable<OutputRecord> {
      * @return the scores
      */
     public String getScores() {
+    	if (scores != null && scores.startsWith("|")) {
+    		scores = scores.substring(1);
+    	}
         return this.scores;
     }
 
