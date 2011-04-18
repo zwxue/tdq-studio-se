@@ -503,9 +503,35 @@ public final class ResourceManager {
      */
     public static String getAbsolutePathRelative2Project(String path) {
         if (path != null && !"".equals(path)) { //$NON-NLS-1$
-            return getRootProject().getLocation().append(path).toOSString();
+            String relative2ProjectPath = path;
+            String projectAbsolutePath = getRootProject().getLocation().toString();
+            if (path.startsWith(projectAbsolutePath)) {
+                relative2ProjectPath = path;
+            } else {
+                relative2ProjectPath = getRootProject().getLocation().append(path).toOSString();
+            }
+            return relative2ProjectPath;
         }
         return ""; //$NON-NLS-1$
     }
 
+    public static boolean isLinux() {
+        return System.getProperty("os.name").toUpperCase().indexOf("LINUX") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public static boolean isWindows() {
+        return System.getProperty("os.name").toUpperCase().indexOf("WIN") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public static boolean isWinXP() {
+        return System.getProperty("os.name").toUpperCase().indexOf("WINDOWS XP") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public static boolean isWin7() {
+        return System.getProperty("os.name").toUpperCase().indexOf("WINDOWS 7") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public static boolean isMac() {
+        return System.getProperty("os.name").toUpperCase().indexOf("MAC") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }
