@@ -337,12 +337,19 @@ public final class DQStructureComparer {
      * Find the matched package of matchDataProvider.
      * 
      * @param selectedPackage
-     * @param matchDataProvider TODO
+     * @param matchDataProvider
      * @return
      * @throws ReloadCompareException
      */
     public static Package findMatchedPackage(Package selectedPackage, Connection matchDataProvider)
             throws ReloadCompareException {
+
+        // code clean by gdbu 2011-4-18 : when conn is null , throw a ReloadCompareException.
+        if (null == matchDataProvider) {
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("DQStructureComparer.ConnectionIsNull")); //$NON-NLS-1$
+        }
+        // code clean
+
         Catalog catalogCase = SwitchHelpers.CATALOG_SWITCH.doSwitch(selectedPackage);
         if (catalogCase != null) {
             return findMatchedCatalogObj(catalogCase, matchDataProvider);

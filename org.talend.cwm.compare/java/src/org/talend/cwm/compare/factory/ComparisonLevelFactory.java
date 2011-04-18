@@ -12,11 +12,8 @@
 // ============================================================================
 package org.talend.cwm.compare.factory;
 
-import org.eclipse.core.resources.IFile;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.compare.factory.comparisonlevel.CatalogComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogSchemaComparisonLevel;
-import org.talend.cwm.compare.factory.comparisonlevel.DataProviderComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.RepositoryObjectComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.SelectedLocalComparison;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
@@ -24,7 +21,6 @@ import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
-import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * This factory use to create the <code>IComparisonLevel</code> object.
@@ -53,23 +49,26 @@ public final class ComparisonLevelFactory {
         } else if (selectedObject instanceof DBColumnFolderRepNode) {
             DBColumnFolderRepNode dbFolderNode = (DBColumnFolderRepNode) selectedObject;
             comparisonLevel = new TableViewComparisonLevel(dbFolderNode);
-        } else if (selectedObject instanceof IFile) {
-            comparisonLevel = new DataProviderComparisonLevel(selectedObject);
         }
-        // else if (selectedObject instanceof Connection) {
+        
+        // code clean by gdbu 2011-4-18 : selectedObject is RepositoryNode type , so the following code is invalid.
+        // else if (selectedObject instanceof IFile) {
+        // comparisonLevel = new DataProviderComparisonLevel(selectedObject);
+        // }else if (selectedObject instanceof Connection) {
         // // MOD qiongli 2010-12-2.bug 16881.
         // IRepositoryViewObject resObject = ProxyRepositoryViewObject.getRepositoryViewObject((Connection)
         // selectedObject);
         // comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
         // }
-        else if (selectedObject instanceof Catalog) {
-            // MOD mzhao 2009-08-12 If compare the schemas of one catalog for MS
-            // SQL Server.
-            comparisonLevel = new CatalogComparisonLevel((Catalog) selectedObject);
-        } else if (selectedObject instanceof IRepositoryViewObject) {
-            // TODO never should be IRepositoryViewObject, it has been instead by DBConnectionRepNode
-            comparisonLevel = new RepositoryObjectComparisonLevel(selectedObject);
-        } else {
+        // else if (selectedObject instanceof Catalog) {
+        // // MOD mzhao 2009-08-12 If compare the schemas of one catalog for MS
+        // // SQL Server.
+        // comparisonLevel = new CatalogComparisonLevel((Catalog) selectedObject);
+        // } else if (selectedObject instanceof IRepositoryViewObject) {
+        // // never should be IRepositoryViewObject, it has been instead by DBConnectionRepNode
+        // comparisonLevel = new RepositoryObjectComparisonLevel(selectedObject);
+        // }
+        else {
             comparisonLevel = null;
         }
 
