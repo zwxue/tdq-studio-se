@@ -39,9 +39,7 @@ public class UiHandler implements IUIHandler {
      */
     public void popComparisonUI(IPath diffResourcePath, String dbName, Object selectedObject, boolean compareEachOther)
             throws ReloadCompareException {
-        // TODO Auto-generated method stub
         new ModelElementCompareEditorLauncher(dbName, selectedObject, compareEachOther).open(diffResourcePath);
-
     }
 
     /*
@@ -52,10 +50,8 @@ public class UiHandler implements IUIHandler {
      * Connection)
      */
     public void popRemoveElement(final Connection provider) {
-        // TODO Auto-generated method stub
         final Display display = PlatformUI.getWorkbench().getDisplay();
         display.asyncExec(new Runnable() {
-
             public void run() {
                 String titleMessage = DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmElementDelete"); //$NON-NLS-1$
                 DeleteModelElementConfirmDialog.showElementImpactDialog(new Shell(display), new ModelElement[] { provider },

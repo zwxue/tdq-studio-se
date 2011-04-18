@@ -101,16 +101,13 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
     public void run(IAction action) {
         // DQStructureComparer.copyCurrentResourceFile(m_SelectedFileObject);
 
+        // code clean by gdbu 2011-4-18 : This class is not being used ， those who extends this class, also not been
+        // used.
         if (selectedObject instanceof Connection) {
-            // TODO:
         } else if (selectedObject instanceof Catalog) {
-            // TODO:
         } else if (selectedObject instanceof Schema) {
-            // TODO:
         } else if (selectedObject instanceof TdTable) {
-            // TODO:
         } else if (selectedObject instanceof TdView) {
-            // TODO:
         }
 
         synchronize();
@@ -250,7 +247,6 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             System.out.print(e.getMessage());
             // log.error(e, e);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             System.out.print(e.getMessage());
             log.error(e, e);
         }

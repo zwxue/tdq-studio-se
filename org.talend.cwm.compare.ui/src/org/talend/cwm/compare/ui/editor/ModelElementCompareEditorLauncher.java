@@ -69,7 +69,6 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                     }
 
                     public Image getLeftImage(Object input) {
-                        // TODO Auto-generated method stub
                         return null;
                     }
 
@@ -114,7 +113,6 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                     }
 
                     public void removeListener(ILabelProviderListener listener) {
-                        // TODO Auto-generated method stub
 
                     }
 

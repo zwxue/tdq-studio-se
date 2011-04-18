@@ -14,8 +14,6 @@ package org.talend.cwm.compare.ui.dialog;
 
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 
-
-
 /**
  * DOC rli  class global comment. Detailled comment
  */
@@ -25,7 +23,7 @@ public class RemoveResourcesConfirmDialog extends DeleteModelElementConfirmDialo
      * DOC rli RemoveResourcesConfirmDialog constructor comment.
      */
     public RemoveResourcesConfirmDialog() {
-        // TODO Auto-generated constructor stub
+        // code clean by gdbu 2011-4-18 : This method is not been used , so I remove the 'TODO'
     }
 
 }

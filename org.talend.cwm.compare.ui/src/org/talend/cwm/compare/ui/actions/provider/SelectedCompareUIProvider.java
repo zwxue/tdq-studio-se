@@ -34,7 +34,6 @@ import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Catalog;
@@ -108,9 +107,11 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
             } else if (node instanceof DBColumnRepNode) {
                 TdColumn tdColumn = ((DBColumnRepNode) node).getTdColumn();
                 objects.add(tdColumn);
-            } else if (node instanceof DFColumnRepNode) {
-                // TODO implement flat file node, yyi 2011-03-22 17871
             }
+            // code clean by gdbu 2011-4-18 : fileDelimited no comparison function
+            // else if (node instanceof DFColumnRepNode) {
+            // TODO implement flat file node, yyi 2011-03-22 17871
+            // }
         }
 
         // MOD yyi 2011-03-22 17871:hide compare action for flat file column
