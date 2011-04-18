@@ -375,7 +375,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         // .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
         // destPropFile = new Path(destPropFile.getPath()).removeLastSegments(1).append(connNameAfter)
         // .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
-        // // TODO change connection property path
+        //
         //
         // }
         // // EMFUtil.saveResource(itemResource);

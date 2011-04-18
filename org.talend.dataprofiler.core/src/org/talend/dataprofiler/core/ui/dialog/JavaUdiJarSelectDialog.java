@@ -391,7 +391,6 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         Button addButton = createButton(buttonComposite, 22, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.add"), false);
         listener = new SelectionAdapter() {
 
-            // TODO implements the listener
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(dialogComposite.getShell(), SWT.NONE | SWT.MULTI);
                 dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
@@ -437,7 +436,6 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                 DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"), false);
         listener = new SelectionAdapter() {
 
-            // TODO implements the listener
             public void widgetSelected(SelectionEvent e) {
                 for (Object delFile : getTreeViewer().getCheckedElements()) {
                     if (delFile instanceof File) {
@@ -507,7 +505,6 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     // false);
     // SelectionListener listener = new SelectionAdapter() {
     //
-    // // TODO implements the listener
     // public void widgetSelected(SelectionEvent e) {
     // FileDialog dialog = new FileDialog(dialogComposite.getShell(), SWT.NONE);
     //                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
@@ -544,7 +541,6 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     // DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"), false);
     // listener = new SelectionAdapter() {
     //
-    // // TODO implements the listener
     // public void widgetSelected(SelectionEvent e) {
     // getTreeViewer().setCheckedElements(new Object[0]);
     // updateOKStatus();

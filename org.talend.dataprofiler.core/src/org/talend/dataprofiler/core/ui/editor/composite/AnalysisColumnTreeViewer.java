@@ -569,7 +569,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     masterPage.doSave(null);
                 }
 
-                // TODO 10238
+
                 if (dm != null && dm instanceof Connection) {
                     Connection dp = (Connection) dm;
                     if (ConnectionUtils.isMdmConnection(dp)) {

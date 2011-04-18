@@ -526,15 +526,15 @@ public class FileSystemImportWriter implements IImportWriter {
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#check()
      */
     public List<String> check() {
-        List<String> errors = new ArrayList<String>(); // TODO externalize these strings!!
+        List<String> errors = new ArrayList<String>();
         if (!checkBasePath()) {
-            errors.add("The root directory is invalid!");
+            errors.add("The root directory is invalid!");//$NON-NLS-1$
         } else if (!checkVersion()) {
-            errors.add("Can't verify the imported version!");
+            errors.add("Can't verify the imported version!");//$NON-NLS-1$
         } else if (!checkProject()) {
-            errors.add("Invalid Project! Can't load the project setting.");
+            errors.add("Invalid Project! Can't load the project setting.");//$NON-NLS-1$
         } else if (!checkTempPath()) {
-            errors.add("Cannot create temporary folder.");
+            errors.add("Cannot create temporary folder.");//$NON-NLS-1$
         }
 
         return errors;

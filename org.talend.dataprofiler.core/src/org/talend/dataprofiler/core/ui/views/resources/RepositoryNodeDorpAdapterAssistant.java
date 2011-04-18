@@ -361,8 +361,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         ERepositoryObjectType objectType = targetNode.getContentType();
         IPath nodeFullPath = this.getNodeFullPath(objectType);
         IPath makeRelativeTo = nodeFullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
-        computePath(folderHelper, sourcePath, targetPath, makeRelativeTo, objectType);
+        computePath(folderHelper, sourcePath, targetPath, makeRelativeTo, objectType, sourceNode, targetNode);
     }
+
 
     /**
      * rename the RepositoryNode's folder name (the RepositoryNode must be a folder).
@@ -488,7 +489,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     private void computePath(FolderHelper folderHelper, IPath sourcePath, IPath targetPath, IPath makeRelativeTo,
-            ERepositoryObjectType type) throws PersistenceException {
+            ERepositoryObjectType type, IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         String completeNewPath = null;
         IPath sourceMakeRelativeTo = sourcePath.makeRelativeTo(makeRelativeTo);
         IPath targetMakeRelativeTo = targetPath.makeRelativeTo(makeRelativeTo);
@@ -499,7 +500,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             completeNewPath = ERepositoryObjectType.getFolderName(type) + IPath.SEPARATOR + targetMakeRelativeTo.toString()
                     + IPath.SEPARATOR + sourceMakeRelativeTo.lastSegment();
         }
-        CorePlugin.getDefault().refreshDQView(); // TODO find the node to refresh
+        RepositoryNode sourceParent = sourceNode.getParent();
+        RepositoryNode targetParent = targetNode.getParent();
+        CorePlugin.getDefault().refreshDQView(sourceParent);
+        CorePlugin.getDefault().refreshDQView(targetParent);
         FolderItem emfFolder = folderHelper.getFolder(completeNewPath);
         computeDependcy(emfFolder);
     }

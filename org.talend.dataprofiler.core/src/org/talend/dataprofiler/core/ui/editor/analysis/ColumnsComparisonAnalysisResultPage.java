@@ -253,13 +253,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             }
             // ~11136
             columnHeader1.setText(tableNameA);
-            // columnHeader1.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetA")); // TODO scorreia put here table name instead //$NON-NLS-1$
             if (!isHasDeactivatedIndicator) {
                 final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
                 columnHeader2.setWidth(120);
                 columnHeader2.setAlignment(SWT.CENTER);
                 columnHeader2.setText(tableNameB);
-                //  columnHeader2.setText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.SetB")); // TODO scorreia put here table name instead //$NON-NLS-1$
             }
             createTableItems(resultTable);
 

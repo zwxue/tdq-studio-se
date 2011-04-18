@@ -70,7 +70,6 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
      */
     private Map<String, String> initReplaceStringMapAna() {
         Map<String, String> result = new HashMap<String, String>();
-        // TODO need to be refacted to get more readable codes
         // TdTable TdView TdColumn TdXMLElement use "xmlns:relational" , Catalog Schema use
         // "xmlns:orgomg.cwm.resource.relational", but there are not "xmlns:orgomg.cwm.resource.relational" in the .ana
         // file so we replate "xmlns:relational" with "xmlns:relational" and "xmlns:orgomg.cwm.resource.relational"
@@ -179,7 +178,9 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
                 fileWriter = null;
                 fileReader.close();
                 fileReader = null;
-                // FIXME why garbage collector is called here? Is it necessary? Explain.
+                // We must show called garbage collection,if set fileReader and fileWriter,then don't clear memory,will
+                // warn a
+                // message is file is in using.
                 System.gc();
             } catch (Exception e) {
                 error = e;

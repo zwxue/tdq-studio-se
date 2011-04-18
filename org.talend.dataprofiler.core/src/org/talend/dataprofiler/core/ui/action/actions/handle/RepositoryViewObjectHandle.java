@@ -38,10 +38,10 @@ public abstract class RepositoryViewObjectHandle implements IDuplicateHandle {
      * DOC bZhou RepositoryViewObjectHandle constructor comment.
      * 
      * @param property
+     * @deprecated use createDuplicateHandle(IRepositoryNode) instead
      */
     RepositoryViewObjectHandle(Property property) {
         if (property.eIsProxy()) {
-            // FIXME property is the argument. Do we really want to change the argument here? What effect is expected?
             property = (Property) EObjectHelper.resolveObject(property);
         }
     }

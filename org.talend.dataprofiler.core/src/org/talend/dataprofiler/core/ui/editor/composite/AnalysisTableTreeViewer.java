@@ -340,7 +340,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             }
             String columnSetName = columnSet.getName();
             if (columnSetName == null) {
-                columnSetName = "Unknown name"; // TODO from scorreia 2010-10-05 externalize string
+                columnSetName = "Unknown name"; //$NON-NLS-1$
             }
             treeItem.setText(0, columnSetName);
             treeItem.setData(TABLE_INDICATOR_KEY, tableIndicator);

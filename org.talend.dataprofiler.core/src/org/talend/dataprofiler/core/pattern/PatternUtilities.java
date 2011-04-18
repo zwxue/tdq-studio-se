@@ -205,7 +205,6 @@ public final class PatternUtilities {
         if (javaRexex == null) {
 
         }
-        // TODO Currently the previous condition checks only whether there exist
         // a regular expression for the analyzed
         // database, but we probably test also whether the analyzed database
         // support the regular expressions (=> check

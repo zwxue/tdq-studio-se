@@ -190,12 +190,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     }
                     connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
                 }
-                // FIXME User UUID to find the right conn repository node.
-                // String label = conn.getLabel();
-                // IRepositoryNode connectionRepositoryNode =
-                // DQStructureManager.getInstance().getConnectionRepositoryNode(label);
+
                 ((AnalysisItemEditorInput) result).setConnectionNode(connectionRepositoryNode);
-                // }
+
                 editorID = AnalysisEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
                 result = new IndicatorDefinitionItemEditorInput(item);

@@ -60,7 +60,6 @@ public class ToolTipChartComposite extends ChartComposite {
 
     private static int hotspontsize = 5;
 
-    // TODO Add code to set and get these values
     private HighLowItemLabelGenerator hiLoTips = new HighLowItemLabelGenerator();
 
     private StandardXYToolTipGenerator xyTips = new StandardXYToolTipGenerator();
@@ -169,5 +168,21 @@ public class ToolTipChartComposite extends ChartComposite {
         }
 
         return result;
+    }
+
+    public HighLowItemLabelGenerator getHiLoTips() {
+        return this.hiLoTips;
+    }
+
+    public void setHiLoTips(HighLowItemLabelGenerator hiLoTips) {
+        this.hiLoTips = hiLoTips;
+    }
+
+    public StandardXYToolTipGenerator getXyTips() {
+        return this.xyTips;
+    }
+
+    public void setXyTips(StandardXYToolTipGenerator xyTips) {
+        this.xyTips = xyTips;
     }
 }

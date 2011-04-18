@@ -120,7 +120,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             return false;
         }
 
-        // TODO Handle element deletion from resource, resource delete.
         return super.handleResourceChange(modelElement);
     }
 

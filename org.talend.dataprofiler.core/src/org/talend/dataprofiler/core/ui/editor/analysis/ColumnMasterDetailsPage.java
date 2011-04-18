@@ -843,9 +843,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // } catch (MalformedURLException e) {
         // }
 
-        // FIXME after i set the options of bins designer, and when saving the
-        // file, it cause a exception.
-
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
@@ -882,7 +879,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     "ColumnMasterDetailsPage.problem", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
-        // TODO get the domain constraint, we will see later.
         // Domain dataFilter = getDataFilter(dataManager, (Column) column); //
         // CAST here for test
         // analysisBuilder.addFilterOnData(dataFilter);
@@ -1002,10 +998,15 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // ~19179
 
         // ADD xqliu 2010-01-22 bug 11200
-        ReturnCode checkMdmExecutionEngine = checkMdmExecutionEngine();
-        if (!checkMdmExecutionEngine.isOk()) {// FIXME: Here(checkMdmExecutionEngine) will always return true, why do
-            // such judgment?
-            return checkMdmExecutionEngine;
+        // ReturnCode checkMdmExecutionEngine = checkMdmExecutionEngine();
+        // if (!checkMdmExecutionEngine.isOk()) {
+        // // such judgment?
+        // return checkMdmExecutionEngine;
+        // }
+        // MOD klliu 2011-04-18 code cleaning.
+        ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
+        if (modelElementIndicators != null && modelElementIndicators.length != 0) {
+            analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
         // ~
         List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
@@ -1088,7 +1089,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             execCombo.setEnabled(false);
         }
     }
-
 
     /**
      * 

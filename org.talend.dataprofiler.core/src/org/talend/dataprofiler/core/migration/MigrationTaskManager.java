@@ -280,8 +280,6 @@ public final class MigrationTaskManager {
                     if (log.isInfoEnabled()) {
                         log.info("Migration Task success: " + task.getName());
                     }
-                    // FIXME from scorreia 2010-10-05 why is there a System.out here? There should not be!!
-                    System.out.println("Migration Task success: " + task.getName());
                 }
             }
 

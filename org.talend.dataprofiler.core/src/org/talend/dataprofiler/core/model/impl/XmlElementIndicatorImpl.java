@@ -34,7 +34,6 @@ public class XmlElementIndicatorImpl extends ModelElementIndicatorImpl implement
     }
 
     public int getJavaType() {
-        // TODO 10238
         return super.getJavaType();
     }
 }

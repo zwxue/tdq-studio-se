@@ -112,13 +112,12 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
             // MOD scorreia 2010-10-05 16030 set the link between indicators and their definition
             if (DefinitionHandler.getInstance().setDefaultIndicatorDefinition(ind)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("MIGRATING: indicator definition " + indicatorDefinition.getName() + " in indicator "
-                            + ind.getName() + " in analysis " + ind.eResource());
+                    log.debug("MIGRATING: indicator definition " + indicatorDefinition.getName() + " in indicator "//$NON-NLS-1$//$NON-NLS-1$
+                            + ind.getName() + " in analysis " + ind.eResource());//$NON-NLS-1$
                 }
             } else {
-                // TODO externalize this string
-                log.error("MIGRATION ERROR: Could not change the indicator definition " + indicatorDefinition.getName()
-                        + " in indicator " + ind.getName() + " in analysis " + ind.eResource());
+                log.error("MIGRATION ERROR: Could not change the indicator definition " + indicatorDefinition.getName()//$NON-NLS-1$
+                        + " in indicator " + ind.getName() + " in analysis " + ind.eResource());//$NON-NLS-1$//$NON-NLS-1$
             }
             // ~ 16030
         } else {

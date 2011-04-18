@@ -121,9 +121,8 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     String theElementName = element.getName();
                     if (theElementName == null) {
                         if (element instanceof Connection) {
-                            // FIXME Use another way to get repository object label.
-                            // theElementName = ProxyRepositoryViewObject.getRepositoryViewObject((Connection)
-                            // element).getLabel();
+                            // MOD klliu 2011-04-18 get repository Object label
+                            // theElementName =RepositoryNodeHelper.recursiveFind(element).getObject().getLabel();
                         }
                     }
 

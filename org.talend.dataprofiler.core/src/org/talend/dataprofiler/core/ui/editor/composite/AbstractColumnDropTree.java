@@ -306,7 +306,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
             return ImageLib.getImage(ImageLib.PATTERN_REG);
         } else if (indicatorType == IndicatorEnum.UserDefinedIndicatorEnum) {
-            // TODO use different image for user defined indicator
             if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(
                     UDIHelper.getUDICategory(indicatorUnit.getIndicator().getIndicatorDefinition()))) {
                 // MOD yyi 2010-04-21 12724,unify the UDI icon as "IndicatorDefinition.gif"

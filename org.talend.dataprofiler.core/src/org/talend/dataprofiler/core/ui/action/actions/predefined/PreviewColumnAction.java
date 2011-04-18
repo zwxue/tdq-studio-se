@@ -44,7 +44,6 @@ public class PreviewColumnAction extends Action {
 
 	@Override
     public void run() {
-        // TODO 10238
         if (modelElements[0] instanceof TdColumn) {
             TdColumn[] columns = new TdColumn[modelElements.length];
             int i = 0;
@@ -71,10 +70,6 @@ public class PreviewColumnAction extends Action {
                                 null,
                                 DefaultMessagesImpl.getString("PreviewColumnAction.Warning"), DefaultMessagesImpl.getString("PreviewColumnAction.previewColumns")); //$NON-NLS-1$ //$NON-NLS-2$
             }
-        } else {
-            // FIXME from scorreia 2010-10-05 why is there a System.out here? There should not be!!
-            System.out.println("Unsupport this method yet!!!");
         }
-
     }
 }

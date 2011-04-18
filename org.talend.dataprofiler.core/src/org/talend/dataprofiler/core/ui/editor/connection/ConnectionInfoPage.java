@@ -252,16 +252,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             passwordText.setEnabled(false);
         }
 
-        // FIXME what is this listener useful for?
-        ModifyListener listener = new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                // saveTextChange();
-            }
-
-        };
-
         // MOD klliu 2010-07-06 bug 14095
         loginText.addModifyListener(new ModifyListener() {
 

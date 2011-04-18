@@ -150,8 +150,6 @@ public final class ChartTableFactory {
 
                                                 @Override
                                                 public void widgetSelected(SelectionEvent e) {
-                                                    // TODO open the editor and display all of data which saved in the
-                                                    // indicator.
                                                     try {
                                                         CorePlugin
                                                                 .getDefault()

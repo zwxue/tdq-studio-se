@@ -561,7 +561,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createPurpose(dataProvider);
         createDescription(dataProvider);
         // MOD mzhao xmldb have no actual connection.
-        // TODO Handle details view.
         if (dataProvider != null) {
             String connectionString = JavaSqlFactory.getURL(dataProvider);
             newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$

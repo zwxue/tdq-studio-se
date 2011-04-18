@@ -250,7 +250,7 @@ public class JungGraphGenerator {
         persist.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                // FIXME open file select dialog.
+                // open file select dialog.
                 // JFileChooser fileChooser = new JFileChooser();
                 // fileChooser.setDialogTitle("Choose a file");
                 // int result = fileChooser.showOpenDialog((JButton) e.getSource());

@@ -68,7 +68,6 @@ public class PatternMouseAdapter extends MouseAdapter {
             masterPage.doSave(null);
         }
 
-        // TODO 10238
         if (dm != null && dm instanceof Connection) {
             Connection dp = (Connection) dm;
             if (ConnectionUtils.isMdmConnection(dp)) {

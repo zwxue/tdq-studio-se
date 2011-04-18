@@ -684,9 +684,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 catalogTableViewer.setInput(indicatorList);
                 // ~
             }
-        } else {
-            // FIXME this code is not used. Remove it.
-            indicatorList = new ArrayList<OverviewIndUIElement>();
         }
     }
 
