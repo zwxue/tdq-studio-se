@@ -23,7 +23,7 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
-import orgomg.cwm.resource.relational.Table;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC hcheng class global comment. Detailled comment
@@ -50,11 +50,12 @@ public class RowMatchExplorer extends DataExplorer {
      */
     public String getRowsNotMatchStatement() {
 
-        Table tablea = (Table) indicator.getAnalyzedElement();
+        ColumnSet tablea = (ColumnSet) indicator.getAnalyzedElement();
         String tableA = tablea.getName();
         String query = "SELECT A.*" + dbmsLanguage.from();
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
-            Table tableb = (Table) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(
+            ColumnSet tableb = (ColumnSet) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator)
+                    .getColumnSetB().get(
                     0));
             String tableB = tableb.getName();
             EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
@@ -108,11 +109,12 @@ public class RowMatchExplorer extends DataExplorer {
      * @return
      */
     public String getRowsMatchStatement() {
-        Table tablea = (Table) indicator.getAnalyzedElement();
+        ColumnSet tablea = (ColumnSet) indicator.getAnalyzedElement();
         String tableA = tablea.getName();
         String query = "";
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
-            Table tableb = (Table) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(
+            ColumnSet tableb = (ColumnSet) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator)
+                    .getColumnSetB().get(
                     0));
             String tableB = tableb.getName();
             EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
@@ -189,9 +191,10 @@ public class RowMatchExplorer extends DataExplorer {
      * @return
      */
     public String getAllRowsStatement() {
-        Table tablea = (Table) indicator.getAnalyzedElement();
+        ColumnSet tablea = (ColumnSet) indicator.getAnalyzedElement();
         String tableA = tablea.getName();
-        Table tableb = (Table) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
+        ColumnSet tableb = (ColumnSet) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB()
+                .get(0));
         String tableB = tableb.getName();
         return getComment(MENU_VIEW_ROWS)
                 + "SELECT * " + dbmsLanguage.from() + getFullyQualifiedTableName(tablea) + whereDataFilter(tableA.equals(tableB) ? null : tableA, null); //$NON-NLS-1$

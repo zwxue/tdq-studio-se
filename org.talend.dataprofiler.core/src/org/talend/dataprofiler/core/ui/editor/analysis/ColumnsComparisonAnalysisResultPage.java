@@ -54,7 +54,6 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -75,6 +74,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 import org.talend.utils.format.StringFormatUtil;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -354,7 +354,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             return null;
         }
 
-        final TdTable columnSet = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        final ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
 
         getAnalysisHandler().getAnalyzedColumns();
 
