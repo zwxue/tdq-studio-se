@@ -1026,9 +1026,9 @@ public final class ConnectionUtils {
 
                     if (sqlConn != null) {
                         MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, sqlConn.getMetaData(),
-                                MetadataConnectionUtils.getPackageFilter(dbConn, sqlConn.getMetaData()));
+                                MetadataConnectionUtils.getPackageFilter(dbConn, sqlConn.getMetaData(), true));
                         MetadataFillFactory.getDBInstance().fillSchemas(dbConn, sqlConn.getMetaData(),
-                                MetadataConnectionUtils.getPackageFilter(dbConn, sqlConn.getMetaData()));
+                                MetadataConnectionUtils.getPackageFilter(dbConn, sqlConn.getMetaData(), false));
                     }
 
                 }
