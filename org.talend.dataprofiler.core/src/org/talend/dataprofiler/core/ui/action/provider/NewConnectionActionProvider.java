@@ -24,6 +24,7 @@ import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
+import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -65,7 +66,8 @@ public class NewConnectionActionProvider extends AbstractCommonActionProvider {
                 action = new CreateDBConnectionAction(node);
             } else if (node instanceof DFConnectionFolderRepNode || node instanceof DFConnectionSubFolderRepNode) {
                 action = new CreateDFConnectionAction(node);
-            } else if (node instanceof MDMConnectionFolderRepNode) {
+            } else if (node instanceof MDMConnectionFolderRepNode || node instanceof MDMConnectionSubFolderRepNode) {
+                // MOD klliu 20744: there is a lack of "Create MDM Connection" menu 2011-04-19
                 action = new CreateMDMConnectionAction(node);
             }
 
