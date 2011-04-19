@@ -151,8 +151,13 @@ public abstract class ResourceFileMap {
         List<ModelElement> elementList = new ArrayList<ModelElement>();
         try {
             List<IFile> allIFiles = searchAllIFiles(parentFolder);
+            // MOD qiongli 2011-4-19.bug 20566,avoid NPE
+            ModelElement mod = null;
             for (IFile file : allIFiles) {
-                elementList.add(getModelElement(file));
+                mod = getModelElement(file);
+                if (mod != null) {
+                    elementList.add(getModelElement(file));
+                }
             }
         } catch (CoreException e) {
             log.error(e);
