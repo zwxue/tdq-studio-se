@@ -43,7 +43,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC xqliu class global comment. TODO 10238
+ * DOC xqliu class global comment.
  */
 public class MdmAnalysisExecutor extends AnalysisExecutor {
 

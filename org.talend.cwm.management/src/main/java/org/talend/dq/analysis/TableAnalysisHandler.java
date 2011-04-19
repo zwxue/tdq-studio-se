@@ -87,7 +87,6 @@ public class TableAnalysisHandler extends AnalysisHandler {
             log.error("Connection has not been set in analysis Context");
             connection = ConnectionHelper.getTdDataProvider(PackageHelper.getParentPackage((MetadataTable) set));
             analysis.getContext().setConnection(connection);
-            // FIXME connection should be set elsewhere
         }
         TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
         if (rc.isOk()) {

@@ -302,9 +302,8 @@ public final class DefinitionHandler {
         EList<TdExpression> sqlGenericExpression = regexIndDef.getSqlGenericExpression();
 
         for (Expression expression : sqlGenericExpression) {
-            if (dbmsName.equals(expression.getLanguage())) {
-                // FIXME scorreia this comparison should be made by
-                // DbmsLanguageFactory?
+            // MOD qiongli 2011-4-18,bug 16723.data cleansing.
+            if (DbmsLanguageFactory.compareDbmsLanguage(dbmsName, expression.getLanguage())) {
                 replaced = replaceBodyWith(expression, regexpFunction);
             }
         }

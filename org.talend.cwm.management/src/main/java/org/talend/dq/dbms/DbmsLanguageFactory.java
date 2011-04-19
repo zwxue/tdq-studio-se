@@ -137,7 +137,6 @@ public final class DbmsLanguageFactory {
         if (isInfomix(dbmsSubtype)) {
             return new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
         }// ~11005
-        // TODO other supported databases here
         return new DbmsLanguage(dbmsSubtype, dbVersion);
     }
 
@@ -159,32 +158,8 @@ public final class DbmsLanguageFactory {
         if (dbType == null) {
             return new DbmsLanguage();
         }
-        // FIXME scorreia replace this switch with a call to the method createDbmsLanguage(String dbmsSubtype, String
-        // databaseVersion)
-        switch (dbType) {
-        case DB2ZOSDEFAULTURL:
-            result = new DB2DbmsLanguage();
-            break;
-        case AS400DEFAULTURL:
-            result = new AS400DbmsLanguage();
-            break;
-        case ORACLEWITHSERVICENAMEDEFAULTURL:
-        case ORACLEWITHSIDDEFAULTURL:
-            result = new OracleDbmsLanguage();
-            break;
-
-        case SYBASEDEFAULTURL:
-            result = new SybaseASEDbmsLanguage();
-            break;
-
-        case MSSQLDEFAULTURL:
-            result = new MSSqlDbmsLanguage();
-            break;
-
-        case MYSQLDEFAULTURL:
-        default:
-            result = new DbmsLanguage();
-        }
+        //MOD qiongli 2011-4-18 bug 16723,data cleansing
+        result=createDbmsLanguage(dbType.getLanguage(),PluginConstant.EMPTY_STRING);
         return result;
     }
 

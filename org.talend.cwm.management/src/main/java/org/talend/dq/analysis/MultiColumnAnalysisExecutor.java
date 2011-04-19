@@ -359,10 +359,6 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      */
     @Override
     protected boolean checkAnalyzedElements(Analysis analysis, AnalysisContext context) {
-        // for (ModelElement node : context.getAnalysedElements()) {
-        // // TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(node);
-        // // TODO scorreia
-        // }
         return true;
     }
 

@@ -38,7 +38,6 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
     @Override
     protected String createSqlStatement(Analysis analysis) {
-        // TODO Auto-generated method stub
         return "";
     }
 

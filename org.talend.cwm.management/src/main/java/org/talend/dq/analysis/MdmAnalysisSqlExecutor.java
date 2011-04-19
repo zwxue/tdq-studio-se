@@ -49,7 +49,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import Zql.ParseException;
 
 /**
- * DOC xqliu class global comment. TODO 10238
+ * DOC xqliu class global comment.
  */
 public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
 

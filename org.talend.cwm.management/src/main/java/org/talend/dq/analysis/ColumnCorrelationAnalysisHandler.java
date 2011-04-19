@@ -71,8 +71,9 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
                 TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
                 log.error("Connection has not been set in analysis Context");
                 connection = ConnectionHelper.getTdDataProvider(tdColumn);
-                analysis.getContext().setConnection(connection);
-                // FIXME connection should be set elsewhere }
+                if(connection!=null){
+                    analysis.getContext().setConnection(connection);
+                }
             }
         }
         TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
@@ -97,7 +98,6 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
         // DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         // }
         //
-        // // FIXME scorreia in case of composite indicators, add children to result.
         // // if (indicator instanceof CompositeIndicator) {
         // // for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
         // // initializeIndicator(child, columns); // recurse

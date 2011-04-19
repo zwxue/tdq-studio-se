@@ -73,8 +73,10 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
                 TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
                 log.error("Connection has not been set in analysis Context");
                 connection = ConnectionHelper.getTdDataProvider(tdColumn);
-                analysis.getContext().setConnection(connection);
-                // FIXME connection should be set elsewhere }
+                if (connection != null) {
+                    analysis.getContext().setConnection(connection);
+                    break;
+                }
             }
         }
         TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);

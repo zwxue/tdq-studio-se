@@ -86,7 +86,6 @@ public final class DatabaseContentRetriever {
         for (int i = 1; i <= columnCount; i++) {
             String columnName = metaData.getColumnName(i);
             // String columnClassName = metaData.getColumnClassName(i);
-            // TODO add other informations
             TdColumn column = ColumnHelper.createTdColumn(columnName);
             ColumnSetHelper.addColumn(column, columnSet);
         }
@@ -456,7 +455,6 @@ public final class DatabaseContentRetriever {
 
         // MOD xqliu 2009-10-23 bug 5327
         // print driver properties
-        // TODO scorreia adapt this code in order to store information in CWM ????
         // DriverPropertyInfo[] driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
         DriverPropertyInfo[] driverProps = null;
         if (!databaseUrl.toLowerCase().startsWith("jdbc:odbc:")) {
@@ -485,7 +483,7 @@ public final class DatabaseContentRetriever {
                 }
                 // ~
 
-                if (log.isDebugEnabled()) { // TODO use logger here
+                if (log.isDebugEnabled()) {
                     log.debug("Prop description = " + prop.description);
                     log.debug(prop.name + "=" + prop.value);
                 }
@@ -603,7 +601,6 @@ public final class DatabaseContentRetriever {
         typeSystem.setName("System type"); // FIXME scorreia put another name?
         while (typeInfo.next()) {
             // --- store the information in CWM structure
-            // TODO scorreia change to SQLSimpleType ?
             TdSqlDataType dataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
             try {
                 dataType.setName(typeInfo.getString(TypeInfoColumns.TYPE_NAME.name()));
@@ -665,7 +662,6 @@ public final class DatabaseContentRetriever {
                 log.warn(e, e);
             }
             // --- get the informations form the DB
-            // TODO scorreia store these informations
             // String literalPrefix = typeInfo.getString(TypeInfoColumns.LITERAL_PREFIX.name());
             // String literalsuffix = typeInfo.getString(TypeInfoColumns.LITERAL_SUFFIX.name());
             // String createparams = typeInfo.getString(TypeInfoColumns.CREATE_PARAMS.name());
@@ -681,8 +677,6 @@ public final class DatabaseContentRetriever {
             typeSystem.getOwnedElement().add(dataType);
 
             // --- create the mapping with the java language
-            // TODO scorreia TypeMapping typeMapping = TypemappingFactory.eINSTANCE.createTypeMapping();
-            // typeMapping.
 
         } // end of loop on typeinfo rows
         return typeSystem;
@@ -707,7 +701,6 @@ public final class DatabaseContentRetriever {
         return new ColumnBuilder(connection).getColumns(catalogName, schemaPattern, tablePattern, columnPattern);
     }
 
-    // method not used!? TODO remove?
     /**
      * Method "getDataType".
      * 
@@ -736,7 +729,6 @@ public final class DatabaseContentRetriever {
         return org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
     }
 
-    // method not used!? TODO remove?
     public static TdSqlDataType createDataType(ResultSet columns) throws SQLException {
         TdSqlDataType sqlDataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
         try {
@@ -759,7 +751,7 @@ public final class DatabaseContentRetriever {
     }
 
     private static String getConnectionInformations(java.sql.Connection connection) {
-        return connection.toString(); // TODO scorreia give more user friendly informations.
+        return connection.toString();
     }
 
     /**

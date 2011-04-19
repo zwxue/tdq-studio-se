@@ -364,7 +364,6 @@ public final class DependenciesHandler {
                 if (supplier != null && supplier.size() > 0) {
                     ModelElement modelElement = supplier.get(0);
                     if (modelElement != null) {
-                        // FIXME simplify code
                         if (modelElement instanceof Connection) {
                             // if (modelElement.equals(connection)) {
                             realDependency.add(dependency);

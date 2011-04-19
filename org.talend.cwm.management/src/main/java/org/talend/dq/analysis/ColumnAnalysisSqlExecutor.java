@@ -97,10 +97,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     private static final String ALIAS = "(\\w*)\\."; //$NON-NLS-1$
 
-    /**
-     * TODO scorreia this constant must be replaced by a default preference and the possibility to the user to change it
-     * for each indicator.
-     */
     private static final int TOP_N = org.talend.dataquality.PluginConstant.DEFAULT_TOP_N;
 
     private static Logger log = Logger.getLogger(ColumnAnalysisSqlExecutor.class);
@@ -561,15 +557,15 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         DataminingType dataminingType = DataminingType.get(contentType);
         if (DataminingType.INTERVAL.equals(dataminingType) && (isText)) {
             // cast is needed
-            // TODO handle date
+            // MOD qiongli 2011-4-18,bug 16723(data cleansing),handle date
             boolean isDate = Java2SqlType.isDateInSQL(javaType);
             if (isDate) {
-                throw new UnsupportedOperationException();
+                return "CAST(" + colName + " AS DATE)";
             }
             boolean isNumeric = Java2SqlType.isNumbericInSQL(javaType);
             if (isNumeric) {
                 // TODO scorreia user should tell the expected format
-                return "CAST (" + colName + " AS DECIMAL)"; //$NON-NLS-1$ //$NON-NLS-2$
+                return "CAST(" + colName + " AS DECIMAL)"; //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         return colName;

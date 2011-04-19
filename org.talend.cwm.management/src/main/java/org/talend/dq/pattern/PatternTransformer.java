@@ -52,7 +52,6 @@ public class PatternTransformer {
 
     private String getRegexpPattern(char inputCharacter) {
         if (lowerCase == inputCharacter) {
-            // TODO could depend on DBMS here
             return "[[:lower:]]"; //$NON-NLS-1$
         }
         if (upperCase == inputCharacter) {
@@ -62,9 +61,8 @@ public class PatternTransformer {
             return "[[:digit:]]"; //$NON-NLS-1$
         }
         if (specialChar.contains(String.valueOf(inputCharacter))) {
-            return "\\" + inputCharacter; // TODO for Mysql, should double the number of \ //$NON-NLS-1$
+            return "\\" + inputCharacter;
         }
-        // TODO add other classes here
         return String.valueOf(inputCharacter);        
     }
 

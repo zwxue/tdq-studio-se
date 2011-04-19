@@ -97,7 +97,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         }
 
         ConnectionIndicator connectionIndicator = getConnectionIndicator();
-        this.resetCounts(connectionIndicator); // TODO reset other indicators
+        this.resetCounts(connectionIndicator);
 
         List<Catalog> catalogs = ConnectionHelper.getCatalogs(dataProvider);
 

@@ -80,7 +80,6 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
             log.error("Connection has not been set in analysis Context");
             connection = ModelElementHelper.getTdDataProvider(modelElement);
             analysis.getContext().setConnection(connection);
-            // FIXME connection should be set elsewhere
         }
         TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
         if (rc.isOk()) {

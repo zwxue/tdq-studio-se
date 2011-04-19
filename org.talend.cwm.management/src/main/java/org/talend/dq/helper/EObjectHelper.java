@@ -77,7 +77,6 @@ public final class EObjectHelper {
     }
 
     /**
-     * TODO scorreia see if we can replace this method by {@link ConnectionHelper#getTdDataProvider(TdColumn)}.
      * 
      * @deprecated it's probably better to use {@link ConnectionHelper#getTdDataProvider(TdColumn)}
      */

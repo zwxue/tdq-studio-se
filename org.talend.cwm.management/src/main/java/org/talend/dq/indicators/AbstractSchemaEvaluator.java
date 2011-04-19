@@ -78,10 +78,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     private int nbExceptions = 0;
 
-    // TODO scorreia use catalog pattern to filter analysis
     private String catalogPattern = null;
 
-    // TODO scorreia use schema pattern to filter analysis
     private String schemaPattern = null;
 
     protected String tablePattern = null;
@@ -92,7 +90,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (this.dbmsLanguage == null) {
             DataManager dm = this.getDataManager();
             if (dm == null) {
-                throw new RuntimeException("No data manager found."); // FIXME use TalendException ? //$NON-NLS-1$
+                throw new RuntimeException("No data manager found.");
             }
             this.dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
             // this.dbmsLanguage.setDbQuoteString(this.dbmsLanguage.getQuoteIdentifier());
@@ -143,7 +141,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             int pkCount = getPKCount(catalog, schema, table);
             schemaIndic.setKeyCount(schemaIndic.getKeyCount() + pkCount);
 
-            // TODO get imported/exported keys
+            // get imported/exported keys
             // getConnection().getMetaData().getImportedKeys(catalog, schema, table);
             // getConnection().getMetaData().getExportedKeys(catalog, schema, table);
 

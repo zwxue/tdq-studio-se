@@ -269,7 +269,6 @@ public class DbmsLanguage {
         return EOS;
     }
 
-    // TODO scorreia implement other predicate methods
 
     public String getDbmsName() {
         return this.dbmsName;

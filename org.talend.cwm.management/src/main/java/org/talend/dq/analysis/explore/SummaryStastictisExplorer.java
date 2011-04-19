@@ -41,7 +41,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
     }
 
     /**
-     * TODO zqin use this method in a menu ".
+     * zqin use this method in a menu ".
      * 
      * View invalid rows" Method "getInvalidRowsStatement".
      * 

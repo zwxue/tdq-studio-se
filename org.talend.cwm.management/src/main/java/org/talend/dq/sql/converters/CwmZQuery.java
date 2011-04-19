@@ -129,7 +129,6 @@ public class CwmZQuery {
      */
     public Domain generateDomain() {
         Domain domain = DomainFactory.eINSTANCE.createDomain();
-        // TODO implement me
 
         return domain;
     }
