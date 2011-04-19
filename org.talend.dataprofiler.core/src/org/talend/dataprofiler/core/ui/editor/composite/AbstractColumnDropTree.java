@@ -185,6 +185,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
         }
         createIndicatorParameters(indicatorItem, indicatorUnit);
+
+        // MOD yyi 2011-04-19 20344: The element tree structure is incorrect after adding a pattern to a column
+        tree.getColumn(0).pack();
     }
 
     protected abstract void setElements(ModelElementIndicator[] modelElementIndicator);
