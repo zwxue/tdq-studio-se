@@ -68,8 +68,6 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
-
-
 /**
  * DOC scorreia class global comment. Detailled comment
  */
@@ -124,6 +122,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
 
         Collection<? extends ModelElement> schemata = ConnectionHelper.getSchema(selectedDataProvider);
         if (CAT_WITH_PRV) {
+            // FIXME ok is never used.
             ok = resource.getContents().addAll(schemata);
         } else {
             // ok = addElementsToOwnResources(schemata,
@@ -217,6 +216,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             }
             //System.out.println("LEFT MODEL=" + match.getLeftModel()); //$NON-NLS-1$
             @SuppressWarnings("unused")
+            // FIXME ownedElements is never used.
             EList<DiffElement> ownedElements = diff.getOwnedElements();
             // for (DiffElement oe : ownedElements) {
             // // System.out.println(oe.g);

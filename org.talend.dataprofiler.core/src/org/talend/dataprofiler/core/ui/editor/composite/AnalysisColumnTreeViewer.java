@@ -841,6 +841,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         ConnectionItem connItem = (ConnectionItem) metadataRepObject.getProperty().getItem();
         // MOD qiongli 2010-8-19,bug 14436:could not come from diffrent connection
         Connection tdProvider = connItem.getConnection();
+        // FIXME text is never used.
         boolean text = metadataRepObject instanceof MetadataXmlElementTypeRepositoryObject;
         if (tdProvider == null) {
             return false;

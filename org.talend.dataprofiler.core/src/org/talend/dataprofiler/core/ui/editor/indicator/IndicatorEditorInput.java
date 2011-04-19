@@ -97,6 +97,8 @@ public class IndicatorEditorInput implements IEditorInput {
 
     /**
      * DOC zshen fixed the bug 10996: One more editors open for a system indicator
+     * 
+     * FIXME should also overwrite the hashCode().
      */
     @Override
     public boolean equals(Object obj) {

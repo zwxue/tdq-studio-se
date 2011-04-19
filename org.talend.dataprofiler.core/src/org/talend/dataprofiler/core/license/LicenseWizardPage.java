@@ -31,7 +31,6 @@ import org.talend.core.ui.branding.IBrandingService;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 
-
 /**
  * Page for new project details. <br/>
  * 
@@ -92,6 +91,7 @@ public class LicenseWizardPage extends WizardPage {
             final URL url = brandingService.getLicenseFile();
 
             FileReader fileReader = new FileReader(new File(url.getPath()));
+            // FIXME in should be closed.
             BufferedReader in = new BufferedReader(fileReader);
 
             String licenseLine = ""; //$NON-NLS-1$

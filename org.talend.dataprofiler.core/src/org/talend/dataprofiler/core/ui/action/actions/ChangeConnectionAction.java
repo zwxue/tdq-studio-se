@@ -269,9 +269,11 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         if (reloadFolder != null) {
             IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reloadFolder);
             if (creatComparisonLevel != null) {
+                // FIXME newDataProv is never used in the following codes.
                 newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
             }
             // Recompute after reload
+            // FIXME treeModelLs is never used in the following codes.
             treeModelLs = anaEleSynDialog.getSynInputModel();
         }
     }
@@ -294,9 +296,11 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         if (reloadFolder != null) {
             IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(reloadFolder);
             if (creatComparisonLevel != null) {
+                // FIXME newDataProv is never used in the following codes.
                 newDataProv = creatComparisonLevel.reloadCurrentLevelElement();
             }
             // Recompute after reload
+            // FIXME treeModelLs is never used in the following codes.
             treeModelLs = anaEleSynDialog.getSynInputModel();
         }
     }

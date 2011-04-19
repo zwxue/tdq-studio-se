@@ -26,7 +26,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQPatternItem;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.ProjectManager;
@@ -99,7 +98,6 @@ public class PatternWriter extends AElementPersistance {
         // if pattern have client depencency, add codes here
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -118,6 +116,7 @@ public class PatternWriter extends AElementPersistance {
             resource.getContents().add(element);
         }
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -132,10 +131,6 @@ public class PatternWriter extends AElementPersistance {
         ReturnCode rc = new ReturnCode();
         try {
             TDQPatternItem patternItem = (TDQPatternItem) item;
-            if (patternItem != null && patternItem.eIsProxy()) {
-                patternItem = (TDQPatternItem) EObjectHelper.resolveObject(patternItem);
-                patternItem.getProperty().setLabel(patternItem.getPattern().getName());
-            }
             Pattern pattern = patternItem.getPattern();
             addDependencies(pattern);
             addResourceContent(pattern.eResource(), pattern);

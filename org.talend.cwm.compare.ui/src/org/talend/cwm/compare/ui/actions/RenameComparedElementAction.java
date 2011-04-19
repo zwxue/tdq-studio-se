@@ -321,6 +321,8 @@ public class RenameComparedElementAction extends Action {
     /**
      * 
      * DOC mzhao RenameComparedElementAction class global comment. Detailled comment
+     * 
+     * FIXME is it better to make it static?
      */
     private class RightPanelAddedElementsDialog extends Dialog {
 

@@ -245,6 +245,7 @@ public abstract class ModelElementTreeMenuProvider {
                     ModelElement ana = getAnalysis2();
                     // MOD qiongli 2011-1-12 feature 16796 :handle the case of ModelElement name is null
                     ana.setName(ModelElementHelper.getName(me));
+                    // FIXME instanceof always return true.
                     if (me instanceof ModelElement) {
                         (new TdAddTaskAction(tree.getShell(), ana)).run();
                     }

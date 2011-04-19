@@ -35,7 +35,7 @@ import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class ModelElementAnalysisHandler extends AnalysisHandler {
 
@@ -199,6 +199,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
      */
     public void setDatamingType(String dataminingTypeLiteral, ModelElement modelElement) {
         DataminingType type = DataminingType.get(dataminingTypeLiteral);
+        // FIXME it always return true.
         if (modelElement instanceof ModelElement) {
             MetadataHelper.setDataminingType(type, (ModelElement) modelElement);
         } else if (modelElement instanceof TdXmlElementType) {

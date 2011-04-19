@@ -158,6 +158,8 @@ public final class CategoryHandler {
      * 
      * Get no need to display indicator definitions.
      * 
+     * FIXME lazy initialization of a static field.
+     * 
      * @return
      */
     public static List<String> getShouldNotIncludeIndicatorDefinitionUuidList() {

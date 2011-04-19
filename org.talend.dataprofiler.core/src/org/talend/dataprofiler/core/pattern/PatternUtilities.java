@@ -201,6 +201,8 @@ public final class PatternUtilities {
             result.setOk(false);
             return result;
         }
+
+        // FIXME javaRexex never used.
         String javaRexex = DomainHelper.getJavaRegexp(pattern);
         if (javaRexex == null) {
 

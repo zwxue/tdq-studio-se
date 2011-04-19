@@ -145,6 +145,7 @@ public class ExportUDIWizardPage extends WizardPage {
             log.error(e1, e1);
         }
 
+        // FIXME buttonComposite never used.
         Control buttonComposite = createSelectionButtons(container);
         Composite monitorComp = new Composite(container, SWT.NONE);
         monitorComp.setLayout(new GridLayout());

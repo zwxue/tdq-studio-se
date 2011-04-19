@@ -66,6 +66,8 @@ public class MDMXmlElementRepNode extends RepositoryNode {
 
             xmlElements = ConnectionUtils.getXMLElements(xmlElementType);
         }
+
+        // FIXME xmlElements might be null.
         if (xmlElements.size() > 0) {
             for (ModelElement mElement : xmlElements) {
                 MetadataXmlElementTypeRepositoryObject metadataXmlElementType = new MetadataXmlElementTypeRepositoryObject(

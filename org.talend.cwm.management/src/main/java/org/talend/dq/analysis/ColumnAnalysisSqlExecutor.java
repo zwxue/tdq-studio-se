@@ -334,6 +334,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     final EList<CharactersMapping> charactersMapping = indicatorDefinition.getCharactersMapping();
                     colName = dbms().getPatternFinderFunction(colName, charactersMapping);
                     if (colName == null) { // no replacement found, try the default one
+                        // FIXME dbms().getPatternFinderDefaultFunction(colName) return null.
                         colName = dbms().getPatternFinderDefaultFunction(colName);
                     }
                     if (colName == null) { // no replacement found, try the default one
@@ -406,6 +407,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             TypedReturnCode<Connection> conn = getConnection(cachedAnalysis);
             Connection conenction = conn.getObject();
 
+            // FIXME stat should be closed.
             Statement stat = conenction.createStatement();
 
             return stat.execute(queryStmt);

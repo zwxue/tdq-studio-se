@@ -58,10 +58,9 @@ import org.talend.resource.ResourceManager;
 import org.talend.utils.io.FilesUtils;
 import org.talend.utils.sugars.ReturnCode;
 
-
 /**
  * @author zshen
- *
+ * 
  */
 public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
@@ -237,6 +236,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     public int open() {
         fIsEmpty = evaluateIfTreeEmpty(fInput);
         super.open();
+        // FIXME treeViewer is never used.
         CheckboxTreeViewer treeViewer = this.getTreeViewer();
         return getReturnCode();
     }
@@ -397,7 +397,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                 String path = dialog.open();
 
                 if (path != null) {
-                    String[] fileNames=dialog.getFileNames();
+                    String[] fileNames = dialog.getFileNames();
                     // jarPathText.setText(path);
                     // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
                     // validateJavaUDI(classNameText, jarPathText);
@@ -406,17 +406,17 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                             IPath filePath = new Path(path);
                             filePath = filePath.removeLastSegments(1).append(name);
 
-                        // File jarFile =
-                        // ResourceManager.getUDIJarFolder().getFullPath().append(filePath.lastSegment()).toFile();
-                        // boolean createNewFile = false;
-                        // if (!jarFile.getAbsoluteFile().isAbsolute()) {
-                        // createNewFile = jarFile.createNewFile();
-                        // }
-                        // if (createNewFile) {
-                        FilesUtils.copyFile(filePath.toFile(),
-                                ResourceManager.getUDIJarFolder().getLocation().append(filePath.lastSegment()).toFile());
-                        // ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
-                        // }
+                            // File jarFile =
+                            // ResourceManager.getUDIJarFolder().getFullPath().append(filePath.lastSegment()).toFile();
+                            // boolean createNewFile = false;
+                            // if (!jarFile.getAbsoluteFile().isAbsolute()) {
+                            // createNewFile = jarFile.createNewFile();
+                            // }
+                            // if (createNewFile) {
+                            FilesUtils.copyFile(filePath.toFile(),
+                                    ResourceManager.getUDIJarFolder().getLocation().append(filePath.lastSegment()).toFile());
+                            // ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+                            // }
                         }
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
@@ -432,8 +432,8 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
             }
         };
         addButton.addSelectionListener(listener);
-        Button delButton = createButton(buttonComposite, 23,
-                DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"), false);
+        Button delButton = createButton(buttonComposite, 23, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"),
+                false);
         listener = new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -445,7 +445,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                             rc.setMessage("the File " + ((File) delFile).getName() + " has been select by the UDI");
                         }
                         if (rc.isOk()) {
-                        ((File) delFile).delete();
+                            ((File) delFile).delete();
                         } else {
                             MessageUI.openWarning(rc.getMessage());
                         }

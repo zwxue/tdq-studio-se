@@ -79,6 +79,7 @@ public final class MessageBoxExceptionHandler {
         } else if (priority == Level.WARN) {
             MessageDialog.openWarning(shell, title, msg);
         } else if (priority == Level.INFO) {
+            // FIXME use the same code in two branches.
             MessageDialog.openInformation(shell, title, msg);
         } else {
             MessageDialog.openInformation(shell, title, msg);

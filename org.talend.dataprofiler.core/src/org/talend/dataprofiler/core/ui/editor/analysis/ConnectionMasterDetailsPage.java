@@ -65,6 +65,7 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         if (connectionNode != null) {
             IProxyRepositoryFactory factory = ((IProxyRepositoryService) GlobalServiceRegister.getDefault().getService(
                     IProxyRepositoryService.class)).getProxyRepositoryFactory();
+            // FIXME lastVersion is never used.
             IRepositoryViewObject lastVersion = null;
             try {
                 lastVersion = factory.getLastVersion(connectionNode.getObject().getId());

@@ -58,6 +58,7 @@ public final class TableUtils {
                     e.item = (TableItem) label.getData("_TABLEITEM"); //$NON-NLS-1$
                     table.setSelection(new TableItem[] { (TableItem) e.item });
                     table.notifyListeners(SWT.Selection, e);
+                    // FIXME does here need a break?
                 case SWT.MouseExit:
                     shell.dispose();
                     break;

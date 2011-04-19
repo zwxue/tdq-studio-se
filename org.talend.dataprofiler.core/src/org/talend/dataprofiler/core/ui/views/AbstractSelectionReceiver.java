@@ -69,6 +69,7 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
      */
     public void execValidation(DropTargetEvent event, boolean valid) {
         if (event.detail != DND.DROP_NONE) {
+            // FIXME static value should not be assigned valus in a instance method.
             lastValidOperation = event.detail;
         }
         if (valid) {

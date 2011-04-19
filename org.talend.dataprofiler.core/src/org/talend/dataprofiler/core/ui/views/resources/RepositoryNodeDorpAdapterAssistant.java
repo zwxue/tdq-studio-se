@@ -511,6 +511,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     private void computeDependcy(FolderItem emfFolder) {
         try {
             if (emfFolder != null) {
+                // FIXME this cast is not safe.
                 Item[] childrens = (Item[]) emfFolder.getChildren().toArray();
                 for (int i = 0; i < childrens.length; i++) {
                     if (childrens[i] instanceof FolderItem) {

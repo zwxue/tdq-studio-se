@@ -27,7 +27,6 @@ import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
@@ -114,10 +113,6 @@ public class ReportWriter extends AElementPersistance {
         ReturnCode rc = new ReturnCode();
         try {
             TDQReportItem repItem = (TDQReportItem) item;
-            if (repItem != null && repItem.eIsProxy()) {
-                repItem = (TDQReportItem) EObjectHelper.resolveObject(repItem);
-                repItem.getProperty().setLabel(repItem.getReport().getName());
-            }
             Report report = repItem.getReport();
             addDependencies(report);
             addResourceContent(report.eResource(), report);

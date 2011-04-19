@@ -50,6 +50,7 @@ public class OverviewAnalysisAction extends Action implements ICheatSheetAction 
 
     private List<IRepositoryNode> catalogs = new ArrayList<IRepositoryNode>();
 
+    // FIXME remove it.
     private Package[] packageObjs;
 
     public OverviewAnalysisAction() {

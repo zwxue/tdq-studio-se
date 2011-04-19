@@ -389,6 +389,7 @@ public class PatternTestView extends ViewPart {
                             throw new DataprofilerCoreException(rcConn.getMessage());
                         }
                         java.sql.Connection connection = rcConn.getObject();
+                        // FIXME createStatement should be closed.
                         Statement createStatement = connection.createStatement();
                         ResultSet resultSet = createStatement.executeQuery(selectRegexpTestString);
                         while (resultSet.next()) {
@@ -504,8 +505,8 @@ public class PatternTestView extends ViewPart {
                 String messageInfo = DefaultMessagesImpl
                         .getString(
                                 "PatternTestView.modifiedTheRegularExpression", expressionLanguage, dbmsLanguage.getDbmsName(), expressionLanguage, expressionLanguage, dbmsLanguage.getDbmsName()); //$NON-NLS-1$
-                MessageDialog messageDialog = new MessageDialog(new Shell(), DefaultMessagesImpl
-                        .getString("PatternTestView.warning"), null, messageInfo, MessageDialog.WARNING, //$NON-NLS-1$
+                MessageDialog messageDialog = new MessageDialog(new Shell(),
+                        DefaultMessagesImpl.getString("PatternTestView.warning"), null, messageInfo, MessageDialog.WARNING, //$NON-NLS-1$
                         new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0);
                 int result = messageDialog.open();
                 if (result == MessageDialog.OK) {
@@ -527,8 +528,8 @@ public class PatternTestView extends ViewPart {
                     // Not find the corresponding regular expression, will new a
                     // expression.
                     if (!isContainLanguage) {
-                        RegularExpression newRegularExpress = BooleanExpressionHelper.createRegularExpression(dbmsLanguage
-                                .getDbmsName(), regularText.getText());
+                        RegularExpression newRegularExpress = BooleanExpressionHelper.createRegularExpression(
+                                dbmsLanguage.getDbmsName(), regularText.getText());
                         this.pattern.getComponents().add(newRegularExpress);
                     }
                 }

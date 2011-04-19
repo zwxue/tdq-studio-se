@@ -25,7 +25,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.RepositoryNode;
@@ -41,6 +40,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class IndicatorDefinitionWriter extends AElementPersistance {
 
     private Logger log = Logger.getLogger(IndicatorDefinitionWriter.class);
+
     /**
      * DOC bZhou SYSIndicatorWriter constructor comment.
      */
@@ -69,6 +69,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
             resource.getContents().add(element);
         }
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -83,10 +84,6 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
         ReturnCode rc = new ReturnCode();
         try {
             TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
-            if (indicatorItem != null && indicatorItem.eIsProxy()) {
-                indicatorItem = (TDQIndicatorDefinitionItem) EObjectHelper.resolveObject(indicatorItem);
-                indicatorItem.getProperty().setLabel(indicatorItem.getIndicatorDefinition().getName());
-            }
             IndicatorDefinition indiDefinition = indicatorItem.getIndicatorDefinition();
             addDependencies(indiDefinition);
             addResourceContent(indiDefinition.eResource(), indiDefinition);

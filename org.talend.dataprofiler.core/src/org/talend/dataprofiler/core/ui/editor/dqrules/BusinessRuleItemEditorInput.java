@@ -23,6 +23,7 @@ import org.talend.dataquality.properties.TDQBusinessRuleItem;
  */
 public class BusinessRuleItemEditorInput extends AbstractItemEditorInput {
 
+    // FIXME remove it.
     private IRepositoryViewObject viewObject = null;
 
     private TDQBusinessRuleItem item = null;

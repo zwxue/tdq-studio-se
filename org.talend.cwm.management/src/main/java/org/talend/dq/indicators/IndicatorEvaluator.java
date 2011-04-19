@@ -76,6 +76,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // create query statement
         // feature 0010630 zshen: Tables are not found when using Excel with ODBC connection
         Statement statement = null;
+        // FIXME stat should be closed.
         statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         // ~10630
         statement.setFetchSize(fetchSize);

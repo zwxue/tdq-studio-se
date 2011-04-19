@@ -36,6 +36,7 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage {
 
+    // FIXME remove it.
     private List<SchemaIndicator> schemaIndicatorList = new ArrayList<SchemaIndicator>();
 
     // private List<Schema> schemas = new ArrayList<Schema>();

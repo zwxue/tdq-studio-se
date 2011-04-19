@@ -163,6 +163,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 }
             }
         }
+        // FIXME parameters is never used, remove it.
         IndicatorParameters parameters = indicator.getParameters();
         if (parameters != null) {
             // TODO handle parameters here

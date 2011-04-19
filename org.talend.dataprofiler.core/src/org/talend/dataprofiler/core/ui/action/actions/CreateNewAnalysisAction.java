@@ -47,8 +47,10 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
 
     public RepositoryNode node;
 
+    // FIXME folder is never used.
     private IFolder folder;
 
+    // FIXME remove it.
     String defaultLabel;
 
     public CreateNewAnalysisAction() {

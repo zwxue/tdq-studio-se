@@ -94,6 +94,7 @@ public class SubelementCompareAction extends Action {
                 // parentPackage);
                 // ((ColumnSet) selectedElement).setNamespace(parentPackage);
                 ModelElement matchedElement = findMatchedModelElement(parentPackage, selectedElement);
+                // FIXME folderNode is never used.
                 folderNode = FolderNodeHelper.getFolderNodes(matchedElement)[0];
                 IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(matchedElement);
 
@@ -126,6 +127,7 @@ public class SubelementCompareAction extends Action {
                 if (reposViewObj instanceof ISubRepositoryObject) {
                     parentPackage = (Package) ((ISubRepositoryObject) reposViewObj).getModelElement();
                 }
+                // FIXME the originPackage might be Null, and we should never used a new object to replace the old one.
                 Package originPackage = parentPackage;
                 if (originPackage.eIsProxy()) {
                     originPackage = (Package) EObjectHelper.resolveObject(originPackage);

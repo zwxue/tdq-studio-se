@@ -71,7 +71,6 @@ public final class DatabaseContentRetriever {
     private DatabaseContentRetriever() {
     }
 
-
     /**
      * DOC scorreia Comment method "getQueryColumnSet".
      * 
@@ -206,10 +205,9 @@ public final class DatabaseContentRetriever {
                         try {
                             catName = schemas.getString(MetaDataConstants.TABLE_CATALOG.name());
                         } catch (Exception e) { // catch exception required for DB2/ZOS
-                            log
-                                    .warn(
-                                            "Exception when trying to get the catalog name linked to the schema. Catalogs won't be used.",
-                                            e);
+                            log.warn(
+                                    "Exception when trying to get the catalog name linked to the schema. Catalogs won't be used.",
+                                    e);
                         }
                         // get schema name
                         try {
@@ -310,6 +308,7 @@ public final class DatabaseContentRetriever {
                     while (catalogSet.next()) {
                         String catalogName = catalogSet.getString(MetaDataConstants.TABLE_CAT.name());
                         // MOD xqliu 2009-10-29 bug 9838
+                        // FIXME in this case, null or "" both possible to be added.
                         if (catalogName != null || !"".equals(catalogName)) {
                             catalogNames.add(catalogName);
                         }

@@ -37,7 +37,9 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
 
     protected IFormPage fPage;
 
+    // FIXME remove it.
     private GlobalAction runAnalysisAction = null;
+
     private Hashtable<String, Action> fGlobalActions = new Hashtable<String, Action>();
 
     public AnalysisFormEditorContributor() {
@@ -54,6 +56,7 @@ public class AnalysisFormEditorContributor extends MultiPageEditorActionBarContr
         public GlobalAction(String id) {
             this.id = id;
         }
+
         public void run() {
             fEditor.performGlobalAction(id);
         }

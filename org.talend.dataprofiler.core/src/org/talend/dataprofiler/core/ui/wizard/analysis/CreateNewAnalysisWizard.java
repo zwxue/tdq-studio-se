@@ -34,9 +34,11 @@ public class CreateNewAnalysisWizard extends Wizard {
 
     private FolderProvider currentFolderProvider;
 
+    // FIXME remove it.
     private IPath path;
 
     private RepositoryNode node;
+
     public FolderProvider getCurrentFolderProvider() {
         return currentFolderProvider;
     }

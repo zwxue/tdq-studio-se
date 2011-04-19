@@ -25,7 +25,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.DQRule;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.RepositoryNode;
@@ -78,6 +77,7 @@ public class DQRuleWriter extends AElementPersistance {
             resource.getContents().add(element);
         }
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -92,10 +92,6 @@ public class DQRuleWriter extends AElementPersistance {
         ReturnCode rc = new ReturnCode();
         try {
             TDQBusinessRuleItem ruleItem = (TDQBusinessRuleItem) item;
-            if (ruleItem != null && ruleItem.eIsProxy()) {
-                ruleItem = (TDQBusinessRuleItem) EObjectHelper.resolveObject(ruleItem);
-                ruleItem.getProperty().setLabel(ruleItem.getDqrule().getName());
-            }
             DQRule rule = ruleItem.getDqrule();
             addDependencies(rule);
             ProxyRepositoryFactory.getInstance().save(ruleItem);

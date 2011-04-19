@@ -292,6 +292,8 @@ public final class ComparatorsFactory {
             } else if (o2 instanceof IResource) {
                 name2 = ((IResource) o2).getName();
             }
+
+            // FIXME name1 might be null.
             return name1.compareTo(name2);
         }
     }

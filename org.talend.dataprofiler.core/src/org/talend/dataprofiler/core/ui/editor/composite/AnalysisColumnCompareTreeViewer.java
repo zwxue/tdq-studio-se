@@ -809,6 +809,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     private Boolean canReverse(RepositoryNode colA, RepositoryNode colB) {
         int idx = 0;
         for (RepositoryNode col : columnListA) {
+            // FIXME don't use == to compare two Strings.
             if (col.getObject().getId() == colB.getObject().getId()) {
                 // if ((idx > columnListB.size() - 1) || (columnListB.get(idx) == colA)) {
                 // return false;

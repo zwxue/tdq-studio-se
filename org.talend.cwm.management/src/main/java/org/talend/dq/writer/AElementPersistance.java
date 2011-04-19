@@ -328,6 +328,7 @@ public abstract class AElementPersistance {
         Resource propResource = util.createResource(uri);
         propResource.getContents().add(property);
 
+        // FIXME rc is assigned value two times. remove one.
         rc = saveProperty(property);
 
         return rc;

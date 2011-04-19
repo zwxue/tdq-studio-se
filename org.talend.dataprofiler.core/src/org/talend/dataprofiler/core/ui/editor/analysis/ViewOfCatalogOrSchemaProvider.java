@@ -53,6 +53,7 @@ public class ViewOfCatalogOrSchemaProvider extends LabelProvider implements ITab
                 text = indicatorUIEle.getTableName();
                 return text;
             case 1:
+                // FIXME instanceof always return true.
                 if (element instanceof ViewIndicator) {
                     text = PluginConstant.EMPTY_STRING + ((ViewIndicator) indicatorUIEle).getRowCount();
                 }

@@ -509,6 +509,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators,
                     uiPagination);
             uiPagination.addPage(pginfo);
+            // FIXME totalPages won't used anymore.
             totalPages++;
         }
         uiPagination.init();

@@ -174,6 +174,7 @@ public final class WorkbenchUtils {
 
     public static IPath getFilePath(IRepositoryNode node) {
         Item item = node.getObject().getProperty().getItem();
+        // FIXME itemType never used.
         ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
         IPath folderPath = WorkbenchUtils.getPath(node);
         String name = node

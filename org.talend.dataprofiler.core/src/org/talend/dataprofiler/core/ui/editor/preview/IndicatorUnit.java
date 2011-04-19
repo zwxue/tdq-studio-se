@@ -35,6 +35,7 @@ public class IndicatorUnit {
 
     private ModelElementIndicator modelElementIndicator;
 
+    // FIXME remove it.
     private Object value;
 
     private IndicatorUnit[] children;

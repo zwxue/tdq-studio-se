@@ -140,6 +140,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             }
             TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
             if (parentXmlElement == null) {
+                // FIXME parentXmlElement is null.
                 this.errorMessage = Messages.getString(
                         "ColumnAnalysisExecutor.NoContainerFound", parentElement.getName(), parentXmlElement); //$NON-NLS-1$
                 return null;

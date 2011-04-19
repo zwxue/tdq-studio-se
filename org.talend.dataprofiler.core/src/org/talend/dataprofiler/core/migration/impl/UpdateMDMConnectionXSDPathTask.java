@@ -114,6 +114,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
         for (File sample : fileList) {
             log.info("-------------- Migrating (" + counter++ + ") : " + sample.getAbsolutePath());
             try {
+                // FIXME stream should be closed.
                 BufferedReader fileReader = new BufferedReader(new FileReader(sample));
                 BufferedWriter fileWriter = new BufferedWriter(new FileWriter(new File(sample.getAbsolutePath()
                         + MIGRATION_FILE_EXT)));

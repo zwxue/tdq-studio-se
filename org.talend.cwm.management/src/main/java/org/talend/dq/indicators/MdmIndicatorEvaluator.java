@@ -116,6 +116,8 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
                 .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElementList.get(0))));
         // all the column under the parentElement
         List<TdXmlElementType> columnList = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
+
+        // FIXME the first instance of resultSetList is never used.
         List<Map<String, String>> resultSetList = new ArrayList<Map<String, String>>();
         if (analysis.getParameters().isStoreData()) {
             resultSetList = statement.tidyResultSet(columnList.toArray(new ModelElement[columnList.size()]), resultSet);

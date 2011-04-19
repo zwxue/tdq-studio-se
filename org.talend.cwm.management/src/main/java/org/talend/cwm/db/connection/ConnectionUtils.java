@@ -377,6 +377,7 @@ public final class ConnectionUtils {
         try {
             connection = ConnectionUtils.createConnection(url, driver, props);
             if (connection != null) {
+                // FIXME stat should be closed.
                 Statement stat = connection.createStatement();
                 if (!"".equals(schema)) {
                     stat.executeQuery("Select * from " + schema.toUpperCase() + "." + tableName);
@@ -514,6 +515,7 @@ public final class ConnectionUtils {
     public static boolean isMdmConnection(Object object) {
         if (object != null) {
             if (object instanceof ProviderConnection) {
+                // FIXME it will cause stack overflow.
                 return isMdmConnection((ProviderConnection) object);
             } else if (object instanceof DataProvider) {
                 return isMdmConnection((DataProvider) object);

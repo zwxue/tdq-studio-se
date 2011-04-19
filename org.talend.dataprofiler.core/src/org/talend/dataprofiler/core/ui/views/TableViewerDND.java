@@ -50,6 +50,7 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  */
 public abstract class TableViewerDND {
 
+    // FIXME remove it.
     ISelectionReceiver receiver = null;
 
     private static int lastValidOperation;

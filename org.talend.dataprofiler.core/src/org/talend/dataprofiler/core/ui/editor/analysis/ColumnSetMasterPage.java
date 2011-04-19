@@ -121,6 +121,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private static Logger log = Logger.getLogger(ColumnSetMasterPage.class);
 
+    // FIXME this field masks a visible field in superclass. Remove it.
     AnalysisEditor currentEditor;
 
     AnalysisColumnSetTreeViewer treeViewer;
@@ -1021,7 +1022,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         return new ReturnCode(message, false);
     }
-
 
     private boolean isFromSameTableByDFColumn(List<IRepositoryNode> columnSetMultiValueList) {
         Set<String> folderItemIds = new HashSet<String>();

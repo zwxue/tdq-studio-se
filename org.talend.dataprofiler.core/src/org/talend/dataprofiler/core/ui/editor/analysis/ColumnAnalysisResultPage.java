@@ -103,6 +103,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             }
             IndicatorPaginationInfo pginfo = new ResultPaginationInfo(form, modelElementIndLs, masterPage, uiPagination);
             uiPagination.addPage(pginfo);
+            // FIXME totalPages won't used anymore.
             totalPages++;
         }
         uiPagination.init();

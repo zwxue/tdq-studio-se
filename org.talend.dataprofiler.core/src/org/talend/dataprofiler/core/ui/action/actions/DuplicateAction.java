@@ -38,6 +38,7 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public class DuplicateAction extends Action {
 
+    // FIXME remove it.
     private Property[] propertyArray = new Property[0];
 
     private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
@@ -64,6 +65,7 @@ public class DuplicateAction extends Action {
         this();
         this.nodeArray = nodeArray;
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -80,7 +82,9 @@ public class DuplicateAction extends Action {
 
                 if (handle != null) {
                     String initLabel = generateInitialLabel(handle);
-                    InputDialog dialog = new InputDialog(null, DefaultMessagesImpl.getString("DuplicateAction.InputDialog"), DefaultMessagesImpl.getString("DuplicateAction.InpurtDesc"), initLabel, //$NON-NLS-1$ //$NON-NLS-2$
+                    InputDialog dialog = new InputDialog(
+                            null,
+                            DefaultMessagesImpl.getString("DuplicateAction.InputDialog"), DefaultMessagesImpl.getString("DuplicateAction.InpurtDesc"), initLabel, //$NON-NLS-1$ //$NON-NLS-2$
                             new IInputValidator() {
 
                                 public String isValid(String newText) {
@@ -99,7 +103,8 @@ public class DuplicateAction extends Action {
                         if (rc.isOk()) {
                             duplicateObject = handle.duplicate(newLabel);
                         } else {
-                            MessageDialog.openError(null, DefaultMessagesImpl.getString("DuplicateAction.InvalidDialog"), rc.getMessage()); //$NON-NLS-1$
+                            MessageDialog.openError(null,
+                                    DefaultMessagesImpl.getString("DuplicateAction.InvalidDialog"), rc.getMessage()); //$NON-NLS-1$
                         }
                     }
                 }

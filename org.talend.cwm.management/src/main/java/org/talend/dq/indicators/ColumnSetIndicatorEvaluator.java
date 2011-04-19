@@ -109,6 +109,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         } else {
             ok = evaluateBySql(sqlStatement, ok);
             Statement statement = null;
+            // FIXME stat should be closed.
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             statement.setFetchSize(fetchSize);
             if (continueRun()) {
@@ -152,6 +153,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      */
     private ReturnCode evaluateBySql(String sqlStatement, ReturnCode ok) throws SQLException {
         Statement statement = null;
+        // FIXME stat should be closed.
         statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         statement.setFetchSize(fetchSize);
         if (continueRun()) {
@@ -212,6 +214,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         }
         CsvReader csvReader = null;
         try {
+            // FIXME encoding might be null.
             csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
                     encoding == null ? encoding : encoding)), ParameterUtil.trimParameter(separator).charAt(0));
 
@@ -377,16 +380,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                         List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
                         recordIncrement = valueObjectList.size();
                         if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                        for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
-                            List<TdColumn> columnList = TableHelper
-                                    .getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(((ColumnSetMultiValueIndicator) indicator)
-                                            .getAnalyzedColumns().get(0).eContainer()));
-                            String newcol = columnList.get(j).getName();
-                            Object newobject = resultSet.getObject(newcol);
-                            if (newobject != null && !(newobject instanceof String)
-                                    && newobject.toString().indexOf("TIMESTAMP") > -1) {
-                                newobject = resultSet.getTimestamp(newcol);
-                            }
+                            for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
+                                List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH
+                                        .doSwitch(((ColumnSetMultiValueIndicator) indicator).getAnalyzedColumns().get(0)
+                                                .eContainer()));
+                                String newcol = columnList.get(j).getName();
+                                Object newobject = resultSet.getObject(newcol);
+                                if (newobject != null && !(newobject instanceof String)
+                                        && newobject.toString().indexOf("TIMESTAMP") > -1) {
+                                    newobject = resultSet.getTimestamp(newcol);
+                                }
                                 // if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                                 if (recordIncrement < valueObjectList.size()) {
                                     valueObjectList.get(recordIncrement)[j] = newobject;
@@ -626,7 +629,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     @Override
     public ReturnCode evaluateIndicators(String sqlStatement, boolean closeConnection) {
         // TODO Auto-generated method stub
-        ReturnCode returnCode= super.evaluateIndicators(sqlStatement, closeConnection);
+        ReturnCode returnCode = super.evaluateIndicators(sqlStatement, closeConnection);
         storeDataSet();
         return returnCode;
 

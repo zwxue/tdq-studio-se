@@ -358,6 +358,7 @@ public class DbmsLanguage {
                 }
                 // try with default language in case we don't find the appropriate language
                 if (this.getDefaultLanguage().equalsIgnoreCase(charactersMap.getLanguage())) {
+                    // FIXME resultingExpressionWithDefaultLang is never used.
                     resultingExpressionWithDefaultLang = this.getPatternFinderFunction(colName, charactersToReplace,
                             replacementCharacters);
                 }
@@ -803,8 +804,8 @@ public class DbmsLanguage {
                 expression = this.getExpression(patternComponent);
                 if (expression != null
                         && (!(isJavaEngin ^ DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.JAVA.getName(),
-                                expression.getLanguage())) || DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.SQL.getName(),
- expression.getLanguage()))) {
+                                expression.getLanguage())) || DbmsLanguageFactory.compareDbmsLanguage(
+                                ExecutionLanguage.SQL.getName(), expression.getLanguage()))) {
                     return expression;
                 }
             }

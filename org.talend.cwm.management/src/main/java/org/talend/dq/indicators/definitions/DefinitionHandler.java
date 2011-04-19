@@ -441,6 +441,7 @@ public final class DefinitionHandler {
     }
 
     public Map<String, IndicatorCategory> getUserDefinedIndicatorCategoryMap() {
+        // FIXME lazy initialization of a static field
         if (userDefinedIndicatorCategoryMap == null) {
             userDefinedIndicatorCategoryMap = new HashMap<String, IndicatorCategory>();
 

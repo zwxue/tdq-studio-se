@@ -42,7 +42,6 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
@@ -192,10 +191,6 @@ public class AnalysisWriter extends AElementPersistance {
         ReturnCode rc = new ReturnCode();
         try {
             TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
-            if (anaItem != null && anaItem.eIsProxy()) {
-                anaItem = (TDQAnalysisItem) EObjectHelper.resolveObject(anaItem);
-                anaItem.getProperty().setLabel(anaItem.getAnalysis().getName());
-            }
             Analysis analysis = anaItem.getAnalysis();
             addDependencies(analysis);
             addResourceContent(analysis.eResource(), analysis);

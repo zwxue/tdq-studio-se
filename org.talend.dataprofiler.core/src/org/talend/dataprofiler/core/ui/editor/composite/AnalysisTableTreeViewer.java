@@ -1135,6 +1135,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                         NamedColumnSet set = tableIndicator.getColumnSet();
                         ModelElement me = getAnalysis();
                         me.setName(set.getName());
+                        // FIXME instanceof always return true.
                         if (set instanceof ModelElement) {
                             (new TdAddTaskAction(tree.getShell(), me)).run();
                         }

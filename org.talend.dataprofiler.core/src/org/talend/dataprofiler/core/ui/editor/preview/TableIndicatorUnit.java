@@ -29,6 +29,7 @@ public class TableIndicatorUnit {
 
     private TableIndicator parentTable;
 
+    // FIXME remove it.
     private Object value;
 
     private TableIndicatorUnit[] children;

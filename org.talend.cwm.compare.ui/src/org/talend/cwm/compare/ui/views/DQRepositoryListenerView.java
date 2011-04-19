@@ -67,6 +67,7 @@ public class DQRepositoryListenerView extends ViewPart implements ISelectionList
                 label.setText(((TdColumn) first).getName() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
             } else {
                 label.setText(first.toString() + "\n\r" + first.getClass().toString()); //$NON-NLS-1$
+                // FIXME these codes are meaningless.
                 if (first.toString().endsWith(".prv")) { //$NON-NLS-1$
                     // MessageDialog.openInformation(getSite().getShell(), "DQRepositoryListenerView", "This is " +
                     // first.toString());

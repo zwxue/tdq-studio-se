@@ -175,6 +175,8 @@ public class SelectedLocalComparison implements IComparisonLevel {
     /**
      * 
      * DOC mzhao Interface that do instanceof converter to provider common object to client.
+     * 
+     * FIXME the class should be made static.
      */
     private class ModelElementAdapter {
 
@@ -259,6 +261,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
                             TdColumn findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
                             rootElement = findMathedColumn;
 
+                            // FIXME instanceof always return true.
                             if (findMathedColumn instanceof TdColumn) {
                                 ((TdColumn) rootElement).getTaggedValue().clear();
                                 // ~MOD 2009-04-21 Clear primary key as well. If
