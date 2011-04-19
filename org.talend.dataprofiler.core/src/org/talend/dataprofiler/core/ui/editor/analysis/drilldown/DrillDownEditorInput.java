@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.analysis.drilldown;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.sourceforge.sqlexplorer.dataset.DataSet;
@@ -196,20 +197,28 @@ public class DrillDownEditorInput implements IEditorInput {
         }
         // MOD qiongli 2011-4-8,bug 19192.delimited file may has diffrent number of columns for every row.
         if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
-            columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
+            columnValue = new String[newColumnElementList.size()][computeColumnValueLength(newColumnElementList)];
         } else {
             columnValue = new String[newColumnElementList.size()][columnElementList.size()];
         }
-        int rowIndex = 0;
-        for (Object[] tableRow : newColumnElementList) {
-            int columnIndex = 0;
-            for (Object tableValue : tableRow) {
-                columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
+        // MOD klliu bug 20508: blank count drill dow exception 2011-04-19
+        for (int row = 0; row < newColumnElementList.size(); row++) {
+            Object[] tableRow = newColumnElementList.get(row);
+            for (int i = 0; i < tableRow.length; i++) {
+                Object tableValue = tableRow[i];
+                columnValue[row][i] = tableValue == null ? "<null>" : tableValue.toString();
             }
-            rowIndex++;
         }
         return new DataSet(columnHeader, columnValue);
         // return null;
+    }
+
+    private int computeColumnValueLength(List<Object[]> newColumnElementList) {
+        List<Integer> maxLength = new ArrayList<Integer>();
+        for (Object[] columnValue : newColumnElementList) {
+            maxLength.add(columnValue.length);
+        }
+        return (Integer) Collections.max(maxLength);
     }
 
     public List<Object[]> filterAdaptDataList() {
