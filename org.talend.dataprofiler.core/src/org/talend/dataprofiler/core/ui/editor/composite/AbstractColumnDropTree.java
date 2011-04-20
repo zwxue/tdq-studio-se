@@ -455,6 +455,10 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     public void setInput(Object[] objs) {
         if (objs == null || objs.length == 0) {
+            TreeItem[] items = tree.getItems();
+            for (TreeItem item : items) {
+                this.removeItemBranch(item);
+            }
             return;
         }
         List<RepositoryNode> reposList = new ArrayList<RepositoryNode>();
