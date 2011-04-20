@@ -31,6 +31,7 @@ import org.talend.core.ICoreService;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.ColumnNameChanged;
 import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -507,6 +508,16 @@ public class TopService implements ICoreService {
     public void syncAllBeans() throws SystemException {
         // TODO Auto-generated method stub
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ICoreService#convert(org.talend.core.model.metadata.builder.connection.MetadataTable)
+     */
+    public IMetadataTable convert(MetadataTable originalTable) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
