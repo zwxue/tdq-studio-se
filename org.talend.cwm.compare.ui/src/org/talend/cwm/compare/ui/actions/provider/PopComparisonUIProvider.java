@@ -63,7 +63,7 @@ public class PopComparisonUIProvider extends AbstractCommonActionProvider {
                 } else if (node instanceof DBColumnFolderRepNode) {
                     menuText = COMPARECOLUMNS_MENUTEXT;
                 }
-                menu.add(new PopComparisonUIAction(node.getObject(), menuText));
+                menu.add(new PopComparisonUIAction(node, menuText));
             }
         }
 

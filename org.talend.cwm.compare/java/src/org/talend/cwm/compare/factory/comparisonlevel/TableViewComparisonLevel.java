@@ -209,11 +209,11 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     @Override
     protected Resource getLeftResource() throws ReloadCompareException {
         ColumnSet selectedColumnSet = null;
-        if (selectedObj instanceof RepositoryNode) {
-            selectedColumnSet = (ColumnSet) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
-        } else if (selectedObj instanceof DBColumnFolderRepNode) {
+        if (selectedObj instanceof DBColumnFolderRepNode) {
             DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
             selectedColumnSet = columnFolderRepNode.getColumnSet();
+        } else if (selectedObj instanceof RepositoryNode) {
+            selectedColumnSet = (ColumnSet) RepositoryNodeHelper.getMetadataElement((RepositoryNode) selectedObj);
         } else {
             selectedColumnSet = (ColumnSet) selectedObj;
         }
