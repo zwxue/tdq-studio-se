@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -24,22 +25,22 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
+import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class DuplicateAction extends Action {
-
-    // FIXME remove it.
-    private Property[] propertyArray = new Property[0];
 
     private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
 
@@ -49,16 +50,6 @@ public class DuplicateAction extends Action {
     public DuplicateAction() {
         super(DefaultMessagesImpl.getString("DuplicateCWMResourceAction.Duplicate")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EDIT_COPY));
-    }
-
-    /**
-     * DOC bZhou DuplicateAction constructor comment.
-     * 
-     * @param propertyArray
-     */
-    public DuplicateAction(Property[] propertyArray) {
-        this();
-        this.propertyArray = propertyArray;
     }
 
     public DuplicateAction(IRepositoryNode[] nodeArray) {
@@ -111,11 +102,11 @@ public class DuplicateAction extends Action {
             }
         }
 
+        CorePlugin.getDefault().refreshWorkSpace();
+        CorePlugin.getDefault().refreshDQView();
         if (duplicateObject != null) {
             selectAndReveal(duplicateObject);
         }
-        CorePlugin.getDefault().refreshWorkSpace();
-        CorePlugin.getDefault().refreshDQView();
     }
 
     /**
@@ -153,8 +144,10 @@ public class DuplicateAction extends Action {
         IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IWorkbenchPage page = workbenchWindow.getActivePage();
         IWorkbenchPart activePart = page.getActivePart();
+        ModelElement modelElement = ModelElementFileFactory.getModelElement((IFile) duplicateObject);
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(modelElement);
         if (activePart instanceof ISetSelectionTarget) {
-            ISelection selection = new StructuredSelection(duplicateObject);
+            ISelection selection = new StructuredSelection(recursiveFind);
             ((ISetSelectionTarget) activePart).selectReveal(selection);
         }
     }
