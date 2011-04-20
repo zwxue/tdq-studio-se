@@ -14,7 +14,11 @@
 package net.sourceforge.sqlexplorer;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -100,6 +104,17 @@ public enum EDriverName {
     private String sqlEid;
 
     private String[] jars;
+
+    // MOD gdbu 2011-4-20 bug : 18975
+    private static Map<String, ArrayList<String>> special_database = new HashMap<String, ArrayList<String>>();
+    static {
+        ArrayList spDB = new ArrayList();
+        spDB.add("com.mysql.jdbc.Driver");
+        special_database.put("org.gjt.mm.mysql.Driver", spDB);
+
+        // According to the above example we can continue to fill special driverclass name...
+    }
+    // ~18975
 
     EDriverName(String dbKey, String dbDriver, String sqlEid, String... jars) {
         this.dbKey = dbKey;
@@ -226,6 +241,39 @@ public enum EDriverName {
                 return driverName.sqlEid;
             }
         }
+
+        // MOD gdbu 2011-4-20 bug : 18975
+        String specID = getDriFromSpecialDB(driver);
+        if (!specID.equals("")) {
+            return specID;
+        }
+        // ~18975
+
         return id;
     }
+
+    /**
+     * MOD gdbu 2011-4-20 bug : 18975
+     * 
+     * DOC gdbu Comment method "getDriFromSpecialDB".
+     * 
+     * If the above method : getId() can not return required driverclass, we can return by this method requires the
+     * driverclass, but only if we have to fill specialdatabase instance
+     * 
+     * @param driver
+     * @return driverID
+     */
+    private static String getDriFromSpecialDB(String driver) {
+        Set<String> kss = special_database.keySet();
+        for (String ks : kss) {
+            ArrayList<String> specDb = special_database.get(ks);
+            for (int i = 0; i < specDb.size(); i++) {
+                if (specDb.get(i).trim().equals(driver.trim())) {
+                    return getId(ks);
+                }
+            }
+        }
+        return "";
+    }
+
 }
