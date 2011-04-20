@@ -51,6 +51,7 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
@@ -422,7 +423,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
-
+                    CorePlugin.getDefault().refreshWorkSpace();
                 }
                 getTreeViewer().refresh();
                 getTreeViewer().setInput(ResourceManager.getUDIJarFolder());
@@ -450,6 +451,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                             MessageUI.openWarning(rc.getMessage());
                         }
                     }
+                    CorePlugin.getDefault().refreshWorkSpace();
                 }
                 getTreeViewer().refresh();
                 fIsEmpty = evaluateIfTreeEmpty(fInput);
