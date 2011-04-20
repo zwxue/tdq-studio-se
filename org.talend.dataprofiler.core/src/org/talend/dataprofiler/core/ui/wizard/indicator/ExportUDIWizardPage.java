@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -37,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.DQCheckedTreeViewer;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
 
 /**
@@ -47,6 +47,8 @@ public class ExportUDIWizardPage extends WizardPage {
     protected static Logger log = Logger.getLogger(ExportUDIWizardPage.class);
 
     private IFolder folder;
+
+    private IRepositoryNode udiFolder;
 
     private Text fileText;
 
@@ -67,7 +69,7 @@ public class ExportUDIWizardPage extends WizardPage {
             setTitle(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIToCSVFile")); //$NON-NLS-1$
             setDescription(DefaultMessagesImpl.getString("ExportUDIWizardPage.chooseFolderToExportIndicators")); //$NON-NLS-1$
         }
-
+        udiFolder = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS);
         this.folder = folder;
         this.isForExchange = isForExchange;
     }
@@ -139,11 +141,7 @@ public class ExportUDIWizardPage extends WizardPage {
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedTree.getTree());
 
-        try {
-            selectedTree.setCheckedElements(folder.members());
-        } catch (CoreException e1) {
-            log.error(e1, e1);
-        }
+        selectedTree.setCheckedElements(udiFolder.getChildren().toArray());
 
         // FIXME buttonComposite never used.
         Control buttonComposite = createSelectionButtons(container);
@@ -181,11 +179,9 @@ public class ExportUDIWizardPage extends WizardPage {
         SelectionListener listener = new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                try {
-                    selectedTree.setCheckedElements(folder.members());
-                } catch (CoreException e1) {
-                    log.error(e1, e1);
-                }
+
+                selectedTree.setCheckedElements(udiFolder.getChildren().toArray());
+
             }
         };
         selectButton.addSelectionListener(listener);

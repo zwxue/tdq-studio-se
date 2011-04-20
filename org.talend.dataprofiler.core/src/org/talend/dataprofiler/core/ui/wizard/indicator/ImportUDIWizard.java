@@ -20,6 +20,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
 import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
@@ -65,6 +66,7 @@ public class ImportUDIWizard extends Wizard {
             }
 
         });
+        CorePlugin.getDefault().refreshDQView();
         return true;
     }
 }

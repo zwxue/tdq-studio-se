@@ -37,6 +37,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 import com.csvreader.CsvWriter;
 
@@ -174,12 +175,11 @@ public final class ExportFactory {
             idMap.put(PatternToExcelEnum.Author, MetadataHelper.getAuthor(indicatorDefinition));
             idMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
             idMap.put(PatternToExcelEnum.Category, UDIHelper.getUDICategory(indicatorDefinition).getLabel());
-            idMap.put(PatternToExcelEnum.JavaClassName,
-                    TaggedValueHelper.getTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT, indicatorDefinition.getTaggedValue())
-                            .getValue());
-            idMap.put(PatternToExcelEnum.JavaJarPath,
-                    TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, indicatorDefinition.getTaggedValue())
-                            .getValue());
+            TaggedValue tagValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT,
+                    indicatorDefinition.getTaggedValue());
+            idMap.put(PatternToExcelEnum.JavaClassName, tagValue == null ? null : tagValue.getValue());
+            tagValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, indicatorDefinition.getTaggedValue());
+            idMap.put(PatternToExcelEnum.JavaJarPath, tagValue == null ? null : tagValue.getValue());
 
             for (PatternLanguageType languagetype : PatternLanguageType.values()) {
                 for (Expression expression : indicatorDefinition.getSqlGenericExpression()) {
