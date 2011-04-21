@@ -1402,5 +1402,12 @@
            language="java">
      </preview>
   </extension>
+  <extension
+        point="net.sourceforge.sqlexplorer.saveAs">
+     <Service
+           class="org.talend.dataprofiler.core.service.SqlExploerSaveAsService"
+           saveAsServiceId="net.sourceforge.sqlexplorer.service.ISaveAsService">
+     </Service>
+  </extension>
 
 </plugin>

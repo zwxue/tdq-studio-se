@@ -56,6 +56,7 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.writer.AElementPersistance;
@@ -336,7 +337,7 @@ public final class DQStructureManager {
     public TDQSourceFileItem createSourceFileItem(File initFile, IPath path, String label, String extension) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
-        property.setStatusCode(""); //$NON-NLS-1$
+        property.setStatusCode(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
         property.setLabel(label);
 
         TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
@@ -361,6 +362,42 @@ public final class DQStructureManager {
         }
         return sourceFileItem;
     }
+
+    /**
+     * 
+     * DOC qiongli Comment method "createSourceFileItem".
+     * 
+     * @param content:cotanin sql sentence
+     * @param path
+     * @param label:file name
+     * @param extension:file extension
+     * @return
+     */
+    public TDQSourceFileItem createSourceFileItem(String content, IPath path, String label, String extension) {
+        Property property = PropertiesFactory.eINSTANCE.createProperty();
+        property.setVersion(VersionUtils.DEFAULT_VERSION);
+        property.setStatusCode(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+        property.setLabel(label);
+
+        TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
+                .createTDQSourceFileItem();
+        sourceFileItem.setProperty(property);
+        sourceFileItem.setName(label);
+        sourceFileItem.setExtension(extension);
+
+        ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
+        byteArray.setInnerContent(content.getBytes());
+        sourceFileItem.setContent(byteArray);
+        IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
+        try {
+            property.setId(repositoryFactory.getNextId());
+            repositoryFactory.create(sourceFileItem, path);
+        } catch (PersistenceException e) {
+            ExceptionHandler.process(e);
+        }
+        return sourceFileItem;
+    }
+
 
     /**
      * Method "isNeedCreateStructure" created by bzhou@talend.com.

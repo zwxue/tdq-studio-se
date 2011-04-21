@@ -89,5 +89,9 @@ The method in class of "net.sourceforge.sqlexplorer.plugin.views.DatabaseStructu
 1.Delete the condition : 'if(_tabFolder == null)'
 2.Add line 379 to 388: select correct item as active item.
 
-
+2011-4-21qiongli bug 20205: the "Save Editor as" button can not create file under "Sourse file" 
+---------------------------------------------------------------------------------------------------
+1.Add a extension named 'saveAs'
+2.Add Pacake 'service',contain:2 interface (ISaveAsService,IService) and a class GlobalServiceRegister.java.
+3.Modify method createIFile of class SQLTextEditor.we should create propery file and item file by model.
 

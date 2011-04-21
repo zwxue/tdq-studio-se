@@ -17,14 +17,13 @@ package net.sourceforge.sqlexplorer.plugin.editors;
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.service.GlobalServiceRegister;
+import net.sourceforge.sqlexplorer.service.ISaveAsService;
 import net.sourceforge.sqlexplorer.sessiontree.model.utility.Dictionary;
 import net.sourceforge.sqlexplorer.sqleditor.SQLTextViewer;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.filebuffers.ITextFileBufferManager;
-import org.eclipse.core.filebuffers.LocationKind;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -35,7 +34,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -75,6 +74,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.talend.core.model.properties.Item;
 
 /**
  * TextEditor specialisation; encapsulates functionality specific to editing SQL.
@@ -155,7 +155,7 @@ public class SQLTextEditor extends TextEditor {
         Shell shell = getSite().getShell();
         final IEditorInput input = getEditorInput();
         IDocumentProvider provider = getDocumentProvider();
-        final IEditorInput newInput;
+        IEditorInput newInput;
         if (input instanceof IURIEditorInput && !(input instanceof IFileEditorInput)) {
             super.performSaveAs(progressMonitor);
             return;
@@ -263,7 +263,10 @@ public class SQLTextEditor extends TextEditor {
             try {
 
                 provider.aboutToChange(newInput);
-                createIFile(progressMonitor, file, getViewer().getDocument().get());
+                // MOD qiongli 2011-4-21 bug 20205.after creating property file,file name is changed(contain version
+                // info),so reset'newInput'.
+                file = createIFile(progressMonitor, file, getViewer().getDocument().get());
+                newInput = new FileEditorInput(file);
                 success = true;
 
             } catch (CoreException x) {
@@ -316,24 +319,33 @@ public class SQLTextEditor extends TextEditor {
      * @param content
      * @throws CoreException
      */
-    private void createIFile(IProgressMonitor monitor, IFile file, String content) throws CoreException {
-        if (monitor == null) {
-            monitor = new NullProgressMonitor();
-        }
+    private IFile createIFile(IProgressMonitor monitor, IFile file, String content) throws CoreException {
+        //MOD qiongli 2011-4-21.bug 20205 .should create sql file and property.use extension of service mechenism.
         try {
-            monitor.beginTask("save file...", 2000);
-            ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
-            manager.connect(file.getFullPath(), LocationKind.IFILE, monitor);
-            ITextFileBuffer buffer = ITextFileBufferManager.DEFAULT.getTextFileBuffer(file.getFullPath(), LocationKind.IFILE);
-            buffer.getDocument().set(content);
-            buffer.commit(monitor, true);
-            manager.disconnect(file.getFullPath(), LocationKind.IFILE, monitor);
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ISaveAsService.class)) {
+                ISaveAsService service = (ISaveAsService) GlobalServiceRegister.getDefault().getService(ISaveAsService.class);
+                String fName = StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION);
+                Item item = service.createFile(content, Path.EMPTY, fName, file.getFileExtension());
+                // get the correct path(contain version info) for newInput file in editor.
+                IPath location = file.getLocation();
+                if (item != null && item.getProperty() != null && location != null) {
+                    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                    location = location.removeLastSegments(1);
+                    StringBuffer strb = new StringBuffer();
+                    strb.append(location.toString());
+                    String version = item.getProperty().getVersion() == null ? "" : item.getProperty().getVersion();
+                    strb.append(Path.SEPARATOR).append(fName).append("_" + version)
+                            .append(DEFAULT_FILE_EXTENSION);
+                    location = Path.fromOSString(strb.toString());
+                    file = workspace.getRoot().getFileForLocation(location);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             monitor.done();
         }
-
+        return file;
     }
 
     /*
