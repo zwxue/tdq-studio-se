@@ -286,8 +286,7 @@ public class ColumnViewerDND {
                         TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
                         if (trc.isOk()) {
                             ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, trc.getObject());
-                        } else if (trc.getMessage() != null && !trc.getMessage().equals("")) {
-
+                        } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {
                             MessageUI.openError(trc.getMessage());
                         }
                     } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
@@ -295,7 +294,7 @@ public class ColumnViewerDND {
                         TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
                         if (trc.isOk()) {
                             ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, trc.getObject());
-                        } else {
+                        } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {
                             MessageUI.openError(trc.getMessage());
                         }
                     }

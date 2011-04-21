@@ -99,7 +99,7 @@ public class PatternMouseAdapter extends MouseAdapter {
                     if (trc.isOk()) {
                         columnDropTree.createOneUnit(treeItem, trc.getObject());
                         columnDropTree.setDirty(true);
-                    } else if (trc.getMessage() != null && !trc.getMessage().equals("")) {
+                    } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {
                         // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                         // MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
                         // + pattern.getName());
