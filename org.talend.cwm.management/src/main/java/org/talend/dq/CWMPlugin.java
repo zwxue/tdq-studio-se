@@ -105,6 +105,9 @@ public class CWMPlugin extends Plugin {
                     // serialized correctly.
                     assert password != null;
 
+                    // password should not null when serialized
+                    password = password != null ? password : "";
+
                     String url = JavaSqlFactory.getURL(connection);
 
                     User previousUser = new User(user, password);
