@@ -35,6 +35,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.impl.IndicatorImpl;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -363,7 +364,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 // ResultSetUtils.printResultSet(resultSet, 0);
                 // --- get content of column
                 String str = String.valueOf(resultSet.getObject(1));
-                Long count = Long.valueOf(str);
+                // MOD gdbu 2011-4-21 bug : 18975
+                Long count = IndicatorImpl.getLongFromObject(str);
+                // ~18975
                 totalRowCount += count;
                 if (log.isDebugEnabled()) {
                     log.debug(quCatalog + "/" + quSchema + "/" + quTable + ": " + count);

@@ -770,7 +770,9 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
         for (Object[] row : objects) {
             Object c = row[row.length - 1];
             if (c != null) {
-                Long val = Long.valueOf(String.valueOf(c));
+                // MOD gdbu 2011-4-21 bug : 19578
+                Long val = Long.valueOf(getLongFromObject(String.valueOf(c)));
+                // ~19578
                 rowcount += val;
                 if (val == 1) {
                     uniq++;
