@@ -101,6 +101,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private String metadataTitle;
 
+    public String oldDataproviderName;
+
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -222,6 +224,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
+
                 // fireTextChange();
             }
 
@@ -378,6 +381,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             // }
 
             nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
+            // MOD klliu 2010-04-21 bug 20204 get the init value
+            setOldDataproviderName(nameText.getText());
             purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
             descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
             authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
@@ -501,5 +506,13 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      */
     protected String getMetadataTitle() {
         return metadataTitle == null ? "" : metadataTitle; //$NON-NLS-1$
+    }
+
+    public String getOldDataproviderName() {
+        return this.oldDataproviderName;
+    }
+
+    public void setOldDataproviderName(String oldDataproviderName) {
+        this.oldDataproviderName = oldDataproviderName;
     }
 }

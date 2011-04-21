@@ -15,9 +15,12 @@ package org.talend.dataprofiler.core.ui.editor.connection;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
+import org.talend.dq.CWMPlugin;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -45,6 +48,13 @@ public class ConnectionEditor extends CommonFormEditor {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+            // MOD klliu 2010-04-21 bug 20204 update SQL Exploer ConnectionNode's name before saving the updated name.
+            ConnectionItem item = (ConnectionItem) ((ConnectionItemEditorInput) this.getEditorInput()).getItem();
+            if (item instanceof DatabaseConnectionItem) {
+                String name = ((DatabaseConnectionItem) item).getConnection().getName();
+                CWMPlugin.getDefault().updateAliasInSQLExplorer(masterPage.getOldDataproviderName(), name);
+                masterPage.setOldDataproviderName(name);
+            }
         }
         setEditorObject(masterPage.getConnectionRepNode());
         super.doSave(monitor);

@@ -155,6 +155,7 @@ public class CWMPlugin extends Plugin {
 
         for (DataProvider dataProvider : dataproviders) {
             try {
+                aliasManager.loadAliases();
                 String aliasName = dataProvider.getName();
                 Alias alias = aliasManager.getAlias(aliasName);
 
@@ -165,5 +166,31 @@ public class CWMPlugin extends Plugin {
                 log.error(e, e);
             }
         }
+        aliasManager.modelChanged();
     }
+
+       /**
+     * 
+     * DOC klliu Comment method "updateAliasInSQLExplorer".update SQL Exploer ConnectionNode's name before saving the
+     * updated name.
+     * 
+     * @param oldDataproviderName
+     * @param newDataproviderName
+     */
+    public void updateAliasInSQLExplorer(String oldDataproviderName, String newDataproviderName) {
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        AliasManager aliasManager = sqlPlugin.getAliasManager();
+        try {
+            aliasManager.loadAliases();
+            Alias alias = aliasManager.getAlias(oldDataproviderName);
+            if (alias != null) {
+                alias.setName(newDataproviderName);
+            }
+            aliasManager.saveAliases();
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+        aliasManager.modelChanged();
+    }
+
 }

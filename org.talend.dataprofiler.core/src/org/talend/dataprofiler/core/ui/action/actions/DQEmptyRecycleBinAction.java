@@ -21,12 +21,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.ui.runtime.exception.MessageBoxExceptionHandler;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.ProjectManager;
@@ -109,6 +113,12 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
                     // connection
                     ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(child);
                     EObjectHelper.removeDependencys(modelEle);
+                }
+                // MOD klliu 2010-04-21 bug 20204 remove SQL Exploer node before phisical delete
+                Item item = child.getObject().getProperty().getItem();
+                if (item instanceof DatabaseConnectionItem) {
+                    DatabaseConnection databaseConnection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
+                    CWMPlugin.getDefault().removeAliasInSQLExplorer(databaseConnection);
                 }
                 deleteElements(factory, (RepositoryNode) child);
             } catch (Exception e) {
