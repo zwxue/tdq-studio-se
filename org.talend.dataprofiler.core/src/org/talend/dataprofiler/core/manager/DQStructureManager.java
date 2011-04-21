@@ -270,8 +270,7 @@ public final class DQStructureManager {
                 }
 
                 String fileName = new Path(fileURL.getPath()).lastSegment();
-                InputStream openStream = null;
-                openStream = fileURL.openStream();
+                InputStream openStream = fileURL.openStream();
                 String folderName = null;
 
                 if (type.equals(ERepositoryObjectType.TDQ_PATTERN_ELEMENT)) {
@@ -297,6 +296,8 @@ public final class DQStructureManager {
                 } else {
                     copyFileToFolder(openStream, fileName, folder);
                 }
+
+                openStream.close();
             } catch (IOException e) {
                 log.error(e, e);
             } catch (PersistenceException e) {
@@ -397,7 +398,6 @@ public final class DQStructureManager {
         }
         return sourceFileItem;
     }
-
 
     /**
      * Method "isNeedCreateStructure" created by bzhou@talend.com.
@@ -574,6 +574,8 @@ public final class DQStructureManager {
                 InputStream openStream = null;
                 openStream = fileURL.openStream();
                 copyFileToFolder(openStream, fileName, desFolder, isImportItem);
+
+                openStream.close();
             } catch (IOException e) {
                 log.error(e, e);
             }

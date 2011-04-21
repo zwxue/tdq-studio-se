@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -29,6 +28,7 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -65,9 +65,7 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
         DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
 
         // Migration for analyses (indicator definition)
-        Collection<Analysis> analyses = new ArrayList<Analysis>();
-
-            analyses = searchAllAnalysis(ResourceManager.getAnalysisFolder());
+        Collection<Analysis> analyses = (Collection<Analysis>) AnaResourceFileHelper.getInstance().getAllElement();
 
         AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
         for (Analysis ana : analyses) {

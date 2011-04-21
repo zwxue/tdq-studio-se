@@ -58,6 +58,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
+    private static final String FILE_NAME_FLAG = "_0.1."; //$NON-NLS-2$
+
     private static Logger log = Logger.getLogger(UpdateAfterMergeTosApiTask.class);
 
     private List<File> newFileList;
@@ -103,9 +105,30 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             deleteOldItemFile(file);
         }
 
+        addConnectionFileToUpdate();
+
         updateFile();
 
         return true;
+    }
+
+    /**
+     * DOC bZhou Comment method "addConnectionFileToUpdate".
+     */
+    private void addConnectionFileToUpdate() {
+        File rawDir = getWorkspacePath().append(EResourceConstant.METADATA.getPath()).toFile();
+        ArrayList<File> fileList = new ArrayList<File>();
+
+        if (rawDir.exists()) {
+            getAllFilesFromFolder(rawDir, fileList, new FilenameFilter() {
+
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(FactoriesUtil.ITEM_EXTENSION);
+                }
+            });
+        }
+
+        newFileList.addAll(fileList);
     }
 
     /**
@@ -183,8 +206,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                         fragment = indicatorDefinition.eResource().getURI().lastSegment();
                     }
 
-                    if (fragment != null) {
-                        String replace = fragment.replace(" ", "_").replace(".", "_0.1.");//$NON-NLS-2$
+                    if (fragment != null && !fragment.contains(FILE_NAME_FLAG)) {
+                        String replace = fragment.replace(" ", "_").replace(".", FILE_NAME_FLAG);
                         FileUtils.replaceInFile(file.getAbsolutePath(), fragment, replace);
                     }
                 }
@@ -220,9 +243,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             InternalEObject eobject = (InternalEObject) modelElement;
             replaceMap.put(file.getName(), eobject.eProxyURI().lastSegment());
         }
-
-        // add all connection files to instead all old dependency link.
-        newFileList.addAll(findRawConnectionFiles());
 
     }
 
@@ -284,22 +304,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                         }
                     }
                     return false;
-                }
-            });
-        }
-
-        return fileList;
-    }
-
-    private ArrayList<File> findRawConnectionFiles() {
-        File rawDir = getWorkspacePath().append(EResourceConstant.METADATA.getPath()).toFile();
-        ArrayList<File> fileList = new ArrayList<File>();
-
-        if (rawDir.exists()) {
-            getAllFilesFromFolder(rawDir, fileList, new FilenameFilter() {
-
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(FactoriesUtil.ITEM_EXTENSION);
                 }
             });
         }

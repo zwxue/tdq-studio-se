@@ -16,20 +16,11 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.emf.FactoriesUtil;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
@@ -120,40 +111,6 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
         folderList.add(workspacePath.append(OLD_PROFILING_FOLDER_NAME).toFile());
 
         return folderList;
-    }
-
-    protected Collection<Analysis> searchAllAnalysis(IFolder folder) throws ClassNotFoundException {
-        Collection<Analysis> analyses = new ArrayList<Analysis>();
-
-        try {
-            for (IResource resource : folder.members()) {
-                if (resource.getType() == IResource.FOLDER) {
-                    if (!resource.getName().startsWith(".svn")) {
-                        analyses.addAll(searchAllAnalysis(folder.getFolder(resource.getName())));
-                    }
-                    continue;
-                }
-                IFile file = (IFile) resource;
-                // MOD yyi 2010-11-04 16236: for split migration task
-                if (null != file.getFileExtension() && file.getFileExtension().equals(FactoriesUtil.ANA)) {
-                    URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
-                    Resource eResource = null;
-                    try{
-                    eResource = EMFSharedResources.getInstance().getResource(uri, true);
-                    } catch (Exception e) {// MOD by zshen for ModelElement can not be find excetion.
-                        eResource = EMFSharedResources.getInstance().getResource(uri, true);
-                    }
-                    if (eResource.getContents().size() > 0) {
-                        analyses.add((Analysis) eResource.getContents().get(0));
-                    } else {
-                        log.error("can't get the analysis from resource :" + eResource);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log.error(e, e);
-        }
-        return analyses;
     }
 
     /**

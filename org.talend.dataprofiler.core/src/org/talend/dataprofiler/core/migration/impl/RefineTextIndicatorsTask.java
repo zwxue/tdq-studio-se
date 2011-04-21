@@ -23,9 +23,9 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.TextIndicator;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.resource.ResourceManager;
 
 /**
  * 
@@ -36,6 +36,7 @@ import org.talend.resource.ResourceManager;
 public class RefineTextIndicatorsTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(RefineTextIndicatorsTask.class);
+
     public RefineTextIndicatorsTask() {
     }
 
@@ -43,7 +44,7 @@ public class RefineTextIndicatorsTask extends AbstractWorksapceUpdateTask {
     protected boolean doExecute() throws Exception {
         // Migration for analyses (indicator definition)
         try {
-            Collection<Analysis> analyses = searchAllAnalysis(ResourceManager.getAnalysisFolder());
+            Collection<Analysis> analyses = (Collection<Analysis>) AnaResourceFileHelper.getInstance().getAllElement();
             AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
             for (Analysis analysis : analyses) {
                 EList<Indicator> allIndics = analysis.getResults().getIndicators();
