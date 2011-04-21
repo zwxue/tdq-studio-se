@@ -79,12 +79,23 @@ public class JrxmlTempFolderRepNode extends RepositoryNode {
                 jrxmlNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
                 jrxmlNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
                 viewObject.setRepositoryNode(jrxmlNode);
-                super.getChildren().add(jrxmlNode);
+                // MOD yyi 2011-04-21 19977 duplicate template after replace
+                if (!duplicateNode(super.getChildren(), jrxmlNode)) {
+                    super.getChildren().add(jrxmlNode);
+                }
             }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
         return super.getChildren();
+    }
+
+    private boolean duplicateNode(List<IRepositoryNode> children, JrxmlTempleteRepNode jrxmlNode) {
+        for (IRepositoryNode node : children) {
+            if (node.getLabel().equals(jrxmlNode.getLabel()))
+                return true;
+        }
+        return false;
     }
 
     @Override
