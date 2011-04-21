@@ -89,9 +89,11 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
                 }
             }
             // ~
-            if (!ConnectionUtils.isOdbcProgress(connection)) {
+            // MOD gdbu 2011-4-21 bug : 20578
+            if (!ConnectionUtils.isOdbcProgress(connection) && !ConnectionUtils.isOdbcOracle(connection)) {
                 connection.setCatalog(catName);
             }
+            // ~20578
             evalSchemaIndicLow(null, schemaIndicator, null, schema, ok);
         }
         return ok;
