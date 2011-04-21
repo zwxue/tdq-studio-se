@@ -95,3 +95,8 @@ The method in class of "net.sourceforge.sqlexplorer.plugin.views.DatabaseStructu
 2.Add Pacake 'service',contain:2 interface (ISaveAsService,IService) and a class GlobalServiceRegister.java.
 3.Modify method createIFile of class SQLTextEditor.we should create propery file and item file by model.
 
+2011-4-21 gdbu bug 19539 : unecrypted passwords in workspace\.metadata\.plugins\net.sourceforge.sqlexplorer
+---------------------------------------------------------------------------------------------------
+1. modified class 'AliasManager' : create method to get decrypt password.
+2. modified class 'User' : line 110 , chenge to get encrypt password.
+3. modified 'MANIFEST.MF' : add org.talend.model and org.talend.utils
