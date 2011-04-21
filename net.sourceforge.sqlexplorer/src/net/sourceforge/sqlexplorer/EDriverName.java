@@ -264,12 +264,14 @@ public enum EDriverName {
      * @return driverID
      */
     private static String getDriFromSpecialDB(String driver) {
-        Set<String> kss = special_database.keySet();
-        for (String ks : kss) {
-            ArrayList<String> specDb = special_database.get(ks);
-            for (int i = 0; i < specDb.size(); i++) {
-                if (specDb.get(i).trim().equals(driver.trim())) {
-                    return getId(ks);
+        if (driver != null) {
+            Set<String> kss = special_database.keySet();
+            for (String ks : kss) {
+                ArrayList<String> specDb = special_database.get(ks);
+                for (int i = 0; i < specDb.size(); i++) {
+                    if (specDb.get(i).trim().equals(driver.trim())) {
+                        return getId(ks);
+                    }
                 }
             }
         }

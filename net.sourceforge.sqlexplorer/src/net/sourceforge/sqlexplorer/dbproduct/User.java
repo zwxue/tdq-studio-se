@@ -106,14 +106,17 @@ public class User implements Comparable<User>, SessionEstablishedListener {
 	 * @return
 	 */
 	public Element describeAsXml() {
-		Element root = new DefaultElement(USER);
-		root.addElement(USER_NAME).setText(userName);
+        Element root = new DefaultElement(USER);
+        String tmpUserName = userName == null ? "" : userName; //$NON-NLS-1$
+        root.addElement(USER_NAME).setText(tmpUserName);
         // MOD mzhao bug:19539 Encript the password
-        root.addElement(PASSWORD).setText(ConnectionHelper.getEncryptPassword(password));
+        String tempPassword = ConnectionHelper.getEncryptPassword(password) == null ? "" : ConnectionHelper //$NON-NLS-1$
+                .getEncryptPassword(password);
+        root.addElement(PASSWORD).setText(tempPassword);
         // ~19539
-		root.addAttribute(AUTO_COMMIT, Boolean.toString(autoCommit));
-		root.addAttribute(COMMIT_ON_CLOSE, Boolean.toString(commitOnClose));
-		return root;
+        root.addAttribute(AUTO_COMMIT, Boolean.toString(autoCommit));
+        root.addAttribute(COMMIT_ON_CLOSE, Boolean.toString(commitOnClose));
+        return root;
 	}
 
 	/**

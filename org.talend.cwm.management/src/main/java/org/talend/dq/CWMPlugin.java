@@ -98,6 +98,9 @@ public class CWMPlugin extends Plugin {
                     // ~19539
                     // ~ 14593
 
+                    // password should not be null
+                    password = password == null ? "" : password; //$NON-NLS-1$
+
                     // MOD scorreia 2010-07-24 set empty string instead of null password so that database xml file is
                     // serialized correctly.
                     assert password != null;
