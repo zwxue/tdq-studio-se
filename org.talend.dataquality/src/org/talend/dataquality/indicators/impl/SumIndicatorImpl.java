@@ -321,6 +321,48 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
                 }
 
             };
+        } else if (object instanceof Long) {
+            return new GenericSum<Long>() {
+
+                @Override
+                Long getDefaultValue() {
+                    return 0l;
+                }
+
+                @Override
+                void addNumber(Long number) {
+                    this.sum += number;
+                }
+
+            };
+        } else if (object instanceof Float) {
+            return new GenericSum<Float>() {
+
+                @Override
+                Float getDefaultValue() {
+                    return 0f;
+                }
+
+                @Override
+                void addNumber(Float number) {
+                    this.sum += number;
+                }
+
+            };
+        } else if (object instanceof Short) {
+            return new GenericSum<Short>() {
+
+                @Override
+                Short getDefaultValue() {
+                    return 0;
+                }
+
+                @Override
+                void addNumber(Short number) {
+                    sum = Short.valueOf(String.valueOf(sum.shortValue() + number.shortValue()));
+                }
+
+            };
         }
 
         // TODO scorreia probably throw an exception here

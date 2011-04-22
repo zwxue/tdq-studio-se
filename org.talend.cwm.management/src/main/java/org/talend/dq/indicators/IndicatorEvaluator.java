@@ -76,7 +76,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // create query statement
         // feature 0010630 zshen: Tables are not found when using Excel with ODBC connection
         Statement statement = null;
-        // FIXME stat should be closed.
+
         statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         // ~10630
         statement.setFetchSize(fetchSize);
@@ -95,6 +95,10 @@ public class IndicatorEvaluator extends Evaluator<String> {
             ok.setReturnCode(mess, false);
             return ok;
         }
+
+        int columnCount = resultSet.getMetaData().getColumnCount();
+        int maxNumberRows = analysis.getParameters().getMaxNumberRows();
+
         // MOD mzhao feature: 12919, add capability to dill down data on Java engine.
         AnalysisResult anaResult = analysis.getResults();
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = anaResult.getIndicToRowMap();
@@ -105,15 +109,15 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // int totalResultNum = resultSet.getRow();
         // resultSet.beforeFirst();
         // --- for each row
+        int columnListSize = columnlist.size();
         label: while (resultSet.next()) {
             // --- for each column
             // feature 0010630 zshen: dislodge the Qualifiers from name of the column
-            for (int i = 0; i < columnlist.size(); i++) {
-
+            for (int i = 0; i < columnListSize; i++) {
                 // MOD xqliu 2010-07-27 bug 13826
                 String col = columnlist.get(i);
                 List<Indicator> indicators = getIndicators(col);
-                col = columnlistMap.get(columnlist.get(i));
+                col = columnlistMap.get(col);
                 // FIXME scorreia this must not be done here!!! but outside the resultset loop
                 // int offset = col.lastIndexOf('.') + 1;
                 // col = col.substring(offset);
@@ -140,7 +144,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     if (analyzedDataSet == null) {
                         analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
                         indicToRowMap.put(indicator, analyzedDataSet);
-                        analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
+                        analyzedDataSet.setDataCount(maxNumberRows);
                         analyzedDataSet.setRecordSize(0);
                     }
 
@@ -148,23 +152,25 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
                         recordIncrement = valueObjectList.size();
-                        for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
-                            List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
-                                    .getAnalyzedElement().eContainer()));
+                        List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                                .getAnalyzedElement().eContainer()));
+                        for (int j = 0; j < columnCount; j++) {
                             String newcol = columnList.get(j).getName();
                             Object newobject = resultSet.getObject(newcol);
                             if (newobject != null && !(newobject instanceof String)
                                     && newobject.toString().indexOf("TIMESTAMP") > -1) {
                                 newobject = resultSet.getTimestamp(newcol);
                             }
-                            if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                            if (recordIncrement < maxNumberRows) {
                                 if (recordIncrement < valueObjectList.size()) {
                                     valueObjectList.get(recordIncrement)[j] = newobject;
                                 } else {
-                                    Object[] valueObject = new Object[resultSet.getMetaData().getColumnCount()];
+                                    Object[] valueObject = new Object[columnCount];
                                     valueObject[j] = newobject;
                                     valueObjectList.add(valueObject);
                                 }
+                            } else {
+                                break;
                             }
                         }
                         // ~
@@ -180,15 +186,17 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                 break;
                             }
                         }
-
                     }
                 }
             }
         }
         // --- release resultset
         resultSet.close();
-        // --- close
+        // --- release statement
+        statement.close();
+        // --- close connection
         connection.close();
+
         return ok;
     }
 
@@ -243,7 +251,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 valueObjectList = new ArrayList<Object[]>();
                 valueObjectListMap.put(key, valueObjectList);
             }
-
         } else if (indicator.isInValidRow() || indicator.isValidRow()) {
             List<Object> patternData = analyzedDataSet.getPatternData();
             if (patternData == null) {
@@ -254,7 +261,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
             }
             Object listObject = patternData.get(AnalyzedDataSetImpl.INVALID_VALUE);
             if (indicator.isInValidRow()) {
-
                 if (listObject instanceof ArrayList<?>) {
                     valueObjectList = (ArrayList<Object[]>) listObject;
                 }

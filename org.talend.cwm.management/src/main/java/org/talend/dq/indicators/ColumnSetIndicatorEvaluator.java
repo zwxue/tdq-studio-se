@@ -628,10 +628,8 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     @Override
     public ReturnCode evaluateIndicators(String sqlStatement, boolean closeConnection) {
-        // TODO Auto-generated method stub
         ReturnCode returnCode = super.evaluateIndicators(sqlStatement, closeConnection);
         storeDataSet();
         return returnCode;
-
     }
 }

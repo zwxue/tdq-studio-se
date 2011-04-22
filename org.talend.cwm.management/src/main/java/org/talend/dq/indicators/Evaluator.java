@@ -168,7 +168,6 @@ public abstract class Evaluator<T> {
                     String message = rc.getMessage();
                     message = Messages.getString("Evaluator.ConnectionProblem", message, connRc.getMessage()); //$NON-NLS-1$
                     rc.setMessage(message);
-
                 }
             }
             return rc;
