@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -96,6 +97,17 @@ public final class SqlExplorerBridge {
             }
 
         } else {
+            // MOD by zshen for 20517
+            if (schemas.size() == 0) {// the case for mssql/postgrel(which have catalog and schema structor) schema
+                                      // analysis.
+                Catalog shcmeaOfCatalogNode = CatalogHelper.getParentCatalog(parentPackageElement);
+                for (INode catalogNode : catalogs) {
+                    if (shcmeaOfCatalogNode.getName().equalsIgnoreCase(catalogNode.getName())) {
+                        catalogOrSchemaNode = catalogNode;
+                        break;
+                    }
+                }
+            }
             for (INode schemaNode : schemas) {
                 if (parentPackageElement.getName().equalsIgnoreCase(schemaNode.getName())) {
                     catalogOrSchemaNode = schemaNode;
