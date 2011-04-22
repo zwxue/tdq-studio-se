@@ -16,6 +16,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -29,9 +30,7 @@ public class OpenResourceProvider extends AbstractCommonActionProvider {
         // DOC MOD klliu 2010-12-09 feature15750
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
-        if (RepositoryNodeHelper.canOpenEditor(node)) {
-            // IRepositoryViewObject object = node.getObject();
-            // openFileAction = new OpenItemEditorAction(object);
+        if (RepositoryNodeHelper.canOpenEditor(node) && !(node instanceof ReportRepNode)) {
             openFileAction = new OpenItemEditorAction(node);
             aMenu.add(openFileAction);
         }
