@@ -373,9 +373,19 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @throws PersistenceException
      */
     public void renameFolderRepNode(IRepositoryNode folderNode, String label) throws PersistenceException {
-        if (folderNode == null) {
+        if (folderNode == null || label == null || "".equals(label)) { //$NON-NLS-1$
             return;
         }
+        IRepositoryViewObject object = folderNode.getObject();
+        if (object == null || !(object instanceof Folder)) {
+            return;
+        } else {
+            if (WorkbenchUtils.equalsOS(label, ((Folder) object).getLabel())) {
+                // the new lable is same with old, so do nothing
+                return;
+            }
+        }
+
         String path = null;
         IRepositoryNode parentNode = folderNode.getParent();
         ERepositoryObjectType objectType = folderNode.getContentType();

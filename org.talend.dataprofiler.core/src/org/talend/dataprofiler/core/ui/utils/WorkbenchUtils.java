@@ -281,4 +281,26 @@ public final class WorkbenchUtils {
     public static boolean isMac() {
         return System.getProperty("os.name").toUpperCase().indexOf("MAC") > -1; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    /**
+     * judgement one string equals another string dependency on the OS's case sensitive type.
+     * 
+     * @param str1
+     * @param str2
+     * @return
+     */
+    public static boolean equalsOS(String str1, String str2) {
+        if (str1 == null || str2 == null) {
+            return false;
+        } else {
+            if (isLinux() || isMac()) {
+                return str1.equals(str2);
+            } else if (isWindows()) {
+                return str1.equalsIgnoreCase(str2);
+            } else {
+                // other os
+                return str1.equals(str2);
+            }
+        }
+    }
 }
