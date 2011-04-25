@@ -125,7 +125,8 @@ public class ChartDataEntity {
 
     public String getPersent() {
         if (percent != null) {
-            if (Double.isNaN(percent)) {
+            // MOD qiongli 2011-4-25 bug 20670:if it is infinite,return N/A.
+            if (Double.isNaN(percent) || Double.isInfinite(percent)) {
                 return "N/A"; //$NON-NLS-1$
             } else {
                 return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
