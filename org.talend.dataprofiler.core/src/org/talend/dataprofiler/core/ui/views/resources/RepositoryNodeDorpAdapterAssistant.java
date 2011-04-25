@@ -67,7 +67,11 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.ConnectionRepNode;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionFolderRepNode;
+import org.talend.dq.nodes.MDMConnectionFolderRepNode;
+import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -265,7 +269,17 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     private void moveConnectionRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         IRepositoryViewObject objectToMove = sourceNode.getObject();
         ConnectionItem item = (ConnectionItem) objectToMove.getProperty().getItem();
-        IPath fullPath = ResourceManager.getReportsFolder().getFullPath();
+
+        IPath fullPath = Path.EMPTY;
+        if (targetNode.getParent() instanceof DBConnectionFolderRepNode) {
+            fullPath = ResourceManager.getConnectionFolder().getFullPath();
+        } else if (targetNode.getParent() instanceof DFConnectionFolderRepNode) {
+            fullPath = ResourceManager.getFileDelimitedFolder().getFullPath();
+        } else if (targetNode.getParent() instanceof MDMConnectionFolderRepNode
+                || targetNode.getParent() instanceof MDMConnectionSubFolderRepNode) {
+            fullPath = ResourceManager.getMDMConnectionFolder().getFullPath();
+        }
+
         if (targetNode.getType() == ENodeType.SIMPLE_FOLDER) {
             moveObject(objectToMove, sourceNode, targetNode,
                     fullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath()));
