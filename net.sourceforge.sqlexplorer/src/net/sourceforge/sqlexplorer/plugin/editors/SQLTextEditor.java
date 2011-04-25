@@ -265,7 +265,7 @@ public class SQLTextEditor extends TextEditor {
                 provider.aboutToChange(newInput);
                 // MOD qiongli 2011-4-21 bug 20205.after creating property file,file name is changed(contain version
                 // info),so reset'newInput'.
-                file = createIFile(progressMonitor, file, getViewer().getDocument().get());
+                file = createIFile(file, getViewer().getDocument().get());
                 newInput = new FileEditorInput(file);
                 success = true;
 
@@ -319,31 +319,32 @@ public class SQLTextEditor extends TextEditor {
      * @param content
      * @throws CoreException
      */
-    private IFile createIFile(IProgressMonitor monitor, IFile file, String content) throws CoreException {
+    private IFile createIFile(IFile file, String content) throws CoreException {
         //MOD qiongli 2011-4-21.bug 20205 .should create sql file and property.use extension of service mechenism.
         try {
             if (GlobalServiceRegister.getDefault().isServiceRegistered(ISaveAsService.class)) {
                 ISaveAsService service = (ISaveAsService) GlobalServiceRegister.getDefault().getService(ISaveAsService.class);
                 String fName = StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION);
-                Item item = service.createFile(content, Path.EMPTY, fName, file.getFileExtension());
+                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                IPath rootPath = new Path("TDQ_Libraries/Source Files");
+                Item item = service.createFile(content,
+                        file.getProjectRelativePath().removeLastSegments(1).makeRelativeTo(rootPath), fName,
+                        file.getFileExtension());
                 // get the correct path(contain version info) for newInput file in editor.
-                IPath location = file.getLocation();
+                 IPath location = file.getLocation();
                 if (item != null && item.getProperty() != null && location != null) {
-                    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
                     location = location.removeLastSegments(1);
                     StringBuffer strb = new StringBuffer();
                     strb.append(location.toString());
-                    String version = item.getProperty().getVersion() == null ? "" : item.getProperty().getVersion();
-                    strb.append(Path.SEPARATOR).append(fName).append("_" + version)
-                            .append(DEFAULT_FILE_EXTENSION);
+                    String version = item.getProperty().getVersion() == null ? "" : "_" + item.getProperty().getVersion();
+                    strb.append(Path.SEPARATOR).append(fName).append(version).append(DEFAULT_FILE_EXTENSION);
                     location = Path.fromOSString(strb.toString());
                     file = workspace.getRoot().getFileForLocation(location);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            monitor.done();
         }
         return file;
     }
