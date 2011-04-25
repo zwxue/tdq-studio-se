@@ -1328,4 +1328,10 @@ public class DbmsLanguage {
         return new GenericSQLHandler("").createGenericSqlWithRegexFunction(function);
     }
 
+    /**
+     * @return if this DbmsLanage hasn't been inited return true, else return false
+     */
+    public boolean isSql() {
+        return SQL.equals(getDbmsName());
+    }
 }

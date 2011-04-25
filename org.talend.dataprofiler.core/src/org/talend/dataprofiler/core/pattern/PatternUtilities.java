@@ -58,6 +58,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIFactory;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
@@ -130,8 +131,7 @@ public final class PatternUtilities {
     }
 
     public static TypedReturnCode<IndicatorUnit> createIndicatorUnit(Pattern pattern,
-            ModelElementIndicator modelElementIndicator,
-            Analysis analysis) {
+            ModelElementIndicator modelElementIndicator, Analysis analysis) {
         return createIndicatorUnit(pattern, modelElementIndicator, analysis, null);
     }
 
@@ -145,8 +145,7 @@ public final class PatternUtilities {
      * @return
      */
     public static TypedReturnCode<IndicatorUnit> createIndicatorUnit(Pattern pattern,
-            ModelElementIndicator modelElementIndicator,
-            Analysis analysis, IndicatorDefinition indicatorDefinition) {
+            ModelElementIndicator modelElementIndicator, Analysis analysis, IndicatorDefinition indicatorDefinition) {
 
         TypedReturnCode<IndicatorUnit> result = new TypedReturnCode<IndicatorUnit>();
 
@@ -186,6 +185,11 @@ public final class PatternUtilities {
         }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);
+        if (dbmsLanguage.isSql()) {
+            MessageUI.openWarning(DefaultMessagesImpl.getString("PatternUtilities.ConnectionError")); //$NON-NLS-1$
+            result.setOk(false);
+            return result;
+        }
         boolean isJavaEngin = ExecutionLanguage.JAVA.equals(executionLanguage);
         Expression returnExpression = dbmsLanguage.getRegexp(pattern, isJavaEngin);
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && returnExpression == null) {
