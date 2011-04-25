@@ -336,6 +336,11 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     private boolean canMoveNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         String sourceNodeRelPath = RepositoryNodeHelper.getPath(sourceNode).toString().trim();
         String targetNodeRelPath = RepositoryNodeHelper.getPath(targetNode).toString().trim();
+        // MOD gdbu 2011-4-25 bug : 19537
+        if (sourceNode.getParent().getId().equals(targetNode.getId())) {
+            return false;
+        }
+        // ~19537
         if (sourceNodeRelPath.length() > targetNodeRelPath.length()) {
             // Move a child node to parent node or child node to move to other branches, allowing moving.
             return true;
