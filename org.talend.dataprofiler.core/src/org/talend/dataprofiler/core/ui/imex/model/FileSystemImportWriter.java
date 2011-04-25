@@ -53,9 +53,11 @@ import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.RepositoryWorkUnit;
@@ -380,6 +382,18 @@ public class FileSystemImportWriter implements IImportWriter {
     public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
         ItemRecord.clear();
 
+        handleDefinitionFile();
+
+        doMigration(monitor);
+
+        deleteTempProjectFolder();
+
+        clearUnloadResources();
+
+        syncConnectionWithExplorer();
+    }
+
+    private void handleDefinitionFile() throws IOException {
         IFile defFile = ResourceManager.getLibrariesFolder().getFile(DEFINITION_FILE_NAME);
 
         if (definitionFile != null && definitionFile.exists()) {
@@ -389,20 +403,26 @@ public class FileSystemImportWriter implements IImportWriter {
             URI uri = URI.createPlatformResourceURI(defFile.getFullPath().toString(), false);
             EMFSharedResources.getInstance().unloadResource(uri.toString());
         }
+    }
 
+    private void doMigration(IProgressMonitor monitor) {
         ResourceService.refreshStructure();
 
         if (!commTasks.isEmpty() && monitor != null) {
             MigrationTaskManager.doMigrationTask(commTasks, monitor);
         }
+    }
 
+    private void deleteTempProjectFolder() throws IOException {
         if (tempFolder != null && tempFolder.exists()) {
             if (log.isDebugEnabled()) {
                 log.debug("Deleting temporary workspace..." + tempFolder.getAbsolutePath());
             }
             FileUtils.deleteDirectory(tempFolder);
         }
+    }
 
+    private void clearUnloadResources() {
         Iterator<Resource> it = EMFSharedResources.getInstance().getResourceSet().getResources().iterator();
         while (it.hasNext()) {
             Resource resource = it.next();
@@ -410,6 +430,14 @@ public class FileSystemImportWriter implements IImportWriter {
                 it.remove();
             }
         }
+    }
+
+    private void syncConnectionWithExplorer() {
+        // add connection alias.
+        List<? extends ModelElement> allDBConnection = PrvResourceFileHelper.getInstance().getAllElement(
+                ResourceManager.getConnectionFolder());
+
+        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(allDBConnection.toArray(new ModelElement[0]));
     }
 
     /*
