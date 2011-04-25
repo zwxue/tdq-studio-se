@@ -16,17 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.rules.DQRule;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -34,7 +31,6 @@ import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -69,14 +65,7 @@ public final class ModelElementFileFactory {
         } else if (FactoriesUtil.isUDIFile(fileExtension)) {
             modelElement = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
         } else if (FactoriesUtil.isItemFile(fileExtension)) {
-            IPath filePath = file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-            if (!file.getParent().getFile(filePath.removeFirstSegments(filePath.segmentCount() - 1)).getLocation().toFile()
-                    .exists()) {
-                return modelElement;
-            } else {
-                Property itemProperty = PropertyHelper.getProperty(ResourceManager.getRoot().getFile(filePath));
-                modelElement = PropertyHelper.retrieveElement(itemProperty.getItem());
-            }
+            modelElement = PrvResourceFileHelper.getInstance().findProvider(file);
         }
 
         return modelElement;

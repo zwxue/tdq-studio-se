@@ -19,8 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -45,9 +43,7 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
     private FilenameFilter propertyFileFilter = new FilenameFilter() {
 
         public boolean accept(File dir, String name) {
-            IPath namePath = new Path(name);
-            String fileExtension = namePath.getFileExtension();
-            return fileExtension != null && !name.startsWith(".") && name.endsWith(FactoriesUtil.PROPERTIES_EXTENSION);
+            return !dir.getName().startsWith(".") && name.endsWith(FactoriesUtil.PROPERTIES_EXTENSION);
         }
 
         // private boolean isUserCreateDir(File dir) {
@@ -61,6 +57,7 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
         // return true;
         // }
     };
+
     /*
      * (non-Jsdoc)
      * 
@@ -97,18 +94,15 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
                     log.debug("---------Translate " + uri.toString());
                 }
 
-                EObject eObject = null;
+                Property property = null;
                 try {
                     Resource resource = emfUtil.getResourceSet().getResource(uri, true);
 
-                    eObject = resource.getContents().get(0);
-
-
-                        for (EObject object : resource.getContents()) {
+                    for (EObject object : resource.getContents()) {
                         if (object instanceof Property) {
-                                eObject = object;
-                                break;
-                            }
+                            property = (Property) object;
+                            break;
+                        }
 
                     }
                 } catch (Exception e) {
@@ -116,16 +110,11 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
                     ok = false;
                 }
 
-                if (eObject != null) {
-                    if (eObject instanceof Property) {
-                        try {
-                            saveObject(emfUtil, file, uri, eObject);
-                        } catch (Exception e) {
-                            log.error("Error when saving " + eObject + " in " + file + " with URI " + uri, e);
-                            ok = false;
-                        }
-                    } else {
-                        log.warn("Can't get the model elment : " + eObject.toString());
+                if (property != null) {
+                    try {
+                        saveObject(emfUtil, file, uri, property);
+                    } catch (Exception e) {
+                        log.error("Error when saving " + property + " in " + file + " with URI " + uri, e);
                         ok = false;
                     }
                 }
@@ -134,9 +123,8 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
         return ok;
     }
 
-    private void saveObject(EMFUtil emfUtil, File file, URI uri, EObject eObject) {
-        
-        Property oldPropery = (Property) eObject;
+    private void saveObject(EMFUtil emfUtil, File file, URI uri, Property oldPropery) {
+
         String statePathStr = PropertyHelper.computePath(oldPropery, file);
         oldPropery.getItem().getState().setPath(statePathStr);
 
@@ -150,8 +138,16 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
         for (File folder : getTopFolderList()) {
             FilesUtils.getAllFilesFromFolder(folder, fileList, propertyFileFilter);
         }
-        return super.valid();
+        return !fileList.isEmpty();
     }
 
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.migration.AMigrationTask#isModelTask()
+     */
+    @Override
+    public Boolean isModelTask() {
+        return true;
+    }
 }

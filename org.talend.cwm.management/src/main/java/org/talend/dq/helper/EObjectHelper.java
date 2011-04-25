@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -285,4 +286,24 @@ public final class EObjectHelper {
         return proxy;
     }
 
+    /**
+     * DOC bZhou Comment method "getURI".
+     * 
+     * Get uri for an object.
+     * 
+     * @param object
+     * @return
+     */
+    public static URI getURI(EObject object) {
+        URI uri = null;
+        if (object != null) {
+            if (object.eIsProxy()) {
+                uri = ((InternalEObject) object).eProxyURI();
+            } else {
+                uri = object.eResource().getURI();
+            }
+        }
+
+        return uri;
+    }
 }

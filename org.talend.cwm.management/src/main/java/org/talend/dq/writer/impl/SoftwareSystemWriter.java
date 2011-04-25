@@ -45,17 +45,6 @@ public class SoftwareSystemWriter extends AElementPersistance {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.writer.AElementPersistance#addResourceContent(orgomg.cwm.objectmodel.core.ModelElement)
-     */
-    @Override
-    protected void addResourceContent(ModelElement element) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.dq.writer.AElementPersistance#getFileExtension()
      */
     @Override

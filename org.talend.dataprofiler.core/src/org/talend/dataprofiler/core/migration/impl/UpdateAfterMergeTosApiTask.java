@@ -32,24 +32,20 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
+import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.files.FileUtils;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -223,25 +219,28 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     private void createNewItemFile(File file) {
         ModelElement modelElement = getModelElement(file);
 
-        if (modelElement != null && !modelElement.eIsProxy()) {
-            IFile iFile = ResourceService.file2IFile(file);
-            IFolder parentFolder = (IFolder) iFile.getParent();
+        if (modelElement != null) {
+            boolean needUpdateFlag = !modelElement.eIsProxy();
 
-            TypedReturnCode<Object> trc = ElementWriterFactory.getInstance().create(modelElement)
-                    .create(modelElement, parentFolder, true);
-            if (trc.getObject() instanceof Item) {
-                Property property = ((Item) trc.getObject()).getProperty();
+            if (needUpdateFlag) {
+                IFile iFile = WorkspaceUtils.fileToIFile(file);
+                IFolder parentFolder = (IFolder) iFile.getParent();
 
-                IPath newFileNamePath = new Path(property.getLabel() + "_" + property.getVersion()).addFileExtension(iFile
-                        .getFileExtension());
-                IFile newFile = parentFolder.getFile(newFileNamePath);
-
-                newFileList.add(newFile.getLocation().toFile());
-                replaceMap.put(file.getName(), newFile.getFullPath().lastSegment());
+                AElementPersistance writer = ElementWriterFactory.getInstance().create(modelElement);
+                writer.create(modelElement, parentFolder, true);
             }
-        } else if (modelElement.eIsProxy()) {
-            InternalEObject eobject = (InternalEObject) modelElement;
-            replaceMap.put(file.getName(), eobject.eProxyURI().lastSegment());
+
+            URI uri = EObjectHelper.getURI(modelElement);
+            if (uri != null) {
+                replaceMap.put(file.getName(), uri.lastSegment());
+
+                if (needUpdateFlag && uri.isPlatform()) {
+                    IPath filePath = new Path(uri.toPlatformString(false));
+                    IFile needUpdateFile = ResourceManager.getRoot().getFile(filePath);
+                    newFileList.add(needUpdateFile.getLocation().toFile());
+                }
+            }
+
         }
 
     }
@@ -269,17 +268,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     private ModelElement getModelElement(File parentFile) {
         ModelElement result = null;
         try {
-            if (parentFile.getName().endsWith(FactoriesUtil.DEFINITION)) {
-                result = IndicatorResourceFileHelper.getInstance().findIndDefinition(WorkspaceUtils.fileToIFile(parentFile));
-            } else if (parentFile.getName().endsWith(FactoriesUtil.PATTERN)) {
-                result = PatternResourceFileHelper.getInstance().findPattern(WorkspaceUtils.fileToIFile(parentFile));
-            } else if (parentFile.getName().endsWith(FactoriesUtil.DQRULE)) {
-                result = DQRuleResourceFileHelper.getInstance().findWhereRule(WorkspaceUtils.fileToIFile(parentFile));
-            } else if (parentFile.getName().endsWith(FactoriesUtil.ANA)) {
-                result = AnaResourceFileHelper.getInstance().findAnalysis(WorkspaceUtils.fileToIFile(parentFile));
-            } else if (parentFile.getName().endsWith(FactoriesUtil.REP)) {
-                result = RepResourceFileHelper.getInstance().findReport(WorkspaceUtils.fileToIFile(parentFile));
-            }
+            IFile iFile = WorkspaceUtils.fileToIFile(parentFile);
+            result = ModelElementFileFactory.getModelElement(iFile);
         } catch (Exception e) {
             log.error(e, e);
         }

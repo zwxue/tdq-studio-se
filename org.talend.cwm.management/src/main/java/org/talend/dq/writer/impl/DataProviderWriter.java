@@ -110,33 +110,30 @@ public class DataProviderWriter extends AElementPersistance {
      */
     @Override
     protected void addResourceContent(ModelElement element) {
+        super.addResourceContent(element);
 
-        EList<EObject> resourceContents = element.eResource().getContents();
+        if (element.eResource() != null) {
+            EList<EObject> resourceContents = element.eResource().getContents();
 
-        // save dependency values
-        EList<Dependency> supplierDependency = element.getSupplierDependency();
-        if (supplierDependency.size() != 0) {
-            resourceContents.addAll(supplierDependency);
-        }
+            // add each catalog to its own file
+            Collection<? extends ModelElement> catalogs = ConnectionHelper.getCatalogs((Connection) element);
+            resourceContents.addAll(catalogs);
 
-        // add each catalog to its own file
-        Collection<? extends ModelElement> catalogs = ConnectionHelper.getCatalogs((Connection) element);
-        resourceContents.addAll(catalogs);
+            if (log.isDebugEnabled()) {
+                log.debug("Catalogs added ");
+            }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Catalogs added ");
-        }
+            // add each schema to its own file
+            Collection<? extends ModelElement> schemas = ConnectionHelper.getSchema((Connection) element);
+            resourceContents.addAll(schemas);
 
-        // add each schema to its own file
-        Collection<? extends ModelElement> schemas = ConnectionHelper.getSchema((Connection) element);
-        resourceContents.addAll(schemas);
+            // add each schema to its own file
+            Collection<? extends ModelElement> xmlSchemas = ConnectionHelper.getTdXmlDocument((Connection) element);
+            resourceContents.addAll(xmlSchemas);
 
-        // add each schema to its own file
-        Collection<? extends ModelElement> xmlSchemas = ConnectionHelper.getTdXmlDocument((Connection) element);
-        resourceContents.addAll(xmlSchemas);
-
-        if (log.isDebugEnabled()) {
-            log.debug("Schema added ");
+            if (log.isDebugEnabled()) {
+                log.debug("Schema added ");
+            }
         }
     }
 

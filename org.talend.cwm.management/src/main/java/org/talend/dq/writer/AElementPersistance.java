@@ -21,7 +21,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
@@ -62,6 +64,7 @@ import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -495,7 +498,31 @@ public abstract class AElementPersistance {
      * @param element
      * @return
      */
-    protected abstract void addResourceContent(ModelElement element);
+    protected void addResourceContent(ModelElement element) {
+        Resource eResource = element.eResource();
+        if (eResource != null) {
+            addResourceContent(eResource, element);
+        }
+    }
+
+    public void addResourceContent(Resource resource, ModelElement element) {
+        if (resource != null) {
+            EList<EObject> resourceContents = resource.getContents();
+
+            if (!resourceContents.contains(element)) {
+                resourceContents.add(element);
+            }
+
+            EList<Dependency> supplierDependency = element.getSupplierDependency();
+            if (supplierDependency != null) {
+                for (Dependency dependency : supplierDependency) {
+                    if (!resourceContents.contains(dependency)) {
+                        resourceContents.add(dependency);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * DOC bZhou Comment method "getFileExtension".

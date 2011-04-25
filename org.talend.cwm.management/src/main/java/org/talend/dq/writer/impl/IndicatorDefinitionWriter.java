@@ -14,8 +14,6 @@ package org.talend.dq.writer.impl;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
@@ -49,25 +47,6 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
 
     @Override
     public void addDependencies(ModelElement element) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.AElementPersistance#addResourceContent(orgomg.cwm.objectmodel.core.ModelElement)
-     */
-    @Override
-    public void addResourceContent(ModelElement element) {
-        EList<EObject> resourceContents = element.eResource().getContents();
-        resourceContents.addAll(element.getDescription());
-    }
-
-    public void addResourceContent(Resource resource, IndicatorDefinition element) {
-        if (resource != null) {
-            EList<EObject> resourceContents = resource.getContents();
-            resourceContents.addAll(element.getDescription());
-            resource.getContents().add(element);
-        }
     }
 
     /*

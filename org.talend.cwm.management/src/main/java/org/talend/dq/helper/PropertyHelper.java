@@ -22,7 +22,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -295,7 +294,7 @@ public final class PropertyHelper {
         if (item.getState() != null) {
             statePathStr = item.getState().getPath();
         } else {
-            URI propURI = getURI(property);
+            URI propURI = EObjectHelper.getURI(property);
 
             if (StringUtils.isBlank(statePathStr) && propURI.isPlatformResource()) {
                 IPath propPath = new Path(propURI.toPlatformString(true)).removeLastSegments(1);
@@ -305,22 +304,6 @@ public final class PropertyHelper {
         }
 
         return statePathStr != null ? new Path(statePathStr) : Path.EMPTY;
-    }
-
-    public static URI getURI(EObject object) {
-        if (object == null) {
-            return null;
-        }
-
-        URI uri = null;
-
-        if (object.eIsProxy()) {
-            uri = ((InternalEObject) object).eProxyURI();
-        } else {
-            uri = object.eResource().getURI();
-        }
-
-        return uri;
     }
 
     /**
@@ -341,7 +324,7 @@ public final class PropertyHelper {
 
         EElementEName elementEName = EElementEName.getElementEName(item);
         if (elementEName != null) {
-            URI uri = getURI(property);
+            URI uri = EObjectHelper.getURI(property);
             if (uri.isFile()) {
                 path = new Path(uri.toFileString());
             } else if (uri.isPlatform()) {

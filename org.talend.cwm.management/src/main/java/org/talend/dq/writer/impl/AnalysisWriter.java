@@ -157,12 +157,12 @@ public class AnalysisWriter extends AElementPersistance {
     }
 
     public void addResourceContent(Resource resource, Analysis element) {
+        super.addResourceContent(resource, element);
+
         if (resource != null) {
             EList<EObject> resourceContents = resource.getContents();
-            EList<Domain> dataFilter = AnalysisHelper.getDataFilter(element);
-            List<Domain> domains = DomainHelper.getDomains(resourceContents);
-            resourceContents.removeAll(domains);
 
+            EList<Domain> dataFilter = AnalysisHelper.getDataFilter(element);
             if (dataFilter != null) {
                 // scorreia save them in their own file? -> no, it's ok to save them
                 // in the analysis file.
@@ -172,8 +172,6 @@ public class AnalysisWriter extends AElementPersistance {
                     }
                 }
             }
-
-            resource.getContents().add(element);
         }
     }
 
