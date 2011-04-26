@@ -48,6 +48,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dq.indicators.graph.EdgeDisplayPredicate;
 import org.talend.dq.indicators.graph.GraphBuilder;
 
@@ -323,7 +324,7 @@ public class JungGraphGenerator {
      * @return
      */
     private JButton createMinusScaler(final VisualizationViewer vv, final ScalingControl scaler) {
-        JButton minus = new JButton("-");
+        JButton minus = new JButton("-");//$NON-NLS-1$
         minus.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -436,7 +437,7 @@ public class JungGraphGenerator {
 
             int sheight;
 
-            String str = ""; //$NON-NLS-1$
+            String str = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
 
             public void paint(Graphics g) {
                 Dimension d = vv.getSize();

@@ -17,6 +17,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.metadata.connection.files.delimited.DelimitedFileWizard;
@@ -70,7 +71,7 @@ public class CreateDFConnectionAction extends AbstractMetadataCreationAction {
      */
     @Override
     protected String getActionLabel() {
-        return "Create File Delimited";
+        return DefaultMessagesImpl.getString("CreateDFConnectionAction.CreateFileDelimited"); //$NON-NLS-1$
     }
 
 }

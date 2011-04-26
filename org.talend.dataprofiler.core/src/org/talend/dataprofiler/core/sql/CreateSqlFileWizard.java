@@ -24,6 +24,7 @@ import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.properties.TDQSourceFileItem;
@@ -82,17 +83,17 @@ public class CreateSqlFileWizard extends Wizard {
 
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
-        property.setStatusCode(""); //$NON-NLS-1$
+        property.setStatusCode(PluginConstant.EMPTY_STRING);
         property.setLabel(parameter.getFileName());
 
         TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
                 .createTDQSourceFileItem();
         sourceFileItem.setProperty(property);
         sourceFileItem.setName(parameter.getFileName());
-        sourceFileItem.setExtension("sql"); //$NON-NLS-1$
+        sourceFileItem.setExtension(PluginConstant.SQL_STRING);
         // set empty content
         ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
-        byteArray.setInnerContent("".getBytes()); //$NON-NLS-1$
+        byteArray.setInnerContent(PluginConstant.EMPTY_STRING.getBytes());
         sourceFileItem.setContent(byteArray);
         
         IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();

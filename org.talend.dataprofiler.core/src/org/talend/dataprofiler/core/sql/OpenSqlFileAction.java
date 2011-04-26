@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.sql;
 import java.io.File;
 import java.util.List;
 
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 
 import org.apache.log4j.Logger;
@@ -74,7 +75,7 @@ public class OpenSqlFileAction extends Action {
             String portableString = location.append(file.getFullPath()).toPortableString();
             try {
                 editorInput = new SQLEditorInput(new File(portableString));
-                ap.openEditor(editorInput, "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
+                ap.openEditor(editorInput, SQLEditor.EDITOR_ID);
             } catch (PartInitException e) {
                 log.error(e, e);
             }

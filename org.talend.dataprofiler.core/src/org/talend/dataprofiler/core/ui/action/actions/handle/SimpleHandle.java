@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Path;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.repository.model.IRepositoryNode;
@@ -64,14 +65,14 @@ public class SimpleHandle implements IDuplicateHandle {
         IPath newFileNamePath = new Path(newLabel).addFileExtension(fileExtension);
         IFile newFile = file.getParent().getFile(newFileNamePath);
 
-        if ("sql".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$
+        if (PluginConstant.SQL_STRING.equalsIgnoreCase(fileExtension)) {
             DQStructureManager.getInstance().createSourceFileItem(
                     WorkspaceUtils.ifileToFile(file),
                     newFile.getFullPath().removeLastSegments(1)
                             .makeRelativeTo(ResourceManager.getSourceFileFolder().getFullPath().removeFirstSegments(1)),
                     newLabel, fileExtension);
             return newFile;
-        } else if ("jrxml".equalsIgnoreCase(fileExtension) || ".jasper".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$ //$NON-NLS-2$
+        } else if (PluginConstant.JRXML_STRING.equalsIgnoreCase(fileExtension) || ".jasper".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$
             JrxmlHandle.createJrxml(
                     newFile.getFullPath().removeLastSegments(1)
                             .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1)), newLabel,

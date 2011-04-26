@@ -76,7 +76,7 @@ public class OpenColumnSelectorAction extends Action implements ICheatSheetActio
             case AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY_VALUE:
                 ColumnDependencyMasterDetailsPage page3 = (ColumnDependencyMasterDetailsPage) editor.getMasterPage();
                 if (params[1] != null) {
-                    if ("A".equalsIgnoreCase(params[1])) {
+                    if ("A".equalsIgnoreCase(params[1])) {//$NON-NLS-1$
                         page3.openColumnsSetASelectionDialog();
                     } else {
                         page3.openColumnsSetBSelectionDialog();

@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
@@ -63,7 +64,7 @@ public class CreateSqlFileWizardPage extends WizardPage {
      * @param folder
      */
     public CreateSqlFileWizardPage(SqlFileParameter parameter) {
-        super(""); //$NON-NLS-1$
+        super(PluginConstant.EMPTY_STRING);
 
         this.parameter = parameter;
         metadata = new HashMap<String, String>();
@@ -89,7 +90,7 @@ public class CreateSqlFileWizardPage extends WizardPage {
 
         // Path:
         Label pathLab = new Label(container, SWT.NONE);
-        pathLab.setText("Path"); //$NON-NLS-1$
+        pathLab.setText(DefaultMessagesImpl.getString("CreateSqlFileWizardPage.Path")); //$NON-NLS-1$
 
         Composite pathContainer = new Composite(container, SWT.NONE);
         pathContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

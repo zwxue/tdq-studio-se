@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 
 /**
@@ -39,7 +40,7 @@ public class WebBrowserPreferencePage extends PreferencePage implements IWorkben
 
     private boolean isBlockWeb;
 
-    public static final String BLOCK_WEB_BROWSER = "BLOCK WEB BROWSER";
+    public static final String BLOCK_WEB_BROWSER = "BLOCK WEB BROWSER";//$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -53,7 +54,7 @@ public class WebBrowserPreferencePage extends PreferencePage implements IWorkben
         top.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         blockWebBtn = new Button(top, SWT.CHECK);
-        blockWebBtn.setText("Block browser help ");
+        blockWebBtn.setText(DefaultMessagesImpl.getString("WebBrowserPreferencePage.blockWebButtonName"));//$NON-NLS-1$
         blockWebBtn.setSelection(isBlockWeb);
         blockWebBtn.addSelectionListener(new SelectionAdapter() {
 

@@ -47,7 +47,7 @@ public class AnalyzeColumnCorrelationAction extends Action {
     TreeSelection selection;
 
     public AnalyzeColumnCorrelationAction() {
-        super("Analyze correlation"); //$NON-NLS-1$
+        super(DefaultMessagesImpl.getString("AnalyzeColumnCorrelationAction.AnalyzeCorr")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
 

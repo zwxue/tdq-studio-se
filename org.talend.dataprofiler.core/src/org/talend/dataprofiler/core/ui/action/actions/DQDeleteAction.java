@@ -59,7 +59,7 @@ public class DQDeleteAction extends DeleteAction {
 
     public DQDeleteAction() {
         super();
-        setText("Delete");
+        setText(DefaultMessagesImpl.getString("DQDeleteAction.delete"));//$NON-NLS-1$
         setId(ActionFactory.DELETE.getId());
         // setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.DELETE_ACTION));
 
@@ -139,8 +139,8 @@ public class DQDeleteAction extends DeleteAction {
             if (physicalDeleteDependencies(dependencies)) {
                 flag = true;
             } else {
-                MessageDialog.openError(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteFailTitle"),
-                        DefaultMessagesImpl.getString("DQDeleteAction.deleteFailMessage"));
+                MessageDialog.openError(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteFailTitle"),//$NON-NLS-1$
+                        DefaultMessagesImpl.getString("DQDeleteAction.deleteFailMessage"));//$NON-NLS-1$
             }
         }
         return flag;
@@ -159,7 +159,7 @@ public class DQDeleteAction extends DeleteAction {
         String lable = node.getObject().getLabel() == null ? PluginConstant.EMPTY_STRING : node.getObject().getLabel();
         boolean flag = DeleteModelElementConfirmDialog.showDialog(null, modEle,
                 dependencies.toArray(new ModelElement[dependencies.size()]),
-                DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable), true);
+                DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable), true);//$NON-NLS-1$
         return flag;
 
     }
@@ -240,7 +240,7 @@ public class DQDeleteAction extends DeleteAction {
             RepositoryNode parent = currentNode.getParent();
             if (parent != null
                     && (parent.getType() == ENodeType.SIMPLE_FOLDER || parent.getLabel().equalsIgnoreCase(
-                            ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", " ")))) {
+                            ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", PluginConstant.SPACE_STRING)))) {//$NON-NLS-1$
                 parent.getChildren(true).remove(currentNode);
             }
         }
@@ -280,8 +280,8 @@ public class DQDeleteAction extends DeleteAction {
     }
 
     private boolean showConfirmDialog(String reportFileName) {
-        return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteForeverTitle"), reportFileName
-                + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("DQDeleteAction.areYouDeleteForever"));
+        return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteForeverTitle"), reportFileName//$NON-NLS-1$
+                + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("DQDeleteAction.areYouDeleteForever"));//$NON-NLS-1$
     }
 
 }

@@ -30,6 +30,7 @@ import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.time.SimpleTimePeriod;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.utils.collections.DoubleValueAggregate;
@@ -209,7 +210,7 @@ public final class ChartDatasetUtils {
     private static String createKey(EList<ModelElement> nominalColumns, int n) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < n; i++) {
-            builder.append(nominalColumns.get(i).getName()).append(" "); //$NON-NLS-1$
+            builder.append(nominalColumns.get(i).getName()).append(PluginConstant.SPACE_STRING); //$NON-NLS-1$
         }
         return builder.toString();
     }

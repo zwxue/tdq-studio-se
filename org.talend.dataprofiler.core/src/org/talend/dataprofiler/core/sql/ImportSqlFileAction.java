@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.sql;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.AbstractImportSourceFileAction;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQFileItem;
@@ -31,7 +33,7 @@ public class ImportSqlFileAction extends AbstractImportSourceFileAction {
      */
     public ImportSqlFileAction(RepositoryNode node) {
         super(node);
-        setText("Import SQL");
+        setText(DefaultMessagesImpl.getString("ImportSqlFileAction.importSql")); //$NON-NLS-1$
     }
 
     /*
@@ -41,7 +43,7 @@ public class ImportSqlFileAction extends AbstractImportSourceFileAction {
      */
     @Override
     protected String[] getFilterExtensions() {
-        return new String[] { "*.sql" };
+        return new String[] { PluginConstant.SQL_SUFFIX };
     }
 
     /*

@@ -134,27 +134,27 @@ public final class ChartDecorator {
         domainAxis.setCategoryMargin(0.01);
         ValueAxis valueAxis = plot.getRangeAxis();
 
-        Font font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);
+        Font font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);//$NON-NLS-1$
 
         render.setBaseItemLabelFont(font);
         // MOD zshen 10998: change the font name 2010-01-16
-        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
+        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);//$NON-NLS-1$
         domainAxis.setLabelFont(font);
 
-        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
+        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);//$NON-NLS-1$
         valueAxis.setLabelFont(font);
 
-        font = new Font("sans-serif", Font.PLAIN, BASE_TICK_LABEL_SIZE);
+        font = new Font("sans-serif", Font.PLAIN, BASE_TICK_LABEL_SIZE);//$NON-NLS-1$
         domainAxis.setTickLabelFont(font);
         valueAxis.setTickLabelFont(font);
 
-        font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);
+        font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);//$NON-NLS-1$
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(font);
         }
 
-        font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);
+        font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);//$NON-NLS-1$
         TextTitle title = chart.getTitle();
         if (title != null) {
             title.setFont(font);
@@ -166,7 +166,7 @@ public final class ChartDecorator {
 
             int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
             if (!isContainsChineseColumn(chart))
-                domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));
+                domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));//$NON-NLS-1$
             domainAxis.setUpperMargin(0.1);
             // MOD klliu bug 14570: Label size too long in Text statistics graph 2010-08-09
             domainAxis.setMaximumCategoryLabelLines(10);
@@ -188,27 +188,27 @@ public final class ChartDecorator {
         ValueAxis domainAxis = plot.getDomainAxis();
         ValueAxis valueAxis = plot.getRangeAxis();
 
-        font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);
+        font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);//$NON-NLS-1$
 
         render.setBaseItemLabelFont(font);
 
-        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
+        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);//$NON-NLS-1$
         domainAxis.setLabelFont(font);
 
-        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);
+        font = new Font("sans-serif", Font.BOLD, BASE_LABEL_SIZE);//$NON-NLS-1$
         valueAxis.setLabelFont(font);
 
-        font = new Font("sans-serif", Font.PLAIN, BASE_TICK_LABEL_SIZE);
+        font = new Font("sans-serif", Font.PLAIN, BASE_TICK_LABEL_SIZE);//$NON-NLS-1$
         domainAxis.setTickLabelFont(font);
         valueAxis.setTickLabelFont(font);
 
-        font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);
+        font = new Font("Tahoma", Font.PLAIN, BASE_LEGEND_LABEL_SIZE);//$NON-NLS-1$
         LegendTitle legend = chart.getLegend();
         if (legend != null) {
             legend.setItemFont(font);
         }
 
-        font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);
+        font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);//$NON-NLS-1$
         TextTitle title = chart.getTitle();
         if (title != null) {
             title.setFont(font);
@@ -242,11 +242,11 @@ public final class ChartDecorator {
      * DOC mzhao 2009-07-28 Bind the indicator with specific color.
      */
     public static enum IndiBindColor {
-        INDICATOR_ROW_COUNT("Row Count", COLOR_7),
-        INDICATOR_NULL_COUNT("Null Count", COLOR_2),
-        INDICATOR_DISTINCT_COUNT("Distinct Count", COLOR_0),
-        INDICATOR_UNIQUE_COUNT("Unique Count", COLOR_1),
-        INDICATOR_DUPLICATE_COUNT("Duplicate Count", COLOR_3);
+        INDICATOR_ROW_COUNT("Row Count", COLOR_7), //$NON-NLS-1$
+        INDICATOR_NULL_COUNT("Null Count", COLOR_2), //$NON-NLS-1$
+        INDICATOR_DISTINCT_COUNT("Distinct Count", COLOR_0), //$NON-NLS-1$
+        INDICATOR_UNIQUE_COUNT("Unique Count", COLOR_1), //$NON-NLS-1$
+        INDICATOR_DUPLICATE_COUNT("Duplicate Count", COLOR_3);//$NON-NLS-1$
 
         String indLabel = null;
 
@@ -288,7 +288,7 @@ public final class ChartDecorator {
      */
     private static boolean isContainsChineseColumn(JFreeChart chart) {
         Object[] columnNames = chart.getCategoryPlot().getDataset().getColumnKeys().toArray();
-        String regEx = "[\u4e00-\u9fa5]";
+        String regEx = "[\u4e00-\u9fa5]";//$NON-NLS-1$
         Pattern pat = Pattern.compile(regEx);
         boolean flg = false;
         for (Object str : columnNames) {

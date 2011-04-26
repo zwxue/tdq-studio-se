@@ -32,6 +32,12 @@ public final class PluginConstant {
 
     public static final int DEFAULT_INT_VALUE = 0;
 
+    public static final String SEMICOLON_STRING = ";";//$NON-NLS-1$
+
+    public static final String COMMA_STRING = ",";//$NON-NLS-1$
+
+    public static final String DOT_STRING = "."; //$NON-NLS-1$
+
     public static final String SPACE_STRING = " "; //$NON-NLS-1$
 
     public static final String PROJECTCREATED_FLAG = "PROJECTCREATED_FLAG"; //$NON-NLS-1$
@@ -43,6 +49,12 @@ public final class PluginConstant {
     public static final String HTML_SUFFIX = "html"; //$NON-NLS-1$
 
     public static final String SQL_SUFFIX = "*.sql"; //$NON-NLS-1$
+
+    public static final String JRXML_STRING = "jrxml"; //$NON-NLS-1$
+
+    public static final String JASPER_STRING = "jasper"; //$NON-NLS-1$
+
+    public static final String SQL_STRING = "sql"; //$NON-NLS-1$
 
     public static final String FILE_SUFFIX = "FILE_SUFFIX"; //$NON-NLS-1$
 

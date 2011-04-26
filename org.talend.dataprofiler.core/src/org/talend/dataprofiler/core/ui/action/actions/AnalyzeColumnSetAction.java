@@ -28,6 +28,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
@@ -60,19 +61,19 @@ public class AnalyzeColumnSetAction extends Action {
     boolean needselection = true;
 
     public AnalyzeColumnSetAction() {
-        super("Analyze Column Set"); //$NON-NLS-1$
+        super(DefaultMessagesImpl.getString("AnalyzeColumnSetAction.Name")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
     }
 
     public AnalyzeColumnSetAction(TdColumn[] columns) {
-        super("Analyze Column Set"); //$NON-NLS-1$
+        super(DefaultMessagesImpl.getString("AnalyzeColumnSetAction.Name")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
         needselection = false;
         this.columns = columns;
     }
 
     public AnalyzeColumnSetAction(IRepositoryNode columns) {
-        super("Analyze Column Set"); //$NON-NLS-1$
+        super(DefaultMessagesImpl.getString("AnalyzeColumnSetAction.Name")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS));
         needselection = false;
         this.nodeColumns = columns;
@@ -83,7 +84,7 @@ public class AnalyzeColumnSetAction extends Action {
      * 
      * @see org.eclipse.jface.action.Action#run()
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")//$NON-NLS-1$
     @Override
     public void run() {
         PackagesAnalyisParameter packaFilterParameter = new PackagesAnalyisParameter();

@@ -304,8 +304,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private void displayResultStatus(final ReturnCode executed) {
         if (log.isInfoEnabled()) {
             int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
-            log.info("Analysis \"" + analysis.getName() + "\" execution code: " + executed + ". Duration: " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    + FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) + " s."); //$NON-NLS-1$
+            log.info(DefaultMessagesImpl
+                    .getString(
+                            "RunAnalysisAction.displayInformation", new Object[] { analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
         }
 
         if (executed.getMessage() != null) {

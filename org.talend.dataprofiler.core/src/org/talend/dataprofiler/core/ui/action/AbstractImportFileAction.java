@@ -28,6 +28,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.FileUtils;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
@@ -85,7 +86,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
     protected Item createItem(File initFile, IPath path) throws Exception {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
-        property.setStatusCode(""); //$NON-NLS-1$
+        property.setStatusCode(PluginConstant.EMPTY_STRING);
         property.setLabel(FileUtils.getName(initFile));
 
         Item item = initItem(initFile);

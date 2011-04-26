@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.database.IDriverService;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
+import org.talend.dataprofiler.core.PluginConstant;
 
 /**
  * 
@@ -111,7 +112,7 @@ public class TOPDriverService implements IDriverService {
 
     private Driver createGenericJDBC(String driverJars, String driverName) throws Exception {
         Driver driver = null;
-        String[] driverJarPath = driverJars.split(";"); //$NON-NLS-1$
+        String[] driverJarPath = driverJars.split(PluginConstant.SEMICOLON_STRING);
         try {
             int driverCount = 0;
             URL[] driverUrl = new URL[driverJarPath.length];

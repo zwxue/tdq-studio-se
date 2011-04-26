@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.sql;
 
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 
 import org.apache.log4j.Logger;
@@ -89,7 +90,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
                 CorePlugin.getDefault().refreshWorkSpace();
                 CorePlugin.getDefault().refreshDQView();
 
-                ap.openEditor(new SQLEditorInput(fileWizard.getSqlFile()), "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor"); //$NON-NLS-1$
+                ap.openEditor(new SQLEditorInput(fileWizard.getSqlFile()), SQLEditor.EDITOR_ID);
             } catch (PartInitException e) {
                 log.error(e, e);
             }

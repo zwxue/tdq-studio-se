@@ -22,6 +22,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -57,9 +58,9 @@ public class PreviewColumnAction extends Action {
                 ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(oneColumn);
                 String tableName = ColumnSetNameHelper.getColumnSetQualifiedName(dataprovider, columnSetOwner);
                 DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
-                String columnClause = ""; //$NON-NLS-1$
+                String columnClause = PluginConstant.EMPTY_STRING;
                 for (TdColumn column : columns) {
-                    columnClause += language.quote(column.getName()) + ","; //$NON-NLS-1$
+                    columnClause += language.quote(column.getName()) + PluginConstant.COMMA_STRING;
                 }
                 columnClause = columnClause.substring(0, columnClause.length() - 1);
                 String query = "select " + tableName + "." + columnClause + " from " + tableName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

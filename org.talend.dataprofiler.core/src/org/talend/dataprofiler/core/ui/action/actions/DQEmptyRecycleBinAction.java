@@ -72,7 +72,7 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
         }
         if (hasDependencyItem) {
             DeleteModelElementConfirmDialog.showDialog(null, children,
-                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));
+                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));//$NON-NLS-1$
             return;
         }
 

@@ -18,6 +18,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
@@ -69,7 +70,7 @@ public class CreateDBConnectionAction extends AbstractMetadataCreationAction {
 
     @Override
     protected String getActionLabel() {
-        return "Create Connection";
+        return DefaultMessagesImpl.getString("CreateDBConnectionAction.createConnection"); //$NON-NLS-1$
     }
 
     @Override

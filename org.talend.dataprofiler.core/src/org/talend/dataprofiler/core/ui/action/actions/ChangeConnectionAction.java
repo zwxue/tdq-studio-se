@@ -49,6 +49,7 @@ import org.talend.dataprofiler.core.ui.dialog.AnalyzedElementSynDialog.SynTreeMo
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedPackageSynDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -91,7 +92,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
     private ReturnCode changeActionStatus;
 
     public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, Connection tdProvider) {
-        Object connectionObj = masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
+        Object connectionObj = masterPage.getConnCombo().getData(
+                masterPage.getConnCombo().getSelectionIndex() + PluginConstant.EMPTY_STRING); //$NON-NLS-1$
         if (connectionObj instanceof DBConnectionRepNode || connectionObj instanceof MDMConnectionRepNode
                 || connectionObj instanceof DFConnectionRepNode) {
             this.newDataProvider = ((ConnectionItem) (((RepositoryNode) connectionObj).getObject().getProperty().getItem()))

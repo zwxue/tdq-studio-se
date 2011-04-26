@@ -355,7 +355,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
                 }
             }
 
-            return ""; //$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING; //$NON-NLS-1$
         }
 
         static LocalToLanguageEnum findLocal(String locale) {

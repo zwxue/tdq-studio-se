@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonMenuConstants;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnAction;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -70,7 +71,7 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
         if (isSelectedColumnLevel(currentSelection)) {
-            IMenuManager submenu = new MenuManager("Column Analysis", NEW_MENU_NAME);
+            IMenuManager submenu = new MenuManager(DefaultMessagesImpl.getString("AnalyzeColumnProvider.columnAnalysis"), NEW_MENU_NAME);//$NON-NLS-1$
             menu.insertAfter(ICommonMenuConstants.GROUP_NEW, submenu);
             analyzeColumnAction.setColumnSelection(currentSelection);
             submenu.add(analyzeColumnAction);

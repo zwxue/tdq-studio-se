@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -85,7 +86,7 @@ public class RenameFolderAction extends Action {
                 // close opend editors
                 // List<SourceFileRepNode> sourceFileRepNodes = RepositoryNodeHelper.getSourceFileRepNodes(node, true);
                 // RepNodeUtils.closeModelElementEditor(sourceFileRepNodes, true);
-                List<IFile> files = FilesUtils.getFiles(this.obj, "sql", true);
+                List<IFile> files = FilesUtils.getFiles(this.obj, PluginConstant.SQL_STRING, true);
                 RepNodeUtils.closeFileEditor(files, true);
 
                 obj.move(folder.getFullPath(), true, null);

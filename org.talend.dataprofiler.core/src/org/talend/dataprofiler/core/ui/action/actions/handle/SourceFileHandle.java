@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Property;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -49,7 +50,7 @@ public class SourceFileHandle extends SimpleHandle {
         IPath newFileNamePath = new Path(newLabel).addFileExtension(fileExtension);
         IFile newFile = file.getParent().getFile(newFileNamePath);
 
-        if ("sql".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$
+        if (PluginConstant.SQL_STRING.equalsIgnoreCase(fileExtension)) {
             DQStructureManager.getInstance().createSourceFileItem(
                     WorkspaceUtils.ifileToFile(file),
                     newFile.getFullPath().removeLastSegments(1)

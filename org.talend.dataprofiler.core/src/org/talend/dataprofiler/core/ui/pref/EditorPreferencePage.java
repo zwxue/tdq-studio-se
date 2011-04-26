@@ -32,6 +32,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.PluginConstant;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -61,7 +62,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
     // default element count in per page
     public static final String DEFAULT_PAGE_SIZE = "5"; //$NON-NLS-1$
 
-    public static final String HIDE_GRAPHICS_FOR_RESULT_PAGE = "HIDE_GRAPHICS_FOR_RESULT_PAGE";
+    public static final String HIDE_GRAPHICS_FOR_RESULT_PAGE = "HIDE_GRAPHICS_FOR_RESULT_PAGE"; //$NON-NLS-1$
 
     private Text pageSizeText;
 
@@ -275,7 +276,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         pageSizeText = new Text(pageSizeComp, SWT.BORDER);
         String pageSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(ANALYZED_ITEMS_PER_PAGE);
-        if (pageSize == null || pageSize.equals("")) { //$NON-NLS-1$
+        if (pageSize == null || pageSize.equals(PluginConstant.EMPTY_STRING)) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
         pageSizeText.setText(pageSize);
@@ -288,7 +289,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
         dqruleSizeText = new Text(pageSizeComp, SWT.BORDER);
         String dqruleSize = ResourcesPlugin.getPlugin().getPluginPreferences().getString(DQ_RULES_PER_PAGE);
-        if (dqruleSize == null || dqruleSize.equals("")) { //$NON-NLS-1$
+        if (dqruleSize == null || dqruleSize.equals(PluginConstant.EMPTY_STRING)) {
             dqruleSize = DEFAULT_PAGE_SIZE;
         }
         dqruleSizeText.setText(dqruleSize);
@@ -351,13 +352,13 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
             ResourcesPlugin.getPlugin().savePluginPreferences();
             return super.performOk();
         } else {
-            String msg = DefaultMessagesImpl.getString("PerformancePreferencePage.pageSizeMsg");
+            String msg = DefaultMessagesImpl.getString("PerformancePreferencePage.pageSizeMsg");//$NON-NLS-1$
             if (!checkPageSize(this.dqruleSizeText.getText())) {
-                msg = DefaultMessagesImpl.getString("PerformancePreferencePage.dqruleSizeMsg");
+                msg = DefaultMessagesImpl.getString("PerformancePreferencePage.dqruleSizeMsg");//$NON-NLS-1$
             }
             MessageDialogWithToggle.openInformation(getShell(), DefaultMessagesImpl
                     .getString("PerformancePreferencePage.information"), //$NON-NLS-1$
-                    msg); //$NON-NLS-1$ //$NON-NLS-2$
+                    msg);
             return false;
         }
         // ~10834
@@ -389,7 +390,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
      */
     public static String getDQRuleSize() {
         String result = ResourcesPlugin.getPlugin().getPluginPreferences().getString(DQ_RULES_PER_PAGE);
-        if (result == null || "".equals(result.trim())) {
+        if (result == null || PluginConstant.EMPTY_STRING.equals(result.trim())) {
             result = DEFAULT_PAGE_SIZE;
         }
         return result;

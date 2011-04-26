@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.markers.MarkerViewUtil;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TdResourceModel;
 import org.talend.dataprofiler.core.ui.dialog.TdTaskPropertiesDialog;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -44,7 +45,7 @@ public class TdAddTaskAction extends Action {
     private Object navObj = null;
 
     public TdAddTaskAction(Shell shell, Object me) {
-        super("Add task..."); //$NON-NLS-1$
+        super(DefaultMessagesImpl.getString("TdAddTaskAction.addTask")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_ACTION));
         this.shell = shell;
         navObj = me;

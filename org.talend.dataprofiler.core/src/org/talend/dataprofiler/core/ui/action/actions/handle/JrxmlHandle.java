@@ -37,6 +37,7 @@ import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.reports.AnalysisMap;
@@ -79,7 +80,7 @@ public class JrxmlHandle extends SimpleHandle {
         IPath newFileNamePath = new Path(newLabel).addFileExtension(fileExtension);
         IFile newFile = file.getParent().getFile(newFileNamePath);
 
-        if ("jrxml".equalsIgnoreCase(fileExtension) || ".jasper".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (PluginConstant.JRXML_STRING.equalsIgnoreCase(fileExtension) || ".jasper".equalsIgnoreCase(fileExtension)) { //$NON-NLS-1$
             createJrxml(
                     newFile.getFullPath().removeLastSegments(1)
                             .makeRelativeTo(ResourceManager.getJRXMLFolder().getFullPath().removeFirstSegments(1)), newLabel,
@@ -121,9 +122,9 @@ public class JrxmlHandle extends SimpleHandle {
 
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setId(EcoreUtil.generateUUID());
-        property.setLabel(StringUtilities.tokenize(targetFile.getName(), ".").get(0));
+        property.setLabel(StringUtilities.tokenize(targetFile.getName(), PluginConstant.DOT_STRING).get(0));
         property.setCreationDate(new Date());
-        property.setVersion("0.1");
+        property.setVersion("0.1");//$NON-NLS-1$
 
         TDQJrxmlItem item = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
         // item.setFilename(targetFile.getName());
@@ -162,7 +163,7 @@ public class JrxmlHandle extends SimpleHandle {
     public static TDQJrxmlItem createJrxml(IPath path, String label, File initFile, String extendtion) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
-        property.setStatusCode(""); //$NON-NLS-1$
+        property.setStatusCode(PluginConstant.EMPTY_STRING);
         property.setLabel(label);
 
         TDQJrxmlItem routineItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQJrxmlItem();

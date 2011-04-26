@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFolder;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.UDIHelper;
@@ -87,7 +88,7 @@ public class UDIHandle extends EMFResourceHandle {
                 || label.equals(PluginConstant.PATTERN_LOW_FREQUENCY_TABLE)) {
             return returnCode;
         }
-        returnCode.setMessage("This '" + label + "' of Indicator's type could not be duplicated!");//$NON-NLS-1$
+        returnCode.setMessage(DefaultMessagesImpl.getString("UDIHandle.TypeDuplicated", label));//$NON-NLS-1$
 
         returnCode.setOk(false);
         return returnCode;

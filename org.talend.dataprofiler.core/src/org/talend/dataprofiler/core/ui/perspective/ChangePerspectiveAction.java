@@ -79,7 +79,7 @@ public class ChangePerspectiveAction extends Action {
      * DOC qzhang ChangePerspectiveAction constructor comment.
      */
     public ChangePerspectiveAction(boolean toolbar) {
-        super(""); //$NON-NLS-1$
+        super(PluginConstant.SPACE_STRING); //$NON-NLS-1$
         this.toolbar = toolbar;
         action = this;
     }
