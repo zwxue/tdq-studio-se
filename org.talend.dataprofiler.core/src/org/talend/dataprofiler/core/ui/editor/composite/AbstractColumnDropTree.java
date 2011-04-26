@@ -114,7 +114,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         indicatorItem.setImage(0, getIndicatorImage(unit));
 
         String indicatorName = getIndicatorName(indicatorUnit);
-        String label = indicatorName == null ? "unknown indicator" : indicatorName;
+        String label = indicatorName == null ? "unknown indicator" : indicatorName;//$NON-NLS-1$
         indicatorItem.setText(0, label);
 
         TreeEditor optionEditor;

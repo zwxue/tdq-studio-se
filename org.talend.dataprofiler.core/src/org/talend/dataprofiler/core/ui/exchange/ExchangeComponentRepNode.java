@@ -48,6 +48,6 @@ public class ExchangeComponentRepNode extends RepositoryNode {
 
     @Override
     public String getLabel() {
-        return this.label == null ? "" : this.label;
+        return this.label == null ? "" : this.label;//$NON-NLS-1$ 
     }
 }

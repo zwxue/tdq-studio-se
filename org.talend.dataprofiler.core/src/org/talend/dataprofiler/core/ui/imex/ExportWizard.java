@@ -42,7 +42,7 @@ public class ExportWizard extends Wizard {
      * DOC bZhou ExportWizard constructor comment.
      */
     public ExportWizard(String specifiedPath) {
-        setWindowTitle("Export Item");
+        setWindowTitle("Export Item");//$NON-NLS-1$ 
 
         this.exportPage = new ExportWizardPage(specifiedPath);
     }
@@ -71,7 +71,7 @@ public class ExportWizard extends Wizard {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("Export Item", records.length);
+                monitor.beginTask("Export Item", records.length);//$NON-NLS-1$ 
 
                 writer.write(records, monitor);
 

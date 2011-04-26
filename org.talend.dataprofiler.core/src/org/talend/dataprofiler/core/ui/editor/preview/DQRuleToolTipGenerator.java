@@ -36,8 +36,8 @@ public class DQRuleToolTipGenerator extends StandardCategoryToolTipGenerator {
             CustomerDefaultCategoryDataset customerDataset = (CustomerDefaultCategoryDataset) dataset;
             ChartDataEntity[] dataEntities = customerDataset.getDataEntities();
             String temp = dataEntities[column].getRangeAsString();
-            if (temp != null && !"".equals(temp.trim())) {
-                result = temp + "\n" + result;
+            if (temp != null && !"".equals(temp.trim())) {//$NON-NLS-1$ 
+                result = temp + "\n" + result;//$NON-NLS-1$ 
             }
         }
         return result;

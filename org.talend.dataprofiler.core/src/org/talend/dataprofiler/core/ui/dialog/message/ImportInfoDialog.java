@@ -99,7 +99,7 @@ public class ImportInfoDialog extends MessageDialog {
                         Image errorImg = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
                         rcItem.setImage(errorImg);
                         imageLabel.setImage(getWarningImage());
-                        messageLabel.setText(DefaultMessagesImpl.getString("ImportInfoDialog.ERROR_TSK"));
+                        messageLabel.setText(DefaultMessagesImpl.getString("ImportInfoDialog.ERROR_TSK"));//$NON-NLS-1$ 
                     }
                     rcItem.setText(rc.getMessage());
                 }

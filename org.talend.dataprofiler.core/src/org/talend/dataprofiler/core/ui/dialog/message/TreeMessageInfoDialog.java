@@ -66,7 +66,7 @@ public class TreeMessageInfoDialog extends MessageDialog {
             layout.numColumns = 1;
             checkComp.setLayout(layout1);
             checkButton = new Button(checkComp, SWT.CHECK);
-            checkButton.setText(DefaultMessagesImpl.getString("DQDeleteAction.deleteAllDependency"));
+            checkButton.setText(DefaultMessagesImpl.getString("DQDeleteAction.deleteAllDependency"));//$NON-NLS-1$
             checkButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override

@@ -158,7 +158,7 @@ public final class ChartTableFactory {
                                                                 .getActivePage()
                                                                 .openEditor(
                                                                         new DrillDownEditorInput(analysis, dataEntity, itemEntity),
-                                                                        "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");
+                                                                        "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
                                                     } catch (PartInitException e1) {
                                                         e1.printStackTrace();
                                                     }
@@ -170,7 +170,7 @@ public final class ChartTableFactory {
                                 }
                             } catch (NullPointerException nullexception) {
 
-                                Log.error("drill down the data shuold run the analysis firstly." + nullexception);
+                                Log.error("drill down the data shuold run the analysis firstly." + nullexception);//$NON-NLS-1$
                             }
                             // MOD by zshen feature 11574:add menu "Generate regular pattern" to date pattern
                             if (isDatePatternFrequencyIndicator(indicator)) {
@@ -189,7 +189,7 @@ public final class ChartTableFactory {
                                         new CreatePatternAction(
                                                 folder,
                                                 ExpressionType.REGEXP,
-                                                "'" + regex + "'", model == null ? "" : "match \"" + model + "\"", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$
+                                                "'" + regex + "'", model == null ? "" : "match \"" + model + "\"", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$//$NON-NLS-5$ 
                                     }
 
                                 });
@@ -208,10 +208,10 @@ public final class ChartTableFactory {
                                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
                                 } else if (isPatternMatchingIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));
+                                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
                                 } else if (isAllMatchIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText("Generate an ETL job to handle rows");
+                                    item.setText("Generate an ETL job to handle rows");//$NON-NLS-1$ 
                                 }
 
                                 if (item != null) {
@@ -252,7 +252,7 @@ public final class ChartTableFactory {
     public static void createPattern(Analysis analysis, MenuItemEntity itemEntity, final PatternTransformer pattTransformer) {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
         String query = itemEntity.getQuery();
-        String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));
+        String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));//$NON-NLS-1$ //$NON-NLS-2$
         IFolder folder = ResourceManager.getPatternRegexFolder();
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }

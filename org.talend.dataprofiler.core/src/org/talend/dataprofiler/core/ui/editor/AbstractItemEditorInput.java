@@ -57,7 +57,7 @@ public class AbstractItemEditorInput implements IEditorInput {
     }
 
     public String getPath() {
-        return item.getState().getPath() + "/";
+        return item.getState().getPath() + "/";//$NON-NLS-1$ 
     }
 
     @Override

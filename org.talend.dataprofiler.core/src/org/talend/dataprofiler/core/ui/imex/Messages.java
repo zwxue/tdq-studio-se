@@ -36,7 +36,7 @@ public final class Messages {
         try {
             return RESOURCE_BUNDLE.getString(key);
         } catch (MissingResourceException e) {
-            return '!' + key + '!';
+            return '!' + key + '!';//$NON-NLS-1$ //$NON-NLS-2$ 
         }
     }
 }

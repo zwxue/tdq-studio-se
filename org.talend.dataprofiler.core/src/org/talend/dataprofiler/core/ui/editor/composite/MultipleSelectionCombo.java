@@ -164,12 +164,12 @@ public class MultipleSelectionCombo extends Composite {
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < usrSelection.length; i++) {
                 if (i > 0)
-                    sb.append(",");
+                    sb.append(",");//$NON-NLS-1$
                 sb.append(items.get(usrSelection[i]));
             }
             textContent.setText(sb.toString());
         } else {
-            textContent.setText("");
+            textContent.setText("");//$NON-NLS-1$
         }
     }
 

@@ -79,7 +79,7 @@ public class IndicatorEditor extends CommonFormEditor {
     @Override
     protected void addPages() {
 
-        masterPage = new IndicatorDefinitionMaterPage(this, "Master Page", "Indicator Definition");
+        masterPage = new IndicatorDefinitionMaterPage(this, "Master Page", "Indicator Definition");//$NON-NLS-1$//$NON-NLS-2$
         try {
             addPage(masterPage);
         } catch (PartInitException e) {

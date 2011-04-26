@@ -95,7 +95,7 @@ public class FileSystemExportWriter implements IExportWriter {
             for (TdXmlSchema schema : tdXmlDocumentList) {
                 IPath srcPath = itemResPath.removeLastSegments(1).append(schema.getXsdFilePath());
                 if (!srcPath.toFile().exists()) {
-                    log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");
+                    log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");//$NON-NLS-1$ //$NON-NLS-2$ 
                     break;
                 }
                 IPath desPath = itemDesPath.removeLastSegments(1).append(new Path(schema.getXsdFilePath()));
@@ -126,10 +126,10 @@ public class FileSystemExportWriter implements IExportWriter {
 
                 Map<IPath, IPath> toImportMap = mapping(record);
 
-                monitor.subTask("Exporting " + record.getName());
+                monitor.subTask("Exporting " + record.getName());//$NON-NLS-1$ 
 
                 if (record.isValid()) {
-                    log.info("Exporting " + record.getFile().getAbsolutePath());
+                    log.info("Exporting " + record.getFile().getAbsolutePath());//$NON-NLS-1$ 
 
                     for (IPath resPath : toImportMap.keySet()) {
                         IPath desPath = toImportMap.get(resPath);
@@ -167,7 +167,7 @@ public class FileSystemExportWriter implements IExportWriter {
         if (resFile.exists()) {
             FilesUtils.copyFile(resFile, desFile);
         } else {
-            log.warn("Export failed! " + resFile.getAbsolutePath() + " is not existed");
+            log.warn("Export failed! " + resFile.getAbsolutePath() + " is not existed");//$NON-NLS-1$ //$NON-NLS-2$ 
         }
     }
 
@@ -179,7 +179,7 @@ public class FileSystemExportWriter implements IExportWriter {
      * [])
      */
     public void finish(ItemRecord[] records) throws IOException, CoreException {
-        IFile projFile = ResourceManager.getRootProject().getFile("talend.project");
+        IFile projFile = ResourceManager.getRootProject().getFile("talend.project");//$NON-NLS-1$ 
         writeSysFile(projFile);
 
         IFile definitonFile = DefinitionHandler.getTalendDefinitionFile();
@@ -244,7 +244,7 @@ public class FileSystemExportWriter implements IExportWriter {
         List<String> errors = new ArrayList<String>();
 
         if (basePath == null || !basePath.toFile().exists()) {
-            errors.add("The root directory does not exist");
+            errors.add("The root directory does not exist");//$NON-NLS-1$ 
         }
 
         return errors;

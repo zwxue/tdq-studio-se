@@ -39,7 +39,7 @@ ITableLabelProvider {
 		case 1:
 			return para.getValue();
 		default:
-			throw new RuntimeException("Should not happen");
+            throw new RuntimeException("Should not happen");//$NON-NLS-1$
 		}
 
 	}

@@ -34,7 +34,7 @@ public class ImportWizard extends Wizard {
     private ImportWizardPage importPage;
 
     public ImportWizard() {
-        setWindowTitle("Import Item");
+        setWindowTitle("Import Item");//$NON-NLS-1$ 
 
         this.importPage = new ImportWizardPage();
     }
@@ -78,7 +78,7 @@ public class ImportWizard extends Wizard {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("Import Item", records.length);
+                monitor.beginTask("Import Item", records.length);//$NON-NLS-1$ 
 
                 writer.write(records, monitor);
 

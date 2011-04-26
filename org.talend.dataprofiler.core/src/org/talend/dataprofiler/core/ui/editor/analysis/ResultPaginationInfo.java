@@ -265,7 +265,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                                     .getActivePage()
                                                     .openEditor(
                                                             new DrillDownEditorInput(analysis, currentDataEntity, itemEntity),
-                                                            "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");
+                                                            "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
                                         } catch (PartInitException e1) {
                                             e1.printStackTrace();
                                         }

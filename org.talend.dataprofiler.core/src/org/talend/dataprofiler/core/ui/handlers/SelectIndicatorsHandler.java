@@ -36,7 +36,7 @@ public class SelectIndicatorsHandler extends AbstractHandler {
             Object dialog = activeShell.getData();
             if (dialog instanceof IndicatorSelectDialog) {
                 ((IndicatorSelectDialog) dialog).selectAllIndicators(event.getCommand().getId().equals(
-                        "org.talend.dataprofiler.core.selectAllIndicators"));
+"org.talend.dataprofiler.core.selectAllIndicators"));//$NON-NLS-1$ 
             }
         }
         return null;

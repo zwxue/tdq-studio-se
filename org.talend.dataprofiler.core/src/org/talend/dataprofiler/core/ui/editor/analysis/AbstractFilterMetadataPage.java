@@ -408,7 +408,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private void createReloadDatabasesButton(Composite sectionClient) {
         if (isConnectionAnalysis()) {
             reloadDatabasesBtn = new Button(sectionClient, SWT.CHECK);
-            reloadDatabasesBtn.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ReloadDatabases"));
+            reloadDatabasesBtn.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ReloadDatabases"));//$NON-NLS-1$
 
             reloadDatabasesBtn.setSelection(AnalysisHelper.getReloadDatabases(analysis));
             reloadDatabasesBtn.addMouseListener(new MouseListener() {
@@ -793,7 +793,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD gdbu 2011-3-3 bug 19179
         // remove the space from analysis name
-        this.analysis.setName(this.analysis.getName().replace(" ", ""));
+        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         // for (Domain domain : this.analysis.getParameters().getDataFilter()) {
         // domain.setName(this.analysis.getName());
         // }
@@ -1027,141 +1027,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         return cataUIEleList;
     }
 
-    // protected void displayTableAndViewComp(final SchemaIndicator schemaIndicator) {
-    // tableAndViewComposite.setVisible(true);
-    // List<TableIndicator> indicatorTableList = (List<TableIndicator>) schemaIndicator.getTableIndicators();
-    // if (tableOfCatalogOrSchemaViewer == null) {
-    // tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
-    // | SWT.SINGLE);
-    // final Table catalogOrSchemaTable = tableOfCatalogOrSchemaViewer.getTable();
-    // catalogOrSchemaTable.setHeaderVisible(true);
-    // catalogOrSchemaTable.setLinesVisible(true);
-    // GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
-    // layoutData.heightHint = 150;
-    // catalogOrSchemaTable.setLayoutData(layoutData);
-    // String[] columnTexts = new String[] {
-    //                    DefaultMessagesImpl.getString("AbstractFilterMetadataPage.Table"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.rows"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.keys"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.indexes") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    // createSorterColumns(tableOfCatalogOrSchemaViewer, columnTexts, tableSorters, COLUMN_TABLE_WIDTH);
-    // TableOfCatalogOrSchemaProvider providerTable = new TableOfCatalogOrSchemaProvider();
-    // tableOfCatalogOrSchemaViewer.setLabelProvider(providerTable);
-    // tableOfCatalogOrSchemaViewer.setContentProvider(providerTable);
-    //
-    // final TableCursor cursor = new TableCursor(catalogOrSchemaTable, SWT.NONE);
-    // cursor.setBackground(catalogOrSchemaTable.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION));
-    // cursor.setForeground(catalogOrSchemaTable.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
-    // cursor.setLayout(new FillLayout());
-    // // cursor.setVisible(true);
-    // final Menu menu = new Menu(catalogOrSchemaTable);
-    // MenuItem keyitem = new MenuItem(menu, SWT.PUSH);
-    //            keyitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewKeys")); //$NON-NLS-1$
-    // keyitem.setImage(ImageLib.getImage(ImageLib.PK_DECORATE));
-    //
-    // final Menu menu1 = new Menu(catalogOrSchemaTable);
-    // MenuItem indexitem = new MenuItem(menu1, SWT.PUSH);
-    //            indexitem.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ViewIndexes")); //$NON-NLS-1$
-    // indexitem.setImage(ImageLib.getImage(ImageLib.INDEX_VIEW));
-    //
-    // final Menu menu2 = new Menu(catalogOrSchemaTable);
-    // MenuItem tableAnalysisitem = new MenuItem(menu2, SWT.PUSH);
-    //            tableAnalysisitem.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
-    // tableAnalysisitem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
-    //
-    // // catalogOrSchemaTable.setMenu(menu);
-    // keyitem.addSelectionListener(new SelectionAdapter() {
-    //
-    // public void widgetSelected(SelectionEvent e) {
-    // TableItem tableItem = cursor.getRow();
-    // String tableName = tableItem.getText(0);
-    // Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
-    // // MOD qiongli bug 13093,2010-7-2
-    // if (currentCatalogIndicator != null)
-    // parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
-    //
-    // TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
-    //                            tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
-    //
-    // if (!findSqlExplorerTableNode.isOk()) {
-    // // log.error(findSqlExplorerTableNode.getMessage());
-    // }
-    // }
-    //
-    // });
-    //
-    // indexitem.addSelectionListener(new SelectionAdapter() {
-    //
-    // public void widgetSelected(SelectionEvent e) {
-    // TableItem tableItem = cursor.getRow();
-    // String tableName = tableItem.getText(0);
-    // Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
-    // // MOD qiongli bug 13093,2010-7-2
-    // if (currentCatalogIndicator != null)
-    // parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
-    //
-    // TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
-    //                            tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
-    //
-    // if (!findSqlExplorerTableNode.isOk()) {
-    // // log.error(findSqlExplorerTableNode.getMessage());
-    // }
-    // }
-    //
-    // });
-    //
-    // tableAnalysisitem.addSelectionListener(new SelectionAdapter() {
-    //
-    // public void widgetSelected(SelectionEvent e) {
-    // TableItem tableItem = cursor.getRow();
-    // runTableAnalysis(tableItem.getText(0));
-    // }
-    //
-    // });
-    //
-    // cursor.addMenuDetectListener(new MenuDetectListener() {
-    //
-    // public void menuDetected(MenuDetectEvent e) {
-    // int column = cursor.getColumn();
-    // if (column == TABLE_COLUMN_INDEX) {
-    // cursor.setMenu(menu2);
-    // menu2.setVisible(true);
-    // } else if (column == VIEW_COLUMN_INDEXES) {
-    // cursor.setMenu(menu1);
-    // menu1.setVisible(true);
-    // } else if (column == VIEW_COLUMN_INDEX) {
-    // cursor.setMenu(menu);
-    // menu.setVisible(true);
-    // } else {
-    // cursor.setMenu(null);
-    // }
-    // }
-    // });
-    // viewOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
-    // | SWT.FULL_SELECTION);
-    // Table tableCatalogOrSchemaView = viewOfCatalogOrSchemaViewer.getTable();
-    // tableCatalogOrSchemaView.setHeaderVisible(true);
-    // tableCatalogOrSchemaView.setLinesVisible(true);
-    // layoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
-    // layoutData.heightHint = 150;
-    // tableCatalogOrSchemaView.setLayoutData(layoutData);
-    // columnTexts = new String[] {
-    //                    DefaultMessagesImpl.getString("AbstractFilterMetadataPage.view"), DefaultMessagesImpl.getString("AbstractFilterMetadataPage.rows") }; //$NON-NLS-1$ //$NON-NLS-2$
-    // createSorterColumns(viewOfCatalogOrSchemaViewer, columnTexts, viewSorters, COLUMN_VIEW_WIDTH);
-    // ViewOfCatalogOrSchemaProvider viewProvider = new ViewOfCatalogOrSchemaProvider();
-    // viewOfCatalogOrSchemaViewer.setLabelProvider(viewProvider);
-    // viewOfCatalogOrSchemaViewer.setContentProvider(viewProvider);
-    // }
-    // tableOfCatalogOrSchemaViewer.getTable().setMenu(null);
-    // tableOfCatalogOrSchemaViewer.setInput(indicatorTableList);
-    // List<ViewIndicator> indicatorViewList = (List<ViewIndicator>) schemaIndicator.getViewIndicators();
-    //
-    // viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
-    // // MOD xqliu 2009-11-05 bug 9521
-    // tableAndViewComposite.pack();
-    // statisticalSection.pack();
-    // statisticalSection.layout();
-    // // ~
-    // form.reflow(true);
-    //
-    // }
 
     private void createSorterColumns(final TableViewer tableViewer, String[] columnTexts, ViewerSorter[][] sorters,
             int columnWidth) {
@@ -1219,10 +1084,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         // ADD gdbu 2011-3-3 bug 19179
 
-        this.nameText.setText(this.nameText.getText().replace(" ", ""));
+        this.nameText.setText(this.nameText.getText().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         if (this.nameText.getText().length() == 0) {
             this.nameText.setText(this.analysis.getName());
-            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);
+            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);//$NON-NLS-1$
         }
         String elementName = this.nameText.getText();
         List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
@@ -1230,10 +1095,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             if (elementName.equals(this.analysis.getName())) {
                 // if new name equals itself's old name ,return true
                 return new ReturnCode(true);
-            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {
+            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
                 // if new name equals one of tree-list's name,return false
                 this.nameText.setText(this.analysis.getName());
-                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);
+                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);//$NON-NLS-1$
             }
         }
 
@@ -1286,8 +1151,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     // }
 
     protected void createContextMenuFor(final StructuredViewer viewer) {
-        final MenuManager contextMenu = new MenuManager("#PopUp");
-        contextMenu.add(new Separator("additions"));
+        final MenuManager contextMenu = new MenuManager("#PopUp");//$NON-NLS-1$
+        contextMenu.add(new Separator("additions"));//$NON-NLS-1$
         contextMenu.setRemoveAllWhenShown(true);
         contextMenu.addMenuListener(new IMenuListener() {
 

@@ -464,8 +464,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     public void doSave(IProgressMonitor monitor) {
         boolean checkDBConnection = checkDBConnectionWithProgress().isOk();
         if (!checkDBConnection) {
-            String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");
-            String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");
+            String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");//$NON-NLS-1$
+            String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");//$NON-NLS-1$
             if (Window.CANCEL == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
                     new ModelElement[] { connection }, dialogTitle, dialogMessage)) {
                 return;
@@ -506,8 +506,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     private ReturnCode impactAnalyses() {
 
         ReturnCode rc = new ReturnCode();
-        String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.impactAnalyses");
-        String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");
+        String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.impactAnalyses");//$NON-NLS-1$
+        String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");//$NON-NLS-1$
         // MOD klliu 2010-07-06 bug 14095: unnecessary wizard
         if (this.isUrlChanged || this.isLoginChanged || this.isPassWordChanged) {
             rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
@@ -569,7 +569,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         JavaSqlFactory.setPassword(connection, passwordText.getText());
         JavaSqlFactory.setURL(connection, urlText.getText());
         // MOD zshen for bug 12327:to save driverClassName.
-        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {
+        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {//$NON-NLS-1$
             ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());
         }
         // ~12327

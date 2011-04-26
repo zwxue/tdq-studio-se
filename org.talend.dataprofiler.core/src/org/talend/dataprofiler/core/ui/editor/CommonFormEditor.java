@@ -124,7 +124,7 @@ public abstract class CommonFormEditor extends FormEditor {
         try {
             updateDocumentProvider(input);
         } catch (CoreException e) {
-            log.error("Install the document provider is failture when created the editor of " + input.getName());
+            log.error("Install the document provider is failture when created the editor of " + input.getName());//$NON-NLS-1$ 
         }
     }
 

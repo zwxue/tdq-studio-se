@@ -134,7 +134,7 @@ public class ItemRecord {
             computeDependencies();
         } catch (Exception e) {
             if (!isSQL()) {
-                String errorMessage = "Can't initialize element [" + getName() + "] : " + e.getMessage();
+                String errorMessage = "Can't initialize element [" + getName() + "] : " + e.getMessage();//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 log.error(errorMessage);
                 this.errors.add(errorMessage);
             }
@@ -214,7 +214,7 @@ public class ItemRecord {
             TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, element.getTaggedValue());
             if (tv != null) {
                 for (IFile udiJarFile : UDIUtils.getLibJarFileList()) {
-                    if (Arrays.binarySearch(tv.getValue().split("\\|\\|"), udiJarFile.getName()) >= 0) {
+                    if (Arrays.binarySearch(tv.getValue().split("\\|\\|"), udiJarFile.getName()) >= 0) {//$NON-NLS-1$
                         dependencyMap.put(udiJarFile.getLocation().toFile(), null);
                     }
                 }
@@ -262,7 +262,7 @@ public class ItemRecord {
      */
     public void addError(String error) {
         if (elementEName != null) {
-            error = "[" + elementEName.name() + "]" + error;
+            error = "[" + elementEName.name() + "]" + error;//$NON-NLS-1$ //$NON-NLS-2$
         }
         this.errors.add(error);
     }

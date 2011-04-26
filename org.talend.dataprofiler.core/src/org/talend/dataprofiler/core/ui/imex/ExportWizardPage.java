@@ -220,7 +220,7 @@ public class ExportWizardPage extends WizardPage {
                 if (result != null) {
                     IPath path = new Path(result);
                     if (StringUtils.isBlank(path.getFileExtension())) {
-                        path = path.addFileExtension("zip");
+                        path = path.addFileExtension("zip");//$NON-NLS-1$ 
                     }
 
                     archTxt.setText(path.toOSString());
@@ -251,7 +251,7 @@ public class ExportWizardPage extends WizardPage {
                         if (findRecord != null) {
                             repositoryTree.setChecked(findRecord, item.getChecked());
                         } else {
-                            log.error("Can't find the file: " + file.getAbsolutePath());
+                            log.error("Can't find the file: " + file.getAbsolutePath());//$NON-NLS-1$ 
                         }
                     }
 
@@ -290,7 +290,7 @@ public class ExportWizardPage extends WizardPage {
                 if (!repositoryTree.getChecked(ItemRecord.findRecord(depFile))) {
                     ModelElement element = dependencyMap.get(depFile);
                     String fileName = element != null ? element.getName() : depFile.getName();
-                    errors.add("\"" + record.getName() + "\" miss dependency : " + fileName);
+                    errors.add("\"" + record.getName() + "\" miss dependency : " + fileName);//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
         }
@@ -363,13 +363,13 @@ public class ExportWizardPage extends WizardPage {
         btnsComposite.setLayoutData(gd);
 
         Button selectAllBTN = new Button(btnsComposite, SWT.PUSH);
-        selectAllBTN.setText("Select All");
+        selectAllBTN.setText("Select All");//$NON-NLS-1$ 
 
         Button deselectAllBTN = new Button(btnsComposite, SWT.PUSH);
-        deselectAllBTN.setText("Deselect All");
+        deselectAllBTN.setText("Deselect All");//$NON-NLS-1$ 
 
         Button addRequireBTN = new Button(btnsComposite, SWT.PUSH);
-        addRequireBTN.setText("Add Require Deps");
+        addRequireBTN.setText("Add Require Deps");//$NON-NLS-1$ 
 
         Composite infoComposite = new Composite(utilityComposite, SWT.NONE);
         infoComposite.setLayout(new GridLayout());
@@ -381,7 +381,7 @@ public class ExportWizardPage extends WizardPage {
         infoComposite.setLayoutData(gd);
 
         final Button showSelectBTN = new Button(infoComposite, SWT.CHECK);
-        showSelectBTN.setText("Only show select element");
+        showSelectBTN.setText("Only show select element");//$NON-NLS-1$ 
 
         Button[] utilityBTNs = new Button[] { selectAllBTN, deselectAllBTN, addRequireBTN };
 

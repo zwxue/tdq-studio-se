@@ -24,9 +24,9 @@ import org.talend.commons.utils.io.FilesUtils;
  */
 public class DQFolderFliter extends ViewerFilter {
 
-    private static final String XSD_FOLDER_NAME = ".xsd";
+    private static final String XSD_FOLDER_NAME = ".xsd";//$NON-NLS-1$ 
 
-    private static final String REPORTS_FOLDER_NAME = "Reports";
+    private static final String REPORTS_FOLDER_NAME = "Reports";//$NON-NLS-1$ 
 
     private boolean isShowFile;
 

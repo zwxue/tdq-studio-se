@@ -142,7 +142,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         toolkit.createLabel(databaseComp, analysisHandler.getTableNames());
 
         // bug 10541 fix by zshen,Change some character set to be proper to add view in the table anasys
-        toolkit.createLabel(databaseComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.view"));
+        toolkit.createLabel(databaseComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.view"));//$NON-NLS-1$
         toolkit.createLabel(databaseComp, analysisHandler.getViewNames());
 
         Composite executionComp = toolkit.createComposite(sectionClient);
@@ -266,7 +266,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
                                                     .getActivePage()
                                                     .openEditor(
                                                             new DrillDownEditorInput(analysis, currentDataEntity, itemEntity),
-                                                            "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");
+                                                            "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
                                         } catch (PartInitException e1) {
                                             e1.printStackTrace();
                                         }

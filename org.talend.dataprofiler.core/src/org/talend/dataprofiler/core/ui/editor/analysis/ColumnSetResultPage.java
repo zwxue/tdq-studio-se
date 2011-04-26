@@ -159,7 +159,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
 
             // match
             if (0 < allMatchIndicator.getCompositeRegexMatchingIndicators().size()) {
-                this.createAllMatchPart(sectionClient, "All Match", allMatchIndicator);
+                this.createAllMatchPart(sectionClient, "All Match", allMatchIndicator);//$NON-NLS-1$
             }
         }
 
@@ -293,7 +293,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             sectionTableComp.setLayout(new GridLayout());
             // MOD zshen for feature 14000
             Button filterDataBt = new Button(sectionTableComp, SWT.NONE);
-            filterDataBt.setText(DefaultMessagesImpl.getString("ColumnSetResultPage.filterData"));
+            filterDataBt.setText(DefaultMessagesImpl.getString("ColumnSetResultPage.filterData"));//$NON-NLS-1$
             filterDataBt.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
             filterDataBt.setEnabled(containAllMatchIndicator());
             filterDataBt.addMouseListener(new MouseListener() {
@@ -310,7 +310,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                     WizardDialog dialog = new WizardDialog(null, wizard);
                     dialog.setPageSize(300, 400);
                     wizard.setContainer(dialog);
-                    wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));
+                    wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));//$NON-NLS-1$
                     if (WizardDialog.OK == dialog.open()) {
                         ColumnSetResultPage.this.tableFilterResult = ((SelectPatternsWizard) wizard).getPatternSelectPage()
                                 .getTableInputList();
@@ -477,7 +477,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
 
                             Object theElement = ((Object[]) element)[index];
                             if (theElement == null) {
-                                theElement = "null";
+                                theElement = "null";//$NON-NLS-1$
                             }
                             Matcher m = p.matcher(String.valueOf(theElement));
                             if (m.find() ^ DataFilterType.MATCHES.equals(filterType)) {
@@ -594,7 +594,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                 if (element instanceof Object[]) {
                     Object theElement = ((Object[]) element)[columnIndex];
                     if (theElement == null) {
-                        theElement = "null";
+                        theElement = "null";//$NON-NLS-1$
                     }
                     Matcher m = p.matcher(String.valueOf(theElement));
                     if (!m.find()) {

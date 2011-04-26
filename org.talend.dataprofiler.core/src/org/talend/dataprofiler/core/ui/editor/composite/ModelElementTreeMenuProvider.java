@@ -580,7 +580,7 @@ public abstract class ModelElementTreeMenuProvider {
             TreePath[] paths = new TreePath[items.length];
 
             for (int i = 0; i < items.length; i++) {
-                TdColumn tdColumn = (TdColumn) items[i].getData("COLUMN_INDICATOR_KEY");
+                TdColumn tdColumn = (TdColumn) items[i].getData("COLUMN_INDICATOR_KEY");//$NON-NLS-1$
                 paths[i] = new TreePath(new Object[] { tdColumn });
             }
             CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();

@@ -164,7 +164,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     private void setDefaultIndDef(Indicator[] indicators) {
         for (int i = 0; i < indicators.length; i++) {
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicators[i])) {
-                log.error(DefaultMessagesImpl.getString("TableIndicator.couldnotSetDef") + indicators[i].getName());
+                log.error(DefaultMessagesImpl.getString("TableIndicator.couldnotSetDef") + indicators[i].getName());//$NON-NLS-1$
             }
         }
     }
@@ -253,7 +253,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         // ADD gdbu 2011-3-3 bug 19179
 
         // remove the space from analysis name
-        this.analysis.setName(this.analysis.getName().replace(" ", ""));
+        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$//$NON-NLS-2$
         // change 'ana' field's 'dataquality' tag content
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
@@ -284,7 +284,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             analysis.getContext().setConnection(tdDataProvider);
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
             if (!rc.isOk()) {
-                log.info("fail to save dependency analysis:" + analysis.getFileName());
+                log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
             }
         } else {
             tdDataProvider = (Connection) analysis.getContext().getConnection();

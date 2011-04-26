@@ -49,11 +49,11 @@ public class ExchangeFolderRepNode extends RepositoryNode {
                 String version = CorePlugin.getDefault().getProductVersion().toString();
                 result = ComponentSearcher.getAvailableCategory(version).toArray();
             } else {
-                result = new String[] { "Connection failed: time out" };
+                result = new String[] { "Connection failed: time out" };//$NON-NLS-1$ 
             }
         } catch (SocketTimeoutException e) {
             timeoutFlag = false;
-            result = new String[] { "Connection failed:" + e.getMessage() };
+            result = new String[] { "Connection failed:" + e.getMessage() };//$NON-NLS-1$ 
 
         } catch (Exception e) {
             timeoutFlag = false;
@@ -84,7 +84,7 @@ public class ExchangeFolderRepNode extends RepositoryNode {
                     ExchangeCategoryRepNode exchangeCategoryRepNode = new ExchangeCategoryRepNode((IEcosCategory) obj,
                             this, ENodeType.REPOSITORY_ELEMENT);
                     exchangeCategoryRepNode.setFlag(true);
-                    exchangeCategoryRepNode.setMsg("");
+                    exchangeCategoryRepNode.setMsg("");//$NON-NLS-1$ 
                     list.add(exchangeCategoryRepNode);
                 }
             }

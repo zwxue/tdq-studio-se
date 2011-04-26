@@ -439,7 +439,7 @@ public class DeleteModelElementConfirmDialog {
                         ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
 
                         String name = modelElement != null ? modelElement.getName() : file.getName();
-                        return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";
+                        return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
                     }
                     return REQUIRES + PluginConstant.SPACE_STRING + "<<" + ((ModelElement) obj).getName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
                 }

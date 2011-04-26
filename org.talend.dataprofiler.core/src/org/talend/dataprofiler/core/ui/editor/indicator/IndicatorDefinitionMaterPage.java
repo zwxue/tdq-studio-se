@@ -225,10 +225,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private List<String> remainDBTypeListCM;
 
-    private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDE"
+    private static final String BODY_CHARACTERS_TO_REPLACE = "abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDE"//$NON-NLS-1$
             + "FGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789"; //$NON-NLS-1$
 
-    private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAA"
+    private static final String BODY_REPLACEMENT_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAA"//$NON-NLS-1$
             + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999"; //$NON-NLS-1$
 
     /**
@@ -488,8 +488,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             public void handleEvent(Event event) {
                 IndicatorDefinitionParameter ip = DefinitionFactory.eINSTANCE.createIndicatorDefinitionParameter();
-                ip.setKey("paraKey");
-                ip.setValue("paraValue");
+                ip.setKey("paraKey");//$NON-NLS-1$
+                ip.setValue("paraValue");//$NON-NLS-1$
                 tempParameters.add(ip);
                 if (parView != null) {
                     parView.refresh(tempParameters);
@@ -526,7 +526,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createDefiniationParameterColumns(TableViewer viewer) {
 
-        String[] titles = { "Parameters Key", "Parameters Value" };
+        String[] titles = { "Parameters Key", "Parameters Value" };//$NON-NLS-1$ //$NON-NLS-2$
         int[] bounds = { 200, 200 };
         for (int i = 0; i < titles.length; i++) {
             TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
@@ -565,9 +565,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
 
             public Object getValue(Object element, String property) {
-                if ("Parameters Key".equals(property)) {
+                if ("Parameters Key".equals(property)) {//$NON-NLS-1$
                     return ((IndicatorDefinitionParameter) element).getKey();
-                } else if ("Parameters Value".equals(property)) {
+                } else if ("Parameters Value".equals(property)) {//$NON-NLS-1$
                     return ((IndicatorDefinitionParameter) element).getValue();
                 }
                 return null;
@@ -576,13 +576,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void modify(Object element, String property, Object value) {
                 TableItem tableItem = (TableItem) element;
                 IndicatorDefinitionParameter data = (IndicatorDefinitionParameter) tableItem.getData();
-                if ("Parameters Key".equals(property)) {
+                if ("Parameters Key".equals(property)) {//$NON-NLS-1$
                     if (!data.getKey().equals(value.toString())) {
                         data.setKey(value.toString());
                         viewer.refresh(data);
                         setDirty(true);
                     }
-                } else if ("Parameters Value".equals(property)) {
+                } else if ("Parameters Value".equals(property)) {//$NON-NLS-1$
                     if (!data.getValue().equals(value)) {
                         data.setValue((String) value);
                         viewer.refresh(data);
@@ -603,7 +603,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createCharactersMappingSection(Composite topComp) {
-        charactersMappingSection = createSection(form, topComp, "Character mapping", null);
+        charactersMappingSection = createSection(form, topComp, "Character mapping", null);//$NON-NLS-1$
 
         charactersMappingComp = createCharactersMappingComp(charactersMappingSection);
 
@@ -733,7 +733,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         cmBodyComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
-        String[] headers = { "Characters to replace", "Replacement characters" };
+        String[] headers = { "Characters to replace", "Replacement characters" };//$NON-NLS-1$//$NON-NLS-2$
         int[] widths = { 300, 300 };
         buildCharactersMappingLineComp(cmBodyComp, charactersMapping, style, headers, widths);
 
@@ -818,7 +818,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createAdditionalFunctionsSection(Composite topComp) {
-        additionalFunctionsSection = createSection(form, topComp, "Additional Functions", null);
+        additionalFunctionsSection = createSection(form, topComp, "Additional Functions", null);//$NON-NLS-1$
 
         additionalFunctionsComp = createAdditionalFunctionsComp(additionalFunctionsSection);
 
@@ -914,15 +914,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
 
         if (aggregateDateExpression.haveAggregateExpression()) {
-            String title = "bubble chart functions";
-            String[] headers = { "horizontal axis", "vertical axis", "bubble size" };
+            String title = "bubble chart functions";//$NON-NLS-1$
+            String[] headers = { "horizontal axis", "vertical axis", "bubble size" };//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             int[] widths = { 120, 120, 240 };
             buildAggregateDateComp(expressionBodyComp, aggregateDateExpression, style, title, headers, widths);
         }
 
         if (aggregateDateExpression.haveDateExpression()) {
-            String title = "gantt chart functions";
-            String[] headers = { "lower value", "upper value", "total", "highlighted values" };
+            String title = "gantt chart functions";//$NON-NLS-1$
+            String[] headers = { "lower value", "upper value", "total", "highlighted values" };//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
             int[] widths = { 120, 120, 120, 240 };
             buildAggregateDateComp(expressionBodyComp, aggregateDateExpression, style, title, headers, widths);
         }
@@ -1080,10 +1080,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createCategorySection(Composite topComp) {
-        categorySection = createSection(form, topComp, "Indicator Category", null);
+        categorySection = createSection(form, topComp, "Indicator Category", null);//$NON-NLS-1$
 
         Label label = new Label(categorySection, SWT.WRAP);
-        label.setText("This section is for indicator category.");
+        label.setText("This section is for indicator category.");//$NON-NLS-1$
         categorySection.setDescriptionControl(label);
 
         categoryComp = createCategoryComp(categorySection);
@@ -1135,17 +1135,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     protected void updateDetailList() {
         if (!"".equals(comboCategory.getText())) { //$NON-NLS-1$
             IndicatorCategory ic = UDIHelper.getUDICategory(definition);
-            String purposeText = "";
-            String descriptionText = "";
+            String purposeText = "";//$NON-NLS-1$
+            String descriptionText = "";//$NON-NLS-1$
             for (TaggedValue value : ic.getTaggedValue()) {
-                if ("Purpose".equals(value.getTag())) {
-                    purposeText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue();
+                if ("Purpose".equals(value.getTag())) {//$NON-NLS-1$
+                    purposeText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue();//$NON-NLS-1$
                 } else if ("Description".equals(value.getTag())) { //$NON-NLS-1$
-                    descriptionText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description")
+                    descriptionText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description")//$NON-NLS-1$
                             + value.getValue();
                 }
             }
-            labelDetail.setText(purposeText + System.getProperty("line.separator") + System.getProperty("line.separator")
+            labelDetail.setText(purposeText + System.getProperty("line.separator") + System.getProperty("line.separator")//$NON-NLS-1$//$NON-NLS-2$
                     + descriptionText);
         }
     }
@@ -1243,15 +1243,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         final Composite titleComp = new Composite(expressionComp, SWT.NONE);
         titleComp.setLayout(new GridLayout(3, false));
         Label databaseLabel = new Label(titleComp, SWT.NONE);
-        databaseLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database"));
+        databaseLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database"));//$NON-NLS-1$
         databaseLabel.setLayoutData(new GridData());
         ((GridData) databaseLabel.getLayoutData()).widthHint = 150;
         Label dbversionLabel = new Label(titleComp, SWT.NONE);
-        dbversionLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion"));
+        dbversionLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion"));//$NON-NLS-1$
         dbversionLabel.setLayoutData(new GridData(GridData.BEGINNING));
         ((GridData) dbversionLabel.getLayoutData()).widthHint = 60;
         Label sqlTemplateLabel = new Label(titleComp, SWT.NONE);
-        sqlTemplateLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate"));
+        sqlTemplateLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate"));//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(titleComp);
         return titleComp;
     }
@@ -1259,7 +1259,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private void createNewLineWithJavaUDI() {
         EList<TaggedValue> tvs = definition.getTaggedValue();
         String classNameStr = null;
-        String jarPathStr = "";
+        String jarPathStr = "";//$NON-NLS-1$
         for (TaggedValue tv : tvs) {
             if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
                 classNameStr = tv.getValue();
@@ -1303,25 +1303,25 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         jarPathText.setText(jarPathStr);
         jarPathText.addModifyListener(new NeedToSetDirtyListener());
         Button button = new Button(detailComp, SWT.PUSH);
-        button.setText("Browse...");
+        button.setText("Browse...");//$NON-NLS-1$
         button.addSelectionListener(new SelectionAdapter() {
 
             // MOD by zshen for bug 18724 2011.02.23
             public void widgetSelected(SelectionEvent e) {
                 String jarpathStr = jarPathText.getText();
                 JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(
-                        ResourceManager.getUDIJarFolder(), jarpathStr.split("\\|\\|"));
+                        ResourceManager.getUDIJarFolder(), jarpathStr.split("\\|\\|"));//$NON-NLS-1$
                 if (selectDialog.open() == Window.OK) {
 
-                    String path = "";
+                    String path = "";//$NON-NLS-1$
                     for (Object obj : selectDialog.getResult()) {
                         if (obj instanceof File) {
 
                             IFile file = ResourceManager.getRoot().getFile(
                                     new org.eclipse.core.runtime.Path(((File) obj).getPath()));
 
-                            if (!"".equalsIgnoreCase(path)) {
-                                path += "||";
+                            if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
+                                path += "||";//$NON-NLS-1$
                             }
                             path += file.getName();
                             setDirty(true);
@@ -1605,7 +1605,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         ((GridData) patternText.getLayoutData()).widthHint = 600;
         patternText.addModifyListener(new ExpressTextModListener(combo));
         // MOD xqliu 2010-03-23 feature 11201
-        patternText.setText(expression.getBody() == null ? "" : expression.getBody());
+        patternText.setText(expression.getBody() == null ? "" : expression.getBody());//$NON-NLS-1$
         // ~11201
         createExpressionEditButton(detailComp, patternText);
         createExpressionDelButton(detailComp, combo);
@@ -1644,17 +1644,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             // MOD by zshen for bug 18724 2011.02.23
             public void widgetSelected(SelectionEvent e) {
                 JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(
-                        ResourceManager.getUDIJarFolder(), jarPathText.getText().split("\\|\\|"));
+                        ResourceManager.getUDIJarFolder(), jarPathText.getText().split("\\|\\|"));//$NON-NLS-1$
                 if (selectDialog.open() == Window.OK) {
-                    String path = "";
+                    String path = "";//$NON-NLS-1$
                     for (Object obj : selectDialog.getResult()) {
                         if (obj instanceof File) {
 
                             IFile file = ResourceManager.getRoot().getFile(
                                     new org.eclipse.core.runtime.Path(((File) obj).getPath()));
 
-                            if (!"".equalsIgnoreCase(path)) {
-                                path += "||";
+                            if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
+                                path += "||";//$NON-NLS-1$
                             }
                             path += file.getName();
                             setDirty(true);
@@ -1727,7 +1727,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private void createExpressionDelButton(final Composite expressComp, final CCombo languageCombo) {
         Button delButton = new Button(expressComp, SWT.PUSH);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        delButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.deleteExpression"));
+        delButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.deleteExpression"));//$NON-NLS-1$
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
@@ -1974,8 +1974,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 if (checkMappingString(c, r)) {
                     charactersMappings.add(cm);
                 } else {
-                    MessageUI.openError("[" + cm.getLanguage()
-                            + "] INPUT ERROR:\nThe length of two inputed strings are not equal.");
+                    MessageUI.openError("[" + cm.getLanguage()//$NON-NLS-1$
+                            + "] INPUT ERROR:\nThe length of two inputed strings are not equal.");//$NON-NLS-1$
                     return;
                 }
             }
@@ -1999,7 +1999,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem);
             this.isDirty = false;
         } else {
-            MessageDialog.openError(null, "error", rc.getMessage());
+            MessageDialog.openError(null, "error", rc.getMessage());//$NON-NLS-1$
         }
     }
 
@@ -2167,8 +2167,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 TdExpression expression = tempExpressionMap.get(cb);
                 String language = expression.getLanguage();
                 String version = expression.getVersion();
-                if (version != null && !"".equals(version)) {
-                    language = language + " V" + expression.getVersion();
+                if (version != null && !"".equals(version)) {//$NON-NLS-1$
+                    language = language + " V" + expression.getVersion();//$NON-NLS-1$
                 }
                 Integer integer = languageVersionCountMap.get(language);
                 if (integer == null) {
@@ -2183,7 +2183,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             String key = iterator.next();
             Integer integer = languageVersionCountMap.get(key);
             if (integer > 1) {
-                MessageUI.openError(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", key));
+                MessageUI.openError(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", key));//$NON-NLS-1$
                 return false;
             }
         }
@@ -2198,7 +2198,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     private boolean checkMappingString(String c, String r) {
-        return !"".equals(c) && !"".equals(r) && c.length() == r.length(); //$NON-NLS-1$
+        return !"".equals(c) && !"".equals(r) && c.length() == r.length(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

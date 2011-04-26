@@ -206,9 +206,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         final Button moveDownButton = new Button(buttonsComp, SWT.NULL);
         moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
         moveDownButton.setLayoutData(buttonGridData);
-        buttons.put("delButton", delButton);
-        buttons.put("moveUpButton", moveUpButton);
-        buttons.put("moveDownButton", moveDownButton);
+        buttons.put("delButton", delButton);//$NON-NLS-1$
+        buttons.put("moveUpButton", moveUpButton);//$NON-NLS-1$
+        buttons.put("moveDownButton", moveDownButton);//$NON-NLS-1$
         enabledButtons(false);
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
@@ -247,9 +247,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         if (!isSelectedColumn(selectItems)) {
             moveEnabled = false;
         }
-        buttons.get("delButton").setEnabled(enabled);
-        buttons.get("moveUpButton").setEnabled(moveEnabled);
-        buttons.get("moveDownButton").setEnabled(moveEnabled);
+        buttons.get("delButton").setEnabled(enabled);//$NON-NLS-1$
+        buttons.get("moveUpButton").setEnabled(moveEnabled);//$NON-NLS-1$
+        buttons.get("moveDownButton").setEnabled(moveEnabled);//$NON-NLS-1$
     }
 
     /**
@@ -419,7 +419,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 public boolean select(Viewer viewer, Object parentElement, Object element) {
                     if (element instanceof IFolder) {
                         IFolder folder = (IFolder) element;
-                        return !folder.getName().endsWith("SQL");
+                        return !folder.getName().endsWith("SQL");//$NON-NLS-1$
                     }
                     return true;
                 }
@@ -720,11 +720,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      */
     private String getModelElemetnDisplayName(ModelElementIndicator meIndicator) {
         String meName = meIndicator.getElementName();
-        String typeName = "";
+        String typeName = "";//$NON-NLS-1$
         if (meIndicator instanceof ColumnIndicator) {
             // MOD scorreia 2010-10-20 bug 16403 avoid NPE here
             TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
-            typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";
+            typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";//$NON-NLS-1$
         } else if (meIndicator instanceof XmlElementIndicator) {
             typeName = ((MDMXmlElementRepNode) meIndicator.getModelElementRepositoryNode()).getTdXmlElementType().getJavaType();
         } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
@@ -732,7 +732,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());
         }
         return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
-                + PluginConstant.PARENTHESIS_RIGHT : "null";
+                + PluginConstant.PARENTHESIS_RIGHT : "null";//$NON-NLS-1$
     }
 
     /*

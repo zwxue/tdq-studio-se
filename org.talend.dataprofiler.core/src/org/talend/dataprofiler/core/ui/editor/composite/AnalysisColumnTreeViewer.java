@@ -368,7 +368,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             IndicatorUnit tmpUnit = units[index + step];
             units[index + step] = units[index];
             units[index] = tmpUnit;
-            code.setReturnCode("", true, units);
+            code.setReturnCode("", true, units);//$NON-NLS-1$
         }
         return code;
     }
@@ -616,11 +616,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
      */
     private String getModelElemetnDisplayName(ModelElementIndicator meIndicator) {
         String meName = meIndicator.getElementName();
-        String typeName = "";
+        String typeName = "";//$NON-NLS-1$
         if (meIndicator instanceof ColumnIndicator) {
             // MOD scorreia 2010-10-20 bug 16403 avoid NPE here
             TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
-            typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";
+            typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";//$NON-NLS-1$
         } else if (meIndicator instanceof XmlElementIndicator) {
             typeName = ((MDMXmlElementRepNode) meIndicator.getModelElementRepositoryNode()).getTdXmlElementType().getJavaType();
         } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
@@ -628,7 +628,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());
         }
         return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
-                + PluginConstant.PARENTHESIS_RIGHT : "null";
+                + PluginConstant.PARENTHESIS_RIGHT : "null";//$NON-NLS-1$
     }
 
     /**

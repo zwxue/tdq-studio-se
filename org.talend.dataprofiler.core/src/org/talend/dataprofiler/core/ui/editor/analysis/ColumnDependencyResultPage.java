@@ -320,8 +320,8 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         if (dataEntities != null) {
             // MOD mzhao bug 8839 There might be duplicate dependencies on left and right columnSet.
             if (dataset.getColumnCount() < dataEntities.length) {
-                MessageDialog.openError(this.getEditor().getSite().getShell(), "Duplicate dependencies",
-                        "There might be duplicate dependencies on left and right columnSet.");
+                MessageDialog.openError(this.getEditor().getSite().getShell(), "Duplicate dependencies",//$NON-NLS-1$
+                        "There might be duplicate dependencies on left and right columnSet.");//$NON-NLS-1$
             } else {
                 for (ChartDataEntity dataEntity : dataEntities) {
                     TableItem item = new TableItem(resultTable, SWT.NULL);

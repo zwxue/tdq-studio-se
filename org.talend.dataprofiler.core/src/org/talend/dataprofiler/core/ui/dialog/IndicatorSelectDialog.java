@@ -480,7 +480,7 @@ public class IndicatorSelectDialog extends TrayDialog {
         boolean expanded = false;
         for (int i = 0; i < branchNodes.length; i++) {
             IIndicatorNode indicatorNode = branchNodes[i];
-            if (!indicatorNode.getLabel().equals("")) {
+            if (!indicatorNode.getLabel().equals("")) {//$NON-NLS-1$ 
                 final TreeItemContainer treeItem;
                 if (parentItem == null) {
                     treeItem = new TreeItemContainer(tree, SWT.NONE, treeColumns.length);

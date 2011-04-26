@@ -621,7 +621,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // ADD gdbu 2011-3-3 bug 19179
 
         // remove the space from analysis name
-        analysis.setName(analysis.getName().replace(" ", ""));
+        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
         }

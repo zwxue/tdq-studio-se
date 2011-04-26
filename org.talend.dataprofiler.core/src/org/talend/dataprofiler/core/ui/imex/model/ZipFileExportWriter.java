@@ -128,10 +128,10 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
     public List<String> check() {
         List<String> errors = new ArrayList<String>();
 
-        ReturnCode rc = new ReturnCode("The root file extension is invalid!", false);
+        ReturnCode rc = new ReturnCode("The root file extension is invalid!", false);//$NON-NLS-1$
 
         if (fileExtension != null) {
-            String[] validExtensions = new String[] { "zip", "tar", "tar.gz" };
+            String[] validExtensions = new String[] { "zip", "tar", "tar.gz" };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             for (String ext : validExtensions) {
                 if (StringUtils.equalsIgnoreCase(fileExtension, ext)) {
                     rc.setOk(true);
@@ -162,7 +162,7 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
 
         boolean renameOk = zipFile.renameTo(tempFile);
         if (!renameOk) {
-            throw new RuntimeException("could not rename the file " + zipFile.getAbsolutePath() + " to "
+            throw new RuntimeException("could not rename the file " + zipFile.getAbsolutePath() + " to "//$NON-NLS-1$ //$NON-NLS-2$
                     + tempFile.getAbsolutePath());
         }
         byte[] buf = new byte[4096];

@@ -700,8 +700,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         javaEnginSection.setLayout(gridLayout);
         checkSection.setLayout(gridLayout);
         numberSection.setLayout(gridLayout);
-        toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
-        drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);
+        toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));//$NON-NLS-1$
+        drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);//$NON-NLS-1$
         drillDownCheck.setSelection(true);
         drillDownCheck.setSelection(anaParameters.isStoreData());
         drillDownCheck.addSelectionListener(new SelectionAdapter() {
@@ -724,8 +724,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     setDirty(true);
                 } else {
                     MessageDialog.openWarning(e.display.getActiveShell(),
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warningMessageTitle"),
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.integerConvertWarning"));
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warningMessageTitle"),//$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.integerConvertWarning"));//$NON-NLS-1$
                     maxNumText.setText(textContent.substring(0, textContent.length() - 1));
                 }
 
@@ -777,7 +777,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // ADD gdbu 2011-3-3 bug 19179
 
         // remove the space from analysis name
-        this.analysis.setName(this.analysis.getName().replace(" ", ""));
+        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
 
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());

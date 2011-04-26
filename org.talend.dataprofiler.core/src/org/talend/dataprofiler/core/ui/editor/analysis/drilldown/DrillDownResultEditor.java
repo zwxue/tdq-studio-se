@@ -68,7 +68,7 @@ public class DrillDownResultEditor extends EditorPart {
 
     private Hashtable<String, Action> actionList;
 
-    public static final String[] ACTION_NAME = { "export" };
+    public static final String[] ACTION_NAME = { "export" };//$NON-NLS-1$
 
     public DrillDownResultEditor() {
         // TODO Auto-generated constructor stub
@@ -201,7 +201,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         // export
         exportAction = new ExportCSVAction();
-        exportAction.setImageDescriptor(CorePlugin.getImageDescriptor("icons/export_wiz.gif"));
+        exportAction.setImageDescriptor(CorePlugin.getImageDescriptor("icons/export_wiz.gif"));//$NON-NLS-1$
         exportAction.setEnabled(true);
     }
 
@@ -229,7 +229,7 @@ public class DrillDownResultEditor extends EditorPart {
             public void handleEvent(Event event) {
                 int columnIndex = getColumnIndex(table, column);   
                 TableItem[] items = table.getItems();   
-                int length = "...".equals(items[items.length - 1].getText(columnIndex)) ? items.length - 1 : items.length;
+                int length = "...".equals(items[items.length - 1].getText(columnIndex)) ? items.length - 1 : items.length;//$NON-NLS-1$
                 for (int i = 1; i < length; i++) {
                     String value2 = items[i].getText(columnIndex);
                     for (int j = 0; j < i; j++) {   
@@ -383,7 +383,7 @@ public class DrillDownResultEditor extends EditorPart {
                 if (ddEditorInput.isDataSpill()) {
                     Object[] leaveOutData = new Object[newColumnElementList.get(0).length];
                     for (int i = 0; i < newColumnElementList.get(0).length; i++) {
-                        leaveOutData[i] = "...";
+                        leaveOutData[i] = "...";//$NON-NLS-1$
                     }
                     newColumnElementList.add(leaveOutData);
                 }

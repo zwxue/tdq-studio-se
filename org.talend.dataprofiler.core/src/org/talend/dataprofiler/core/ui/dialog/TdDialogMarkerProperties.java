@@ -260,7 +260,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         if (title == null) {
-            newShell.setText(MarkerMessages.propertiesDialog_title);
+            newShell.setText(MarkerMessages.propertiesDialog_title);//$NON-NLS-1$
         } else {
             newShell.setText(title);
         }
@@ -327,7 +327,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
      */
     private void createCreationTimeArea(Composite parent) {
         Label label = new Label(parent, SWT.NONE);
-        label.setText(MarkerMessages.propertiesDialog_creationTime_text);
+        label.setText(MarkerMessages.propertiesDialog_creationTime_text);//$NON-NLS-1$ 
 
         creationTime = new Label(parent, SWT.NONE);
     }
@@ -345,7 +345,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
      */
     private void createDescriptionArea(Composite parent) {
         Label label = new Label(parent, SWT.NONE);
-        label.setText(MarkerMessages.propertiesDialog_description_text);
+        label.setText(MarkerMessages.propertiesDialog_description_text);//$NON-NLS-1$
         descriptionText = new Text(parent, (SWT.SINGLE | SWT.BORDER));
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.widthHint = convertHorizontalDLUsToPixels(400);
@@ -373,7 +373,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
      */
     private void createResourceArea(Composite parent) {
         Label resourceLabel = new Label(parent, SWT.NONE);
-        resourceLabel.setText(MarkerMessages.propertiesDialog_resource_text);
+        resourceLabel.setText(MarkerMessages.propertiesDialog_resource_text);//$NON-NLS-1$
         resourceText = new Text(parent, SWT.SINGLE | SWT.WRAP | SWT.READ_ONLY | SWT.BORDER);
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         resourceText.setLayoutData(gridData);
@@ -589,7 +589,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
             // we don't know what kind of marker is being modified
             return MarkerMessages.DialogMarkerProperties_ModifyMarker;
         }
-        return NLS.bind(MarkerMessages.qualifiedMarkerCommand_title, MarkerMessages.DialogMarkerProperties_Modify, markerName);
+        return NLS.bind(MarkerMessages.qualifiedMarkerCommand_title, MarkerMessages.DialogMarkerProperties_Modify, markerName);//$NON-NLS-2$
     }
 
     /**
@@ -601,9 +601,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
     protected String getCreateOperationTitle() {
         if (markerName == null) {
             // we don't know what kind of marker is being created
-            return MarkerMessages.DialogMarkerProperties_CreateMarker;
+            return MarkerMessages.DialogMarkerProperties_CreateMarker;//$NON-NLS-1$
         }
-        return NLS.bind(MarkerMessages.qualifiedMarkerCommand_title, MarkerMessages.DialogMarkerProperties_Create, markerName);
+        return NLS.bind(MarkerMessages.qualifiedMarkerCommand_title, MarkerMessages.DialogMarkerProperties_Create, markerName);//$NON-NLS-2$
 
     }
 

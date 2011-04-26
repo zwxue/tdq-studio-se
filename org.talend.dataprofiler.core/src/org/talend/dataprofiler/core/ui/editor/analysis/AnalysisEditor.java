@@ -43,9 +43,9 @@ public class AnalysisEditor extends CommonFormEditor {
 
     private static Logger log = Logger.getLogger(AnalysisEditor.class);
 
-    public static final String RESULT_PAGE = "SecondPage";
+    public static final String RESULT_PAGE = "SecondPage";//$NON-NLS-1$
 
-    public static final String MASTER_PAGE = "MasterPage";
+    public static final String MASTER_PAGE = "MasterPage";//$NON-NLS-1$
 
     private static final String ANALYSIS_RESULTS = DefaultMessagesImpl.getString("AnalysisEditor.analysisResult"); //$NON-NLS-1$
 
@@ -164,7 +164,7 @@ public class AnalysisEditor extends CommonFormEditor {
     protected void translateInput(IEditorInput input) {
         // MOD klliu 2010-12-10
         Analysis findAnalysis = null;
-        String label = "";
+        String label = "";//$NON-NLS-1$
         if (input instanceof AnalysisItemEditorInput) {
             AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) input;
             TDQAnalysisItem tdqAnalysisItem = fileEditorInput.getTDQAnalysisItem();
@@ -181,7 +181,7 @@ public class AnalysisEditor extends CommonFormEditor {
         if (findAnalysis != null) {
             analysisType = findAnalysis.getParameters().getAnalysisType();
         } else {
-            log.error("Could not find an analysis in file: " + label);
+            log.error("Could not find an analysis in file: " + label);//$NON-NLS-1$
         }
     }
 

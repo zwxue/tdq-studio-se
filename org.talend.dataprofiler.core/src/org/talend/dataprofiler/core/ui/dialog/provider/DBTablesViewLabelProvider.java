@@ -116,31 +116,17 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
             return decorateText;
         }
 
-        // else if (element instanceof IFile) {
-        // if (FactoriesUtil.isProvFile(((IFile) element).getFileExtension())) {
-        // IFile file = (IFile) element;
-        // TypedReturnCode<Connection> rc = PrvResourceFileHelper.getInstance().findProvider(file);
-        // String decorateText = PluginConstant.EMPTY_STRING;
-        // if (rc.isOk()) {
-        // decorateText = rc.getObject().getName();
-        // } else {
-        // log.warn(rc.getMessage());
-        // }
-        // return decorateText;
-        // }
-        // }
-
         else if (element instanceof TdXmlSchema) {
             return ((TdXmlSchema) element).getName();
         } else if (element instanceof TdXmlElementType) {
             String elemLabe = ((TdXmlElementType) element).getName();
             String elementType = ((TdXmlElementType) element).getJavaType();
             if (elementType != null && !StringUtils.isEmpty(elementType)) {
-                elemLabe += " (" + elementType + ")";
+                elemLabe += " (" + elementType + ")";//$NON-NLS-1$ //$NON-NLS-2$
             }
             return elemLabe;
         } else if ((element instanceof TdTable || element instanceof TdView) && tableOwner != null && !"".equals(tableOwner)) {
-            return super.getText(element) + "(" + tableOwner + ")";
+            return super.getText(element) + "(" + tableOwner + ")";//$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return super.getText(element);

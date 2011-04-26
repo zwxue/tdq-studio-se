@@ -76,7 +76,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private static Logger log = Logger.getLogger(FileSystemImportWriter.class);
 
-    private static final String VERSION_FILE_NAME = ".version.txt";
+    private static final String VERSION_FILE_NAME = ".version.txt";//$NON-NLS-1$ 
 
     private static final String DEFINITION_FILE_NAME = DefinitionHandler.FILENAME;
 
@@ -135,11 +135,11 @@ public class FileSystemImportWriter implements IImportWriter {
 
                 if (node != null) {
                     record.setConflictNode(node);
-                    record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");
+                    record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
 
             } catch (Exception e) {
-                record.addError("\"" + record.getName() + "\" check item conflict failed!");
+                record.addError("\"" + record.getName() + "\" check item conflict failed!");//$NON-NLS-1$ //$NON-NLS-2$ 
             }
         }
     }
@@ -157,10 +157,10 @@ public class FileSystemImportWriter implements IImportWriter {
                 IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
 
                 if (itemFile.exists()) {
-                    record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());
+                    record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             } else {
-                record.addError("\"" + record.getName() + "\" can't analyze the path ! ");
+                record.addError("\"" + record.getName() + "\" can't analyze the path ! ");//$NON-NLS-1$ //$NON-NLS-2$ 
             }
         }
     }
@@ -174,7 +174,7 @@ public class FileSystemImportWriter implements IImportWriter {
         for (ModelElement melement : record.getDependencyMap().values()) {
             if (melement != null && melement.eIsProxy()) {
                 InternalEObject inObject = (InternalEObject) melement;
-                record.addError("\"" + record.getName() + "\" missing dependented file : " + inObject.eProxyURI().toFileString());
+                record.addError("\"" + record.getName() + "\" missing dependented file : " + inObject.eProxyURI().toFileString());//$NON-NLS-1$ //$NON-NLS-2$ 
             }
         }
     }
@@ -217,7 +217,7 @@ public class FileSystemImportWriter implements IImportWriter {
                 for (TdXmlSchema schema : tdXmlDocumentList) {
                     IPath srcPath = record.getFilePath().removeLastSegments(1).append(schema.getXsdFilePath());
                     if (!srcPath.toFile().exists()) {
-                        log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");
+                        log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");//$NON-NLS-1$ //$NON-NLS-2$ 
                         break;
                     }
                     IPath desPath = itemDesPath.removeLastSegments(1).append(new Path(schema.getXsdFilePath()));
@@ -241,7 +241,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
         boolean isCovered = desFile.exists();
         if (isCovered) {
-            log.warn(desFile.getAbsoluteFile() + " is overwritten!");
+            log.warn(desFile.getAbsoluteFile() + " is overwritten!");//$NON-NLS-1$ 
         }
 
         FilesUtils.copyFile(resFile, desFile);
@@ -265,9 +265,9 @@ public class FileSystemImportWriter implements IImportWriter {
 
         String curProjectLabel = ResourceManager.getRootProjectName();
         if (!StringUtils.equals(projectName, curProjectLabel)) {
-            String content = FileUtils.readFileToString(desFile, "utf-8");
-            content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");
-            FileUtils.writeStringToFile(desFile, content, "utf-8");
+            String content = FileUtils.readFileToString(desFile, "utf-8");//$NON-NLS-1$
+            content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+            FileUtils.writeStringToFile(desFile, content, "utf-8");//$NON-NLS-1$
         }
 
         if (desFile.exists()) {
@@ -291,10 +291,10 @@ public class FileSystemImportWriter implements IImportWriter {
                     }
 
                     if (log.isDebugEnabled()) {
-                        log.debug("property file for " + desIFile + " = " + property.getLabel());
+                        log.debug("property file for " + desIFile + " = " + property.getLabel());//$NON-NLS-1$ //$NON-NLS-2$
                     }
                 } else {
-                    log.error("Loading property error: " + desIFile.getFullPath().toString());
+                    log.error("Loading property error: " + desIFile.getFullPath().toString());//$NON-NLS-1$
                 }
             }
         }
@@ -316,7 +316,7 @@ public class FileSystemImportWriter implements IImportWriter {
         final ItemRecord[] fRecords = records;
         final IProgressMonitor fMonitor = monitor;
 
-        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Import TDQ Element") {
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Import TDQ Element") {//$NON-NLS-1$
 
             @Override
             protected void run() {
@@ -330,10 +330,10 @@ public class FileSystemImportWriter implements IImportWriter {
 
                         Map<IPath, IPath> toImportMap = mapping(record);
 
-                        fMonitor.subTask("Importing " + record.getName());
+                        fMonitor.subTask("Importing " + record.getName());//$NON-NLS-1$
 
                         if (record.isValid()) {
-                            log.info("Importing " + record.getFile().getAbsolutePath());
+                            log.info("Importing " + record.getFile().getAbsolutePath());//$NON-NLS-1$
 
                             // Delete the conflict node before import.
                             IRepositoryNode conflictNode = record.getConflictNode();
@@ -416,7 +416,7 @@ public class FileSystemImportWriter implements IImportWriter {
     private void deleteTempProjectFolder() throws IOException {
         if (tempFolder != null && tempFolder.exists()) {
             if (log.isDebugEnabled()) {
-                log.debug("Deleting temporary workspace..." + tempFolder.getAbsolutePath());
+                log.debug("Deleting temporary workspace..." + tempFolder.getAbsolutePath());//$NON-NLS-1$
             }
             FileUtils.deleteDirectory(tempFolder);
         }
@@ -494,7 +494,7 @@ public class FileSystemImportWriter implements IImportWriter {
             }
 
             IPath tempBasePath = new Path(tempFolder.getAbsolutePath());
-            IPath projPath = tempBasePath.append("talend.project");
+            IPath projPath = tempBasePath.append("talend.project");//$NON-NLS-1$
             setBasePath(tempBasePath);
             if (projPath.toFile().exists()) {
                 Object projOBJ = EObjectHelper.retrieveEObject(projPath, PropertiesPackage.eINSTANCE.getProject());
@@ -513,10 +513,10 @@ public class FileSystemImportWriter implements IImportWriter {
     protected File backUPWorksapce(IPath workspacePath) {
         try {
             if (log.isDebugEnabled()) {
-                log.debug("Back-up workspace...." + workspacePath.toOSString());
+                log.debug("Back-up workspace...." + workspacePath.toOSString());//$NON-NLS-1$
             }
 
-            File temporaryFolder = ResourceManager.getRootFolderLocation().append("tempFolder" + EcoreUtil.generateUUID())
+            File temporaryFolder = ResourceManager.getRootFolderLocation().append("tempFolder" + EcoreUtil.generateUUID())//$NON-NLS-1$
                     .toFile();
             if (!temporaryFolder.exists()) {
                 temporaryFolder.mkdir();

@@ -151,7 +151,7 @@ public class IndicatorsComp extends AbstractPagePart {
 
         indicatorItem.setImage(0, ImageLib.getImage(ImageLib.IND_DEFINITION));
         String indicatorName = indicator.getName();
-        String label = indicatorName == null ? "unknown indicator" : indicatorName;
+        String label = indicatorName == null ? "unknown indicator" : indicatorName;//$NON-NLS-1$
         indicatorItem.setText(0, label);
 
         TreeEditor optionEditor;

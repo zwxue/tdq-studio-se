@@ -230,7 +230,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
         // ADD gdbu 2011-3-3 bug 19179
         // remove the space from analysis name
-        analysis.setName(analysis.getName().replace(" ", ""));
+        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
         }
@@ -270,7 +270,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             analysis.getContext().setConnection(tdDataProvider);
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
             if (!rc.isOk()) {
-                log.info("fail to save dependency analysis:" + analysis.getFileName());
+                log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
             }
         } else {
             tdDataProvider = (Connection) analysis.getContext().getConnection();

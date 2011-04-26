@@ -99,7 +99,7 @@ public class DateFrequencyStatisticsState extends FrequencyStatisticsState {
 
     @Override
     protected String getTitle() {
-        return null == type ? DefaultMessagesImpl.getString("DateFrequencyStatisticsState.DateFrequencyStatistics") : type
+        return null == type ? DefaultMessagesImpl.getString("DateFrequencyStatisticsState.DateFrequencyStatistics") : type//$NON-NLS-1$
                 .getLiteral();
     }
 }

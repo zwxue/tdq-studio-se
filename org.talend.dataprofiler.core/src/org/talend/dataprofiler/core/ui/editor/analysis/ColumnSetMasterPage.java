@@ -463,7 +463,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         Section previewSimpleStatSection = createSection(
                 form,
                 parentComp,
-                DefaultMessagesImpl.getString("ColumnSetResultPage.SimpleStatistics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnSetResultPage.SimpleStatistics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
         previewSimpleStatSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Composite sectionClient = toolkit.createComposite(previewSimpleStatSection);

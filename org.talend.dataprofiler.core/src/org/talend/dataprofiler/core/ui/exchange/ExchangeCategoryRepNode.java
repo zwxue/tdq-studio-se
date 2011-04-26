@@ -33,7 +33,7 @@ public class ExchangeCategoryRepNode extends RepositoryNode {
     /**
      * messages of expression.
      */
-    private String msg = "Can't get any categories from website!";
+    private String msg = "Can't get any categories from website!";//$NON-NLS-1$ 
 
     private final IEcosCategory ecosCategory;
 

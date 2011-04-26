@@ -40,7 +40,7 @@ public class SimpleTextStatisticsState extends TextStatisticsState {
 
     public JFreeChart getChart() {
         JFreeChart chart = TopChartFactory.createBarChart(DefaultMessagesImpl
-                .getString("SimpleTextStatisticsState.SimpleTextStatistics"), getDataset(), false);
+.getString("SimpleTextStatisticsState.SimpleTextStatistics"), getDataset(), false);//$NON-NLS-1$
         chart.getCategoryPlot().setOrientation(PlotOrientation.HORIZONTAL);
         return chart;
     }
@@ -54,22 +54,22 @@ public class SimpleTextStatisticsState extends TextStatisticsState {
         for (IndicatorUnit unit : units) {
             double value = Double.parseDouble(unit.getValue().toString());
             String label = unit.getIndicatorName();
-            String type = "";
+            String type = "";//$NON-NLS-1$
             switch (unit.getType()) {
             case MinLengthWithNullIndicatorEnum:
             case MinLengthWithBlankIndicatorEnum:
             case MinLengthWithBlankNullIndicatorEnum:
-                type = "Minimal";
+                type = "Minimal";//$NON-NLS-1$
                 break;
             case MaxLengthWithBlankIndicatorEnum:
             case MaxLengthWithBlankNullIndicatorEnum:
             case MaxLengthWithNullIndicatorEnum:
-                type = "Maximal";
+                type = "Maximal";//$NON-NLS-1$
                 break;
             case AverageLengthWithNullIndicatorEnum:
             case AverageLengthWithBlankIndicatorEnum:
             case AverageLengthWithNullBlankIndicatorEnum:
-                type = "Average";
+                type = "Average";//$NON-NLS-1$
                 break;
             default:
                 type = label;

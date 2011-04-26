@@ -360,7 +360,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         data.grabExcessHorizontalSpace = true;
         buttonComposite.setLayoutData(data);
         Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID,
-                WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);
+                WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);//$NON-NLS-1$ 
         SelectionListener listener = new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -377,7 +377,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         };
         selectButton.addSelectionListener(listener);
         Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID,
-                WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);
+                WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);//$NON-NLS-2$
         listener = new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -389,7 +389,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
         final Composite dialogComposite = composite;
 
-        Button addButton = createButton(buttonComposite, 22, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.add"), false);
+        Button addButton = createButton(buttonComposite, 22, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.add"), false);//$NON-NLS-3$
         listener = new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
@@ -433,7 +433,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
             }
         };
         addButton.addSelectionListener(listener);
-        Button delButton = createButton(buttonComposite, 23, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"),
+        Button delButton = createButton(buttonComposite, 23, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"),//$NON-NLS-3$
                 false);
         listener = new SelectionAdapter() {
 
@@ -443,7 +443,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                         ReturnCode rc = UDIUtils.checkUDIDependency((File) delFile);
                         if (elements.contains(delFile)) {
                             rc.setOk(false);
-                            rc.setMessage("the File " + ((File) delFile).getName() + " has been select by the UDI");
+                            rc.setMessage("the File " + ((File) delFile).getName() + " has been select by the UDI");//$NON-NLS-1$ //$NON-NLS-3$
                         }
                         if (rc.isOk()) {
                             ((File) delFile).delete();
@@ -494,87 +494,4 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
             treeViewer.setCheckedElements(elements.toArray());
         }
     }
-
-    // private Button addButton = null;
-
-    // private Composite buttonComposite = null;
-
-    // @Override
-    // protected Composite createSelectionButtons(Composite composite) {
-    // final Composite dialogComposite = composite;
-    // buttonComposite = super.createSelectionButtons(composite);
-    // addButton = createButton(buttonComposite, 22, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.add"),
-    // false);
-    // SelectionListener listener = new SelectionAdapter() {
-    //
-    // public void widgetSelected(SelectionEvent e) {
-    // FileDialog dialog = new FileDialog(dialogComposite.getShell(), SWT.NONE);
-    //                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
-    // String path = dialog.open();
-    // if (path != null) {
-    // // jarPathText.setText(path);
-    // // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-    // // validateJavaUDI(classNameText, jarPathText);
-    // IPath filePath = new Path(path);
-    // try {
-    // // File jarFile =
-    // // ResourceManager.getUDIJarFolder().getFullPath().append(filePath.lastSegment()).toFile();
-    // // boolean createNewFile = false;
-    // // if (!jarFile.getAbsoluteFile().isAbsolute()) {
-    // // createNewFile = jarFile.createNewFile();
-    // // }
-    // // if (createNewFile) {
-    // FilesUtils.copyFile(filePath.toFile(),
-    // ResourceManager.getUDIJarFolder().getLocation().append(filePath.lastSegment()).toFile());
-    // // }
-    // } catch (IOException e1) {
-    // // TODO Auto-generated catch block
-    // e1.printStackTrace();
-    // }
-    // }
-    // getTreeViewer().refresh();
-    // getTreeViewer().setInput(ResourceManager.getUDIJarFolder());
-    // // getTreeViewer().setCheckedElements(new Object[0]);
-    // // updateOKStatus();
-    // }
-    // };
-    // addButton.addSelectionListener(listener);
-    // Button delButton = createButton(buttonComposite, 23,
-    // DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"), false);
-    // listener = new SelectionAdapter() {
-    //
-    // public void widgetSelected(SelectionEvent e) {
-    // getTreeViewer().setCheckedElements(new Object[0]);
-    // updateOKStatus();
-    // }
-    // };
-    // delButton.addSelectionListener(listener);
-    // return buttonComposite;
-    // }
-
-    // @Override
-    // protected Control createDialogArea(Composite parent) {
-    //
-    //
-    // Composite composite = (Composite) super.createDialogArea(parent);
-    // Label messageLabel = createMessageArea(composite);
-    // CheckboxTreeViewer treeViewer = createTreeViewer(composite);
-    // Control buttonComposite = createSelectionButtons(composite);
-    // GridData data = new GridData(GridData.FILL_BOTH);
-    // data.widthHint = convertWidthInCharsToPixels(fWidth);
-    // data.heightHint = convertHeightInCharsToPixels(fHeight);
-    // Tree treeWidget = treeViewer.getTree();
-    // treeWidget.setLayoutData(data);
-    // treeWidget.setFont(parent.getFont());
-    // if (fIsEmpty) {
-    // messageLabel.setEnabled(false);
-    // treeWidget.setEnabled(false);
-    // buttonComposite.setEnabled(false);
-    // }
-    //
-    // buttonComposite.setEnabled(true);
-    // this.getTreeViewer().getTree().setEnabled(true);
-    // return composite;
-    // }
-
 }

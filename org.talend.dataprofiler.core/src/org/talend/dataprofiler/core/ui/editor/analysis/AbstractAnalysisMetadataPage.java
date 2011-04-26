@@ -150,11 +150,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     protected ReturnCode canModifyAnalysisName() {
         // MOD by gdbu 2011-3-21 bug 19179
-        this.nameText.setText(this.nameText.getText().replace(" ", ""));
+        this.nameText.setText(this.nameText.getText().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         if (this.nameText.getText().length() == 0) {
             // analysis can not without a name
             this.nameText.setText(this.analysis.getName());
-            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);
+            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);//$NON-NLS-1$
         }
         String elementName = this.nameText.getText();
         List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
@@ -162,10 +162,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             if (elementName.equals(this.analysis.getName())) {
                 // if new name equals itself's old name ,return true
                 break;
-            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {
+            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-2$
                 // if new name equals one of tree-list's name,return false
                 this.nameText.setText(this.analysis.getName());
-                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);
+                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);//$NON-NLS-1$
             }
         }
         // MOD klliu bug 19995 question2

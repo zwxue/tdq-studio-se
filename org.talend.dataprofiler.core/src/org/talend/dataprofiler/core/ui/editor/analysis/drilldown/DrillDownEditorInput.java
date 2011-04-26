@@ -173,11 +173,11 @@ public class DrillDownEditorInput implements IEditorInput {
             return false;
         switch (menuType) {
         case MENU_VALUE_TYPE:
-            return menuStr.toLowerCase().indexOf("values") > -1;
+            return menuStr.toLowerCase().indexOf("values") > -1;//$NON-NLS-1$
         case MENU_VALID_TYPE:
-            return menuStr.toLowerCase().indexOf("valid") > -1;
+            return menuStr.toLowerCase().indexOf("valid") > -1;//$NON-NLS-1$
         case MENU_INVALID_TYPE:
-            return menuStr.toLowerCase().indexOf("invalid") > -1;
+            return menuStr.toLowerCase().indexOf("invalid") > -1;//$NON-NLS-1$
         default:
             return false;
         }
@@ -206,7 +206,7 @@ public class DrillDownEditorInput implements IEditorInput {
             Object[] tableRow = newColumnElementList.get(row);
             for (int i = 0; i < tableRow.length; i++) {
                 Object tableValue = tableRow[i];
-                columnValue[row][i] = tableValue == null ? "<null>" : tableValue.toString();
+                columnValue[row][i] = tableValue == null ? "<null>" : tableValue.toString();//$NON-NLS-1$
             }
         }
         return new DataSet(columnHeader, columnValue);

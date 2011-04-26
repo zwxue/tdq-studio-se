@@ -71,7 +71,7 @@ public class PatternMouseAdapter extends MouseAdapter {
         if (dm != null && dm instanceof Connection) {
             Connection dp = (Connection) dm;
             if (ConnectionUtils.isMdmConnection(dp)) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dontSupport"));
+                MessageUI.openWarning(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dontSupport"));//$NON-NLS-1$
                 return;
             }
         }
@@ -99,7 +99,7 @@ public class PatternMouseAdapter extends MouseAdapter {
                     if (trc.isOk()) {
                         columnDropTree.createOneUnit(treeItem, trc.getObject());
                         columnDropTree.setDirty(true);
-                    } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {
+                    } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {//$NON-NLS-1$
                         // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                         // MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
                         // + pattern.getName());

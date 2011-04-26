@@ -98,7 +98,7 @@ public class UrlEditDialog extends TrayDialog {
     @Override
     public void create() {
         super.create();
-        getShell().setText("Edit Connection URL");
+        getShell().setText("Edit Connection URL");//$NON-NLS-1$
         if (null == urlSetupControl)
             getButton(MessageDialog.OK).setEnabled(false);
 

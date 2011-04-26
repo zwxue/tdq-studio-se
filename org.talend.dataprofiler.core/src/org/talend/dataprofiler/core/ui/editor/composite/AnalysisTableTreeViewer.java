@@ -586,7 +586,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         if (IndicatorEnum.WhereRuleIndicatorEnum.compareTo(type) == 0) {
             indicatorItem.setImage(0, ImageLib.getImage(ImageLib.DQ_RULE));
         }
-        indicatorItem.setText(0, label != null ? label : "Unknown indicator");
+        indicatorItem.setText(0, label != null ? label : "Unknown indicator");//$NON-NLS-1$
 
         TreeEditor optionEditor = new TreeEditor(tree);
         Label optionLabel = new Label(tree, SWT.NONE);
