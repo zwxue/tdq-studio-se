@@ -69,8 +69,8 @@ public class ImportPatternsWizard extends Wizard {
     @Override
     public boolean performFinish() {
         if (IMessageProvider.WARNING == page.getMessageType()) {
-            if (!MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("ImportPatternsWizard.Warning"),
-                    DefaultMessagesImpl.getString("ImportPatternsWizard.ConfirmImport"))) {
+            if (!MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("ImportPatternsWizard.Warning"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ImportPatternsWizard.ConfirmImport"))) { //$NON-NLS-1$
                 return false;
             }
         }

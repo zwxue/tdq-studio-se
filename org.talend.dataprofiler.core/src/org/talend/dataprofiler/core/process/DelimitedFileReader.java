@@ -17,6 +17,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+
 /**
  * 
  * @author xtan
@@ -61,7 +63,7 @@ public class DelimitedFileReader {
     public DelimitedFileReader(String fileName, String encoding, String fieldDelimiter, String recordDelimiter,
             boolean needSkipEmptyRecord) throws IOException {
         if (fileName == null || fieldDelimiter == null || recordDelimiter == null) {
-            throw new IllegalArgumentException("Parameter can't be null.");
+            throw new IllegalArgumentException(DefaultMessagesImpl.getString("DelimitedFileReader_NullPara")); //$NON-NLS-1$
         }
 
         inputStream = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), encoding));
@@ -124,8 +126,9 @@ public class DelimitedFileReader {
                 if (!autoReallocateForHuge
                         && streamBuffer.currentPosition - streamBuffer.columnStart + columnBuffer.position > StaticSettings.MAX_CHARS_IN_ONE_COLUMN) {
                     close();
-                    throw new IOException("The maximum chars of one column is " + StaticSettings.MAX_CHARS_IN_ONE_COLUMN
-                            + ". There is over this limit.");
+                    throw new IOException(DefaultMessagesImpl.getString(
+                            "DelimitedFileReader_OverLimitColumn", StaticSettings.MAX_CHARS_IN_ONE_COLUMN) //$NON-NLS-1$
+                    );
                 }
             }
 
@@ -186,8 +189,9 @@ public class DelimitedFileReader {
                 if (!autoReallocateForHuge
                         && streamBuffer.currentPosition - streamBuffer.columnStart + columnBuffer.position > StaticSettings.MAX_CHARS_IN_ONE_COLUMN) {
                     close();
-                    throw new IOException("The maximum chars of one column is " + StaticSettings.MAX_CHARS_IN_ONE_COLUMN
-                            + ". There is over this limit.");
+                    throw new IOException(DefaultMessagesImpl.getString(
+                            "DelimitedFileReader_OverLimitColumn", StaticSettings.MAX_CHARS_IN_ONE_COLUMN) //$NON-NLS-1$
+                    );
                 }
             }
 
@@ -216,7 +220,7 @@ public class DelimitedFileReader {
         streamBuffer.skipRecordDelimiter();
 
         if (skipEmptyRecord) {
-            if (columnsCount == 0 || (columnsCount == 1 && values[0].equals(""))) {
+            if (columnsCount == 0 || (columnsCount == 1 && values[0].equals(""))) { //$NON-NLS-1$
                 columnsCount = 0;// reset the columnsCount = 0 is a must
                 streamBuffer.columnStart = streamBuffer.currentPosition;
                 return;
@@ -234,7 +238,7 @@ public class DelimitedFileReader {
      * improper data format.
      */
     private void endColumn() throws IOException {
-        String currentValue = "";
+        String currentValue = ""; //$NON-NLS-1$
 
         if (columnBuffer.position == 0) {
             currentValue = new String(streamBuffer.buffer, streamBuffer.columnStart, streamBuffer.currentPosition
@@ -250,8 +254,9 @@ public class DelimitedFileReader {
         // for checking one record can support the max number of columns
         if (!autoReallocateForHuge && columnsCount >= StaticSettings.MAX_COLUMNS_IN_ONE_RECORD) {
             close();
-            throw new IOException("The maximum column number of one record is " + StaticSettings.MAX_COLUMNS_IN_ONE_RECORD
-                    + ". There is over this limit.");
+            throw new IOException(DefaultMessagesImpl.getString(
+                    "DelimitedFileReader_OverLimitRecord", StaticSettings.MAX_COLUMNS_IN_ONE_RECORD) //$NON-NLS-1$
+            );
         }
 
         if (columnsCount == values.length) {
@@ -296,7 +301,7 @@ public class DelimitedFileReader {
      */
     private void checkClosed() throws IOException {
         if (closed) {
-            throw new IOException("This instance of the DelimitedFileReader class has already been closed.");
+            throw new IOException(DefaultMessagesImpl.getString("DelimitedFileReader_StreamClosed")); //$NON-NLS-1$
         }
     }
 
@@ -309,7 +314,7 @@ public class DelimitedFileReader {
         if (columnIndex > -1 && columnIndex < columnsCount) {
             return values[columnIndex];
         } else {
-            return "";
+            return ""; //$NON-NLS-1$
         }
     }
 
@@ -505,7 +510,7 @@ public class DelimitedFileReader {
             }
 
             if (debug) {
-                System.out.println("##maxReadLength=" + maxReadLength + "   newReadCount=" + readCount);
+                System.out.println("##maxReadLength=" + maxReadLength + "   newReadCount=" + readCount); //$NON-NLS-1$ //$NON-NLS-2$
                 System.out.println(streamBuffer);
             }
 
@@ -560,14 +565,14 @@ public class DelimitedFileReader {
         public StreamBuffer(String fieldDelimiterPara, String recordDelimiterPara) throws IOException {
             buffer = new char[StaticSettings.MAX_BUFFER_SIZE];
 
-            if (recordDelimiterPara.equals("\\n")) {
+            if (recordDelimiterPara.equals("\\n")) { //$NON-NLS-1$
                 if (StaticSettings.LINEMODE == LineMode.LINEFEED_ALL) {
                     // notice: here we set it "\r\n", neither "\n" nor "\r", becase there want max length
-                    recordDelimiter = "\r\n".toCharArray();
+                    recordDelimiter = "\r\n".toCharArray(); //$NON-NLS-1$
                     lineFeedAll = true;
                 } else if (StaticSettings.LINEMODE == LineMode.LINEFEED_JRE) {
                     String lineSeparator = (String) java.security.AccessController
-                            .doPrivileged(new sun.security.action.GetPropertyAction("line.separator"));
+                            .doPrivileged(new sun.security.action.GetPropertyAction("line.separator")); //$NON-NLS-1$
                     recordDelimiter = lineSeparator.toCharArray();
                 } else {
                     recordDelimiter = recordDelimiterPara.toCharArray();
@@ -663,21 +668,21 @@ public class DelimitedFileReader {
         @Override
         public String toString() {
             StringBuffer sb = new StringBuffer();
-            sb.append("count=").append(count).append("\n");
-            sb.append("maxLimit=").append(maxLimit).append("\n");
-            sb.append("lastIndexToRead=").append(lastIndexToRead).append("\n");
-            sb.append("currentPosition=").append(currentPosition).append("\n");
-            sb.append("columnStart=").append(columnStart).append("\n");
-            sb.append("streamEndMeet=").append(streamEndMeet).append("\n");
+            sb.append("count=").append(count).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("maxLimit=").append(maxLimit).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("lastIndexToRead=").append(lastIndexToRead).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("currentPosition=").append(currentPosition).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("columnStart=").append(columnStart).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("streamEndMeet=").append(streamEndMeet).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
-            sb.append("overMaxLimit()=").append(needJoinReadNextBuffer()).append("\n");
-            sb.append("hasMoreData()=").append(hasMoreData()).append("\n");
+            sb.append("overMaxLimit()=").append(needJoinReadNextBuffer()).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("hasMoreData()=").append(hasMoreData()).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
-            sb.append("char[]=").append(buffer).append("\n");
-            sb.append("char[").append(currentPosition).append("]=").append(buffer[currentPosition]).append("\n");
+            sb.append("char[]=").append(buffer).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("char[").append(currentPosition).append("]=").append(buffer[currentPosition]).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-            sb.append("fieldDelimiterLength=").append(fieldDelimiter.length).append("\n");
-            sb.append("recordDelimiterLength=").append(recordDelimiter.length).append("\n");
+            sb.append("fieldDelimiterLength=").append(fieldDelimiter.length).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("recordDelimiterLength=").append(recordDelimiter.length).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
             return sb.toString();
         }
@@ -741,17 +746,17 @@ public class DelimitedFileReader {
     }
 
     public static void main(String[] args) throws IOException {
-        DelimitedFileReader fid = new DelimitedFileReader("D:\\talend\\talendFID\\in.csv", "ISO-8859-15", "", "\n", false);
+        DelimitedFileReader fid = new DelimitedFileReader("D:\\talend\\talendFID\\in.csv", "ISO-8859-15", "", "\n", false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         int rowNum = 0;
         while (fid.readRecord()) {
-            System.out.println("*********Row" + rowNum + "***********");
-            System.out.println("------Row------\n" + fid.getRowRecord());
+            System.out.println("*********Row" + rowNum + "***********"); //$NON-NLS-1$ //$NON-NLS-2$
+            System.out.println("------Row------\n" + fid.getRowRecord()); //$NON-NLS-1$
             int fieldNum = fid.getAvailableColumnsCount();
             for (int k = 0; k < fieldNum; k++) {
-                System.out.println("------" + k + "------\n" + fid.get(k));
+                System.out.println("------" + k + "------\n" + fid.get(k)); //$NON-NLS-1$ //$NON-NLS-2$
             }
             rowNum++;
-            System.out.println("\n\n");
+            System.out.println("\n\n"); //$NON-NLS-1$
         }
     }
 

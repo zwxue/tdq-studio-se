@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.StringUtils;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -34,7 +35,7 @@ public class TalendDefinitionFileUpdate {
 
     private static Logger log = Logger.getLogger(TalendDefinitionFileUpdate.class);
 
-    private static final String TALENDDEFINITIONFILENAME = ".Talend.definition";
+    private static final String TALENDDEFINITIONFILENAME = ".Talend.definition"; //$NON-NLS-1$
 
     /**
      * A map where the keys are the old strings to replace and the values are the new strings.
@@ -61,7 +62,8 @@ public class TalendDefinitionFileUpdate {
                 for (String oldString : old2new.keySet()) {
                     String newString = old2new.get(oldString);
                     if (log.isInfoEnabled()) {
-                        log.info("Migration task: " + migrationTaskName + ". Replacing \"" + oldString + "\" by \"" + newString);
+                        log.info(DefaultMessagesImpl.getString(
+                                "TalendDefinitionFileUpdate_MigLog", migrationTaskName, oldString, newString));//$NON-NLS-1$
                     }
                     content = StringUtils.replace(content, oldString, newString);
                 }

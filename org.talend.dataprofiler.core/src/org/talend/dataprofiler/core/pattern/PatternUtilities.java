@@ -153,7 +153,7 @@ public final class PatternUtilities {
             // MOD xqliu 2009-08-12 bug 7810
             if (UDIHelper.getMatchingIndicatorName(indicatorDefinition, pattern).equals(indicator.getName())) {
                 result.setOk(false);
-                result.setMessage("This pattern has been selected!");
+                result.setMessage(DefaultMessagesImpl.getString("PatternUtilities.Selected")); //$NON-NLS-1$
                 return result;
             }
             // ~
@@ -194,8 +194,10 @@ public final class PatternUtilities {
         Expression returnExpression = dbmsLanguage.getRegexp(pattern, isJavaEngin);
         if (ExpressionType.REGEXP.getLiteral().equals(expressionType) && returnExpression == null) {
             String executeType = isJavaEngin ? executionLanguage.getName() : dbmsLanguage.getDbmsName();
-            boolean openPattern = MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    "warning", "no " + executeType + " expression found in this pattern. Would you like to add one?");
+            boolean openPattern = MessageDialog
+                    .openQuestion(
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            DefaultMessagesImpl.getString("PatternUtilities.Warning"), DefaultMessagesImpl.getString("PatternUtilities.NoExpression", executeType)); //$NON-NLS-1$ //$NON-NLS-2$
             if (openPattern) {
                 RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.recursiveFind(pattern);
                 if (RepositoryNodeHelper.canOpenEditor(node)) {
@@ -254,7 +256,7 @@ public final class PatternUtilities {
         // when the indicator is created.
         if (indicatorDefinition == null) {
             if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(patternMatchingIndicator)) {
-                log.error("Could not set the definition of the given indicator :" + patternMatchingIndicator.getName()); //$NON-NLS-1$
+                log.error(DefaultMessagesImpl.getString("PatternUtilities.SetFailed", patternMatchingIndicator.getName())); //$NON-NLS-1$
             }
         } else {
             patternMatchingIndicator.setIndicatorDefinition(indicatorDefinition);
@@ -264,7 +266,7 @@ public final class PatternUtilities {
         IndicatorUnit addIndicatorUnit = modelElementIndicator.addSpecialIndicator(type, patternMatchingIndicator);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
         result.setOk(true);
-        result.setMessage("OK");
+        result.setMessage(DefaultMessagesImpl.getString("PatternUtilities.OK")); //$NON-NLS-1$
         result.setObject(addIndicatorUnit);
         return result;
     }

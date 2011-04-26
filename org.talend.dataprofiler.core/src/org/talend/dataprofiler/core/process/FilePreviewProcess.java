@@ -58,7 +58,7 @@ public class FilePreviewProcess implements IPreview {
             String fileSeparator = TalendQuoteUtils.removeQuotes(description.getFieldSeparator());
             String rowSeparator = TalendQuoteUtils.removeQuotes(description.getRowSeparator());
 
-            if (fileSeparator.contains("t")) {
+            if (fileSeparator.contains("t")) { //$NON-NLS-1$
                 fileSeparator = String.valueOf('\t');
             }
 

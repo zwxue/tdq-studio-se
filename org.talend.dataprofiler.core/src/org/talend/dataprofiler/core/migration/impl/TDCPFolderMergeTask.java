@@ -86,8 +86,8 @@ public class TDCPFolderMergeTask extends AbstractWorksapceUpdateTask {
             }
         }
         // Reporting_db
-        String pathName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/";
-        File repFolder = new File(pathName);
+        String pathName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + "/reporting_db/"; //$NON-NLS-1$
+        File repFolder = ResourceManager.getReportDBFolder().getLocation().toFile();
         if (repFolder.exists()) {
             FileUtils.copyDirectory(repFolder, ResourceManager.getReportDBFolder().getLocation().toFile());
             FileUtils.forceDelete(new File(pathName));
@@ -97,7 +97,7 @@ public class TDCPFolderMergeTask extends AbstractWorksapceUpdateTask {
     }
 
     private boolean fileContentUpgrade(IProject rootProject) throws CoreException {
-        String[] extensions = { FactoriesUtil.ANA, FactoriesUtil.PROV, FactoriesUtil.REP, "softwaredeployment" };
+        String[] extensions = { FactoriesUtil.ANA, FactoriesUtil.PROV, FactoriesUtil.REP, FactoriesUtil.SOFTWARE_SYSTEM };
         boolean recursive = true;
         Collection<?> files = FileUtils.listFiles(new File(rootProject.getLocation().toOSString()), extensions, recursive);
         for (Iterator<?> iterator = files.iterator(); iterator.hasNext();) {
@@ -105,13 +105,13 @@ public class TDCPFolderMergeTask extends AbstractWorksapceUpdateTask {
             if (file != null) {
                 try {
                     String content = FileUtils.readFileToString(file, EMFUtil.ENCODING);
-                    content = StringUtils.replace(content, "/Metadata/", "/" + EResourceConstant.METADATA.getName() + "/");
-                    content = StringUtils.replace(content, "/Libraries/", "/" + EResourceConstant.LIBRARIES.getName() + "/");
-                    content = StringUtils.replace(content, "/resource/" + EResourceConstant.LIBRARIES.getName() + "/",
-                            "/resource/" + ResourceManager.getRootProjectName() + "/" + EResourceConstant.LIBRARIES.getName()
-                                    + "/");
-                    content = StringUtils.replace(content, "/Data Profiling/", "/" + EResourceConstant.DATA_PROFILING.getName()
-                            + "/");
+                    content = StringUtils.replace(content, "/Metadata/", "/" + EResourceConstant.METADATA.getName() + "/"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    content = StringUtils.replace(content, "/Libraries/", "/" + EResourceConstant.LIBRARIES.getName() + "/"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    content = StringUtils.replace(content, "/resource/" + EResourceConstant.LIBRARIES.getName() + "/", //$NON-NLS-1$ //$NON-NLS-2$
+                            "/resource/" + ResourceManager.getRootProjectName() + "/" + EResourceConstant.LIBRARIES.getName() //$NON-NLS-1$ //$NON-NLS-2$
+                                    + "/"); //$NON-NLS-1$
+                    content = StringUtils.replace(content, "/Data Profiling/", "/" + EResourceConstant.DATA_PROFILING.getName() //$NON-NLS-1$ //$NON-NLS-2$
+                            + "/"); //$NON-NLS-1$
 
                     FileUtils.writeStringToFile(file, content, EMFUtil.ENCODING);
                 } catch (IOException e) {

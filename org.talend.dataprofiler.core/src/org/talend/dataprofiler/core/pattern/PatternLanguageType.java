@@ -139,7 +139,7 @@ public enum PatternLanguageType {
             }
         }
 
-        return "Unrecognized";
+        return DefaultMessagesImpl.getString("PatternLanguageType.Unrecognized"); //$NON-NLS-1$
     }
 
     public static String[] getAllLanguageTypes() {

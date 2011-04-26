@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.analysis.Analysis;
@@ -46,11 +47,11 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(ReorderingLibraryFoldersTask.class);
 
-    private static final String SQL_PATTERNS = "SQL Patterns";
+    private static final String SQL_PATTERNS = "SQL Patterns"; //$NON-NLS-1$
 
-    private static final String DQ_RULES = "DQ Rules";
+    private static final String DQ_RULES = "DQ Rules"; //$NON-NLS-1$
 
-    private static final String JRXML_REPORTS = "JRXML Reports";
+    private static final String JRXML_REPORTS = "JRXML Reports"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -190,7 +191,7 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
         } else if (FactoriesUtil.isDQRuleFile(fileExtension)) {
             return DQRuleResourceFileHelper.getInstance().findWhereRule(file);
         }
-        log.error("Unhandled file " + file.getFullPath().toOSString());
+        log.error(DefaultMessagesImpl.getString("ReorderingLibraryFoldersTask_LogErr", file.getFullPath().toOSString())); //$NON-NLS-1$
         return null;
 
     }

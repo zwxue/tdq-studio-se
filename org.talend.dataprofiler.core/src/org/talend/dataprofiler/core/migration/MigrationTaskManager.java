@@ -263,7 +263,7 @@ public final class MigrationTaskManager {
             monitor = new NullProgressMonitor();
         }
 
-        monitor.beginTask("Migration...", tasks.size());
+        monitor.beginTask(DefaultMessagesImpl.getString("MigrationTaskManager.MigProcess"), tasks.size()); //$NON-NLS-1$
 
         for (IMigrationTask task : tasks) {
 
@@ -275,10 +275,10 @@ public final class MigrationTaskManager {
 
             if (task.valid()) {
                 if (!task.execute()) {
-                    log.error("Migration Task failed: " + task.getName());
+                    log.error(DefaultMessagesImpl.getString("MigrationTaskManager.MigFailed", task.getName())); //$NON-NLS-1$
                 } else {
                     if (log.isInfoEnabled()) {
-                        log.info("Migration Task success: " + task.getName());
+                        log.info(DefaultMessagesImpl.getString("MigrationTaskManager.MigSuccess", task.getName())); //$NON-NLS-1$
                     }
                 }
             }

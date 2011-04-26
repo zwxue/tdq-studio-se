@@ -203,9 +203,9 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private Map<String, String> initReplaceStringMap() {
         Map<String, String> result = new HashMap<String, String>();
-        result.put("TDQ_Metadata/DB Connections", EResourceConstant.DB_CONNECTIONS.getPath());
-        result.put("TDQ_Metadata/MDM Connections", EResourceConstant.MDM_CONNECTIONS.getPath());
-        result.put(".prv", ".item");
+        result.put("TDQ_Metadata/DB Connections", EResourceConstant.DB_CONNECTIONS.getPath()); //$NON-NLS-1$
+        result.put("TDQ_Metadata/MDM Connections", EResourceConstant.MDM_CONNECTIONS.getPath()); //$NON-NLS-1$
+        result.put(".prv", ".item"); //$NON-NLS-1$ //$NON-NLS-2$
 
         return result;
     }
@@ -283,10 +283,10 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
                 String version = property.getVersion();
                 if (version == null) {
-                    version = "0.1";
+                    version = "0.1"; //$NON-NLS-1$
                 }
 
-                String label = conn.getName() + "_" + version;
+                String label = conn.getName() + "_" + version; //$NON-NLS-1$
                 connNameAfter = label;
 
                 File destItemFile = new Path(targetFolder.getAbsolutePath()).append(path).append(connNameAfter)
@@ -300,7 +300,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                     while (destItemFile.exists() || destPropFile.exists()) {
 
                         connName = conn.getName() + String.valueOf(++num);
-                        connNameAfter = connName + "_" + version;
+                        connNameAfter = connName + "_" + version; //$NON-NLS-1$
                         destItemFile = new Path(destItemFile.getPath()).removeLastSegments(1).append(connNameAfter)
                                 .addFileExtension(FactoriesUtil.ITEM_EXTENSION).toFile();
                         destPropFile = new Path(destPropFile.getPath()).removeLastSegments(1).append(connNameAfter)

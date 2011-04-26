@@ -29,9 +29,9 @@ import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
  */
 public class UpdateDatabaseTypeTask extends AbstractWorksapceUpdateTask {
 
-    private static final String RAW_JDBC_TYPE = "Generic JDBC";
+    private static final String RAW_JDBC_TYPE = "Generic JDBC"; //$NON-NLS-1$
 
-    private static final String RAW_SYBASE_TYPE = "Sybase";
+    private static final String RAW_SYBASE_TYPE = "Sybase"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)

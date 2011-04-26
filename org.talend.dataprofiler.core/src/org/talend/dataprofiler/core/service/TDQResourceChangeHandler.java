@@ -113,7 +113,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 public void run() {
                     DeleteModelElementConfirmDialog.showDialog(null,
                             PropertyHelper.getItemFile(PropertyHelper.getProperty(modelElementFinal)), dependencyElements,
-                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.ConnectionNotBeSave"),false);
+                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.ConnectionNotBeSave"),false); //$NON-NLS-1$
                 }
             });
 

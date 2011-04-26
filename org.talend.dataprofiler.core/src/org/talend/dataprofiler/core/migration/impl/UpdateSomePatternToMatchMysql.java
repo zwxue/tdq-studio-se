@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -43,9 +44,9 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
 
     protected static Logger log = Logger.getLogger(UpdateSomePatternToMatchMysql.class);
 
-    private static final String UPDATE_FILE_NAME = "TDQ_Libraries/Patterns/Regex/phone/International_phone_number.pattern";
+    private static final String UPDATE_FILE_NAME = "TDQ_Libraries/Patterns/Regex/phone/International_phone_number.pattern"; //$NON-NLS-1$
 
-    private static final String EXPRESSIONBODY = "'^\\\\+[0-9]{1,3}\\.[0-9]+\\.[0-9]+$'";
+    private static final String EXPRESSIONBODY = "'^\\\\+[0-9]{1,3}\\.[0-9]+\\.[0-9]+$'"; //$NON-NLS-1$
 
     private File updateFile = null;
 
@@ -99,10 +100,10 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
     private Pattern retirePattern(Resource fileResource) {
         EList<EObject> contents = fileResource.getContents();
         if (contents.isEmpty()) {
-            log.error("No content in " + fileResource);
+            log.error(DefaultMessagesImpl.getString("UpdateSomePatternToMatchMysql_logErr", fileResource)); //$NON-NLS-1$
         }
         if (log.isDebugEnabled()) {
-            log.debug("No elements in contents " + contents.size());
+            log.debug("No elements in contents " + contents.size()); //$NON-NLS-1$
         }
         PatternSwitch<Pattern> mySwitch = new PatternSwitch<Pattern>() {
 

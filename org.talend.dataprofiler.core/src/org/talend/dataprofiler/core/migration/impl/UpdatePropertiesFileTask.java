@@ -29,6 +29,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Property;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter;
 import org.talend.dq.helper.PropertyHelper;
@@ -48,7 +49,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
         public boolean accept(File dir, String name) {
             IPath namePath = new Path(name);
             String fileExtension = namePath.getFileExtension();
-            return fileExtension != null && !name.startsWith(".") && !name.endsWith(FactoriesUtil.PROPERTIES_EXTENSION)
+            return fileExtension != null && !name.startsWith(".") && !name.endsWith(FactoriesUtil.PROPERTIES_EXTENSION) //$NON-NLS-1$
                     && FactoriesUtil.isEmfFile(fileExtension);
         }
     };
@@ -86,7 +87,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                 URI uri = URI.createFileURI(file.getAbsolutePath());
 
                 if (log.isDebugEnabled()) {
-                    log.debug("---------Translate " + uri.toString());
+                    log.debug("---------Translate " + uri.toString()); //$NON-NLS-1$
                 }
 
                 EObject eObject = null;
@@ -104,7 +105,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                         }
                     }
                 } catch (Exception e) {
-                    log.warn("Can't update property of file: " + file.getAbsolutePath(), e);
+                    log.warn(DefaultMessagesImpl.getString("UpdatePropertiesFileTask_2", file.getAbsolutePath()), e); //$NON-NLS-1$
                     ok = false;
                 }
 
@@ -113,11 +114,11 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                         try {
                             saveObject(emfUtil, file, uri, eObject);
                         } catch (Exception e) {
-                            log.error("Error when saving " + eObject + " in " + file + " with URI " + uri, e);
+                            log.error(DefaultMessagesImpl.getString("UpdatePropertiesFileTask_3", eObject, file, uri), e); //$NON-NLS-1$
                             ok = false;
                         }
                     } else {
-                        log.warn("Can't get the model elment : " + eObject.toString());
+                        log.warn(DefaultMessagesImpl.getString("UpdatePropertiesFileTask_4", eObject.toString())); //$NON-NLS-1$
                         ok = false;
                     }
                 }
@@ -157,7 +158,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
             EMFUtil.saveResource(propResource);
 
         } else {
-            log.warn("The property of " + modelElement.getName() + " is ignored.");
+            log.warn(DefaultMessagesImpl.getString("UpdatePropertiesFileTask_5", modelElement.getName())); //$NON-NLS-1$
         }
     }
 

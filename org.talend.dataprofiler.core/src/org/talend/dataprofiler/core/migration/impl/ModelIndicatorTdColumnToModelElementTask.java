@@ -95,7 +95,7 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
         int errorCounter = 0;
         Throwable error = null;
         for (File srcFile : fileList) {
-            log.info("-------------- Migrating (" + counter++ + ") : " + srcFile.getAbsolutePath());
+            log.info("-------------- Migrating (" + counter++ + ") : " + srcFile.getAbsolutePath()); //$NON-NLS-1$ //$NON-NLS-2$
             try {
                 // String inURI = sample.toURI().toString();
                 // String outURI = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).toURI().toString();
@@ -106,10 +106,10 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
             } catch (Throwable e) {
 
                 errorCounter++;
-                log.error("!!!!!!!!!!!  Error transforming (" + srcFile.getAbsolutePath() + ")\n" + e.getMessage(), e);
+                log.error("!!!!!!!!!!!  Error transforming (" + srcFile.getAbsolutePath() + ")\n" + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            log.info("-------------- Migration done of " + counter + " files"
-                    + (errorCounter != 0 ? (",  there are " + errorCounter + " files in error.") : "."));
+            log.info("-------------- Migration done of " + counter + " files" //$NON-NLS-1$ //$NON-NLS-2$
+                    + (errorCounter != 0 ? (",  there are " + errorCounter + " files in error.") : ".")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         if (error == null) {
             // remove original files and rename new ones to old ones
@@ -117,7 +117,7 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
                 boolean isDeleted = sample.delete();
                 log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
                 boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); //$NON-NLS-1$
-                log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$
+                log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }

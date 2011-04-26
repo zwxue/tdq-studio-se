@@ -34,12 +34,12 @@ public class UpdateOracleTextIndicatorQueryTask extends AbstractWorksapceUpdateT
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
         talendDefinitionFileUpdate
                 .add(
-                        "<sqlGenericExpression xmi:id=\"_ybtTIDh8Ed2XmO7pl5Yuyg\" body=\"SELECT MIN(LENGTH(TRIM('XX' || &lt;%=__COLUMN_NAMES__%>))) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>",
-                        "<sqlGenericExpression xmi:id=\"_ybtTIDh8Ed2XmO7pl5Yuyg\" body=\"SELECT MIN(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>");
+                        "<sqlGenericExpression xmi:id=\"_ybtTIDh8Ed2XmO7pl5Yuyg\" body=\"SELECT MIN(LENGTH(TRIM('XX' || &lt;%=__COLUMN_NAMES__%>))) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>", //$NON-NLS-1$
+                        "<sqlGenericExpression xmi:id=\"_ybtTIDh8Ed2XmO7pl5Yuyg\" body=\"SELECT MIN(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>"); //$NON-NLS-1$
         talendDefinitionFileUpdate
                 .add(
-                        "<sqlGenericExpression xmi:id=\"_ybt6Mjh8Ed2XmO7pl5Yuyg\" body=\"SELECT MAX(LENGTH(TRIM('XX' || &lt;%=__COLUMN_NAMES__%>))) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>",
-                        "<sqlGenericExpression xmi:id=\"_ybt6Mjh8Ed2XmO7pl5Yuyg\" body=\"SELECT MAX(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>");
+                        "<sqlGenericExpression xmi:id=\"_ybt6Mjh8Ed2XmO7pl5Yuyg\" body=\"SELECT MAX(LENGTH(TRIM('XX' || &lt;%=__COLUMN_NAMES__%>))) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>", //$NON-NLS-1$
+                        "<sqlGenericExpression xmi:id=\"_ybt6Mjh8Ed2XmO7pl5Yuyg\" body=\"SELECT MAX(LENGTH('XX' || &lt;%=__COLUMN_NAMES__%>)) - LENGTH('XX') FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>\" language=\"Oracle\"/>"); //$NON-NLS-1$
         return talendDefinitionFileUpdate.replace(this.getClass().getName());
     }
 

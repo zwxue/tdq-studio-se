@@ -43,31 +43,31 @@ public final class DQStructureMessage {
     }
 
     static {
-        MESSAGEMAP.put(EResourceConstant.ANALYSIS.getName(), "DQStructureManager.analyses");
+        MESSAGEMAP.put(EResourceConstant.ANALYSIS.getName(), "DQStructureManager.analyses"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.DATA_PROFILING.getName(), "DQStructureManager.data_Profiling");
+        MESSAGEMAP.put(EResourceConstant.DATA_PROFILING.getName(), "DQStructureManager.data_Profiling"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.DB_CONNECTIONS.getName(), "DQStructureManager.dbConnections");
+        MESSAGEMAP.put(EResourceConstant.DB_CONNECTIONS.getName(), "DQStructureManager.dbConnections"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.LIBRARIES.getName(), "DQStructureManager.libraries");
+        MESSAGEMAP.put(EResourceConstant.LIBRARIES.getName(), "DQStructureManager.libraries"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.METADATA.getName(), "DQStructureManager.metadata");
+        MESSAGEMAP.put(EResourceConstant.METADATA.getName(), "DQStructureManager.metadata"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.PATTERNS.getName(), "DQStructureManager.patterns");
+        MESSAGEMAP.put(EResourceConstant.PATTERNS.getName(), "DQStructureManager.patterns"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.PATTERN_REGEX.getName(), "DQStructureManager.regex");
+        MESSAGEMAP.put(EResourceConstant.PATTERN_REGEX.getName(), "DQStructureManager.regex"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.REPORTS.getName(), "DQStructureManager.reports");
+        MESSAGEMAP.put(EResourceConstant.REPORTS.getName(), "DQStructureManager.reports"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.SOURCE_FILES.getName(), "DQStructureManager.sourceFiles");
+        MESSAGEMAP.put(EResourceConstant.SOURCE_FILES.getName(), "DQStructureManager.sourceFiles"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.PATTERN_SQL.getName(), "DQStructureManager.sqlPatterns");
+        MESSAGEMAP.put(EResourceConstant.PATTERN_SQL.getName(), "DQStructureManager.sqlPatterns"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.RULES.getName(), "DQStructureManager.rules");
+        MESSAGEMAP.put(EResourceConstant.RULES.getName(), "DQStructureManager.rules"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.RULES_SQL.getName(), "DQStructureManager.sqls");
+        MESSAGEMAP.put(EResourceConstant.RULES_SQL.getName(), "DQStructureManager.sqls"); //$NON-NLS-1$
 
-        MESSAGEMAP.put(EResourceConstant.USER_DEFINED_INDICATORS.getName(), "DQStructureManager.userDefinedIndicators");
+        MESSAGEMAP.put(EResourceConstant.USER_DEFINED_INDICATORS.getName(), "DQStructureManager.userDefinedIndicators"); //$NON-NLS-1$
 
         // MESSAGEMAP.put(EResourceConstant.RULES.getName(), "DQStructureManager.dqRules");
     }

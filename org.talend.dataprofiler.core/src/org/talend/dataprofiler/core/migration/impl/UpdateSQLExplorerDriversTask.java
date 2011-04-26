@@ -20,6 +20,7 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AProjectTask;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 
@@ -52,7 +53,7 @@ public class UpdateSQLExplorerDriversTask extends AProjectTask {
 
                         break;
                     }
-                    log.warn("No jar assigned to the database: " + supportDBUrlType.getDBKey());
+                    log.warn(DefaultMessagesImpl.getString("UpdateSQLExplorerDriversTask_NoJar", supportDBUrlType.getDBKey())); //$NON-NLS-1$
                 }
             }
         }

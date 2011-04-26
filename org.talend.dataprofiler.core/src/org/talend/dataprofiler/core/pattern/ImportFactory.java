@@ -122,20 +122,20 @@ public final class ImportFactory {
                     }
 
                     try {
-                        String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
+                        String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type); //$NON-NLS-1$
                         names.add(name);
 
-                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name,
+                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name, //$NON-NLS-1$
                                 relativePath), true));
                     } catch (Exception e) {
-                        importEvent.add(new ReturnCode("Can't save pattern " + name, false));
+                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.SaveFailed") + name, false)); //$NON-NLS-1$
                     }
 
                 }
                 reader.close();
             } catch (Exception e) {
                 log.error(e, e);
-                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false));
+                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
             }
         }
 
@@ -164,12 +164,12 @@ public final class ImportFactory {
                             String contents = cell.getContents();
                             if (names.contains(contents)) {
                                 if (skip) {
-                                    importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.patternInported",
+                                    importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.patternInported", //$NON-NLS-1$
                                             contents), false));
                                     continue;
                                 }
                                 if (rename) {
-                                    contents = contents + "(" + new Date() + ")";
+                                    contents = contents + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                                 }
                             }
 
@@ -183,15 +183,15 @@ public final class ImportFactory {
 
                             for (int columnIndex : expressionMap.keySet()) {
                                 String rowContent = row[columnIndex].getContents();
-                                if (!rowContent.equals("")) {
+                                if (!rowContent.equals("")) { //$NON-NLS-1$
                                     patternParameters.regex.put(expressionMap.get(columnIndex).getLiteral(), rowContent);
                                 }
                             }
 
-                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type);
+                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type); //$NON-NLS-1$
 
                             names.add(contents);
-                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", contents,
+                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", contents, //$NON-NLS-1$
                                     relativePath), true));
                         }
                     }
@@ -200,10 +200,10 @@ public final class ImportFactory {
                 rwb.close();
             } catch (BiffException e) {
                 log.error(e, e);
-                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false));
+                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
             } catch (IOException e) {
                 log.error(e, e);
-                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false));
+                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
             }
         }
 
@@ -375,7 +375,7 @@ public final class ImportFactory {
 
         public UDIParameters() {
             super();
-            category = "";
+            category = ""; //$NON-NLS-1$
         }
 
     }
@@ -399,7 +399,7 @@ public final class ImportFactory {
         String fileExtName = getFileExtName(importFile);
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
-            String name = "";
+            String name = ""; //$NON-NLS-1$
             try {
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
                 reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
@@ -408,7 +408,7 @@ public final class ImportFactory {
 
                 reader.readHeaders();
 
-                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
+                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
 
                 while (reader.readRecord()) {
                     name = reader.get(PatternToExcelEnum.Label.getLiteral());
@@ -416,7 +416,7 @@ public final class ImportFactory {
                     if (names.contains(name)) {
                         if (skip) {
                             information
-                                    .add(new ReturnCode("User Defined Indicator \"" + name + "\" has already imported", false));
+                                    .add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.Imported") + name, false)); //$NON-NLS-1$
                             continue;
                         }
                         if (rename) {
@@ -445,8 +445,9 @@ public final class ImportFactory {
 
                     names.add(name);
 
-                    information.add(new ReturnCode("User Defined Indicator \"" + name
-                            + "\" imported in the \"Indicators/User Defined Indicators\" folder", true));
+                    information.add(new ReturnCode(
+                            DefaultMessagesImpl.getString("ImportFactory.importedSucess") //$NON-NLS-1$
+                                    + name, true));
 
                 }
 
@@ -454,7 +455,7 @@ public final class ImportFactory {
 
             } catch (Exception e) {
                 log.error(e, e);
-                information.add(new ReturnCode("User Defined Indicator \"" + name + "\" import failed", false));
+                information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed") + name, false)); //$NON-NLS-1$
             }
         }
 
@@ -486,7 +487,7 @@ public final class ImportFactory {
                                     continue;
                                 }
                                 if (rename) {
-                                    contents = contents + "(" + new Date() + ")";
+                                    contents = contents + "(" + new Date() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                                 }
                             }
 
@@ -501,7 +502,7 @@ public final class ImportFactory {
 
                             for (int columnIndex : expressionMap.keySet()) {
                                 String rowContent = row[columnIndex].getContents();
-                                if (!rowContent.equals("")) {
+                                if (!rowContent.equals("")) { //$NON-NLS-1$
                                     udiParameters.regex.put(expressionMap.get(columnIndex).getLiteral(), rowContent);
                                 }
                             }
@@ -608,8 +609,8 @@ public final class ImportFactory {
         if (importFile != null && targetFile != null) {
             File file = new File(targetFile.getRawLocation().toOSString());
             if (file.exists()) {
-                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS");
-                File bakFile = new File(file.getAbsolutePath() + "." + simpleDateFormat.format(new Date()) + ".bak");
+                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
+                File bakFile = new File(file.getAbsolutePath() + "." + simpleDateFormat.format(new Date()) + ".bak"); //$NON-NLS-1$ //$NON-NLS-2$
                 FilesUtils.copyFile(file, bakFile);
             }
             FilesUtils.copyFile(importFile, file);

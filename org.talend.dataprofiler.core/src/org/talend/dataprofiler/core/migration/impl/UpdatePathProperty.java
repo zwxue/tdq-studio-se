@@ -26,6 +26,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.Property;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.PropertyHelper;
 
@@ -43,7 +44,7 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
     private FilenameFilter propertyFileFilter = new FilenameFilter() {
 
         public boolean accept(File dir, String name) {
-            return !dir.getName().startsWith(".") && name.endsWith(FactoriesUtil.PROPERTIES_EXTENSION);
+            return !dir.getName().startsWith(".") && name.endsWith(FactoriesUtil.PROPERTIES_EXTENSION); //$NON-NLS-1$
         }
 
         // private boolean isUserCreateDir(File dir) {
@@ -91,7 +92,7 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
                 URI uri = URI.createFileURI(file.getAbsolutePath());
 
                 if (log.isDebugEnabled()) {
-                    log.debug("---------Translate " + uri.toString());
+                    log.debug("---------Translate " + uri.toString()); //$NON-NLS-1$
                 }
 
                 Property property = null;
@@ -106,7 +107,7 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
 
                     }
                 } catch (Exception e) {
-                    log.warn("Can't update property of file: " + file.getAbsolutePath(), e);
+                    log.warn(DefaultMessagesImpl.getString("UpdatePathProperty_UpdateFailed", file.getAbsolutePath()), e); //$NON-NLS-1$
                     ok = false;
                 }
 
@@ -114,7 +115,7 @@ public class UpdatePathProperty extends AbstractWorksapceUpdateTask {
                     try {
                         saveObject(emfUtil, file, uri, property);
                     } catch (Exception e) {
-                        log.error("Error when saving " + property + " in " + file + " with URI " + uri, e);
+                        log.error(DefaultMessagesImpl.getString("UpdatePathProperty_UpdateError", property, file, uri), e); //$NON-NLS-1$
                         ok = false;
                     }
                 }

@@ -46,8 +46,8 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
      */
     private Map<String, String> initReplaceStringMapMdm() {
         Map<String, String> result = new HashMap<String, String>();
-        result.put("TdXMLDocument", "TdXmlSchema");
-        result.put("TdXMLElement", "TdXmlElementType");
+        result.put("TdXMLDocument", "TdXmlSchema"); //$NON-NLS-1$ //$NON-NLS-2$
+        result.put("TdXMLElement", "TdXmlElementType"); //$NON-NLS-1$ //$NON-NLS-2$
         return result;
     }
 
@@ -63,7 +63,7 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
         File fileAnalysis = this.getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
 
         try {
-            String[] anaFileExtentionNames = { ".ana" };
+            String[] anaFileExtentionNames = { ".ana" }; //$NON-NLS-1$
             result = FilesUtils.migrateFolder(fileAnalysis, anaFileExtentionNames, this.getReplaceStringMapMdm(), log);
             // AnaResourceFileHelper.getInstance().clear();
             // AnaResourceFileHelper.getInstance().getAllAnalysis();

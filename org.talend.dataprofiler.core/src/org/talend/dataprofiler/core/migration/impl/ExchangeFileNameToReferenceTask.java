@@ -38,6 +38,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
@@ -50,9 +51,9 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
 
     protected static Logger log = Logger.getLogger(ExchangeFileNameToReferenceTask.class);
 
-    public static final String DB_CONNECTION = "TDQ_Metadata/DB Connections";
+    public static final String DB_CONNECTION = "TDQ_Metadata/DB Connections"; //$NON-NLS-1$
 
-    public static final String MDM_CONNECTION = "TDQ_Metadata/MDM Connections";
+    public static final String MDM_CONNECTION = "TDQ_Metadata/MDM Connections"; //$NON-NLS-1$
 
     private Map<String, String> replaceStringMap;
 
@@ -98,7 +99,9 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
                         handlePropertiesFile(resource);
                     } catch (Exception e) {
                         returnFlag = false;
-                        log.warn("Error when migrating resource " + resource.getAbsolutePath(), e);
+                        log.warn(
+                                DefaultMessagesImpl.getString(
+                                        "ExchangeFileNameToReferenceTask_MigWarn", resource.getAbsolutePath()), e); //$NON-NLS-1$
                     }
 
                 }
@@ -190,7 +193,7 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
 
     private boolean isPropertyFile(File propertyFile) {
         if (propertyFile.isFile()
-                && propertyFile.getName().toLowerCase().endsWith("." + FactoriesUtil.PROPERTIES_EXTENSION.toLowerCase())) {
+                && propertyFile.getName().toLowerCase().endsWith("." + FactoriesUtil.PROPERTIES_EXTENSION.toLowerCase())) { //$NON-NLS-1$
             return true;
         }
         return false;
@@ -213,7 +216,7 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
 
     private Map<String, String> initReplaceStringMap() {
         Map<String, String> result = new HashMap<String, String>();
-        result.put(".prv", ".item");
+        result.put(".prv", ".item"); //$NON-NLS-1$ //$NON-NLS-2$
 
         return result;
     }

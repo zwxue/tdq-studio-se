@@ -39,15 +39,15 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(MergeMetadataTask.class);
 
-    private static final String MIGRATION_FILE_EXT = ".mig";
+    private static final String MIGRATION_FILE_EXT = ".mig"; //$NON-NLS-1$
 
-    private static final String MIGRATION_FOLDER_EXT = "_mig";
+    private static final String MIGRATION_FOLDER_EXT = "_mig"; //$NON-NLS-1$
 
-    private static final String TDQ_METADATA = "TDQ_Metadata";
+    private static final String TDQ_METADATA = "TDQ_Metadata"; //$NON-NLS-1$
 
-    private static final String TDQ_DATAPROFILING = "TDQ_Data Profiling";
+    private static final String TDQ_DATAPROFILING = "TDQ_Data Profiling"; //$NON-NLS-1$
 
-    private static final String TDQ_LIBRARIES = "TDQ_Libraries";
+    private static final String TDQ_LIBRARIES = "TDQ_Libraries"; //$NON-NLS-1$
 
     private TopMetadataMigrationFrom400to410usingGenericVM metadata400to410;
 
@@ -73,17 +73,17 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
         // TdTable TdView TdColumn TdXMLElement use "xmlns:relational" , Catalog Schema use
         // "xmlns:orgomg.cwm.resource.relational", but there are not "xmlns:orgomg.cwm.resource.relational" in the .ana
         // file so we replate "xmlns:relational" with "xmlns:relational" and "xmlns:orgomg.cwm.resource.relational"
-        result.put("xmlns:relational=\"http:///org/talend/cwm/resource.relational\"",
-                "xmlns:relational=\"http://www.talend.org/cwm/resource/relational/2010\""
-                        + " xmlns:orgomg.cwm.resource.relational=\"http:///orgomg/cwm/resource/relational.ecore\"");
+        result.put("xmlns:relational=\"http:///org/talend/cwm/resource.relational\"", //$NON-NLS-1$
+                "xmlns:relational=\"http://www.talend.org/cwm/resource/relational/2010\"" //$NON-NLS-1$
+                        + " xmlns:orgomg.cwm.resource.relational=\"http:///orgomg/cwm/resource/relational.ecore\""); //$NON-NLS-1$
         // ~~~
-        result.put("xmlns:org.talend.cwm.xml=\"http:///org/talend/cwm/resource.xml\"",
-                "xmlns:org.talend.cwm.xml=\"http://www.talend.org/cwm/resource/xml/2010\"");
-        result.put("xmlns:softwaredeployment=\"http:///org.talend/cwm/foundation.softwaredeployment\"",
-                "xmlns:TalendMetadata=\"http://www.talend.org/metadata/connection/2010\"");
-        result.put("softwaredeployment:TdDataProvider", "TalendMetadata:DatabaseConnection");
-        result.put("relational:TdCatalog", "orgomg.cwm.resource.relational:Catalog");
-        result.put("relational:TdSchema", "orgomg.cwm.resource.relational:Schema");
+        result.put("xmlns:org.talend.cwm.xml=\"http:///org/talend/cwm/resource.xml\"", //$NON-NLS-1$
+                "xmlns:org.talend.cwm.xml=\"http://www.talend.org/cwm/resource/xml/2010\""); //$NON-NLS-1$
+        result.put("xmlns:softwaredeployment=\"http:///org.talend/cwm/foundation.softwaredeployment\"", //$NON-NLS-1$
+                "xmlns:TalendMetadata=\"http://www.talend.org/metadata/connection/2010\""); //$NON-NLS-1$
+        result.put("softwaredeployment:TdDataProvider", "TalendMetadata:DatabaseConnection"); //$NON-NLS-1$ //$NON-NLS-2$
+        result.put("relational:TdCatalog", "orgomg.cwm.resource.relational:Catalog"); //$NON-NLS-1$ //$NON-NLS-2$
+        result.put("relational:TdSchema", "orgomg.cwm.resource.relational:Schema"); //$NON-NLS-1$ //$NON-NLS-2$
         return result;
     }
 
@@ -110,8 +110,8 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
      */
     private Map<String, String> initReplaceStringMapRules() {
         Map<String, String> result = new HashMap<String, String>();
-        result.put("xmlns:relational=\"http:///org/talend/cwm/resource.relational\"",
-                "xmlns:relational=\"http://www.talend.org/cwm/resource/relational/2010\"");
+        result.put("xmlns:relational=\"http:///org/talend/cwm/resource.relational\"", //$NON-NLS-1$
+                "xmlns:relational=\"http://www.talend.org/cwm/resource/relational/2010\""); //$NON-NLS-1$
         return result;
     }
 
@@ -151,14 +151,14 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
                 return false;
             }
         });
-        log.info("-------------- Migrating " + fileList.size() + " files");
+        log.info("-------------- Migrating " + fileList.size() + " files"); //$NON-NLS-1$ //$NON-NLS-2$
 
         int counter = 0;
         int errorCounter = 0;
         Throwable error = null;
 
         for (File sample : fileList) {
-            log.info("-------------- Migrating (" + counter++ + ") : " + sample.getAbsolutePath());
+            log.info("-------------- Migrating (" + counter++ + ") : " + sample.getAbsolutePath()); //$NON-NLS-1$ //$NON-NLS-2$
             try {
                 BufferedReader fileReader = new BufferedReader(new FileReader(sample));
                 BufferedWriter fileWriter = new BufferedWriter(new FileWriter(new File(sample.getAbsolutePath()
@@ -185,10 +185,10 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             } catch (Exception e) {
                 error = e;
                 errorCounter++;
-                log.error("!!!!!!!!!!!  Error transforming (" + sample.getAbsolutePath() + ")\n" + e.getMessage(), e);
+                log.error("!!!!!!!!!!!  Error transforming (" + sample.getAbsolutePath() + ")\n" + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            log.info("-------------- Migration done of " + counter + " files"
-                    + (errorCounter != 0 ? (",  there are " + errorCounter + " files in error.") : "."));
+            log.info("-------------- Migration done of " + counter + " files" //$NON-NLS-1$ //$NON-NLS-2$
+                    + (errorCounter != 0 ? (",  there are " + errorCounter + " files in error.") : ".")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         if (error != null) {
@@ -197,9 +197,9 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             // remove original files and rename new ones to old ones
             for (File sample : fileList) {
                 boolean isDeleted = sample.delete();
-                log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete."));
+                log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
                 boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); //$NON-NLS-1$
-                log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename."));
+                log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
 
@@ -232,14 +232,14 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
                 return false;
             }
         });
-        log.info("-------------- Migrating " + fileList.size() + " files");
+        log.info("-------------- Migrating " + fileList.size() + " files"); //$NON-NLS-1$ //$NON-NLS-2$
 
         int counter = 0;
         int errorCounter = 0;
         Throwable error = null;
 
         for (File sample : fileList) {
-            log.info("-------------- Migrating (" + counter++ + ") : " + sample.getAbsolutePath());
+            log.info("-------------- Migrating (" + counter++ + ") : " + sample.getAbsolutePath()); //$NON-NLS-1$ //$NON-NLS-2$
             try {
                 String inURI = sample.toURI().toString();
                 String outURI = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).toURI().toString();
@@ -247,10 +247,10 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             } catch (Exception e) {
                 error = e;
                 errorCounter++;
-                log.error("!!!!!!!!!!!  Error transforming (" + sample.getAbsolutePath() + ")\n" + e.getMessage(), e);
+                log.error("!!!!!!!!!!!  Error transforming (" + sample.getAbsolutePath() + ")\n" + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            log.info("-------------- Migration done of " + counter + " files"
-                    + (errorCounter != 0 ? (",  there are " + errorCounter + " files in error.") : "."));
+            log.info("-------------- Migration done of " + counter + " files" //$NON-NLS-1$ //$NON-NLS-2$
+                    + (errorCounter != 0 ? (",  there are " + errorCounter + " files in error.") : ".")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         if (error != null) {
@@ -259,9 +259,9 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             // remove original files and rename new ones to old ones
             for (File sample : fileList) {
                 boolean isDeleted = sample.delete();
-                log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete."));
+                log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
                 boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); //$NON-NLS-1$
-                log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename."));
+                log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         return true;
@@ -380,20 +380,20 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             if (migFile.isDirectory()) {
                 try {
                     String[] fileExts;
-                    if (StringUtils.equals(fname, "TDQ_Metadata")) {
+                    if (StringUtils.equals(fname, "TDQ_Metadata")) { //$NON-NLS-1$
                         // If folder is TDQ_Metadata
-                        fileExts = new String[] { ".prv" };
+                        fileExts = new String[] { ".prv" }; //$NON-NLS-1$
                         result = migrateFolder(migFile, fileExts);
                     } else if (StringUtils.equals(fname, EResourceConstant.LIBRARIES.getName())) {
                         // If folder is TDQ_Libaries
-                        fileExts = new String[] { ".softwaresystem.softwaredeployment" };
+                        fileExts = new String[] { ".softwaresystem.softwaredeployment" }; //$NON-NLS-1$
                         result = migrateFolder(migFile, fileExts);
 
-                        fileExts = new String[] { ".rules" };
+                        fileExts = new String[] { ".rules" }; //$NON-NLS-1$
                         result = migrateFolder(migFile, fileExts, this.getReplaceStringMapRules());
                     } else if (StringUtils.equals(fname, EResourceConstant.DATA_PROFILING.getName())) {
                         // If folder is TDQ_Data Profiling
-                        fileExts = new String[] { ".ana" };
+                        fileExts = new String[] { ".ana" }; //$NON-NLS-1$
                         result = migrateFolder(migFile, fileExts, this.getReplaceStringMapAna());
                     }
                 } catch (Exception e) {

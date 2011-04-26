@@ -27,9 +27,9 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
  */
 public class UpdateRegularExpressionMatchingMysqlExpressionTask extends AbstractWorksapceUpdateTask {
 
-    private static final String REGULAR_EXPRESSION_MATCHING_LABEL = "Regular Expression Matching";
+    private static final String REGULAR_EXPRESSION_MATCHING_LABEL = "Regular Expression Matching"; //$NON-NLS-1$
 
-    private static final String MYSQL_EXPRESSION = "SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> REGEXP BINARY <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>";
+    private static final String MYSQL_EXPRESSION = "SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> REGEXP BINARY <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)

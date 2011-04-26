@@ -130,7 +130,7 @@ public final class WorkspaceResourceHelper {
 
             String folderName = null;
             if (type.equals(ERepositoryObjectType.TDQ_JRAXML_ELEMENT)) {
-                folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel();
+                folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel(); //$NON-NLS-1$
             }
             IFolder folder = project.getFolder(folderName);
             int segmentCount = folder.getFullPath().segmentCount();

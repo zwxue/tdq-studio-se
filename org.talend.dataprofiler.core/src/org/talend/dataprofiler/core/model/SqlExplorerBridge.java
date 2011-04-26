@@ -72,7 +72,7 @@ public final class SqlExplorerBridge {
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         if (currentUser == null) {
             MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable") + tableName);
+                    DefaultMessagesImpl.getString("SqlExplorerBridge.MissTable", tableName)); //$NON-NLS-1$
             return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
                     "SqlExplorerBridge.NotFindCorrespondTable", tableName), //$NON-NLS-1$
                     false);
@@ -134,14 +134,14 @@ public final class SqlExplorerBridge {
                 DatabaseStructureView dsView = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
                 dsView.setSessionSelectionNode(currentUser.getMetaDataSession(), new StructuredSelection(node));
                 // MOD qiongli bug 13093,2010-7-2
-                SQLExplorerPlugin.getDefault().getConnectionsView().getTreeViewer().setSelection(
-                        new StructuredSelection(currentUser));
+                SQLExplorerPlugin.getDefault().getConnectionsView().getTreeViewer()
+                        .setSelection(new StructuredSelection(currentUser));
 
                 return typedReturnCode;
             }
         }
         MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable", tableName));
+                DefaultMessagesImpl.getString("SqlExplorerBridge.NotFindCorrespondTable", tableName)); //$NON-NLS-1$
         return new TypedReturnCode<TableNode>(DefaultMessagesImpl.getString(
                 "SqlExplorerBridge.NotFindCorrespondTableObject", tableName), //$NON-NLS-1$
                 false);

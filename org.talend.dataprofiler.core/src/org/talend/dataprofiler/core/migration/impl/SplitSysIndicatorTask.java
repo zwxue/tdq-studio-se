@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.talend.commons.emf.CwmResource;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.analysis.Analysis;
@@ -110,12 +111,13 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
             // MOD scorreia 2010-10-05 16030 set the link between indicators and their definition
             if (DefinitionHandler.getInstance().setDefaultIndicatorDefinition(ind)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("MIGRATING: indicator definition " + indicatorDefinition.getName() + " in indicator "//$NON-NLS-1$//$NON-NLS-1$
+                    log.debug("MIGRATING: indicator definition " + indicatorDefinition.getName() + " in indicator "//$NON-NLS-1$//$NON-NLS-1$ //$NON-NLS-2$
                             + ind.getName() + " in analysis " + ind.eResource());//$NON-NLS-1$
                 }
             } else {
-                log.error("MIGRATION ERROR: Could not change the indicator definition " + indicatorDefinition.getName()//$NON-NLS-1$
-                        + " in indicator " + ind.getName() + " in analysis " + ind.eResource());//$NON-NLS-1$//$NON-NLS-1$
+                log.error(DefaultMessagesImpl.getString(
+                        "SplitSysIndicatorTask_LogErr", indicatorDefinition.getName(), ind.getName(), ind.eResource())); //$NON-NLS-1$
+
             }
             // ~ 16030
         } else {

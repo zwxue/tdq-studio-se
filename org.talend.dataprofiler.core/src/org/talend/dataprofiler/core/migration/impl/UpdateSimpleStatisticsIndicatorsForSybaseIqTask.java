@@ -49,19 +49,19 @@ public class UpdateSimpleStatisticsIndicatorsForSybaseIqTask extends AbstractWor
                     .addSqlExpression(
                             definition0,
                             SYBASE,
-                            "SELECT COUNT(*) FROM (SELECT <%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) AS myquery");
+                            "SELECT COUNT(*) FROM (SELECT <%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> HAVING COUNT(*) = 1) AS myquery"); //$NON-NLS-1$
 
             IndicatorDefinitionFileHelper
                     .addSqlExpression(
                             definition1,
                             SYBASE,
-                            "SELECT COUNT(*) FROM (SELECT <%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM <%=__TABLE_NAME__%>  m <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) AS myquery");
+                            "SELECT COUNT(*) FROM (SELECT <%=__COLUMN_NAMES__%>, COUNT(*) mycount FROM <%=__TABLE_NAME__%>  m <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAMES__%> HAVING COUNT(*) > 1) AS myquery"); //$NON-NLS-1$
 
             IndicatorDefinitionFileHelper
                     .addSqlExpression(
                             definition2,
                             SYBASE,
-                            "SELECT COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> WHERE RTRIM(LTRIM(<%=__COLUMN_NAMES__%>)) = '' <%=__AND_WHERE_CLAUSE__%>");
+                            "SELECT COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> WHERE RTRIM(LTRIM(<%=__COLUMN_NAMES__%>)) = '' <%=__AND_WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
             return IndicatorDefinitionFileHelper.save(definition0) & IndicatorDefinitionFileHelper.save(definition1)
                     & IndicatorDefinitionFileHelper.save(definition2);

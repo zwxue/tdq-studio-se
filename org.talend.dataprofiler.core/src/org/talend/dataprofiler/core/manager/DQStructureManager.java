@@ -281,15 +281,15 @@ public final class DQStructureManager {
                 } else if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
                     folderName = ERepositoryObjectType.getFolderName(type);
                 } else {
-                    folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel();
+                    folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel(); //$NON-NLS-1$
                 }
-                if (folderName.equals("date")) {
+                if (folderName.equals("date")) { //$NON-NLS-1$
                     continue;
                 }
                 IFolder folder = project.getFolder(folderName);
                 if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
                     String name = file.getName();
-                    int indexOf = name.indexOf(".");
+                    int indexOf = name.indexOf("."); //$NON-NLS-1$
                     String label = name.substring(0, indexOf);
                     String extendtion = name.substring(indexOf + 1);
                     createSourceFileItem(file, Path.EMPTY, label, extendtion);

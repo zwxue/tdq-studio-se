@@ -22,13 +22,13 @@ import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
  */
 public class SoundexIndicatorQueryTask extends AbstractWorksapceUpdateTask {
 
-    private final String oldSoundexQuery = "ORDER BY d,c DESC";
+    private final String oldSoundexQuery = "ORDER BY d,c DESC"; //$NON-NLS-1$
 
-    private final String newSoundexQuery = "ORDER BY d DESC,c DESC";
+    private final String newSoundexQuery = "ORDER BY d DESC,c DESC"; //$NON-NLS-1$
 
-    private final String oldPSoundexQuery = "ORDER BY COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) , COUNT(*) DESC";
+    private final String oldPSoundexQuery = "ORDER BY COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) , COUNT(*) DESC"; //$NON-NLS-1$
 
-    private final String newPSoundexQuery = "ORDER BY COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) DESC , COUNT(*) DESC";
+    private final String newPSoundexQuery = "ORDER BY COUNT(DISTINCT &lt;%=__COLUMN_NAMES__%>) DESC , COUNT(*) DESC"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)

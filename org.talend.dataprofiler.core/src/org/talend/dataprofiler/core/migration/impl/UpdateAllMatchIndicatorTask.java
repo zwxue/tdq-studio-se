@@ -22,18 +22,18 @@ import org.talend.dataprofiler.core.migration.helper.TalendDefinitionFileUpdate;
  */
 public class UpdateAllMatchIndicatorTask extends AbstractWorksapceUpdateTask {
 
-    String separator = System.getProperty("line.separator");
+    String separator = System.getProperty("line.separator"); //$NON-NLS-1$
 
-    String allMatchIndicatorDefinitions = "  <indicatorDefinitions xmi:id=\"_JoeMkM-jEd6qN5aKpPNGTh\" name=\"All Match\" label=\"All Match\" categories=\"_ccKHEBF2Ed2PKb6nEJEvhw\">"
+    String allMatchIndicatorDefinitions = "  <indicatorDefinitions xmi:id=\"_JoeMkM-jEd6qN5aKpPNGTh\" name=\"All Match\" label=\"All Match\" categories=\"_ccKHEBF2Ed2PKb6nEJEvhw\">" //$NON-NLS-1$
             + separator
-            + "    <taggedValue xmi:id=\"_JoezoW-jEd6qN5aKpPNGTg\" tag=\"Description\" value=\"All Match\"/>"
+            + "    <taggedValue xmi:id=\"_JoezoW-jEd6qN5aKpPNGTg\" tag=\"Description\" value=\"All Match\"/>" //$NON-NLS-1$
             + separator
-            + "    <taggedValue xmi:id=\"_JoezoA-jEd6qN5aKpPNGTg\" tag=\"Purpose\" value=\"All Match\"/>"
+            + "    <taggedValue xmi:id=\"_JoezoA-jEd6qN5aKpPNGTg\" tag=\"Purpose\" value=\"All Match\"/>" //$NON-NLS-1$
             + separator
-            + "    <sqlGenericExpression xmi:id=\"_Joezos-jEd6qN5aKpPNGTg\" body=\"SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>\" language=\"SQL\"/>"
-            + separator + "  </indicatorDefinitions>";
+            + "    <sqlGenericExpression xmi:id=\"_Joezos-jEd6qN5aKpPNGTg\" body=\"SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%>\" language=\"SQL\"/>" //$NON-NLS-1$
+            + separator + "  </indicatorDefinitions>"; //$NON-NLS-1$
 
-    String endLine = "</dataquality.indicators.definition:IndicatorsDefinitions>";
+    String endLine = "</dataquality.indicators.definition:IndicatorsDefinitions>"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -43,7 +43,7 @@ public class UpdateAllMatchIndicatorTask extends AbstractWorksapceUpdateTask {
     @Override
     protected boolean doExecute() throws Exception {
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
-        if (-1 == talendDefinitionFileUpdate.indexOf("name=\"All Match\"")) {
+        if (-1 == talendDefinitionFileUpdate.indexOf("name=\"All Match\"")) { //$NON-NLS-1$
             talendDefinitionFileUpdate.add(endLine, allMatchIndicatorDefinitions + separator + endLine);
             return talendDefinitionFileUpdate.replace(this.getClass().getName());
         }

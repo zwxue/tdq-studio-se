@@ -31,11 +31,11 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     private static Logger log = Logger.getLogger(AbstractWorksapceUpdateTask.class);
 
-    public static final String OLD_MEATADATA_FOLDER_NAME = "TDQ_Metadata";
+    public static final String OLD_MEATADATA_FOLDER_NAME = "TDQ_Metadata"; //$NON-NLS-1$
 
-    public static final String OLD_LIBRARIES_FOLDER_NAME = "TDQ_Libraries";
+    public static final String OLD_LIBRARIES_FOLDER_NAME = "TDQ_Libraries"; //$NON-NLS-1$
 
-    public static final String OLD_PROFILING_FOLDER_NAME = "TDQ_Data Profiling";
+    public static final String OLD_PROFILING_FOLDER_NAME = "TDQ_Data Profiling"; //$NON-NLS-1$
 
     private IPath workspacePath = ResourceManager.getRootProject().getLocation();
 

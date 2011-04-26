@@ -23,6 +23,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.resource.ResourceManager;
 
@@ -56,7 +57,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
      */
     private static String migrateFilePath(String aString) {
         String result = aString;
-        if (aString != null && !"".equals(aString)) {
+        if (aString != null && !"".equals(aString)) { //$NON-NLS-1$
             int xedPoint = aString.indexOf(XED);
             int xsdPoint = aString.indexOf(XSD);
             if (xedPoint > -1 && xsdPoint > -1 && (xsdPoint - xedPoint > 0)) {
@@ -105,14 +106,14 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
                 return false;
             }
         });
-        log.info("-------------- Migrating " + fileList.size() + " files");
+        log.info(DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo", fileList.size())); //$NON-NLS-1$
 
         int counter = 0;
         int errorCounter = 0;
         Throwable error = null;
 
         for (File sample : fileList) {
-            log.info("-------------- Migrating (" + counter++ + ") : " + sample.getAbsolutePath());
+            log.info(DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo2", counter, sample.getAbsolutePath())); //$NON-NLS-1$
             try {
                 // FIXME stream should be closed.
                 BufferedReader fileReader = new BufferedReader(new FileReader(sample));
@@ -132,10 +133,11 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
             } catch (Exception e) {
                 error = e;
                 errorCounter++;
-                log.error("!!!!!!!!!!!  Error transforming (" + sample.getAbsolutePath() + ")\n" + e.getMessage(), e);
+                log.error(
+                        DefaultMessagesImpl.getString(
+                                "UpdateMDMConnectionXSDPathTask_MigInfo3", sample.getAbsolutePath(), e.getMessage()), e); //$NON-NLS-1$
             }
-            log.info("-------------- Migration done of " + counter + " files"
-                    + (errorCounter != 0 ? (",  there are " + errorCounter + " files in error.") : "."));
+            log.info(DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo4", counter, errorCounter)); //$NON-NLS-1$
         }
 
         if (error != null) {
@@ -145,9 +147,12 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
                 // remove original files and rename new ones to old ones
                 for (File sample : fileList) {
                     boolean isDeleted = sample.delete();
-                    log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete."));
-                    boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); //$NON-NLS-1$
-                    log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename."));
+                    log.info(isDeleted ? DefaultMessagesImpl.getString(
+                            "UpdateMDMConnectionXSDPathTask_MigInfo5", sample.getAbsolutePath()) : DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo6", sample.getAbsolutePath())); //$NON-NLS-1$ //$NON-NLS-2$
+                    String fullPath = sample.getAbsolutePath() + MIGRATION_FILE_EXT;
+                    boolean isrenamed = new File(fullPath).renameTo(sample); //$NON-NLS-1$
+                    log.info(isrenamed ? DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo7", fullPath) //$NON-NLS-1$
+                            : DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo8", fullPath)); //$NON-NLS-1$
                 }
             }
         }

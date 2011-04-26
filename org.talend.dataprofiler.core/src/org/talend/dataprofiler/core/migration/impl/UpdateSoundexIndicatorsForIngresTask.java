@@ -42,13 +42,13 @@ public class UpdateSoundexIndicatorsForIngresTask extends AbstractWorksapceUpdat
                 .addSqlExpression(
                         definitionHigh,
                         INGRES,
-                        "SELECT MAX(<%=__COLUMN_NAMES__%>), SOUNDEX(<%=__COLUMN_NAMES__%>) , COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY d DESC,c DESC");
+                        "SELECT MAX(<%=__COLUMN_NAMES__%>), SOUNDEX(<%=__COLUMN_NAMES__%>) , COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY d DESC,c DESC"); //$NON-NLS-1$
         IndicatorDefinition definitionLow = IndicatorDefinitionFileHelper.getSystemIndicatorByName(SOUNDEX_LOW_FREQUENCY);
         IndicatorDefinitionFileHelper
                 .addSqlExpression(
                         definitionLow,
                         INGRES,
-                        "SELECT MAX(<%=__COLUMN_NAMES__%>), SOUNDEX(<%=__COLUMN_NAMES__%>) , COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY d,c ASC");
+                        "SELECT MAX(<%=__COLUMN_NAMES__%>), SOUNDEX(<%=__COLUMN_NAMES__%>) , COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY d,c ASC"); //$NON-NLS-1$
 
         return IndicatorDefinitionFileHelper.save(definitionHigh) & IndicatorDefinitionFileHelper.save(definitionLow);
     }

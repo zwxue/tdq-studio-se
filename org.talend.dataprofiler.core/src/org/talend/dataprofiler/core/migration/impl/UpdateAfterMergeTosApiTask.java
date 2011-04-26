@@ -54,7 +54,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
-    private static final String FILE_NAME_FLAG = "_0.1."; //$NON-NLS-2$
+    private static final String FILE_NAME_FLAG = "_0.1."; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(UpdateAfterMergeTosApiTask.class);
 
@@ -203,7 +203,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                     }
 
                     if (fragment != null && !fragment.contains(FILE_NAME_FLAG)) {
-                        String replace = fragment.replace(" ", "_").replace(".", FILE_NAME_FLAG);
+                        String replace = fragment.replace(" ", "_").replace(".", FILE_NAME_FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         FileUtils.replaceInFile(file.getAbsolutePath(), fragment, replace);
                     }
                 }
@@ -289,7 +289,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                             ModelElement element = getModelElement(file);
                             if (element != null) {
                                 String newName = WorkspaceUtils.normalize(element.getName());
-                                return !name.contains(newName) || !name.contains("0.1");
+                                return !name.contains(newName) || !name.contains("0.1"); //$NON-NLS-1$
                             }
                         }
                     }
@@ -308,6 +308,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * @return
      */
     private boolean isNotSVNFolder(File file) {
-        return !file.getAbsolutePath().contains("svn");
+        return !file.getAbsolutePath().contains("svn"); //$NON-NLS-1$
     }
 }

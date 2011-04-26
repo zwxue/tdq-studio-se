@@ -50,11 +50,11 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
 
     private static Logger log = Logger.getLogger(SqlSourceFileUpdateTask.class);
 
-    private static final String SQL_EXT = "sql";
+    private static final String SQL_EXT = "sql"; //$NON-NLS-1$
 
-    private static final String PROP_EXT = "properties";
+    private static final String PROP_EXT = "properties"; //$NON-NLS-1$
 
-    private static final String TDQ_SOURCE_FILE_PATH = "TDQ_Libraries/Source Files";
+    private static final String TDQ_SOURCE_FILE_PATH = "TDQ_Libraries/Source Files"; //$NON-NLS-1$
 
     /*
      * (non-Javadoc)
@@ -97,11 +97,11 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
                 }
             });
 
-            log.info("-----------Updating sql source file task ---------------");
+            log.info("-----------Updating sql source file task ---------------"); //$NON-NLS-1$
             int counter = 0;
             for (File sqlFile : fileList) {
-                log.info(counter + ". Updating: " + sqlFile.getAbsolutePath());
-                String fileNamePart = FileUtils.getName(sqlFile) + "_" + VersionUtils.DEFAULT_VERSION;
+                log.info(counter + ". Updating: " + sqlFile.getAbsolutePath()); //$NON-NLS-1$
+                String fileNamePart = FileUtils.getName(sqlFile) + "_" + VersionUtils.DEFAULT_VERSION; //$NON-NLS-1$
 
                 IPath newSQLPath = new Path(sqlFile.getAbsolutePath()).removeLastSegments(1).append(fileNamePart)
                         .addFileExtension(SQL_EXT);

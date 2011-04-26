@@ -31,13 +31,13 @@ public class UpdateAccessDistinctQueryTask extends AbstractWorksapceUpdateTask {
      */
     @Override
     protected boolean doExecute() throws Exception {
-        String categorie = "categories=\"_ccKHEBF2Ed2PKb6nEJEvhw\" label=\"Distinct Count\">";
+        String categorie = "categories=\"_ccKHEBF2Ed2PKb6nEJEvhw\" label=\"Distinct Count\">"; //$NON-NLS-1$
 
-        String accessQuery = "    <sqlGenericExpression xmi:id=\"_ybqP0jh8Ed2XmO7pl5Yuyl\" body=\"SELECT COUNT (&lt;%=__COLUMN_NAMES__%>) FROM (SELECT DISTINCT (&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>)\" language=\"Access\"/>";
+        String accessQuery = "    <sqlGenericExpression xmi:id=\"_ybqP0jh8Ed2XmO7pl5Yuyl\" body=\"SELECT COUNT (&lt;%=__COLUMN_NAMES__%>) FROM (SELECT DISTINCT (&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>)\" language=\"Access\"/>"; //$NON-NLS-1$
 
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
         if (-1 == talendDefinitionFileUpdate.indexOf(accessQuery)) {
-            talendDefinitionFileUpdate.add(categorie, categorie + System.getProperty("line.separator") + accessQuery);
+            talendDefinitionFileUpdate.add(categorie, categorie + System.getProperty("line.separator") + accessQuery); //$NON-NLS-1$
             return talendDefinitionFileUpdate.replace(this.getClass().getName());
         }
 
