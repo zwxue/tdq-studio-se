@@ -113,6 +113,8 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
     // Typical file extensions
     public static final String[] SUPPORTED_FILETYPES = new String[] { "*.sql", "*.txt", "*.*" };
 
+    public static final String EDITOR_ID = "net.sourceforge.sqlexplorer.plugin.editors.SQLEditor";
+
     // The Session node from the Connections view
     private Session session;
 
