@@ -1,4 +1,5 @@
-Talend record linkage library version: 0.9.5
+Talend record linkage library version: 0.9.6
 
 Changes:
+- 0.9.6: fix bug with Levenshtein distance computation
 - 0.9.5: added the ability to create a custom AttributeMatcher
