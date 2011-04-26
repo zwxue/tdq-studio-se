@@ -120,7 +120,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
          */
         @Override
         public Boolean caseCatalogIndicator(CatalogIndicator object) {
-            return setIndicatorDefinition(object, "Catalog Overview");
+            return setIndicatorDefinition(object, "Catalog Overview"); //$NON-NLS-1$
         }
 
         /*

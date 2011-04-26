@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import org.talend.dataquality.PluginConstant;
 import org.talend.repository.model.RepositoryNode;
 
 
@@ -33,6 +34,6 @@ public class PatternLanguageRepNode extends RepositoryNode {
     }
     @Override
     public String getLabel() {
-        return this.label == null ? "" : this.label;
+        return this.label == null ? PluginConstant.EMPTY_STRING : this.label;
     }
 }

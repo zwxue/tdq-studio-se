@@ -120,7 +120,7 @@ public class DataProviderWriter extends AElementPersistance {
             resourceContents.addAll(catalogs);
 
             if (log.isDebugEnabled()) {
-                log.debug("Catalogs added ");
+                log.debug("Catalogs added "); //$NON-NLS-1$
             }
 
             // add each schema to its own file
@@ -132,7 +132,7 @@ public class DataProviderWriter extends AElementPersistance {
             resourceContents.addAll(xmlSchemas);
 
             if (log.isDebugEnabled()) {
-                log.debug("Schema added ");
+                log.debug("Schema added "); //$NON-NLS-1$
             }
         }
     }
@@ -155,7 +155,7 @@ public class DataProviderWriter extends AElementPersistance {
     @Override
     public boolean check(IFile file) {
         String fileExtension = file.getFileExtension();
-        return fileExtension.equals(getFileExtension()) || fileExtension.equals("comp");
+        return fileExtension.equals(getFileExtension()) || fileExtension.equals("comp"); //$NON-NLS-1$
     }
 
     public ReturnCode save(Item item) {

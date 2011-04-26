@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.i18n.Messages;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
@@ -238,7 +239,7 @@ public final class IndicatorCommonUtil {
 
                 }
             } catch (Exception e) {
-                log.error("Get value failed: " + e.getMessage());
+                log.error(Messages.getString("Get value failed: ", e.getMessage())); //$NON-NLS-1$
             }
         }
 

@@ -35,7 +35,7 @@ public class PatternBuilder {
      */
     public boolean initializePattern(String patternName) {
         if (initialized) {
-            log.warn("Pattern already initialized. ");
+            log.warn("Pattern already initialized. ");//$NON-NLS-1$
             return false;
         }
 

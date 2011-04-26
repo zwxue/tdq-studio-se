@@ -110,7 +110,7 @@ public abstract class Evaluator<T> {
             }
             return rc;
         } catch (SQLException e) {
-            log.error("Exception while executing SQL query " + sqlStatement, e);
+            log.error(Messages.getString("Evaluator.SQLException", sqlStatement), e); //$NON-NLS-1$
             rc.setReturnCode(e.getMessage(), false);
         }
         return rc;

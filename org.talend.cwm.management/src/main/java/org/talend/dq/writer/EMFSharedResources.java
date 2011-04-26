@@ -272,7 +272,7 @@ public final class EMFSharedResources {
      */
     private Resource initSoftwareDeploymentResource() {
         // MOD mzhao 2009-03-23,Feature 6066
-        String softwareFile = ".softwaresystem." + SoftwaredeploymentPackage.eNAME;
+        String softwareFile = ".softwaresystem." + SoftwaredeploymentPackage.eNAME; //$NON-NLS-1$
         String softwarePath = ResourceManager.getLibrariesFolder().getFullPath().append(softwareFile).toString();
         URI sUri = URI.createPlatformResourceURI(softwarePath, false); //$NON-NLS-1$
         Resource resource = resourceSet.getResource(sUri, false);

@@ -28,6 +28,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -163,8 +164,8 @@ public class DbmsLanguage {
      * @return the sqlIdentifier quoted.
      */
     public String quote(String sqlIdentifier) {
-        if (sqlIdentifier == null || sqlIdentifier.equals("")) {
-            return "";
+        if (sqlIdentifier == null || sqlIdentifier.equals(PluginConstant.EMPTY_STRING)) {
+            return PluginConstant.EMPTY_STRING;
         }
         String quotedSqlIdentifier = sqlIdentifier;
         if (!quotedSqlIdentifier.startsWith(dbQuoteString)) {
@@ -378,7 +379,7 @@ public class DbmsLanguage {
      * @return the string REPLACE(partialExpression,'toReplace','replacement')
      */
     protected String replaceOneChar(String partialExpression, char toReplace, char replacement) {
-        return "REPLACE(" + partialExpression + ",'" + toReplace + "','" + replacement + "')";
+        return "REPLACE(" + partialExpression + ",'" + toReplace + "','" + replacement + "')"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
     /**
@@ -390,7 +391,7 @@ public class DbmsLanguage {
      * @return the string "TRANSLATE(expression,charsToReplace,replacementChars)"
      */
     protected String translateUsingPattern(String expression, String charsToReplace, String replacementChars) {
-        return "TRANSLATE(" + expression + " , '" + charsToReplace + "' , '" + replacementChars + "')";
+        return "TRANSLATE(" + expression + " , '" + charsToReplace + "' , '" + replacementChars + "')"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
     public String replaceNullsWithString(String colName, String replacement) {
@@ -478,7 +479,7 @@ public class DbmsLanguage {
     }
 
     public String selectColumnsFromTable(List<String> columns, String table) {
-        return " SELECT " + StringUtils.join(columns.iterator(), ',') + from() + table;
+        return " SELECT " + StringUtils.join(columns.iterator(), ',') + from() + table; //$NON-NLS-1$ //$NON-NLS-2$ 
     }
 
     public String in() {
@@ -504,14 +505,14 @@ public class DbmsLanguage {
 
     public void setDbQuoteString(String dbQuoteString) {
         if (log.isDebugEnabled()) {
-            log.debug("Database SQL quote: " + dbQuoteString);
+            log.debug("Database SQL quote: " + dbQuoteString); //$NON-NLS-1$
         }
         this.dbQuoteString = dbQuoteString;
     }
 
     protected String extract(DateGrain dateGrain, String colName) {
         if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
-            return "DATEPART(" + dateGrain + "," + colName + ") ";
+            return "DATEPART(" + dateGrain + "," + colName + ") ";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         // ANSI SQL, MySQL, Oracle
         return " EXTRACT(" + dateGrain + from() + colName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
@@ -627,11 +628,11 @@ public class DbmsLanguage {
 
         // else try with default language (ANSI SQL)
         if (log.isDebugEnabled()) {
-            log.warn("The indicator SQL expression has not been found for the database type " + this.dbmsName
-                    + " for the indicator" + indicatorDefinition.getName()
-                    + ". This is not necessarily a problem since the default SQL expression will be used. "
-                    + "Nevertheless, if an SQL error during the analysis, this could be the cause.");
-            log.info("Trying to compute the indicator with the default language " + getDefaultLanguage());
+            log.warn("The indicator SQL expression has not been found for the database type " + this.dbmsName //$NON-NLS-1$
+                    + " for the indicator" + indicatorDefinition.getName() //$NON-NLS-1$
+                    + ". This is not necessarily a problem since the default SQL expression will be used. " //$NON-NLS-1$
+                    + "Nevertheless, if an SQL error during the analysis, this could be the cause."); //$NON-NLS-1$
+            log.info("Trying to compute the indicator with the default language " + getDefaultLanguage()); //$NON-NLS-1$
         }
         // MOD xqliu 2010-02-25 feature 11201
         return matchDbVersion ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression,
@@ -771,7 +772,7 @@ public class DbmsLanguage {
         TdExpression defaultExpression = null;
         List<TdExpression> tempExpressions2 = new ArrayList<TdExpression>();
         for (TdExpression exp : tempExpressions) {
-            if (exp.getVersion() == null || "".equals(exp.getVersion())) {
+            if (exp.getVersion() == null || PluginConstant.EMPTY_STRING.equals(exp.getVersion())) {
                 defaultExpression = exp;
             } else {
                 if (dbVersion.toString().equals(exp.getVersion())) {
@@ -925,7 +926,7 @@ public class DbmsLanguage {
      * @return hard coded quote identifier string
      */
     public String getHardCodedQuoteIdentifier() {
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     /**
@@ -983,9 +984,9 @@ public class DbmsLanguage {
     public String getSelectOrderedAggregate(boolean distinct, List<String> columns, String table, String whereClause,
             List<Integer> groupByIndexes, String havingClause, List<Integer> orderByIndexes) {
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT ");
+        builder.append("SELECT "); //$NON-NLS-1$
         builder.append(StringUtils.join(columns.iterator(), ','));
-        builder.append(", COUNT(*) ");
+        builder.append(", COUNT(*) "); //$NON-NLS-1$
         builder.append(from());
         builder.append(table);
 
@@ -998,7 +999,7 @@ public class DbmsLanguage {
             groupByColumns.add(columns.get(i));
         }
         if (!groupByColumns.isEmpty()) {
-            builder.append(" GROUP BY ");
+            builder.append(" GROUP BY "); //$NON-NLS-1$
             builder.append(StringUtils.join(groupByColumns.iterator(), ','));
         }
 
@@ -1011,7 +1012,7 @@ public class DbmsLanguage {
             orderByColumns.add(columns.get(i));
         }
         if (!orderByColumns.isEmpty()) {
-            builder.append(" ORDER BY ");
+            builder.append(" ORDER BY "); //$NON-NLS-1$
             builder.append(StringUtils.join(orderByColumns.iterator(), ','));
         }
 
@@ -1019,7 +1020,7 @@ public class DbmsLanguage {
     }
 
     public String orderBy(List<String> columns, boolean ascending) {
-        return orderBy() + StringUtils.join(columns.iterator(), ',') + (ascending ? " ASC " : " DESC ");
+        return orderBy() + StringUtils.join(columns.iterator(), ',') + (ascending ? " ASC " : " DESC "); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -1028,27 +1029,27 @@ public class DbmsLanguage {
      * @return the generic query to get the invalid detailed values in the functional dependency analysis
      */
     public String getFDGenericInvalidDetailedValues() {
-        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC"; //$NON-NLS-1$
     }
 
     public String getFDGenericValidDetailedValues() {
-        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC"; //$NON-NLS-1$
     }
 
     public String getFDGenericInvalidValues() {
-        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC"; //$NON-NLS-1$
     }
 
     public String getFDGenericValidValues() {
-        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT <%=__COLUMN_NAME_A__%> , count(*) AS countNum FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A   FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> GROUP BY <%=__COLUMN_NAME_A__%> , <%=__COLUMN_NAME_B__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC"; //$NON-NLS-1$
     }
 
     public String getFDGenericValidRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as countNum  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as countNum  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) = 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC"; //$NON-NLS-1$
     }
 
     public String getFDGenericInvalidRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as countNum  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC";
+        return "SELECT * FROM <%=__TABLE_NAME__%> JOIN (SELECT DISTINCT A , COUNT(*) as countNum  FROM (SELECT DISTINCT <%=__COLUMN_NAME_A__%> AS A , <%=__COLUMN_NAME_B__%> AS B FROM  <%=__TABLE_NAME__%> C   <%=__WHERE_CLAUSE__%> ) T GROUP BY A HAVING COUNT(*) > 1 ) J on (J.A = <%=__TABLE_NAME__%>.<%=__COLUMN_NAME_A__%>) <%=__WHERE_CLAUSE__%> ORDER BY <%=__COLUMN_NAME_A__%> ASC"; //$NON-NLS-1$
     }
 
     /**
@@ -1151,7 +1152,7 @@ public class DbmsLanguage {
     public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName,
             String schemaName) {
         if (joinElements.isEmpty()) {
-            return "";
+            return PluginConstant.EMPTY_STRING;
         }
         // else
         StringBuilder builder = new StringBuilder();
@@ -1248,7 +1249,7 @@ public class DbmsLanguage {
         if (hasTableAliasB) {
             builder.append(surroundWithSpaces(tableAliasB));
         }
-        builder.append(" ON ");
+        builder.append(" ON "); //$NON-NLS-1$
 
         String tA = hasTableAliasA ? tableAliasA : tableA;
         String tB = hasTableAliasB ? tableAliasB : tableB;
@@ -1260,7 +1261,7 @@ public class DbmsLanguage {
     }
 
     public String join() {
-        return " JOIN ";
+        return " JOIN "; //$NON-NLS-1$
     }
 
     /**
@@ -1289,13 +1290,13 @@ public class DbmsLanguage {
         // (tablealiasA.colA = tablealiasB.colB)
         builder.append('(');
         if (tableA != null) {
-            builder.append(tableA + ".");
+            builder.append(tableA + DOT);
         }
         builder.append(columnAName);
 
         builder.append(operator);
         if (tableB != null) {
-            builder.append(tableB + ".");
+            builder.append(tableB + DOT);
         }
         builder.append(columnBName);
         builder.append(')');
@@ -1325,7 +1326,7 @@ public class DbmsLanguage {
      * @return special sql statement
      */
     public String createGenericSqlWithRegexFunction(String function) {
-        return new GenericSQLHandler("").createGenericSqlWithRegexFunction(function);
+        return new GenericSQLHandler(PluginConstant.EMPTY_STRING).createGenericSqlWithRegexFunction(function);
     }
 
     /**

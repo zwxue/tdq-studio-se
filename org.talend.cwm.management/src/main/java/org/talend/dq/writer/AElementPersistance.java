@@ -44,6 +44,7 @@ import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -88,8 +89,8 @@ public abstract class AElementPersistance {
         TypedReturnCode<Object> trc = new TypedReturnCode<Object>();
 
         if (getFileExtension() == null) {
-            trc.setMessage("File extension is null.");
-            log.error("Get file extension error");
+            trc.setMessage("File extension is null."); //$NON-NLS-1$
+            log.error(Messages.getString("Get file extension error")); //$NON-NLS-1$
         } else {
             IPath itemPath = folder.getFullPath();
             Property property = initProperty(element);
@@ -109,7 +110,7 @@ public abstract class AElementPersistance {
                 if (file.exists()) {
                     // MOD yyi 2009-10-15 Feature: 9524
                     String oriName = element.getName();
-                    element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+                    element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
                     fname = createLogicalFileName(element, getFileExtension());
                     file = folder.getFile(fname);
 
@@ -133,7 +134,7 @@ public abstract class AElementPersistance {
      * @return
      */
     private IPath getPath(ModelElement element, IPath itemPath) {
-        IPath path = new Path("");
+        IPath path = new Path(PluginConstant.EMPTY_STRING);
         if (element instanceof DatabaseConnection) { // database connection
             path = itemPath.makeRelativeTo(ResourceManager.getTDQConnectionFolder().getFullPath());
         } else if (element instanceof MDMConnection) { // mdm connection
@@ -162,7 +163,7 @@ public abstract class AElementPersistance {
      * @return
      */
     public static String createLogicalFileName(ModelElement element, String extension) {
-        return DqRepositoryViewService.createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element)
+        return DqRepositoryViewService.createTechnicalName(element.getName()) + "_" + MetadataHelper.getVersion(element) //$NON-NLS-1$
                 + org.talend.dataquality.PluginConstant.DOT_STRING + extension;
     }
 
@@ -178,7 +179,7 @@ public abstract class AElementPersistance {
     public ReturnCode create(ModelElement element, IFile file) {
         ReturnCode rc = new ReturnCode();
         if (!check(file)) {
-            rc.setReturnCode("Failed to save! the extent file name is wrong.", false);
+            rc.setReturnCode(Messages.getString("AElementPersistance.FailToSave1"), false); //$NON-NLS-1$
         } else {
             rc = create(element, file.getFullPath(), true);
         }
@@ -199,7 +200,7 @@ public abstract class AElementPersistance {
         ReturnCode rc = new ReturnCode();
 
         if (!util.addEObjectToResourceSet(itemPath.toString(), element)) {
-            rc.setReturnCode("Failed to save: " + util.getLastErrorMessage(), false);
+            rc.setReturnCode(Messages.getString("AElementPersistance.FailToSave2", util.getLastErrorMessage()), false); //$NON-NLS-1$
         } else {
             if (element instanceof RenderedObject) {
                 ((RenderedObject) element).setFileName(itemPath.toString());
@@ -226,7 +227,7 @@ public abstract class AElementPersistance {
     public Property createProperty(ModelElement modelElement) {
         Resource eResource = modelElement.eResource();
         if (eResource == null) {
-            log.error("Can't create property: no resouce assigned to this model element!");
+            log.error(Messages.getString("AElementPersistance.FailToCreateProperty")); //$NON-NLS-1$
             return null;
         }
 
@@ -372,7 +373,7 @@ public abstract class AElementPersistance {
         }
 
         if (rc.isOk()) {
-            rc.setMessage("save " + element.getName() + " is OK!");
+            rc.setMessage("save " + element.getName() + " is OK!"); //$NON-NLS-1$ //$NON-NLS-2$
             if (withProperty) {
                 notifyResourceChanges();
             }
@@ -444,7 +445,7 @@ public abstract class AElementPersistance {
         itemState.setDeleted(false);
         item.setState(itemState);
         if (item instanceof TDQItem) {
-            ((TDQItem) item).setFilename(element.getName() + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING
+            ((TDQItem) item).setFilename(element.getName() + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING //$NON-NLS-1$
                     + this.getFileExtension());
         }
 

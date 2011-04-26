@@ -81,7 +81,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             String separator = delimitedFileconnection.getFieldSeparatorValue();
             String encoding = delimitedFileconnection.getEncoding();
             if (!file.exists()) {
-                returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false);
+                returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false); //$NON-NLS-1$
                 return returnCode;
             }
             csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
@@ -98,7 +98,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             boolean isBablyForm = false;
             List<MetadataColumn> columnElementList = new ArrayList<MetadataColumn>();
             label: while (csvReader.readRecord()) {
-                if (delimitedFileconnection.isFirstLineCaption() && csvReader.getCurrentRecord() == Long.valueOf("0")) {
+                if (delimitedFileconnection.isFirstLineCaption() && csvReader.getCurrentRecord() == Long.valueOf("0")) { //$NON-NLS-1$
                     continue;
                 }
                 String[] rowValues = csvReader.getValues();
@@ -112,7 +112,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     Integer position = ColumnHelper.getColumnIndex(mColumn);
                     // warning with a file of badly form
                     if (position == null || position >= rowValues.length) {
-                        log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData",
+                        log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData", //$NON-NLS-1$
                                 StringUtils.join(rowValues, separator)));
                         if (!isBablyForm) {
                             isBablyForm = true;
@@ -120,8 +120,8 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
                                 public void run() {
                                     MessageDialog.openWarning(null,
-                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),
-                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));
+                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"), //$NON-NLS-1$
+                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message")); //$NON-NLS-1$
                                 }
                             });
                         }
@@ -223,7 +223,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
      */
     private void initializeCsvReader(CsvReader csvReader) {
         String rowSep = delimitedFileconnection.getRowSeparatorValue();
-        if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) {
+        if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
             csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
         }
 
@@ -235,7 +235,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             csvReader.setUseTextQualifier(false);
         }
         String escapeChar = delimitedFileconnection.getEscapeChar();
-        if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) {
+        if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
             csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
         } else {
             csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);

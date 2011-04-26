@@ -54,14 +54,14 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
         DataProvider dataProvider = this.getDataManager();
 
         if (this.elementToIndicators.values().isEmpty()) {
-            String msg = "No indicator set for the connection evaluation";
+            String msg = Messages.getString("Evaluator.NoInidcator1"); //$NON-NLS-1$
             log.error(msg);
             ok.setReturnCode(msg, false);
             return ok;
         }
         Indicator[] indics = this.getAllIndicators();
         if (indics.length == 0) {
-            String msg = "No indicator for " + dataProvider;
+            String msg = Messages.getString("Evaluator.NoInidcator2", dataProvider); //$NON-NLS-1$
             log.error(msg);
             ok.setReturnCode(msg, false);
             return ok;
@@ -76,7 +76,7 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             String catName = schema.getName();
             // MOD yyi 2009-11-30 10187
             if (!checkSchema(schema)) {
-                ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", catName), false);
+                ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", catName), false); //$NON-NLS-1$
                 return ok;
             }
             // ~

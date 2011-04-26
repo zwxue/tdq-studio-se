@@ -13,6 +13,7 @@
 package org.talend.dq.dqrule;
 
 import org.apache.log4j.Logger;
+import org.talend.cwm.i18n.Messages;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
@@ -32,7 +33,7 @@ public class DqRuleBuilder {
     public boolean initializeDqRuleBuilder(String ruleName) {
 
         if (initialized) {
-            log.warn("Pattern already initialized. ");
+            log.warn(Messages.getString("DqRuleBuilder.Initialized")); //$NON-NLS-1$
             return false;
         }
 

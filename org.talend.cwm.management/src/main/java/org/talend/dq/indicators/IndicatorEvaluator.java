@@ -28,6 +28,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -83,14 +84,14 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // MOD xqliu 2009-02-09 bug 6237
         if (continueRun()) {
             if (log.isInfoEnabled()) {
-                log.info("Executing query: " + sqlStatement);
+                log.info("Executing query: " + sqlStatement); //$NON-NLS-1$
             }
             statement.execute(sqlStatement);
         }
         // get the results
         ResultSet resultSet = statement.getResultSet();
         if (resultSet == null) {
-            String mess = "No result set for this statement: " + sqlStatement;
+            String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$
             log.warn(mess);
             ok.setReturnCode(mess, false);
             return ok;
@@ -128,7 +129,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 // MOD zshen, when the type of object is TIMESTAMP then need getTimestamp(col) to get correct value,or
                 // the value only is the name of type and can't be match with TIMESTAMP.
                 // FIXME this will slow down a lot the computation
-                if (object != null && !(object instanceof String) && object.toString().indexOf("TIMESTAMP") > -1) {
+                if (object != null && !(object instanceof String) && object.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$
                     object = resultSet.getTimestamp(col);
                 }
                 // --- give row to handle to indicators
@@ -158,7 +159,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             String newcol = columnList.get(j).getName();
                             Object newobject = resultSet.getObject(newcol);
                             if (newobject != null && !(newobject instanceof String)
-                                    && newobject.toString().indexOf("TIMESTAMP") > -1) {
+                                    && newobject.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$
                                 newobject = resultSet.getTimestamp(newcol);
                             }
                             if (recordIncrement < maxNumberRows) {
@@ -236,7 +237,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 key = SpecialValueDisplay.NULL_FIELD;
             } else if (indicator instanceof MinLengthIndicator || indicator instanceof MaxLengthIndicator) {
                 key = String.valueOf(object.toString().length());
-            } else if (object.equals("")) {
+            } else if (object.equals(PluginConstant.EMPTY_STRING)) {
                 key = SpecialValueDisplay.EMPTY_FIELD;
             } else if (indicator instanceof PatternLowFreqIndicator) {
                 key = ((PatternLowFreqIndicator) indicator).convertCharacters(object.toString());

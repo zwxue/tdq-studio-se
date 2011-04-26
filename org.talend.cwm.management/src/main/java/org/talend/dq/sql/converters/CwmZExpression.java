@@ -41,7 +41,7 @@ public class CwmZExpression<T> {
     private T instance;
 
     public CwmZExpression(SqlPredicate op) {
-        assert op != null : "null operator given";
+        assert op != null : "null operator given"; //$NON-NLS-1$
         this.operator = op;
     }
 

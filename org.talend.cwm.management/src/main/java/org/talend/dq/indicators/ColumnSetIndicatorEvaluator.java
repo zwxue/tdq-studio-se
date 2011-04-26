@@ -114,7 +114,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             statement.setFetchSize(fetchSize);
             if (continueRun()) {
                 if (log.isInfoEnabled()) {
-                    log.info("Executing query: " + sqlStatement);
+                    log.info("Executing query: " + sqlStatement); //$NON-NLS-1$
                 }
                 statement.execute(sqlStatement);
             }
@@ -158,7 +158,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         statement.setFetchSize(fetchSize);
         if (continueRun()) {
             if (log.isInfoEnabled()) {
-                log.info("Executing query: " + sqlStatement);
+                log.info("Executing query: " + sqlStatement); //$NON-NLS-1$
             }
             statement.execute(sqlStatement);
         }
@@ -167,7 +167,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         List<String> columnNames = getAnalyzedElementsName();
 
         if (resultSet == null) {
-            String mess = "No result set for this statement: " + sqlStatement;
+            String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$
             log.warn(mess);
             ok.setReturnCode(mess, false);
             return ok;
@@ -209,7 +209,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         String separator = con.getFieldSeparatorValue();
         String encoding = con.getEncoding();
         if (!file.exists()) {
-            returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false);
+            returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false); //$NON-NLS-1$ 
             return returnCode;
         }
         CsvReader csvReader = null;
@@ -219,7 +219,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                     encoding == null ? encoding : encoding)), ParameterUtil.trimParameter(separator).charAt(0));
 
             String rowSep = con.getRowSeparatorValue();
-            if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) {
+            if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
                 csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
             }
             csvReader.setSkipEmptyRecords(true);
@@ -230,7 +230,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 csvReader.setUseTextQualifier(false);
             }
             String escapeChar = con.getEscapeChar();
-            if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) {
+            if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
                 csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
             } else {
                 csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
@@ -242,7 +242,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             boolean isBablyForm = false;
             while (csvReader.readRecord()) {
                 long currentRow = csvReader.getCurrentRecord();
-                if (con.isFirstLineCaption() && currentRow == Long.valueOf("0")) {
+                if (con.isFirstLineCaption() && currentRow == Long.valueOf("0")) { //$NON-NLS-1$
                     continue;
                 }
                 String[] rowValues = csvReader.getValues();
@@ -254,7 +254,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                     Integer position = ColumnHelper.getColumnIndex(mColumn);
                     // MOD qiongli 2011-4-2,bug 20033,warning with a badly form file
                     if (position == null || position >= rowValues.length) {
-                        log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData",
+                        log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData", //$NON-NLS-1$
                                 StringUtils.join(rowValues, separator.charAt(1))));
                         if (!isBablyForm) {
                             isBablyForm = true;
@@ -262,8 +262,8 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
                                 public void run() {
                                     MessageDialog.openWarning(null,
-                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),
-                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));
+                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"), //$NON-NLS-1$
+                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message")); //$NON-NLS-1$
                                 }
                             });
                         }
@@ -317,7 +317,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             }
         }
         if (resultSet == null) {
-            String mess = "No result set for this statement: " + sqlStatement;
+            String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$ 
             log.warn(mess);
             returnCode.setReturnCode(mess, false);
             return returnCode;
@@ -387,7 +387,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                                 String newcol = columnList.get(j).getName();
                                 Object newobject = resultSet.getObject(newcol);
                                 if (newobject != null && !(newobject instanceof String)
-                                        && newobject.toString().indexOf("TIMESTAMP") > -1) {
+                                        && newobject.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$ 
                                     newobject = resultSet.getTimestamp(newcol);
                                 }
                                 // if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {

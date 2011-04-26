@@ -34,6 +34,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
@@ -64,7 +65,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     /**
      * 
      */
-    public static final char FILTER_SEP = ',';
+    public static final char FILTER_SEP = ',';//$NON-NLS-1$
 
     private DbmsLanguage dbmsLanguage;
 
@@ -91,7 +92,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (this.dbmsLanguage == null) {
             DataManager dm = this.getDataManager();
             if (dm == null) {
-                throw new RuntimeException("No data manager found.");
+                throw new RuntimeException("No data manager found."); //$NON-NLS-1$ 
             }
             this.dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
             // this.dbmsLanguage.setDbQuoteString(this.dbmsLanguage.getQuoteIdentifier());
@@ -232,9 +233,10 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                     table, false, false);
             // ~
         } catch (SQLException e) {
+
             log.warn(
-                    "Exception while getting indexes on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
-                            + e.getLocalizedMessage(), e);
+Messages.getString("AbstractSchemaEvaluator.IndexException", //$NON-NLS-1$
+                            this.dbms().toQualifiedName(catalog, schema, table), e.getLocalizedMessage()), e); //$NON-NLS-1$
             // Oracle increments the number of cursors to close each time a new query is executed after this exception!
             reloadConnectionAfterException(catalog);
         }
@@ -268,8 +270,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             // ~
         } catch (SQLException e1) {
             log.warn(
-                    "Exception while getting primary keys on " + this.dbms().toQualifiedName(catalog, schema, table) + ": "
-                            + e1.getLocalizedMessage(), e1);
+Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
+                            this.dbms().toQualifiedName(catalog, schema, table), e1.getLocalizedMessage()), e1);
             reloadConnectionAfterException(catalog);
         }
         if (pk != null) {
@@ -294,7 +296,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         }
         ReturnCode connClosed = super.closeConnection();
         if (!connClosed.isOk()) {
-            log.error("Problem reloading connection: " + connClosed.getMessage());
+            log.error(Messages.getString("AbstractSchemaEvaluator.ReloadProblem", connClosed.getMessage())); //$NON-NLS-1$
         }
         Connection dp = this.getDataManager();
         TypedReturnCode<java.sql.Connection> conn = JavaSqlFactory.createConnection(dp);
@@ -331,7 +333,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         // not needed here statement.setFetchSize(fetchSize);
         try {
             if (log.isInfoEnabled()) {
-                log.info("Executing SQL statement: " + sqlStatement);
+                log.info("Executing SQL statement: " + sqlStatement); //$NON-NLS-1$
             }
             // MOD xqliu 2009-02-09 bug 6237
             if (continueRun()) {
@@ -339,9 +341,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             }
         } catch (SQLException e) {
             statement.close();
-            log.warn(e.getMessage() + " for SQL statement: " + sqlStatement);
+            log.warn(e.getMessage() + " for SQL statement: " + sqlStatement); //$NON-NLS-1$
             if (log.isDebugEnabled()) {
-                log.debug(e, e);
+                log.debug(e, e); //$NON-NLS-1$
             }
             // some tables on Oracle give the following exception:
             // ORA-25191: cannot reference overflow table of an index-organized table
@@ -352,7 +354,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         // get the results
         ResultSet resultSet = statement.getResultSet();
         if (resultSet == null) {
-            String mess = "No result set for this statement: " + sqlStatement;
+            String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$
             log.warn(mess);
         } else {
             while (resultSet != null && resultSet.next()) {
@@ -369,7 +371,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 // ~18975
                 totalRowCount += count;
                 if (log.isDebugEnabled()) {
-                    log.debug(quCatalog + "/" + quSchema + "/" + quTable + ": " + count);
+                    log.debug(quCatalog + "/" + quSchema + "/" + quTable + ": " + count); //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
 
                     // // --- give row to handle to indicators
                     // for (SchemaIndicator indicator : indicators) {
@@ -445,7 +447,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 .split(this.tablePattern, FILTER_SEP) : new String[] { this.tablePattern };
         for (String pat : tablePatterns) {
             // MOD zshen bug 12041: the variable trimPat must be null(not a "") if it isn't a table name.
-            String trimPat = pat != null && !"".equals(pat) ? pat.trim() : null;
+            String trimPat = pat != null && !PluginConstant.EMPTY_STRING.equals(pat) ? pat.trim() : null;
             // ~12041
             List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(catName, schemaName, trimPat);
             for (NamedColumnSet t : tables) {
@@ -462,7 +464,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 .split(this.viewPattern, FILTER_SEP) : new String[] { this.viewPattern };
         for (String pat : viewPatterns) {
             // MOD zshen bug 12041: the variable trimPat must be null(not a "") if it isn't a view name.
-            String trimPat = pat != null && !"".equals(pat) ? pat.trim() : null;
+            String trimPat = pat != null && !PluginConstant.EMPTY_STRING.equals(pat) ? pat.trim() : null;
             // ~12041
             List<? extends NamedColumnSet> views = viewBuilder.getColumnSets(catName, schemaName, trimPat);
             for (NamedColumnSet t : views) {
@@ -491,7 +493,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             if (SchemaPackage.eINSTANCE.getCatalogIndicator().equals(schemaIndic.eClass())) {
                 this.addToConnectionIndicator(schemaIndic);
             } else {
-                log.error("This should not happen. No catatog and no schema.");
+                log.error(Messages.getString("AbstractSchemaEvaluator.NoCatalogSchema")); //$NON-NLS-1$
             }
         }
     }
@@ -504,7 +506,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (indicator != null) {
             boolean reset = indicator.reset();
             if (log.isDebugEnabled()) {
-                log.debug("connection indicator reset: " + reset);
+                log.debug("connection indicator reset: " + reset); //$NON-NLS-1$
             }
         }
     }
@@ -678,7 +680,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         // MOD qiongli 2010-9-17，bug 15525
         // MOD qiongli 2010-12-24,bug 17671,avoid NPE
         if (dataprovider == null) {
-            rc.setReturnCode(Messages.getString("Evaluator.NoConnectionFoundInMetadata"), false);
+            rc.setReturnCode(Messages.getString("Evaluator.NoConnectionFoundInMetadata"), false); //$NON-NLS-1$
             return rc;
         }
         return rc;

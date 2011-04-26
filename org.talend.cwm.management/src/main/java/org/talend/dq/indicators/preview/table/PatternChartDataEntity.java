@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.indicators.preview.table;
 
+import org.talend.dataquality.PluginConstant;
 import org.talend.utils.format.StringFormatUtil;
 
 /**
@@ -66,10 +67,10 @@ public class PatternChartDataEntity extends ChartDataEntity {
         // MOD xqliu 2010-03-10 feature 10834
         String result = null;
         String temp = getToolTip();
-        if (temp == null || "".equals(temp.trim())) {
+        if (temp == null || PluginConstant.EMPTY_STRING.equals(temp.trim())) {
             result = msg.length() == 0 ? null : msg.toString();
         } else {
-            result = msg.length() == 0 ? "Desc: " + temp : "Desc: " + temp + "\n" + msg.toString();
+            result = msg.length() == 0 ? "Desc: " + temp : "Desc: " + temp + "\n" + msg.toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         return result;
     }

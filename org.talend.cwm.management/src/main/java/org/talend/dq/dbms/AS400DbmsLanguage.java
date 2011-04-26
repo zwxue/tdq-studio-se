@@ -84,6 +84,6 @@ public class AS400DbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String trim(String colName) {
-        return " LTRIM(RTRIM(" + colName + ")) ";
+        return " LTRIM(RTRIM(" + colName + ")) ";//$NON-NLS-1$ //$NON-NLS-2$
     }
 }

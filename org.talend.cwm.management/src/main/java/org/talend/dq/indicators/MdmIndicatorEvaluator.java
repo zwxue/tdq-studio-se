@@ -28,6 +28,7 @@ import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.db.connection.XQueryExpressionUtil;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.analysis.Analysis;
@@ -81,11 +82,11 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
                 XQueryExpressionUtil.toParseXquery(sqlStatement);
                 do {
                     if (log.isInfoEnabled()) {
-                        log.info("Executing query: " + XQueryExpressionUtil.getExpression());
+                        log.info("Executing query: " + XQueryExpressionUtil.getExpression()); //$NON-NLS-1$
                     }
                     returnCode.setOk(returnCode.isOk() && statement.execute(tdXmlDocument, XQueryExpressionUtil.getExpression()));
                     List<String> strResultListTemp = Arrays.asList(statement.getResultSet());
-                    String totalNum = statement.getXmlNodeValue(strResultListTemp.get(0), "totalCount");
+                    String totalNum = statement.getXmlNodeValue(strResultListTemp.get(0), "totalCount"); //$NON-NLS-1$
                     totalcount = totalNum == null ? 0 : Integer.parseInt(totalNum);
                     strResultList.addAll(strResultListTemp.subList(1, strResultListTemp.size()));
                     XQueryExpressionUtil.increaseVernier();
@@ -99,7 +100,7 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
             }
         }
         if (resultSet == null) {
-            String mess = "No result set for this statement: " + sqlStatement;
+            String mess = Messages.getString("IndicatorEvaluator.NoResultSet", sqlStatement); //$NON-NLS-1$
             log.warn(mess);
             returnCode.setReturnCode(mess, false);
             return returnCode;

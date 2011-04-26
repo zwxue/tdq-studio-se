@@ -83,14 +83,14 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         // }
 
         if (this.elementToIndicators.values().isEmpty()) {
-            String msg = "No indicator set for the connection evaluation";
+            String msg = Messages.getString("Evaluator.NoInidcator1"); //$NON-NLS-1$
             log.error(msg);
             ok.setReturnCode(msg, false);
             return ok;
         }
         elementIndics = this.elementToIndicators.values().iterator().next();
         if (elementIndics.isEmpty()) {
-            String msg = "No indicator for " + dataProvider;
+            String msg = Messages.getString("Evaluator.NoInidcator2", dataProvider); //$NON-NLS-1$
             log.error(msg);
             ok.setReturnCode(msg, false);
             return ok;
@@ -106,7 +106,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
             // MOD yyi 2009-11-30 10187
             for (Schema tdSchema : schemata) {
                 if (!checkSchema(tdSchema)) {
-                    ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", tdSchema.getName()), false);
+                    ok.setReturnCode(Messages.getString("Evaluator.schemaNotExist", tdSchema.getName()), false); //$NON-NLS-1$
                     return ok;
                 }
             }
@@ -118,7 +118,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
             // MOD yyi 2009-11-30 10187
             for (Catalog tdCatalog : catalogs) {
                 if (!checkCatalog(tdCatalog.getName())) {
-                    ok.setReturnCode(Messages.getString("Evaluator.catalogNotExist", tdCatalog.getName()), false);
+                    ok.setReturnCode(Messages.getString("Evaluator.catalogNotExist", tdCatalog.getName()), false); //$NON-NLS-1$
                     return ok;
                 }
             }
@@ -128,7 +128,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 try {
                     connection.setCatalog(catName);
                 } catch (Exception e) {
-                    log.warn("Exception while executing SQL query " + sqlStatement, e);
+                    log.warn("Exception while executing SQL query " + sqlStatement, e); //$NON-NLS-1$
                 }
                 CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
                 // MOD xqliu 2009-1-21 feature 4715
@@ -162,12 +162,12 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         if (connectionIndicator == null) {
             return;
         }
-        log.info("nb table= " + connectionIndicator.getTableCount());
-        log.info("nb views= " + connectionIndicator.getViewCount());
-        log.info("nb index= " + connectionIndicator.getIndexCount());
-        log.info("nb PK= " + connectionIndicator.getKeyCount());
-        log.info("total table row count= " + connectionIndicator.getTableRowCount());
-        log.info("total view row count= " + connectionIndicator.getViewRowCount());
+        log.info("nb table= " + connectionIndicator.getTableCount()); //$NON-NLS-1$
+        log.info("nb views= " + connectionIndicator.getViewCount()); //$NON-NLS-1$
+        log.info("nb index= " + connectionIndicator.getIndexCount()); //$NON-NLS-1$
+        log.info("nb PK= " + connectionIndicator.getKeyCount()); //$NON-NLS-1$
+        log.info("total table row count= " + connectionIndicator.getTableRowCount()); //$NON-NLS-1$
+        log.info("total view row count= " + connectionIndicator.getViewRowCount()); //$NON-NLS-1$
     }
 
     protected void addToConnectionIndicator(Indicator indicator) {

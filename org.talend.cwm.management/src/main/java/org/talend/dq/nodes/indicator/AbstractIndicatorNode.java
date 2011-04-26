@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes.indicator;
 
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -71,7 +72,7 @@ public abstract class AbstractIndicatorNode implements IIndicatorNode {
             }
         }
 
-        return "";
+        return PluginConstant.EMPTY_STRING;
     }
 
     /*

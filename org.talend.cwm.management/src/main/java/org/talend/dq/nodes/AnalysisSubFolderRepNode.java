@@ -150,12 +150,12 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
                 ModelElement modelElement = analysedElements.get(0);
                 if (modelElement instanceof DatabaseConnection) {
                     EList<Package> dataPackage = ((DatabaseConnection) modelElement).getDataPackage();
-                    return "(" + dataPackage.size() + ")";
+                    return "(" + dataPackage.size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
-            return "(" + analysedElements.size() + ")";
+            return "(" + analysedElements.size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
         }
-        return "(0)";
+        return "(0)"; //$NON-NLS-1$
     }
 
     public boolean isVirtualFolder() {

@@ -173,7 +173,7 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
     }
 
     public String getCount() {
-        return "(" + this.getChildren().size() + ")";
+        return "(" + this.getChildren().size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override

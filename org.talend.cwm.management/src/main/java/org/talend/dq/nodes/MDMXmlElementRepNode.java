@@ -20,6 +20,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.dataquality.PluginConstant;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -102,7 +103,7 @@ public class MDMXmlElementRepNode extends RepositoryNode {
         if (!hasChildren()) {
             return tdXmlElementType.getJavaType();
         }
-        return "";
+        return PluginConstant.EMPTY_STRING;
 
     }
 }

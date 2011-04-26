@@ -106,7 +106,7 @@ public class CWMPlugin extends Plugin {
                     assert password != null;
 
                     // password should not null when serialized
-                    password = password != null ? password : "";
+                    password = password != null ? password : ""; //$NON-NLS-1$
 
                     String url = JavaSqlFactory.getURL(connection);
 

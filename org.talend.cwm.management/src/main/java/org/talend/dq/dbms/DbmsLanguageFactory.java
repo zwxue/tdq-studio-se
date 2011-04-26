@@ -24,6 +24,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.api.SoftwareSystemManager;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -68,7 +69,7 @@ public final class DbmsLanguageFactory {
         if (softwareSystem != null || isMdm) {
             final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : softwareSystem.getSubtype();
             if (log.isDebugEnabled()) {
-                log.debug("Software system subtype (Database type): " + dbmsSubtype);
+                log.debug("Software system subtype (Database type): " + dbmsSubtype); //$NON-NLS-1$
             }
             if (StringUtils.isNotBlank(dbmsSubtype)) {
                 String version = isMdm ? DatabaseConstant.MDM_VERSION : softwareSystem.getVersion();
@@ -175,21 +176,21 @@ public final class DbmsLanguageFactory {
         String databaseProductName = null;
         try {
             databaseProductName = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductName();
-            databaseProductName = databaseProductName == null ? "" : databaseProductName; //$NON-NLS-1$
+            databaseProductName = databaseProductName == null ? PluginConstant.EMPTY_STRING : databaseProductName;
             String databaseProductVersion = null;
             try {
                 databaseProductVersion = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection)
                         .getDatabaseProductVersion();
-                databaseProductVersion = databaseProductVersion == null ? "0" : databaseProductVersion;
+                databaseProductVersion = databaseProductVersion == null ? "0" : databaseProductVersion; //$NON-NLS-1$
             } catch (Exception e) {
-                log.warn("Exception when retrieving database product version of " + databaseProductName, e);
+                log.warn(Messages.getString("DbmsLanguageFactory.RetrieveVerSionException", databaseProductName), e);//$NON-NLS-1$
             }
             DbmsLanguage dbmsLanguage = createDbmsLanguage(databaseProductName, databaseProductVersion);
             dbmsLanguage.setDbQuoteString(org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection)
                     .getIdentifierQuoteString());
             return dbmsLanguage;
         } catch (SQLException e) {
-            log.warn("Exception when retrieving database informations:" + e + ". Creating a default DbmsLanguage.", e);
+            log.warn(Messages.getString("DbmsLanguageFactory.RetrieveInfoException", e), e);//$NON-NLS-1$
             return new DbmsLanguage();
         }
     }

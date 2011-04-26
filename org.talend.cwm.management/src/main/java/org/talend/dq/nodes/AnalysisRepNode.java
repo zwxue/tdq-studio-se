@@ -61,7 +61,7 @@ public class AnalysisRepNode extends RepositoryNode {
         RepositoryNode parent = this.getParent();
         if (!(parent instanceof ReportSubFolderRepNode)) {
             AnalysisSubFolderRepNode childNodeFolder = new AnalysisSubFolderRepNode(null, this, ENodeType.SIMPLE_FOLDER);
-            childNodeFolder.setProperties(EProperties.LABEL, "analyzed elements");
+            childNodeFolder.setProperties(EProperties.LABEL, "analyzed elements"); //$NON-NLS-1$
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
             anaElement.add(childNodeFolder);
         }

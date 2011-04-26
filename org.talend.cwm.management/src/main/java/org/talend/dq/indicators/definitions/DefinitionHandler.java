@@ -140,11 +140,11 @@ public final class DefinitionHandler {
 
         EList<EObject> contents = definitionsFile.getContents();
         if (contents == null) {
-            log.error("No content found in given resource: " + definitionsFile.getURI());
+            log.error(Messages.getString("DefinitionHandler.NoContentFound", definitionsFile.getURI())); //$NON-NLS-1$
             return null;
         }
         if (contents.isEmpty()) {
-            log.error("No content found in given resource: " + definitionsFile.getURI());
+            log.error(Messages.getString("DefinitionHandler.NoContentFound", definitionsFile.getURI())); //$NON-NLS-1$
             return null;
         }
         DefinitionSwitch<IndicatorsDefinitions> catSwitch = new DefinitionSwitch<IndicatorsDefinitions>() {
@@ -178,11 +178,11 @@ public final class DefinitionHandler {
               // do not create it here if it does not exist.
             definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
             if (log.isDebugEnabled()) {
-                log.debug("Definition of indicators loaded from " + uri);
+                log.debug("Definition of indicators loaded from " + uri); //$NON-NLS-1$
             }
         } catch (RuntimeException e) {
             if (log.isDebugEnabled()) {
-                log.debug("ERROR: " + e.getMessage(), e);
+                log.debug("ERROR: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         if (definitionsFile == null) {
@@ -190,11 +190,11 @@ public final class DefinitionHandler {
             try { // load from plugin path
                 definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
                 if (log.isDebugEnabled()) {
-                    log.debug("Definition of indicators loaded from " + uri);
+                    log.debug("Definition of indicators loaded from " + uri); //$NON-NLS-1$
                 }
             } catch (RuntimeException e) {
                 if (log.isDebugEnabled()) {
-                    log.debug("ERROR: " + e.getMessage(), e);
+                    log.debug("ERROR: " + e.getMessage(), e); //$NON-NLS-1$
                 }
             }
         }
@@ -202,10 +202,10 @@ public final class DefinitionHandler {
         if (definitionsFile == null) {
             // try to load from a local file
             definitionsFile = EMFSharedResources.getInstance().getResource(
-                    URI.createFileURI(".." + File.separator + PLUGIN_PATH), true);
+                    URI.createFileURI(".." + File.separator + PLUGIN_PATH), true); //$NON-NLS-1$
         }
         if (definitionsFile == null) {
-            log.error("No resource found at " + PLUGIN_PATH + " URI= " + uri);
+            log.error(Messages.getString("DefinitionHandler.NoResourceFound", PLUGIN_PATH, uri));//$NON-NLS-1$
             return null;
         }
         return definitionsFile;
@@ -259,10 +259,10 @@ public final class DefinitionHandler {
 
         if (EMFSharedResources.getInstance().saveResource(resource)) {
             if (log.isInfoEnabled()) {
-                log.info("Indicator default definitions correctly saved in " + resource.getURI());
+                log.info("Indicator default definitions correctly saved in " + resource.getURI()); //$NON-NLS-1$
             }
         } else {
-            log.error("Failed to save default indicator definitions in " + resource.getURI());
+            log.error(Messages.getString("DefinitionHandler.FailToSave", resource.getURI()));//$NON-NLS-1$
 
         }
         return resource;

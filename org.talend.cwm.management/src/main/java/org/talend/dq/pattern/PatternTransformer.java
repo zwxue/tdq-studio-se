@@ -61,7 +61,7 @@ public class PatternTransformer {
             return "[[:digit:]]"; //$NON-NLS-1$
         }
         if (specialChar.contains(String.valueOf(inputCharacter))) {
-            return "\\" + inputCharacter;
+            return "\\" + inputCharacter; //$NON-NLS-1$
         }
         return String.valueOf(inputCharacter);        
     }

@@ -132,32 +132,32 @@ public enum IndicatorEnum {
     DateFrequencyIndicatorEnum(
                                IndicatorsPackage.DATE_FREQUENCY_INDICATOR,
                                IndicatorsPackage.Literals.DATE_FREQUENCY_INDICATOR,
-                               "Date Frequency Table",
+                               "Date Frequency Table", //$NON-NLS-1$
                                null),
     WeekFrequencyIndicatorEnum(
                                IndicatorsPackage.WEEK_FREQUENCY_INDICATOR,
                                IndicatorsPackage.Literals.WEEK_FREQUENCY_INDICATOR,
-                               "Week Frequency Table",
+                               "Week Frequency Table", //$NON-NLS-1$
                                null),
     MonthFrequencyIndicatorEnum(
                                 IndicatorsPackage.MONTH_FREQUENCY_INDICATOR,
                                 IndicatorsPackage.Literals.MONTH_FREQUENCY_INDICATOR,
-                                "Month Frequency Table",
+                                "Month Frequency Table", //$NON-NLS-1$
                                 null),
     QuarterFrequencyIndicatorEnum(
                                   IndicatorsPackage.QUARTER_FREQUENCY_INDICATOR,
                                   IndicatorsPackage.Literals.QUARTER_FREQUENCY_INDICATOR,
-                                  "Quarter Frequency Table",
+                                  "Quarter Frequency Table", //$NON-NLS-1$
                                   null),
     YearFrequencyIndicatorEnum(
                                IndicatorsPackage.YEAR_FREQUENCY_INDICATOR,
                                IndicatorsPackage.Literals.YEAR_FREQUENCY_INDICATOR,
-                               "Year Frequency Table",
+                               "Year Frequency Table", //$NON-NLS-1$
                                null),
     BinFrequencyIndicatorEnum(
                               IndicatorsPackage.BIN_FREQUENCY_INDICATOR,
                               IndicatorsPackage.Literals.BIN_FREQUENCY_INDICATOR,
-                              "Bin Frequency Table",
+                              "Bin Frequency Table", //$NON-NLS-1$
                               null),
 
     LowFrequencyIndicatorEnum(
@@ -169,32 +169,32 @@ public enum IndicatorEnum {
     DateLowFrequencyIndicatorEnum(
                                   IndicatorsPackage.DATE_LOW_FREQUENCY_INDICATOR,
                                   IndicatorsPackage.Literals.DATE_LOW_FREQUENCY_INDICATOR,
-                                  "Date Low Frequency Table",
+                                  "Date Low Frequency Table", //$NON-NLS-1$
                                   null),
     WeekLowFrequencyIndicatorEnum(
                                   IndicatorsPackage.WEEK_LOW_FREQUENCY_INDICATOR,
                                   IndicatorsPackage.Literals.WEEK_LOW_FREQUENCY_INDICATOR,
-                                  "Week Low Frequency Table",
+                                  "Week Low Frequency Table", //$NON-NLS-1$
                                   null),
     MonthLowFrequencyIndicatorEnum(
                                    IndicatorsPackage.MONTH_LOW_FREQUENCY_INDICATOR,
                                    IndicatorsPackage.Literals.MONTH_LOW_FREQUENCY_INDICATOR,
-                                   "Month Low Frequency Table",
+                                   "Month Low Frequency Table", //$NON-NLS-1$
                                    null),
     QuarterLowFrequencyIndicatorEnum(
                                      IndicatorsPackage.QUARTER_LOW_FREQUENCY_INDICATOR,
                                      IndicatorsPackage.Literals.QUARTER_LOW_FREQUENCY_INDICATOR,
-                                     "Quarter Low Frequency Table",
+                                     "Quarter Low Frequency Table", //$NON-NLS-1$
                                      null),
     YearLowFrequencyIndicatorEnum(
                                   IndicatorsPackage.YEAR_LOW_FREQUENCY_INDICATOR,
                                   IndicatorsPackage.Literals.YEAR_LOW_FREQUENCY_INDICATOR,
-                                  "Year Low Frequency Table",
+                                  "Year Low Frequency Table", //$NON-NLS-1$
                                   null),
     BinLowFrequencyIndicatorEnum(
                                  IndicatorsPackage.BIN_LOW_FREQUENCY_INDICATOR,
                                  IndicatorsPackage.Literals.BIN_LOW_FREQUENCY_INDICATOR,
-                                 "Bin Low Frequency Table",
+                                 "Bin Low Frequency Table", //$NON-NLS-1$
                                  null),
 
     // MOD mzhao 2009-03-05 Soundex frequency indicator.

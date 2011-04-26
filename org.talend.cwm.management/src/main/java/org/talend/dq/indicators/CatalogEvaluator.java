@@ -56,14 +56,14 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
         DataProvider dataProvider = this.getDataManager();
 
         if (this.elementToIndicators.values().isEmpty()) {
-            String msg = "No indicator set for the connection evaluation";
+            String msg = Messages.getString("Evaluator.NoInidcator1"); //$NON-NLS-1$
             log.error(msg);
             ok.setReturnCode(msg, false);
             return ok;
         }
         Indicator[] indics = this.getAllIndicators();
         if (indics.length == 0) {
-            String msg = "No indicator for " + dataProvider;
+            String msg = Messages.getString("Evaluator.NoInidcator2", dataProvider); //$NON-NLS-1$
             log.error(msg);
             ok.setReturnCode(msg, false);
             return ok;
@@ -77,7 +77,7 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
             String catName = catalog.getName();
             // MOD yyi 2009-11-30 10187
             if (!checkCatalog(catName)) {
-                ok.setReturnCode(Messages.getString("Evaluator.catalogNotExist", catName), false);
+                ok.setReturnCode(Messages.getString("Evaluator.catalogNotExist", catName), false); //$NON-NLS-1$
                 return ok;
             }
             // ~
