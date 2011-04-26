@@ -21,7 +21,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -77,7 +79,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         DataManager connection = analysis.getContext().getConnection();
         if (connection == null) {
             // try to get one
-            log.error("Connection has not been set in analysis Context");
+            log.error(Messages.getString("ColumnCorrelationAnalysisHandler.CONNNOTBEENSETINANALYSIS"));//$NON-NLS-1$
             connection = ModelElementHelper.getTdDataProvider(modelElement);
             analysis.getContext().setConnection(connection);
         }
@@ -117,7 +119,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
     public String getDatamingType(ModelElement modelElement) {
         DataminingType dmType = MetadataHelper.getDataminingType(modelElement);
         if (dmType == null) {
-            return ""; //$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
         // else
         return dmType.getLiteral();

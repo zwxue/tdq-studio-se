@@ -113,25 +113,26 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     protected String getComment(String showing) {
         if (!SHOW_COMMENT_BEFORE_STATEMENT) {
-            return ""; //$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
         StringBuffer sb = new StringBuffer();
         if (this.analysis != null) {
-            String anaName = this.analysis.getName() == null ? "" : this.analysis.getName(); //$NON-NLS-1$
+            String anaName = this.analysis.getName() == null ? PluginConstant.EMPTY_STRING : this.analysis.getName();
             AnalysisType analysisType = AnalysisHelper.getAnalysisType(this.analysis);
-            String anaType = analysisType == null ? "" : analysisType.getLiteral() == null ? "" : analysisType.getLiteral(); //$NON-NLS-1$  //$NON-NLS-2$
+            String anaType = analysisType == null ? PluginConstant.EMPTY_STRING
+                    : analysisType.getLiteral() == null ? PluginConstant.EMPTY_STRING : analysisType.getLiteral();
             String anaPurpose = AnalysisHelper.getPurpose(this.analysis);
             String anaDescription = AnalysisHelper.getDescription(this.analysis);
-            String aeName = "";
-            String indName = "";
+            String aeName = PluginConstant.EMPTY_STRING;
+            String indName = PluginConstant.EMPTY_STRING;
             if (this.indicator != null) {
                 ModelElement analyzedElement = this.indicator.getAnalyzedElement();
                 if (analyzedElement != null) {
-                    aeName = analyzedElement.getName() == null ? "" : analyzedElement.getName();
+                    aeName = analyzedElement.getName() == null ? PluginConstant.EMPTY_STRING : analyzedElement.getName();
                 }
-                indName = this.indicator.getName() == null ? "" : this.indicator.getName();
+                indName = this.indicator.getName() == null ? PluginConstant.EMPTY_STRING : this.indicator.getName();
             }
-            showing = showing == null ? "" : showing; //$NON-NLS-1$
+            showing = showing == null ? PluginConstant.EMPTY_STRING : showing; //$NON-NLS-1$
             //            sb.append("/*\n"); //$NON-NLS-1$
             //            sb.append("Analysis: " + anaName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
             //            sb.append("Type of Analysis: " + anaType + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
@@ -206,7 +207,7 @@ public abstract class DataExplorer implements IDataExplorer {
         Expression instantiatedExpression = dbmsLanguage.getInstantiatedExpression(indicator);
         String instantiatedSQL = instantiatedExpression == null ? null : instantiatedExpression.getBody();
         if (instantiatedSQL == null) {
-            log.error("No instantiated SQL expression found for " + indicator.getName() + " in analysis " + analysis.getName());
+            log.error(Messages.getString("DataExplorer.NOINSTANTIATEDSQL", indicator.getName(), analysis.getName()));//$NON-NLS-1$
             return null;
         }
         int b = instantiatedSQL.indexOf(this.dbmsLanguage.from());
@@ -218,12 +219,12 @@ public abstract class DataExplorer implements IDataExplorer {
         this.analysis = analysis;
         AnalysisContext context = this.analysis.getContext();
         if (context == null) {
-            log.error("Context of analysis " + analysis.getName() + " is null.");
+            log.error(Messages.getString("DataExplorer.ANALYSISCONTEXTISNULL", analysis.getName()));//$NON-NLS-1$
             return false;
         }
         DataManager dataManager = context.getConnection();
         if (dataManager == null) {
-            log.error("No connection found in context of analysis " + analysis.getName());
+            log.error(Messages.getString("DataExplorer.NOCONNFOUND") + analysis.getName());//$NON-NLS-1$ 
             return false;
         }
         this.dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dataManager);
@@ -258,10 +259,10 @@ public abstract class DataExplorer implements IDataExplorer {
         }
         if (eLs != null && !eLs.isEmpty()) {
             for (ModelElement mColumn : eLs) {
-                name.append(dbmsLanguage.quote(mColumn.getName())).append(",");
+                name.append(dbmsLanguage.quote(mColumn.getName())).append(",");//$NON-NLS-1$ 
             }
             if (eLs.size() > 0) {
-                return org.apache.commons.lang.StringUtils.removeEnd(name.toString(), ",");
+                return org.apache.commons.lang.StringUtils.removeEnd(name.toString(), ",");//$NON-NLS-1$ 
             }
         }
 
@@ -330,7 +331,7 @@ public abstract class DataExplorer implements IDataExplorer {
      */
     protected String getDataFilterClause() {
         String where = AnalysisHelper.getStringDataFilter(analysis);
-        return where != null ? where : ""; //$NON-NLS-1$
+        return where != null ? where : PluginConstant.EMPTY_STRING;
     }
 
     /**
@@ -342,7 +343,7 @@ public abstract class DataExplorer implements IDataExplorer {
     protected String andDataFilterClause() {
         String dataFilter = getDataFilterClause();
         if (dataFilter.length() == 0) {
-            return ""; //$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
         return dbmsLanguage.and() + inBrackets(dataFilter);
     }

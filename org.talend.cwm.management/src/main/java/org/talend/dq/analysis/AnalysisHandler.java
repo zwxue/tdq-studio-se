@@ -25,6 +25,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dq.helper.PropertyHelper;
@@ -91,7 +92,7 @@ public class AnalysisHandler {
 
             return format.format(resultMetadata.getExecutionDate());
         } else {
-            return ""; //$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
     }
 
@@ -118,15 +119,15 @@ public class AnalysisHandler {
     public String getConnectionName() {
         DataManager connection = analysis.getContext().getConnection();
         if (connection == null) {
-            return "";//$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         } else {
             Property property = PropertyHelper.getProperty(connection);
-            return property == null ? "" : property.getLabel(); //$NON-NLS-1$
+            return property == null ? PluginConstant.EMPTY_STRING : property.getLabel(); //$NON-NLS-1$
         }
     }
 
     public String getTableNames() {
-        String str = ""; //$NON-NLS-1$
+        String str = PluginConstant.EMPTY_STRING;
         for (String aStr : getColumnSetOwnerNames()) {
             str = str + aStr + " "; //$NON-NLS-1$
         }
@@ -136,7 +137,7 @@ public class AnalysisHandler {
 
     // bug 10541 fix by zshen,Change some character set to be proper to add view in the table anasys
     public String getViewNames() {
-        String str = ""; //$NON-NLS-1$
+        String str = PluginConstant.EMPTY_STRING;
         for (String aStr : getColumnSetOwnerViewNames()) {
             str = str + aStr + " "; //$NON-NLS-1$
         }
@@ -150,7 +151,7 @@ public class AnalysisHandler {
      * @return the schema names concatenated or the empty string (never null)
      */
     public String getSchemaNames() {
-        String str = ""; //$NON-NLS-1$
+        String str = PluginConstant.EMPTY_STRING;
         for (ColumnSet columnSet : getColumnSets()) {
             Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
             if (schema != null && RelationalPackage.eINSTANCE.getSchema().equals(schema.eClass())) {
@@ -166,7 +167,7 @@ public class AnalysisHandler {
      * @return the catalog names concatenated or the empty string (never null)
      */
     public String getCatalogNames() {
-        String str = ""; //$NON-NLS-1$
+        String str = PluginConstant.EMPTY_STRING;
         for (ColumnSet columnSet : getColumnSets()) {
             Package schema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
             if (schema == null) {

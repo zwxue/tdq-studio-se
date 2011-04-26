@@ -40,6 +40,7 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -71,15 +72,15 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
 
     private static final String XSD_SUFIX = ".xsd"; //$NON-NLS-1$
 
-    private String url = "";
+    private String url = PluginConstant.EMPTY_STRING;
 
-    private String userName = "";
+    private String userName = PluginConstant.EMPTY_STRING;
 
-    private String userPass = "";
+    private String userPass = PluginConstant.EMPTY_STRING;
 
-    private String universe = "";
+    private String universe = PluginConstant.EMPTY_STRING;
 
-    private String dataFilter = "";
+    private String dataFilter = PluginConstant.EMPTY_STRING;
 
     private Properties props = null;
 
@@ -95,9 +96,12 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
      * init userName, userPass, universe,dataFilter.
      */
     private void initParams() {
-        userName = props.getProperty(TaggedValueHelper.USER) == null ? "" : props.getProperty(TaggedValueHelper.USER);
-        userPass = props.getProperty(TaggedValueHelper.PASSWORD) == null ? "" : props.getProperty(TaggedValueHelper.PASSWORD);
-        universe = props.getProperty(TaggedValueHelper.UNIVERSE) == null ? "" : props.getProperty(TaggedValueHelper.UNIVERSE);
+        userName = props.getProperty(TaggedValueHelper.USER) == null ? PluginConstant.EMPTY_STRING : props
+                .getProperty(TaggedValueHelper.USER);
+        userPass = props.getProperty(TaggedValueHelper.PASSWORD) == null ? PluginConstant.EMPTY_STRING : props
+                .getProperty(TaggedValueHelper.PASSWORD);
+        universe = props.getProperty(TaggedValueHelper.UNIVERSE) == null ? PluginConstant.EMPTY_STRING : props
+                .getProperty(TaggedValueHelper.UNIVERSE);
         dataFilter = props.getProperty(TaggedValueHelper.DATA_FILTER);
     }
 
@@ -110,7 +114,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
             stub.ping(new WSPing());
 
             ret.setOk(true);
-            ret.setMessage("OK");
+            ret.setMessage("OK");//$NON-NLS-1$
         } catch (Exception e) {
             log.warn(e, e);
             ret.setOk(false);
@@ -137,7 +141,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         if (universe == null || universe.trim().length() == 0) {
             stub.setUsername(userName);
         } else {
-            stub.setUsername(universe + "/" + userName);
+            stub.setUsername(universe + "/" + userName);//$NON-NLS-1$
         }
         stub.setPassword(userPass);
         return stub;
@@ -150,7 +154,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         String datamodel = mdmConn.getDatamodel();
         try {
             XtentisBindingStub stub = getXtentisBindingStub();
-            WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(""));
+            WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(PluginConstant.EMPTY_STRING));
             // MOD xqliu 2010-10-11 bug 15756
             // String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
             // + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
@@ -175,7 +179,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
 
     private String getTechXSDFolderName() {
         String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
-                + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+                + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));//$NON-NLS-1$
         IFolder xsdFolder = ResourceManager.getMDMConnectionFolder().getFolder(XSD_SUFIX);
         if (xsdFolder.getFolder(techXSDFolderName).exists()) {
             try {
@@ -193,7 +197,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         List<String> xmlDocs = new ArrayList<String>();
         try {
             XtentisBindingStub stub = getXtentisBindingStub();
-            WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(""));
+            WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(PluginConstant.EMPTY_STRING));
 
             for (WSDataModelPK pk : pks) {
                 xmlDocs.add(pk.getPk());
@@ -225,8 +229,8 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         } catch (Exception e1) {
             log.warn(e1, e1);
         }
-        if (resXSD == null || "".equals(resXSD.trim())) {
-            log.warn("XSD not exist for \"" + resName + "\"");
+        if (resXSD == null || PluginConstant.EMPTY_STRING.equals(resXSD.trim())) {
+            log.warn(Messages.getString("EXistXMLDBConnection.XSDNOTEXIST", resName));//$NON-NLS-1$
             return;
         }
         // ~ 16161
@@ -243,7 +247,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         IFile file = xsdFolder.getFile(resName + XSD_SUFIX);
         // zshen bug 14089: unfolder MDM node get exception.because of the encoding of stream
         try {
-            file.create(new ByteArrayInputStream(resXSD.getBytes("UTF-8")), true, new NullProgressMonitor());
+            file.create(new ByteArrayInputStream(resXSD.getBytes("UTF-8")), true, new NullProgressMonitor());//$NON-NLS-1$
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

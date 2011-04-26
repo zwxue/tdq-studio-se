@@ -27,7 +27,7 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     private static final String REGEX = "SELECT.*\\s*MAX\\((.*)\\)\\s*, SOUNDEX\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
-    private static final String SOUNDEX_PREFIX = "SOUNDEX";
+    private static final String SOUNDEX_PREFIX = "SOUNDEX";//$NON-NLS-1$
 
     @Override
     protected String getFreqRowsStatement() {
@@ -43,9 +43,6 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
                 return resultSql;
             }
         }
-
-
-        //
 
         String clause = getInstantiatedClause();
         return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$

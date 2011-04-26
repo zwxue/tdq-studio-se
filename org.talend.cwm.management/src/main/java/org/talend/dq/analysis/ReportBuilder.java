@@ -37,7 +37,7 @@ public class ReportBuilder {
 
     public boolean initializeTdReport(String reportName) {
         if (initialized) {
-            log.warn("TdReport already initialized. ");
+            log.warn("TdReport already initialized. ");//$NON-NLS-1$
             return false;
         }
 

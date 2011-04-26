@@ -33,6 +33,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
@@ -105,7 +106,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         boolean closeAtTheEnd = true;
         Package catalog = schemata.values().iterator().next();
         if (!eval.selectCatalog(catalog.getName())) {
-            log.warn("Failed to select catalog " + catalog.getName() + " for connection.");
+            log.warn(Messages.getString("ColumnAnalysisExecutor.FAILEDTOSELECTCATALOG", catalog.getName()));//$NON-NLS-1$
         }
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
         if (!rc.isOk()) {
@@ -153,7 +154,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
         // CwmZQuery query = new CwmZQuery();
-        StringBuilder sql = new StringBuilder("SELECT ");
+        StringBuilder sql = new StringBuilder("SELECT ");//$NON-NLS-1$
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
@@ -186,7 +187,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
                 sql.append(this.quote(col.getName()));
                 // append comma if more columns exist
                 if (iterator.hasNext()) {
-                    sql.append(',');
+                    sql.append(',');//$NON-NLS-1$
                 }
             }
 
@@ -199,8 +200,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         }
         if (fromPart.size() != 1) {
-            log.error("Java analysis must be run on only one table. The number of different tables is " + fromPart.size() + ".");
-            this.errorMessage = "Cannot run a Java analysis on several tables. Use only columns from one table.";
+            log.error(Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLE") + fromPart.size() + PluginConstant.DOT_STRING);//$NON-NLS-1$
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLEERRORMESSAGE");//$NON-NLS-1$
             return null;
         }
         // MOD zshen feature 12919 select all the column to be prepare for drill down.

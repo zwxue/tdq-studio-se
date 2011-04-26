@@ -96,8 +96,8 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
 
             Expression query = dbms().getInstantiatedExpression(indicator);
             if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
-                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
             } else {
                 // set computation done
                 indicator.setComputed(true);

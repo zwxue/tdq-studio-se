@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -74,7 +75,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof DB2DbmsLanguage) {
             value = entity.getKey();
         } else {
-            value = "'" + entity.getKey() + "'";
+            value = "'" + entity.getKey() + "'";//$NON-NLS-1$//$NON-NLS-2$
         }
 
         String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : ((function == null ? colName : function)
@@ -112,7 +113,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         if (colName == null) {
             return colName;
         }
-        colName = " CAST(" + colName + " AS CHAR(20)) ";
+        colName = " CAST(" + colName + " AS CHAR(20)) ";//$NON-NLS-1$//$NON-NLS-2$
         return colName;
     }
 
@@ -121,7 +122,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         IndicatorDefinition indicatorDefinition;
         String label = indicator.getIndicatorDefinition().getLabel();
-        if (label == null || "".equals(label)) { //$NON-NLS-1$
+        if (label == null || PluginConstant.EMPTY_STRING.equals(label)) {
             indicatorDefinition = indicator.getIndicatorDefinition();
         } else {
             indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);

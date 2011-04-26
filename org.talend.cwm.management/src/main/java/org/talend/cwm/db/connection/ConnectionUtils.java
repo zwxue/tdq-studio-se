@@ -145,20 +145,21 @@ public final class ConnectionUtils {
         if (driver != null) {
             DriverManager.registerDriver(driver);
             if (log.isDebugEnabled()) {
-                log.debug("SQL driver found and registered: " + driverClassName);
-                log.debug("Enumerating all drivers:");
+                log.debug("SQL driver found and registered: " + driverClassName);//$NON-NLS-1$
+                log.debug("Enumerating all drivers:");//$NON-NLS-1$
                 Enumeration<Driver> drivers = DriverManager.getDrivers();
                 while (drivers.hasMoreElements()) {
                     log.debug(drivers.nextElement());
                 }
             }
             java.sql.Connection connection = null;
-            if (driverClassName.equals("org.hsqldb.jdbcDriver")) { //$NON-NLS-1$getClassDriver 
+            if (driverClassName.equals("org.hsqldb.jdbcDriver")) { //$NON-NLS-1$
+                // getClassDriver
                 // MOD mzhao 2009-04-13, Try to load driver first as there will
                 // cause exception: No suitable driver
                 // found... if not load.
                 try {
-                    Class.forName("org.hsqldb.jdbcDriver");
+                    Class.forName("org.hsqldb.jdbcDriver");//$NON-NLS-1$
                 } catch (ClassNotFoundException e) {
                     log.error(e, e);
                 }
@@ -357,7 +358,7 @@ public final class ConnectionUtils {
     }
 
     // ADD xqliu 2009-11-09 bug 9403
-    private static final String DEFAULT_TABLE_NAME = "TDQ_PRODUCT";
+    private static final String DEFAULT_TABLE_NAME = "TDQ_PRODUCT";//$NON-NLS-1$
 
     /**
      * DOC xqliu Comment method "existTable".
@@ -371,7 +372,7 @@ public final class ConnectionUtils {
      */
     public static boolean existTable(String url, String driver, Properties props, String tableName, String schema) {
         java.sql.Connection connection = null;
-        if (tableName == null || "".equals(tableName.trim())) {
+        if (tableName == null || org.talend.dataquality.PluginConstant.EMPTY_STRING.equals(tableName.trim())) {
             tableName = DEFAULT_TABLE_NAME;
         }
         try {
@@ -379,10 +380,10 @@ public final class ConnectionUtils {
             if (connection != null) {
                 // FIXME stat should be closed.
                 Statement stat = connection.createStatement();
-                if (!"".equals(schema)) {
-                    stat.executeQuery("Select * from " + schema.toUpperCase() + "." + tableName);
+                if (!org.talend.dataquality.PluginConstant.EMPTY_STRING.equals(schema)) {
+                    stat.executeQuery("Select * from " + schema.toUpperCase() + org.talend.dataquality.PluginConstant.DOT_STRING + tableName); //$NON-NLS-1$
                 } else {
-                    stat.executeQuery("Select * from " + tableName);
+                    stat.executeQuery("Select * from " + tableName);//$NON-NLS-1$
                 }
             }
         } catch (Exception e) {
@@ -457,7 +458,8 @@ public final class ConnectionUtils {
     public static boolean isMssql(Connection connection) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn != null) {
-            String databaseType = dbConn.getDatabaseType() == null ? "" : dbConn.getDatabaseType();
+            String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
+                    .getDatabaseType();
             return EDriverName.MSSQL2008URL.getDBKey().equalsIgnoreCase(databaseType)
                     || EDriverName.MSSQLDEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
                     || EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(databaseType);
@@ -474,7 +476,8 @@ public final class ConnectionUtils {
     public static boolean isAs400(Connection connection) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn != null) {
-            String databaseType = dbConn.getDatabaseType() == null ? "" : dbConn.getDatabaseType();
+            String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
+                    .getDatabaseType();
             return EDriverName.AS400DEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
                     || EDatabaseTypeName.AS400.getDisplayName().equalsIgnoreCase(databaseType);
         }
@@ -603,7 +606,8 @@ public final class ConnectionUtils {
     public static boolean isPostgresql(Connection connection) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn != null) {
-            String databaseType = dbConn.getDatabaseType() == null ? "" : dbConn.getDatabaseType(); //$NON-NLS-1$
+            String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
+                    .getDatabaseType(); //$NON-NLS-1$
             return EDriverName.POSTGRESQLEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
                     || EDatabaseTypeName.PSQL.getDisplayName().equalsIgnoreCase(databaseType);
         }
@@ -733,7 +737,7 @@ public final class ConnectionUtils {
             ResultSetMetaData metaData = rs.getMetaData();
             int columnSize = metaData.getColumnCount();
             for (int i = 0; i < columnSize; ++i) {
-                System.out.println("[" + (i + 1) + "]:" + metaData.getColumnName(i + 1));
+                System.out.println("[" + (i + 1) + "]:" + metaData.getColumnName(i + 1));//$NON-NLS-1$//$NON-NLS-2$
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -954,9 +958,9 @@ public final class ConnectionUtils {
         if (conn != null && conn instanceof DatabaseConnection) {
             String sid = ((DatabaseConnection) conn).getSID();
             if (sid != null && sid.trim().length() > 0) {
-                TaggedValueHelper.setTaggedValue(conn, TaggedValueHelper.RETRIEVE_ALL, "false");
+                TaggedValueHelper.setTaggedValue(conn, TaggedValueHelper.RETRIEVE_ALL, "false");//$NON-NLS-1$
             } else {
-                TaggedValueHelper.setTaggedValue(conn, TaggedValueHelper.RETRIEVE_ALL, "true");
+                TaggedValueHelper.setTaggedValue(conn, TaggedValueHelper.RETRIEVE_ALL, "true");//$NON-NLS-1$
             }
         }
     }
@@ -987,7 +991,8 @@ public final class ConnectionUtils {
         Properties properties = new Properties();
         properties.put(TaggedValueHelper.USER, mdmConn.getUsername());
         properties.put(TaggedValueHelper.PASSWORD, mdmConn.getPassword());
-        properties.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse());
+        properties.put(TaggedValueHelper.UNIVERSE,
+                mdmConn.getUniverse() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : mdmConn.getUniverse());
         MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), properties);
         ConnectionHelper.addXMLDocuments(mdmWsConn.createConnection(mdmConn));
         return mdmConn;
@@ -1110,18 +1115,22 @@ public final class ConnectionUtils {
         // fill metadata
         MetadataHelper.setAuthor(conn, property.getAuthor().getLogin());
         MetadataHelper.setDescription(property.getDescription(), conn);
-        String statusCode = property.getStatusCode() == null ? "" : property.getStatusCode();
-        MetadataHelper.setDevStatus(conn, "".equals(statusCode) ? DevelopmentStatus.DRAFT.getLiteral() : statusCode);
+        String statusCode = property.getStatusCode() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : property
+                .getStatusCode();
+        MetadataHelper.setDevStatus(conn,
+                org.talend.dataquality.PluginConstant.EMPTY_STRING.equals(statusCode) ? DevelopmentStatus.DRAFT.getLiteral()
+                        : statusCode);
         MetadataHelper.setPurpose(property.getPurpose(), conn);
         MetadataHelper.setVersion(property.getVersion(), conn);
         String retrieveAllMetadataStr = MetadataHelper.getRetrieveAllMetadata(conn);
         // ADD xqliu 2010-10-13 bug 15756
-        if (tSize == 0 && dataPackage.size() == 1 && !"".equals(dataPackage.get(0).getName())) {
-            retrieveAllMetadataStr = "false";
+        if (tSize == 0 && dataPackage.size() == 1
+                && !org.talend.dataquality.PluginConstant.EMPTY_STRING.equals(dataPackage.get(0).getName())) {
+            retrieveAllMetadataStr = "false";//$NON-NLS-1$
         }
         // ~ 15756
         // MOD klliu bug 15821 retrieveAllMetadataStr for Diff database
-        MetadataHelper.setRetrieveAllMetadata(retrieveAllMetadataStr == null ? "true" : retrieveAllMetadataStr, conn);
+        MetadataHelper.setRetrieveAllMetadata(retrieveAllMetadataStr == null ? "true" : retrieveAllMetadataStr, conn);//$NON-NLS-1$
         String schema = MetadataHelper.getOtherParameter(conn);
         MetadataHelper.setOtherParameter(schema, conn);
         return conn;
@@ -1233,7 +1242,7 @@ public final class ConnectionUtils {
         if (connectionParam.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
             String dataFilter = connectionParam.getParameters().getProperty(TaggedValueHelper.DATA_FILTER);
             if (dataFilter != null) {
-                packageFilter = Arrays.asList(dataFilter.split(","));
+                packageFilter = Arrays.asList(dataFilter.split(","));//$NON-NLS-1$
             }
         } else {
             if (!connectionParam.isRetrieveAllMetadata()) {

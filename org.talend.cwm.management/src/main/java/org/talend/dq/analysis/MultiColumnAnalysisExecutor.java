@@ -27,6 +27,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -70,7 +71,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         }
 
         // no query to return, here we only instantiate several SQL queries
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     /**
@@ -121,7 +122,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             // handle data filter
             String stringDataFilter = AnalysisHelper.getStringDataFilter(cachedAnalysis);
             if (stringDataFilter == null) {
-                stringDataFilter = ""; //$NON-NLS-1$
+                stringDataFilter = PluginConstant.EMPTY_STRING;
             }
             sqlExpr = dbms().addWhereToStatement(sqlExpr, stringDataFilter);
 
@@ -191,7 +192,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         MetadataTable mdColumn = SwitchHelpers.METADATA_TABLE_SWITCH.doSwitch(owner);
 
 
-        String tableName = "";
+        String tableName = PluginConstant.EMPTY_STRING;
         ModelElement columnSetOwner = null;
         if (null == set && mdColumn != null) {
             tableName = mdColumn.getName();
@@ -208,7 +209,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         }
         // ~
         if (pack == null) {
-            log.error("No Catalog or Schema found for column set owner: " + tableName);
+            log.error(Messages.getString("MultiColumnAnalysisExecutor.NOCATALOGORSCHEMAFOUNDFORCOLUMN", tableName));//$NON-NLS-1$
         } else {
             this.catalogOrSchema = pack.getName();
         }
@@ -246,7 +247,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         boolean ok = true;
         TypedReturnCode<Connection> trc = this.getConnection(analysis);
         if (!trc.isOk()) {
-            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+            return traceError(Messages.getString(
+                    "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
         }
 
         Connection connection = trc.getObject();
@@ -263,8 +265,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 Expression query = dbms().getInstantiatedExpression(indicator);
 
                 if (query == null || !executeQuery(indicator, connection, query)) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
                 } else {
                     indicator.setComputed(true);
                 }
@@ -388,19 +390,19 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     protected boolean checkAllMatchIndicator(AllMatchIndicator indicator) {
         EList<RegexpMatchingIndicator> indicators = indicator.getCompositeRegexMatchingIndicators();
-        String patternNames = "";
+        String patternNames = PluginConstant.EMPTY_STRING;
         for (RegexpMatchingIndicator rmi : indicators) {
             if (null == rmi.getRegex()) {
 
-                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
+                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             }
             // MOD klliu bug 14527 2010-08-09
             else if (rmi.getRegex().equals(rmi.getName())) {
-                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
+                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             }
         }
-        if ("" != patternNames) {
-            this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames);
+        if (PluginConstant.EMPTY_STRING != patternNames) {
+            this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames);//$NON-NLS-1$
             return false;
         }
         return true;

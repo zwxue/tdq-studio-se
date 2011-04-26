@@ -25,7 +25,9 @@ import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -62,7 +64,9 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
         boolean ok = true;
         TypedReturnCode<Connection> trc = this.getConnection(analysis);
         if (!trc.isOk()) {
-            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+
+            return traceError(Messages.getString(
+                    "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
         }
 
         Connection connection = trc.getObject();
@@ -79,8 +83,8 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
                 Expression query = dbms().getInstantiatedExpression(indicator);
 
                 if (query == null || !executeQuery(indicator, connection, query)) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
                 } else {
                     indicator.setComputed(true);
                 }
@@ -126,7 +130,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
         }
 
         // no query to return, here we only instantiate several SQL queries
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     private boolean instantiateQuery(Indicator indicator, DbmsLanguage dbmsLanguage) {
@@ -145,7 +149,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
-        return traceError("Unhandled given indicator: " + indicator.getName());
+        return traceError(Messages.getString("FunctionalDependencyExecutor.UNHANDLEDGIVENINDICATOR", indicator.getName()));//$NON-NLS-1$
     }
 
     /**
@@ -191,7 +195,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
 
         ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
         if (columnSetOwner == null) {
-            log.error("ColumnSet Owner of column " + column.getName() + " is null");
+            log.error(Messages.getString("FunctionalDependencyExecutor.COLUMNSETOWNERISNULL", column.getName()));//$NON-NLS-1$
         } else {
             // this is so bad code
             Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);

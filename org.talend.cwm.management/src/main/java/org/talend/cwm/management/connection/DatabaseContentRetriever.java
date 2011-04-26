@@ -40,6 +40,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
@@ -47,6 +48,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
+import org.talend.dataquality.PluginConstant;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sql.metadata.constants.MetaDataConstants;
@@ -109,7 +111,7 @@ public final class DatabaseContentRetriever {
             ResultSet schemaRs = null;
             try {
                 // Case of JDK 1.6
-                Method getSchemaMethod = connectionMetadata.getClass().getMethod("getSchemas", String.class, String.class);
+                Method getSchemaMethod = connectionMetadata.getClass().getMethod("getSchemas", String.class, String.class);//$NON-NLS-1$
                 schemaRs = (ResultSet) getSchemaMethod.invoke(connectionMetadata, cl, null);
             } catch (SecurityException e) {
                 // Case of JDK1.5
@@ -185,7 +187,7 @@ public final class DatabaseContentRetriever {
         try {
             schemas = connectionMetadata.getSchemas();
         } catch (Exception e1) {
-            log.warn("Cannot get Schemas from the JDBC driver's metadata", e1);
+            log.warn(Messages.getString("DatabaseContentRetriever.CANGETSCHEMA"), e1);//$NON-NLS-1$
         }
         try {
             if (schemas != null) {
@@ -205,9 +207,7 @@ public final class DatabaseContentRetriever {
                         try {
                             catName = schemas.getString(MetaDataConstants.TABLE_CATALOG.name());
                         } catch (Exception e) { // catch exception required for DB2/ZOS
-                            log.warn(
-                                    "Exception when trying to get the catalog name linked to the schema. Catalogs won't be used.",
-                                    e);
+                            log.warn(Messages.getString("DatabaseContentRetriever.GETCATALOG"), e);//$NON-NLS-1$
                         }
                         // get schema name
                         try {
@@ -309,14 +309,15 @@ public final class DatabaseContentRetriever {
                         String catalogName = catalogSet.getString(MetaDataConstants.TABLE_CAT.name());
                         // MOD xqliu 2009-10-29 bug 9838
                         // FIXME in this case, null or "" both possible to be added.
-                        if (catalogName != null || !"".equals(catalogName)) {
+                        if (catalogName != null || !PluginConstant.EMPTY_STRING.equals(catalogName)) {
                             catalogNames.add(catalogName);
                         }
                         // ~
                     }
                 }
             } catch (SQLException e) {
-                log.warn("Cannot retrieve catalogs", e);
+                log.warn(Messages.getString("DatabaseContentRetriever.CANNOTGETCATALOGS"), e);//$NON-NLS-1$
+
             } finally {
                 // --- release the result set.
                 if (catalogSet != null) {
@@ -456,7 +457,7 @@ public final class DatabaseContentRetriever {
         // print driver properties
         // DriverPropertyInfo[] driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
         DriverPropertyInfo[] driverProps = null;
-        if (!databaseUrl.toLowerCase().startsWith("jdbc:odbc:")) {
+        if (!databaseUrl.toLowerCase().startsWith("jdbc:odbc:")) {//$NON-NLS-1$
             driverProps = driver.getPropertyInfo(databaseUrl, driverProperties);
         }
         // ~
@@ -469,7 +470,7 @@ public final class DatabaseContentRetriever {
                 // security hole
                 if (TaggedValueHelper.PASSWORD.equals(prop.name)) {
                     // MOD scorreia 2010-07-24 store password in data provider
-                    String password = prop.value != null ? prop.value : "";
+                    String password = prop.value != null ? prop.value : PluginConstant.EMPTY_STRING;
                     JavaSqlFactory.setPassword(provider, password);
                     // ~
                     continue;
@@ -477,14 +478,14 @@ public final class DatabaseContentRetriever {
 
                 // MOD scorreia 2010-07-24 store username in data provider
                 if (TaggedValueHelper.USER.equals(prop.name)) {
-                    String user = prop.value != null ? prop.value : "";
+                    String user = prop.value != null ? prop.value : PluginConstant.EMPTY_STRING;
                     JavaSqlFactory.setUsername(provider, user);
                 }
                 // ~
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Prop description = " + prop.description);
-                    log.debug(prop.name + "=" + prop.value);
+                    log.debug("Prop description = " + prop.description);//$NON-NLS-1$
+                    log.debug(prop.name + "=" + prop.value);//$NON-NLS-1$
                 }
 
                 // TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(prop.name, prop.value);
@@ -493,7 +494,7 @@ public final class DatabaseContentRetriever {
                 if (log.isDebugEnabled()) {
                     if (prop.choices != null) {
                         for (int j = 0; j < prop.choices.length; j++) {
-                            log.debug("prop choice " + j + " = " + prop.choices[j]);
+                            log.debug("prop choice " + j + " = " + prop.choices[j]);//$NON-NLS-1$//$NON-NLS-2$
                         }
                     }
                 }
@@ -541,34 +542,34 @@ public final class DatabaseContentRetriever {
         try {
             databaseProductName = databaseMetadata.getDatabaseProductName();
             if (log.isInfoEnabled()) {
-                log.info("Database Product Name: " + databaseProductName);
+                log.info(Messages.getString("DatabaseContentRetriever.PRODUCTNAME") + databaseProductName);//$NON-NLS-1$
             }
         } catch (Exception e1) {
-            log.warn("could not get database product name. " + e1, e1);
+            log.warn(Messages.getString("DatabaseContentRetriever.CANNOTGETPRODUCTNAME") + e1, e1);//$NON-NLS-1$
         }
         String databaseProductVersion = null;
         try {
             databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
             if (log.isInfoEnabled()) {
-                log.info("Database Product Version: " + databaseProductVersion);
+                log.info(Messages.getString("DatabaseContentRetriever.PRODUCTVERSION") + databaseProductVersion);//$NON-NLS-1$
             }
         } catch (Exception e1) {
-            log.warn("Could not get database product version. " + e1, e1);
+            log.warn(Messages.getString("DatabaseContentRetriever.CANNOTGETPRODUCTVERSION") + e1, e1);//$NON-NLS-1$
         }
         try {
             int databaseMinorVersion = databaseMetadata.getDatabaseMinorVersion();
             int databaseMajorVersion = databaseMetadata.getDatabaseMajorVersion();
             // simplify the database product version when these informations are accessible
-            databaseProductVersion = Integer.toString(databaseMajorVersion) + "." + databaseMinorVersion;
+            databaseProductVersion = Integer.toString(databaseMajorVersion) + PluginConstant.DOT_STRING + databaseMinorVersion;
 
             if (log.isDebugEnabled()) {
-                log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + ". DB version: "
-                        + databaseMajorVersion + "." + databaseMinorVersion);
+                log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + ". DB version: "//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+                        + databaseMajorVersion + PluginConstant.DOT_STRING + databaseMinorVersion);
             }
         } catch (RuntimeException e) {
             // happens for Sybase ASE for example
             if (log.isDebugEnabled()) {
-                log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + " " + e, e);
+                log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + " " + e, e);//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             }
         }
 
@@ -597,7 +598,8 @@ public final class DatabaseContentRetriever {
         // int columnCount = typeInfo.getMetaData().getColumnCount();
 
         TypeSystem typeSystem = TypemappingFactory.eINSTANCE.createTypeSystem();
-        typeSystem.setName("System type"); // FIXME scorreia put another name?
+        typeSystem.setName("System type"); //$NON-NLS-1$ 
+        // FIXME scorreia put another name?
         while (typeInfo.next()) {
             // --- store the information in CWM structure
             TdSqlDataType dataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
@@ -616,7 +618,7 @@ public final class DatabaseContentRetriever {
             } catch (Exception e) {
                 // some db do not support this method.
                 if (log.isDebugEnabled()) {
-                    log.debug("precision type skipped");
+                    log.debug("precision type skipped");//$NON-NLS-1$
                 }
             }
 
@@ -723,7 +725,7 @@ public final class DatabaseContentRetriever {
     }
 
     private static DatabaseMetaData getConnectionMetadata(java.sql.Connection connection) throws SQLException {
-        assert connection != null : "Connection should not be null in DatabaseContentRetriever.getConnectionMetadata() ";
+        assert connection != null : Messages.getString("DatabaseContentRetriever.CONNNOTBENULL");//$NON-NLS-1$
         // MOD xqliu 2009-07-13 bug 7888
         return org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
     }

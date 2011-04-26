@@ -59,10 +59,10 @@ public class ColumnDependencyExplorer extends DataExplorer {
         TdColumn columnA = cdIndicator.getColumnA();
         TdColumn columnB = cdIndicator.getColumnB();
         if (columnA.getName().equals(columnB.getName())) {
-            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_A, dbmsLanguage.quote(columnA.getName()) + " AS "
-                    + columnA.getName() + "_A");
-            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_B, dbmsLanguage.quote(columnB.getName()) + " AS "
-                    + columnA.getName() + "_B");
+            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_A, dbmsLanguage.quote(columnA.getName()) + " AS "//$NON-NLS-1$
+                    + columnA.getName() + "_A");//$NON-NLS-1$
+            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_B, dbmsLanguage.quote(columnB.getName()) + " AS "//$NON-NLS-1$
+                    + columnA.getName() + "_B");//$NON-NLS-1$
         }
         return getStatement(genericSQL);
     }
@@ -74,10 +74,10 @@ public class ColumnDependencyExplorer extends DataExplorer {
         TdColumn columnA = cdIndicator.getColumnA();
         TdColumn columnB = cdIndicator.getColumnB();
         if (columnA.getName().equals(columnB.getName())) {
-            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_A, dbmsLanguage.quote(columnA.getName()) + " AS "
-                    + columnA.getName() + "_A");
-            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_B, dbmsLanguage.quote(columnB.getName()) + " AS "
-                    + columnA.getName() + "_B");
+            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_A, dbmsLanguage.quote(columnA.getName()) + " AS "//$NON-NLS-1$
+                    + columnA.getName() + "_A");//$NON-NLS-1$
+            genericSQL = genericSQL.replaceFirst(GenericSQLHandler.COLUMN_NAMES_B, dbmsLanguage.quote(columnB.getName()) + " AS "//$NON-NLS-1$
+                    + columnA.getName() + "_B");//$NON-NLS-1$
         }
         return getStatement(genericSQL);
     }

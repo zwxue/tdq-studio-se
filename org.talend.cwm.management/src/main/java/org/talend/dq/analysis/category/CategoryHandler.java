@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.category.AnalysisCategories;
 import org.talend.dataquality.analysis.category.util.CategorySwitch;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
@@ -49,7 +50,7 @@ public final class CategoryHandler {
 
     private static List<String> shouldNotIncludeIndicatorDefinitionUuidList;
 
-    private static final String CATEGORY_OTHER = "Others";
+    private static final String CATEGORY_OTHER = "Others";//$NON-NLS-1$
 
     private static IndicatorCategory indicatorCategory;
 
@@ -78,12 +79,12 @@ public final class CategoryHandler {
             catFile = util.getResourceSet().getResource(URI.createFileURI(".." + File.separator + pathName), true); //$NON-NLS-1$
         }
         if (catFile == null) {
-            log.error("No resource found at " + pathName + " URI= " + uri);
+            log.error(Messages.getString("CategoryHandler.NORESOUTCEFOUND", pathName, uri));//$NON-NLS-1$
             return null;
         }
         EList<EObject> contents = catFile.getContents();
         if (contents == null) {
-            log.error("No category found in given resource: " + uri);
+            log.error(Messages.getString("CategoryHandler.NOCATALOGFOUND", uri));//$NON-NLS-1$
             return null;
         }
         CategorySwitch<AnalysisCategories> catSwitch = new CategorySwitch<AnalysisCategories>() {
@@ -252,7 +253,7 @@ public final class CategoryHandler {
      */
     public static String getLabel(String categoryLabel) {
 
-        String messageKey = Messages.getString("AnalysisType." + categoryLabel.replaceAll("\\s*", ""));
+        String messageKey = Messages.getString("AnalysisType." + categoryLabel.replaceAll("\\s*", PluginConstant.EMPTY_STRING));//$NON-NLS-1$//$NON-NLS-2$
         if (messageKey.startsWith(MessagesCore.KEY_NOT_FOUND_PREFIX) && messageKey.endsWith(MessagesCore.KEY_NOT_FOUND_SUFFIX)) {
             return categoryLabel;
         }

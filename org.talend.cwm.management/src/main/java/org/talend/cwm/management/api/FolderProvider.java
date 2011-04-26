@@ -15,6 +15,7 @@ package org.talend.cwm.management.api;
 import java.io.File;
 
 import org.eclipse.core.resources.IFolder;
+import org.talend.dataquality.PluginConstant;
 
 /**
  * @author scorreia
@@ -69,7 +70,7 @@ public class FolderProvider {
             return this.folderResource.getFullPath().toString();
         }
 
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     public boolean isNull() {

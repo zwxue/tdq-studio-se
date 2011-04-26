@@ -23,6 +23,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.ReportHelper;
 
 import com.csvreader.CsvReader;
@@ -36,13 +37,13 @@ public final class ReportUtils {
     private ReportUtils() {
     }
 
-    public static final String REPORT_LIST = ".report.list";
+    public static final String REPORT_LIST = ".report.list";//$NON-NLS-1$
 
-    public static final char CURRENT_SEPARATOR = '\t';
+    public static final char CURRENT_SEPARATOR = '\t';//$NON-NLS-1$
 
     public static final boolean USE_TEXT_QUAL = true;
 
-    public static final char TEXT_QUAL = '"';
+    public static final char TEXT_QUAL = '"';//$NON-NLS-1$
 
     public static final int ESCAPE_MODE_BACKSLASH = CsvReader.ESCAPE_MODE_BACKSLASH;
 
@@ -175,14 +176,14 @@ public final class ReportUtils {
      */
     public static File getReportListFile(IFile reportFile) throws IOException {
         String reportFileName = reportFile.getName();
-        int indexOf = reportFileName.indexOf(".");
-        String simpleName = "";
+        int indexOf = reportFileName.indexOf(PluginConstant.DOT_STRING);
+        String simpleName = PluginConstant.EMPTY_STRING;
         if (indexOf != -1) {
             simpleName = reportFileName.substring(0, indexOf);
         } else {
             return null;
         }
-        File file = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName) + "/"
+        File file = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName) + "/"//$NON-NLS-1$
                 + REPORT_LIST);
         if (!file.exists()) {
             File parentFile = file.getParentFile();
@@ -224,18 +225,18 @@ public final class ReportUtils {
      */
     public static void initRepListFile(IFile reportFile) throws Exception {
         String reportFileName = reportFile.getName();
-        int indexOf = reportFileName.indexOf(".");
-        String simpleName = "";
+        int indexOf = reportFileName.indexOf(PluginConstant.DOT_STRING);
+        String simpleName = PluginConstant.EMPTY_STRING;
         if (indexOf != -1) {
             simpleName = reportFileName.substring(0, indexOf);
         } else {
             return;
         }
-        IFolder reportFileFolder = ((IFolder) reportFile.getParent()).getFolder("." + simpleName);
+        IFolder reportFileFolder = ((IFolder) reportFile.getParent()).getFolder(PluginConstant.DOT_STRING + simpleName);
         if (reportFileFolder != null && reportFileFolder.exists()) {
 
             File repListFile = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName)
-                    + "/" + REPORT_LIST);
+                    + "/" + REPORT_LIST);//$NON-NLS-1$
             List<ReportListParameters> repList = new ArrayList<ReportListParameters>();
 
             IResource[] members = reportFileFolder.members();
@@ -266,9 +267,9 @@ public final class ReportUtils {
         String createTime;
 
         public ReportListParameters() {
-            name = ""; //$NON-NLS-1$
-            path = ""; //$NON-NLS-1$
-            createTime = ""; //$NON-NLS-1$
+            name = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
+            path = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
+            createTime = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
         }
     }
 }

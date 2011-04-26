@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -71,7 +72,7 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
         if (connection == null) { // try to get one
             for (ModelElement element : columns) {
                 TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-                log.error("Connection has not been set in analysis Context");
+                log.error(Messages.getString("ColumnCorrelationAnalysisHandler.CONNNOTBEENSETINANALYSIS"));//$NON-NLS-1$
                 connection = ConnectionHelper.getTdDataProvider(tdColumn);
                 if (connection != null) {
                     analysis.getContext().setConnection(connection);

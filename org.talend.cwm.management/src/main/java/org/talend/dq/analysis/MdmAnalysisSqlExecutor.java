@@ -29,9 +29,11 @@ import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.XmlElementHelper;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
@@ -72,7 +74,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
                 if (!createSqlQuery(stringDataFilter, indicator)) {
-                    log.error("Error when creating query with indicator " + indicator.getName());
+                    log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName());//$NON-NLS-1$
                     // return null;
                 }
             }
@@ -84,7 +86,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             return null;
         }
 
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     /**
@@ -100,11 +102,12 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             AnalysisExecutionException {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
-            return traceError("Analyzed element is null for indicator " + indicator.getName());
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
         }
         TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (xmlElement == null) {
-            return traceError("Analyzed element is not a XmlElement for indicator " + indicator.getName());
+            return traceError(Messages
+                    .getString("MdmAnalysisSqlExecutor.   ANALYZEDELEMENTISNOTAXMLELEMENT", indicator.getName()));//$NON-NLS-1$
         }
         // String elementName = XmlElementHelper.getFullName(xmlElement);
         String elementName = xmlElement.getName();
@@ -115,14 +118,13 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         // get indicator's sql columnS (generate the real SQL statement from its definition)
         IndicatorDefinition indicatorDefinition;
         String label = indicator.getIndicatorDefinition().getLabel();
-        if (label == null || "".equals(label)) { //$NON-NLS-1$
+        if (label == null || PluginConstant.EMPTY_STRING.equals(label)) {
             indicatorDefinition = indicator.getIndicatorDefinition();
         } else {
             indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
         }
         if (indicatorDefinition == null) {
-            return traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
-                    + ". Please, report a bug at http://talendforge.org/bugs/");
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
         final EClass indicatorEclass = indicator.eClass();
@@ -130,12 +132,11 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
             // expressions.
             if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
-                return traceError("Unsupported use of regular expressions on this database (" + language
-                        + "). Remove all Pattern indicators from this analysis, please.");
+                return traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
             }
-            return traceError("Unsupported Indicator. No SQL expression found for indicator "
-                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (UUID: "
-                    + ResourceHelper.getUUID(indicatorDefinition) + ")");
+            return traceError(Messages
+                    .getString(
+                            "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()), ResourceHelper.getUUID(indicatorDefinition)));//$NON-NLS-1$
         }
         // --- get indicator parameters and convert them into sql expression
         List<String> whereExpression = new ArrayList<String>();
@@ -176,7 +177,8 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         boolean ok = true;
         TypedReturnCode<MdmWebserviceConnection> trc = this.getMdmConnection(analysis);
         if (!trc.isOk()) {
-            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+            return traceError(Messages.getString(
+                    "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
         }
 
         MdmWebserviceConnection connection = trc.getObject();
@@ -225,8 +227,8 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
 
             Expression query = dbms().getInstantiatedExpression(indicator);
             if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
-                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
             } else {
                 // set computation done
                 indicator.setComputed(true);
@@ -261,7 +263,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         TdXmlElementType analyzedElement = (TdXmlElementType) indicator.getAnalyzedElement();
         TdXmlSchema xmlDocument = analyzedElement.getOwnedDocument();
         if (log.isInfoEnabled()) {
-            log.info("Computing indicator: " + indicator.getName());
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()));//$NON-NLS-1$
         }
         // give result to indicator so that it handles the results
         boolean ret = false;
@@ -293,7 +295,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         MdmStatement statement = connection.createStatement();
         // statement.setFetchSize(fetchSize);
         if (log.isInfoEnabled()) {
-            log.info("Executing query: " + queryStmt);
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$
         }
 
         if (continueRun()) {
@@ -305,7 +307,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         // get the results
         String[] resultSet = statement.getResultSet();
         if (resultSet == null) {
-            String mess = "No result set for this statement: " + queryStmt;
+            String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$
             log.warn(mess);
             return null;
         }

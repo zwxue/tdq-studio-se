@@ -25,7 +25,9 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -74,7 +76,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         }
 
         // no query to return, here we only instantiate several SQL queries
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     /**
@@ -91,7 +93,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             EList<TdColumn> columnSetA = rowMatchingIndicator.getColumnSetA();
             EList<TdColumn> columnSetB = rowMatchingIndicator.getColumnSetB();
             if (columnSetA.size() != columnSetB.size()) {
-                return traceError("Cannot compare two column sets with different size"); // break;
+                return traceError("Cannot compare two column sets with different size");//$NON-NLS-1$ 
+                // break;
             }
 
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
@@ -103,7 +106,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
-        return traceError("Unhandled given indicator: " + indicator.getName());
+        return traceError("Unhandled given indicator: " + indicator.getName());//$NON-NLS-1$
     }
 
     /**
@@ -143,7 +146,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String whereClause = createWhereClause(aliasB, columnSetB);
         if (useNulls) {
             // add a where clause to avoid the equality of rows fully null (i.e. rows like "null,null,null"
-            whereClause += dbms().and() + '(' + createNotNullCondition(aliasA, columnSetA) + ')';
+            whereClause += dbms().and() + '(' + createNotNullCondition(aliasA, columnSetA) + ')';//$NON-NLS-1$//$NON-NLS-1$
         }
 
         String instantiatedSQL = dbms().fillGenericQueryWithJoin(genericSQL, tableNameA, tableNameB, joinClause, whereClause);
@@ -155,7 +158,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     }
 
     private String addDataFilterWithTableName(String tableName, String dataFilter) {
-        if (dataFilter == null || dataFilter.trim().equals("")) { //$NON-NLS-1$
+        if (dataFilter == null || dataFilter.trim().equals(PluginConstant.EMPTY_STRING)) {
             return tableName;
         }
         return "(SELECT * FROM " + tableName + " WHERE ( " + dataFilter + " ))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -193,7 +196,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         int size = columnSet.size();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < size; i++) {
-            builder.append(tableName).append('.').append(getQuotedColumnName(columnSet.get(i))).append(isNull);
+            builder.append(tableName).append(PluginConstant.DOT_STRING).append(getQuotedColumnName(columnSet.get(i)))
+                    .append(isNull);
             if (i != size - 1) {
                 builder.append(and);
             }
@@ -215,8 +219,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         StringBuilder builder = new StringBuilder();
         int size = columnSetA.size();
         for (int i = 0; i < size; i++) {
-            String colA = tableNameA + '.' + getQuotedColumnName(columnSetA.get(i));
-            String colB = tableNameB + '.' + getQuotedColumnName(columnSetB.get(i));
+            String colA = tableNameA + PluginConstant.DOT_STRING + getQuotedColumnName(columnSetA.get(i));
+            String colB = tableNameB + PluginConstant.DOT_STRING + getQuotedColumnName(columnSetB.get(i));
             builder.append(" (").append(colA).append(dbms().equal()).append(colB); //$NON-NLS-1$
             if (useNulls) { // allow to identify rows like ('a', null) = ('a', null)
                 builder.append(dbms().or()).append(bothNull(colA, colB));
@@ -260,7 +264,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
 
                 if (columnSetOwner == null) {
-                    log.error("ColumnSet Owner of column " + column.getName() + " is null");
+                    log.error(Messages.getString("FunctionalDependencyExecutor.COLUMNSETOWNERISNULL", column.getName()));//$NON-NLS-1$
                     continue;
                 } else {
                     // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
@@ -302,7 +306,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         boolean ok = true;
         TypedReturnCode<Connection> trc = this.getConnection(analysis);
         if (!trc.isOk()) {
-            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+            return traceError(Messages.getString("FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(),//$NON-NLS-1$
+                    trc.getMessage()));
         }
 
         Connection connection = trc.getObject();
@@ -322,8 +327,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 Expression query = dbms().getInstantiatedExpression(indicator);
 
                 if (query == null || !executeQuery(indicator, connection, query)) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
                 } else {
                     indicator.setComputed(true);
                 }
@@ -366,7 +371,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     AnalysisHelper.DATA_FILTER_B) : AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
                     AnalysisHelper.DATA_FILTER_A);
             List<String> whereClauses = new ArrayList<String>();
-            if (stringDataFilter != null && !stringDataFilter.trim().equals("")) { //$NON-NLS-1$
+            if (stringDataFilter != null && !stringDataFilter.trim().equals(PluginConstant.EMPTY_STRING)) {
                 whereClauses.add(stringDataFilter);
             }
             // ~
@@ -406,7 +411,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String analyzedTableName = null;
         ColumnSet columnSetOwner = (ColumnSet) indicator.getAnalyzedElement();
         if (columnSetOwner == null) {
-            log.error("ColumnSet Owner is null for indicator: " + indicator.getName());
+            log.error(Messages.getString("RowMatchingAnalysisExecutor.COLUMNSETOWNERISNULL", indicator.getName()));//$NON-NLS-1$
         } else {
             if (columnSetOwner.eIsProxy()) {
                 columnSetOwner = (ColumnSet) EObjectHelper.resolveObject(columnSetOwner);

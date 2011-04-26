@@ -48,6 +48,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
@@ -123,7 +124,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
                 if (!createSqlQuery(stringDataFilter, indicator)) {
-                    log.error("Error when creating query with indicator " + indicator.getName());
+                    log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName());//$NON-NLS-1$
                     // return null;
                 }
             }
@@ -135,7 +136,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return null;
         }
 
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     /**
@@ -153,11 +154,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             AnalysisExecutionException {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
-            return traceError("Analyzed element is null for indicator " + indicator.getName());
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
         }
         TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (tdColumn == null) {
-            return traceError("Analyzed element is not a column for indicator " + indicator.getName());
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYZEDISNOTCOLUMNINDICATOR", indicator.getName()));//$NON-NLS-1$
         }
         if (tdColumn.eIsProxy()) {
             tdColumn = (TdColumn) EObjectHelper.resolveObject(tdColumn);
@@ -168,7 +169,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
                 buf.append(schema.getName() + " "); //$NON-NLS-1$
             }
-            log.error("Column " + colName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
+
+            log.error(Messages
+                    .getString("ColumnAnalysisSqlExecutor.COLUMNNOTBELONGTOEXISTSCHEMA", colName, buf.toString().trim()));//$NON-NLS-1$
             return false;
         }
         colName = castColumn(indicator, tdColumn, colName);
@@ -182,15 +185,15 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         IndicatorDefinition indicatorDefinition;
         String label = indicator.getIndicatorDefinition().getLabel();
-        if (label == null || "".equals(label)) { //$NON-NLS-1$
+        if (label == null || PluginConstant.EMPTY_STRING.equals(label)) {
             indicatorDefinition = indicator.getIndicatorDefinition();
         } else {
             indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
         }
 
         if (indicatorDefinition == null) {
-            return traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
-                    + ". Please, report a bug at http://talendforge.org/bugs/");
+
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
@@ -199,13 +202,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
             // expressions.
             if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
-                return traceError("Unsupported use of regular expressions on this database (" + language
-                        + "). Remove all Pattern indicators from this analysis, please.");
+                return traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
             }
 
-            return traceError("Unsupported Indicator. No SQL expression found for indicator "
-                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (UUID: "
-                    + ResourceHelper.getUUID(indicatorDefinition) + ")");
+            return traceError(Messages
+                    .getString(
+                            "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()), ResourceHelper.getUUID(indicatorDefinition)));//$NON-NLS-1$
         }
 
         // --- get indicator parameters and convert them into sql expression
@@ -231,7 +233,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             TextParameters textParameter = parameters.getTextParameter();
             if (textParameter != null) {
                 if (textParameter.isUseNulls()) {
-                    colName = dbms().replaceNullsWithString(colName, "''");
+                    colName = dbms().replaceNullsWithString(colName, "''");//$NON-NLS-1$
                 } else {
                     whereExpression.add(colName.concat(dbms().isNotNull()));
                 }
@@ -242,7 +244,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         && IndicatorsPackage.eINSTANCE.getLengthIndicator().isSuperTypeOf(indicatorEclass)) {
 
                     String tdColName = getQuotedColumnName(tdColumn);
-                    tdColName = dbms().replaceNullsWithString(tdColName, "'NULL TALEND'");
+                    tdColName = dbms().replaceNullsWithString(tdColName, "'NULL TALEND'");//$NON-NLS-1$
                     whereExpression.add(dbms().isNotBlank(tdColName));
 
                 } else if (textParameter.isUseBlank()
@@ -338,8 +340,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         colName = dbms().getPatternFinderDefaultFunction(colName);
                     }
                     if (colName == null) { // no replacement found, try the default one
-                        return traceError("No replacement found for database type: " + language + " for indicator "
-                                + indicator.getName());
+
+                        return traceError(Messages.getString(
+                                "ColumnAnalysisSqlExecutor.NOREPLACEMENTFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
                     }
                     // ~
                 } else if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator())
@@ -359,7 +362,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)) {
             List<String> patterns = getPatterns(indicator);
             if (patterns.isEmpty()) {
-                return traceError("No pattern found for database type: " + language + " for indicator " + indicator.getName());
+                return traceError(Messages.getString(
+                        "ColumnAnalysisSqlExecutor.NOPATTERNFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
             }
             completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table, patterns);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
@@ -368,8 +372,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (IndicatorsPackage.eINSTANCE.getDefValueCountIndicator().equals(indicatorEclass)) {
                 String defValue = ColumnHelper.getDefaultValue(tdColumn);
                 if (defValue == null) {
-                    return traceError("No default value exits for this column " + colName + ". The indicator "
-                            + indicator.getName() + " cannot be evaluated.");
+                    return traceError(Messages
+                            .getString("ColumnAnalysisSqlExecutor.NODEFAULTVALUE", colName, indicator.getName()));//$NON-NLS-1$
                 }
                 // need to generate different SQL where clause for each type.
                 int javaType = tdColumn.getSqlDataType().getJavaDataType();
@@ -403,7 +407,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private boolean isFunction(String defValue, String table) {
         try {
-            String queryStmt = "select " + defValue + " from " + table;
+            String queryStmt = "select " + defValue + " from " + table;//$NON-NLS-1$//$NON-NLS-2$
             TypedReturnCode<Connection> conn = getConnection(cachedAnalysis);
             Connection conenction = conn.getObject();
 
@@ -420,7 +424,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (colName == null) {
             return colName;
         }
-        colName = " CAST(" + colName + " AS CHAR(20)) ";
+        colName = " CAST(" + colName + " AS CHAR(20)) ";//$NON-NLS-1$//$NON-NLS-2$
         return colName;
     }
 
@@ -456,8 +460,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             for (TdColumn col : columns) {
                 String colNameToReplace = where.contains(quotedColName) ? quotedColName : col.getName();
                 if (where.contains(colNameToReplace)) {
-                    whereA = whereA.replace(colNameToReplace, tableAliases[0] + "." + colNameToReplace); //$NON-NLS-1$
-                    whereB = whereB.replace(colNameToReplace, tableAliases[1] + "." + colNameToReplace); //$NON-NLS-1$
+                    whereA = whereA.replace(colNameToReplace, tableAliases[0] + PluginConstant.DOT_STRING + colNameToReplace);
+                    whereB = whereB.replace(colNameToReplace, tableAliases[1] + PluginConstant.DOT_STRING + colNameToReplace);
                 }
             }
             duplicatedWhereExpressions.add(whereA);
@@ -562,7 +566,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD qiongli 2011-4-18,bug 16723(data cleansing),handle date
             boolean isDate = Java2SqlType.isDateInSQL(javaType);
             if (isDate) {
-                return "CAST(" + colName + " AS DATE)";
+                return "CAST(" + colName + " AS DATE)";//$NON-NLS-1$//$NON-NLS-2$
             }
             boolean isNumeric = Java2SqlType.isNumbericInSQL(javaType);
             if (isNumeric) {
@@ -588,7 +592,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private String getDateAggregatedCompletedStringWithoutAlia(Expression sqlExpression, String colName, String table,
             DateGrain dateAggregationType) {
         int nbExtractedColumns = 0;
-        String result = ""; //$NON-NLS-1$
+        String result = PluginConstant.EMPTY_STRING;
         //        String aliases = ""; // used in group by clause in MySQL //$NON-NLS-1$
         // String alias;
         switch (dateAggregationType) {
@@ -652,7 +656,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private String unquote(String colName) {
         String dbQuoteString = dbms().getDbQuoteString();
-        return colName.replace(dbQuoteString, ""); //$NON-NLS-1$
+        return colName.replace(dbQuoteString, PluginConstant.EMPTY_STRING);
     }
 
     /**
@@ -709,9 +713,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         for (int i = 0; i < last; i++) {
             String singleSelect = getCompletedSingleSelect(indicator, singleStatement, colName, table, whereExpression,
                     rangeStrings.get(i));
-            buf.append('('); // parenthesis necessary for MySQL
+            // parenthesis necessary for MySQL
+            buf.append('('); //$NON-NLS-1$ 
             buf.append(singleSelect);
-            buf.append(')'); // parenthesis necessary for MySQL
+            // parenthesis necessary for MySQL
+            buf.append(')'); //$NON-NLS-1$  
             if (i != last - 1) {
                 buf.append(dbms().unionAll());
             }
@@ -933,18 +939,18 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     , trc.getMessage()));
         }
         Connection connection = trc.getObject();
-        String whereExp = (whereExpression == null || whereExpression.isEmpty()) ? "" : " WHERE " //$NON-NLS-1$ //$NON-NLS-2$
+        String whereExp = (whereExpression == null || whereExpression.isEmpty()) ? PluginConstant.EMPTY_STRING : " WHERE " //$NON-NLS-1$
                 + dbms().buildWhereExpression(whereExpression);
         String queryStmt = "SELECT COUNT(" + colName + ") FROM " + table + whereExp; // + dbms().eos(); //$NON-NLS-1$ //$NON-NLS-2$
 
         List<Object[]> myResultSet = executeQuery(catalogName, connection, queryStmt);
 
         if (myResultSet.isEmpty() || myResultSet.size() > 1) {
-            log.error("Too many result obtained for a simple count: " + myResultSet);
+            log.error(Messages.getString("ColumnAnalysisSqlExecutor.TOOMANYRESULTOBTAINED") + myResultSet);//$NON-NLS-1$  
             return -1L;
         }
         // MOD zshen exchange OracleODBC will get a double value to int.Else Have a NumberFormatException at here.
-        return Long.valueOf(String.valueOf(myResultSet.get(0)[0]).split("\\.")[0]);
+        return Long.valueOf(String.valueOf(myResultSet.get(0)[0]).split("\\.")[0]);//$NON-NLS-1$  
         // ~
     }
 
@@ -997,7 +1003,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         boolean ok = true;
         TypedReturnCode<Connection> trc = this.getConnection(analysis);
         if (!trc.isOk()) {
-            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());//$NON-NLS-1$//$NON-NLS-1$  
         }
 
         Connection connection = trc.getObject();
@@ -1055,8 +1061,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
             Expression query = dbms().getInstantiatedExpression(indicator);
             if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
-                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" " //$NON-NLS-1$//$NON-NLS-2$
+                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody())); //$NON-NLS-1$//$NON-NLS-2$  
             } else {
                 // set computation done
                 indicator.setComputed(true);
@@ -1092,7 +1098,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         public ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor parent, Connection connection,
                 Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator) {
-            super("");
+            super(PluginConstant.EMPTY_STRING);
             this.parent = parent;
             this.connection = connection;
             this.elementToIndicator = elementToIndicator;
@@ -1245,7 +1251,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     protected String getCatalogOrSchemaName(ModelElement analyzedElement) {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
-            log.error("No schema found for column " + ((analyzedElement != null) ? analyzedElement.getName() : "Unknow column"));
+            log.error(Messages.getString("ColumnAnalysisSqlExecutor.NOSCHEMAFOUNDFORCOLUMN") + ((analyzedElement != null) ? analyzedElement.getName() : "Unknow column"));//$NON-NLS-1$  //$NON-NLS-2$  
             return null;
         }
         // else
@@ -1270,7 +1276,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     protected boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
-            log.info("Computing indicator: " + indicator.getName());
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()));//$NON-NLS-1$  
         }
         // give result to indicator so that it handles the results
         boolean ret = false;
@@ -1301,7 +1307,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Statement statement = connection.createStatement();
         // statement.setFetchSize(fetchSize);
         if (log.isInfoEnabled()) {
-            log.info("Executing query: " + queryStmt);
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$  
         }
         // MOD xqliu 2009-02-09 bug 6237
         if (continueRun()) {
@@ -1311,7 +1317,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // get the results
         ResultSet resultSet = statement.getResultSet();
         if (resultSet == null) {
-            String mess = "No result set for this statement: " + queryStmt;
+            String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$  
             log.warn(mess);
             return null;
         }
@@ -1350,11 +1356,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // ~
             return true;
         } catch (RuntimeException e) {
-            return traceError("Problem when changing trying to set catalog \"" + catalogName
-                    + "\" on connection. RuntimeException message: " + e.getMessage());
+
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$  
         } catch (SQLException e) {
-            return traceError("Problem when changing trying to set catalog \"" + catalogName
-                    + "\" on connection. SQLException message: " + e.getMessage());
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$  
         }
     }
 

@@ -56,7 +56,7 @@ public final class SoftwareSystemManager {
         if (softwareSystem == null) {
             // else create it and store it
             if (log.isDebugEnabled()) {
-                log.debug("Trying to create the softwareSystem object from the given data provider " + dataProvider.getName());
+                log.debug("Trying to create the softwareSystem object from the given data provider " + dataProvider.getName());//$NON-NLS-1$
             }
             try {
                 // create it
@@ -74,7 +74,7 @@ public final class SoftwareSystemManager {
                 log.error(e, e);
             }
         } else if (log.isDebugEnabled()) { // only debug
-            log.debug("The softwareSystem " + softwareSystem.getName() + " has been found for the given data provider "
+            log.debug("The softwareSystem " + softwareSystem.getName() + " has been found for the given data provider "//$NON-NLS-1$//$NON-NLS-2$
                     + dataProvider.getName());
         }
         return softwareSystem;

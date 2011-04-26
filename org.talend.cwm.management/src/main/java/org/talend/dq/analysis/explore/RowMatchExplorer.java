@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -52,7 +53,7 @@ public class RowMatchExplorer extends DataExplorer {
 
         ColumnSet tablea = (ColumnSet) indicator.getAnalyzedElement();
         String tableA = tablea.getName();
-        String query = "SELECT A.*" + dbmsLanguage.from();
+        String query = "SELECT A.*" + dbmsLanguage.from();//$NON-NLS-1$
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
             ColumnSet tableb = (ColumnSet) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator)
                     .getColumnSetB().get(
@@ -61,44 +62,44 @@ public class RowMatchExplorer extends DataExplorer {
             EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
             EList<TdColumn> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
 
-            String clauseA = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea);
-            String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);
+            String clauseA = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea);//$NON-NLS-1$
+            String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);//$NON-NLS-1$
             String where = null;
-            String onClause = " ON ";
+            String onClause = " ON ";//$NON-NLS-1$
             String realWhereClause = dbmsLanguage.where();
-            String columnsName = "";
+            String columnsName = PluginConstant.EMPTY_STRING;
 
             for (int i = 0; i < columnSetA.size(); i++) {
-                String fullColumnAName = getFullyQualifiedTableName(tablea) + "."
+                String fullColumnAName = getFullyQualifiedTableName(tablea) + PluginConstant.DOT_STRING
                         + dbmsLanguage.quote(columnSetA.get(i).getName());
 
                 where = dbmsLanguage.and();
                 if (i == 0) {
                     where = dbmsLanguage.where();
-                    columnsName += " (" + fullColumnAName + " ";
+                    columnsName += " (" + fullColumnAName + " ";//$NON-NLS-1$//$NON-NLS-2$
                 } else {
                     onClause += where;
                     realWhereClause += where;
-                    columnsName += ", " + fullColumnAName + " ";
+                    columnsName += ", " + fullColumnAName + " ";//$NON-NLS-1$//$NON-NLS-2$
                 }
 
-                realWhereClause += " B" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName())
+                realWhereClause += " B" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName())//$NON-NLS-1$
                         + dbmsLanguage.isNull();
 
-                onClause += " (A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName()) + "=" + " B"
-                        + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName()) + ") ";
+                onClause += " (A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName()) + "=" + " B"//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+                        + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName()) + ") ";//$NON-NLS-1$
             }
-            columnsName += ") ";
+            columnsName += ") ";//$NON-NLS-1$
             clauseA += (tableA.equals(tableB) ? whereDataFilter(tableA,
                     (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
                             : AnalysisHelper.DATA_FILTER_B)) : whereDataFilter(tableA, null))
-                    + ") A";
+                    + ") A";//$NON-NLS-1$
 
             clauseB += (tableB.equals(tableA) ? whereDataFilter(tableB,
                     (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_B
                             : AnalysisHelper.DATA_FILTER_A)) : whereDataFilter(tableB, null))
-                    + ") B";
-            query += clauseA + " LEFT JOIN " + clauseB + onClause + realWhereClause;
+                    + ") B";//$NON-NLS-1$
+            query += clauseA + " LEFT JOIN " + clauseB + onClause + realWhereClause;//$NON-NLS-1$
         }
         return getComment(MENU_VIEW_NOT_MATCH_ROWS) + query;
     }
@@ -111,7 +112,7 @@ public class RowMatchExplorer extends DataExplorer {
     public String getRowsMatchStatement() {
         ColumnSet tablea = (ColumnSet) indicator.getAnalyzedElement();
         String tableA = tablea.getName();
-        String query = "";
+        String query = PluginConstant.EMPTY_STRING;
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
             ColumnSet tableb = (ColumnSet) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator)
                     .getColumnSetB().get(
@@ -120,63 +121,63 @@ public class RowMatchExplorer extends DataExplorer {
             EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
             EList<TdColumn> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
 
-            String clauseA = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea);
-            String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);
+            String clauseA = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tablea);//$NON-NLS-1$
+            String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);//$NON-NLS-1$
             String where = null;
-            String onClause = " ON ";
+            String onClause = " ON ";//$NON-NLS-1$
             String realWhereClause = dbmsLanguage.where();
-            String columnsName = "";
+            String columnsName = "";//$NON-NLS-1$
 
             for (int i = 0; i < columnSetA.size(); i++) {
-                String fullColumnAName = getFullyQualifiedTableName(tablea) + "."
+                String fullColumnAName = getFullyQualifiedTableName(tablea) + PluginConstant.DOT_STRING
                         + dbmsLanguage.quote(columnSetA.get(i).getName());
 
                 where = dbmsLanguage.and();
                 if (i == 0) {
                     where = dbmsLanguage.where();
-                    columnsName += " (" + fullColumnAName + " ";
+                    columnsName += " (" + fullColumnAName + " ";//$NON-NLS-1$//$NON-NLS-2$
                 } else {
                     onClause += where;
                     realWhereClause += where;
-                    columnsName += ", " + fullColumnAName + " ";
+                    columnsName += ", " + fullColumnAName + " ";//$NON-NLS-1$//$NON-NLS-2$
                 }
 
-                realWhereClause += " B" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName())
+                realWhereClause += " B" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName())//$NON-NLS-1$
                         + dbmsLanguage.isNull();
 
-                onClause += " (A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName()) + "=" + " B"
-                        + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName()) + ") ";
+                onClause += " (A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName()) + "=" + " B"//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+                        + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName()) + ") ";//$NON-NLS-1$
 
             }
-            columnsName += ") ";
+            columnsName += ") ";//$NON-NLS-1$
             clauseA += (tableA.equals(tableB) ? whereDataFilter(tableA,
                     (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
                             : AnalysisHelper.DATA_FILTER_B)) : whereDataFilter(tableA, null))
-                    + ") A";
+                    + ") A";//$NON-NLS-1$
 
             clauseB += (tableB.equals(tableA) ? whereDataFilter(tableB,
                     (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_B
                             : AnalysisHelper.DATA_FILTER_A)) : whereDataFilter(tableB, null))
-                    + ") B";
+                    + ") B";//$NON-NLS-1$
 
-            query = "SELECT * FROM " + getFullyQualifiedTableName(tablea);
+            query = "SELECT * FROM " + getFullyQualifiedTableName(tablea);//$NON-NLS-1$
 
             for (int i = 0; i < columnSetA.size(); i++) {
-                String clause = "";
-                String fullColumnAName = getFullyQualifiedTableName(tablea) + "."
+                String clause = PluginConstant.EMPTY_STRING;
+                String fullColumnAName = getFullyQualifiedTableName(tablea) + PluginConstant.DOT_STRING
                         + dbmsLanguage.quote(columnSetA.get(i).getName());
-                String columnNameByAlias = " A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName());
-                clause = "(SELECT " + columnNameByAlias + dbmsLanguage.from() + clauseA + " LEFT JOIN " + clauseB + onClause
-                        + realWhereClause + ")";
+                String columnNameByAlias = " A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName());//$NON-NLS-1$
+                clause = "(SELECT " + columnNameByAlias + dbmsLanguage.from() + clauseA + " LEFT JOIN " + clauseB + onClause//$NON-NLS-1$//$NON-NLS-2$
+                        + realWhereClause + ")";//$NON-NLS-1$
                 if (i == 0) {
 
-                    clause = dbmsLanguage.where() + "(" + fullColumnAName + dbmsLanguage.notIn() + clause;
+                    clause = dbmsLanguage.where() + "(" + fullColumnAName + dbmsLanguage.notIn() + clause;//$NON-NLS-1$
                 } else {
                     clause = dbmsLanguage.or() + fullColumnAName + dbmsLanguage.notIn() + clause;
                 }
                 query += clause;
             }
-            query += ") "
+            query += ") "//$NON-NLS-1$
                     + (tableA.equals(tableB) ? andDataFilter(tableA,
                             (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
                                     : AnalysisHelper.DATA_FILTER_B)) : andDataFilter(tableA, null));
@@ -245,11 +246,11 @@ public class RowMatchExplorer extends DataExplorer {
         } else {
             andTable = AnalysisHelper.getStringDataFilter(analysis, index.intValue());
         }
-        if (null != andTable && !andTable.equals("")) {
+        if (null != andTable && !andTable.equals(PluginConstant.EMPTY_STRING)) {
             andTable = dbmsLanguage.and() + andTable;
         }
         if (andTable == null)
-            andTable = "";
+            andTable = PluginConstant.EMPTY_STRING;
         return andTable;
 
     }
@@ -270,11 +271,11 @@ public class RowMatchExplorer extends DataExplorer {
             andTable = AnalysisHelper.getStringDataFilter(analysis, index.intValue());
         }
         // String andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewName));
-        if (null != andTable && !andTable.equals("")) {
+        if (null != andTable && !andTable.equals(PluginConstant.EMPTY_STRING)) {
             andTable = dbmsLanguage.where() + andTable;
         }
         if (andTable == null)
-            andTable = "";
+            andTable = PluginConstant.EMPTY_STRING;
         return andTable;
 
     }

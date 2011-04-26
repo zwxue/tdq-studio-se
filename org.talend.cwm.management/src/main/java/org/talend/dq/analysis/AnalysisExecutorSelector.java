@@ -45,7 +45,7 @@ public final class AnalysisExecutorSelector {
         assert analysis != null;
         AnalysisType analysisType = AnalysisHelper.getAnalysisType(analysis);
         if (analysisType == null) {
-            log.error("Analysis type is not set for analysis" + analysis.getName()); //$NON-NLS-1$
+            log.error(Messages.getString("AnalysisExecutorSelector.ANALYSISTYPEISNOTSET", analysis.getName())); //$NON-NLS-1$
             return null;
         }
         ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(analysis);

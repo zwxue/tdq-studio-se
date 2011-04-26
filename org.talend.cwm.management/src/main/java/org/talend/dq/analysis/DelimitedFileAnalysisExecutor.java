@@ -21,6 +21,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
@@ -38,7 +39,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
     @Override
     protected String createSqlStatement(Analysis analysis) {
-        return "";
+        return PluginConstant.EMPTY_STRING;
     }
 
     /*

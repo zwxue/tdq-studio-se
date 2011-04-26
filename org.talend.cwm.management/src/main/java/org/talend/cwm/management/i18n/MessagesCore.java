@@ -78,7 +78,7 @@ public abstract class MessagesCore {
      */
     public static String getString(String key, String pluginId, ResourceBundle resourceBundle, Object[] args) {
         // MOD xqliu 2010-05-24 bug 11750
-        return MessageFormat.format(getString(key, pluginId, resourceBundle).replaceAll("'", "''"), args);
+        return MessageFormat.format(getString(key, pluginId, resourceBundle).replaceAll("'", "''"), args);//$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -102,7 +102,7 @@ public abstract class MessagesCore {
      */
     public static String getString(String key, ResourceBundle resourceBundle, Object[] args) {
         // MOD xqliu 2010-05-24 bug 11750
-        return MessageFormat.format(getString(key, null, resourceBundle).replaceAll("'", "''"), args);
+        return MessageFormat.format(getString(key, null, resourceBundle).replaceAll("'", "''"), args);//$NON-NLS-1$//$NON-NLS-2$
     }
 
 }

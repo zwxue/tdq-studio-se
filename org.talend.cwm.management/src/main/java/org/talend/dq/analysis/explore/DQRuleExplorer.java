@@ -62,8 +62,8 @@ public class DQRuleExplorer extends DataExplorer {
             // MOD zshen 2010-01-13 bug 10913
             NamedColumnSet set = (NamedColumnSet) indicator2.getAnalyzedElement();
             String whereClause = ((WhereRule) indicator2.getIndicatorDefinition()).getWhereExpression();
-            return "SELECT * FROM " + getFullyQualifiedTableName(set) + dbmsLanguage.where() + dbmsLanguage.not() + "("
-                    + whereClause + ")" + andDataFilterClause();
+            return "SELECT * FROM " + getFullyQualifiedTableName(set) + dbmsLanguage.where() + dbmsLanguage.not() + "("//$NON-NLS-1$//$NON-NLS-2$
+                    + whereClause + ")" + andDataFilterClause();//$NON-NLS-1$
             // ~10913
         }
         // ~

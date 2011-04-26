@@ -16,6 +16,7 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.domain.Domain;
@@ -38,7 +39,7 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
      */
     @Override
     protected String createSqlStatement(Analysis analysis) {
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     /**

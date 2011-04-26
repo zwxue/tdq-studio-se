@@ -148,7 +148,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         boolean closeAtTheEnd = true;
         Package catalog = schemata.values().iterator().next();
         if (!eval.selectCatalog(catalog.getName())) {
-            log.warn("Failed to select catalog " + catalog.getName() + " for connection.");
+            log.warn("Failed to select catalog " + catalog.getName() + " for connection.");//$NON-NLS-1$//$NON-NLS-2$
         }
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
         if (!rc.isOk()) {

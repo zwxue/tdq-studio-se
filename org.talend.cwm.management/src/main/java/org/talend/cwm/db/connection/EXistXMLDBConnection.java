@@ -38,6 +38,7 @@ import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.constants.SoftwareSystemConstants;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentFactory;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -116,10 +117,10 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
 
             // get the collection
             col = DatabaseManager.getCollection(connectionURI);
-            col.setProperty(OutputKeys.INDENT, "no");
+            col.setProperty(OutputKeys.INDENT, "no");//$NON-NLS-1$
             tempXmlDocs = new ArrayList<TdXmlSchema>();
             String techXSDFolderName = DqRepositoryViewService.createTechnicalName(XSD_SUFIX
-                    + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));
+                    + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
             for (int idx = 0; idx < col.getResourceCount(); idx++) {
                 String resName = col.listResources()[idx];
                 if (resName.endsWith(XML_SUFIX)) {
@@ -141,7 +142,7 @@ public class EXistXMLDBConnection implements IXMLDBConnection {
             throws XMLDBException, CoreException {
         XMLResource resXSD = (XMLResource) col.getResource(StringUtils.removeEnd(resName, XML_SUFIX) + XSD_SUFIX);
         if (resXSD == null) {
-            log.error("XSD not exist for \"" + resName + "\"");
+            log.error(Messages.getString("EXistXMLDBConnection.XSDNOTEXIST", resName)); //$NON-NLS-1$
             return;
         }
         // Save xsd file to local disk.

@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.cwm.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -63,7 +64,7 @@ public class AnalysisBuilder {
      */
     public boolean initializeAnalysis(String analysisName, AnalysisType type) {
         if (initialized) {
-            log.warn("Analysis already initialized. ");
+            log.warn(Messages.getString("AnalysisBuilder.ANALYSISALREADYINITIALIZED"));//$NON-NLS-1$
             return false;
         }
 
@@ -113,7 +114,7 @@ public class AnalysisBuilder {
         }
         AnalysisContext context = analysis.getContext();
         if (context == null) {
-            log.error("Context is null");
+            log.error(Messages.getString("AnalysisBuilder.CONTEXTISNULL"));//$NON-NLS-1$
             return false;
         }
         context.setConnection(dataManager);
@@ -130,7 +131,7 @@ public class AnalysisBuilder {
      */
     public boolean addElementToAnalyze(ModelElement element, Indicator... indicators) {
         if (!isOfGoodType(element, indicators)) {
-            log.error(element.getName() + " cannot be analyzed in this analysis.");
+            log.error(Messages.getString("AnalysisBuilder.CANNOTANALYZEDINANALYSIS", element.getName()));//$NON-NLS-1$
             return false;
         }
 
@@ -153,7 +154,7 @@ public class AnalysisBuilder {
 
         for (int i = 0; i < elements.length; i++) {
             if (!isOfGoodType(elements[i], indicators)) {
-                log.error(elements[i].getName() + " cannot be analyzed in this analysis.");
+                log.error(Messages.getString("AnalysisBuilder.CANNOTANALYZEDINANALYSIS", elements[i].getName()));//$NON-NLS-1$
                 continue;
             }
             // store element in context
@@ -241,7 +242,7 @@ public class AnalysisBuilder {
         // Assert.assertTrue(saved.getMessage(), saved.isOk());
         if (saved.isOk()) {
             if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + file.getFullPath());
+                log.debug("Saved in  " + file.getFullPath());//$NON-NLS-1$
             }
         }
         return saved.isOk();

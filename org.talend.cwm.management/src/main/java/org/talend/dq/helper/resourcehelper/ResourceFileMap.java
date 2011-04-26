@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.cwm.i18n.Messages;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -124,10 +125,10 @@ public abstract class ResourceFileMap {
         if (resource != null) {
             EList<EObject> contents = resource.getContents();
             if (contents.isEmpty()) {
-                log.error("No content in " + resource);
+                log.error(Messages.getString("ResourceFileMap.NOCONTENT") + resource);//$NON-NLS-1$
             }
             if (log.isDebugEnabled()) {
-                log.debug("Nb elements in contents " + contents.size());
+                log.debug("Nb elements in contents " + contents.size());//$NON-NLS-1$
             }
 
             for (EObject object : contents) {

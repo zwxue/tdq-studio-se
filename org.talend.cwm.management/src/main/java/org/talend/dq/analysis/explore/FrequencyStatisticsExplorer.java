@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
@@ -34,7 +35,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     protected String getFreqRowsStatement() {
 
-        String clause = ""; //$NON-NLS-1$
+        String clause = PluginConstant.EMPTY_STRING;
 
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         int javaType = column.getSqlDataType().getJavaDataType();
@@ -68,7 +69,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 clause = getInstantiatedClause();
             }
         } else {
-            clause = getDefaultQuotedStatement(""); // no quote here //$NON-NLS-1$
+            clause = getDefaultQuotedStatement(PluginConstant.EMPTY_STRING); // no quote here //$NON-NLS-1$
         }
 
         return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$
@@ -205,7 +206,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      * @return
      */
     private String concatWhereClause(String clause, String whereclause) {
-        String and = (clause.length() == 0) ? "" : dbmsLanguage.and(); //$NON-NLS-1$
+        String and = (clause.length() == 0) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and(); //$NON-NLS-1$
         clause = clause + and + whereclause;
         return clause;
     }
@@ -241,10 +242,10 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         } else if (Java2SqlType.isNumbericInSQL(javaType) && dbmsLanguage instanceof SybaseASEDbmsLanguage) {
             value = entity.getKey();
         } else {
-            value = "'" + entity.getKey() + "'";
+            value = "'" + entity.getKey() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : columnName + dbmsLanguage.equal() + value; //$NON-NLS-1$ //$NON-NLS-2$
+        String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : columnName + dbmsLanguage.equal() + value;
         return clause;
     }
 }

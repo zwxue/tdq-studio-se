@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
+import org.talend.dataquality.PluginConstant;
+
 /**
  * DOC zshen class global comment. help to tidy xquery expression
  */
@@ -42,17 +44,17 @@ public final class XQueryExpressionUtil {
     public static void toParseXquery(String xqueryStr) {
         int beginIndex = 0;
         int endIndex = 0;
-        beginIndex = xqueryStr.indexOf("//") + 2;
-        endIndex = xqueryStr.indexOf(" let $_page_ := ", beginIndex);
+        beginIndex = xqueryStr.indexOf("//") + 2;//$NON-NLS-1$
+        endIndex = xqueryStr.indexOf(" let $_page_ := ", beginIndex);//$NON-NLS-1$
         tableNode = xqueryStr.substring(beginIndex, endIndex);
-        beginIndex = xqueryStr.indexOf(",", endIndex) + 1;
-        endIndex = xqueryStr.indexOf(",", beginIndex);
+        beginIndex = xqueryStr.indexOf(PluginConstant.DOT_STRING, endIndex) + 1;
+        endIndex = xqueryStr.indexOf(PluginConstant.DOT_STRING, beginIndex);
         startNum = Integer.parseInt(xqueryStr.substring(beginIndex, endIndex));
-        beginIndex = xqueryStr.indexOf(")", endIndex) + 1;
-        endIndex = xqueryStr.indexOf("return", beginIndex);
+        beginIndex = xqueryStr.indexOf(")", endIndex) + 1; //$NON-NLS-1$
+        endIndex = xqueryStr.indexOf("return", beginIndex); //$NON-NLS-1$
         whereClause = xqueryStr.substring(beginIndex, endIndex);
-        beginIndex = xqueryStr.indexOf(" then ", endIndex) + 6;
-        endIndex = xqueryStr.indexOf(" else ", beginIndex);
+        beginIndex = xqueryStr.indexOf(" then ", endIndex) + 6; //$NON-NLS-1$
+        endIndex = xqueryStr.indexOf(" else ", beginIndex); //$NON-NLS-1$
         columnNodeNameArraystr = xqueryStr.substring(beginIndex, endIndex);
     }
 
@@ -67,19 +69,19 @@ public final class XQueryExpressionUtil {
             return null;
         }
         expression.delete(0, expression.length());
-        expression.append("let $_leres0_ := //");
+        expression.append("let $_leres0_ := //");//$NON-NLS-1$
         expression.append(tableNode);
-        expression.append(" let $_page_ := for $");
+        expression.append(" let $_page_ := for $");//$NON-NLS-1$
         expression.append(tableNode);
-        expression.append(" in subsequence($_leres0_,");
+        expression.append(" in subsequence($_leres0_,");//$NON-NLS-1$
         expression.append(startNum);
-        expression.append(",");
+        expression.append(PluginConstant.DOT_STRING);
         expression.append(ROWS_PER_PAGE);
-        expression.append(") return <result>{if ($");
+        expression.append(") return <result>{if ($");//$NON-NLS-1$
         expression.append(tableNode);
-        expression.append(") then ");
-        expression.append(columnNodeNameArraystr == null ? "$" + tableNode : columnNodeNameArraystr);
-        expression.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres0_)}</totalCount>)");
+        expression.append(") then ");//$NON-NLS-1$
+        expression.append(columnNodeNameArraystr == null ? "$" + tableNode : columnNodeNameArraystr);//$NON-NLS-1$
+        expression.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres0_)}</totalCount>)");//$NON-NLS-1$
 
         return expression.toString();
     }

@@ -52,6 +52,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -140,7 +141,7 @@ public final class RepositoryNodeHelper {
             return null;
         }
         if (node.isBin()) {
-            return new Path(""); //$NON-NLS-1$
+            return new Path(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
         }
         if (node.getType() == null) {
             return null;
@@ -154,7 +155,7 @@ public final class RepositoryNodeHelper {
             }
             return new Path(ERepositoryObjectType.getFolderName(contentType)); //$NON-NLS-1$
         case SIMPLE_FOLDER:
-            String label = "";//$NON-NLS-1$
+            String label = PluginConstant.EMPTY_STRING;
             if (node.getObject() != null) {
                 label = node.getObject().getProperty().getLabel();
             }
@@ -1436,7 +1437,7 @@ public final class RepositoryNodeHelper {
      * @return one RepositoryFolderNode which corresponding to the value of folderConstant
      */
     public static IRepositoryNode getMetadataFolderNode(EResourceConstant folderConstant) {
-        String[] folderPathArray = folderConstant.getPath().split("/");
+        String[] folderPathArray = folderConstant.getPath().split("/");//$NON-NLS-1$
         if (folderPathArray.length <= 0) {
             return null;
         }
@@ -1455,7 +1456,7 @@ public final class RepositoryNodeHelper {
     }
 
     public static IRepositoryNode getDataProfilingFolderNode(EResourceConstant folderConstant) {
-        String[] folderPathArray = folderConstant.getPath().split("/");
+        String[] folderPathArray = folderConstant.getPath().split("/");//$NON-NLS-1$
         if (folderPathArray.length <= 0) {
             return null;
         }
@@ -1475,7 +1476,7 @@ public final class RepositoryNodeHelper {
     }
 
     public static IRepositoryNode getLibrariesFolderNode(EResourceConstant folderConstant) {
-        String[] folderPathArray = folderConstant.getPath().split("/");
+        String[] folderPathArray = folderConstant.getPath().split("/");//$NON-NLS-1$
         if (folderPathArray.length <= 0) {
             return null;
         }
@@ -2006,7 +2007,7 @@ public final class RepositoryNodeHelper {
      */
     private static boolean needFindInChildren(IRepositoryNode node) {
         boolean result = true;
-        String exchangeFolderClassName = "org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode";
+        String exchangeFolderClassName = "org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode";//$NON-NLS-1$
         if (node instanceof AnalysisRepNode || node instanceof ReportRepNode
                 || exchangeFolderClassName.equals(node.getClass().getName()) || node instanceof SysIndicatorDefinitionRepNode
                 || node instanceof PatternRepNode || node instanceof RuleRepNode || node instanceof SourceFileFolderRepNode
@@ -2123,7 +2124,7 @@ public final class RepositoryNodeHelper {
         if (node != null) {
             return getLocker((RepositoryViewObject) node.getObject());
         }
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     public static String getLocker(RepositoryViewObject viewObject) {
@@ -2136,7 +2137,7 @@ public final class RepositoryNodeHelper {
                 }
             }
         }
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     /**

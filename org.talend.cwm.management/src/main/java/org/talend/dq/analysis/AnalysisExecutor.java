@@ -27,6 +27,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -135,7 +136,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         String[] indiPercentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
         Object obj = IndicatorCommonUtil.getIndicatorValue(indicator);
         if (dataThreshold != null || indicatorThreshold != null || indiPercentThreshold != null) {
-            ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "", "");
+            ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, PluginConstant.EMPTY_STRING,
+                    PluginConstant.EMPTY_STRING);
             if (obj != null) {
                 if (obj instanceof PatternMatchingExt) {
                     obj = (((PatternMatchingExt) obj).getMatchingValueCount());
@@ -195,7 +197,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             if (SoftwaredeploymentPackage.eINSTANCE.getDataProvider().isInstance(connection)) {
                 boolean isMDM = connection instanceof MDMConnection;
                 boolean isDelimitedFile = connection instanceof DelimitedFileConnection;
-                log.info("Connection to "
+                log.info(Messages.getString("AnalysisExecutor.CONNECTIONTO")//$NON-NLS-1$
                         + (isMDM ? ((MDMConnection) connection).getPathname()
                                 : isDelimitedFile ? ((DelimitedFileConnection) connection).getPathname()
                                         : ((DatabaseConnection) connection).getURL()));

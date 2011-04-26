@@ -88,14 +88,14 @@ public final class ParameterUtil {
             return null;
         }
         Map<String, String> parameterMap = toMap((Object) parameter);
-        parameterMap.put("name", parameter.getName());
-        parameterMap.put("purpose", parameter.getPurpose());
-        parameterMap.put("description", parameter.getDescription());
-        parameterMap.put("author", parameter.getAuthor());
-        parameterMap.put("status", parameter.getStatus());
-        parameterMap.put("version", parameter.getVersion());
-        parameterMap.put("universe", parameter.getParameters().getProperty(TaggedValueHelper.UNIVERSE));
-        parameterMap.put("datafilter", parameter.getParameters().getProperty(TaggedValueHelper.DATA_FILTER));
+        parameterMap.put("name", parameter.getName());//$NON-NLS-1$
+        parameterMap.put("purpose", parameter.getPurpose());//$NON-NLS-1$
+        parameterMap.put("description", parameter.getDescription());//$NON-NLS-1$
+        parameterMap.put("author", parameter.getAuthor());//$NON-NLS-1$
+        parameterMap.put("status", parameter.getStatus());//$NON-NLS-1$
+        parameterMap.put("version", parameter.getVersion());//$NON-NLS-1$
+        parameterMap.put("universe", parameter.getParameters().getProperty(TaggedValueHelper.UNIVERSE));//$NON-NLS-1$
+        parameterMap.put("datafilter", parameter.getParameters().getProperty(TaggedValueHelper.DATA_FILTER));//$NON-NLS-1$
         parameterMap.put(TaggedValueHelper.RETRIEVE_ALL, String.valueOf(parameter.isRetrieveAllMetadata()));
         parameterMap.put(TaggedValueHelper.PASSWORD, parameter.getParameters().getProperty(TaggedValueHelper.PASSWORD));
         parameterMap.put(TaggedValueHelper.USER, parameter.getParameters().getProperty(TaggedValueHelper.USER));

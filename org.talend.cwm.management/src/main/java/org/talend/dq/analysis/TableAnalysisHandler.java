@@ -23,6 +23,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
+import org.talend.cwm.i18n.Messages;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -84,7 +85,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
         DataManager connection = analysis.getContext().getConnection();
         if (connection == null) {
             // try to get one
-            log.error("Connection has not been set in analysis Context");
+            log.error(Messages.getString("ColumnCorrelationAnalysisHandler.CONNNOTBEENSETINANALYSIS"));//$NON-NLS-1$
             connection = ConnectionHelper.getTdDataProvider(PackageHelper.getParentPackage((MetadataTable) set));
             analysis.getContext().setConnection(connection);
         }

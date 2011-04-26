@@ -13,6 +13,7 @@
 package org.talend.dq.analysis.parameters;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.PluginConstant;
 
 
 /**
@@ -22,7 +23,7 @@ public class FuncationDependencyParameter extends AnalysisParameter {
 
     @Override
     public String getName() {
-       return StringUtils.isBlank(super.getName())?"":super.getName(); //$NON-NLS-1$
+        return StringUtils.isBlank(super.getName()) ? PluginConstant.EMPTY_STRING : super.getName();
     }
 
     

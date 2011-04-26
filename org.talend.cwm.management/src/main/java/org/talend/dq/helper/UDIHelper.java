@@ -51,7 +51,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public final class UDIHelper {
 
-    public static final String JAREXTENSIONG = "jar";
+    public static final String JAREXTENSIONG = "jar";//$NON-NLS-1$
 
     private static IndicatorSqlSwitch<UserDefIndicator> userDefIndSwitch = new IndicatorSqlSwitch<UserDefIndicator>() {
 
@@ -121,11 +121,11 @@ public final class UDIHelper {
             String category, String javaClassName, String javaJarPath) {
         IndicatorDefinition id = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         id.setName(name);
-        MetadataHelper.setAuthor(id, author == null ? "" : author); //$NON-NLS-1$
-        MetadataHelper.setDescription(description == null ? "" : description, id); //$NON-NLS-1$
-        MetadataHelper.setPurpose(purpose == null ? "" : purpose, id); //$NON-NLS-1$
+        MetadataHelper.setAuthor(id, author == null ? PluginConstant.EMPTY_STRING : author);
+        MetadataHelper.setDescription(description == null ? PluginConstant.EMPTY_STRING : description, id);
+        MetadataHelper.setPurpose(purpose == null ? PluginConstant.EMPTY_STRING : purpose, id);
         // MOD mzhao feature 7479 2009-10-16
-        MetadataHelper.setDevStatus(id, status == null ? "" : status); //$NON-NLS-1$
+        MetadataHelper.setDevStatus(id, status == null ? PluginConstant.EMPTY_STRING : status);
         TaggedValueHelper.setTaggedValue(id, TaggedValueHelper.CLASS_NAME_TEXT, javaClassName);
         TaggedValueHelper.setTaggedValue(id, TaggedValueHelper.JAR_FILE_PATH, javaJarPath);
         setUDICategory(id, category);
@@ -157,7 +157,7 @@ public final class UDIHelper {
 
     public static String getMatchingIndicatorName(IndicatorDefinition indicatorDefinition, Pattern pattern) {
         if (indicatorDefinition != null) {
-            return pattern.getName() + "(" + indicatorDefinition.getName() + ")";
+            return pattern.getName() + "(" + indicatorDefinition.getName() + ")";//$NON-NLS-1$//$NON-NLS-2$
         } else {
             return pattern.getName();
         }
@@ -231,27 +231,27 @@ public final class UDIHelper {
         // MOD mzhao feature 11128, In case of Java UDI, No expression is allowed to be saved.
         if (!containsJavaUDI(indicatorDefinition)) {
             if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
-                errorList.add(Messages.getString("UDIHelper.validateNoExpression"));
+                errorList.add(Messages.getString("UDIHelper.validateNoExpression"));//$NON-NLS-1$
                 rc.setOk(false);
             }
         }
 
-        if ("".equals(indicatorDefinition.getName())) {
-            errorList.add(Messages.getString("UDIHelper.validateNoName"));
+        if (PluginConstant.EMPTY_STRING.equals(indicatorDefinition.getName())) {
+            errorList.add(Messages.getString("UDIHelper.validateNoName"));//$NON-NLS-1$
             rc.setOk(false);
         }
 
         for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
             if (null == exp.getBody() || exp.getBody().length() + 1 < MIN_EXPRESSION_LENGTH) {
-                errorList.add(Messages.getString("UDIHelper.validateTooShort"));
+                errorList.add(Messages.getString("UDIHelper.validateTooShort"));//$NON-NLS-1$
                 rc.setOk(false);
             }
         }
 
-        String message = Messages.getString("UDIHelper.validateCannotSave");
-        String wrap = System.getProperty("line.separator");
+        String message = Messages.getString("UDIHelper.validateCannotSave");//$NON-NLS-1$
+        String wrap = System.getProperty("line.separator");//$NON-NLS-1$
         for (int i = 0; i < errorList.size(); i++) {
-            message += wrap + (i + 1) + "." + errorList.get(i);
+            message += wrap + (i + 1) + org.talend.dataquality.PluginConstant.DOT_STRING + errorList.get(i);
         }
         rc.setMessage(message);
 
@@ -282,7 +282,7 @@ public final class UDIHelper {
                     jarPath = tv.getValue();
                 }
             }
-//MOD by zshen for feature 18724
+            // MOD by zshen for feature 18724
             if (validateJavaUDI(userJavaClassName, jarPath)) {
                 List<URL> jarUrls = new ArrayList<URL>();
                 for (IFile file : getContainJarFile(jarPath)) {
@@ -376,7 +376,7 @@ public final class UDIHelper {
     public static List<IFile> getContainJarFile(String jarPathStr) {
         List<IFile> fileList = new ArrayList<IFile>();
 
-        for (String containJarName : jarPathStr.split("\\|\\|")) {
+        for (String containJarName : jarPathStr.split("\\|\\|")) {//$NON-NLS-1$
             for (IFile libJarFile : getLibJarFileList()) {
                 if (libJarFile.getName().equalsIgnoreCase(containJarName)) {
                     fileList.add(libJarFile);

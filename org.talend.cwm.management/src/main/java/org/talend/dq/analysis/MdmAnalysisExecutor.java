@@ -112,7 +112,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
         // int paginationNum = analysis.getParameters().getMaxNumberRows();
-        StringBuilder sql = new StringBuilder("let $_leres0_ := //");
+        StringBuilder sql = new StringBuilder("let $_leres0_ := //");//$NON-NLS-1$
         StringBuilder selectElement = new StringBuilder();
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
@@ -130,7 +130,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             // --- preconditions
             TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
             if (tdXmlElement == null) {
-                this.errorMessage = "given element can't be used.";
+                this.errorMessage = Messages.getString("MdmAnalysisExecutor.GIVENELEMENTCANNOTUSE");//$NON-NLS-1$
                 return null;
             }
             ModelElement parentElement = XmlElementHelper.getParentElement(tdXmlElement);
@@ -150,21 +150,21 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
                 parentAnalyzedElementName = parentElement.getName();
                 analyzedElementName = tdXmlElement.getName();
                 if (selectElement.length() > 0) {
-                    selectElement.append("|$");
+                    selectElement.append("|$");//$NON-NLS-1$
                     selectElement.append(parentAnalyzedElementName);
-                    selectElement.append("/");
+                    selectElement.append("/");//$NON-NLS-1$
                 } else {
-                    selectElement.append("$");
+                    selectElement.append("$");//$NON-NLS-1$
                     selectElement.append(parentAnalyzedElementName);
-                    selectElement.append("/");
+                    selectElement.append("/");//$NON-NLS-1$
                 }
                 selectElement.append(analyzedElementName);
             }
             fromPart.add(xmlDocument);
         }
         if (fromPart.size() != 1) {
-            log.error("Java analysis must be run on only one table. The number of different tables is " + fromPart.size() + ".");
-            this.errorMessage = "Cannot run a Java analysis on several tables. Use only columns from one table.";
+            log.error(Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLE") + fromPart.size());//$NON-NLS-1$
+            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLEERRORMESSAGE");//$NON-NLS-1$
             return null;
         }
         if (analysis.getParameters().isStoreData()) {
@@ -179,49 +179,49 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
                     continue;
                 }
                 if (selectElement.length() > 0) {
-                    selectElement.append("|$");
+                    selectElement.append("|$");//$NON-NLS-1$
                     selectElement.append(parentElement.getName());
-                    selectElement.append("/");
+                    selectElement.append("/");//$NON-NLS-1$
                 } else {
-                    selectElement.append("$");
+                    selectElement.append("$");//$NON-NLS-1$
                     selectElement.append(parentElement.getName());
-                    selectElement.append("/");
+                    selectElement.append("/");//$NON-NLS-1$
                 }
                 selectElement.append(xmlElemenet.getName());
             }
         }
 
         if (selectElement.length() <= 0) {
-            this.errorMessage = "Not any element to be choice";
+            this.errorMessage = Messages.getString("MdmAnalysisExecutor.NOTANAELEMENTTOBECHOICE");//$NON-NLS-1$
             return null;
         }
         // for
         sql.append(parentAnalyzedElementName);// remaind on version 2
-        sql.append(" let $_page_ := for $");
+        sql.append(" let $_page_ := for $");//$NON-NLS-1$
 
         sql.append(parentAnalyzedElementName);
 
-        sql.append(" in subsequence($_leres0_,1,");
+        sql.append(" in subsequence($_leres0_,1,");//$NON-NLS-1$
         sql.append(XQueryExpressionUtil.ROWS_PER_PAGE);
-        sql.append(") ");
+        sql.append(") ");//$NON-NLS-1$
 
         // where--- get data filter
         ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();
         handler.setAnalysis(analysis);
         String stringDataFilter = handler.getStringDataFilter();
-        if (stringDataFilter != null && !stringDataFilter.equals("")) {
+        if (stringDataFilter != null && !stringDataFilter.equals(PluginConstant.EMPTY_STRING)) {
             // TODO The user will don't know what is our name of variable in xquery,so need us add our name of variable
             // before the name of column by user input.Now our name of variable is parentNode name.
             sql.append(dbms().where().toLowerCase());// All of function in xquery,character is lowercase
             sql.append(stringDataFilter);
         }
         // return
-        sql.append("return <result>{if ($");
+        sql.append("return <result>{if ($");//$NON-NLS-1$
         sql.append(parentAnalyzedElementName);
-        sql.append(") then ");
+        sql.append(") then ");//$NON-NLS-1$
         sql.append(selectElement);
 
-        sql.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres0_)}</totalCount>)");
+        sql.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres0_)}</totalCount>)");//$NON-NLS-1$
         return sql.toString();
     }
 

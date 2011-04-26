@@ -153,11 +153,11 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                         analysis.getName());
                 return null;
             }
-            StringBuilder sql = new StringBuilder("//");
+            StringBuilder sql = new StringBuilder("//");//$NON-NLS-1$
             for (ModelElement modelElement : analysedElements) {
                 TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
                 if (tdXmlElement == null) {
-                    this.errorMessage = "given element can't be used.";
+                    this.errorMessage = "given element can't be used.";//$NON-NLS-1$
                     return null;
                 }
                 ModelElement parentElement = XmlElementHelper.getParentElement(tdXmlElement);
@@ -178,7 +178,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         }
         // ~
         this.cachedAnalysis = analysis;
-        StringBuilder sql = new StringBuilder("SELECT ");
+        StringBuilder sql = new StringBuilder("SELECT ");//$NON-NLS-1$
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         // MOD yyi 2011-02-22 17871:delimitefile
         EList<ModelElement> analysedElements = null;
@@ -225,7 +225,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                 sql.append(this.quote(col.getName()));
                 // append comma if more columns exist
                 if (iterator.hasNext()) {
-                    sql.append(',');
+                    sql.append(',');//$NON-NLS-1$
                 }
             }
             // add from
@@ -233,8 +233,8 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
         }
         if (fromPart.size() != 1) {
-            log.error("Java analysis must be run on only one table. The number of different tables is " + fromPart.size() + ".");
-            this.errorMessage = "Cannot run a Java analysis on several tables. Use only columns from one table.";
+            log.error(Messages.getString("ColumnSetAnalysisExecutor.JAVAANALYSISMUSTBERUNONONETABLE", fromPart.size()));//$NON-NLS-1$
+            this.errorMessage = Messages.getString("ColumnSetAnalysisExecutor.CANNOTRUNONSEVERALTABLES");//$NON-NLS-1$
             return null;
         }
         // select all the column to be prepare for drill down.
@@ -247,7 +247,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                 sql.append(this.quote(column.getName()));
                 // append comma if more columns exist
                 if (iter.hasNext()) {
-                    sql.append(',');
+                    sql.append(',');//$NON-NLS-1$
                 }
             }
         }
@@ -301,17 +301,17 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
     protected boolean checkAllMatchIndicator(AllMatchIndicator indicator) {
         EList<RegexpMatchingIndicator> indicators = indicator.getCompositeRegexMatchingIndicators();
-        String patternNames = "";
+        String patternNames = PluginConstant.EMPTY_STRING;
         for (RegexpMatchingIndicator rmi : indicators) {
             if (null == rmi.getRegex()) {
 
-                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
+                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             } else if (rmi.getRegex().equals(rmi.getName())) {
-                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";
+                patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             }
         }
-        if ("" != patternNames) {
-            this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames);
+        if (PluginConstant.EMPTY_STRING != patternNames) {
+            this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames);//$NON-NLS-1$
             return false;
         }
         return true;

@@ -38,6 +38,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
@@ -88,7 +89,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
                 if (!createSqlQuery(stringDataFilter, indicator)) {
-                    log.error("Error when creating query with indicator " + indicator.getName());
+                    log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName());//$NON-NLS-1$
                     return null;
                 }
             }
@@ -99,18 +100,18 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             log.error(e, e);
             return null;
         }
-        return ""; //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
     private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
             AnalysisExecutionException {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
-            return traceError("Analyzed element is null for indicator " + indicator.getName());
+            return traceError("Analyzed element is null for indicator " + indicator.getName());//$NON-NLS-1$
         }
         NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (set == null) {
-            return traceError("Analyzed element is not a table for indicator " + indicator.getName());
+            return traceError("Analyzed element is not a table for indicator " + indicator.getName());//$NON-NLS-1$
         }
         // --- get the schema owner
         String setName = quote(set.getName());
@@ -119,7 +120,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
                 buf.append(schema.getName() + " "); //$NON-NLS-1$
             }
-            log.error("Table " + setName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
+            log.error(Messages
+                    .getString("ColumnAnalysisSqlExecutor.COLUMNNOTBELONGTOEXISTSCHEMA", setName, buf.toString().trim()));//$NON-NLS-1$
             return false;
         }
 
@@ -132,16 +134,16 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
         if (indicatorDefinition == null) {
-            return traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
-                    + ". Please, report a bug at http://talendforge.org/bugs/");
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
         final EClass indicatorEclass = indicator.eClass();
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
-            return traceError("Unsupported Indicator. No SQL expression found for indicator "
-                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (UUID: "
-                    + ResourceHelper.getUUID(indicatorDefinition) + ")");
+            return traceError(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR",//$NON-NLS-1$
+                    (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
+                    ResourceHelper.getUUID(indicatorDefinition)));
         }
 
         // --- get indicator parameters and convert them into sql expression
@@ -193,7 +195,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         // --- default case
         // allow join
         String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
-                schemaName) : "";
+                schemaName) : PluginConstant.EMPTY_STRING;
 
         completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
@@ -244,7 +246,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         boolean ok = true;
         TypedReturnCode<Connection> trc = this.getConnection(analysis);
         if (!trc.isOk()) {
-            return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());
+            return traceError(Messages.getString(
+                    "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
         }
 
         Connection connection = trc.getObject();
@@ -268,8 +271,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
                 Expression query = dbms().getInstantiatedExpression(indicator);
                 if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));
+                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
                 } else {
                     indicator.setComputed(true);
                 }
@@ -298,7 +301,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
-            log.error("No schema found for table " + analyzedElement.getName());
+            log.error(Messages.getString("TableAnalysisSqlExecutor.NOSCHEMAFOUNDFORTABLE", analyzedElement.getName()));//$NON-NLS-1$
             return null;
         }
         // else
@@ -319,18 +322,16 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             }
             return true;
         } catch (RuntimeException e) {
-            return traceError("Problem when changing trying to set catalog \"" + catalogName
-                    + "\" on connection. RuntimeException message: " + e.getMessage());
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$
         } catch (SQLException e) {
-            return traceError("Problem when changing trying to set catalog \"" + catalogName
-                    + "\" on connection. SQLException message: " + e.getMessage());
+            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
         }
     }
 
     private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
-            log.info("Computing indicator: " + indicator.getName());
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()));//$NON-NLS-1$
         }
         List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
 
@@ -346,7 +347,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         Statement statement = connection.createStatement();
         // statement.setFetchSize(fetchSize);
         if (log.isInfoEnabled()) {
-            log.info("Executing query: " + queryStmt);
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$
         }
         if (continueRun()) {
             statement.execute(queryStmt);
@@ -355,7 +356,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         // get the results
         ResultSet resultSet = statement.getResultSet();
         if (resultSet == null) {
-            String mess = "No result set for this statement: " + queryStmt;
+            String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$
             log.warn(mess);
             return null;
         }
@@ -386,13 +387,13 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     public String getValidStatement(String dataFilterAsString, Indicator indicator) {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
-            traceError("Analyzed element is null for indicator " + indicator.getName());
-            return "";
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
         NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (set == null) {
-            traceError("Analyzed element is not a table for indicator " + indicator.getName());
-            return "";
+            traceError(Messages.getString("TableAnalysisSqlExecutor.ANALYZEDELEMENTISNOTATABLE", indicator.getName()));//$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
         // --- get the schema owner
         String setName = quote(set.getName());
@@ -401,8 +402,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             for (orgomg.cwm.objectmodel.core.Package schema : schemata.values()) {
                 buf.append(schema.getName() + " "); //$NON-NLS-1$
             }
-            log.error("Table " + setName + " does not belong to an existing schema [" + buf.toString().trim() + "]");
-            return "";
+            log.error(Messages.getString("TableAnalysisSqlExecutor.TABLENOTBELONGTOEXISSCHEMA", setName, buf.toString().trim()));//$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
 
         // get correct language for current database
@@ -413,18 +414,17 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
         if (indicatorDefinition == null) {
-            traceError("INTERNAL ERROR: No indicator definition found for indicator " + indicator.getName()
-                    + ". Please, report a bug at http://talendforge.org/bugs/");
-            return "";
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
         final EClass indicatorEclass = indicator.eClass();
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
-            traceError("Unsupported Indicator. No SQL expression found for indicator "
-                    + (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()) + " (UUID: "
-                    + ResourceHelper.getUUID(indicatorDefinition) + ")");
-            return "";
+            traceError(Messages
+                    .getString(
+                            "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()), ResourceHelper.getUUID(indicatorDefinition)));//$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
         }
 
         // --- get indicator parameters and convert them into sql expression
@@ -432,7 +432,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         if (StringUtils.isNotBlank(dataFilterAsString)) {
             whereExpression.add(dataFilterAsString);
         }
-        String setAliasA = "";
+        String setAliasA = PluginConstant.EMPTY_STRING;
         final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
@@ -444,7 +444,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 for (JoinElement joinelt : wr.getJoins()) {
                     JoinElement joinCopy = (JoinElement) EcoreUtil.copy(joinelt);
                     joinConditions.add(joinCopy);
-                    setAliasA = "".equals(setAliasA) ? joinCopy.getTableAliasA() : setAliasA;
+                    setAliasA = PluginConstant.EMPTY_STRING.equals(setAliasA) ? joinCopy.getTableAliasA() : setAliasA;
                 }
             }
         }
@@ -472,11 +472,11 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         // --- default case
         // allow join
         String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
-                schemaName) : "";
+                schemaName) : PluginConstant.EMPTY_STRING;
 
         String genericSql = sqlGenericExpression.getBody();
-        setAliasA = "".equals(setAliasA) ? "*" : setAliasA + ".*";
-        genericSql = genericSql.replace("COUNT(*)", setAliasA);
+        setAliasA = PluginConstant.EMPTY_STRING.equals(setAliasA) ? "*" : setAliasA + ".*";//$NON-NLS-1$//$NON-NLS-2$
+        genericSql = genericSql.replace("COUNT(*)", setAliasA);//$NON-NLS-1$
 
         completedSqlString = dbms().fillGenericQueryWithJoin(genericSql, setName, joinclause);
         // ~
