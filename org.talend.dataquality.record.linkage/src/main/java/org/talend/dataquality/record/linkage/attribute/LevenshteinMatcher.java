@@ -26,7 +26,7 @@ public class LevenshteinMatcher implements IAttributeMatcher {
      */
     public double getMatchingWeight(String str1, String str2) {
         // get the max possible levenstein distance score for string
-        int maxLen = Math.min(str1.length(), str2.length());
+        int maxLen = Math.max(str1.length(), str2.length());
 
         // check for 0 maxLen
         if (maxLen == 0) {

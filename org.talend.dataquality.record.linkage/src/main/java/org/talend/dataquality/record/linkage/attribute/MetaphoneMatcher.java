@@ -38,7 +38,8 @@ public class MetaphoneMatcher implements IAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
      */
     public double getMatchingWeight(String str1, String str2) {
-        return StringComparisonUtil.difference(algorithm.encode(str1), algorithm.encode(str2)) / algorithm.getMaxCodeLen();
+        return StringComparisonUtil.difference(algorithm.encode(str1), algorithm.encode(str2))
+                / (double) algorithm.getMaxCodeLen();
     }
 
 
