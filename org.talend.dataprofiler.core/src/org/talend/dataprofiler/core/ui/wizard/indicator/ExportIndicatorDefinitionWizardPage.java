@@ -41,7 +41,6 @@ public class ExportIndicatorDefinitionWizardPage extends WizardPage {
 
     public ExportIndicatorDefinitionWizardPage() {
         super(DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizardPage.ExportSystemIndicator")); //$NON-NLS-1$
-
         setTitle(DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizardPage.ExportSystemIndicators")); //$NON-NLS-1$
         setDescription(DefaultMessagesImpl.getString("ExportIndicatorDefinitionWizardPage.ChooseFile")); //$NON-NLS-1$
     }

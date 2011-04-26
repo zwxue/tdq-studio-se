@@ -32,15 +32,11 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author zqin
- * 
  */
 public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
 
     protected ConnAnalysisDPSelectionPage dpSelectionPage;
 
-    /**
-     * 
-     */
     public ConnectionAnalysisWizard(AnalysisFilterParameter parameter) {
         super(parameter);
     }
@@ -52,7 +48,6 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
      */
     @Override
     public void addPages() {
-
         addPage(new AnalysisMetadataWizardPage());
 
         if (getParameter().getConnectionRepNode() == null) {
@@ -66,7 +61,6 @@ public class ConnectionAnalysisWizard extends AnalysisFilterWizard {
 
     @Override
     public ModelElement initCWMResourceBuilder() {
-
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
         if (getAnalysisBuilder() != null) {
             IRepositoryNode connectionRepNode = getParameter().getConnectionRepNode();

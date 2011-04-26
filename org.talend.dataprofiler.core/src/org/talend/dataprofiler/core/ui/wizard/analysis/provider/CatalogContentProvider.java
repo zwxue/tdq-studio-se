@@ -16,7 +16,6 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -34,11 +33,10 @@ import org.talend.resource.ResourceManager;
  */
 public class CatalogContentProvider extends ResourceViewContentProvider {
 
-    private static Logger log = Logger.getLogger(CatalogContentProvider.class);
+    // private static Logger log = Logger.getLogger(CatalogContentProvider.class);
 
     public CatalogContentProvider() {
         // super(MNComposedAdapterFactory.getAdapterFactory());
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -109,7 +107,6 @@ public class CatalogContentProvider extends ResourceViewContentProvider {
      */
     @Override
     public Object[] getElements(Object object) {
-        // TODO Auto-generated method stub
         return this.getChildren(object);
     }
 

@@ -95,7 +95,6 @@ public class ColumnFilterWizardPage extends AbstractWizardPage {
         columnFilterText.setLayoutData(gd);
 
         addFieldsListeners();
-
         this.setControl(comp);
     }
 

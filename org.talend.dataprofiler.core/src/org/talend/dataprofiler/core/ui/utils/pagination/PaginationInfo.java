@@ -54,7 +54,7 @@ public abstract class PaginationInfo implements IPagination {
         IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask("Loading page...", objectList.size());
+                monitor.beginTask("Loading page...", objectList.size()); //$NON-NLS-1$
                 uiPagination.notifyPageNavigator();
                 render();
                 uiPagination.updatePageInfoLabel();

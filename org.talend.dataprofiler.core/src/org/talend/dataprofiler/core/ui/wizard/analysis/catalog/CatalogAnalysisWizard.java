@@ -76,7 +76,6 @@ public class CatalogAnalysisWizard extends AnalysisFilterWizard {
                 indicators[i] = createCatalogIndicator;
                 i++;
             }
-
             getAnalysisBuilder().addElementsToAnalyze(modelElement, indicators);
         }
         return analysis;

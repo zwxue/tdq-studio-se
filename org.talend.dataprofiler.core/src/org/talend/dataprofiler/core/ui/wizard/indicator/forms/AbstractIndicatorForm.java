@@ -49,7 +49,6 @@ public abstract class AbstractIndicatorForm extends AbstractForm {
      */
     public AbstractIndicatorForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style);
-
         this.parameters = parameters;
     }
 

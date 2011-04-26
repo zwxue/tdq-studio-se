@@ -67,14 +67,11 @@ public class FreqBinsDesignerForm extends BinsDesignerForm {
 
             // MOD scorreia annotation commented out for Java 5 compilation @Override
             public void modifyText(ModifyEvent e) {
-
                 checkFieldsValue();
-
                 if (isStatusOnValid()) {
                     parameters.setTopN(Integer.parseInt(numberTxt.getText()));
                 }
             }
-
         });
     }
 
@@ -92,7 +89,6 @@ public class FreqBinsDesignerForm extends BinsDesignerForm {
 
     @Override
     protected boolean checkFieldsValue() {
-
         if (numberTxt.getText() == "") { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
@@ -106,5 +102,4 @@ public class FreqBinsDesignerForm extends BinsDesignerForm {
         updateStatus(IStatus.OK, MSG_OK);
         return super.checkFieldsValue();
     }
-
 }

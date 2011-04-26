@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.jfree.util.Log;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
@@ -182,10 +183,9 @@ public class DatabaseWizardPage extends AbstractWizardPage {
 
                 SupportDBUrlType dbType = SupportDBUrlType.getDBTypeByKey(selectedDBKey);
                 if (dbType == null) {
-                    MessageDialog
-                            .openWarning(
-                                    null,
-                                    DefaultMessagesImpl.getString("DatabaseWizardPage.UnsupportedTitle"), DefaultMessagesImpl.getString("DatabaseWizardPage.UnsupportedDriver")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openWarning(
+                            null,
+                            DefaultMessagesImpl.getString("DatabaseWizardPage.UnsupportedTitle"), DefaultMessagesImpl.getString("DatabaseWizardPage.UnsupportedDriver")); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
 
                     switch (dbType) {
@@ -262,16 +262,14 @@ public class DatabaseWizardPage extends AbstractWizardPage {
             public void widgetSelected(SelectionEvent e) {
                 ReturnCode code = checkDBConnection();
                 if (code.isOk()) {
-                    MessageDialog
-                            .openInformation(
-                                    getShell(),
-                                    DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnections"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openInformation(
+                            getShell(),
+                            DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnections"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
-                    MessageDialog
-                            .openInformation(
-                                    getShell(),
-                                    DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
-                                            + code.getMessage());
+                    MessageDialog.openInformation(
+                            getShell(),
+                            DefaultMessagesImpl.getString("DatabaseWizardPage.checkConnectionss"), DefaultMessagesImpl.getString("DatabaseWizardPage.checkFailure") //$NON-NLS-1$ //$NON-NLS-2$
+                                    + code.getMessage());
                 }
             }
 
@@ -328,7 +326,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
     }
 
     private ReturnCode checkDBConnection() {
-        connectionParam.getParameters().setProperty(TaggedValueHelper.DATA_FILTER, "");
+        connectionParam.getParameters().setProperty(TaggedValueHelper.DATA_FILTER, ""); //$NON-NLS-1$
         // ADD xqliu 2010-04-01 bug 12379. MOD mzhao 2010-04-05, avoid replicated codes for same function.
         ReturnCode rt = databaseConnectionWizard.checkMetadata();
         if (!rt.isOk()) {
@@ -337,16 +335,16 @@ public class DatabaseWizardPage extends AbstractWizardPage {
         // ~12379
         // MOD xqliu 2009-12-17 check for a mdm database
         if (mdmFlag) {
-            IXMLDBConnection mdmConnection = new MdmWebserviceConnection(connectionParam.getJdbcUrl(), connectionParam
-                    .getParameters());
+            IXMLDBConnection mdmConnection = new MdmWebserviceConnection(connectionParam.getJdbcUrl(),
+                    connectionParam.getParameters());
             ReturnCode retcode = mdmConnection.checkDatabaseConnection();
             this.urlSetupControl.getDataFilterCombo().setEnabled(fillComboContent(mdmConnection).isOk());
             return retcode;
         }
         // MOD mzhao 2009-11-27 Check for an xml database (e.g eXist)
         if (connectionParam.getDriverClassName().equals(DatabaseConstant.XML_EXIST_DRIVER_NAME)) {
-            IXMLDBConnection eXistDBConnection = new EXistXMLDBConnection(connectionParam.getDriverClassName(), connectionParam
-                    .getJdbcUrl());
+            IXMLDBConnection eXistDBConnection = new EXistXMLDBConnection(connectionParam.getDriverClassName(),
+                    connectionParam.getJdbcUrl());
             ReturnCode retcode = eXistDBConnection.checkDatabaseConnection();
             return retcode;
         }
@@ -358,8 +356,8 @@ public class DatabaseWizardPage extends AbstractWizardPage {
             Driver externalDriver = null;
             String errorMsg = ""; //$NON-NLS-1$
             try {
-                externalDriver = createGenericJDBC(this.connectionParam.getDriverPath(), this.connectionParam
-                        .getDriverClassName());
+                externalDriver = createGenericJDBC(this.connectionParam.getDriverPath(),
+                        this.connectionParam.getDriverClassName());
             } catch (Exception e1) {
                 errorMsg = e1.getLocalizedMessage();
             }
@@ -367,8 +365,8 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                 try {
                     DriverManager.registerDriver(externalDriver);
                     // MOD xqliu 2009-02-03 bug 5261
-                    Connection connection = ConnectionUtils.createConnectionWithTimeout(externalDriver, this.connectionParam
-                            .getJdbcUrl(), this.connectionParam.getParameters());
+                    Connection connection = ConnectionUtils.createConnectionWithTimeout(externalDriver,
+                            this.connectionParam.getJdbcUrl(), this.connectionParam.getParameters());
                     if (connection == null) {
                         rc.setOk(false);
                         rc.setMessage(DefaultMessagesImpl.getString("DatabaseWizardPage.connIsNULL")); //$NON-NLS-1$
@@ -385,8 +383,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
             return rc;
         } else {
             ReturnCode returnCode = ConnectionUtils.checkConnection(this.connectionParam.getJdbcUrl(),
-                    this.connectionParam
-                    .getDriverClassName(), this.connectionParam.getParameters());
+                    this.connectionParam.getDriverClassName(), this.connectionParam.getParameters());
             return returnCode;
         }
     }
@@ -521,12 +518,12 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                         .getDriverClassName();
                 String connURL = this.connectionParam.getJdbcUrl() == null ? "" : this.connectionParam.getJdbcUrl(); //$NON-NLS-1$
                 // MOD xqliu 2009-12-03 bug 10247
-                complete = !("".equals(driverName) || "".equals(connURL));
-                //                String userName = this.userid == null ? "" : this.userid; //$NON-NLS-1$
-                //                if ("".equals(driverName) || "".equals(connURL)) { //$NON-NLS-1$ //$NON-NLS-2$
+                complete = !("".equals(driverName) || "".equals(connURL)); //$NON-NLS-1$ //$NON-NLS-2$
+                // String userName = this.userid == null ? "" : this.userid; //$NON-NLS-1$
+                // If ("".equals(driverName) || "".equals(connURL)) { //$NON-NLS-1$ //$NON-NLS-2$
                 // complete = false;
                 // } else {
-                //                    complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver().equals(driverName) ? true : !"".equals(userName); //$NON-NLS-1$
+                // complete = SupportDBUrlType.SQLITE3DEFAULTURL.getDbDriver().equals(driverName) ? true : !"".equals(userName); //$NON-NLS-1$
                 // }
                 // ~
             } else if (SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey().equals(dbTypeName)) {
@@ -624,6 +621,7 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                 rc.setOk(true);
             }
         } catch (Exception exception) {
+            Log.error(exception);
         }
         return rc;
     }

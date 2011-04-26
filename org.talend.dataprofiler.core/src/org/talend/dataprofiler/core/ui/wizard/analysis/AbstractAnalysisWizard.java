@@ -61,9 +61,7 @@ public abstract class AbstractAnalysisWizard extends AbstractWizard {
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
         IFolder folder = parameter.getFolderProvider().getFolderResource();
-
         AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
-
         return analysisWriter.create(analysis, folder);
     }
 

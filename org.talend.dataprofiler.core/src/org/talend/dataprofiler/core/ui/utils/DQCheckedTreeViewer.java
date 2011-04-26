@@ -36,5 +36,4 @@ public class DQCheckedTreeViewer extends ContainerCheckedTreeViewer {
         addFilter(new DQFolderFliter(true));
         addFilter(new FolderObjFilter());
     }
-
 }

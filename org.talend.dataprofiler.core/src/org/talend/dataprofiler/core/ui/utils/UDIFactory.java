@@ -81,5 +81,4 @@ public final class UDIFactory {
         indicator.setName(UDIHelper.getMatchingIndicatorName(indicatorDefinition, pattern));
         return indicator;
     }
-    
 }

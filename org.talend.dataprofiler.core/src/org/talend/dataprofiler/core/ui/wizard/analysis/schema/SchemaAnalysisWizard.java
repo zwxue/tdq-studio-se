@@ -61,7 +61,7 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
         Analysis analysis = (Analysis) super.initCWMResourceBuilder();
 
         if (getAnalysisBuilder() != null) {
-            // DOC klliu 15750 2011-1-05 add the repnode on parameter
+            // MOD klliu 15750 2011-1-05 add the repnode on parameter
             PackagesAnalyisParameter packageParameter = getParameter();
             IRepositoryNode connectionRepNode = getParameter().getConnectionRepNode();
             ConnectionItem item = (ConnectionItem) connectionRepNode.getObject().getProperty().getItem();
@@ -103,7 +103,6 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
 
     @Override
     protected PackagesAnalyisParameter getParameter() {
-        // TODO Auto-generated method stub
         return (PackagesAnalyisParameter) super.getParameter();
     }
 }

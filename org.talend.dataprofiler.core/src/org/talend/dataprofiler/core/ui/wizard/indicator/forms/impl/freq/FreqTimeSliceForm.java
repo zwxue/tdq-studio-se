@@ -104,5 +104,4 @@ public class FreqTimeSliceForm extends TimeSlicesForm {
         updateStatus(IStatus.OK, MSG_OK);
         return true;
     }
-
 }

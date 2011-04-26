@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -29,12 +28,11 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
- * 
  * DOC mzhao class global comment. This class provide schema content provider.
  */
 public class SchemaContentProvider extends ResourceViewContentProvider {
 
-    private static Logger log = Logger.getLogger(SchemaContentProvider.class);
+    // private static Logger log = Logger.getLogger(SchemaContentProvider.class);
 
     public SchemaContentProvider() {
         // super(MNComposedAdapterFactory.getAdapterFactory());
@@ -109,7 +107,6 @@ public class SchemaContentProvider extends ResourceViewContentProvider {
      */
     @Override
     public Object[] getElements(Object object) {
-        // TODO Auto-generated method stub
         return this.getChildren(object);
     }
 

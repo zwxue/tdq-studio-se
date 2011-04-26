@@ -178,27 +178,27 @@ public final class ImageLib {
 
     public static final String XML_ELEMENT_DOC = "xmlele.gif"; //$NON-NLS-1$
 
-    public static final String ICON_PROCESS = "process_icon.gif";
+    public static final String ICON_PROCESS = "process_icon.gif"; //$NON-NLS-1$
 
-    public static final String ICON_PROCESS_WIZARD = "process_wiz.png";
+    public static final String ICON_PROCESS_WIZARD = "process_wiz.png"; //$NON-NLS-1$
 
-    public static final String ICON_ERROR_INFO = "error.gif";
+    public static final String ICON_ERROR_INFO = "error.gif"; //$NON-NLS-1$
     
-    public static final String RECYCLEBIN_EMPTY = "recyclebinempty.png";
+    public static final String RECYCLEBIN_EMPTY = "recyclebinempty.png"; //$NON-NLS-1$
     
-    public static final String RECYCLEBIN_OVERLAY = "recycle_bino_verlay.gif";
+    public static final String RECYCLEBIN_OVERLAY = "recycle_bino_verlay.gif"; //$NON-NLS-1$
     
-    public static final String RECYCLEBIN_FULL = "recyclebinfull.png";
+    public static final String RECYCLEBIN_FULL = "recyclebinfull.png"; //$NON-NLS-1$
 
-    public static final String ICON_ERROR_VAR = "error_ovr.gif";
+    public static final String ICON_ERROR_VAR = "error_ovr.gif"; //$NON-NLS-1$
 
-    public static final String ICON_ADD_VAR = "add_ovr.gif";
+    public static final String ICON_ADD_VAR = "add_ovr.gif"; //$NON-NLS-1$
 
-    public static final String FILE_DELIMITED = "filedelimited.gif";
+    public static final String FILE_DELIMITED = "filedelimited.gif"; //$NON-NLS-1$
 
-    public static final String SOURCE_FILE = "editor.gif";
+    public static final String SOURCE_FILE = "editor.gif"; //$NON-NLS-1$
 
-    public static final String JAR_FILE = "jar_obj.gif";
+    public static final String JAR_FILE = "jar_obj.gif"; //$NON-NLS-1$
 
     /**
      * DOC bzhou ImageLib constructor comment.

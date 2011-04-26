@@ -27,5 +27,4 @@ public class SchemaAnalysisFilterPage extends AnalysisFilterPage {
         setTitle(DefaultMessagesImpl.getString("SchemaAnalysisPageStep1.newAnalysis")); //$NON-NLS-1$
         setMessage(DefaultMessagesImpl.getString("SchemaAnalysisFilterPage.AddFilters")); //$NON-NLS-1$
     }
-
 }

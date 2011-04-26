@@ -24,7 +24,7 @@ public interface ICWMResouceAdapter {
     /**
      * DOC bzhou Comment method "checkMetadata".
      * 
-     * check the metadata user defined is valid or not.
+     * check the metadata user defined is valid or not. <br>
      * 
      * @return
      */

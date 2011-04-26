@@ -24,7 +24,6 @@ public final class PluginChecker {
     private static final String TDCP_ID = "org.talend.datacleansing.core"; //$NON-NLS-1$
 
     private PluginChecker() {
-
     }
 
     /**

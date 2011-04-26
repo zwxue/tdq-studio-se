@@ -36,7 +36,6 @@ import org.talend.dq.nodes.DBColumnRepNode;
 public final class WhereClauseDND {
 
     private WhereClauseDND() {
-
     }
 
     public static void installDND(final Text targetControl) {

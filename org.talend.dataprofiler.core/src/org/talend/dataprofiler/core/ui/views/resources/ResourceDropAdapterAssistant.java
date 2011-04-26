@@ -207,7 +207,6 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
      * @return the resource selection from the LocalSelectionTransfer
      */
     private IResource[] getSelectedResources() {
-
         ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
         if (selection instanceof IStructuredSelection) {
             return getSelectedResources((IStructuredSelection) selection);
@@ -248,7 +247,6 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
     @Override
     public IStatus validateDrop(Object target, int operation, TransferData transferType) {
         if (!(target instanceof IResource)) {
-
             return Status.CANCEL_STATUS;
         }
         IResource targetRes = (IResource) target;

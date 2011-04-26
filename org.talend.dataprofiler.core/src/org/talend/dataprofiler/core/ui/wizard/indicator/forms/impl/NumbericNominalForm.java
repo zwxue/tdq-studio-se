@@ -45,7 +45,6 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
      */
     public NumbericNominalForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style, parameters);
-
         setupForm();
     }
 
@@ -95,7 +94,6 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
             }
 
         });
-
     }
 
     /*
@@ -144,7 +142,6 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
      */
     @Override
     public FormEnum getFormEnum() {
-
         return FormEnum.NumbericNominalForm;
     }
 
@@ -155,8 +152,6 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
      */
     @Override
     protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -166,7 +161,5 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
-
     }
 }

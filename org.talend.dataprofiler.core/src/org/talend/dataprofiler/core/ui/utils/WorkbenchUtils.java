@@ -180,9 +180,9 @@ public final class WorkbenchUtils {
         String name = node
                 .getObject()
                 .getLabel()
-                .concat("_")
+                .concat("_") //$NON-NLS-1$
                 .concat(node.getObject().getProperty().getVersion())
-                .concat(".")
+                .concat(".") //$NON-NLS-1$
                 .concat(WorkbenchUtils.getItemExtendtion(item != null ? item.eClass().getClassifierID() : node.getObject()
                         .getProperty().getItem().eClass().getClassifierID()));
         IPath append = folderPath.append(new Path(name));
@@ -202,7 +202,7 @@ public final class WorkbenchUtils {
         FolderHelper folderHelper = LocalFolderHelper.createInstance(newProject.getEmfProject(), ProxyRepositoryFactory
                 .getInstance().getRepositoryContext().getUser());
         String path = folderHelper.getFullFolderPath(folderItem);
-        if (path != null && (path.startsWith("TDQ") || path.startsWith("metadata"))) {
+        if (path != null && (path.startsWith("TDQ") || path.startsWith("metadata"))) { //$NON-NLS-1$ //$NON-NLS-2$
             return true;
         }
         return false;

@@ -28,9 +28,8 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
-
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class ImportIndicatorDefinitionWizardPage extends WizardPage {
 
@@ -42,7 +41,6 @@ public class ImportIndicatorDefinitionWizardPage extends WizardPage {
 
     public ImportIndicatorDefinitionWizardPage() {
         super(DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizardPage.ImportSystemIndicator")); //$NON-NLS-1$
-
         setTitle(DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizardPage.ImportSystemIndicators")); //$NON-NLS-1$
         setDescription(DefaultMessagesImpl.getString("ImportIndicatorDefinitionWizardPage.ChooseFile")); //$NON-NLS-1$
     }

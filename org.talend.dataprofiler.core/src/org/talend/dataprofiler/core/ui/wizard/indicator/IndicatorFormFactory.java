@@ -38,7 +38,6 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 public final class IndicatorFormFactory {
 
     private IndicatorFormFactory() {
-
     }
 
     public static AbstractIndicatorForm createForm(Composite parent, FormEnum formEnum, IndicatorParameters parameters) {

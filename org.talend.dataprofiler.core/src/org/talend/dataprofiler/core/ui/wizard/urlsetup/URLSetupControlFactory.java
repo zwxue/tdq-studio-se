@@ -66,11 +66,9 @@ public final class URLSetupControlFactory {
      */
     public static URLSetupControl createEditControl(SupportDBUrlType dbType, Composite composite, Connection connection,
             DBConnectionParameter parameter) {
-
         URLSetupControl control = new EditConnectionURLSetupControl(composite, dbType, connection);
         control.createPart(parameter);
         return control;
-
     }
 
     /**

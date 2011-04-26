@@ -97,5 +97,4 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
     public boolean isHasPages() {
         return false;
     }
-
 }

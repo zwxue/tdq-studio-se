@@ -63,16 +63,18 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
     }
 
     boolean checkName = true;
+
     @Override
     protected void addListeners() {
         super.addListeners();
         this.nameText.addModifyListener(new ModifyListener() {
+
             public void modifyText(ModifyEvent e) {
                 // MOD gdbu 2011-4-8 bug : 19976
                 if (checkName) {
                     checkName = false;
                     int x = nameText.getSelection().x;
-                    nameText.setText(WorkspaceUtils.normalize(nameText.getText()) + "");
+                    nameText.setText(WorkspaceUtils.normalize(nameText.getText()) + ""); //$NON-NLS-1$
                     nameText.setSelection(x);
                     checkName = true;
                 }

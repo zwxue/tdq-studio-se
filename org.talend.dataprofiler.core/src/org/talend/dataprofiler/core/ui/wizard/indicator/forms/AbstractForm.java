@@ -29,7 +29,6 @@ import org.talend.dataprofiler.core.CorePlugin;
  * DOC tguiu class global comment. Detailled comment <br/>
  * 
  * $Id: AbstractForm.java 12311 2008-03-14 09:40:39Z ggu $
- * 
  */
 public abstract class AbstractForm extends Composite {
 

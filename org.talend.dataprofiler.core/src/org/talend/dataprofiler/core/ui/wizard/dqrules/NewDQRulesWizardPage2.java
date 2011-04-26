@@ -49,7 +49,6 @@ public class NewDQRulesWizardPage2 extends AbstractWizardPage {
         whereText.setLayoutData(data);
 
         addListeners();
-
         setControl(container);
     }
 
@@ -61,7 +60,6 @@ public class NewDQRulesWizardPage2 extends AbstractWizardPage {
 
             public void modifyText(ModifyEvent e) {
                 String whereExpression = whereText.getText();
-
                 if (whereExpression != null && !"".equals(whereExpression)) { //$NON-NLS-1$
                     ((DQRulesParameter) getParameter()).setWhereClause(whereExpression);
                     setPageComplete(checkFieldsValue());

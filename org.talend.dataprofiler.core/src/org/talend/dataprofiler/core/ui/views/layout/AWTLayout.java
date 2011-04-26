@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Layout;
  * DOC qwei class global comment. Detailled comment <br/>
  * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
- * 
  */
 public abstract class AWTLayout extends Layout {
 

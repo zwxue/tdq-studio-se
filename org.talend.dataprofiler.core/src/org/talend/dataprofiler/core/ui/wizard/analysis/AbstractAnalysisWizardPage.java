@@ -18,7 +18,6 @@ import org.talend.dq.analysis.parameters.AnalysisParameter;
 
 /**
  * @author zqin
- * 
  */
 public abstract class AbstractAnalysisWizardPage extends AbstractWizardPage {
 
@@ -50,13 +49,11 @@ public abstract class AbstractAnalysisWizardPage extends AbstractWizardPage {
      */
     @Override
     public boolean canFlipToNextPage() {
-        // TODO Auto-generated method stub
         if (hasPages) {
             return super.canFlipToNextPage();
         } else {
             return false;
         }
-
     }
 
     /**
@@ -88,7 +85,6 @@ public abstract class AbstractAnalysisWizardPage extends AbstractWizardPage {
     }
 
     protected AnalysisParameter getConnectionParams() {
-
         return (AnalysisParameter) super.getParameter();
     }
 }

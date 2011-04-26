@@ -30,7 +30,6 @@ public class FreqTextLengthForm extends TextLengthForm {
     @Override
     protected void addFields() {
         super.addFields();
-
         this.blankBtn.setText(DefaultMessagesImpl.getString("FreqTextLengthForm.aggregateBlanks")); //$NON-NLS-1$
         this.nullBtn.setText(DefaultMessagesImpl.getString("FreqTextLengthForm.aggregateNullsWithBlanks")); //$NON-NLS-1$
     }

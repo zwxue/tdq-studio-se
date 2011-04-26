@@ -22,7 +22,6 @@ import org.talend.repository.model.RepositoryNode;
 
 /**
  * @author zqin
- * 
  */
 public class CreateNewAnalysisWizard extends Wizard {
 
@@ -70,7 +69,6 @@ public class CreateNewAnalysisWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-
         wizard = mainPage.getSelectedWizard();
         wizard.setContainer(getContainer());
         return true;
@@ -83,7 +81,6 @@ public class CreateNewAnalysisWizard extends Wizard {
      */
     @Override
     public void addPages() {
-
         // mainPage = new NewWizardSelectionPage();
         mainPage = new NewWizardSelectionPage(this.node);
         mainPage.setWizard(wizard);
@@ -100,7 +97,6 @@ public class CreateNewAnalysisWizard extends Wizard {
         if (mainPage != null) {
             return mainPage.isCanFinishEarly();
         }
-
         return super.canFinish();
     }
 

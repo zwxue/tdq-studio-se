@@ -80,7 +80,7 @@ public abstract class URLSetupControl extends Composite {
     // for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
     // String key = (String) i.next();
     // putProperty(key, (String) properties.get(key));
-    //            
+    //
     // }
     // }
     /**
@@ -137,5 +137,4 @@ public abstract class URLSetupControl extends Composite {
     public MultipleSelectionCombo getDataFilterCombo() {
         return dataFilterCombo;
     }
-
 }

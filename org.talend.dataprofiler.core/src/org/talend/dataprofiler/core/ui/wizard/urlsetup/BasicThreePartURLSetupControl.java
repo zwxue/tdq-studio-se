@@ -246,7 +246,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                     String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", fileText.getText(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
                     if (log.isInfoEnabled()) {
-                        log.info("the formated url is :" + url);
+                        log.info("the formated url is :" + url); //$NON-NLS-1$
                     }
 
                     setConnectionURL(url);
@@ -293,7 +293,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             databaseNameText.setEnabled(compositeEnable);
 
             label = new Label(parent, SWT.NONE);
-            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.datafilter"));
+            label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.datafilter")); //$NON-NLS-1$
             dataFilterCombo = new MultipleSelectionCombo(parent, SWT.READ_ONLY);
             dataFilterCombo.setEnabled(false);
             dataFilterCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -310,7 +310,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
             label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.universe")); //$NON-NLS-1$
             final Text universeText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             universeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            universeText.setText("");
+            universeText.setText(""); //$NON-NLS-1$
 
             label = new Label(parent, SWT.NONE);
             label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.url")); //$NON-NLS-1$
@@ -340,7 +340,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
                 public void modifyText(ModifyEvent event) {
                     setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(),
-                            portText.getText(), databaseNameText.getText(), universeText.getText(), ""));
+                            portText.getText(), databaseNameText.getText(), universeText.getText(), "")); //$NON-NLS-1$
                     urlText.setText(getConnectionURL());
                     connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE, universeText.getText());
                 }
@@ -351,7 +351,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
                 public void modifyText(ModifyEvent event) {
                     String host = hostNameText.getText();
                     setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), host, portText.getText(),
-                            databaseNameText.getText(), universeText.getText(), ""));
+                            databaseNameText.getText(), universeText.getText(), "")); //$NON-NLS-1$
                     urlText.setText(getConnectionURL());
                     connectionParam.setHost(host);
                 }
@@ -363,7 +363,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
 
                     String port = portText.getText();
                     setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(), port,
-                            databaseNameText.getText(), universeText.getText(), ""));
+                            databaseNameText.getText(), universeText.getText(), "")); //$NON-NLS-1$
                     urlText.setText(getConnectionURL());
                     connectionParam.setPort(port);
                 }
@@ -589,7 +589,7 @@ public class BasicThreePartURLSetupControl extends URLSetupControl {
     }
 
     /**
-     * ADD yyi 2010-12-14 check is Ingres DB
+     * ADD yyi 2010-12-14 check is Ingres DB.
      * 
      * @param dbName
      * @return true if the db name is 'Ingres'

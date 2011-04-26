@@ -43,7 +43,6 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
      */
     public ExpectedValueForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style, parameters);
-
         setupForm();
     }
 
@@ -106,7 +105,6 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
      */
     @Override
     public FormEnum getFormEnum() {
-
         return FormEnum.ExpectedValueForm;
     }
 
@@ -117,8 +115,6 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
      */
     @Override
     protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -128,8 +124,6 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -139,7 +133,6 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        // TODO Auto-generated method stub
         return false;
     }
 }

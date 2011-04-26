@@ -149,7 +149,5 @@ public class TableViewFilterWizard extends AbstractWizard {
 
     @Override
     public void openEditor(Item item) {
-        // TODO Auto-generated method stub
-
     }
 }

@@ -73,7 +73,6 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
                     setMessage(source.getStatus(), source.getStatusLevel());
                 }
             }
-
         };
     }
 
@@ -126,7 +125,6 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
     }
 
     public AbstractIndicatorForm[] createForm(Composite parent, ICheckListener listener, FormEnum[] formTypes) {
-
         IndicatorParameters parameters = indicatorUnit.getIndicator().getParameters();
         if (parameters == null) {
             parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
@@ -166,7 +164,6 @@ public class DynamicIndicatorOptionsPage extends WizardPage {
         if (container instanceof OpeningHelpWizardDialog) {
             return (OpeningHelpWizardDialog) container;
         }
-
         return null;
     }
 }

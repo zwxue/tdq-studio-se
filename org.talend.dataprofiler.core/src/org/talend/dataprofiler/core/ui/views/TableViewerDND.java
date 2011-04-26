@@ -50,8 +50,8 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
  */
 public abstract class TableViewerDND {
 
-    // FIXME remove it.
-    ISelectionReceiver receiver = null;
+    private TableViewerDND() {
+    }
 
     private static int lastValidOperation;
 
@@ -229,7 +229,6 @@ public abstract class TableViewerDND {
                 if (viewer != null && viewer.canDrop(set)) {
                     event.detail = DND.DROP_MOVE;
                 }
-
             }
         }
 

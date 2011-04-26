@@ -58,5 +58,4 @@ public class ImportIndicatorDefinitionWizard extends Wizard {
         page = new ImportIndicatorDefinitionWizardPage();
         addPage(page);
     }
-
 }

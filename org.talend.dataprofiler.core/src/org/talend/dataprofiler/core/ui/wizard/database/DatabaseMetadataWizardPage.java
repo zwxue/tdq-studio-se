@@ -31,9 +31,7 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
      */
     @Override
     public void createControl(Composite parent) {
-
         super.createControl(parent);
-
         pathText.setText(getParameter().getFolderProvider().getFolderURI());
     }
 
@@ -45,8 +43,6 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
      */
     @Override
     protected void createExtendedControl(Composite container) {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -65,7 +61,6 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
              */
             @Override
             public void widgetSelected(SelectionEvent e) {
-
                 openFolderSelectionDialog(getStoredFolder());
             }
         });
@@ -77,5 +72,4 @@ public class DatabaseMetadataWizardPage extends MetadataWizardPage {
     protected IFolder getStoredFolder() {
         return ResourceManager.getConnectionFolder();
     }
-
 }

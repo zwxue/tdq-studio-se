@@ -79,7 +79,8 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public final class UDIUtils {
 
-    public static final String JAREXTENSIONG = "jar";
+    public static final String JAREXTENSIONG = "jar"; //$NON-NLS-1$
+
     private UDIUtils() {
     }
 
@@ -126,7 +127,7 @@ public final class UDIUtils {
         }
         Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
         if (indicatorValidDomain == null) {
-            indicatorValidDomain = DomainHelper.createDomain("JAVA_UDI_PARAMETERS");
+            indicatorValidDomain = DomainHelper.createDomain("JAVA_UDI_PARAMETERS"); //$NON-NLS-1$
             parameters.setIndicatorValidDomain(indicatorValidDomain);
         }
         List<IndicatorDefinitionParameter> indicatorDefs = udid.getIndicatorDefinitionParameter();
@@ -224,44 +225,45 @@ public final class UDIUtils {
         return dialog;
     }
 
-/**
- * 
- * zshen Comment method "createUdiJarCheckedTreeSelectionDialog".
- * @param udiJarProject
- * @return
- */
+    /**
+     * 
+     * zshen Comment method "createUdiJarCheckedTreeSelectionDialog".
+     * 
+     * @param udiJarProject
+     * @return
+     */
     public static JavaUdiJarSelectDialog createUdiJarCheckedTreeSelectionDialog(IFolder udiJarProject, String[] selectionPath) {
 
         JavaUdiJarSelectDialog dialog = new JavaUdiJarSelectDialog(null, new UdiLabelProvider(), new UdiJarContentProvider());
         // dialog.addFilter(new RecycleBinFilter());
         // dialog.addFilter(new FolderObjFilter());
-    dialog.setInput(udiJarProject);
+        dialog.setInput(udiJarProject);
         dialog.setCheckedElements(selectionPath);
-    dialog.setValidator(new ISelectionStatusValidator() {
-        
-        public IStatus validate(Object[] selection) {
-            IStatus status = Status.OK_STATUS;
-            for (Object udi : selection) {
-                if (udi instanceof IFile) {
-                    IFile file = (IFile) udi;
-                    if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
-                        IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
-                        boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
-                        if (!validStatus) {
-                            status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
-                                    .getString("AnalysisColumnTreeViewer.chooseValidUdis")); //$NON-NLS-1$
+        dialog.setValidator(new ISelectionStatusValidator() {
+
+            public IStatus validate(Object[] selection) {
+                IStatus status = Status.OK_STATUS;
+                for (Object udi : selection) {
+                    if (udi instanceof IFile) {
+                        IFile file = (IFile) udi;
+                        if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
+                            IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
+                            boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
+                            if (!validStatus) {
+                                status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
+                                        .getString("AnalysisColumnTreeViewer.chooseValidUdis")); //$NON-NLS-1$
+                            }
                         }
                     }
                 }
+                return status;
             }
-            return status;
-        }
-        
-    });
+
+        });
         // dialog.addFilter(new DQFolderFliter(true));
         dialog.addFilter(new ViewerFilter() {
-        
- @Override
+
+            @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof File) {
                     File file = (File) element;
@@ -272,12 +274,12 @@ public final class UDIUtils {
                 return false;
             }
         });
-    dialog.setContainerMode(true);
-    dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udiSelector")); //$NON-NLS-1$
-    dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udis")); //$NON-NLS-1$
-    dialog.setSize(80, 30);
-    return dialog;
-}
+        dialog.setContainerMode(true);
+        dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udiSelector")); //$NON-NLS-1$
+        dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udis")); //$NON-NLS-1$
+        dialog.setSize(80, 30);
+        return dialog;
+    }
 
     /**
      * 
@@ -310,7 +312,7 @@ public final class UDIUtils {
     public static List<IFile> getContainJarFile(String jarPathStr) {
         List<IFile> fileList = new ArrayList<IFile>();
 
-        for (String containJarName : jarPathStr.split("\\|\\|")) {
+        for (String containJarName : jarPathStr.split("\\|\\|")) { //$NON-NLS-1$
             for (IFile libJarFile : getLibJarFileList()) {
                 if (libJarFile.getName().equalsIgnoreCase(containJarName)) {
                     fileList.add(libJarFile);
@@ -345,17 +347,18 @@ public final class UDIUtils {
             if (tv == null) {
                 continue;
             }
-            String[] strArray = tv.getValue().split("\\|\\|");
+            String[] strArray = tv.getValue().split("\\|\\|"); //$NON-NLS-1$
             int index = Arrays.binarySearch(strArray, filePath.lastSegment());
             if (index >= 0) {
-                result.setMessage("The jar file(" + strArray[index] + ") has in use by UDI for " + indiDef.getName());//$NON-NLS-1$
+                result.setMessage("The jar file(" + strArray[index] + ") has in use by UDI for " + indiDef.getName());//$NON-NLS-1$ //$NON-NLS-2$
                 result.setOk(false);
                 return result;
-    }
-}
+            }
+        }
         return result;
     }
 }
+
 /**
  * DOC xqliu class global comment. Detailled comment
  */
@@ -385,8 +388,8 @@ class UdiLabelProvider extends LabelProvider {
             return ImageLib.getImage(ImageLib.JAR_FILE);
         }
 
-            return null;
-        }
+        return null;
+    }
 
     @Override
     public String getText(Object element) {
@@ -407,13 +410,10 @@ class UdiLabelProvider extends LabelProvider {
             return file.getName();
         }
 
-            return ""; //$NON-NLS-1$
-        }
+        return ""; //$NON-NLS-1$
+    }
 
-
-   
 }
-
 
 /**
  * 
@@ -428,7 +428,6 @@ class UdiJarContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     public void dispose() {
-        // TODO Auto-generated method stub
 
     }
 
@@ -439,7 +438,6 @@ class UdiJarContentProvider implements ITreeContentProvider {
      * java.lang.Object)
      */
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -471,7 +469,6 @@ class UdiJarContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
     public Object getParent(Object element) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -481,9 +478,6 @@ class UdiJarContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
     public boolean hasChildren(Object element) {
-        // TODO Auto-generated method stub
         return false;
     }
-
 }
-

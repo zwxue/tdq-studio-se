@@ -57,7 +57,6 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
         addListener(new IDoubleClickListener() {
 
             public void doubleClick(DoubleClickEvent event) {
-                // TODO Auto-generated method stub
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 if (object instanceof Catalog) {
                     advanceToNextPageOrFinish();
@@ -80,13 +79,9 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
                         setPageComplete(false);
                     }
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     log.error(e, e);
                 }
             }
-
         });
-
     }
-
 }

@@ -81,8 +81,6 @@ import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * The View use to test the text whether match the specification regular text.
- * 
- * 
  */
 
 public class PatternTestView extends ViewPart {
@@ -163,7 +161,7 @@ public class PatternTestView extends ViewPart {
 
         });
         buttonSql = new Button(coboCom, SWT.RADIO);
-        buttonSql.setText(DefaultMessagesImpl.getString("PatternTestView.Connections"));
+        buttonSql.setText(DefaultMessagesImpl.getString("PatternTestView.Connections")); //$NON-NLS-1$
         buttonSql.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -431,7 +429,7 @@ public class PatternTestView extends ViewPart {
         pattern = editorPattern;
         this.regularExpression = regularExpression;
         String body = regularExpression.getExpression().getBody();
-        this.regularText.setText(body == null ? "" : body);
+        this.regularText.setText(body == null ? "" : body); //$NON-NLS-1$
         this.saveButton.setEnabled(true);
         this.createPatternButton.setEnabled(true);
 

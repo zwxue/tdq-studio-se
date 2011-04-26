@@ -80,5 +80,4 @@ public class AnalysisFilterPage extends AbstractAnalysisWizardPage {
         });
         setControl(container);
     }
-
 }

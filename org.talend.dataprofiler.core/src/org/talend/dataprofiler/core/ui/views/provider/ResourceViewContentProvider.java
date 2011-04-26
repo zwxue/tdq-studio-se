@@ -125,7 +125,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     }
                 }
 
-                RecycleBinRepNode recycleBin = new RecycleBinRepNode(DefaultMessagesImpl.getString("RecycleBin.resBinName"));
+                RecycleBinRepNode recycleBin = new RecycleBinRepNode(DefaultMessagesImpl.getString("RecycleBin.resBinName")); //$NON-NLS-1$
                 folders.add(recycleBin);
                 return folders.toArray();
             } else if (element instanceof RepositoryNode) {
@@ -252,5 +252,4 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         // }
         return super.hasChildren(element);
     }
-
 }

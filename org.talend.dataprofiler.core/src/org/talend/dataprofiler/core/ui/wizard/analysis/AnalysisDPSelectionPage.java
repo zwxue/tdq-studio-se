@@ -92,7 +92,6 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         setControl(container);
         addFilters(new EMFObjFilter(), new DQFolderFliter(true), new TDQEEConnectionFolderFilter(), new RecycleBinFilter());
         addListeners();
-
     }
 
     private void createMetaDataTree(Composite parent) {
@@ -121,5 +120,4 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
     protected void addListener(ISelectionChangedListener selectionChangedListener) {
         fViewer.addSelectionChangedListener(selectionChangedListener);
     }
-
 }

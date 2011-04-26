@@ -93,7 +93,6 @@ public class NewDQRulesWizard extends AbstractWizard {
 
     public ModelElement initCWMResourceBuilder() {
         DqRuleBuilder ruleBuilder = new DqRuleBuilder();
-
         boolean ruleInitialized = ruleBuilder.initializeDqRuleBuilder(parameter.getName());
         if (ruleInitialized) {
             return ruleBuilder.getWhereRule();

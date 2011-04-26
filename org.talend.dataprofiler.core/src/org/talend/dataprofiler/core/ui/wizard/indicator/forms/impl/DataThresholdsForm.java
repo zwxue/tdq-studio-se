@@ -55,7 +55,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFields() {
-
         group = new Group(this, SWT.NONE);
         group.setLayout(new GridLayout(2, false));
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -81,7 +80,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFieldsListeners() {
-
         lowerText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -124,7 +122,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected void initialize() {
-
         String[] dataThreshold = IndicatorHelper.getDataThreshold(parameters);
         if (dataThreshold != null) {
             lowerText.setText(dataThreshold[0]);
@@ -140,7 +137,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     public boolean performFinish() {
-
         String min = lowerText.getText();
         String max = higherText.getText();
 
@@ -162,8 +158,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -173,8 +167,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -184,8 +176,6 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-
         return false;
     }
-
 }

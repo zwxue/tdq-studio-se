@@ -102,5 +102,4 @@ public class FreqTextParametersForm extends TextParametersForm {
         updateStatus(IStatus.OK, MSG_OK);
         return true;
     }
-
 }

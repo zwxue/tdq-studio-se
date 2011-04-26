@@ -55,7 +55,7 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
     @Override
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         Analysis analysis = (Analysis) cwmElement;
-        // DOC klliu feature 15750 connection property define
+        // MOD klliu feature 15750 connection property define
         // MOD qiongli 2011-2-24,bug 17588,add dependency.
         DataManager connection = analysis.getContext().getConnection();
         DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
@@ -103,5 +103,4 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
     protected AnalysisFilterParameter getParameter() {
         return (AnalysisFilterParameter) super.getParameter();
     }
-
 }

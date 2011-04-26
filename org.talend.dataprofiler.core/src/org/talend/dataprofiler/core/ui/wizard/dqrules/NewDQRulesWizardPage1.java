@@ -42,7 +42,6 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
     }
 
     public void createControl(Composite parent) {
-
         super.createControl(parent);
         pathText.setText(getParameter().getFolderProvider().getFolderURI());
 
@@ -65,13 +64,10 @@ public class NewDQRulesWizardPage1 extends MetadataWizardPage {
 
     @Override
     protected void createExtendedControl(Composite container) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     protected IFolder getStoredFolder() {
         return ResourceManager.getRulesFolder();
     }
-
 }

@@ -44,7 +44,6 @@ public class ColumnSetWizard extends ColumnWizard {
             mvIndicator.setDuplicateCountIndicator(IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator());
             mvIndicator.setUniqueCountIndicator(IndicatorsFactory.eINSTANCE.createUniqueCountIndicator());
         }
-
         return super.initCWMResourceBuilder();
     }
 }

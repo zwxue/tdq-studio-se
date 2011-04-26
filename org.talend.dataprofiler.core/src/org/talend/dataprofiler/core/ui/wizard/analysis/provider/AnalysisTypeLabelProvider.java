@@ -21,15 +21,10 @@ import org.talend.dq.analysis.category.CategoryHandler;
 
 /**
  * @author huangssssx
- * 
  */
 public class AnalysisTypeLabelProvider implements ILabelProvider {
 
-    /**
-     * 
-     */
     public AnalysisTypeLabelProvider() {
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -38,14 +33,12 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
     public Image getImage(Object element) {
-        // TODO Auto-generated method stub
         AnalysisTypeNode node = (AnalysisTypeNode) element;
         if (node.getParent() != null) {
             return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
         } else {
             return ImageLib.getImage(ImageLib.PROJECT_ACTIVE);
         }
-
     }
 
     /*
@@ -63,8 +56,6 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void addListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -73,8 +64,6 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
     public void dispose() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -83,7 +72,6 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
     public boolean isLabelProperty(Object element, String property) {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -94,8 +82,5 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
      * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void removeListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
-
     }
-
 }

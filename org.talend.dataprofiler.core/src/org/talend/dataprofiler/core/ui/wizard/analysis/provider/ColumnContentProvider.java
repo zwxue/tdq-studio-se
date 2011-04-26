@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -31,7 +30,7 @@ import org.talend.resource.ResourceManager;
  */
 public class ColumnContentProvider extends ResourceViewContentProvider {
 
-    private static Logger log = Logger.getLogger(CatalogContentProvider.class);
+    // private static Logger log = Logger.getLogger(CatalogContentProvider.class);
 
     public ColumnContentProvider() {
     }
@@ -43,11 +42,9 @@ public class ColumnContentProvider extends ResourceViewContentProvider {
      */
     @Override
     public Object[] getChildren(Object parentElement) {
-
         List<RepositoryNode> analyzeNode = new ArrayList<RepositoryNode>();
         if (parentElement instanceof IContainer) {
             if (ResourceManager.isMetadataFolder((IResource) parentElement)) {
-
                 IFolder container = (IFolder) parentElement;
                 IRepositoryViewObject viewObject = new Folder(((IFolder) container).getName(), ((IFolder) container).getName());
                 RepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);

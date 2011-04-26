@@ -31,8 +31,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * The factory to build comparator.
- */
-/**
  * DOC zqin class global comment. Detailled comment
  */
 public final class ComparatorsFactory {

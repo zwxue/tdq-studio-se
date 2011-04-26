@@ -46,7 +46,6 @@ import org.talend.repository.model.RepositoryNode;
 
 /**
  * @author zqin
- * 
  */
 public final class WizardFactory {
 
@@ -193,5 +192,4 @@ public final class WizardFactory {
         }
         return new CreatePatternWizard(parameter, type, expression, language);
     }
-
 }

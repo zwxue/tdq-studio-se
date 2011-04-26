@@ -22,9 +22,7 @@ import org.talend.dataprofiler.help.HelpPlugin;
 
 /**
  * DOC bZhou class global comment. Detailled comment
- * 
  * open a dialog with one specified context help.
- * 
  */
 public class OpeningHelpWizardDialog extends WizardDialog {
 
@@ -92,7 +90,6 @@ public class OpeningHelpWizardDialog extends WizardDialog {
 
             ((HelpTray) getTray()).getHelpPart().showURL(href);
         }
-
     }
 
     /**

@@ -47,7 +47,6 @@ public class ImportUDIWizardPage extends WizardPage {
 
     protected ImportUDIWizardPage() {
         super(DefaultMessagesImpl.getString("ImportUDIWizardPage.importUDIWizardPage")); //$NON-NLS-1$
-
         setTitle(DefaultMessagesImpl.getString("ImportUDIWizardPage.importUDIFromFile")); //$NON-NLS-1$
         setDescription(DefaultMessagesImpl.getString("ImportUDIWizardPage.chooseFileToImportUDI")); //$NON-NLS-1$
     }
@@ -109,7 +108,7 @@ public class ImportUDIWizardPage extends WizardPage {
         renameBtn.setText(DefaultMessagesImpl.getString("ImportUDIWizardPage.renameNewIndicator")); //$NON-NLS-1$
 
         Label label2 = new Label(container, SWT.NONE);
-        label2.setText("Preview:");
+        label2.setText("Preview:"); //$NON-NLS-1$
 
         csvViewer = new CsvFileTableViewer(container, SWT.NONE);
         csvViewer.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -136,27 +135,25 @@ public class ImportUDIWizardPage extends WizardPage {
     private void updatePreview() {
         File file = new File(fileText.getText());
         if (!file.exists()) {
-            setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.FileNotExist"), IMessageProvider.ERROR);
+            setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.FileNotExist"), IMessageProvider.ERROR); //$NON-NLS-1$
             setPageComplete(false);
             return;
         }
         if (csvViewer.setCsvFile(file)) {
             if (csvViewer.isHeadersInvalid()) {
-                setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.FileHeaderInvalid"), IMessageProvider.ERROR);
+                setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.FileHeaderInvalid"), IMessageProvider.ERROR); //$NON-NLS-1$
                 setPageComplete(false);
                 return;
             }
             if (csvViewer.isQuotesError()) {
-                setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.QuoteError"), IMessageProvider.WARNING);
+                setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.QuoteError"), IMessageProvider.WARNING); //$NON-NLS-1$
             } else {
                 setMessage(null);
             }
             setPageComplete(true);
         } else {
-            setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.ReadError"), IMessageProvider.ERROR);
+            setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.ReadError"), IMessageProvider.ERROR); //$NON-NLS-1$
             setPageComplete(false);
         }
-
     }
-
 }

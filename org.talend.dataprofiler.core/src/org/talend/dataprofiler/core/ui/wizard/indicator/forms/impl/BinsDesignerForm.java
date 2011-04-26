@@ -361,7 +361,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
     @SuppressWarnings("unchecked")
     @Override
     public boolean performFinish() {
-
         if (minValue.getText().equals("") || maxValue.getText().equals("") || numbOfBins.getText().equals("0") || numbOfBins.getText().equals("")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             parameters.setBins(null);
 
@@ -419,7 +418,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     @Override
     protected void updateStatus(int status, String statusLabelText) {
-        // TODO Auto-generated method stub
         super.updateStatus(status, statusLabelText);
         if (status == IStatus.ERROR) {
             isSetRange.setEnabled(false);
@@ -440,7 +438,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
         }
 
         public String getColumnText(Object element, int columnIndex) {
-
             RangeRestriction range = (RangeRestriction) element;
             switch (columnIndex) {
             case 0:
@@ -453,7 +450,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
                 return ""; //$NON-NLS-1$
             }
         }
-
     }
 
     /**
@@ -477,7 +473,6 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         }
-
     }
 
     /**

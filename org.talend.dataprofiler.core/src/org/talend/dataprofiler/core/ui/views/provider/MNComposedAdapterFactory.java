@@ -23,7 +23,6 @@ import org.talend.dataquality.analysis.provider.AnalysisItemProviderAdapterFacto
 
 /**
  * @author rli
- * 
  */
 public final class MNComposedAdapterFactory {
 

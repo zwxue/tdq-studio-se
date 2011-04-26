@@ -63,7 +63,6 @@ public abstract class AbstractWizardPage extends WizardPage {
                     setMessage(sourcePage.getStatus(), sourcePage.getStatusLevel());
                 }
             }
-
         };
     }
 
@@ -73,7 +72,6 @@ public abstract class AbstractWizardPage extends WizardPage {
      * @return
      */
     public boolean checkFieldsValue() {
-
         return true;
     }
 
@@ -91,7 +89,6 @@ public abstract class AbstractWizardPage extends WizardPage {
      * @param String
      */
     protected void updateStatus(final int status, final String statusLabelText) {
-
         this.status = statusLabelText;
         this.statusLevel = status;
         if (listener != null) {

@@ -16,7 +16,6 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * @author zqin
- * 
  */
 public class ConnAnalysisFilterPage extends AnalysisFilterPage {
 

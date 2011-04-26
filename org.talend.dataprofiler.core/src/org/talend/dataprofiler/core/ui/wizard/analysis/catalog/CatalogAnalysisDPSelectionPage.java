@@ -55,7 +55,6 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
      */
     public CatalogAnalysisDPSelectionPage() {
         super(newAnaStr, chooseConnStr, connsStr, new CatalogContentProvider()); //$NON-NLS-1$
-
         setPageComplete(false);
     }
 
@@ -65,7 +64,6 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
         addListener(new IDoubleClickListener() {
 
             public void doubleClick(DoubleClickEvent event) {
-                // TODO Auto-generated method stub
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 if (object instanceof Catalog) {
                     advanceToNextPageOrFinish();
@@ -84,8 +82,7 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                         DBCatalogRepNode catalogNode = (DBCatalogRepNode) object;
                         Catalog catalog = ((MetadataCatalogRepositoryObject) catalogNode.getObject()).getCatalog();
                         Connection tdProvider = ConnectionHelper
-                                .getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH
-                                .doSwitch(catalog));
+                                .getTdDataProvider(SwitchHelpers.PACKAGE_SWITCH.doSwitch(catalog));
                         nodes.add(catalogNode);
                         if (tdProvider != null && catalogPanameter != null) {
                             catalogPanameter.setTdDataProvider(tdProvider);
@@ -97,13 +94,10 @@ public class CatalogAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                         setPageComplete(false);
                     }
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     log.error(e, e);
                 }
             }
 
         });
-
     }
-
 }

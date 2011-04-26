@@ -52,7 +52,6 @@ public class ResourceDragAdapterAssistant extends CommonDragAdapterAssistant {
      * org.eclipse.jface.viewers.IStructuredSelection)
      */
     public boolean setDragData(DragSourceEvent anEvent, IStructuredSelection aSelection) {
-
         if (LocalSelectionTransfer.getTransfer().isSupportedType(anEvent.dataType)) {
             anEvent.data = aSelection;
             return true;
@@ -61,7 +60,6 @@ public class ResourceDragAdapterAssistant extends CommonDragAdapterAssistant {
             return true;
         } 
         return false;
-
     }
 
     @SuppressWarnings("unchecked")
@@ -89,5 +87,4 @@ public class ResourceDragAdapterAssistant extends CommonDragAdapterAssistant {
         }
         return resource;
     }
-
 }

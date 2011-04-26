@@ -104,7 +104,6 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }
-
         return super.checkFieldsValue();
     }
 
@@ -112,5 +111,4 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
     protected IFolder getStoredFolder() {
         return ResourceManager.getAnalysisFolder();
     }
-
 }

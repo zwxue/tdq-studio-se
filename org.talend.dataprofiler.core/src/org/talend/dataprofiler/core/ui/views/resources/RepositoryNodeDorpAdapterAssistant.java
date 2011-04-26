@@ -89,7 +89,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
- * 
  * DOC mzhao Handle drop event of repositoryNode on DQ repository viewer.
  */
 public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssistant {
@@ -110,7 +109,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
         IRepositoryNode targetNode = (IRepositoryNode) target;
         for (IRepositoryNode res : getSelectedRepositoryNodes()) {
-
             switch (targetNode.getType()) {
             case SYSTEM_FOLDER:
             case SIMPLE_FOLDER:
@@ -944,7 +942,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                     //
                     // }
                     factory.save(item, null);
-
                 }
             }
         }

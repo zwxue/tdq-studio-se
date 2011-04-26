@@ -36,7 +36,6 @@ import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
@@ -49,7 +48,6 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
     public SchemaAnalysisDPSelectionPage() {
         super(newAnaStr, chooseConnStr, connsStr, new SchemaContentProvider());
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -57,7 +55,6 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
         addListener(new IDoubleClickListener() {
 
             public void doubleClick(DoubleClickEvent event) {
-                // TODO Auto-generated method stub
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 if (object instanceof Schema) {
                     advanceToNextPageOrFinish();
@@ -93,8 +90,6 @@ public class SchemaAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                     setPageComplete(false);
                 }
             }
-
         });
-
     }
 }

@@ -38,7 +38,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
- * 
  * DOC mzhao 2009-04-20,UI pagination.
  */
 public class UIPagination {
@@ -76,7 +75,6 @@ public class UIPagination {
         this.composite = composite;
         currentPage = 0;
         totalPages = 0;
-
     }
 
     public void init() {

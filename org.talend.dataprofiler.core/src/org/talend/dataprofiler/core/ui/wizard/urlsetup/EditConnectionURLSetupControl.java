@@ -75,7 +75,6 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
      */
     public EditConnectionURLSetupControl(Composite parent, SupportDBUrlType dbType) {
         super(parent, dbType);
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -234,10 +233,10 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             fileText.setEditable(true);
             // set sqllite3 file path
             String jdbcUrl = connectionParam.getJdbcUrl();
-            String dBUrl = SupportDBUrlStore.getInstance().getDBUrl(SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey(), "", "", "",
-                    "", "");
+            String dBUrl = SupportDBUrlStore.getInstance().getDBUrl(SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey(), "", "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    "", ""); //$NON-NLS-1$ //$NON-NLS-2$
             int index = jdbcUrl.indexOf(dBUrl);
-            String filePath = index > -1 ? jdbcUrl.substring(dBUrl.length() + index) : "";
+            String filePath = index > -1 ? jdbcUrl.substring(dBUrl.length() + index) : ""; //$NON-NLS-2$
 
             fileText.setText(filePath);
             fileText.addModifyListener(new ModifyListener() {
@@ -286,7 +285,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
                         String url = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(),
                                 "", "", fileText.getText(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                         if (log.isInfoEnabled()) {
-                            log.info("the formated url is :" + url);
+                            log.info("the formated url is :" + url); //$NON-NLS-1$
                         }
                         setConnectionURL(url);
                         urlText3.setText(getConnectionURL());
@@ -294,7 +293,6 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
                     // ~ 14593
                 }
             });
-
         } else if (dbLiteral.trim().equals(SupportDBUrlType.MDM.getLanguage())) {
             GridLayout layout = new GridLayout();
             layout.numColumns = 2;
@@ -334,7 +332,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             label.setText(DefaultMessagesImpl.getString("BasicThreePartURLSetupControl.universe")); //$NON-NLS-1$
             final Text universeText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             universeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-            universeText.setText(connectionParam.getParameters().getProperty(TaggedValueHelper.UNIVERSE) == null ? ""
+            universeText.setText(connectionParam.getParameters().getProperty(TaggedValueHelper.UNIVERSE) == null ? "" //$NON-NLS-1$
                     : connectionParam.getParameters().getProperty(TaggedValueHelper.UNIVERSE));
 
             label = new Label(parent, SWT.NONE);
@@ -356,7 +354,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
 
                 public void modifyText(ModifyEvent event) {
                     setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(),
-                            portText.getText(), databaseNameText.getText(), universeText.getText(), ""));
+                            portText.getText(), databaseNameText.getText(), universeText.getText(), "")); //$NON-NLS-1$
                     urlText.setText(getConnectionURL());
                     connectionParam.getParameters().setProperty(TaggedValueHelper.UNIVERSE, universeText.getText());
                 }
@@ -367,7 +365,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
                 public void modifyText(ModifyEvent event) {
                     String host = hostNameText.getText();
                     setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), host, portText.getText(),
-                            databaseNameText.getText(), universeText.getText(), ""));
+                            databaseNameText.getText(), universeText.getText(), "")); //$NON-NLS-1$
                     urlText.setText(getConnectionURL());
                     connectionParam.setHost(host);
                 }
@@ -379,7 +377,7 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
 
                     String port = portText.getText();
                     setConnectionURL(SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), hostNameText.getText(), port,
-                            databaseNameText.getText(), universeText.getText(), ""));
+                            databaseNameText.getText(), universeText.getText(), "")); //$NON-NLS-1$
                     urlText.setText(getConnectionURL());
                     connectionParam.setPort(port);
                 }
@@ -398,7 +396,6 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
                     }
                 }
             });
-
         } else {
             GridLayout layout = new GridLayout();
             layout.numColumns = 2;
@@ -463,8 +460,8 @@ public class EditConnectionURLSetupControl extends URLSetupControl {
             final Text dataSourceText = new Text(parent, SWT.BORDER | SWT.SINGLE);
             dataSourceText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             if (compositeEnable) {
-                if (dbLiteral.trim().equals("ODBC")) {
-                    String dbUrl = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", "", "", "");
+                if (dbLiteral.trim().equals("ODBC")) { //$NON-NLS-1$
+                    String dbUrl = SupportDBUrlStore.getInstance().getDBUrl(dbType.getDBKey(), "", "", "", "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                     String jdbcUrl = connectionParam.getJdbcUrl();
                     int index = jdbcUrl.indexOf(dbUrl);
                     if (index > -1) {

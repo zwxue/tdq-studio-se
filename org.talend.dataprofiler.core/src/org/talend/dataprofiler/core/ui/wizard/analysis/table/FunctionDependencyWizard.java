@@ -24,15 +24,16 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * DOC jet  this is wizard for create new Function Dependency Analysis.<p>
+ * DOC jet this is wizard for create new Function Dependency Analysis.
+ * <p>
  * 
  */
 public class FunctionDependencyWizard extends AbstractAnalysisWizard implements INewWizard {
 
     /**
      * DOC jet FunctionDependencyWizard constructor comment.
+     * 
      * @param parameter
      */
     public FunctionDependencyWizard(AnalysisParameter parameter) {
@@ -51,17 +52,18 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
 
         return analysis;
     }
- 
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+     * org.eclipse.jface.viewers.IStructuredSelection)
      */
     public void init(IWorkbench workbench, IStructuredSelection selection) {
         // initalSelection = selection;
         setHelpAvailable(true);
-        setWindowTitle("Just a test");
+        setWindowTitle("Just a test"); //$NON-NLS-1$
     }
-  
 
     @Override
     public void addPages() {
@@ -79,7 +81,4 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
         AnalysisItemEditorInput itemEditorInput = new AnalysisItemEditorInput(item);
         CorePlugin.getDefault().openEditor(itemEditorInput, AnalysisEditor.class.getName());
     }
-    
-    
-
 }

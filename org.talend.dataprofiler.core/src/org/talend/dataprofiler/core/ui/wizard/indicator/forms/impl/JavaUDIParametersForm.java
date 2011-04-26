@@ -60,9 +60,9 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     private List<JavaUDIIndicatorParameter> content = new ArrayList<JavaUDIIndicatorParameter>();
 
-    private static final String NAME_PROPERTY = "Parameter Key";
+    private static final String NAME_PROPERTY = "Parameter Key"; //$NON-NLS-1$
 
-    private static final String VALUE_PROPERTY = "Parameter Value";
+    private static final String VALUE_PROPERTY = "Parameter Value"; //$NON-NLS-1$
 
     private TableViewer viewer;
 
@@ -77,7 +77,6 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
      */
     public JavaUDIParametersForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style, parameters);
-        // TODO Auto-generated constructor stub
         setupForm();
     }
 
@@ -88,7 +87,6 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
      */
     @Override
     public FormEnum getFormEnum() {
-        // TODO Auto-generated method stub
         return FormEnum.JavaUDIParametersForm;
     }
 
@@ -99,12 +97,11 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
      */
     @Override
     public boolean performFinish() {
-        // TODO Auto-generated method stub
         boolean isNull = content.isEmpty();
         if (!isNull) {
             Domain indicatorValidDomain = parameters.getIndicatorValidDomain();
             if (indicatorValidDomain == null) {
-                indicatorValidDomain = DomainHelper.createDomain("JAVA_UDI_PARAMETERS");
+                indicatorValidDomain = DomainHelper.createDomain("JAVA_UDI_PARAMETERS"); //$NON-NLS-1$
                 parameters.setIndicatorValidDomain(indicatorValidDomain);
             }
             parameters.getIndicatorValidDomain().getJavaUDIIndicatorParameter().clear();
@@ -120,8 +117,6 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -131,14 +126,12 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFields() {
-        // TODO Auto-generated method stub
         // this.setLayout(new FillLayout());
         Group group = new Group(this, SWT.NONE);
         group.setLayout(new GridLayout(1, false));
         group.setLayoutData(new GridData(GridData.FILL_BOTH));
         group.setText(DefaultMessagesImpl.getString("JavaUDIParametersForm.replace")); //$NON-NLS-1$
         buildControls(group);
-
     }
 
     /**
@@ -147,8 +140,6 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
      * @param group
      */
     private void buildControls(Group group) {
-        // TODO Auto-generated method stub
-
         table = new Table(group, SWT.FULL_SELECTION);
         GridData data = new GridData(GridData.FILL_BOTH);
         table.setLayoutData(data);
@@ -168,7 +159,6 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
         table.addListener(SWT.Modify, new Listener() {
 
             public void handleEvent(Event event) {
-                // TODO Auto-generated method stub
                 checkFieldsValue();
             }
         });
@@ -178,7 +168,6 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     }
 
     private void createDefinitionParametersButton(Composite comp, final TableViewer parView) {
-        // TODO Auto-generated method stub
         Composite composite = new Composite(comp, SWT.NONE);
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
@@ -195,8 +184,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
         addButton.addListener(SWT.MouseDown, new Listener() {
 
             public void handleEvent(Event event) {
-                // TODO Auto-generated method stub
-                JavaUDIIndicatorParameter newItem = DomainHelper.createJavaUDIIndicatorParameter("key", "value");
+                JavaUDIIndicatorParameter newItem = DomainHelper.createJavaUDIIndicatorParameter("key", "value"); //$NON-NLS-1$ //$NON-NLS-2$
                 content.add(newItem);
                 viewer.refresh();
                 checkFieldsValue();
@@ -230,7 +218,6 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFieldsListeners() {
-        // TODO Auto-generated method stub
     }
 
     /*
@@ -240,8 +227,6 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -282,11 +267,11 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     private class NewRowAction extends Action {
 
         public NewRowAction() {
-            super("Insert New Row");
+            super("Insert New Row"); //$NON-NLS-1$
         }
 
         public void run() {
-            JavaUDIIndicatorParameter newItem = DomainHelper.createJavaUDIIndicatorParameter("key", "value");
+            JavaUDIIndicatorParameter newItem = DomainHelper.createJavaUDIIndicatorParameter("key", "value"); //$NON-NLS-1$ //$NON-NLS-2$
             content.add(newItem);
             viewer.refresh();
             checkFieldsValue();
@@ -299,7 +284,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     private class DelRowAction extends Action {
 
         public DelRowAction() {
-            super("Delete Row");
+            super("Delete Row"); //$NON-NLS-1$
         }
 
         public void run() {
@@ -333,7 +318,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
                 case 1:
                     return ((JavaUDIIndicatorParameter) element).getValue();
                 default:
-                    return "Invalid column: " + columnIndex;
+                    return "Invalid column: " + columnIndex; //$NON-NLS-1$
                 }
             }
 
@@ -389,9 +374,9 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
         table.setLayout(layout);
 
         TableColumn nameColumn = new TableColumn(table, SWT.CENTER);
-        nameColumn.setText("Parameter Key");
+        nameColumn.setText("Parameter Key"); //$NON-NLS-1$
         TableColumn valColumn = new TableColumn(table, SWT.CENTER);
-        valColumn.setText("Parameter Value");
+        valColumn.setText("Parameter Value"); //$NON-NLS-1$
         table.setHeaderVisible(true);
         return tableViewer;
     }
@@ -435,5 +420,4 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
         viewer.setColumnProperties(new String[] { NAME_PROPERTY, VALUE_PROPERTY });
     }
-
 }

@@ -76,31 +76,31 @@ public class DatabaseConnectionWizard extends AbstractWizard {
      * Adding the page to the wizard and set Title, Description and PageComplete.
      */
     public void addPages() {
-        String winTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.mdmConnection")
-                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.databaseConnection");
+        String winTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.mdmConnection") //$NON-NLS-1$
+                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.databaseConnection"); //$NON-NLS-1$
 
-        setWindowTitle(winTitle); //$NON-NLS-1$
+        setWindowTitle(winTitle);
         setDefaultPageImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
 
         propertiesWizardPage = new DatabaseMetadataWizardPage();
         databaseWizardPage = new DatabaseWizardPage(this);
         databaseWizardPage.setMdmFlag(isMdmFlag());
 
-        String propTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnection")
-                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnection");
-        String propDesc = DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineProperties");
+        String propTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnection") //$NON-NLS-1$
+                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnection"); //$NON-NLS-1$
+        String propDesc = DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineProperties"); //$NON-NLS-1$
 
-        propertiesWizardPage.setTitle(propTitle); //$NON-NLS-1$
-        propertiesWizardPage.setDescription(propDesc); //$NON-NLS-1$
+        propertiesWizardPage.setTitle(propTitle);
+        propertiesWizardPage.setDescription(propDesc);
         propertiesWizardPage.setPageComplete(false);
 
-        String dataTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnections")
-                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnections");
-        String dataDesc = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineMdm") : DefaultMessagesImpl
-                .getString("DatabaseConnectionWizard.defineDatabase");
+        String dataTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.newMdmConnections") //$NON-NLS-1$
+                : DefaultMessagesImpl.getString("DatabaseConnectionWizard.newDatabaseConnections"); //$NON-NLS-1$
+        String dataDesc = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.defineMdm") : DefaultMessagesImpl //$NON-NLS-1$
+                .getString("DatabaseConnectionWizard.defineDatabase"); //$NON-NLS-1$
 
-        databaseWizardPage.setTitle(dataTitle); //$NON-NLS-1$
-        databaseWizardPage.setDescription(dataDesc); //$NON-NLS-1$
+        databaseWizardPage.setTitle(dataTitle);
+        databaseWizardPage.setDescription(dataDesc);
 
         try {
             addPage(propertiesWizardPage);
@@ -310,7 +310,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         if (getParameter() != null) {
             String dbName = getParameter().getDbName();
             boolean retrieveAll = getParameter().isRetrieveAllMetadata();
-            if (!retrieveAll && (dbName == null || "".equals(dbName.trim()))) {
+            if (!retrieveAll && (dbName == null || "".equals(dbName.trim()))) { //$NON-NLS-1$
                 ReturnCode rc = new ReturnCode();
                 rc.setMessage(DefaultMessagesImpl.getString("DatabaseConnectionWizard.dbnameEmpty")); //$NON-NLS-1$
                 rc.setOk(false);

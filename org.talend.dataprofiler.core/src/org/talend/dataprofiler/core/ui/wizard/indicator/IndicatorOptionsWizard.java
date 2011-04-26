@@ -33,7 +33,6 @@ public class IndicatorOptionsWizard extends Wizard {
      */
     public IndicatorOptionsWizard(IndicatorUnit indicatorUnit) {
         setWindowTitle(DefaultMessagesImpl.getString("IndicatorOptionsWizard.indicator")); //$NON-NLS-1$
-
         this.indicatorUnit = indicatorUnit;
     }
 
@@ -65,9 +64,7 @@ public class IndicatorOptionsWizard extends Wizard {
      */
     @Override
     public void addPages() {
-
         indicatorPage = new DynamicIndicatorOptionsPage(indicatorUnit);
-
         addPage(indicatorPage);
     }
 
@@ -79,5 +76,4 @@ public class IndicatorOptionsWizard extends Wizard {
     public boolean isDirty() {
         return this.isDirty;
     }
-
 }

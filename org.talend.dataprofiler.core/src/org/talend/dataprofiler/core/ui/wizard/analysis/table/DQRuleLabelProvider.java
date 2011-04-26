@@ -45,8 +45,8 @@ public class DQRuleLabelProvider extends LabelProvider {
             if (findWhereRule != null) {
                 boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
                 if (!validStatus) {
-                    ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-                            ISharedImages.IMG_OBJS_WARN_TSK);
+                    ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages()
+                            .getImageDescriptor(ISharedImages.IMG_OBJS_WARN_TSK);
                     DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
                             IDecoration.BOTTOM_RIGHT);
                     imageDescriptor = icon;

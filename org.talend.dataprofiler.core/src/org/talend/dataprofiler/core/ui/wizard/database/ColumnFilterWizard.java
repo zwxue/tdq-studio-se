@@ -117,7 +117,6 @@ public class ColumnFilterWizard extends AbstractWizard {
             ColumnHelper.setColumnFilter(columnFilter, namedColumnSet);
             return ElementWriterFactory.getInstance().createDataProviderWriter().save(tdDataProvider).isOk();
         }
-
         return true;
     }
 
@@ -142,6 +141,5 @@ public class ColumnFilterWizard extends AbstractWizard {
 
     @Override
     public void openEditor(Item item) {
-
     }
 }

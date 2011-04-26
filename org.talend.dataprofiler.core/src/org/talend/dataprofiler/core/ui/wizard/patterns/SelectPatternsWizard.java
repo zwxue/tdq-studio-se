@@ -44,7 +44,6 @@ public class SelectPatternsWizard extends Wizard {
         for (Indicator theIndicator : indicatorsList) {
             if (theIndicator instanceof AllMatchIndicatorImpl) {
                 allMatchIndicator = (AllMatchIndicatorImpl) theIndicator;
-
             } else if (theIndicator instanceof SimpleStatIndicator) {
                 ssIndicator = (SimpleStatIndicator) theIndicator;
             } else {
@@ -64,19 +63,16 @@ public class SelectPatternsWizard extends Wizard {
 
     @Override
     public boolean canFinish() {
-        // TODO Auto-generated method stub
         return super.canFinish();
     }
 
     @Override
     public void createPageControls(Composite pageContainer) {
-        // TODO Auto-generated method stub
         super.createPageControls(pageContainer);
     }
 
     @Override
     public String getWindowTitle() {
-
         return super.getWindowTitle();
     }
 
@@ -125,5 +121,4 @@ public class SelectPatternsWizard extends Wizard {
     public void setFilterType(DataFilterType filterType) {
         this.filterType = filterType;
     }
-
 }

@@ -47,6 +47,7 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
     private static String connsStr = DefaultMessagesImpl.getString("TableAnalysisPageStep0.tables"); //$NON-NLS-1$
 
     public Connection connection = null;
+
     public TableAnalysisDPSelectionPage() {
         super(newAnaStr, chooseConnStr, connsStr, new TableContentProvider(), true);
     }
@@ -66,7 +67,7 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
         addListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
-               // Connection oldTdDataProvider = null;
+                // Connection oldTdDataProvider = null;
                 NamedColumnSetAnalysisParameter paraneter = (NamedColumnSetAnalysisParameter) getConnectionParams();
                 List tempList = ((IStructuredSelection) event.getSelection()).toList();
                 List<NamedColumnSet> setList = new ArrayList<NamedColumnSet>();
@@ -80,32 +81,31 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                         // ~
                         setList.add(tableNode.getTdTable());
                     }
-//                    if (object instanceof NamedColumnSet) {
-//                        NamedColumnSet set = (NamedColumnSet) object;
-//                        Connection tdProvider = ConnectionHelper.getTdDataProvider(TableHelper
-//                                .getParentCatalogOrSchema(set));
-//                        oldTdDataProvider = oldTdDataProvider == null ? tdProvider : oldTdDataProvider;
-//                        if (oldTdDataProvider != null && !oldTdDataProvider.equals(tdProvider)) {
-//                            MessageUI.openWarning(DefaultMessagesImpl
-//                                    .getString("TableAnalysisDPSelectionPage.TableSelectWarning")); //$NON-NLS-1$
-//                        } else if (tdProvider != null && paraneter != null) {
-//                            setList.add(set);
-//                            paraneter.setTdDataProvider(oldTdDataProvider);
-//                        }
-//                    }
+                    // if (object instanceof NamedColumnSet) {
+                    // NamedColumnSet set = (NamedColumnSet) object;
+                    // Connection tdProvider = ConnectionHelper.getTdDataProvider(TableHelper
+                    // .getParentCatalogOrSchema(set));
+                    // oldTdDataProvider = oldTdDataProvider == null ? tdProvider : oldTdDataProvider;
+                    // if (oldTdDataProvider != null && !oldTdDataProvider.equals(tdProvider)) {
+                    // MessageUI.openWarning(DefaultMessagesImpl
+                    //                                    .getString("TableAnalysisDPSelectionPage.TableSelectWarning")); //$NON-NLS-1$
+                    // } else if (tdProvider != null && paraneter != null) {
+                    // setList.add(set);
+                    // paraneter.setTdDataProvider(oldTdDataProvider);
+                    // }
+                    // }
                 }
                 if (setList.size() > 0 && paraneter != null) {
                     paraneter.setNamedColumnSets(setList.toArray(new NamedColumnSet[setList.size()]));
-                    DBTableRepNode recursiveFind = (DBTableRepNode) RepositoryNodeHelper.recursiveFind(
-                            (TdTable) setList.get(0));
+                    DBTableRepNode recursiveFind = (DBTableRepNode) RepositoryNodeHelper.recursiveFind((TdTable) setList.get(0));
                     RepositoryNode parent = recursiveFind.getParent().getParent();
                     // MOD qiongli 2011-3-16 bug 19475
                     RepositoryNode catalogNode = parent;
-                    if(parent instanceof DBCatalogRepNode){
+                    if (parent instanceof DBCatalogRepNode) {
                         parent = parent.getParent();
                     } else if (parent instanceof DBSchemaRepNode) {
                         parent = parent.getParent();
-                        if(parent instanceof DBCatalogRepNode){
+                        if (parent instanceof DBCatalogRepNode) {
                             catalogNode = parent;
                             parent = parent.getParent();
                         }
@@ -124,8 +124,6 @@ public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                     setPageComplete(false);
                 }
             }
-
         });
-
     }
 }

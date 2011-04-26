@@ -16,7 +16,6 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * This class store all the constant of current plugin.
- * 
  */
 public final class PluginConstant {
 

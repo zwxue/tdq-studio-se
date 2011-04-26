@@ -72,7 +72,6 @@ public class FolderWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
-
         String folderName = mainPage.getName();
         if (defaultLabel == null) {
             IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
@@ -111,5 +110,4 @@ public class FolderWizard extends Wizard {
         DQStructureManager manager = DQStructureManager.getInstance();
         return manager.isPathValid(path, folderName);
     }
-
 }

@@ -42,7 +42,6 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
 
     public TimeSlicesForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style, parameters);
-
         setupForm();
     }
 
@@ -74,7 +73,6 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFieldsListeners() {
-
         for (final Button button : allBtns) {
             button.addSelectionListener(new SelectionAdapter() {
 
@@ -106,8 +104,6 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -117,7 +113,6 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -128,7 +123,6 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
      */
     @Override
     protected void initialize() {
-
         if (parameters != null) {
             DateParameters dateParameters = parameters.getDateParameters();
             if (dateParameters != null) {
@@ -161,8 +155,5 @@ public class TimeSlicesForm extends AbstractIndicatorForm {
      */
     @Override
     protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
-
 }

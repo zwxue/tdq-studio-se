@@ -66,7 +66,6 @@ public class TableViewFilterWizardPage extends AbstractWizardPage {
     public TableViewFilterWizardPage(TableViewFilterWizard parent) {
         this();
         this.parent = parent;
-
     }
 
     public void createControl(Composite parent) {

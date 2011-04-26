@@ -126,7 +126,7 @@ public class CorePlugin extends AbstractUIPlugin {
         super.start(context);
         plugin = this;
         getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
-        getPreferenceStore().setValue(ITalendCorePrefConstants.PREVIEW_LIMIT, "50");
+        getPreferenceStore().setValue(ITalendCorePrefConstants.PREVIEW_LIMIT, "50");//$NON-NLS-1$
         getPreferenceStore().setValue(ITalendCorePrefConstants.LANGUAGE_SELECTOR, Locale.getDefault().getLanguage());
         try {
             for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
@@ -257,7 +257,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
                 if (connection != null) {
                     String userName = JavaSqlFactory.getUsernameDefault(connection);
-                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
+                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     input.setUser(alias.getUser(userName));
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
                     SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
@@ -451,9 +451,9 @@ public class CorePlugin extends AbstractUIPlugin {
             ReponsitoryContextBridge.initialized(project.getEmfProject(), user);
         } else { // else project is null, then we are in TOP only
             ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
-            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local");//$NON-NLS-1$
+            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
             if (repository == null) {
-                log.fatal("No local Repository found! Probably due to a missing plugin in the product.");
+                log.fatal("No local Repository found! Probably due to a missing plugin in the product."); //$NON-NLS-1$
                 return false;
             }
             proxyRepository.setRepositoryFactoryFromProvider(repository);
@@ -469,8 +469,8 @@ public class CorePlugin extends AbstractUIPlugin {
                     project = new Project(xmiResourceManager.loadProject(rootProject));
                 } else {
                     User user = PropertiesFactoryImpl.eINSTANCE.createUser();
-                    user.setLogin("talend@talend.com");
-                    user.setPassword("talend@talend.com".getBytes());
+                    user.setLogin("talend@talend.com"); //$NON-NLS-1$
+                    user.setPassword("talend@talend.com".getBytes()); //$NON-NLS-1$
                     String projectName = ResourceManager.getRootProjectName();
                     String projectDesc = ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment();
                     Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA.getName(),
@@ -487,7 +487,7 @@ public class CorePlugin extends AbstractUIPlugin {
                     initRepositoryContext(project);
 
                     // add status
-                    String defaultTechnicalStatusList = "DEV development;TEST testing;PROD production";
+                    String defaultTechnicalStatusList = "DEV development;TEST testing;PROD production"; //$NON-NLS-1$
                     List<Status> statusList = StatusHelper.parse(defaultTechnicalStatusList);
                     proxyRepository.setTechnicalStatus(statusList);
                 }
@@ -506,7 +506,7 @@ public class CorePlugin extends AbstractUIPlugin {
         repositoryContext.setClearPassword(project.getLabel());
         repositoryContext.setProject(project);
         repositoryContext.setFields(new HashMap<String, String>());
-        repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), "");
+        repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), ""); //$NON-NLS-1$ //$NON-NLS-2$
         Context ctx = CoreRuntimePlugin.getInstance().getContext();
         ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
 

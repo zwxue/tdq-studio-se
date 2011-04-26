@@ -161,7 +161,6 @@ public class DynamicTableIndicatorOptionsPage extends WizardPage {
         if (container instanceof OpeningHelpWizardDialog) {
             return (OpeningHelpWizardDialog) container;
         }
-
         return null;
     }
 }

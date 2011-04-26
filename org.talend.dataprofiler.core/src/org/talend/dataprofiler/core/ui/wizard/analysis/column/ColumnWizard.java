@@ -34,7 +34,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author zqin
- * 
  */
 public class ColumnWizard extends AbstractAnalysisWizard {
 

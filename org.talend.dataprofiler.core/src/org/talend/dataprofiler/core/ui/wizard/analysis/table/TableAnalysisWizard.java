@@ -161,10 +161,8 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
                 }
             }
             getAnalysisBuilder().addElementsToAnalyze(ncss, indicatorList.toArray(new Indicator[indicatorList.size()]));
-
             getAnalysisBuilder().setAnalysisConnection(tdp);
         }
-
         return analysis;
     }
 

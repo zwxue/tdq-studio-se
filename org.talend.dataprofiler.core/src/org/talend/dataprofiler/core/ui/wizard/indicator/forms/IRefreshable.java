@@ -12,16 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.forms;
 
-
 /**
- * DOC zqin  class global comment. Detailled comment
+ * DOC zqin class global comment. Detailled comment
  */
 public interface IRefreshable {
 
     /**
-     * Refresh the concrete composite.
-     * 
-     * zqin Comment method "refresh".
+     * Refresh the concrete composite. zqin Comment method "refresh".
      */
     public void refresh();
 }

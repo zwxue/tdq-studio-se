@@ -59,7 +59,6 @@ public class ExportUDIWizardPage extends WizardPage {
     private boolean isForExchange;
 
     public ExportUDIWizardPage(IFolder folder, boolean isForExchange) {
-
         super(DefaultMessagesImpl.getString("ExportUDIWizardPage.exportUDIWizardPage")); //$NON-NLS-1$
 
         if (isForExchange) {
@@ -75,7 +74,6 @@ public class ExportUDIWizardPage extends WizardPage {
     }
 
     public void createControl(Composite parent) {
-
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout layout = new GridLayout();
         GridData gridData = new GridData(GridData.FILL_BOTH);

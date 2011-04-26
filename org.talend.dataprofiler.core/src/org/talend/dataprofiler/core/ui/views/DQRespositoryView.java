@@ -121,7 +121,6 @@ import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * @author rli
- * 
  */
 public class DQRespositoryView extends CommonNavigator {
 
@@ -142,7 +141,7 @@ public class DQRespositoryView extends CommonNavigator {
 
         if (manager.isNeedCreateStructure()) {
             ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(
-                    new RepositoryWorkUnit<Object>("Create DQ Repository structure") {
+                    new RepositoryWorkUnit<Object>("Create DQ Repository structure") { //$NON-NLS-1$
 
                         @Override
                         protected void run() {
@@ -461,6 +460,7 @@ public class DQRespositoryView extends CommonNavigator {
 
         // MOD mzhao 2011-03-10 bug 19147: filter MDM entries.
         getCommonViewer().addFilter(new ViewerFilter() {
+
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof IProject) {
@@ -608,7 +608,6 @@ public class DQRespositoryView extends CommonNavigator {
         refresh.run();
     }
 
-
     @Override
     protected void handleDoubleClick(DoubleClickEvent anEvent) {
         IStructuredSelection selection = (IStructuredSelection) anEvent.getSelection();
@@ -632,7 +631,7 @@ public class DQRespositoryView extends CommonNavigator {
                     ERepositoryObjectType type = WorkbenchUtils.getFolderContentType(folder);
                     // MOD by zshen to avoid NullPointerException.
                     if (type != null) {
-                    ProxyRepositoryFactory.getInstance().getAll(type, true);
+                        ProxyRepositoryFactory.getInstance().getAll(type, true);
                     }
                 }
             }

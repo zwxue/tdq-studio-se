@@ -44,5 +44,4 @@ public final class MessageUI {
         return MessageDialog.openQuestion(CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
                 DefaultMessagesImpl.getString("MessageUI.Confirm"), message); //$NON-NLS-1$
     }
-
 }

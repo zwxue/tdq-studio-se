@@ -68,7 +68,7 @@ public class PatternsSelectPage extends WizardPage {
      * @param pageName
      */
     protected PatternsSelectPage(SelectPatternsWizard selectPatternsWizard) {
-        super(DefaultMessagesImpl.getString("PatternsSelectPage.title"));
+        super(DefaultMessagesImpl.getString("PatternsSelectPage.title")); //$NON-NLS-1$
         setTitle(DefaultMessagesImpl.getString("PatternsSelectPage.title")); //$NON-NLS-1$
         setMessage(DefaultMessagesImpl.getString("PatternsSelectPage.message")); //$NON-NLS-1$
 
@@ -126,17 +126,16 @@ public class PatternsSelectPage extends WizardPage {
 
         inItitemCheck();
 
-
         this.setControl(parent);
         this.setPageComplete(true);
     }
 
     private void initDataFilterSection(Composite parent) {
-        
+
         GridData data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.grabExcessHorizontalSpace = true;
-        
+
         FillLayout dataFilterSectionGridLayout = new FillLayout();
 
         Composite dataFilterSection = new Composite(parent, SWT.NONE);
@@ -374,8 +373,6 @@ public class PatternsSelectPage extends WizardPage {
         this.oldTableInputList = oldTableInputList;
     }
 
-
-
     public DataFilterType getFilterType() {
         return filterType;
     }
@@ -397,8 +394,8 @@ public class PatternsSelectPage extends WizardPage {
          */
         public void widgetSelected(SelectionEvent e) {
             Widget selectItem = e.widget;
-            if(selectItem instanceof Button && (selectItem.getStyle()|SWT.RADIO)!=0){
-                for(DataFilterType type:DataFilterType.values()){
+            if (selectItem instanceof Button && (selectItem.getStyle() | SWT.RADIO) != 0) {
+                for (DataFilterType type : DataFilterType.values()) {
                     if (type.getTextName().equals(((Button) selectItem).getText())) {
                         filterType = type;
                         break;
@@ -420,5 +417,3 @@ public class PatternsSelectPage extends WizardPage {
 
     }
 }
-
-

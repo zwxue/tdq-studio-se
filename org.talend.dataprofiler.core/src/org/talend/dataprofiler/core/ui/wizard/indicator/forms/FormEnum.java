@@ -235,7 +235,6 @@ public enum FormEnum {
         default:
 
         }
-
         return forms;
     }
 
@@ -264,7 +263,6 @@ public enum FormEnum {
         if (getForms(indicatorUnit) != null) {
             return true;
         }
-
         return false;
     }
 
@@ -272,7 +270,6 @@ public enum FormEnum {
         if (getForms(indicatorUnit) != null) {
             return true;
         }
-
         return false;
     }
 }

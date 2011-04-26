@@ -150,7 +150,7 @@ public final class DqFileUtils {
 
         while (paths.hasMoreElements()) {
             String nextElement = (String) paths.nextElement();
-            String currentPath = "/" + nextElement;
+            String currentPath = "/" + nextElement; //$NON-NLS-1$
             URL resourceURL = plugin.getBundle().getEntry(currentPath);
 
             URL fileURL = FileLocator.toFileURL(resourceURL);

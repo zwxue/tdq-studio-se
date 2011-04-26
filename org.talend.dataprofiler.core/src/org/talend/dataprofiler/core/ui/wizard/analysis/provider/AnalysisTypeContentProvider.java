@@ -21,15 +21,10 @@ import org.talend.dq.nodes.analysis.AbstractAnalysisNode;
 
 /**
  * @author huangssssx
- * 
  */
 public class AnalysisTypeContentProvider implements ITreeContentProvider {
 
-    /**
-     * 
-     */
     public AnalysisTypeContentProvider() {
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -38,7 +33,6 @@ public class AnalysisTypeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
     public Object[] getChildren(Object parentElement) {
-        // TODO Auto-generated method stub
         AbstractAnalysisNode analysisNode = (AnalysisTypeNode) parentElement;
 
         Object[] childrenNode = analysisNode.getChildren();
@@ -75,7 +69,6 @@ public class AnalysisTypeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
     public Object[] getElements(Object inputElement) {
-
         if (inputElement instanceof List) {
             return ((List) inputElement).toArray();
         } else {
@@ -89,8 +82,6 @@ public class AnalysisTypeContentProvider implements ITreeContentProvider {
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     public void dispose() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -100,8 +91,5 @@ public class AnalysisTypeContentProvider implements ITreeContentProvider {
      * java.lang.Object)
      */
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        // TODO Auto-generated method stub
-
     }
-
 }

@@ -67,7 +67,6 @@ public class TextParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFieldsListeners() {
-
         caseBtn.addSelectionListener(new SelectionAdapter() {
 
             /*
@@ -80,7 +79,6 @@ public class TextParametersForm extends AbstractIndicatorForm {
 
                 updateStatus(IStatus.OK, MSG_OK);
             }
-
         });
     }
 
@@ -91,7 +89,6 @@ public class TextParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void initialize() {
-
         TextParameters textParameter = parameters.getTextParameter();
         if (textParameter != null) {
             caseBtn.setSelection(textParameter.isIgnoreCase());
@@ -121,8 +118,6 @@ public class TextParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -132,7 +127,6 @@ public class TextParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -143,7 +137,5 @@ public class TextParametersForm extends AbstractIndicatorForm {
      */
     @Override
     protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
 }

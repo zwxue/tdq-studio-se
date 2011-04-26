@@ -82,32 +82,31 @@ public class ExportUDIWizard extends Wizard {
             File resource = new File(targetFile);
 
             if (isForExchange) {
-                ExportFactory.export(resource, folder, seletedIndicators
-                        .toArray(new IndicatorDefinition[seletedIndicators.size()]));
+                ExportFactory.export(resource, folder,
+                        seletedIndicators.toArray(new IndicatorDefinition[seletedIndicators.size()]));
 
                 for (Iterator<IndicatorDefinition> iterator = seletedIndicators.iterator(); iterator.hasNext();) {
                     IndicatorDefinition id = iterator.next();
                     File idFile = new File(resource, id.getName() + ".csv"); //$NON-NLS-1$
                     if (idFile.isFile() && idFile.exists()) {
                         try {
-                            List<File> udiAndJarfiles=new ArrayList<File>();
+                            List<File> udiAndJarfiles = new ArrayList<File>();
                             udiAndJarfiles.add(idFile);
                             // MOD by zshen for bug 18724 2011.03.01
-                            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, id.getTaggedValue());
+                            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH,
+                                    id.getTaggedValue());
                             if (tv != null) {
                                 for (IFile udiJarFile : UDIUtils.getLibJarFileList()) {
-                                    for (String jarName : tv.getValue().split("\\|\\|")) {
+                                    for (String jarName : tv.getValue().split("\\|\\|")) { //$NON-NLS-1$
                                         if (udiJarFile.getName().equals(jarName)) {
-                                        udiAndJarfiles.add(udiJarFile.getLocation().toFile());
+                                            udiAndJarfiles.add(udiJarFile.getLocation().toFile());
                                             break;
                                         }
                                     }
                                 }
                             }
                             // ~
-                            
-                            
-                            
+
                             FilesUtils.zips(udiAndJarfiles.toArray(new File[udiAndJarfiles.size()]), idFile.getPath() + ".zip"); //$NON-NLS-1$
                             idFile.delete();
 
@@ -122,14 +121,14 @@ public class ExportUDIWizard extends Wizard {
 
                 boolean isContinue = true;
                 if (resource.exists()) {
-                    isContinue = MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl
-                            .getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
+                    isContinue = MessageDialogWithToggle.openConfirm(null,
+                            DefaultMessagesImpl.getString("ExportPatternsWizard.waring"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("ExportPatternsWizard.fileAlreadyExist")); //$NON-NLS-1$
                 }
 
                 if (isContinue) {
-                    ExportFactory.export(resource, folder, seletedIndicators.toArray(new IndicatorDefinition[seletedIndicators
-                            .size()]));
+                    ExportFactory.export(resource, folder,
+                            seletedIndicators.toArray(new IndicatorDefinition[seletedIndicators.size()]));
                     return true;
                 }
 
@@ -143,5 +142,4 @@ public class ExportUDIWizard extends Wizard {
         page = new ExportUDIWizardPage(folder, isForExchange);
         addPage(page);
     }
-
 }

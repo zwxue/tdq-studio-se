@@ -99,7 +99,6 @@ public class ColumnViewerDND {
      * DOC qzhang Comment method "installDND".
      */
     public static void installDND(final Tree targetControl) {
-
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         DQRespositoryView findView = (DQRespositoryView) activePage.findView(DQRespositoryView.ID);
         final CommonViewer commonViewer = findView.getCommonViewer();
@@ -286,7 +285,7 @@ public class ColumnViewerDND {
                         TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
                         if (trc.isOk()) {
                             ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, trc.getObject());
-                        } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {
+                        } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) { //$NON-NLS-1$
                             MessageUI.openError(trc.getMessage());
                         }
                     } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
@@ -294,7 +293,7 @@ public class ColumnViewerDND {
                         TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
                         if (trc.isOk()) {
                             ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, trc.getObject());
-                        } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {
+                        } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) { //$NON-NLS-1$
                             MessageUI.openError(trc.getMessage());
                         }
                     }
@@ -302,7 +301,6 @@ public class ColumnViewerDND {
                 viewer.setDirty(true);
             }
         }
-
     }
 
     /**
@@ -313,7 +311,6 @@ public class ColumnViewerDND {
 
         // @Override
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
-
             event.detail = DND.DROP_NONE;
             StructuredSelection structuredSelection = (StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
             RepositoryNode firstElement = (RepositoryNode) structuredSelection.getFirstElement();
@@ -365,7 +362,6 @@ public class ColumnViewerDND {
             // event.detail = DND.DROP_MOVE;
             // }
             // }
-
         }
 
         @SuppressWarnings("unchecked")
@@ -535,7 +531,6 @@ public class ColumnViewerDND {
                     // MOD yyi 2009-09-16
                     // Feature :8866
                     if (udi != null && (TaggedValueHelper.getValidStatus(udi) | UDIHelper.isUDIValid(udi))) {
-
                         is = false;
                     }
                 }
@@ -596,7 +591,6 @@ public class ColumnViewerDND {
                 }
             }
         }
-
     }
 
     /**
@@ -605,7 +599,6 @@ public class ColumnViewerDND {
      * @param myTable
      */
     public static void installDND(final Table targetControl) {
-
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         DQRespositoryView findView = (DQRespositoryView) activePage.findView(DQRespositoryView.ID);
         final CommonViewer commonViewer = findView.getCommonViewer();
@@ -684,7 +677,6 @@ public class ColumnViewerDND {
 
         // @Override
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
-
             event.detail = DND.DROP_NONE;
             IRepositoryNode firstElement = (RepositoryNode) ((StructuredSelection) LocalSelectionTransfer.getTransfer()
                     .getSelection()).getFirstElement();
@@ -721,5 +713,4 @@ public class ColumnViewerDND {
             localSelection = null;
         }
     }
-
 }

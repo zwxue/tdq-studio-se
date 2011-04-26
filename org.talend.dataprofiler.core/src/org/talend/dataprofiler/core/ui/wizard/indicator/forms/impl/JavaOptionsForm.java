@@ -37,7 +37,6 @@ public class JavaOptionsForm extends AbstractIndicatorForm {
 
     public JavaOptionsForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style, parameters);
-
         setupForm();
     }
 
@@ -82,12 +81,10 @@ public class JavaOptionsForm extends AbstractIndicatorForm {
         GridData gd2 = new GridData();
         gd2.widthHint = 200;
         replacementCharactersText.setLayoutData(gd2);
-
     }
 
     @Override
     protected void addFieldsListeners() {
-
         characters2ReplaceText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -107,7 +104,6 @@ public class JavaOptionsForm extends AbstractIndicatorForm {
 
     @Override
     protected void addUtilsButtonListeners() {
-
     }
 
     @Override
@@ -131,5 +127,4 @@ public class JavaOptionsForm extends AbstractIndicatorForm {
         characters2ReplaceText.setText(s1);
         replacementCharactersText.setText(s2);
     }
-
 }

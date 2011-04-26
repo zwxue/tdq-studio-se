@@ -37,7 +37,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     public TextLengthForm(Composite parent, int style, IndicatorParameters parameters) {
         super(parent, style, parameters);
-
         setupForm();
     }
 
@@ -48,7 +47,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFields() {
-
         this.setLayout(new GridLayout());
 
         Group group = new Group(this, SWT.NONE);
@@ -61,7 +59,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
         blankBtn = new Button(group, SWT.CHECK);
         blankBtn.setText(DefaultMessagesImpl.getString("TextLengthForm.countBlanks")); //$NON-NLS-1$
-
     }
 
     /*
@@ -71,7 +68,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addFieldsListeners() {
-
         nullBtn.addSelectionListener(new SelectionAdapter() {
 
             /*
@@ -108,7 +104,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
      */
     @Override
     protected void initialize() {
-
         TextParameters textParameter = parameters.getTextParameter();
         if (textParameter != null) {
             nullBtn.setSelection(textParameter.isUseNulls());
@@ -123,7 +118,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     @Override
     public boolean performFinish() {
-
         TextParameters textParameter = parameters.getTextParameter();
         if (textParameter == null) {
             textParameter = IndicatorsFactory.eINSTANCE.createTextParameters();
@@ -141,8 +135,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
      */
     @Override
     protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -152,8 +144,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
      */
     @Override
     protected void addUtilsButtonListeners() {
-        // TODO Auto-generated method stub
-
     }
 
     /*
@@ -163,7 +153,6 @@ public class TextLengthForm extends AbstractIndicatorForm {
      */
     @Override
     protected boolean checkFieldsValue() {
-        // TODO Auto-generated method stub
         return false;
     }
 }

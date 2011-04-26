@@ -12,11 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.urlsetup;
 
-
 /**
- * DOC rli  class global comment. Detailled comment
- * <br/>
- *
+ * DOC rli class global comment. Detailled comment <br/>
  */
 public class AdapterFactory {
 

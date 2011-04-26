@@ -102,9 +102,9 @@ import orgomg.cwm.resource.relational.Schema;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
- * @author qzhang
- * 
  * Detail view of the Data profiler.
+ * 
+ * @author qzhang
  */
 public class RespositoryDetailView extends ViewPart implements ISelectionListener {
 
@@ -369,14 +369,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         List<PrimaryKey> primaryKeys = TableHelper.getPrimaryKeys(table);
         newLabelAndText(
                 gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : primaryKeys.get(0).getName() + "(" + String.valueOf(primaryKeys.get(0).getFeature().size()) + ")"); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RespositoryDetailView.PrimaryKeys"), primaryKeys.isEmpty() ? null : primaryKeys.get(0).getName() + "(" + String.valueOf(primaryKeys.get(0).getFeature().size()) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         Map<String, Integer> foreignInfo = TableHelper.getForeignKeysInformation(table);
         String[] foreignNameArray = foreignInfo.keySet().toArray(new String[foreignInfo.keySet().size()]);
         newLabelAndText(
                 gContainer,
-                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignNameArray.length == 0 ? null : foreignNameArray[0] + "(" + foreignInfo.get(foreignNameArray[0]) + ")"); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RespositoryDetailView.Foreignkeys"), foreignNameArray.length == 0 ? null : foreignNameArray[0] + "(" + foreignInfo.get(foreignNameArray[0]) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         for (int i = 1; i < foreignNameArray.length; i++) {
-            newLabelAndText(gContainer, "", foreignNameArray[i] + "(" + foreignInfo.get(foreignNameArray[i]) + ")"); //$NON-NLS-1$
+            newLabelAndText(gContainer, "", foreignNameArray[i] + "(" + foreignInfo.get(foreignNameArray[i]) + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
     }
 
@@ -529,7 +529,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         newLabelAndText(
                 gContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.typex"), column.getSqlDataType() != null ? column.getSqlDataType().getName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
-        String purpose = "" + column.isNullable();
+        String purpose = "" + column.isNullable(); //$NON-NLS-1$
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.nullable"), purpose); //$NON-NLS-1$
         final Expression initialValue = column.getInitialValue();
         String defValueText = (initialValue != null) ? initialValue.getBody() : null;
@@ -630,7 +630,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         Properties props = new Properties();
         props.put(TaggedValueHelper.USER, mdmConn.getUsername());
         props.put(TaggedValueHelper.PASSWORD, mdmConn.getPassword());
-        props.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse());
+        props.put(TaggedValueHelper.UNIVERSE, mdmConn.getUniverse() == null ? "" : mdmConn.getUniverse()); //$NON-NLS-1$
         MdmWebserviceConnection mdmWsConn = new MdmWebserviceConnection(mdmConn.getPathname(), props);
         version = mdmWsConn.getVersion();
         return version;

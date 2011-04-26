@@ -114,7 +114,6 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     public ModelElement initCWMResourceBuilder() {
         UDIndicatorBuilder udiBuilder = new UDIndicatorBuilder();
-
         boolean udiInitialized = udiBuilder.initializeUDIndicatorBuilder(parameter.getName());
         if (udiInitialized) {
             return udiBuilder.getUDIndicator();

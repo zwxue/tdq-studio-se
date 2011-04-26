@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.talend.core.model.repository.Folder;
@@ -30,11 +29,10 @@ import org.talend.resource.ResourceManager;
 
 /**
  * @author zqin
- * 
  */
 public class ConnectionsContentProvider extends ResourceViewContentProvider {
 
-    private static Logger log = Logger.getLogger(ConnectionsContentProvider.class);
+    // private static Logger log = Logger.getLogger(ConnectionsContentProvider.class);
 
     /**
      * @param adapterFactory
@@ -97,7 +95,6 @@ public class ConnectionsContentProvider extends ResourceViewContentProvider {
      */
     @Override
     public Object[] getElements(Object object) {
-        // TODO Auto-generated method stub
         return this.getChildren(object);
     }
 
@@ -121,8 +118,6 @@ public class ConnectionsContentProvider extends ResourceViewContentProvider {
      */
     @Override
     public boolean hasChildren(Object element) {
-
         return !(element instanceof DBConnectionRepNode);
     }
-
 }

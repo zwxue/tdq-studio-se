@@ -38,7 +38,6 @@ public final class ModelElementIndicatorRule {
     }
 
     public static boolean match(IIndicatorNode node, ModelElementIndicator meIndicator, ExecutionLanguage language) {
-
         IndicatorEnum indicatorType = node.getIndicatorEnum();
         if (indicatorType == null) {
 
@@ -57,7 +56,6 @@ public final class ModelElementIndicatorRule {
     }
 
     public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me, ExecutionLanguage language) {
-
         int javaType = 0;
         boolean isDeliFileColumn = !(me instanceof TdColumn) && me instanceof MetadataColumn;
         if (me instanceof TdColumn) {
@@ -116,9 +114,7 @@ public final class ModelElementIndicatorRule {
                     return true;
                 }
             }
-
             break;
-
         case ModeIndicatorEnum:
         case FrequencyIndicatorEnum:
         case LowFrequencyIndicatorEnum:
@@ -127,7 +123,6 @@ public final class ModelElementIndicatorRule {
             if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL) {
                 return true;
             }
-
             break;
         // MOD zshen 2010-01-27 Date Pattern frequency indicator
         case DatePatternFreqIndicatorEnum:
@@ -159,7 +154,6 @@ public final class ModelElementIndicatorRule {
                 }
             }
             break;
-
         case RangeIndicatorEnum:
         case MinValueIndicatorEnum:
         case MaxValueIndicatorEnum:
@@ -170,9 +164,7 @@ public final class ModelElementIndicatorRule {
                     return true;
                 }
             }
-
             break;
-
         case DateFrequencyIndicatorEnum:
         case WeekFrequencyIndicatorEnum:
         case MonthFrequencyIndicatorEnum:
@@ -189,7 +181,6 @@ public final class ModelElementIndicatorRule {
                     && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
                 return true;
             }
-
             break;
         case BinFrequencyIndicatorEnum:
         case BinLowFrequencyIndicatorEnum:
@@ -198,7 +189,6 @@ public final class ModelElementIndicatorRule {
                 return true;
             }
             break;
-
         default:
             return false;
         }

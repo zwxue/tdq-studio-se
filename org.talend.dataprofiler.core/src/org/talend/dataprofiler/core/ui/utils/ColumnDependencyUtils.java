@@ -12,13 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-
-
 /**
  * DOC xqliu  class global comment. Detailled comment
  */
 public final class ColumnDependencyUtils {
     private ColumnDependencyUtils() {
     }
-    
 }

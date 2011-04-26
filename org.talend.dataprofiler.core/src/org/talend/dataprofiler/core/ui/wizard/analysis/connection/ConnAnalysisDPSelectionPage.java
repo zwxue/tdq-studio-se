@@ -29,10 +29,7 @@ import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.nodes.DBConnectionRepNode;
 
 /**
- * 
  * @author zqin
- * 
- * 
  */
 public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
@@ -43,7 +40,6 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
     private static String connsStr = DefaultMessagesImpl.getString("ConnAnalysisPageStep0.connections"); //$NON-NLS-1$
 
     /**
-     * 
      * @param pageName
      */
     public ConnAnalysisDPSelectionPage() {
@@ -53,11 +49,9 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
     @Override
     protected void addListeners() {
-
         addListener(new IDoubleClickListener() {
 
             public void doubleClick(DoubleClickEvent event) {
-                // TODO Auto-generated method stub
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 if (object instanceof IFile) {
                     IFile file = (IFile) object;
@@ -71,26 +65,25 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
         addListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
-
                 // get the dataprovider from the seleted connection
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 AnalysisFilterParameter connPanameter = (AnalysisFilterParameter) getConnectionParams();
-//                if (object instanceof IRepositoryViewObject) {
-//                    IRepositoryViewObject reposViewObj = (IRepositoryViewObject) object;
-//                    // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview
-//                    // analysis.
-//                    if (ConnectionUtils.isMdmConnection(reposViewObj)) {
-//                        setPageComplete(false);
-//                        return;
-//                    }
-//
-//                    Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
-//                    if (connection != null && connPanameter != null) {
-//                        connPanameter.setTdDataProvider(connection);
-//                    }
-//
-//                    setPageComplete(true);
-//                } 
+                // if (object instanceof IRepositoryViewObject) {
+                // IRepositoryViewObject reposViewObj = (IRepositoryViewObject) object;
+                // // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview
+                // // analysis.
+                // if (ConnectionUtils.isMdmConnection(reposViewObj)) {
+                // setPageComplete(false);
+                // return;
+                // }
+                //
+                // Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
+                // if (connection != null && connPanameter != null) {
+                // connPanameter.setTdDataProvider(connection);
+                // }
+                //
+                // setPageComplete(true);
+                // }
                 if (object instanceof DBConnectionRepNode) {
                     DBConnectionRepNode connNode = (DBConnectionRepNode) object;
                     IRepositoryViewObject reposViewObj = connNode.getObject();
@@ -112,9 +105,6 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                     setPageComplete(false);
                 }
             }
-
         });
-
     }
-
 }

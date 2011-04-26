@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.wizard.patterns;
 
 /**
- * 
  * zshen PatternsSelectPage class global comment. Detailled comment
  */
 public enum DataFilterType {
@@ -30,5 +29,4 @@ public enum DataFilterType {
     public String getTextName() {
         return textName;
     }
-
 }

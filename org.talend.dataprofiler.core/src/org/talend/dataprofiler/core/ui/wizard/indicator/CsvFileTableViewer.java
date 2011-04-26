@@ -210,7 +210,6 @@ public class CsvFileTableViewer extends Composite {
         }
         viewer.setInput(reader);
         return true;
-
     }
 
     /**

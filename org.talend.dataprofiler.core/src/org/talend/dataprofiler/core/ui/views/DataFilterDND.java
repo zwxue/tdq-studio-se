@@ -69,7 +69,6 @@ public final class DataFilterDND {
             @Override
             public void dropAccept(DropTargetEvent event) {
                 // String existStr = targetControl.getText();
-
             }
 
             @Override

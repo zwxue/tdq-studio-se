@@ -263,9 +263,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                     || node instanceof RuleRepNode) {
                 // return node.getObject().getLabel() + " " + node.getObject().getVersion();
-                return node.getLabel() + " " + node.getObject().getVersion();
+                return node.getLabel() + " " + node.getObject().getVersion(); //$NON-NLS-1$
             } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
-                return node.getObject().getLabel() + "(Unsupported)";
+                return node.getObject().getLabel() + "(Unsupported)"; //$NON-NLS-1$
             } else if (node instanceof DBCatalogRepNode) {
                 // MOD zshen to modify catalog name when connection is ODBC
                 String catalogName = node.getObject().getLabel();
@@ -276,7 +276,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (node instanceof AnalysisSubFolderRepNode) {
                     AnalysisSubFolderRepNode anaSubNode = (AnalysisSubFolderRepNode) node;
                     if (node.getObject() == null) {
-                        return DefaultMessagesImpl.getString("AnalysisSubFolderRepNode.analyzedElement") + anaSubNode.getCount();
+                        return DefaultMessagesImpl.getString("AnalysisSubFolderRepNode.analyzedElement") + anaSubNode.getCount(); //$NON-NLS-1$
                     }
                     return anaSubNode.getLabelWithCount();
                 }
@@ -310,7 +310,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             return node.getObject().getLabel();
         }
         String text = super.getText(element);
-        return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text;
+        return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

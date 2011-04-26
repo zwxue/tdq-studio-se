@@ -82,7 +82,6 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
         if (elementName == null || folderResource == null) {
             return new ReturnCode("", false); //$NON-NLS-1$
         } else {
-
             Collection<ModelElement> modelElements = new ArrayList<ModelElement>();
 
             switch (getParameter().getParamType()) {
@@ -130,7 +129,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                         // MOD xqliu 2010-09-21 bug 15762
                         return new ReturnCode(UIMessages.MSG_ANALYSIS_SAME_NAME, false);
                         // if (!MessageUI.openConfirm(UIMessages.MSG_ANALYSIS_SAME_NAME)) {
-                        //                            getParameter().setName(elementName + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
+                        //     getParameter().setName(elementName + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
                         // }
                         // break;
                         // ~ 15762

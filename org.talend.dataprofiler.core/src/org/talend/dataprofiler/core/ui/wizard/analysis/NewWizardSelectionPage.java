@@ -50,7 +50,6 @@ import org.talend.resource.ResourceManager;
 
 /**
  * @author zqin
- * 
  */
 public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
@@ -97,7 +96,6 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
-
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gdLayout = new GridLayout(1, true);
         container.setLayout(gdLayout);
@@ -116,11 +114,9 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
     }
 
     protected void addListeners() {
-
         typeTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
-
                 AnalysisTypeNode node = (AnalysisTypeNode) ((IStructuredSelection) event.getSelection()).getFirstElement();
                 if (node == null) {
                     return;
@@ -260,7 +256,6 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                     advanceToNextPageOrFinish();
                 }
             }
-
         });
     }
 
@@ -271,7 +266,6 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
      */
     @Override
     public IWizardPage getNextPage() {
-
         if (selectedWizard == null) {
             return null;
         }
@@ -289,5 +283,4 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
     public Wizard getSelectedWizard() {
         return this.selectedWizard;
     }
-
 }

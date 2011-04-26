@@ -278,7 +278,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                 if (isPerMinEmpty && isPerMaxEmpty) {
                     removeRange(PERCENTAGE_THRESHOLD);
                 } else {
-                    String lower = "", higher = "";
+                    String lower = "", higher = ""; //$NON-NLS-1$ //$NON-NLS-2$
                     if (StringUtils.isNotEmpty(plower)) {
                         lower = String.valueOf(Double.valueOf(plower) / 100);
                     }
@@ -316,15 +316,12 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     protected void adaptFormToReadOnly() {
-        // TODO Auto-generated method stub
-
     }
 
     /**
      * yyi 2009-10-29 validate lowerText higherText pLowerText pHigherText. feature:9340: Set indicator thresholds.
      */
     protected boolean checkFields() {
-
         ReturnCode rc0 = checkIndicatorFields();
         ReturnCode rc1 = checkIndicatorInPrecentFields();
 
@@ -343,19 +340,18 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
      * @return
      */
     protected ReturnCode checkIndicatorFields() {
-
-        String min = null != lowerText ? lowerText.getText().trim() : "";
-        String max = null != higherText ? higherText.getText().trim() : "";
+        String min = null != lowerText ? lowerText.getText().trim() : ""; //$NON-NLS-1$
+        String max = null != higherText ? higherText.getText().trim() : ""; //$NON-NLS-1$
 
         ReturnCode rc = new ReturnCode(true);
-        String statusLabelText = "";
+        String statusLabelText = ""; //$NON-NLS-1$
 
         if (isRangeForDate) {
             if ((!CheckValueUtils.isDateValue(min) && !CheckValueUtils.isEmpty(min))
                     || (!CheckValueUtils.isDateValue(max) && !CheckValueUtils.isEmpty(max))) {
 
                 rc.setOk(false);
-                statusLabelText += MSG_ONLY_DATE + System.getProperty("line.separator");
+                statusLabelText += MSG_ONLY_DATE + System.getProperty("line.separator"); //$NON-NLS-1$
             }
         } else {
             // bug 10550 by zshen,Cannot set a negative threshold on individual summary statistics indicators
@@ -363,7 +359,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                     || (!CheckValueUtils.isNumberWithNegativeValue(max) && !CheckValueUtils.isEmpty(max))) {
 
                 rc.setOk(false);
-                statusLabelText += MSG_ONLY_NUMBER + System.getProperty("line.separator");
+                statusLabelText += MSG_ONLY_NUMBER + System.getProperty("line.separator"); //$NON-NLS-1$
             } else {
                 // MOD yyi 2010-04-15 bug 12483 : check the value is out of range
                 try {
@@ -373,7 +369,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
                         Long.valueOf(min);
                 } catch (NumberFormatException e) {
                     rc.setOk(false);
-                    statusLabelText += UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE_LONG + System.getProperty("line.separator");
+                    statusLabelText += UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE_LONG + System.getProperty("line.separator"); //$NON-NLS-1$
                 }
 
             }
@@ -381,7 +377,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
         if (CheckValueUtils.isAoverB(min, max)) {
             rc.setOk(false);
-            statusLabelText += UIMessages.MSG_LOWER_LESS_HIGHER + System.getProperty("line.separator");
+            statusLabelText += UIMessages.MSG_LOWER_LESS_HIGHER + System.getProperty("line.separator"); //$NON-NLS-1$
         }
 
         rc.setMessage(statusLabelText);
@@ -394,26 +390,25 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
      * @return
      */
     protected ReturnCode checkIndicatorInPrecentFields() {
-
-        String pmin = null != pLowerText ? pLowerText.getText().trim() : "";
-        String pmax = null != pHigherText ? pHigherText.getText().trim() : "";
+        String pmin = null != pLowerText ? pLowerText.getText().trim() : ""; //$NON-NLS-1$
+        String pmax = null != pHigherText ? pHigherText.getText().trim() : ""; //$NON-NLS-1$
 
         ReturnCode rc = new ReturnCode(true);
-        String statusLabelText = "";
+        String statusLabelText = ""; //$NON-NLS-1$
 
         if ((!CheckValueUtils.isEmpty(pmin) && !CheckValueUtils.isRealNumberValue(pmin))
                 || (!CheckValueUtils.isEmpty(pmax) && !CheckValueUtils.isRealNumberValue(pmax))) {
 
             rc.setOk(false);
-            statusLabelText += MSG_ONLY_REAL_NUMBER + System.getProperty("line.separator");
+            statusLabelText += MSG_ONLY_REAL_NUMBER + System.getProperty("line.separator"); //$NON-NLS-1$
         }
         if (CheckValueUtils.isOutRange(MIN, MAX, pmin) || CheckValueUtils.isOutRange(MIN, MAX, pmax)) {
             rc.setOk(false);
-            statusLabelText += UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE + System.getProperty("line.separator");
+            statusLabelText += UIMessages.MSG_INDICATOR_VALUE_OUT_OF_RANGE + System.getProperty("line.separator"); //$NON-NLS-1$
         }
         if (CheckValueUtils.isAoverB(pmin, pmax)) {
             rc.setOk(false);
-            statusLabelText += UIMessages.MSG_LOWER_LESS_HIGHER + System.getProperty("line.separator");
+            statusLabelText += UIMessages.MSG_LOWER_LESS_HIGHER + System.getProperty("line.separator"); //$NON-NLS-1$
         }
 
         rc.setMessage(statusLabelText);
@@ -457,7 +452,6 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
     @Override
     protected void addUtilsButtonListeners() {
         if (isRangeForDate) {
-
             lowerBTN.addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -500,7 +494,6 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     @Override
     protected boolean checkFieldsValue() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -508,8 +501,8 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
     protected void initialize() {
         String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(parameters);
         if (indicatorThreshold != null) {
-            lowerText.setText(indicatorThreshold[0] == null ? "" : indicatorThreshold[0]);
-            higherText.setText(indicatorThreshold[1] == null ? "" : indicatorThreshold[1]);
+            lowerText.setText(indicatorThreshold[0] == null ? "" : indicatorThreshold[0]); //$NON-NLS-1$
+            higherText.setText(indicatorThreshold[1] == null ? "" : indicatorThreshold[1]); //$NON-NLS-1$
         }
         String[] indicatorPersentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(parameters);
         if (indicatorPersentThreshold != null && isContainRowCount) {

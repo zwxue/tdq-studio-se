@@ -51,7 +51,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
- * 
  */
 public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements ICommonLabelProvider {
 
@@ -117,7 +116,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                     Boolean lockByOthers = ImplementationHelper.getRepositoryManager().isLockByOthers(item);
                     Boolean lockByUserOwn = ImplementationHelper.getRepositoryManager().isLockByUserOwn(item);
                     if (lockByOthers || lockByUserOwn) {
-                        log.info(property.getLabel() + " is locked");
+                        log.info(property.getLabel() + " is locked"); //$NON-NLS-1$
                         image = ImageLib.createLockedIcon(image);
                     }
                 }
@@ -164,7 +163,7 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
         if (element instanceof IFile) {
             IFile file = (IFile) element;
             if (log.isDebugEnabled()) {
-                log.debug("Loading file " + file.getLocation());
+                log.debug("Loading file " + file.getLocation()); //$NON-NLS-1$
             }
             // MOD qiongli ,bug 14698,add 'try...catch'
             ModelElement mElement = null;
@@ -187,9 +186,9 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
 
             IFolder folder = (IFolder) element;
             if (ResourceManager.isAnalysisFolder(folder)) {
-                input += "(" + getFileCount(folder, new String[] { "ana" }) + ")";
+                input += "(" + getFileCount(folder, new String[] { "ana" }) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             } else if (ResourceManager.isReportsFolder(folder)) {
-                input += "(" + getFileCount(folder, new String[] { "rep" }) + ")";
+                input += "(" + getFileCount(folder, new String[] { "rep" }) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
         }
 

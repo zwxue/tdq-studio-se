@@ -55,13 +55,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author zqin
- * 
  */
 public abstract class MetadataWizardPage extends AbstractWizardPage {
 
-    /**
-     * 
-     */
     private static final int TEXT_FIELD_DEFAULT_MAX_CHAR_LIMIT = 200;
 
     // protected members
@@ -83,7 +79,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     // private members
     // private Button versionMajorBtn;
-    //
     // private Button versionMinorBtn;
 
     public MetadataWizardPage() {
@@ -97,7 +92,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      * (org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
-
         if (getParameter().getFolderProvider() == null || getParameter().getFolderProvider().isNull()) {
             FolderProvider defaultFolder = new FolderProvider();
             defaultFolder.setFolderResource(getStoredFolder());
@@ -233,7 +227,6 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      * @param inputFolder
      */
     protected void openFolderSelectionDialog(IFolder inputFolder) {
-
         FolderSelectionDialog dialog = new FolderSelectionDialog(getShell());
         dialog.setTitle(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolder")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("MetadataWizardPage.selectFolderItem")); //$NON-NLS-1$
@@ -356,9 +349,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         IFolder folderResource = getParameter().getFolderProvider().getFolderResource();
         if (elementName == null || folderResource == null) {
             // updateStatus(IStatus.ERROR, MSG_EMPTY);
-            //            return false; //$NON-NLS-1$
+            // return false; //$NON-NLS-1$
         } else {
-
             Collection<ModelElement> modelElements = new ArrayList<ModelElement>();
 
             switch (getParameter().getParamType()) {
@@ -403,5 +395,4 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
         }
         return true;
     }
-
 }

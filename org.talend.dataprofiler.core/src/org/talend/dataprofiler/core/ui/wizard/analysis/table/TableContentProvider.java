@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.talend.core.model.repository.Folder;
@@ -38,7 +37,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class TableContentProvider extends ResourceViewContentProvider {
 
-    private static Logger log = Logger.getLogger(TableContentProvider.class);
+    // private static Logger log = Logger.getLogger(TableContentProvider.class);
 
     public TableContentProvider() {
         super();

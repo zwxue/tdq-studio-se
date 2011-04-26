@@ -23,7 +23,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPag
  * DOC xqliu class global comment. Detailled comment
  */
 public class TableAnalysisMetadataWizardPage extends AnalysisMetadataWizardPage {
-    
+
     Log log = LogFactory.getLog(TableAnalysisMetadataWizardPage.class);
 
     private final String pageTitle = DefaultMessagesImpl.getString("TableAnalysisMetadataWizardPage.newAnalysis"); //$NON-NLS-1$
@@ -49,7 +49,6 @@ public class TableAnalysisMetadataWizardPage extends AnalysisMetadataWizardPage 
 
     @Override
     public boolean isPageComplete() {
-      
         return this.getParameter().getName().length() > 0;
     }
 
