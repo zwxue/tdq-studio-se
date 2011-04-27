@@ -20,7 +20,6 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
@@ -52,7 +51,6 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
     @Override
     protected String getInstantiatedClause() {
         // get function which convert data into a pattern
-
         String function = getFunction();
 
         // MOD zshen bug 11005 sometimes(when instead of soundex() with some sql),the Variable named "function" is not
@@ -66,7 +64,6 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         // ~11005
 
         // MOD mzhao bug 9740 2009-11-10
-
         String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : SOUNDEX_PREFIX + "("//$NON-NLS-1$ 
                 + function + ")" + dbmsLanguage.equal() + SOUNDEX_PREFIX + "('" + entity.getKey() + "')"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
         return clause;
@@ -81,5 +78,4 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         String group = matcher.group(1);
         return group;
     }
-
 }

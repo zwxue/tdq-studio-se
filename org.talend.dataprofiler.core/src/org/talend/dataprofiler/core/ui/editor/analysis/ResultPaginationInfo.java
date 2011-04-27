@@ -129,7 +129,6 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     private void createResultDataComposite(final Composite comp, final ModelElementIndicator modelElementIndicator) {
         if (modelElementIndicator.getIndicators().length != 0) {
-
             Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
                     .getIndicatorComposite(modelElementIndicator);
             for (EIndicatorChartType chartType : indicatorComposite.keySet()) {

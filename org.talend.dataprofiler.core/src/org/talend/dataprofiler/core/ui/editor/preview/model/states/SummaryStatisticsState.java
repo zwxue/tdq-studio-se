@@ -153,13 +153,11 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
     @Override
     protected ITableLabelProvider getLabelProvider() {
-        // TODO Auto-generated method stub
         return new SummaryLabelProvider();
     }
 
     @Override
     protected IStructuredContentProvider getContentProvider() {
-        // TODO Auto-generated method stub
         return new CommonContenteProvider();
     }
 

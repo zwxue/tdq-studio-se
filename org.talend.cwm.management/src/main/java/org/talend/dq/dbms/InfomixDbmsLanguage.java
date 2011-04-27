@@ -139,9 +139,11 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
 
     @Override
     public String getFreqRowsStatement(String colName, String table, String key) {
-        String sqlStatment = "select t3.* from (select  " //$NON-NLS-1$
+        String sqlStatment = "select distinct t3.* from (select  " //$NON-NLS-1$
                 + colName
-                + " ,first_char||second_char||rpad(replace_str2,1,'0')||rpad(replace(substring(rpad(replace_str2,100,'0') from 2),substring(rpad(replace_str2,100,'0') from 1 for 1),''),1,'0') as soundex_column_result from (select  name , first_char,rpad(replace_str,1,'0') as second_char,replace(substring(replace_str from 2),substring(replace_str from 1 for 1),'') as replace_str2 from(select  " //$NON-NLS-1$
+                + " ,first_char||second_char||rpad(replace_str2,1,'0')||rpad(replace(substring(rpad(replace_str2,100,'0') from 2),substring(rpad(replace_str2,100,'0') from 1 for 1),''),1,'0') as soundex_column_result from (select  " //$NON-NLS-1$
+                + colName
+                + " , first_char,rpad(replace_str,1,'0') as second_char,replace(substring(replace_str from 2),substring(replace_str from 1 for 1),'') as replace_str2 from(select  " //$NON-NLS-1$
                 + colName
                 + " , substring(UPPER(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace( " //$NON-NLS-1$
                 + colName
@@ -161,8 +163,12 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
                 + colName
                 + " ,'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9',''),'0','')),100,'0') from 2),'A','0'),'E','0'),'H','0'),'I','0'),'O','0'),'U','0'),'W','0'),'Y','0'),'B','1'),'F','1'),'P','1'),'V','1'),'C','2'),'G','2'),'J','2'),'K','2'),'Q','2'),'S','2'),'X','2'),'Z','2'),'D','3'),'T','3'),'L','4'),'M','5'),'N','5'),'R','6'),'0',''),100,'0') as replace_str from  " //$NON-NLS-1$
                 + table
-                + " ))) as t2 ,test_talend : test1 as t3 where t1." + colName + "='" + key //$NON-NLS-1$//$NON-NLS-2$
-                + "' and t2.soundex_column_result=t1.soundex_column_result and t2." + colName + "=t3." + colName + PluginConstant.EMPTY_STRING; //$NON-NLS-1$//$NON-NLS-2$
+                + " ))) as t2 ," //$NON-NLS-1$
+                + table
+                + " as t3 where t1." + colName + "='" + key //$NON-NLS-1$//$NON-NLS-2$
+                + "' and t2.soundex_column_result=t1.soundex_column_result and t2." + colName + "=t3." + colName //$NON-NLS-1$//$NON-NLS-2$
+                + "and t3." + colName + "='" + key + "'"//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+                + PluginConstant.EMPTY_STRING;
         return sqlStatment;
     }
 
