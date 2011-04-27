@@ -19,6 +19,7 @@ import java.util.List;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -244,7 +245,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         getTreeViewer().setSubtreeChecked(viewerElements[i], true);
                     }
                 }
-                // modelElementCheckedMap.clear();
+                modelElementCheckedMap.clear();
                 if (getTableViewer().getInput() != null) {
                     handleTreeElementsChecked((RepositoryNode) getTableViewer().getInput(), true);
                 }
@@ -273,37 +274,88 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         if (selectedObj != null) {
             if (selectedObj.hasChildren()) {
                 this.setOutput(selectedObj);
+                Boolean allCheckFlag = this.getTreeViewer().getChecked(selectedObj);
                 List<?> repositoryNodeList = (List<?>) modelElementCheckedMap.get(selectedObj);
                 if (repositoryNodeList != null) {
                     this.getTableViewer().setCheckedElements(repositoryNodeList.toArray());
+                }// MOD klliu check Table/View node is select
+                else if (selectedObj instanceof DBTableRepNode || selectedObj instanceof DBViewRepNode
+                        || selectedObj instanceof DFTableRepNode) {
+                    if (allCheckFlag) {
+                        this.getTableViewer().setCheckedElements(selectedObj.getChildren().get(0).getChildren().toArray());
+                    }
+                } else if (selectedObj instanceof MDMXmlElementRepNode) {
+                    if (allCheckFlag) {
+                        this.getTableViewer().setCheckedElements(selectedObj.getChildren().toArray());
+                    }
+                }
+                // ~
+            }
+        }
+
+    }
+
+    List<IRepositoryNode> allCheckedElements = new ArrayList<IRepositoryNode>();
+
+    private void getAllCheckElements() {
+        Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
+        for (int i = 0; i < checkedNodes.length; i++) {
+            IRepositoryNode repNode = (IRepositoryNode) checkedNodes[i];
+            if (repNode instanceof DBColumnRepNode || repNode instanceof DFColumnRepNode) {
+                if (!allCheckedElements.contains(repNode)) {
+                    allCheckedElements.add(repNode);
+                }
+            } else if (repNode instanceof DFTableRepNode || repNode instanceof DBTableRepNode || repNode instanceof DBViewRepNode) {
+                if (!getTableviewCheckedElements(allCheckedElements, repNode)) {
+                    List<IRepositoryNode> children = repNode.getChildren().get(0).getChildren();
+                    for (IRepositoryNode node : children) {
+                        if (!allCheckedElements.contains(node)) {
+                            allCheckedElements.add(node);
+                        }
+                    }
+                }
+            } else if (repNode instanceof MDMXmlElementRepNode) {
+                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(repNode, true).length > 0;
+                if (!isLeaf) {
+                    if (!getTableviewCheckedElements(allCheckedElements, repNode)) {
+                        List<IRepositoryNode> children = repNode.getChildren();
+                        allCheckedElements.addAll(children);
+                    }
                 }
             }
         }
-
     }
 
-    @SuppressWarnings("unchecked")
-    protected void computeResult() {
-        List<RepositoryNode> allCheckedElements = new ArrayList<RepositoryNode>();
-        Iterator<?> keyIterate = modelElementCheckedMap.keySet().iterator();
-        while (keyIterate.hasNext()) {
-            RepositoryNode repNode = (RepositoryNode) keyIterate.next();
-            // Parent
-            allCheckedElements.add(repNode);
-            // Children
-            List<RepositoryNode> columnFolder = (List<RepositoryNode>) modelElementCheckedMap.get(repNode);
-            for (RepositoryNode column : columnFolder) {
-                allCheckedElements.add(column);
-            }
+    private boolean getTableviewCheckedElements(List<IRepositoryNode> allCheckedElements, IRepositoryNode repNode) {
+        List<IRepositoryNode> columnFolder = (List<IRepositoryNode>) modelElementCheckedMap.get(repNode);
+        if (columnFolder == null) {
+            return false;
         }
-        setResult(allCheckedElements);
+        for (IRepositoryNode column : columnFolder) {
+            allCheckedElements.add(column);
+        }
+        return columnFolder.size() > 0;
     }
+
+    private static final int CHECKED_ELEMENTS_LENGTH = 100;
 
     protected void okPressed() {
-        super.okPressed();
-        ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
-        this.modelElementCheckedMap = null;
+        allCheckedElements.clear();
+        getAllCheckElements();
+        if (allCheckedElements.size() > CHECKED_ELEMENTS_LENGTH) {
+            MessageDialog.openWarning(null,
+                    "Column Selection", "The section of 'Analysis Columns' can up to " + CHECKED_ELEMENTS_LENGTH + " columns."); //$NON-NLS-1$
+        } else {
+            super.okPressed();
+            ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
+            ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
+            this.modelElementCheckedMap = null;
+        }
+    }
+
+    @Override
+    protected void computeResult() {
+        setResult(allCheckedElements);
     }
 
     /**

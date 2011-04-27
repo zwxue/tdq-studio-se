@@ -454,13 +454,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     public abstract void addElements(final ModelElementIndicator[] elements);
 
     public void setInput(Object[] objs) {
-        if (objs == null || objs.length == 0) {
-            TreeItem[] items = tree.getItems();
-            for (TreeItem item : items) {
-                this.removeItemBranch(item);
-            }
-            return;
-        }
         List<RepositoryNode> reposList = new ArrayList<RepositoryNode>();
         for (Object obj : objs) {
             // MOD klliu 2011-02-16 feature 15387
@@ -475,6 +468,10 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             }
         }
         if (reposList.size() == 0) {
+            TreeItem[] items = this.tree.getItems();
+            for (TreeItem item : items) {
+                this.removeItemBranch(item);
+            }
             return;
         }
         boolean isMdm = false;

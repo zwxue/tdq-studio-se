@@ -465,6 +465,8 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         // List<DBColumnRepNode> columnNodeList = RepositoryNodeHelper.getColumnNodeList(objs);
         List<IRepositoryNode> columnNodes = this.getColumnNodes(objs);
         if (columnNodes.size() == 0) {
+            TreeItem[] items = this.tree.getItems();
+            this.removeSelectedElements(items);
             return;
         }
         this.setElements(columnNodes);
@@ -630,6 +632,14 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
      */
     private void removeSelectedElements(final Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
+        for (TreeItem item : selection) {
+            RepositoryNode tdColumnReposNode = (RepositoryNode) item.getData(COLUMN_INDICATOR_KEY);
+            deleteColumnItems(tdColumnReposNode);
+            removeItemBranch(item);
+        }
+    }
+
+    private void removeSelectedElements(final TreeItem[] selection) {
         for (TreeItem item : selection) {
             RepositoryNode tdColumnReposNode = (RepositoryNode) item.getData(COLUMN_INDICATOR_KEY);
             deleteColumnItems(tdColumnReposNode);

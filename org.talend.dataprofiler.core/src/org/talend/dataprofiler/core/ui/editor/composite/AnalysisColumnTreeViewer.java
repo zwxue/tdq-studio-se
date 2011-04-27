@@ -569,7 +569,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     masterPage.doSave(null);
                 }
 
-
                 if (dm != null && dm instanceof Connection) {
                     Connection dp = (Connection) dm;
                     if (ConnectionUtils.isMdmConnection(dp)) {
@@ -687,6 +686,34 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         TreeItem[] selection = newTree.getSelection();
         boolean branchIndicatorExist = false;
         for (TreeItem item : selection) {
+            IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
+            if (indicatorUnit != null) {
+                deleteIndicatorItems((ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY), indicatorUnit);
+            } else {
+                deleteModelElementItems((ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY));
+            }
+            // if the item's parent item is a indicator item, when current
+            // indicator item removed, it's parent item
+            // should be removed and recreate the tree;else,just need remove
+            // current item and it's branch.
+            if (item.getParentItem() != null && item.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
+                branchIndicatorExist = true;
+                continue;
+            } else {
+                removeItemBranch(item);
+            }
+        }
+        if (branchIndicatorExist) {
+            setElements(modelElementIndicators);
+        }
+        // MOD mzhao 2009-05-5, bug 6587.
+        // MOD mzhao 2009-06-8, bug 5887.
+        // updateBindConnection(masterPage, getColumnIndicator(), tree);
+    }
+
+    private void removeSelectedElements(TreeItem[] items) {
+        boolean branchIndicatorExist = false;
+        for (TreeItem item : items) {
             IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
             if (indicatorUnit != null) {
                 deleteIndicatorItems((ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY), indicatorUnit);
@@ -875,6 +902,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             return !metadataRepositoryNode.hasChildren();
         }
         return true;
+    }
+
+    @Override
+    public void setInput(Object[] objs) {
+        if (objs == null || objs.length == 0) {
+            this.removeSelectedElements(tree.getItems());
+            return;
+        }
+        super.setInput(objs);
     }
 
     /**
