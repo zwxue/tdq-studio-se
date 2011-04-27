@@ -197,20 +197,19 @@ public class DrillDownEditorInput implements IEditorInput {
         }
         // MOD qiongli 2011-4-8,bug 19192.delimited file may has diffrent number of columns for every row.
         if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
-            columnValue = new String[newColumnElementList.size()][computeColumnValueLength(newColumnElementList)];
+            columnValue = new String[newColumnElementList.size()][newColumnElementList.get(0).length];
         } else {
             columnValue = new String[newColumnElementList.size()][columnElementList.size()];
         }
-        // MOD klliu bug 20508: blank count drill dow exception 2011-04-19
-        for (int row = 0; row < newColumnElementList.size(); row++) {
-            Object[] tableRow = newColumnElementList.get(row);
-            for (int i = 0; i < tableRow.length; i++) {
-                Object tableValue = tableRow[i];
-                columnValue[row][i] = tableValue == null ? "<null>" : tableValue.toString();//$NON-NLS-1$
+        int rowIndex = 0;
+        for (Object[] tableRow : newColumnElementList) {
+            int columnIndex = 0;
+            for (Object tableValue : tableRow) {
+                columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
             }
+            rowIndex++;
         }
         return new DataSet(columnHeader, columnValue);
-        // return null;
     }
 
     private int computeColumnValueLength(List<Object[]> newColumnElementList) {
