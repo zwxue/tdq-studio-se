@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import net.sourceforge.sqlexplorer.IConstants;
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -67,26 +68,26 @@ public abstract class AbstractSQLTab extends AbstractDataSetTab {
             
         } catch (Exception e) {
             
-            SQLExplorerPlugin.error("Couldn't load source for: " + getNode().getName(), e);
+            SQLExplorerPlugin.error(Messages.getString("AbstractSQLSourceTab.cannotLoadSource") + getNode().getName(), e);
             
         } finally {
             if (rs != null)
             	try {
             		rs.close();
             	}catch(SQLException e) {
-            		SQLExplorerPlugin.error("Error closing result set", e);
+                    SQLExplorerPlugin.error(Messages.getString("DataSet.errorCloseRs"), e);
             	}
             if (stmt != null)
                 try {
                     stmt.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Error closing statement", e);
+                    SQLExplorerPlugin.error(Messages.getString("DataSet.errorCloseStmt"), e);
                 }
             if (pStmt != null)
                 try {
                     pStmt.close();
                 } catch (SQLException e) {
-                    SQLExplorerPlugin.error("Error closing statement", e);
+                    SQLExplorerPlugin.error(Messages.getString("DataSet.errorCloseStmt"), e);
                 }
             if (connection != null)
             	getNode().getSession().releaseConnection(connection);

@@ -81,7 +81,7 @@ public class ColumnInfoTab extends AbstractDataSetTab {
             	row[i++] = col.getOrdinalPosition();
             	row[i++] = col.isNullable();
             	if (i != COLUMN_LABELS.length)
-            		throw new RuntimeException("Internal error: ColumnInfoTab: wrong number of columns");
+                    throw new RuntimeException(Messages.getString("ColumnInfoTab.runtimeException"));
             }
             DataSet dataSet = new DataSet(COLUMN_LABELS, dataRows);
             return dataSet;
@@ -91,7 +91,7 @@ public class ColumnInfoTab extends AbstractDataSetTab {
     }
 
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.ColumnInfo.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.ColumnInfo.status") + " " + getNode().getQualifiedName();//$NON-NLS-2$
     }
     
 }

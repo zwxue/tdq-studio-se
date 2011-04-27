@@ -90,7 +90,7 @@ public class ExportXLSAction extends AbstractDataSetTableContextAction {
                     
                     file.createNewFile();
                     PrintStream writer = new PrintStream(file, dlg.getCharacterSet()); 
-                    StringBuffer buffer = new StringBuffer("");
+                    StringBuffer buffer = new StringBuffer("");//$NON-NLS-1$
                     
                     // get preferences
                     boolean includeColumnNames = dlg.includeHeaders();
@@ -104,19 +104,19 @@ public class ExportXLSAction extends AbstractDataSetTableContextAction {
                         return;
                     }
 
-                    writer.println("<table>");
+                    writer.println("<table>");//$NON-NLS-1$
                     
                     // export column names
                     if (includeColumnNames) {
                         
-                        buffer.append("<tr>");
+                        buffer.append("<tr>");//$NON-NLS-1$
                         DataSet.Column[] columns = dataSet.getColumns();
                         for (int i = 0; i < columns.length; i++) {
-                            buffer.append("<th>");
+                            buffer.append("<th>");//$NON-NLS-1$
                             buffer.append(TextUtil.htmlEscape(columns[i].getCaption()));
-                            buffer.append("</th>");
+                            buffer.append("</th>");//$NON-NLS-1$
                         }
-                        buffer.append("</tr>");
+                        buffer.append("</tr>");//$NON-NLS-1$
                         writer.println(buffer.toString());
                     }
 
@@ -124,30 +124,30 @@ public class ExportXLSAction extends AbstractDataSetTableContextAction {
                     int columnCount = _table.getColumnCount();
                     for (int i = 0; i < dataSet.getRowCount(); i++) {
                                            
-                        buffer = new StringBuffer("<tr>");
+                        buffer = new StringBuffer("<tr>");//$NON-NLS-1$
                         DataSetRow row = dataSet.getRow(i);
                         
                         for (int j = 0; j < columnCount; j++) {
-                            buffer.append("<td>");
+                            buffer.append("<td>");//$NON-NLS-1$
                             Object o = row.getRawObjectValue(j);
                         	String t = o == null ? nullValue : o.toString();
                         	if (rtrim) 
                         		t = TextUtil.rtrim(t);
                         	if (quote && o instanceof String) {
-                        		buffer.append("\"");
+                                buffer.append("\"");//$NON-NLS-1$
                         		buffer.append(TextUtil.htmlEscape(t));
-                        		buffer.append("\"");
+                                buffer.append("\"");//$NON-NLS-1$
                         	} else
                         		buffer.append(TextUtil.htmlEscape(t));
-                            buffer.append("</td>");
+                            buffer.append("</td>");//$NON-NLS-1$
                         }
                         
-                        buffer.append("</tr>");
+                        buffer.append("</tr>");//$NON-NLS-1$
                         
                         writer.println(buffer.toString());
                     }
 
-                    writer.println("</table>");
+                    writer.println("</table>");//$NON-NLS-1$
                     
                     writer.close();
 

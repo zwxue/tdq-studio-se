@@ -84,7 +84,7 @@ public class CopyColumnNameAction extends AbstractDataSetTableContextAction {
             clipBoard.setContents(new Object[] {column.getText()}, new Transfer[] {textTransfer});
 
         } catch (Exception e) {
-            SQLExplorerPlugin.error("Error exporting cell to clipboard ", e);
+            SQLExplorerPlugin.error(Messages.getString("CopyColumnNameAction.error"), e);
         }
     }
 

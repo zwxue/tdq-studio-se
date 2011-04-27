@@ -83,7 +83,7 @@ public class ExportCSVAction extends AbstractDataSetTableContextAction {
                     
                     file.createNewFile();
                     PrintStream writer = new PrintStream(file, dlg.getCharacterSet()); 
-                    StringBuffer buffer = new StringBuffer("");
+                    StringBuffer buffer = new StringBuffer("");//$NON-NLS-1$
                     
                     // get column header and separator preferences
                     String columnSeparator = dlg.getDelimiter(); 
@@ -115,7 +115,7 @@ public class ExportCSVAction extends AbstractDataSetTableContextAction {
                     int columnCount = _table.getColumnCount();
                     for (int i = 0; i < dataSet.getRowCount(); i++) {
                                            
-                        buffer = new StringBuffer("");
+                        buffer = new StringBuffer("");//$NON-NLS-1$
                         DataSetRow row = dataSet.getRow(i);
                         
                         for (int j = 0; j < columnCount; j++) {
@@ -124,9 +124,9 @@ public class ExportCSVAction extends AbstractDataSetTableContextAction {
                         	if (rtrim) 
                         		t = TextUtil.rtrim(t);
                         	if (quote && o instanceof String) {
-                        		buffer.append("\"");
+                                buffer.append("\"");//$NON-NLS-1$
                         		buffer.append(t);
-                        		buffer.append("\"");
+                                buffer.append("\"");//$NON-NLS-1$
                         	} else
                         		buffer.append(t);
                         	/* don't append separator _after_ last column */

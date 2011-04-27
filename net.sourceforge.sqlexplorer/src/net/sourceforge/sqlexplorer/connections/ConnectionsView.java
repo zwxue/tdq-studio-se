@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
 import net.sourceforge.sqlexplorer.connections.actions.AbstractConnectionTreeAction;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
@@ -85,7 +86,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      */
     public void createPartControl(Composite parent) {
 
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".AliasView");
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".AliasView");//$NON-NLS-1$
 
         SQLExplorerPlugin.getDefault().getAliasManager().addListener(this);
 
@@ -119,7 +120,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
                     IFile file = SQLExplorerPlugin.getDefault().getPropertyFile().get(element);
                     if (null != file && file.exists())
                         // FIXME: Not recommended to judge delete status like this.
-                        return !FileUtils.readFileToString(file.getLocation().toFile()).contains("deleted=\"true\"");
+                        return !FileUtils.readFileToString(file.getLocation().toFile()).contains("deleted=\"true\"");//$NON-NLS-1$
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -161,7 +162,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
 
         // add context menu
         final ConnectionTreeActionGroup actionGroup = new ConnectionTreeActionGroup();
-        MenuManager menuManager = new MenuManager("ConnectionTreeContextMenu");
+        MenuManager menuManager = new MenuManager("ConnectionTreeContextMenu");//$NON-NLS-1$
         menuManager.setRemoveAllWhenShown(true);
         Menu contextMenu = menuManager.createContextMenu(_treeViewer.getTree());
         _treeViewer.getTree().setMenu(contextMenu);
@@ -187,14 +188,15 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
                 dsView.addUser(user);
             }
             SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo()
-                    + ").sql");
+                    + ").sql");//$NON-NLS-1$ $NON-NLS-2$
             input.setUser(user);
             IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
             page.openEditor(input, SQLEditor.class.getName());
         } catch (SQLCannotConnectException e) {
-            MessageDialog.openError(Display.getDefault().getActiveShell(), "Cannot connect", e.getMessage());
+            MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.getString("ConnectionsView.cannotConnect"),
+                    e.getMessage());
         } catch (Throwable e) {
-            SQLExplorerPlugin.error("Error creating sql editor", e);
+            SQLExplorerPlugin.error(Messages.getString("ConnectionsView.errCreateSql"), e);
         }
     }
 

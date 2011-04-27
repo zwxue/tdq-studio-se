@@ -90,10 +90,10 @@ public class DataSetTableSorter implements Comparator {
         
         // sort based on null values
         // MOD by zshen to fix a castException for bug 17291
-    	if ("<null>".equals(o1)  || "<null>".equals(o2)) {
-            if ("<null>".equals(o1) && !"<null>".equals(o2)) {
+        if ("<null>".equals(o1) || "<null>".equals(o2)) {//$NON-NLS-1$ $NON-NLS-2$
+            if ("<null>".equals(o1) && !"<null>".equals(o2)) {//$NON-NLS-1$ $NON-NLS-2$
     			result = 1;
-            } else if (!"<null>".equals(o1) && "<null>".equals(o2)) {
+            } else if (!"<null>".equals(o1) && "<null>".equals(o2)) {//$NON-NLS-1$ $NON-NLS-2$
     			result = -1;
     		} else {
     			result = 0;

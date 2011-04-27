@@ -83,10 +83,12 @@ public class ConnectionTreeLabelProvider extends LabelProvider {
         		numSessions += user.getConnections().size();
         	
             if (numSessions == 1)
-                return label + " (" + numSessions + " " + Messages.getString("ConnectionsView.ConnectedAlias.single.Postfix") + ")";
+                return label
+                        + " (" + numSessions + " " + Messages.getString("ConnectionsView.ConnectedAlias.single.Postfix") + ")";//$NON-NLS-1$
 
             if (numSessions > 1)
-                return label + " (" + numSessions + " " + Messages.getString("ConnectionsView.ConnectedAlias.multiple.Postfix") + ")";
+                return label
+                        + " (" + numSessions + " " + Messages.getString("ConnectionsView.ConnectedAlias.multiple.Postfix") + ")";//$NON-NLS-1$
 
             return label;
 
@@ -99,13 +101,13 @@ public class ConnectionTreeLabelProvider extends LabelProvider {
             String label;
             
             if (connection.getDescription() == null) {
-	            SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
-            	label = Messages.getString("ConnectionsView.ConnectedAlias.ConnectedSince") + ' ' + fmt.format(new Date(connection.getCreatedTime()));
+                SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");//$NON-NLS-1$
+                label = Messages.getString("ConnectionsView.ConnectedAlias.ConnectedSince") + ' ' + fmt.format(new Date(connection.getCreatedTime()));//$NON-NLS-2$
             } else
-            	label = Messages.getString("ConnectionsView.ConnectedAlias.Connection") + ' ' + connection.getDescription();
+                label = Messages.getString("ConnectionsView.ConnectedAlias.Connection") + ' ' + connection.getDescription();//$NON-NLS-2$
 
             if (connection.isPooled())
-            	label += ' ' + Messages.getString("ConnectionsView.ConnectedAlias.Pooled");
+                label += ' ' + Messages.getString("ConnectionsView.ConnectedAlias.Pooled");//$NON-NLS-1$
             return label;
         }
         

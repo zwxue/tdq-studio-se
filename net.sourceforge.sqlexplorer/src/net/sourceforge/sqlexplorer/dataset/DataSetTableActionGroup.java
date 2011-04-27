@@ -72,7 +72,7 @@ public class DataSetTableActionGroup extends ActionGroup {
     public void fillContextMenu(IMenuManager menu) {
         
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "dataSetTableContextAction");
+        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "dataSetTableContextAction");//$NON-NLS-1$ $NON-NLS-2$
         IExtension[] extensions = point.getExtensions();
 
         // add basic actions
@@ -86,11 +86,12 @@ public class DataSetTableActionGroup extends ActionGroup {
             for (int j = 0; j < ces.length; j++) {
                 try {
                     
-                    String group = ces[j].getAttribute("group");
-                    if (group == null || !group.equalsIgnoreCase("export")) {
+                    String group = ces[j].getAttribute("group");//$NON-NLS-1$
+                    if (group == null || !group.equalsIgnoreCase("export")) {//$NON-NLS-1$
                     
                         // check if the action thinks it is suitable..
-                        AbstractDataSetTableContextAction action = (AbstractDataSetTableContextAction) ces[j].createExecutableExtension("class");
+                        AbstractDataSetTableContextAction action = (AbstractDataSetTableContextAction) ces[j]
+                                .createExecutableExtension("class");//$NON-NLS-1$
                         action.setTable(_table);
                         action.setTableCursor(_cursor);
                         if (action.isAvailable()) {
@@ -99,7 +100,7 @@ public class DataSetTableActionGroup extends ActionGroup {
                     }
                         
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error("Could not create menu action", ex);
+                    SQLExplorerPlugin.error(Messages.getString("DataSetTableActionGroup.cannotCreateMenuAction"), ex);
                 }
             }
         }
@@ -120,11 +121,12 @@ public class DataSetTableActionGroup extends ActionGroup {
             for (int j = 0; j < ces.length; j++) {
                 try {
                     
-                    String group = ces[j].getAttribute("group");
-                    if (group != null && group.equalsIgnoreCase("export")) {
+                    String group = ces[j].getAttribute("group");//$NON-NLS-1$
+                    if (group != null && group.equalsIgnoreCase("export")) {//$NON-NLS-1$
                     
                         // check if the action thinks it is suitable..
-                        AbstractDataSetTableContextAction action = (AbstractDataSetTableContextAction) ces[j].createExecutableExtension("class");
+                        AbstractDataSetTableContextAction action = (AbstractDataSetTableContextAction) ces[j]
+                                .createExecutableExtension("class");//$NON-NLS-1$
                         action.setTable(_table);
                         action.setTableCursor(_cursor);
                         if (action.isAvailable()) {
@@ -133,7 +135,7 @@ public class DataSetTableActionGroup extends ActionGroup {
                     }
                         
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error("Could not create menu action", ex);
+                    SQLExplorerPlugin.error(Messages.getString("DataSetTableActionGroup.cannotCreateMenuAction"), ex);
                 }
             }
         }

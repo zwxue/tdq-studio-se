@@ -76,10 +76,10 @@ public class CopyTableAction extends AbstractDataSetTableContextAction {
                     // create clipboard
                     Clipboard clipBoard = new Clipboard(Display.getCurrent());
                     TextTransfer textTransfer = TextTransfer.getInstance();
-                    StringBuffer buffer = new StringBuffer("");
+                    StringBuffer buffer = new StringBuffer("");//$NON-NLS-1$
                     
                     // get preferences
-                    String lineSeparator = System.getProperty("line.separator");
+                    String lineSeparator = System.getProperty("line.separator");//$NON-NLS-1$
                     String columnSeparator = SQLExplorerPlugin.getDefault().getPreferenceStore().getString(IConstants.CLIP_EXPORT_SEPARATOR);
                     boolean includeColumnNames = SQLExplorerPlugin.getDefault().getPreferenceStore().getBoolean(IConstants.CLIP_EXPORT_COLUMNS);
                     
@@ -117,7 +117,7 @@ public class CopyTableAction extends AbstractDataSetTableContextAction {
                     clipBoard.setContents(new Object[] {buffer.toString()}, new Transfer[] {textTransfer});
 
                 } catch (Exception e) {
-                    SQLExplorerPlugin.error("Error exporting to clipboard ", e);
+                    SQLExplorerPlugin.error(Messages.getString("CopyTableAction.error"), e);
                 }
             }
         });

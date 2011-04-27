@@ -59,6 +59,6 @@ public class PriviligesTab extends AbstractDataSetTab {
     }
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.Priviliges.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.Priviliges.status") + " " + getNode().getQualifiedName();//$NON-NLS-2$
     }
 }

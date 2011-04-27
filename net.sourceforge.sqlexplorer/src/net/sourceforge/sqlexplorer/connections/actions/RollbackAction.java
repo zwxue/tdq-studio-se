@@ -20,6 +20,7 @@ package net.sourceforge.sqlexplorer.connections.actions;
 
 import java.sql.SQLException;
 
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
@@ -41,7 +42,7 @@ public class RollbackAction extends AbstractConnectionTreeAction implements IVie
 				if (!connection.getAutoCommit())
     				connection.rollback();
 			}catch(SQLException e) {
-				SQLExplorerPlugin.error("Cannot rollback session", e);
+                SQLExplorerPlugin.error(Messages.getString("RollbackAction.rollback"), e);
 			}
     }
 
@@ -59,7 +60,7 @@ public class RollbackAction extends AbstractConnectionTreeAction implements IVie
 				if (!connection.getAutoCommit())
     				return true;
 			}catch(SQLException e) {
-				SQLExplorerPlugin.error("Cannot rollback session", e);
+                SQLExplorerPlugin.error(Messages.getString("RollbackAction.rollback"), e);
 			}
 
         return false;

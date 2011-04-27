@@ -66,7 +66,7 @@ public class DetailTabManager {
     public static void clearCacheForNode(INode node) {
 
         if (_logger.isDebugEnabled()) {
-            _logger.debug("Clearing tab cache for: " + node.getUniqueIdentifier());
+            _logger.debug("Clearing tab cache for: " + node.getUniqueIdentifier());//$NON-NLS-1$
         }
 
         HashMap<String, List<IDetailTab>> tabCache = _sessionTabCache.get(node.getSession());
@@ -84,7 +84,7 @@ public class DetailTabManager {
     public static void clearCacheForSession(MetaDataSession session) {
 
         if (_logger.isDebugEnabled()) {
-            _logger.debug("Clearing tab cache for: " + session.toString());
+            _logger.debug("Clearing tab cache for: " + session.toString());//$NON-NLS-1$
         }
 
         _sessionTabCache.remove(session);
@@ -106,7 +106,7 @@ public class DetailTabManager {
             // no detail found..
 
             Label label = new Label(composite, SWT.FILL);
-            label.setText(Messages.getString("DatabaseDetailView.Tab.Unavailable") + " " + node.getLabelText());
+            label.setText(Messages.getString("DatabaseDetailView.Tab.Unavailable") + " " + node.getLabelText());//$NON-NLS-2$
             label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
             return;
@@ -202,7 +202,7 @@ public class DetailTabManager {
     private static List<IDetailTab> createTabs(INode node) {
 
         if (_logger.isDebugEnabled()) {
-            _logger.debug("Creating tabs for: " + node.getUniqueIdentifier());
+            _logger.debug("Creating tabs for: " + node.getUniqueIdentifier());//$NON-NLS-1$
         }
 
         ArrayList<IDetailTab> tabList = new ArrayList<IDetailTab>();
@@ -265,7 +265,7 @@ public class DetailTabManager {
         String nodeType = node.getType().toLowerCase().trim();
 
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "nodeDetailTab");
+        IExtensionPoint point = registry.getExtensionPoint("net.sourceforge.sqlexplorer", "nodeDetailTab");//$NON-NLS-1$ $NON-NLS-2$
         IExtension[] extensions = point.getExtensions();
 
         for (int i = 0; i < extensions.length; i++) {
@@ -280,8 +280,8 @@ public class DetailTabManager {
                     boolean isValidProduct = false;
                     boolean isValidNodeType = false;
 
-                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");
-                    String[] validNodeTypes = ces[j].getAttribute("node-type").split(",");
+                    String[] validProducts = ces[j].getAttribute("database-product-name").split(",");//$NON-NLS-1$ $NON-NLS-2$
+                    String[] validNodeTypes = ces[j].getAttribute("node-type").split(",");//$NON-NLS-1$ $NON-NLS-2$
 
                     // check if tab is valid for current database product
                     for (int k = 0; k < validProducts.length; k++) {
@@ -292,12 +292,12 @@ public class DetailTabManager {
                             continue;
                         }
 
-                        if (product.equals("*")) {
+                        if (product.equals("*")) {//$NON-NLS-1$
                             isValidProduct = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(product, '*', ".*");
+                        String regex = TextUtil.replaceChar(product, '*', ".*");//$NON-NLS-1$ $NON-NLS-2$
                         if (databaseProductName.matches(regex)) {
                             isValidProduct = true;
                             break;
@@ -318,12 +318,12 @@ public class DetailTabManager {
                             continue;
                         }
 
-                        if (type.equals("*")) {
+                        if (type.equals("*")) {//$NON-NLS-1$
                             isValidNodeType = true;
                             break;
                         }
 
-                        String regex = TextUtil.replaceChar(type, '*', ".*");
+                        String regex = TextUtil.replaceChar(type, '*', ".*");//$NON-NLS-1$ $NON-NLS-2$
                         if (nodeType.matches(regex)) {
                             isValidNodeType = true;
                             break;
@@ -336,13 +336,13 @@ public class DetailTabManager {
                     }
 
                     // add tab to list
-                    IDetailTab tab = (IDetailTab) ces[j].createExecutableExtension("class");
+                    IDetailTab tab = (IDetailTab) ces[j].createExecutableExtension("class");//$NON-NLS-1$
                     tab.setNode(node);
 
                     tabList.add(tab);
 
                 } catch (Throwable ex) {
-                    SQLExplorerPlugin.error("Could not create menu action", ex);
+                    SQLExplorerPlugin.error(Messages.getString("DataSetTableActionGroup.cannotCreateMenuAction"), ex);
                 }
             }
         }
@@ -362,7 +362,7 @@ public class DetailTabManager {
     private static List getTabs(INode node) {
 
         if (_logger.isDebugEnabled()) {
-            _logger.debug("Loading tabs for: " + node.getUniqueIdentifier());
+            _logger.debug("Loading tabs for: " + node.getUniqueIdentifier());//$NON-NLS-1$
         }
 
         HashMap<String, List<IDetailTab>> tabCache = _sessionTabCache.get(node.getSession());

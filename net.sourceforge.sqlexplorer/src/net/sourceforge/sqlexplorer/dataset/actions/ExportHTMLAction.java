@@ -92,7 +92,7 @@ public class ExportHTMLAction extends AbstractDataSetTableContextAction {
                     
                     file.createNewFile();
                     PrintStream writer = new PrintStream(file, charset); 
-                    StringBuffer buffer = new StringBuffer("");
+                    StringBuffer buffer = new StringBuffer("");//$NON-NLS-1$
                     
                     // get preferences
                     boolean includeColumnNames = dlg.includeHeaders();
@@ -105,32 +105,32 @@ public class ExportHTMLAction extends AbstractDataSetTableContextAction {
                         return;
                     }
                     
-                    writer.println("<html>");
-                    writer.println("<head>");                    
-                    writer.print("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=");
+                    writer.println("<html>");//$NON-NLS-1$
+                    writer.println("<head>");//$NON-NLS-1$               
+                    writer.print("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=");//$NON-NLS-1$
                     writer.print(charset);
-                    writer.println("\">");
-                    writer.println("<style type=\"text/css\">");
-                    writer.println("TABLE {border-collapse: collapse;}");
-                    writer.println("TH {background-color: rgb(240, 244, 245);}");
-                    writer.println("TH, TD {border: 1px solid #D1D6D4;font-size: 10px;font-family: Verdana, Arial, Helvetica, sans-serif;}");
-                    writer.println(".right {text-align: right;}");
-                    writer.println("</style>");
-                    writer.println("</head>");
-                    writer.println("<body>");
-                    writer.println("<table>");
+                    writer.println("\">");//$NON-NLS-1$
+                    writer.println("<style type=\"text/css\">");//$NON-NLS-1$
+                    writer.println("TABLE {border-collapse: collapse;}");//$NON-NLS-1$
+                    writer.println("TH {background-color: rgb(240, 244, 245);}");//$NON-NLS-1$
+                    writer.println("TH, TD {border: 1px solid #D1D6D4;font-size: 10px;font-family: Verdana, Arial, Helvetica, sans-serif;}");//$NON-NLS-1$
+                    writer.println(".right {text-align: right;}");//$NON-NLS-1$
+                    writer.println("</style>");//$NON-NLS-1$
+                    writer.println("</head>");//$NON-NLS-1$
+                    writer.println("<body>");//$NON-NLS-1$
+                    writer.println("<table>");//$NON-NLS-1$
                     
                     // export column names
                     if (includeColumnNames) {
                         
-                        buffer.append("<tr>");
+                        buffer.append("<tr>");//$NON-NLS-1$
                         DataSet.Column[] columns = dataSet.getColumns();
                         for (int i = 0; i < columns.length; i++) {
-                            buffer.append("<th>");
+                            buffer.append("<th>");//$NON-NLS-1$
                             buffer.append(TextUtil.htmlEscape(columns[i].getCaption()));
-                            buffer.append("</th>");
+                            buffer.append("</th>");//$NON-NLS-1$
                         }
-                        buffer.append("</tr>");
+                        buffer.append("</tr>");//$NON-NLS-1$
                         writer.println(buffer.toString());
                     }
 
@@ -138,7 +138,7 @@ public class ExportHTMLAction extends AbstractDataSetTableContextAction {
                     int columnCount = _table.getColumnCount();
                     for (int i = 0; i < dataSet.getRowCount(); i++) {
                                            
-                        buffer = new StringBuffer("<tr>");
+                        buffer = new StringBuffer("<tr>");//$NON-NLS-1$
                         DataSetRow row = dataSet.getRow(i);
                         
                         for (int j = 0; j < columnCount; j++) {
@@ -147,25 +147,25 @@ public class ExportHTMLAction extends AbstractDataSetTableContextAction {
                         	
                             if (o instanceof Double || o instanceof Integer)
                                 // right align numbers
-                                buffer.append("<td class=\"right\">");    
+                                buffer.append("<td class=\"right\">");//$NON-NLS-1$  
                             else
-                                buffer.append("<td>");
+                                buffer.append("<td>");//$NON-NLS-1$
 
                         	String t = o == null ? nullValue : o.toString();
                         	if (rtrim) 
                         		t = TextUtil.rtrim(t);
                             buffer.append(TextUtil.htmlEscape(t));
-                            buffer.append("</td>");
+                            buffer.append("</td>");//$NON-NLS-1$
                         }
                         
-                        buffer.append("</tr>");
+                        buffer.append("</tr>");//$NON-NLS-1$
                         
                         writer.println(buffer.toString());
                     }
 
-                    writer.println("</table>");
-                    writer.println("</body>");
-                    writer.println("</html>");
+                    writer.println("</table>");//$NON-NLS-1$
+                    writer.println("</body>");//$NON-NLS-1$
+                    writer.println("</html>");//$NON-NLS-1$
                     
                     writer.close();
 

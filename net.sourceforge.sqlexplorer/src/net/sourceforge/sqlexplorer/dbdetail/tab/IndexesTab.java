@@ -79,7 +79,7 @@ public class IndexesTab extends AbstractDataSetTab {
             	row[i++] = col.getPages();
             	row[i++] = col.getFilterCondition();
             	if (i != COLUMN_LABELS.length)
-            		throw new RuntimeException("Internal error: ColumnInfoTab: wrong number of columns");
+                    throw new RuntimeException(Messages.getString("ColumnInfoTab.runtimeException"));
             }
             DataSet dataSet = new DataSet(COLUMN_LABELS, dataRows);
             
@@ -90,6 +90,6 @@ public class IndexesTab extends AbstractDataSetTab {
     }
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.Indexes.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.Indexes.status") + " " + getNode().getQualifiedName();//$NON-NLS-2$
     }
 }

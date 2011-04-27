@@ -78,6 +78,6 @@ public class TableInfoTab extends AbstractDataSetTab {
     
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.Info.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.Info.status") + " " + getNode().getQualifiedName();//$NON-NLS-2$
     }
 }

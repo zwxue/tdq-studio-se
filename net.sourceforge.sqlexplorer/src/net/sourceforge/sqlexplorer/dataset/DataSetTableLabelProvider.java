@@ -75,7 +75,7 @@ public class DataSetTableLabelProvider implements ITableLabelProvider {
 
         Object tmp = row.getRawObjectValue(columnIndex);
         if (tmp == null)
-        	return "<null>";
+            return "<null>";//$NON-NLS-1$
         
         // Get the column definition and have it do the formatting  
         DataSet.Column column = row.getDataset().getColumns()[columnIndex];

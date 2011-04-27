@@ -125,7 +125,7 @@ public class DataSetTableKeyListener implements KeyListener {
 
 
                 } catch (Exception ex) {
-                    SQLExplorerPlugin.error("Error exporting cell to clipboard ", ex);
+                SQLExplorerPlugin.error(Messages.getString("CopyColumnNameAction.error"), ex);
                 }
                 break;
 
@@ -315,7 +315,7 @@ public class DataSetTableKeyListener implements KeyListener {
         }
         
         if (text == null) {
-            text = "";
+            text = "";//$NON-NLS-1$
         }
         
         

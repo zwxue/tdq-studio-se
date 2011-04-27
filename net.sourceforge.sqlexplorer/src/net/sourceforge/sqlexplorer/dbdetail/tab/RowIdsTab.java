@@ -38,7 +38,7 @@ public class RowIdsTab extends AbstractDataSetTab {
     	"DatabaseDetailView.Tab.RowIds.Col.ColumnSize",
     	"DatabaseDetailView.Tab.RowIds.Col.DecimalDigits",
     	"DatabaseDetailView.Tab.RowIds.Col.PseudoColumn"
-    };
+ };//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$ $NON-NLS-4$ $NON-NLS-5$ $NON-NLS-6$ $NON-NLS-7$
     
     public String getLabelText() {
         return Messages.getString("DatabaseDetailView.Tab.RowIds");
@@ -71,7 +71,7 @@ public class RowIdsTab extends AbstractDataSetTab {
             	row[i++] = rowId.getScale();
             	row[i++] = rowId.getPseudoColumn();
             	if (i != COLUMN_LABELS.length)
-            		throw new RuntimeException("Internal Error: RowIdsTab: wrong number of columns");
+                    throw new RuntimeException(Messages.getString("RowIdsTab.RuntimeException"));
             }
             DataSet dataSet = new DataSet(COLUMN_LABELS, data);
             return dataSet;
@@ -81,6 +81,6 @@ public class RowIdsTab extends AbstractDataSetTab {
     }
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.RowIds.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.RowIds.status") + " " + getNode().getQualifiedName();//$NON-NLS-2$
     }
 }

@@ -66,7 +66,7 @@ public class PreviewTab extends AbstractDataSetTab {
             	connection = tableNode.getSession().grabConnection();
                 statement = connection.createStatement();
                 statement.setMaxRows(maxResults);
-                statement.execute("select * from " + tableNode.getQualifiedName());
+                statement.execute("select * from " + tableNode.getQualifiedName());//$NON-NLS-1$
                 resultSet = statement.getResultSet();
                 
                 dataSet = new DataSet(resultSet, null);
@@ -75,13 +75,13 @@ public class PreviewTab extends AbstractDataSetTab {
                 	try {
                 		resultSet.close();
                 	}catch(SQLException e) {
-                		SQLExplorerPlugin.error("Error closing result set", e);
+                        SQLExplorerPlugin.error(Messages.getString("DataSet.errorCloseRs"), e);
                 	}
                 if (statement != null)
                     try {
                         statement.close();
                     } catch (SQLException e) {
-                        SQLExplorerPlugin.error("Error closing statement", e);
+                        SQLExplorerPlugin.error(Messages.getString("DataSet.errorCloseStmt"), e);
                     }
                 if (connection != null)
                 	getNode().getSession().releaseConnection(connection);
@@ -94,6 +94,6 @@ public class PreviewTab extends AbstractDataSetTab {
     
     
     public String getStatusMessage() {
-        return Messages.getString("DatabaseDetailView.Tab.Preview.status") + " " + getNode().getQualifiedName();
+        return Messages.getString("DatabaseDetailView.Tab.Preview.status") + " " + getNode().getQualifiedName();//$NON-NLS-2$
     }
 }
