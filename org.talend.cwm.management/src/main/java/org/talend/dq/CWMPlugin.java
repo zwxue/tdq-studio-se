@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -85,7 +86,8 @@ public class CWMPlugin extends Plugin {
         for (ModelElement dataProvider : dataproviders) {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
-                if (connection != null) {
+                // MOD bug mzhao filter the other connections except database connection.
+                if (connection != null && connection instanceof DatabaseConnection) {
 
                     Alias alias = new Alias(dataProvider.getName());
 
