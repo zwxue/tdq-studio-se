@@ -56,9 +56,12 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
@@ -454,7 +457,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     public abstract void addElements(final ModelElementIndicator[] elements);
 
     public void setInput(Object[] objs) {
-        List<RepositoryNode> reposList = new ArrayList<RepositoryNode>();
+        List<IRepositoryNode> reposList = new ArrayList<IRepositoryNode>();
         for (Object obj : objs) {
             // MOD klliu 2011-02-16 feature 15387
             if (obj instanceof MDMXmlElementRepNode) {
@@ -466,12 +469,19 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             if (obj instanceof DBColumnRepNode || obj instanceof DFColumnRepNode) {
                 reposList.add((RepositoryNode) obj);
             }
+            if (obj instanceof DBTableRepNode || obj instanceof DBViewRepNode || obj instanceof DFTableRepNode) {
+                List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren().get(0).getChildren();
+                reposList.addAll(children);
+
+            } else if (obj instanceof MDMXmlElementRepNode) {
+                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(obj, true).length > 0;
+                if (!isLeaf) {
+                    List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
+                    reposList.addAll(children);
+                }
+            }
         }
         if (reposList.size() == 0) {
-            TreeItem[] items = this.tree.getItems();
-            for (TreeItem item : items) {
-                this.removeItemBranch(item);
-            }
             return;
         }
         boolean isMdm = false;
@@ -495,7 +505,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             }
         }
 
-        for (RepositoryNode repObj : reposList) {
+        for (IRepositoryNode repObj : reposList) {
             ModelElementIndicator temp = isMdm ? ModelElementIndicatorHelper.createXmlElementIndicator(repObj)
                     : isDelimitedFile ? ModelElementIndicatorHelper.createDFColumnIndicator(repObj) : ModelElementIndicatorHelper
                             .createColumnIndicator(repObj);

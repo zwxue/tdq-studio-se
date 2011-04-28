@@ -335,6 +335,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     masterPage.changeExecuteLanguageToJava(true);
                 }
             }
+        } else {
+            TreeItem[] items = this.tree.getItems();
+            for (TreeItem item : items) {
+                this.removeItemBranch(item);
+            }
         }
         // ~
         super.setInput(objs);
