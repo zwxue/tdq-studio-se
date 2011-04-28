@@ -212,12 +212,12 @@ public class DrillDownEditorInput implements IEditorInput {
         return new DataSet(columnHeader, columnValue);
     }
 
-    private int computeColumnValueLength(List<Object[]> newColumnElementList) {
+    public boolean computeColumnValueLength(List<Object[]> newColumnElementList) {
         List<Integer> maxLength = new ArrayList<Integer>();
         for (Object[] columnValue : newColumnElementList) {
             maxLength.add(columnValue.length);
         }
-        return (Integer) Collections.max(maxLength);
+        return (Integer) Collections.max(maxLength) == Collections.min(maxLength);
     }
 
     public List<Object[]> filterAdaptDataList() {

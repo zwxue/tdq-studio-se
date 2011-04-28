@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -40,6 +41,7 @@ import org.jfree.chart.entity.ChartEntity;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -257,14 +259,23 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                     // MOD xqliu 2010-09-26 bug 15745
                                     if (ExecutionLanguage.JAVA == currentEngine) {
                                         try {
-                                            CorePlugin
+                                            DrillDownEditorInput input = new DrillDownEditorInput(analysis, currentDataEntity,
+                                                    itemEntity);
+
+                                            if(input.computeColumnValueLength(input.filterAdaptDataList())){
+                                                 CorePlugin
                                                     .getDefault()
                                                     .getWorkbench()
                                                     .getActiveWorkbenchWindow()
                                                     .getActivePage()
-                                                    .openEditor(
-                                                            new DrillDownEditorInput(analysis, currentDataEntity, itemEntity),
+                                                    .openEditor(input,
                                                             "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
+                                            }else{
+                                                MessageDialog.openWarning(null,
+                                                        Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),//$NON-NLS-1$
+                                                        Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));//$NON-NLS-1$
+                                            }
+                                           
                                         } catch (PartInitException e1) {
                                             e1.printStackTrace();
                                         }
