@@ -31,10 +31,13 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.DelimitedFileConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
+import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -42,6 +45,11 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.util.PropertiesSwitch;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -507,5 +515,71 @@ public final class PropertyHelper {
         IPath statPath = filePath.removeFirstSegments(flag).removeLastSegments(1);
 
         return statPath.toString();
+    }
+
+    /**
+     * DOC bZhou Comment method "getModelElement".
+     * 
+     * Get model element from property recognized by current system.
+     * 
+     * @param property
+     * @return
+     */
+    public static ModelElement getModelElement(Property property) {
+        Item item = property.getItem();
+
+        assert item != null;
+
+        Object object = new org.talend.core.model.properties.util.PropertiesSwitch() {
+
+            @Override
+            public Object caseDatabaseConnectionItem(DatabaseConnectionItem object) {
+                return ((DatabaseConnectionItem) object).getConnection();
+            }
+
+            @Override
+            public Object caseMDMConnectionItem(MDMConnectionItem object) {
+                return ((MDMConnectionItem) object).getConnection();
+            }
+
+            @Override
+            public Object caseDelimitedFileConnectionItem(DelimitedFileConnectionItem object) {
+                return ((DelimitedFileConnectionItem) object).getConnection();
+            }
+
+        }.doSwitch(item);
+
+        if (object == null) {
+            object = new org.talend.dataquality.properties.util.PropertiesSwitch<Object>() {
+
+                @Override
+                public Object caseTDQReportItem(TDQReportItem object) {
+                    return ((TDQReportItem) object).getReport();
+                }
+
+                @Override
+                public Object caseTDQAnalysisItem(TDQAnalysisItem object) {
+                    return ((TDQAnalysisItem) object).getAnalysis();
+                }
+
+                @Override
+                public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
+                    return ((TDQBusinessRuleItem) object).getDqrule();
+                }
+
+                @Override
+                public Object caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
+                    return ((TDQIndicatorDefinitionItem) object).getIndicatorDefinition();
+                }
+
+                @Override
+                public Object caseTDQPatternItem(TDQPatternItem object) {
+                    return ((TDQPatternItem) object).getPattern();
+                }
+
+            }.doSwitch(item);
+        }
+
+        return object != null ? (ModelElement) object : null;
     }
 }

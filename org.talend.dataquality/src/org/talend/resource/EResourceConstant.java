@@ -256,76 +256,71 @@ public enum EResourceConstant {
      * @return
      */
     public static EResourceConstant getTypedConstant(Item item) {
-        EResourceConstant resConstant = getTypeConstantsFromTDQ(item);
-        if (resConstant != null) {
+        Object object = new org.talend.core.model.properties.util.PropertiesSwitch() {
 
-            return resConstant;
-        } else {
-            return (EResourceConstant) new org.talend.core.model.properties.util.PropertiesSwitch() {
+            @Override
+            public Object caseDatabaseConnectionItem(DatabaseConnectionItem object) {
+                return DB_CONNECTIONS;
+            }
+
+            @Override
+            public Object caseMDMConnectionItem(MDMConnectionItem object) {
+                return MDM_CONNECTIONS;
+            }
+
+            @Override
+            public Object caseFolderItem(FolderItem object) {
+                return FOLDER;
+            }
+
+            @Override
+            public Object caseDelimitedFileConnectionItem(DelimitedFileConnectionItem object) {
+                return FILEDELIMITED;
+            }
+
+        }.doSwitch(item);
+
+        if (object == null) {
+            object = new PropertiesSwitch<Object>() {
 
                 @Override
-                public Object caseDatabaseConnectionItem(DatabaseConnectionItem object) {
-                    return DB_CONNECTIONS;
+                public Object caseTDQReportItem(TDQReportItem object) {
+                    return REPORTS;
                 }
 
                 @Override
-                public Object caseMDMConnectionItem(MDMConnectionItem object) {
-                    return MDM_CONNECTIONS;
+                public Object caseTDQAnalysisItem(TDQAnalysisItem object) {
+                    return ANALYSIS;
                 }
 
                 @Override
-                public Object caseFolderItem(FolderItem object) {
-                    return FOLDER;
+                public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
+                    return RULES_SQL;
                 }
 
                 @Override
-                public Object caseDelimitedFileConnectionItem(DelimitedFileConnectionItem object) {
-                    return FILEDELIMITED;
+                public Object caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
+                    return INDICATORS;
                 }
 
+                @Override
+                public Object caseTDQPatternItem(TDQPatternItem object) {
+                    return PATTERNS;
+                }
+
+                @Override
+                public Object caseTDQJrxmlItem(TDQJrxmlItem object) {
+                    return JRXML_TEMPLATE;
+                }
+
+                @Override
+                public Object caseTDQSourceFileItem(TDQSourceFileItem object) {
+                    return SOURCE_FILES;
+                }
             }.doSwitch(item);
         }
 
-    }
-
-    private static EResourceConstant getTypeConstantsFromTDQ(Item item) {
-        return (EResourceConstant) new PropertiesSwitch<Object>() {
-
-            @Override
-            public Object caseTDQReportItem(TDQReportItem object) {
-                return REPORTS;
-            }
-
-            @Override
-            public Object caseTDQAnalysisItem(TDQAnalysisItem object) {
-                return ANALYSIS;
-            }
-
-            @Override
-            public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
-                return RULES_SQL;
-            }
-
-            @Override
-            public Object caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
-                return INDICATORS;
-            }
-
-            @Override
-            public Object caseTDQPatternItem(TDQPatternItem object) {
-                return PATTERNS;
-            }
-
-            @Override
-            public Object caseTDQJrxmlItem(TDQJrxmlItem object) {
-                return JRXML_TEMPLATE;
-            }
-
-            @Override
-            public Object caseTDQSourceFileItem(TDQSourceFileItem object) {
-                return SOURCE_FILES;
-            }
-        }.doSwitch(item);
+        return object != null ? (EResourceConstant) object : null;
     }
 
     /**
