@@ -1092,4 +1092,25 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
         return c;
     }
 
+    /**
+     * MOD gdbu 2011-4-28 bug : 18975
+     * 
+     * DOC gdbu Comment method "getIntegerFromObject".
+     * 
+     * @param objects
+     * @return
+     */
+    public static Integer getIntegerFromObject(Object objects) {
+        Integer c = 0;
+        String toString = String.valueOf(objects + "");
+        try {
+            c = Integer.valueOf(toString);
+        } catch (Exception e) {
+            if (toString.contains(".")) {
+                toString = toString.substring(0, toString.indexOf("."));
+            }
+            c = Integer.valueOf(toString);
+        }
+        return c;
+    }
 } // IndicatorImpl

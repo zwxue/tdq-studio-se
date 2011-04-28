@@ -259,7 +259,10 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
     private static Long getNBDistinct(List<Object[]> myResultSet) {
         if (myResultSet.size() == 1 && myResultSet.get(0).length == 2) {
             // return (Long) myResultSet.get(0)[1];
-            return Long.valueOf(String.valueOf(myResultSet.get(0)[1]));
+            // return Long.valueOf(String.valueOf(myResultSet.get(0)[1]));
+            // MOD gdbu 2011-4-28 bug : 18975
+            return Long.valueOf(IndicatorImpl.getLongFromObject(String.valueOf(myResultSet.get(0)[1])));
+            // ~18975
         }
         return null;
     }
@@ -267,7 +270,10 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
     private static Long getNB(List<Object[]> myResultSet) {
         if (myResultSet.size() == 1 && myResultSet.get(0).length == 2) {
             // return (Long) myResultSet.get(0)[0];
-            return Long.valueOf(String.valueOf(myResultSet.get(0)[0]));
+            // return Long.valueOf(String.valueOf(myResultSet.get(0)[0]));
+            // MOD gdbu 2011-4-28 bug : 18975
+            return IndicatorImpl.getLongFromObject(String.valueOf(myResultSet.get(0)[0]));
+            // ~18975
         }
         return null;
     }
