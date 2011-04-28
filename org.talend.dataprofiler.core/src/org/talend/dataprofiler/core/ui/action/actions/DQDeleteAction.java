@@ -40,11 +40,13 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteAction;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -81,13 +83,12 @@ public class DQDeleteAction extends DeleteAction {
 
     @Override
     public void init(TreeViewer viewer, IStructuredSelection selection) {
-
     }
 
     @Override
     public void run() {
-
         ISelection selection = this.getSelection();
+        boolean onlyDeleteReportFile = true;
         for (Object obj : ((IStructuredSelection) selection).toArray()) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
@@ -96,7 +97,7 @@ public class DQDeleteAction extends DeleteAction {
                     deleteReportFile((ReportFileRepNode) node);
                     continue;
                 }
-
+                onlyDeleteReportFile = false;
                 boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
                 // logical delete
                 if (!isStateDeleted) {
@@ -128,8 +129,11 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
 
-        CorePlugin.getDefault().refreshDQView();
-        CorePlugin.getDefault().refreshWorkSpace();
+        // the deleteReportFile() mothed have refresh the workspace and dqview
+        if (!onlyDeleteReportFile) {
+            CorePlugin.getDefault().refreshWorkSpace();
+            CorePlugin.getDefault().refreshDQView();
+        }
     }
 
     private boolean handleDependencies(IRepositoryNode node) {
@@ -147,7 +151,6 @@ public class DQDeleteAction extends DeleteAction {
     }
 
     /**
-     * 
      * DOC qiongli Comment method "showDialog".
      * 
      * @param node
@@ -161,11 +164,9 @@ public class DQDeleteAction extends DeleteAction {
                 dependencies.toArray(new ModelElement[dependencies.size()]),
                 DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable), true);//$NON-NLS-1$
         return flag;
-
     }
 
     /**
-     * 
      * DOC qiongli Comment method "physicalDeleteDependencies".
      * 
      * @param dependences
@@ -205,14 +206,12 @@ public class DQDeleteAction extends DeleteAction {
                         EObjectHelper.removeDependencys(mod);
                     }
                 }
-
             }
         } catch (Exception exc) {
             log.error(exc, exc);
             return false;
         }
         return isSucceed;
-
     }
 
     private void closeEditors(ISelection selection) {
@@ -252,11 +251,9 @@ public class DQDeleteAction extends DeleteAction {
             DatabaseConnection databaseConnection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
             CWMPlugin.getDefault().removeAliasInSQLExplorer(databaseConnection);
         }
-
     }
 
     /**
-     * 
      * physical delete generating report file.
      * 
      * @param repFileNode
@@ -273,6 +270,17 @@ public class DQDeleteAction extends DeleteAction {
                     }
                 }
                 latestRepIFile.delete(true, null);
+
+                // refresh the wrokspace and dqview (Reports node and RecycleBin node)
+                CorePlugin.getDefault().refreshWorkSpace();
+                IRepositoryNode reportsNode = RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS);
+                if (reportsNode != null) {
+                    CorePlugin.getDefault().refreshDQView(reportsNode);
+                }
+                RecycleBinRepNode recycleBinRepNode = RepositoryNodeHelper.getRecycleBinRepNode();
+                if (recycleBinRepNode != null) {
+                    CorePlugin.getDefault().refreshDQView(recycleBinRepNode);
+                }
             }
         } catch (CoreException e) {
             log.error(e, e);
@@ -283,5 +291,4 @@ public class DQDeleteAction extends DeleteAction {
         return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteForeverTitle"), reportFileName//$NON-NLS-1$
                 + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("DQDeleteAction.areYouDeleteForever"));//$NON-NLS-1$
     }
-
 }

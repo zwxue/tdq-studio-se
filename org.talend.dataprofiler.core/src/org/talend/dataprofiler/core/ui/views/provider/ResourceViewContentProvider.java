@@ -125,8 +125,10 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     }
                 }
 
+                // add RecycleBinRepNode
                 RecycleBinRepNode recycleBin = new RecycleBinRepNode(DefaultMessagesImpl.getString("RecycleBin.resBinName")); //$NON-NLS-1$
                 folders.add(recycleBin);
+
                 return folders.toArray();
             } else if (element instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) element;

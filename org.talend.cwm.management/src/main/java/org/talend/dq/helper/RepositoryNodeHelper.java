@@ -133,6 +133,33 @@ public final class RepositoryNodeHelper {
 
     public static final String DI_REPOSITORY_NAME = "Repository"; //$NON-NLS-1$
 
+    private static RecycleBinRepNode recycleBinRepNode;
+
+    public static RecycleBinRepNode getRecycleBinRepNode() {
+        if (recycleBinRepNode == null) {
+            recycleBinRepNode = initRecycleBinRepNode();
+        }
+        return recycleBinRepNode;
+    }
+
+    private static RecycleBinRepNode initRecycleBinRepNode() {
+        CommonViewer commonViewer = getDQCommonViewer(true);
+        if (commonViewer != null) {
+            TreeItem[] items = commonViewer.getTree().getItems();
+            for (TreeItem item : items) {
+                RepositoryNode node = (RepositoryNode) item.getData();
+                if (node.isBin()) {
+                    return (RecycleBinRepNode) node;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void setRecycleBinRepNode(RecycleBinRepNode recycleBinRepNode) {
+        RepositoryNodeHelper.recycleBinRepNode = recycleBinRepNode;
+    }
+
     private RepositoryNodeHelper() {
     }
 
@@ -1647,6 +1674,13 @@ public final class RepositoryNodeHelper {
         return getRootNode(nodeName, false);
     }
 
+    /**
+     * get the RepositoryNode according to the nodeName.
+     * 
+     * @param nodeName the node name
+     * @param open if the DQView is not show, show it or not
+     * @return
+     */
     public static RepositoryNode getRootNode(ERepositoryObjectType nodeName, boolean open) {
         FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
                 ProjectManager.getInstance().getCurrentProject(), nodeName, Path.EMPTY);

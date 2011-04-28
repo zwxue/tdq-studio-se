@@ -12,21 +12,23 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.commons.ui.runtime.image.ECoreImage;
 import org.talend.commons.ui.runtime.image.IImage;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class RecycleBinRepNode extends RepositoryNode {
 
     private IImage icon;
 
     private String label;
+
     /**
      * DOC klliu RecyleBinRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
@@ -61,6 +63,9 @@ public class RecycleBinRepNode extends RepositoryNode {
      * @return the label
      */
     public String getLabel() {
+        if (this.label == null) {
+            this.label = DefaultMessagesImpl.getString("RecycleBin.resBinName"); //$NON-NLS-1$
+        }
         return this.label;
     }
 
@@ -77,5 +82,4 @@ public class RecycleBinRepNode extends RepositoryNode {
     public boolean isBin() {
         return true;
     }
-
 }

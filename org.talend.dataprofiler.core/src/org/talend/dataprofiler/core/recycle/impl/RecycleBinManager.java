@@ -92,7 +92,6 @@ public final class RecycleBinManager {
      * @param foldersList
      */
     private void addItemToRecycleBin(RepositoryNode parentNode, Item item, List<RepositoryNode> foldersList) {
-
         ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
         RepositoryNode currentParentNode = parentNode;
         if (item instanceof FolderItem) {
@@ -144,7 +143,6 @@ public final class RecycleBinManager {
             } catch (PersistenceException e) {
                 ExceptionHandler.process(e);
             }
-
         }
     }
 
