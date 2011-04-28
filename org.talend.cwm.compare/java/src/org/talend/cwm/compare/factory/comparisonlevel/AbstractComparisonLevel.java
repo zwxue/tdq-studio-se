@@ -45,6 +45,7 @@ import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.factory.update.AddTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
+import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -365,7 +366,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         removeRelationalSwitch.setLeftElement(difElement.getLeftElement());
         final Boolean updated = removeRelationalSwitch.doSwitch(difElement.getLeftTarget());
         if (!Boolean.TRUE.equals(updated)) {
-            log.warn("Element not updated: " + difElement.getLeftElement());
+            log.warn(DefaultMessagesImpl.getString("AbstractComparisonLevel.ElementNotUpdated", difElement.getLeftElement()));//$NON-NLS-1$
         }
     }
 
@@ -373,7 +374,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         addRelationalSwitch.setLeftElement(difElement.getLeftElement());
         final Boolean updated = addRelationalSwitch.doSwitch(difElement.getRightTarget());
         if (!Boolean.TRUE.equals(updated)) {
-            log.warn("Element not updated: " + difElement.getLeftElement());
+            log.warn(DefaultMessagesImpl.getString("AbstractComparisonLevel.ElementNotUpdated", difElement.getLeftElement()));//$NON-NLS-1$
         }
     }
 
@@ -387,7 +388,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         this.updateRelationalStructSwitch.setRightElement(rightElement);
         final Boolean updated = updateRelationalStructSwitch.doSwitch(leftElement);
         if (!Boolean.TRUE.equals(updated)) {
-            log.warn("Element not updated: " + leftElement);
+            log.warn(DefaultMessagesImpl.getString("AbstractComparisonLevel.ElementNotUpdated", leftElement));//$NON-NLS-1$
         }
     }
 
@@ -426,16 +427,16 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eObject);
         TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(eObject);
         if (column != null) {
-            column.setName(column.getName() == null ? "" : column.getName().toUpperCase());
-            column.setLabel(column.getLabel() == null ? "" : column.getLabel().toUpperCase());
+            column.setName(column.getName() == null ? "" : column.getName().toUpperCase());//$NON-NLS-1$
+            column.setLabel(column.getLabel() == null ? "" : column.getLabel().toUpperCase());//$NON-NLS-1$
             column.getSqlDataType().setName(
-                    column.getSqlDataType().getName() == null ? "" : column.getSqlDataType().getName().toUpperCase());
-            column.setContentType(column.getContentType() == null ? "" : column.getContentType().toUpperCase());
-            column.setSourceType(column.getSourceType() == null ? "" : column.getSourceType().toUpperCase());
+                    column.getSqlDataType().getName() == null ? "" : column.getSqlDataType().getName().toUpperCase());//$NON-NLS-1$
+            column.setContentType(column.getContentType() == null ? "" : column.getContentType().toUpperCase());//$NON-NLS-1$
+            column.setSourceType(column.getSourceType() == null ? "" : column.getSourceType().toUpperCase());//$NON-NLS-1$
         } else if (pckg != null) {
-            pckg.setName(pckg.getName() == null ? "" : pckg.getName().toUpperCase());
+            pckg.setName(pckg.getName() == null ? "" : pckg.getName().toUpperCase());//$NON-NLS-1$
         } else if (columnSet != null) {
-            columnSet.setName(columnSet.getName() == null ? "" : columnSet.getName().toUpperCase());
+            columnSet.setName(columnSet.getName() == null ? "" : columnSet.getName().toUpperCase());//$NON-NLS-1$
         }
     }
 }

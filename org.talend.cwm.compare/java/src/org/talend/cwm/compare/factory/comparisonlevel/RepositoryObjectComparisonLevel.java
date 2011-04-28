@@ -40,7 +40,7 @@ public class RepositoryObjectComparisonLevel extends DataProviderComparisonLevel
     @Override
     protected Connection findDataProvider() {
         Assert.isTrue(selectedObj instanceof IRepositoryViewObject, this.selectedObj
-                + " is not an instance of IRepositoryViewObject");
+                + " is not an instance of IRepositoryViewObject");//$NON-NLS-1$
         Connection returnValue = null;
         ModelElement modelElement = PropertyHelper.retrieveElement(((IRepositoryViewObject) selectedObj).getProperty().getItem());
         if (modelElement instanceof Connection) {

@@ -243,7 +243,7 @@ public final class DQStructureComparer {
                 retValue = true;
             } catch (CoreException e) {
 
-                log.warn("Problem while trying to delete temp file:" + file.getFullPath().toOSString(), e);
+                log.warn(DefaultMessagesImpl.getString("DQStructureComparer.errorDelTmpFile", file.getFullPath().toOSString()), e);//$NON-NLS-1$
                 retValue = false;
             }
         } else {
@@ -562,8 +562,9 @@ public final class DQStructureComparer {
         // ~ MOD mzhao bug 11449. 2010-03-16
         if (leftResource.getContents() == null || leftResource.getContents().size() == 0) {
             // Could not merge this.
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Could not merge this",
-                    "left roots of diff model is empty");
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog1"),
+                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog2"));//$NON-NLS-1$ $NON-NLS-2$
             return null;
         }
         EList<DiffElement> ownedElements = diff.getOwnedElements();

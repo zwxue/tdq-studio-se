@@ -15,6 +15,7 @@ package org.talend.cwm.compare.factory.update;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.resource.relational.ForeignKey;
@@ -40,20 +41,20 @@ class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
     
     @Override
     public Boolean caseForeignKey(ForeignKey object) {
-        log.error("Update of object not handled for " + object);
+        log.error(DefaultMessagesImpl.getString("UpdateRelationalSwitch.errorUpdateOfObj", object));//$NON-NLS-1$
         // TODO Auto-generated method stub
         return super.caseForeignKey(object);
     }
 
     @Override
     public Boolean caseKeyRelationship(KeyRelationship object) {
-        log.error("Update of object not handled for " + object);
+        log.error(DefaultMessagesImpl.getString("UpdateRelationalSwitch.errorUpdateOfObj", object));//$NON-NLS-1$
         // TODO Auto-generated method stub
         return super.caseKeyRelationship(object);
     }
     @Override
     public Boolean casePrimaryKey(PrimaryKey object) {
-        log.error("Update of object not handled for " + object);
+        log.error(DefaultMessagesImpl.getString("UpdateRelationalSwitch.errorUpdateOfObj", object));//$NON-NLS-1$
         // TODO Auto-generated method stub
         return super.casePrimaryKey(object);
     }
@@ -62,7 +63,7 @@ class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
 
     @Override
     public Boolean caseUniqueKey(UniqueKey object) {
-        log.error("Update of object not handled for " + object);
+        log.error(DefaultMessagesImpl.getString("UpdateRelationalSwitch.errorUpdateOfObj", object));//$NON-NLS-1$
         // TODO Auto-generated method stub
         return super.caseUniqueKey(object);
     }
