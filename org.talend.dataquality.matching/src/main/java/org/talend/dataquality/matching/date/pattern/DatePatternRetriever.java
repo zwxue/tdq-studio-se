@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.matching.i18n.Messages;
 
 /**
  * 
@@ -57,10 +58,10 @@ public class DatePatternRetriever {
             String line;
             try {
                 while ((line = br.readLine()) != null) {
-                    StringTokenizer string = new StringTokenizer(line, "=\n");
+                    StringTokenizer string = new StringTokenizer(line, "=\n");//$NON-NLS-1$
                     while (string.hasMoreTokens()) {
-                        String key = string.nextToken().replace("\"", "");
-                        String val = string.nextToken().replace("\"", "");
+                        String key = string.nextToken().replace("\"", "");//$NON-NLS-1$ $NON-NLS-2$
+                        String val = string.nextToken().replace("\"", "");//$NON-NLS-1$ $NON-NLS-2$
                         // System.out.print(key+"\n");
                         modelMatchers.add(new ModelMatcher(key, val));
                     }
@@ -69,9 +70,9 @@ public class DatePatternRetriever {
                 br.close();
             }
         } catch (FileNotFoundException e) {
-            logger.warn("File not found");
+            logger.warn(Messages.getString("DatePatternRetriever.warn1"));//$NON-NLS-1$
         } catch (IOException e) {
-            logger.warn("Problem when reading");
+            logger.warn(Messages.getString("DatePatternRetriever.warn2"));//$NON-NLS-1$
         }
     }
 
@@ -94,7 +95,7 @@ public class DatePatternRetriever {
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.getScore() > 0) {
                 if (logger.isInfoEnabled()) {
-                    logger.info(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");
+                    logger.info(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");//$NON-NLS-1$ $NON-NLS-2$
                 }
             }
         }

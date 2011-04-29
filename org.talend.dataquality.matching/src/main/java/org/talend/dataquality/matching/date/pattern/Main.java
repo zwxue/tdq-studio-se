@@ -19,6 +19,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.matching.i18n.Messages;
 
 /**
  * 
@@ -41,23 +42,23 @@ public final class Main {
             String line;
             try {
                 while ((line = br.readLine()) != null) {
-                	patt.handle(line.replace("\"", ""));
+                    patt.handle(line.replace("\"", ""));//$NON-NLS-1$ $NON-NLS-2$
                 }
             } finally {
                 br.close();
             }
         } catch (FileNotFoundException e) {
-        	logger.warn("File not found");
+            logger.warn(Messages.getString("DatePatternRetriever.warn1"));//$NON-NLS-1$
         } catch (IOException e) {
-        	logger.warn("Problem when reading");
+            logger.warn(Messages.getString("DatePatternRetriever.warn2"));//$NON-NLS-1$
         }
     }
     
     public static void main(String[] args) {
     	
         DatePatternRetriever patt = new DatePatternRetriever();
-        File file = new File("PatternsNameAndRegularExpressions.txt");
-        File filedates = new File("dates.txt");
+        File file = new File("PatternsNameAndRegularExpressions.txt");//$NON-NLS-1$
+        File filedates = new File("dates.txt");//$NON-NLS-1$
         patt.initModel2Regex(file);
         parseFile(filedates,patt);
         patt.showResults();
