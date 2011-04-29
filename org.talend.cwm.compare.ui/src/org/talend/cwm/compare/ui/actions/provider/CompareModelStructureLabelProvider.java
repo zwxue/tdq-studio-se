@@ -94,7 +94,7 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
                     int subChanges = diffGroup.getSubchanges();
                     text = Messages.getString("CompareModelStructureLabelProvider.ChangeInModel", subChanges); //$NON-NLS-1$
                     if (diffGroup.getRightParent() != null && diffGroup.getRightParent() instanceof ModelElement) {
-                        text += ":\"" + ((ModelElement) diffGroup.getRightParent()).getName() + "\"";
+                        text += ":\"" + ((ModelElement) diffGroup.getRightParent()).getName() + "\"";//$NON-NLS-1$ $NON-NLS-2$
                     }
                 } else if (object instanceof ModelElementChangeRightTarget) {
 

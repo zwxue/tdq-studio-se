@@ -116,7 +116,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
     public void hookContextMenu(boolean compareEachOther) {
 
         if (!compareEachOther) {
-            MenuManager menuMgr = new MenuManager("#PopupMenu", "contextMenu");
+            MenuManager menuMgr = new MenuManager("#PopupMenu", "contextMenu");//$NON-NLS-1$ $NON-NLS-2$
             menuMgr.setRemoveAllWhenShown(true);
             menuMgr.addMenuListener(new IMenuListener() {
 

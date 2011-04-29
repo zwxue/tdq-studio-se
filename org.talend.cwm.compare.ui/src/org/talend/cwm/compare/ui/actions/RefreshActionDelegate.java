@@ -53,6 +53,7 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.api.FolderProvider;
@@ -182,7 +183,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 newConn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
             }
             if (newConn == null) {
-                log.error("Unable to create a new connection: " + connection.getName());
+                log.error(Messages.getString("RefreshActionDelegate.errorUnableCreateNewCon", connection.getName()));//$NON-NLS-1$
                 return;
             }
             // System.out.println(alreadySavedModel.toString());
