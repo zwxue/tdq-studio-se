@@ -34,10 +34,10 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ModelElementHelper;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
@@ -580,8 +580,10 @@ public abstract class ModelElementTreeMenuProvider {
             TreePath[] paths = new TreePath[items.length];
 
             for (int i = 0; i < items.length; i++) {
-                TdColumn tdColumn = (TdColumn) items[i].getData("COLUMN_INDICATOR_KEY");//$NON-NLS-1$
-                paths[i] = new TreePath(new Object[] { tdColumn });
+                // MOD klliu bug 20820 change TDcolum to IRepositoryNode, then solve NPE 2011-04-29
+                ColumnIndicator data = (ColumnIndicator) items[i].getData("MODELELEMENT_INDICATOR_KEY");//$NON-NLS-1$
+                IRepositoryNode modelElementRepositoryNode = data.getModelElementRepositoryNode();
+                paths[i] = new TreePath(new Object[] { modelElementRepositoryNode });
             }
             CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();
             analysisAction.setSelection(new TreeSelection(paths));
