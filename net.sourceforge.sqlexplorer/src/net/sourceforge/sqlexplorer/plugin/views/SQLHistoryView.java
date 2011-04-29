@@ -119,10 +119,13 @@ public class SQLHistoryView extends ViewPart implements SQLHistoryChangedListene
      */
     public void createPartControl(final Composite parent) {
 
-        final SQLHistory history = SQLExplorerPlugin.getDefault().getSQLHistory();
+        // MOD gdbu 2011-4-29 bug : 20960
+        SQLHistory tem_history = SQLExplorerPlugin.getDefault().getSQLHistory();
+        final SQLHistory history = tem_history == null ? new SQLHistory() : tem_history;
+        // ~20960
 
         history.sort(1, SWT.DOWN);
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".SQLHistoryView");
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".SQLHistoryView");//$NON-NLS-1$
 
         history.addListener(this);
 
@@ -141,7 +144,7 @@ public class SQLHistoryView extends ViewPart implements SQLHistoryChangedListene
         // add search box
         _searchBox = new Text(composite, SWT.BORDER);
         _searchBox.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-        _searchBox.setText(Messages.getString("SQLHistoryView.SearchText"));
+        _searchBox.setText(Messages.getString("SQLHistoryView.SearchText"));//$NON-NLS-1$
         _searchBox.selectAll();
 
         SQLHistorySearchListener searchListener = new SQLHistorySearchListener(history);
