@@ -37,6 +37,7 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.dataprofiler.core.ui.perspective.PerspectiveMenuManager;
+import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4CoolBar;
 
 /**
@@ -111,9 +112,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     protected void fillMenuBar(IMenuManager menuBar) {
         this.beforefillMenuBar();
-        MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE); //$NON-NLS-1$
-        MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW); //$NON-NLS-1$
-        MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP); //$NON-NLS-1$
+        MenuManager fileMenu = new MenuManager(
+                Messages.getString("ApplicationActionBarAdvisor.File"), IWorkbenchActionConstants.M_FILE); //$NON-NLS-1$
+        MenuManager windowMenu = new MenuManager(
+                Messages.getString("ApplicationActionBarAdvisor.Window"), IWorkbenchActionConstants.M_WINDOW); //$NON-NLS-1$
+        MenuManager helpMenu = new MenuManager(
+                Messages.getString("ApplicationActionBarAdvisor.Help"), IWorkbenchActionConstants.M_HELP); //$NON-NLS-1$
 
         menuBar.add(fileMenu);
         menuBar.add(windowMenu);
@@ -145,7 +149,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         helpMenu.add(aboutAction);
         // ADD qiongli 2010-6-3,bug 0012874
         CheatSheetCategoryBasedSelectionAction cscAction = new CheatSheetCategoryBasedSelectionAction();
-        cscAction.setText("Cheat Sheets...");
+        cscAction.setText(Messages.getString("ApplicationActionBarAdvisor.CheatSheets"));//$NON-NLS-1$
         helpMenu.add(cscAction);
     }
 

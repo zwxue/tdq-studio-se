@@ -102,6 +102,6 @@ public class TOPBrandingService implements IBrandingService {
     }
 
     public String getAcronym() {
-        return "top";
+        return "top";//$NON-NLS-1$
     }
 }

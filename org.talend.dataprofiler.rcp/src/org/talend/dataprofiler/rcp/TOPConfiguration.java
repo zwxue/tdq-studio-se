@@ -137,7 +137,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
         bottomLayout.addView(ecosystemViewId);
         bottomLayout.addView(schedulerViewId);
         bottomLayout.addView(jobHierarchyViewId);
-        bottomLayout.addPlaceholder("*");
+        bottomLayout.addPlaceholder("*");//$NON-NLS-1$
 
     }
 

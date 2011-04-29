@@ -24,6 +24,7 @@ import org.eclipse.ui.internal.dialogs.ShowViewDialog;
 import org.eclipse.ui.internal.misc.StatusUtil;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.views.IViewDescriptor;
+import org.talend.dataprofiler.rcp.i18n.Messages;
 
 /**
  * Displays a window for view selection. <br/>
@@ -38,7 +39,7 @@ public class ShowViewAction extends Action {
      * Constructs a new ShowViewAction.
      */
     public ShowViewAction() {
-        super("Show view..."); //$NON-NLS-1$
+        super(Messages.getString("ShowViewAction.showView")); //$NON-NLS-1$
     }
 
     /*

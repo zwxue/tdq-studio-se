@@ -73,7 +73,7 @@ public class LinksToolbarItem extends ContributionItem {
         Link learn = new Link(composite, SWT.NONE);
         learn.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
         learn.setText(LEARN_URL);
-        learn.setToolTipText(Messages.getString("LinksToolbarItem_0"));
+        learn.setToolTipText(Messages.getString("LinksToolbarItem_0"));//$NON-NLS-1$
 
         learn.addListener(SWT.Selection, new Listener() {
 
@@ -93,7 +93,7 @@ public class LinksToolbarItem extends ContributionItem {
         Link ask = new Link(composite, SWT.NONE);
         ask.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
         ask.setText(ASK_URL);
-        ask.setToolTipText(Messages.getString("LinksToolbarItem_7"));
+        ask.setToolTipText(Messages.getString("LinksToolbarItem_7"));//$NON-NLS-1$
 
         ask.addListener(SWT.Selection, new Listener() {
 
@@ -131,7 +131,7 @@ public class LinksToolbarItem extends ContributionItem {
         Link upgrade = new Link(composite, SWT.NONE);
         upgrade.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
         upgrade.setText(UPGRADE_URL);
-        upgrade.setToolTipText(Messages.getString("LinksToolbarItem_11"));
+        upgrade.setToolTipText(Messages.getString("LinksToolbarItem_11"));//$NON-NLS-1$
 
         upgrade.addListener(SWT.Selection, new Listener() {
 

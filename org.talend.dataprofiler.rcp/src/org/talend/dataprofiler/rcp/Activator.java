@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.talend.dataprofiler.rcp.i18n.Messages;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -44,7 +45,7 @@ public class Activator extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         if (log.isInfoEnabled()) {
-            log.info("Starting Talend Data Profiler platform."); //$NON-NLS-1$
+            log.info(Messages.getString("Activator.starting")); //$NON-NLS-1$
         }
 
         plugin = this;
