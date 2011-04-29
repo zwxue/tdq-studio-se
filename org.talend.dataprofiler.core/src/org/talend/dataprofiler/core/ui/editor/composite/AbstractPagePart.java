@@ -238,9 +238,7 @@ public abstract class AbstractPagePart {
                         }
 
                     });
-
                 }
-
             };
 
             try {
@@ -262,6 +260,7 @@ public abstract class AbstractPagePart {
             // MOD mzhao bug 12766, 2010-04-22 save the editor automatically.
             masterPage.doSave(new NullProgressMonitor());
             //
+            masterPage.updateAnalysisConnectionVersionInfo();
         } else {
             cancelSelection(masterPage, oldSelect);
         }

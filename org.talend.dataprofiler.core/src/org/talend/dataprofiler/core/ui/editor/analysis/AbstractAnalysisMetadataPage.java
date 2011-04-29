@@ -23,12 +23,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -44,6 +46,7 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -71,6 +74,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected AnalysisEditor currentEditor = null;
 
     protected CCombo connCombo;
+
+    protected Text textConnVersion;
 
     public CCombo getConnCombo() {
         return connCombo;
@@ -128,6 +133,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 // which has same columns with before,the editor should not
                 // dirty.
                 ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+                this.updateAnalysisConnectionVersionInfo();
             } catch (DataprofilerCoreException e) {
                 ExceptionHandler.process(e, Level.ERROR);
                 log.error(e, e);
@@ -221,7 +227,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // ~ MOD mzhao 2009-05-05,Bug 6587.
         Composite labelButtonClient = toolkit.createComposite(parentComp);
         GridLayout labelButtonClientLayout = new GridLayout();
-        labelButtonClientLayout.numColumns = 2;
+        labelButtonClientLayout.numColumns = 3;
         labelButtonClient.setLayout(labelButtonClientLayout);
 
         toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.connBind")); //$NON-NLS-1$
@@ -230,7 +236,50 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(labelButtonClient);
         reloadDataproviderAndFillConnCombo();
         // ~
+        createConnVersionText(labelButtonClient);
+    }
 
+    /**
+     * create the version Text of the connection.
+     * 
+     * @param parentComp
+     */
+    private void createConnVersionText(Composite parentComp) {
+        textConnVersion = toolkit.createText(parentComp, PluginConstant.EMPTY_STRING, SWT.FLAT);
+        textConnVersion.setEditable(false);
+        updateAnalysisConnectionVersionInfo();
+    }
+
+    /**
+     * update the version info of the analysis.
+     */
+    public void updateAnalysisConnectionVersionInfo() {
+        if (this.textConnVersion != null) {
+            String strConnVersion = DefaultMessagesImpl.getString("AbstractMetadataFormPage.connVersion")
+                    + getConnectionVersion();
+            textConnVersion.setText(strConnVersion);
+        }
+    }
+
+    /**
+     * get the database's version of the Analysis.
+     * 
+     * @return
+     */
+    public String getConnectionVersion() {
+        String version = null;
+        if (this.analysis != null) {
+            DataManager connection = this.analysis.getContext().getConnection();
+            if (connection != null) {
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
+                if (recursiveFind != null) {
+                    if (recursiveFind.getObject() != null && recursiveFind.getObject().getProperty() != null) {
+                        version = recursiveFind.getObject().getProperty().getVersion();
+                    }
+                }
+            }
+        }
+        return version == null ? "Unknown" : version; //$NON-NLS-1$
     }
 
     // MOD mzhao 2009-05-05, bug 6587.
