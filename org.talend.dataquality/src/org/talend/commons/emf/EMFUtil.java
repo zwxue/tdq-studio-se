@@ -155,10 +155,10 @@ public final class EMFUtil {
                 ress.save(options);
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Resource saved in:" + ress.getURI());
+                    log.debug("Resource saved in:" + ress.getURI());//$NON-NLS-1$
                 }
             } catch (IOException e) {
-                log.error("Error during the saving of resource. Uri=" + ress.getURI().toString(), e);
+                log.error(Messages.getString("EMFUtil.errorSave") + ress.getURI().toString(), e);//$NON-NLS-1$
                 // possible cause is a missing factory initialization and filename extension.
                 ok = false;
             }
@@ -249,10 +249,10 @@ public final class EMFUtil {
             resource.save(options);
 
             if (log.isDebugEnabled()) {
-                log.debug("Resource saved in:" + resource.getURI());
+                log.debug("Resource saved in:" + resource.getURI());//$NON-NLS-1$
             }
         } catch (IOException e) {
-            log.error("Error during the saving of resource. Uri=" + resource.getURI().toString(), e);
+            log.error(Messages.getString("EMFUtil.errorSave") + resource.getURI().toString(), e);//$NON-NLS-1$
             save = false;
         }
         return save;

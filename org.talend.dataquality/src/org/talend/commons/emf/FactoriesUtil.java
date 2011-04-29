@@ -126,7 +126,7 @@ public final class FactoriesUtil {
     /**
      * Extension used for xml configuration file
      */
-    public static final String XML = "xml";
+    public static final String XML = "xml";//$NON-NLS-1$
 
     private FactoriesUtil() {
     }
@@ -354,18 +354,18 @@ public final class FactoriesUtil {
      * DOC mzhao FactoriesUtil class global comment. Detailled comment
      */
     public enum EElementEName {
-        UNKNOWN("Unknow", ""),
+        UNKNOWN("Unknow", ""), //$NON-NLS-1$ $NON-NLS-2$
 
-        ANALYSIS("Analysis", FactoriesUtil.ANA),
-        REPORT("Report", FactoriesUtil.REP),
-        PROVIDER("DataProvider", FactoriesUtil.PROV),
-        PATTERN("Pattern", FactoriesUtil.PATTERN),
-        RULE("Rule", FactoriesUtil.DQRULE),
-        DEFINITION("Definition", FactoriesUtil.DEFINITION),
-        JRXML("ReportTemplate", FactoriesUtil.JRXML),
-        SQL("SQLFile", FactoriesUtil.SQL),
-        ITEM("Item", FactoriesUtil.ITEM_EXTENSION),
-        PROPERTY("Property", FactoriesUtil.PROPERTIES_EXTENSION);
+        ANALYSIS("Analysis", FactoriesUtil.ANA), //$NON-NLS-1$
+        REPORT("Report", FactoriesUtil.REP), //$NON-NLS-1$
+        PROVIDER("DataProvider", FactoriesUtil.PROV), //$NON-NLS-1$
+        PATTERN("Pattern", FactoriesUtil.PATTERN), //$NON-NLS-1$
+        RULE("Rule", FactoriesUtil.DQRULE), //$NON-NLS-1$
+        DEFINITION("Definition", FactoriesUtil.DEFINITION), //$NON-NLS-1$
+        JRXML("ReportTemplate", FactoriesUtil.JRXML), //$NON-NLS-1$
+        SQL("SQLFile", FactoriesUtil.SQL), //$NON-NLS-1$
+        ITEM("Item", FactoriesUtil.ITEM_EXTENSION), //$NON-NLS-1$
+        PROPERTY("Property", FactoriesUtil.PROPERTIES_EXTENSION);//$NON-NLS-1$
 
         String name, fileExt;
 

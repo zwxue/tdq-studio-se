@@ -71,7 +71,7 @@ public final class WorkspaceUtils {
     }
 
     public static String normalize(String pathName) {
-        return pathName == null ? pathName : AsciiUtils.replaceCharacters(pathName, "/: \\", "____");
+        return pathName == null ? pathName : AsciiUtils.replaceCharacters(pathName, "/: \\", "____");//$NON-NLS-1$ $NON-NLS-2$
 
     }
 }

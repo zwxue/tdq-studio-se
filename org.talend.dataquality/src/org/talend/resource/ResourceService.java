@@ -200,7 +200,7 @@ public final class ResourceService {
                 && ResourceManager.getDataProfilingFolder().exists()
                 && ResourceManager.getLibrariesFolder().exists()
                 && (ResourceManager.getMetadataFolder().exists() || ResourceManager.getRootProject().getFolder("TDQ_Metadata")
-                        .exists());
+                        .exists());//$NON-NLS-1$
     }
 
     /**
@@ -210,9 +210,9 @@ public final class ResourceService {
      */
     public static boolean checkSecludedResource() {
 
-        String dpProject = "Data Profiling";
-        String lbProject = "Libraries";
-        String mtProject = "Metadata";
+        String dpProject = "Data Profiling";//$NON-NLS-1$
+        String lbProject = "Libraries";//$NON-NLS-1$
+        String mtProject = "Metadata";//$NON-NLS-1$
 
         IWorkspaceRoot root = ResourceManager.getRoot();
 
