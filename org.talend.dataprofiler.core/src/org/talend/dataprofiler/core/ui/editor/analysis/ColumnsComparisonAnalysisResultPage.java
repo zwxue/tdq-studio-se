@@ -26,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -334,6 +335,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
                 if (column == 2) {
                     resultTable.setMenu(createMenu(resultTable, rowMatchingIndicatorB));
+                }
+
+                // ADD by msjian 2011-4-29 20602: click the data, its color changed
+                if (e.widget instanceof TableCursor) {
+                    ((TableCursor) e.widget).setForeground(new Color(null, 0, 0, 0));
                 }
             }
         });
