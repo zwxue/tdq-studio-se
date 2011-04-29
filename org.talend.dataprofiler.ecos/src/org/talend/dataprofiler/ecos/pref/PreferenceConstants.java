@@ -21,5 +21,5 @@ public final class PreferenceConstants {
 
     }
 
-    public static final String ECOS_TIME_OUT_VALUE = "ECOS_TIME_OUT_VALUE";
+    public static final String ECOS_TIME_OUT_VALUE = "ECOS_TIME_OUT_VALUE";//$NON-NLS-1$
 }

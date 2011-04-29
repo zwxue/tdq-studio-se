@@ -60,7 +60,7 @@ public abstract class EcosystemService {
 
     private final static Pattern DEFAULT_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)\\.*(\\d*)"); //$NON-NLS-1$
 
-    private final static String CATEGORY_LIST_URL = "http://talendforge.org/exchange/top/api/get_category_list.php";
+    private final static String CATEGORY_LIST_URL = "http://talendforge.org/exchange/top/api/get_category_list.php";//$NON-NLS-1$
 
     private static MultiValueMap versionMap = new MultiValueMap();
 

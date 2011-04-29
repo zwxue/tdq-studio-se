@@ -111,12 +111,12 @@ public class EcosystemSocketFactory implements SocketFactory {
         if ((tcp.getProxyHost().length() == 0) || (tcp.getProxyPort().length() == 0) || hostInNonProxyList) {
             sock = create(host, port, timeout);
             if (log.isDebugEnabled()) {
-                log.debug(Messages.getMessage("createdHTTP00"));
+                log.debug(Messages.getMessage("createdHTTP00"));//$NON-NLS-1$
             }
         } else {
             sock = create(tcp.getProxyHost(), new Integer(tcp.getProxyPort()).intValue(), timeout);
             if (log.isDebugEnabled()) {
-                log.debug(Messages.getMessage("createdHTTP01", tcp.getProxyHost(), tcp.getProxyPort()));
+                log.debug(Messages.getMessage("createdHTTP01", tcp.getProxyHost(), tcp.getProxyPort()));//$NON-NLS-1$
             }
             useFullURL.value = true;
         }
@@ -168,7 +168,7 @@ public class EcosystemSocketFactory implements SocketFactory {
             String pattern = tokenizer.nextToken();
 
             if (log.isDebugEnabled()) {
-                log.debug(Messages.getMessage("match00", new String[] { "HTTPSender", host, pattern }));
+                log.debug(Messages.getMessage("match00", new String[] { "HTTPSender", host, pattern }));//$NON-NLS-1$ $NON-NLS-2$
             }
             if (match(pattern, host, false)) {
                 return true;

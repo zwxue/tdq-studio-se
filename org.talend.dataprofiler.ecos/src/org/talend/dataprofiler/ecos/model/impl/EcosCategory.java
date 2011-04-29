@@ -93,8 +93,8 @@ public class EcosCategory implements IEcosCategory {
     public String toString() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("name:").append(getName()).append("\n");
-        sb.append("counter:").append(getCounter()).append("\n");
+        sb.append("name:").append(getName()).append("\n");//$NON-NLS-1$ $NON-NLS-2$
+        sb.append("counter:").append(getCounter()).append("\n");//$NON-NLS-1$ $NON-NLS-2$
         return sb.toString();
     }
 

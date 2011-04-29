@@ -32,7 +32,7 @@ public class EcosystemServiceTest {
     public void testGetCategoryList() {
         List<IEcosCategory> list;
         try {
-            list = EcosystemService.getCategoryList("3.1.2");
+            list = EcosystemService.getCategoryList("3.1.2");//$NON-NLS-1$
             for (Iterator<IEcosCategory> iterator = list.iterator(); iterator.hasNext();) {
                 EcosCategory object = (EcosCategory) iterator.next();
                 System.out.println(object.getVersion());
