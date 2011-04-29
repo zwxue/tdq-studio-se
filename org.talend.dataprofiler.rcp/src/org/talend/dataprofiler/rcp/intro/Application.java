@@ -14,6 +14,7 @@ package org.talend.dataprofiler.rcp.intro;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -26,6 +27,7 @@ import org.talend.commons.exception.BusinessException;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ui.branding.IBrandingService;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.license.LicenseManagement;
 import org.talend.dataprofiler.core.license.LicenseWizard;
 import org.talend.dataprofiler.core.license.LicenseWizardDialog;
@@ -34,6 +36,7 @@ import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4Cool
 import org.talend.repository.registeruser.RegisterManagement;
 import org.talend.repository.ui.wizards.register.RegisterWizard;
 import org.talend.repository.ui.wizards.register.RegisterWizardPage1;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * This class controls all aspects of the application's execution.
@@ -57,7 +60,11 @@ public class Application implements IApplication {
         }
         try {
             if (!CorePlugin.getDefault().isRepositoryInitialized()) {
-                CorePlugin.getDefault().initProxyRepository();
+                ReturnCode rc = CorePlugin.getDefault().initProxyRepository();
+                if (!rc.isOk()) {
+                    MessageDialog.openError(shell, DefaultMessagesImpl.getString("Application.warring"), rc.getMessage());//$NON-NLS-1$
+                    return IApplication.EXIT_OK;
+                }
             }
 
             Tweaklets.setDefault(WorkbenchImplementation.KEY, new Workbench3xImplementation4CoolBar());

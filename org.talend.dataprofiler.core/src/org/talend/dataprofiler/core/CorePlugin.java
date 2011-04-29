@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,8 +33,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.help.internal.base.BaseHelpSystem;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -84,6 +88,7 @@ import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -136,7 +141,7 @@ public class CorePlugin extends AbstractUIPlugin {
             log.error(e, e);
         }
 
-        repositoryInitialized = this.initProxyRepository();
+        repositoryInitialized = this.initProxyRepository().isOk();
         SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
     }
 
@@ -439,8 +444,20 @@ public class CorePlugin extends AbstractUIPlugin {
      * DOC zshen Comment method "initProxyRepository".
      * 
      */
-    public boolean initProxyRepository() {
-
+    public ReturnCode initProxyRepository() {
+        ReturnCode rc = new ReturnCode();
+        Location instanceLoc = Platform.getInstanceLocation();
+        try {
+            if (instanceLoc.isLocked()) {
+                rc.setMessage(DefaultMessagesImpl.getString("CorePlugin.workspaceInUse"));//$NON-NLS-1$
+                rc.setOk(false);
+                return rc;
+            } else {
+                instanceLoc.lock();
+            }
+        } catch (IOException e) {
+            log.error(e, e);
+        }
         Project project = null;
         RepositoryContext repositoryContext = (RepositoryContext) org.talend.core.runtime.CoreRuntimePlugin.getInstance()
                 .getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
@@ -453,8 +470,10 @@ public class CorePlugin extends AbstractUIPlugin {
             ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
             IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
             if (repository == null) {
-                log.fatal("No local Repository found! Probably due to a missing plugin in the product."); //$NON-NLS-1$
-                return false;
+                log.fatal(DefaultMessagesImpl.getString("CorePlugin.noLocalRepositoryFound")); //$NON-NLS-1$
+                rc.setMessage(DefaultMessagesImpl.getString("CorePlugin.noLocalRepositoryFound"));//$NON-NLS-1$
+                rc.setOk(false);
+                return rc;
             }
             proxyRepository.setRepositoryFactoryFromProvider(repository);
             try {
@@ -463,6 +482,8 @@ public class CorePlugin extends AbstractUIPlugin {
 
                 XmiResourceManager xmiResourceManager = new XmiResourceManager();
                 IProject rootProject = ResourceManager.getRootProject();
+
+
                 if (rootProject.getFile(FileConstants.LOCAL_PROJECT_FILENAME).exists()) {
                     // Initialize TDQ EMF model packages.
                     new EMFUtil();
@@ -494,13 +515,16 @@ public class CorePlugin extends AbstractUIPlugin {
 
             } catch (PersistenceException e) {
                 ExceptionHandler.process(e);
-                return false;
+                rc.setMessage(e.getMessage());
+                rc.setOk(false);
+                return rc;
             }
         }
-        return true;
+        return rc;
     }
 
     private void initRepositoryContext(Project project) {
+
         RepositoryContext repositoryContext = new RepositoryContext();
         repositoryContext.setUser(project.getAuthor());
         repositoryContext.setClearPassword(project.getLabel());
