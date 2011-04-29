@@ -84,7 +84,7 @@ public class FirstNameStandardize {
     }
 
     public TopDocs getFuzzySearch(String input) throws Exception {
-        Query q = new FuzzyQuery(new Term("name", input), 0.5f, 2);
+        Query q = new FuzzyQuery(new Term("name", input), 0.5f, 2);//$NON-NLS-1$
         TopDocs matches = searcher.search(q, 10);
         return matches;
     }
@@ -118,11 +118,11 @@ public class FirstNameStandardize {
                 .parse(inputName);
         Query countryQuery = null;
         Query genderQuery = null;
-        if (countryText != null && !countryText.equals("")) {
+        if (countryText != null && !countryText.equals("")) {//$NON-NLS-1$
             countryQuery = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_COUNTRY, analyzer)
                     .parse(countryText);
             nameQuery = nameQuery.combine(new Query[] { nameQuery, countryQuery });
-            if (genderText != null && !genderText.equals("")) {
+            if (genderText != null && !genderText.equals("")) {//$NON-NLS-1$
                 genderQuery = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_GENDER, analyzer)
                         .parse(genderText);
                 nameQuery = nameQuery.combine(new Query[] { nameQuery, countryQuery, genderQuery });
@@ -135,10 +135,10 @@ public class FirstNameStandardize {
             Query name = new FuzzyQuery(termName);
             Query country = null;
             Query gender = null;
-            if (countryText != null && !countryText.equals("")) {
+            if (countryText != null && !countryText.equals("")) {//$NON-NLS-1$
                 country = new FuzzyQuery(termCountry);
                 name = name.combine(new Query[] { name, country });
-                if (genderText != null && !genderText.equals("")) {
+                if (genderText != null && !genderText.equals("")) {//$NON-NLS-1$
                     gender = new FuzzyQuery(ternGender);
                     name = name.combine(new Query[] { name, country, gender });
                 }
@@ -177,31 +177,31 @@ public class FirstNameStandardize {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return (results == null || results.length == 0) ? "" : searcher.doc(results[0].doc).get("name");
+        return (results == null || results.length == 0) ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
     }
     public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender, boolean fuzzyQuery)
             throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
-        indexFields.put("country", inputCountry);
-        indexFields.put("gender", inputGender);
+        indexFields.put("country", inputCountry);//$NON-NLS-1$
+        indexFields.put("gender", inputGender);//$NON-NLS-1$
         ScoreDoc[] results = standardize(inputName, indexFields, fuzzyQuery);
-        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
     }
 
     public String replaceNameWithCountryInfo(String inputName, String inputCountry, boolean fuzzyQuery) throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
-        indexFields.put("country", inputCountry);
+        indexFields.put("country", inputCountry);//$NON-NLS-1$
         ScoreDoc[] results = standardize(inputName, indexFields, fuzzyQuery);
-        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
     }
 
     public String replaceNameWithGenderInfo(String inputName, String inputGender, boolean fuzzyQuery) throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
-        indexFields.put("gender", inputGender);
+        indexFields.put("gender", inputGender);//$NON-NLS-1$
         ScoreDoc[] results;
 
         results = standardize(inputName, indexFields, fuzzyQuery);
 
-        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
     }
 }

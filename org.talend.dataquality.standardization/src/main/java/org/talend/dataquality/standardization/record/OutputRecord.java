@@ -60,11 +60,11 @@ public class OutputRecord implements Comparable<OutputRecord> {
     public String toString() {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < record.length; i++) {
-            buf.append(record[i]).append(" ; ");
+            buf.append(record[i]).append(" ; ");//$NON-NLS-1$
         }
         buf.deleteCharAt(buf.length() - 2);
-        buf.append(" | score= " + score);
-        buf.append(" ->" + scores).append("| nb match=").append(nbMatch).append("/").append(record.length);
+        buf.append(" | score= " + score);//$NON-NLS-1$
+        buf.append(" ->" + scores).append("| nb match=").append(nbMatch).append("/").append(record.length);//$NON-NLS-1$ $NON-NLS-2$ //$NON-NLS-3$
 
         return buf.toString();
     }
@@ -149,7 +149,7 @@ public class OutputRecord implements Comparable<OutputRecord> {
      * @return the scores
      */
     public String getScores() {
-    	if (scores != null && scores.startsWith("|")) {
+        if (scores != null && scores.startsWith("|")) {//$NON-NLS-1$
     		scores = scores.substring(1);
     	}
         return this.scores;

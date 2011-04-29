@@ -26,6 +26,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Version;
+import org.talend.dataquality.standardization.i18n.Messages;
 
 import com.csvreader.CsvReader;
 
@@ -59,7 +60,7 @@ public class IndexBuilder {
     public boolean initializeIndex(String csvFileToIndex, int[] columnsToBeIndexed) throws IOException {
         assert csvFileToIndex != null;
         if (!new File(csvFileToIndex).exists() || !new File(directoryPath).isDirectory()) {
-            throw new IOException(csvFileToIndex + " does not exist or" + directoryPath + " is not a directory");
+            throw new IOException(Messages.getString("IndexBuilder.error", csvFileToIndex, directoryPath));//$NON-NLS-1$
         }
         index = new MMapDirectory(new File(directoryPath));
         // The same analyzer should be used for indexing and searching
@@ -71,7 +72,7 @@ public class IndexBuilder {
         // read the data (this will be the input data of a component called
         // tFirstNameStandardize)
         CsvReader csvReader = new CsvReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
-                csvFileToIndex.toString()), "windows-1252")), ',');
+                csvFileToIndex.toString()), "windows-1252")), ',');//$NON-NLS-1$
         csvReader.setTextQualifier('"');
         csvReader.setUseTextQualifier(true);
 
@@ -91,13 +92,13 @@ public class IndexBuilder {
     }
 
     private static void addDoc(IndexWriter w, String name, String country, String gender, String count) throws IOException {
-        if (!country.equals("") && !gender.equals("")) {
+        if (!country.equals("") && !gender.equals("")) {//$NON-NLS-1$ $NON-NLS-2$
             Document doc = new Document();
-            Field field = new Field("name", name, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);
+            Field field = new Field("name", name, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);//$NON-NLS-1$
             doc.add(field);
-            doc.add(new Field("country", country, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.YES));
-            doc.add(new Field("gender", gender, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.YES));
-            doc.add(new Field("count", count, Field.Store.NO, Field.Index.NOT_ANALYZED, TermVector.NO));
+            doc.add(new Field("country", country, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.YES));//$NON-NLS-1$
+            doc.add(new Field("gender", gender, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.YES));//$NON-NLS-1$
+            doc.add(new Field("count", count, Field.Store.NO, Field.Index.NOT_ANALYZED, TermVector.NO));//$NON-NLS-1$
             w.addDocument(doc);
         }
     }
@@ -105,7 +106,7 @@ public class IndexBuilder {
     public boolean initializeSynonymIndex(String csvFileToIndex, int[] columnsToBeIndexed) throws IOException {
         assert csvFileToIndex != null;
         if (!new File(csvFileToIndex).exists() || !new File(directoryPath).isDirectory()) {
-            throw new IOException(csvFileToIndex + " does not exist or" + directoryPath + " is not a directory");
+            throw new IOException(Messages.getString("IndexBuilder.error", csvFileToIndex, directoryPath));//$NON-NLS-1$
         }
 
         index = FSDirectory.open(new File(directoryPath));
@@ -119,7 +120,7 @@ public class IndexBuilder {
         // read the data (this will be the input data of a component called
         // tFirstNameStandardize)
         CsvReader csvReader = new CsvReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
-                csvFileToIndex.toString()), "windows-1252")), ';');
+                csvFileToIndex.toString()), "windows-1252")), ';');//$NON-NLS-1$
         csvReader.setTextQualifier('"');
         csvReader.setUseTextQualifier(true);
 
@@ -129,8 +130,8 @@ public class IndexBuilder {
 
             Document doc = new Document();
             String word = csvReader.get(columnsToBeIndexed[0]);
-            doc.add(new Field("word", word, Field.Store.YES, Field.Index.NO, TermVector.NO));
-            doc.add(new Field("syn", word, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
+            doc.add(new Field("word", word, Field.Store.YES, Field.Index.NO, TermVector.NO));//$NON-NLS-1$
+            doc.add(new Field("syn", word, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));//$NON-NLS-1$
 
             if (columnsToBeIndexed.length == 1) {
                 w.addDocument(doc);
@@ -138,9 +139,9 @@ public class IndexBuilder {
             }
 
             String synonyms = csvReader.get(columnsToBeIndexed[1]);
-            String[] split = StringUtils.split(synonyms, "|");
+            String[] split = StringUtils.split(synonyms, "|");//$NON-NLS-1$
             for (String str : split) {
-                doc.add(new Field("syn", str, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));
+                doc.add(new Field("syn", str, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES));//$NON-NLS-1$
             }
             w.addDocument(doc);
         }
@@ -152,15 +153,15 @@ public class IndexBuilder {
     }
 
     private static void createSynonymIndex(String indexPath, String sourceFile) {
-        File dirFile = new File("data/indexes/" + indexPath);
+        File dirFile = new File("data/indexes/" + indexPath);//$NON-NLS-1$
         if ( ! (dirFile.exists())  &&   ! (dirFile.isDirectory())) {
             dirFile.mkdirs();
         }
 
-        IndexBuilder ib = new IndexBuilder("data/indexes/" + indexPath);
+        IndexBuilder ib = new IndexBuilder("data/indexes/" + indexPath);//$NON-NLS-1$
         int[] columnsToIndex = { 0, 1 };
         try {
-            ib.initializeSynonymIndex("data/indexes/" + sourceFile, columnsToIndex);
+            ib.initializeSynonymIndex("data/indexes/" + sourceFile, columnsToIndex);//$NON-NLS-1$
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -168,15 +169,15 @@ public class IndexBuilder {
     }
 
     private static void createSingleIndex(String indexPath, String sourceFile) {
-        File dirFile = new File("data/indexes/" + indexPath);
+        File dirFile = new File("data/indexes/" + indexPath);//$NON-NLS-1$
         if (!(dirFile.exists()) && !(dirFile.isDirectory())) {
             dirFile.mkdirs();
         }
 
-        IndexBuilder ib = new IndexBuilder("data/indexes/" + indexPath);
+        IndexBuilder ib = new IndexBuilder("data/indexes/" + indexPath);//$NON-NLS-1$
         int[] columnsToIndex = { 0 };
         try {
-            ib.initializeSynonymIndex("data/indexes/" + sourceFile, columnsToIndex);
+            ib.initializeSynonymIndex("data/indexes/" + sourceFile, columnsToIndex);//$NON-NLS-1$
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -185,10 +186,10 @@ public class IndexBuilder {
 
     public static void main(String[] args) throws IOException {
 
-        createSynonymIndex("Salutory", "SalutorySynonyms.csv");
-        createSynonymIndex("Address", "AddressSynonyms.csv");
-        createSingleIndex("Company", "CompanySynonyms.csv");
-        createSynonymIndex("StreetType", "StreetTypeSynonyms.csv");
+        createSynonymIndex("Salutory", "SalutorySynonyms.csv");//$NON-NLS-1$ $NON-NLS-2$
+        createSynonymIndex("Address", "AddressSynonyms.csv");//$NON-NLS-1$ $NON-NLS-2$
+        createSingleIndex("Company", "CompanySynonyms.csv");//$NON-NLS-1$ $NON-NLS-2$
+        createSynonymIndex("StreetType", "StreetTypeSynonyms.csv");//$NON-NLS-1$ $NON-NLS-2$
     }
 
 }

@@ -30,15 +30,16 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.talend.dataquality.standardization.i18n.Messages;
 
 /**
  * @author scorreia A class to create an index with synonyms.
  */
 public class SynonymIndexSearcher {
 
-    public static final String F_WORD = "word";
+    public static final String F_WORD = "word";//$NON-NLS-1$
 
-    public static final String F_SYN = "syn";
+    public static final String F_SYN = "syn";//$NON-NLS-1$
 
     private IndexSearcher searcher;
 
@@ -91,7 +92,7 @@ public class SynonymIndexSearcher {
         CheckIndex check = new CheckIndex(indexDir);
         Status status = check.checkIndex();
         if (status.missingSegments) {
-            System.err.println("Failed to load index. Please make sure it's not empty.\n");
+            System.err.println(Messages.getString("SynonymIndexBuilder.print"));//$NON-NLS-1$
         }
         this.searcher = new IndexSearcher(indexDir);
     }

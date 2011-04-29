@@ -19,7 +19,8 @@ package org.talend.dataquality.standardization.index;
  */
 public class Error {
 	private boolean status = true;
-	private String message = "";
+
+    private String message = "";//$NON-NLS-1$
 	
 	public void set(boolean status, String message) {
 		this.status = status;
@@ -28,7 +29,7 @@ public class Error {
 	
 	public void reset() {
 		this.status = true;
-		this.message = "";
+        this.message = "";//$NON-NLS-1$
 	}
 	
 	public boolean getStatus() {

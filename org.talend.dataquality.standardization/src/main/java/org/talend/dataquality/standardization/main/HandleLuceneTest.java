@@ -31,25 +31,25 @@ public final class HandleLuceneTest {
      */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        String filename = "./data/TalendGivenNames.TXT";
+        String filename = "./data/TalendGivenNames.TXT";//$NON-NLS-1$
         // String indexfolder = "C:\\Documents and Settings\\Administrator\\����\\data\\TalendGivenNames_index";
-        String indexfolder = "./data/TalendGivenNames_index";
+        String indexfolder = "./data/TalendGivenNames_index";//$NON-NLS-1$
         HandleLucene hl = new HandleLuceneImpl();
         System.out.print(hl.createIndex(filename, indexfolder));
 
         try {
 
-            String res = hl.replaceName(indexfolder, "Philippe", false);
-            System.out.println("replaceName:" + res);
+            String res = hl.replaceName(indexfolder, "Philippe", false);//$NON-NLS-1$
+            System.out.println("replaceName:" + res);//$NON-NLS-1$
             try {
-                String res1 = hl.replaceNameWithCountryInfo(indexfolder, "Philippe", "china", false);
-                System.out.println("replaceNameWithCountryInfo:" + res1);
+                String res1 = hl.replaceNameWithCountryInfo(indexfolder, "Philippe", "china", false);//$NON-NLS-1$ $NON-NLS-2$
+                System.out.println("replaceNameWithCountryInfo:" + res1);//$NON-NLS-1$
 
-                String res2 = hl.replaceNameWithGenderInfo(indexfolder, "Philippe", "0", false);
+                String res2 = hl.replaceNameWithGenderInfo(indexfolder, "Philippe", "0", false);//$NON-NLS-1$ $NON-NLS-2$
 
-                System.out.println("replaceNameWithGenderInfo:" + res2);
-                String res3 = hl.replaceNameWithCountryGenderInfo(indexfolder, "Philippe", "china", "1", false);
-                System.out.println("replaceNameWithCountryGenderInfo:" + res3);
+                System.out.println("replaceNameWithGenderInfo:" + res2);//$NON-NLS-1$
+                String res3 = hl.replaceNameWithCountryGenderInfo(indexfolder, "Philippe", "china", "1", false);//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
+                System.out.println("replaceNameWithCountryGenderInfo:" + res3);//$NON-NLS-1$
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

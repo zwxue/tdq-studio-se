@@ -37,7 +37,7 @@ public class WordNetSynonymEngine implements SynonymEngine {
     /**
      * Reuse this term for optimized creation of terms.
      */
-    private Term term = new Term("word", "");
+    private Term term = new Term("word", "");//$NON-NLS-1$ $NON-NLS-2$
 
     public WordNetSynonymEngine(File index) throws IOException {
         directory = FSDirectory.open(index);
@@ -63,7 +63,7 @@ public class WordNetSynonymEngine implements SynonymEngine {
         // iterate over matching documents
         for (ScoreDoc hits : collector.getHits()) {
             Document doc = searcher.doc(hits.doc);
-            String[] values = doc.getValues("syn"); // FIXME hard coded string
+            String[] values = doc.getValues("syn"); //$NON-NLS-1$ // FIXME hard coded string
 
             // record synonyms
             for (int j = 0; j < values.length; j++) {

@@ -141,7 +141,7 @@ public class HandleLuceneImpl implements HandleLucene {
             Document d = null;
             try {
                 d = searcher.doc(docId);
-                String name = d.get("name");
+                String name = d.get("name");//$NON-NLS-1$
                 soreDoc.add(name);
             } catch (CorruptIndexException e) {
                 e.printStackTrace();

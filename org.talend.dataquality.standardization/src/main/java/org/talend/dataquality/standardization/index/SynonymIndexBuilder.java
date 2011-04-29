@@ -34,15 +34,16 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.talend.dataquality.standardization.i18n.Messages;
 
 /**
  * @author scorreia A class to create an index with synonyms.
  */
 public class SynonymIndexBuilder {
 
-    public static final String F_WORD = "word";
+    public static final String F_WORD = "word";//$NON-NLS-1$
 
-    public static final String F_SYN = "syn";
+    public static final String F_SYN = "syn";//$NON-NLS-1$
 
     private Directory indexDir;
 
@@ -102,7 +103,7 @@ public class SynonymIndexBuilder {
         try {
             indexDir = FSDirectory.open(file);
         } catch (IOException e) {
-            error.set(false, "Failed to load index. Please make sure it's not empty.");
+            error.set(false, Messages.getString("SynonymIndexBuilder.failLoad"));//$NON-NLS-1$
             // e.printStackTrace();
         }
     }
@@ -132,7 +133,7 @@ public class SynonymIndexBuilder {
             getWriter().addDocument(generateDocument(word, synonyms));
             return true;
         } // else
-        error.set(false, "A document with the same reference <" + word + "> exists in the index. Cannot insert.");
+        error.set(false, Messages.getString("SynonymIndexBuilder.aDocument", word));//$NON-NLS-1$
         return false;
     }
 
@@ -164,7 +165,7 @@ public class SynonymIndexBuilder {
             // FIXME maybe we need to avoid deleting several documents when we just want to update one document (to be
             // tested)
             nbUpdatedDocuments = -1;// to avoid insertion by the component when nbUpdatedDocuments == 0
-            error.set(false, docs.totalHits + " documents matched the given reference <" + word + ">. No changes have been made.");
+            error.set(false, Messages.getString("SynonymIndexBuilder.documents", docs.totalHits, word));//$NON-NLS-1$
             break;
         }
         return nbUpdatedDocuments;
@@ -181,7 +182,7 @@ public class SynonymIndexBuilder {
         TopDocs docs = searchDocumentByWord(word);
         switch (docs.totalHits) {
         case 0:
-            error.set(false, "<" + word + "> doesn't exist. Cannot delete.");
+            error.set(false, Messages.getString("SynonymIndexBuilder.doesnotExsit", word));//$NON-NLS-1$
             return 0;
         case 1:
             getWriter().deleteDocuments(new Term(F_WORD, word));
@@ -231,7 +232,7 @@ public class SynonymIndexBuilder {
             String[] synonyms = doc.getValues(F_SYN);
             for (String str : synonyms) {
                 if (str.toLowerCase().equals(newSynonym.toLowerCase())) {
-                    error.set(false, "The synonym <" + newSynonym + "> is equivalent to <" + str + ">. Ignored.");
+                    error.set(false, Messages.getString("SynonymIndexBuilder.synonym", newSynonym, str));//$NON-NLS-1$
                     // FIXME should the synonym be rejected when an equivalent one already exists in the document?
                     synExists = true;
                     break;
@@ -246,10 +247,9 @@ public class SynonymIndexBuilder {
             }
         } else {
             if (docs.totalHits == 0) {
-                error.set(false, "The document <" + word + "> doesn't exist. Cannot add any synonym.");
+                error.set(false, Messages.getString("SynonymIndexBuilder.document", word));//$NON-NLS-1$
             } else {
-                error.set(false, docs.totalHits + " documents matched the given reference <" + word
-                        + ">. No changes have been made.");
+                error.set(false, Messages.getString("SynonymIndexBuilder.documents", docs.totalHits, word));//$NON-NLS-1$
             }
         }
         // FIXME avoid use of idxSearcher?
@@ -267,12 +267,11 @@ public class SynonymIndexBuilder {
     public int removeSynonymFromDocument(String word, String synonymToDelete) throws IOException {
         assert word != null;
         if (synonymToDelete == null) {
-            error.set(false, "The synonym of the word \"" + word + "\" is null");
+            error.set(false, Messages.getString("SynonymIndexBuilder.theSynonym", word));//$NON-NLS-1$
             return 0;
         }
         if (synonymToDelete.toLowerCase().equals(word.toLowerCase())) {
-            error.set(false, "The synonym <" + synonymToDelete + "> is equivalent to the reference <" + word
-                    + ">. It cannot be removed");
+            error.set(false, Messages.getString("SynonymIndexBuilder.synonymToDelete", synonymToDelete, word));//$NON-NLS-1$
             return 0;
         }
         int deleted = 0;
@@ -299,14 +298,14 @@ public class SynonymIndexBuilder {
 
             // if the value of deleted is 0, we can know that the synonymToDelete doesn't exist
             if (deleted == 0) {
-                error.set(false, "The synonym <" + synonymToDelete + "> doesn't exist in the document. Ignored.");
+                error.set(false, Messages.getString("SynonymIndexBuilder.synonymNotExsit", synonymToDelete));//$NON-NLS-1$
             } else {
                 Document newDoc = generateDocument(word, synonymList);
                 getWriter().updateDocument(new Term(F_WORD, word), newDoc);
             }
 
         } else {
-            error.set(false, "The document <" + word + "> doesn't exist in the index. Cannot remove any synonym of it.");
+            error.set(false, Messages.getString("SynonymIndexBuilder.documentNotExsit", word));//$NON-NLS-1$
             deleted = 0;
         }
         newSynIdxSearcher.close();
@@ -337,7 +336,7 @@ public class SynonymIndexBuilder {
         } // else folder is a file
         allDeleted = folder.delete();
         if (!allDeleted) {
-            error.set(false, "Could not delete all index files: " + folder.getAbsolutePath());
+            error.set(false, Messages.getString("SynonymIndexBuilder.couldNotDelete", folder.getAbsolutePath()));//$NON-NLS-1$
         }
         return allDeleted;
     }
@@ -446,7 +445,7 @@ public class SynonymIndexBuilder {
         CheckIndex check = new CheckIndex(indexDir);
         Status status = check.checkIndex();
         if (status.missingSegments) {
-            System.err.println("Failed to load index. Please make sure it's not empty.\n");
+            System.err.println(Messages.getString("SynonymIndexBuilder.print"));//$NON-NLS-1$
         }
         return new IndexSearcher(indexDir);
     }

@@ -23,6 +23,7 @@ import java.util.Set;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.talend.dataquality.standardization.i18n.Messages;
 import org.talend.dataquality.standardization.index.SynonymIndexSearcher;
 
 /**
@@ -73,7 +74,7 @@ public class SynonymRecordSearcher {
          */
         @Override
         public String toString() {
-            return "WordResult=" + this.input + "->" + this.word + "; score=" + score;
+            return "WordResult=" + this.input + "->" + this.word + "; score=" + score;//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
         }
 
     } // EOC WordResult
@@ -127,7 +128,7 @@ public class SynonymRecordSearcher {
                 // this is mainly for robustness and for tests as the search method of SynonymRecordSearcher already
                 // handles this case
                 if (lastWR.isEmpty()) {
-                    outputRows.add(createOutputRecord(recordLength, foundWords, createEmptyWordResult("")));
+                    outputRows.add(createOutputRecord(recordLength, foundWords, createEmptyWordResult("")));//$NON-NLS-1$
                 } else {
                     // handle case when at least one synonym reference has been found (usual case)
                     for (WordResult wordResult : lastWR) {
@@ -142,7 +143,7 @@ public class SynonymRecordSearcher {
                 // handles this case
                 if (firstWR.isEmpty()) {
                     List<WordResult> wr = new ArrayList<WordResult>(foundWords);
-                    wr.add(createEmptyWordResult(""));
+                    wr.add(createEmptyWordResult(""));//$NON-NLS-1$
                     computeOutputRows(recordLength, wr, sublist, outputRows);
                 }
                 // handle case when at least one synonym reference has been found (usual case)
@@ -167,7 +168,7 @@ public class SynonymRecordSearcher {
         private static void updateOutputRec(OutputRecord outputRec, int idx, WordResult wordResult) {
             outputRec.record[idx] = wordResult.word;
             outputRec.score += wordResult.score; // TODO add multiplicative weight here if needed
-            outputRec.scores += "|" + wordResult.score;
+            outputRec.scores += "|" + wordResult.score;//$NON-NLS-1$
             if (wordResult.score != 0) {
                 outputRec.nbMatch++;
             }
@@ -195,7 +196,7 @@ public class SynonymRecordSearcher {
             String field = record[i];
             
             // if input value is empty, create an empty record
-            if (field == null || "".equals(field.trim())){
+            if (field == null || "".equals(field.trim())) {//$NON-NLS-1$
             	wResults.add(createEmptyWordResult(field));
             } else {
 	            // search this field in one index
@@ -240,7 +241,7 @@ public class SynonymRecordSearcher {
     public void addSearcher(SynonymIndexSearcher searcher, int columnIndex) {
         assert columnIndex < this.recordSize;
         if (searcher == null) {
-            throw new NullPointerException("tried to set a null Synonym index searcher at " + columnIndex);
+            throw new NullPointerException(Messages.getString("SynonymRecordSearcher.tried", columnIndex));//$NON-NLS-1$
         }
         searchers[columnIndex] = searcher;
     }
