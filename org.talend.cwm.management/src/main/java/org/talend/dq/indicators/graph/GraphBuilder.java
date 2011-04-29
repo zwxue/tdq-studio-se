@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.indicators.impl.IndicatorImpl;
 import org.talend.utils.collections.MultipleKey;
 
 import edu.uci.ics.jung.graph.Edge;
@@ -214,7 +215,7 @@ public class GraphBuilder {
      */
     private Integer getIntegerValue(Object object) {
         assert object != null;
-        return (object instanceof Integer) ? (Integer) object : Integer.valueOf(String.valueOf(object));
+        return (object instanceof Integer) ? (Integer) object : IndicatorImpl.getIntegerFromObject(String.valueOf(object));
     }
 
     /**
