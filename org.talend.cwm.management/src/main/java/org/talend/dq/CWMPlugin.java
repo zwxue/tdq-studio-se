@@ -160,9 +160,9 @@ public class CWMPlugin extends Plugin {
                 aliasManager.loadAliases();
                 String aliasName = dataProvider.getName();
                 Alias alias = aliasManager.getAlias(aliasName);
-
                 if (alias != null) {
                     aliasManager.removeAlias(aliasName);
+                    aliasManager.saveAliases();
                 }
             } catch (Exception e) {
                 log.error(e, e);
@@ -171,7 +171,7 @@ public class CWMPlugin extends Plugin {
         aliasManager.modelChanged();
     }
 
-       /**
+    /**
      * 
      * DOC klliu Comment method "updateAliasInSQLExplorer".update SQL Exploer ConnectionNode's name before saving the
      * updated name.

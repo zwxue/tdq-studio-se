@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.service;
 
+import java.util.List;
+
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
@@ -27,6 +29,9 @@ import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dq.CWMPlugin;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -85,5 +90,22 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         if (listener != null) {
             activePage.addPartListener(listener);
         }
+    }
+
+    public boolean removeAliasInSQLExplorer(IRepositoryNode children) {
+        boolean hasDependencyItem = true;
+        //MOD klliu 2011-04-28 bug 20204 removing connection is synced to the connection view of SQL explore 
+        Item item = children.getObject().getProperty().getItem();
+        if (item instanceof ConnectionItem) {
+            Connection connection = ((ConnectionItem) item).getConnection();
+            List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(connection);
+            if (!(dependencyClients == null || dependencyClients.isEmpty())) {
+                hasDependencyItem = false;
+            } else {
+                CWMPlugin.getDefault().removeAliasInSQLExplorer(connection);
+            }
+        }
+
+        return hasDependencyItem;
     }
 }
