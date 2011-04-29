@@ -667,6 +667,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
+            // MOD qiongli 2011-4-29 bug 21035.resolve Proxy.
+            if (tdqAnalysisItem.eIsProxy()) {
+                tdqAnalysisItem = (TDQAnalysisItem) EObjectHelper.resolveObject(tdqAnalysisItem);
+            }
             // ADD gdbu 2011-3-3 bug 19179
             tdqAnalysisItem.getProperty().setLabel(analysisHandler.getName());
             this.nameText.setText(analysisHandler.getName());

@@ -95,6 +95,7 @@ import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -824,6 +825,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
+            // MOD qiongli 2011-4-29 bug 21035.resolve Proxy.
+            if (tdqAnalysisItem.eIsProxy()) {
+                tdqAnalysisItem = (TDQAnalysisItem) EObjectHelper.resolveObject(tdqAnalysisItem);
+            }
             // ADD gdbu 2011-3-3 bug 19179
             tdqAnalysisItem.getProperty().setLabel(analysis.getName());
             this.nameText.setText(analysis.getName());

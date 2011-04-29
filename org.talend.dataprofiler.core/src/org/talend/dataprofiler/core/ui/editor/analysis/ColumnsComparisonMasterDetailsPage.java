@@ -54,6 +54,7 @@ import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -315,6 +316,10 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
+            // MOD qiongli 2011-4-29 bug 21035.resolve Proxy.
+            if (tdqAnalysisItem.eIsProxy()) {
+                tdqAnalysisItem = (TDQAnalysisItem) EObjectHelper.resolveObject(tdqAnalysisItem);
+            }
             // ADD gdbu 2011-3-3 bug 19179
             tdqAnalysisItem.getProperty().setLabel(analysis.getName());
             this.nameText.setText(analysis.getName());
