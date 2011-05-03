@@ -35,7 +35,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.help.internal.base.BaseHelpSystem;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.ui.IEditorInput;
@@ -446,18 +445,6 @@ public class CorePlugin extends AbstractUIPlugin {
      */
     public ReturnCode initProxyRepository() {
         ReturnCode rc = new ReturnCode();
-        Location instanceLoc = Platform.getInstanceLocation();
-        try {
-            if (instanceLoc.isLocked()) {
-                rc.setMessage(DefaultMessagesImpl.getString("CorePlugin.workspaceInUse"));//$NON-NLS-1$
-                rc.setOk(false);
-                return rc;
-            } else {
-                instanceLoc.lock();
-            }
-        } catch (IOException e) {
-            log.error(e, e);
-        }
         Project project = null;
         RepositoryContext repositoryContext = (RepositoryContext) org.talend.core.runtime.CoreRuntimePlugin.getInstance()
                 .getContext().getProperty(Context.REPOSITORY_CONTEXT_KEY);
@@ -467,6 +454,18 @@ public class CorePlugin extends AbstractUIPlugin {
 
             ReponsitoryContextBridge.initialized(project.getEmfProject(), user);
         } else { // else project is null, then we are in TOP only
+            Location instanceLoc = Platform.getInstanceLocation();
+            try {
+                if (instanceLoc.isLocked()) {
+                    rc.setMessage(DefaultMessagesImpl.getString("CorePlugin.workspaceInUse"));//$NON-NLS-1$
+                    rc.setOk(false);
+                    return rc;
+                } else {
+                    instanceLoc.lock();
+                }
+            } catch (IOException e) {
+                log.error(e, e);
+            }
             ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
             IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
             if (repository == null) {
