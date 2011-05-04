@@ -85,7 +85,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 return returnCode;
             }
             csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
-                    encoding == null ? /* FIXME do we really want to pass null here? */encoding : encoding)), ParameterUtil
+                    encoding == null ? "US-ASCII" : encoding)), ParameterUtil //$NON-NLS-1$
                     .trimParameter(separator).charAt(0));
             initializeCsvReader(csvReader);
 
