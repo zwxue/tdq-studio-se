@@ -42,23 +42,23 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  */
 public class UIPagination {
 
-    private int totalPages;
+    protected int totalPages;
 
-    private int currentPage;
+    protected int currentPage;
 
-    private List<IPagination> pageCache = new ArrayList<IPagination>();
+    protected List<IPagination> pageCache = new ArrayList<IPagination>();
 
-    private ImageHyperlink pageLastImgHypLnk = null;
+    protected ImageHyperlink pageLastImgHypLnk = null;
 
-    private ImageHyperlink pageNextImgHypLnk = null;
+    protected ImageHyperlink pageNextImgHypLnk = null;
 
-    private ImageHyperlink pagePreviouseImgHypLnk = null;
+    protected ImageHyperlink pagePreviouseImgHypLnk = null;
 
-    private ImageHyperlink pageFirstImgHypLnk = null;
+    protected ImageHyperlink pageFirstImgHypLnk = null;
 
-    private ImageHyperlink goImgHypLnk = null;
+    protected ImageHyperlink goImgHypLnk = null;
 
-    private Text pageGoText;
+    protected Text pageGoText;
 
     private FormToolkit toolkit;
 
