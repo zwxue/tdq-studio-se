@@ -217,7 +217,7 @@ public class UIPagination {
         totalPages++;
     }
 
-    private void initPageNav() {
+    protected void initPageNav() {
         pageFirstImgHypLnk.addMouseListener(new MouseListener() {
 
             public void mouseDoubleClick(MouseEvent e) {
@@ -291,7 +291,7 @@ public class UIPagination {
 
     }
 
-    private void go() {
+    protected void go() {
 
         if (!isNumeric(pageGoText.getText().trim())) {
             MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
