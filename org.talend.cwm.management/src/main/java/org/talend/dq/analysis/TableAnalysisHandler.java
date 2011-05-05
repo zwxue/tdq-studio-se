@@ -23,7 +23,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
-import org.talend.cwm.i18n.Messages;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
