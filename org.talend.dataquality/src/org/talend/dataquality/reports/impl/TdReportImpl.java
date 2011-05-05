@@ -478,11 +478,25 @@ public class TdReportImpl extends ReportImpl implements TdReport {
     public boolean setMustRefresh(Analysis analysis, boolean mustRefresh) {
         boolean ok = false;
         EList<AnalysisMap> anMaps = this.getAnalysisMap();
+        // MOD qiongli 2011-5-5 bug 20771.sometimes,the anMaps dosen't cotanin this analysis. .eg. when create a new
+        // report and before saveing,the anMaps is empty.but the state of mustRefresh should take effect for the refresh
+        // checkbox.
         for (AnalysisMap anMap : anMaps) {
             if (ResourceHelper.areSame(analysis, anMap.getAnalysis())) {
                 ok = true;
                 anMap.setMustRefresh(mustRefresh);
                 break;
+            }
+        }
+        if (!ok) {
+            boolean added = this.getComponent().add(analysis);
+            if (added) {
+                AnalysisMap createAnalysisMap = ReportsFactory.eINSTANCE.createAnalysisMap();
+                createAnalysisMap.setAnalysis(analysis);
+                createAnalysisMap.setMustRefresh(mustRefresh);
+                createAnalysisMap.setReportType(ReportType.getReportType(analysis, ReportHelper.BASIC).getLabel());
+                this.getAnalysisMap().add(createAnalysisMap);
+                ok = true;
             }
         }
         return ok;
