@@ -13,7 +13,7 @@
 package org.talend.dq.dqrule;
 
 import org.apache.log4j.Logger;
-import org.talend.cwm.i18n.Messages;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
