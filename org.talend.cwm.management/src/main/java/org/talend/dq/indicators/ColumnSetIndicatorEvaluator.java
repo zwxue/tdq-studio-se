@@ -380,12 +380,33 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                         List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
                         recordIncrement = valueObjectList.size();
                         if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                            for (int j = 0; j < resultSet.getMetaData().getColumnCount(); j++) {
-                                List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH
-                                        .doSwitch(((ColumnSetMultiValueIndicator) indicator).getAnalyzedColumns().get(0)
-                                                .eContainer()));
-                                String newcol = columnList.get(j).getName();
-                                Object newobject = resultSet.getObject(newcol);
+                            // MOD gdbu 2011-5-6 bug : 20927
+                            int columnCount = resultSet.getMetaData().getColumnCount();
+                            if (0 >= columnCount) {
+                                continue;
+                            }
+                            List<TdColumn> columnList = TableHelper
+                                    .getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(((ColumnSetMultiValueIndicator) indicator)
+                                            .getAnalyzedColumns().get(0).eContainer()));
+                            for (int j = 0; j < columnCount; j++) {
+                                String newcol = null;
+                                Object newobject = null;
+
+                                for (TdColumn tdColumn : columnList) {
+                                    try {
+                                        newcol = tdColumn.getName();
+                                        newobject = resultSet.getObject(newcol);
+                                    } catch (Exception e) {
+                                        continue;
+                                    }
+                                    columnList.remove(tdColumn);
+                                    break;
+                                }
+
+                                if (null == newcol || null == newobject) {
+                                    continue;
+                                }
+                                // ~20927
                                 if (newobject != null && !(newobject instanceof String)
                                         && newobject.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$ 
                                     newobject = resultSet.getTimestamp(newcol);
