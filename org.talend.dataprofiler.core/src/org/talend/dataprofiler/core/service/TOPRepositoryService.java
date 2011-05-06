@@ -21,6 +21,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -96,7 +97,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         boolean hasDependencyItem = true;
         //MOD klliu 2011-04-28 bug 20204 removing connection is synced to the connection view of SQL explore 
         Item item = children.getObject().getProperty().getItem();
-        if (item instanceof ConnectionItem) {
+        // MOD mzhao filter the connections which is not a type of database.
+        if (item != null && item instanceof ConnectionItem
+                && ((ConnectionItem) item).getConnection() instanceof DatabaseConnection) {
             Connection connection = ((ConnectionItem) item).getConnection();
             List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(connection);
             if (!(dependencyClients == null || dependencyClients.isEmpty())) {
