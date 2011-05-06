@@ -186,6 +186,11 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         this.analysis = analysis;
         checkComputButton = analysis.getParameters().getDeactivatedIndicators().size() != 0;
 
+        // ADD by msjian 2011-5-6 21022: the checkbox to "compute only number of A rows not in B" value is not saved
+        if (null != checkComputeButton) {
+            checkComputeButton.setSelection(checkComputButton);
+        }
+
     }
 
     private void createAnalyzedColumnSetsSection(String mainTitle, String description) {
