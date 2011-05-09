@@ -73,7 +73,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
         }
 
         query.append(" from ");
-        query.append(table);
+        query.append(fixTableName(table));
 
         return query.toString();
 
@@ -101,7 +101,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
         }
 
         query.append(" from ");
-        query.append(node.getQualifiedName());
+        query.append(fixTableName(node.getQualifiedName()));
 
         return query.toString();
     }
@@ -212,5 +212,24 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
             e.printStackTrace();
         }
         return "";
+    }
+
+    /**
+     * ADD yyi 2011-04-22 20716:remove quotes for Sybase ASE query
+     * 
+     * @param qualifiedName
+     * @return
+     */
+    protected String fixTableName(String qualifiedName) {
+        INode node = _selectedNodes[0];
+        try {
+            if ("Adaptive Server Enterprise".equals(node.getSession().getDatabaseProductName())) {
+                return qualifiedName.replaceAll("\"", "");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return qualifiedName;
+
     }
 }
