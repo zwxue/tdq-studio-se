@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
@@ -59,6 +60,7 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
+    private static final int CHECKED_ELEMENTS_LENGTH = 200;
     // private static Logger log = Logger.getLogger(ColumnsSelectionDialog.class);
 
     // Multiple map: one left checked element map to multiple right checked map. (e.g:
@@ -337,14 +339,16 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         return columnFolder.size() > 0;
     }
 
-    private static final int CHECKED_ELEMENTS_LENGTH = 100;
+
 
     protected void okPressed() {
         allCheckedElements.clear();
         getAllCheckElements();
         if (allCheckedElements.size() > CHECKED_ELEMENTS_LENGTH) {
-            MessageDialog.openWarning(null,
-                    "Column Selection", "The section of 'Analysis Columns' can up to " + CHECKED_ELEMENTS_LENGTH + " columns."); //$NON-NLS-1$
+            MessageDialog
+                    .openWarning(
+                            this.getShell(),
+                            DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + CHECKED_ELEMENTS_LENGTH);//$NON-NLS-1$
         } else {
             super.okPressed();
             ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
