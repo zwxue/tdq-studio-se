@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
@@ -171,7 +172,7 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
             return false;
         }
         // MOD gdbu 2011-4-14 bug : 18975
-        this.setDefaultValCount(getLongFromObject(objects.get(0)[0]));
+        this.setDefaultValCount(IndicatorHelper.getLongFromObject(objects.get(0)[0]));
         // ~18975
 
         return true;

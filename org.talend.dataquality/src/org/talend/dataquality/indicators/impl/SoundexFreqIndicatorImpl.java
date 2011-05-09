@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
 import org.talend.utils.collections.MapValueSorter;
@@ -216,14 +217,14 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
             // MOD gdbu 2011-4-14 bug : 18975
             // Long freq = Long.valueOf(String.valueOf(value2freq[nbColumns - 2]));
-            Long freq = getLongFromObject(value2freq[nbColumns - 2]);
+            Long freq = IndicatorHelper.getLongFromObject(value2freq[nbColumns - 2]);
             // ~18975
 
             mapVal2Freq.put(value, freq);
 
             // MOD gdbu 2011-4-14 bug : 18975
             // Long distinctFreq = Long.valueOf(String.valueOf(value2freq[nbColumns - 1]));
-            Long distinctFreq = getLongFromObject(value2freq[nbColumns - 1]);
+            Long distinctFreq = IndicatorHelper.getLongFromObject(value2freq[nbColumns - 1]);
             // ~18975
 
             mapVal2DistinctFreq.put(value, distinctFreq);

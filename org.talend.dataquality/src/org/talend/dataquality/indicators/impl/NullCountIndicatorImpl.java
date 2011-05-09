@@ -8,6 +8,7 @@ package org.talend.dataquality.indicators.impl;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.NullCountIndicator;
 
@@ -64,7 +65,7 @@ public class NullCountIndicatorImpl extends IndicatorImpl implements NullCountIn
             return false;
         }
         // MOD gdbu 2011-4-14 bug : 18975
-        this.setNullCount(getLongFromObject(objects.get(0)[0]));
+        this.setNullCount(IndicatorHelper.getLongFromObject(objects.get(0)[0]));
         // ~18975
         return true;
     }

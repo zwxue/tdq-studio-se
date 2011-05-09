@@ -8,6 +8,7 @@ package org.talend.dataquality.indicators.impl;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.RowCountIndicator;
 
@@ -64,7 +65,7 @@ public class RowCountIndicatorImpl extends IndicatorImpl implements RowCountIndi
             return false;
         }
         // MOD gdbu 2011-4-14 bug : 18975
-        this.setCount(getLongFromObject(objects.get(0)[0]));
+        this.setCount(IndicatorHelper.getLongFromObject(objects.get(0)[0]));
         // ~18975
         return true;
     }

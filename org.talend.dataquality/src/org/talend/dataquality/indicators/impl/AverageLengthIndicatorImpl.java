@@ -10,6 +10,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
@@ -203,7 +204,7 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
         } else {
             // MOD gdbu 2011-4-14 bug : 18975
             // String c = String.valueOf(lCount);
-            this.setCount(getLongFromObject(lCount));
+            this.setCount(IndicatorHelper.getLongFromObject(lCount));
             // ~18975
         }
 

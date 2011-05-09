@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -519,7 +520,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
             // MOD gdbu 2011-4-14 bug : 18975
             // Long freq = Long.valueOf(String.valueOf(value2freq[nbColumns - 1]));
-            Long freq = getLongFromObject(value2freq[nbColumns - 1]);
+            Long freq = IndicatorHelper.getLongFromObject(value2freq[nbColumns - 1]);
             // ~18975
 
             mapVal2Freq.put(value, freq);

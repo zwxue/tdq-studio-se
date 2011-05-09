@@ -10,6 +10,7 @@ import java.util.List;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.LengthIndicator;
 
@@ -170,7 +171,7 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
             this.setLength(0L);
         } else {
             // MOD gdbu 2011-4-14 bug : 18975
-            this.setLength(getLongFromObject(lLength));
+            this.setLength(IndicatorHelper.getLongFromObject(lLength));
             // ~18975
         }
         return true;

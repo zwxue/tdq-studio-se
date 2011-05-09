@@ -35,8 +35,8 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.impl.IndicatorImpl;
 import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
@@ -367,7 +367,7 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
                 // --- get content of column
                 String str = String.valueOf(resultSet.getObject(1));
                 // MOD gdbu 2011-4-21 bug : 18975
-                Long count = IndicatorImpl.getLongFromObject(str);
+                Long count = IndicatorHelper.getLongFromObject(str);
                 // ~18975
                 totalRowCount += count;
                 if (log.isDebugEnabled()) {

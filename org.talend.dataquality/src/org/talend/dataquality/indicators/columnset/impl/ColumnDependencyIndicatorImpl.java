@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
@@ -261,7 +262,7 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
             // return (Long) myResultSet.get(0)[1];
             // return Long.valueOf(String.valueOf(myResultSet.get(0)[1]));
             // MOD gdbu 2011-4-28 bug : 18975
-            return Long.valueOf(IndicatorImpl.getLongFromObject(String.valueOf(myResultSet.get(0)[1])));
+            return Long.valueOf(IndicatorHelper.getLongFromObject(String.valueOf(myResultSet.get(0)[1])));
             // ~18975
         }
         return null;
@@ -272,7 +273,7 @@ public class ColumnDependencyIndicatorImpl extends IndicatorImpl implements Colu
             // return (Long) myResultSet.get(0)[0];
             // return Long.valueOf(String.valueOf(myResultSet.get(0)[0]));
             // MOD gdbu 2011-4-28 bug : 18975
-            return IndicatorImpl.getLongFromObject(String.valueOf(myResultSet.get(0)[0]));
+            return IndicatorHelper.getLongFromObject(String.valueOf(myResultSet.get(0)[0]));
             // ~18975
         }
         return null;

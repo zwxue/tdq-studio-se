@@ -12,6 +12,7 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
@@ -179,7 +180,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
             return false;
         }
         // MOD gdbu 2011-4-14 bug : 18975
-        this.setDuplicateValueCount(getLongFromObject(objects.get(0)[0]));
+        this.setDuplicateValueCount(IndicatorHelper.getLongFromObject(objects.get(0)[0]));
         // ~18975
         return true;
     }

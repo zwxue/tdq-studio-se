@@ -12,6 +12,7 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -178,7 +179,7 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
             return false;
         }
         // MOD gdbu 2011-4-14 bug : 18975
-        this.setDistinctValueCount(getLongFromObject(objects.get(0)[0]));
+        this.setDistinctValueCount(IndicatorHelper.getLongFromObject(objects.get(0)[0]));
         // ~18975
         return true;
     }

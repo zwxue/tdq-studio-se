@@ -8,7 +8,7 @@ package org.talend.dataquality.indicators.sql.impl;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
-import org.talend.dataquality.indicators.impl.IndicatorImpl;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 
@@ -53,7 +53,7 @@ public class WhereRuleIndicatorImpl extends UserDefIndicatorImpl implements Wher
         }
         // MOD gdbu 2011-4-28 bug : 18975
         // Long c = Long.valueOf(String.valueOf(objects.get(0)[0]));
-        Long c = IndicatorImpl.getLongFromObject(String.valueOf(objects.get(0)[0]));
+        Long c = IndicatorHelper.getLongFromObject(String.valueOf(objects.get(0)[0]));
         // ~18975
         this.setUserCount(c);
         return true;

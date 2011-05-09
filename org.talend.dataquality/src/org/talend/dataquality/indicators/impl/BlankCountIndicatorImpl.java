@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
@@ -195,7 +196,7 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
         }
 
         // MOD gdbu 2011-4-14 bug : 18975
-        this.setBlankCount(getLongFromObject(objects.get(0)[0]));
+        this.setBlankCount(IndicatorHelper.getLongFromObject(objects.get(0)[0]));
         // ~18975
 
         return true;

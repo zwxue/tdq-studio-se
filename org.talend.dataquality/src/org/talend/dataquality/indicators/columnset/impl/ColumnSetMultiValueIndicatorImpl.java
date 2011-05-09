@@ -30,6 +30,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
@@ -771,7 +772,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
             Object c = row[row.length - 1];
             if (c != null) {
                 // MOD gdbu 2011-4-21 bug : 19578
-                Long val = Long.valueOf(getLongFromObject(String.valueOf(c)));
+                Long val = Long.valueOf(IndicatorHelper.getLongFromObject(String.valueOf(c)));
                 // ~19578
                 rowcount += val;
                 if (val == 1) {

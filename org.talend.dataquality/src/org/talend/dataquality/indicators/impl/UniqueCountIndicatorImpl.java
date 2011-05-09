@@ -12,6 +12,7 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 
@@ -180,7 +181,7 @@ public class UniqueCountIndicatorImpl extends IndicatorImpl implements UniqueCou
         }
 
         // MOD gdbu 2011-4-14 bug : 18975
-        this.setUniqueValueCount(getLongFromObject(objects.get(0)[0]));
+        this.setUniqueValueCount(IndicatorHelper.getLongFromObject(objects.get(0)[0]));
         // ~18975
 
         return true;

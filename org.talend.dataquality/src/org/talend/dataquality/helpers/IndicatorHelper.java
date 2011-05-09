@@ -602,4 +602,48 @@ public final class IndicatorHelper {
         // MOD yyi 2010-04-15 bug 12483 : Unify the decimal format as US.
         return NumberFormat.getInstance(Locale.US).format(input);
     }
+
+    /**
+     * MOD gdbu 2011-4-14 bug : 18975
+     * 
+     * DOC gdbu Comment method "getLongFromObject".
+     * 
+     * @param objects
+     * @return
+     */
+    public static Long getLongFromObject(Object objects) {
+        Long c = 0L;
+        String toString = String.valueOf(objects + "");//$NON-NLS-1$
+        try {
+            c = Long.valueOf(toString);
+        } catch (Exception e) {
+            if (toString.contains(".")) {//$NON-NLS-1$
+                toString = toString.substring(0, toString.indexOf("."));//$NON-NLS-1$
+            }
+            c = Long.valueOf(toString);
+        }
+        return c;
+    }
+
+    /**
+     * MOD gdbu 2011-4-28 bug : 18975
+     * 
+     * DOC gdbu Comment method "getIntegerFromObject".
+     * 
+     * @param objects
+     * @return
+     */
+    public static Integer getIntegerFromObject(Object objects) {
+        Integer c = 0;
+        String toString = String.valueOf(objects + "");//$NON-NLS-1$
+        try {
+            c = Integer.valueOf(toString);
+        } catch (Exception e) {
+            if (toString.contains(".")) {//$NON-NLS-1$
+                toString = toString.substring(0, toString.indexOf("."));//$NON-NLS-1$
+            }
+            c = Integer.valueOf(toString);
+        }
+        return c;
+    }
 }
