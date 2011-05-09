@@ -1426,7 +1426,6 @@ public final class RepositoryNodeHelper {
     /**
      * ADD mzhao 15750 , build dq metadata tree, get connection root node.
      */
-
     public static List<IRepositoryNode> getConnectionRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.METADATA);
         List<IRepositoryNode> connNodes = new ArrayList<IRepositoryNode>();

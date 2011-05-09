@@ -74,7 +74,6 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class ChangeConnectionAction extends Action implements ICheatSheetAction {

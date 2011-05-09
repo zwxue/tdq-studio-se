@@ -17,10 +17,14 @@ import java.util.List;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -30,6 +34,8 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -43,6 +49,9 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -233,6 +242,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.connBind")); //$NON-NLS-1$
         connCombo = new CCombo(labelButtonClient, SWT.BORDER);
         connCombo.setEditable(false);
+        connCombo.addSelectionListener(new SelectionListener() {
+
+            public void widgetSelected(SelectionEvent e) {
+                updateAnalysisConnectionVersionInfo();
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+
+            }
+        });
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(labelButtonClient);
         reloadDataproviderAndFillConnCombo();
         // ~
@@ -269,17 +288,81 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public String getConnectionVersion() {
         String version = null;
         if (this.analysis != null) {
-            DataManager connection = this.analysis.getContext().getConnection();
-            if (connection != null) {
-                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
-                if (recursiveFind != null) {
-                    if (recursiveFind.getObject() != null && recursiveFind.getObject().getProperty() != null) {
-                        version = recursiveFind.getObject().getProperty().getVersion();
+            DataManager dm = this.analysis.getContext().getConnection();
+            if (dm != null) {
+                if (dm instanceof Connection) {
+                    Connection connection = (Connection) dm;
+                    version = connection.getVersion();
+                    if (version == null) {
+                        version = initConnectionVersion(connection);
                     }
+                }
+                // shouldn't use RepositoryNodeHelper.recursiveFind() to find the RepositoryNode, because this method
+                // will return the last version of the connection, not the correct version of connection which analysis
+                // depend on
+                //
+                // RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
+                // if (recursiveFind != null) {
+                // if (recursiveFind.getObject() != null && recursiveFind.getObject().getProperty() != null) {
+                // version = recursiveFind.getObject().getProperty().getVersion();
+                // }
+                // }
+            }
+        }
+        return version == null ? getConnectionVersionDefault() : version; //$NON-NLS-1$
+    }
+
+    /**
+     * get the default connection's version of this analysis.
+     * 
+     * @returnd efault connection's version
+     */
+    private String getConnectionVersionDefault() {
+        String version = "Unknown"; //$NON-NLS-1$
+        Object data = connCombo.getData(connCombo.getSelectionIndex() + PluginConstant.EMPTY_STRING);
+        if (data != null) {
+            if (data instanceof DBConnectionRepNode) {
+                DBConnectionRepNode dbConnRepNode = (DBConnectionRepNode) data;
+                if (dbConnRepNode.getObject() != null && dbConnRepNode.getObject().getProperty() != null) {
+                    version = dbConnRepNode.getObject().getProperty().getVersion();
+                }
+            } else if (data instanceof MDMConnectionRepNode) {
+                MDMConnectionRepNode mdmConnRepNode = (MDMConnectionRepNode) data;
+                if (mdmConnRepNode.getObject() != null && mdmConnRepNode.getObject().getProperty() != null) {
+                    version = mdmConnRepNode.getObject().getProperty().getVersion();
+                }
+            } else if (data instanceof DFConnectionRepNode) {
+                DFConnectionRepNode dfConnRepNode = (DFConnectionRepNode) data;
+                if (dfConnRepNode.getObject() != null && dfConnRepNode.getObject().getProperty() != null) {
+                    version = dfConnRepNode.getObject().getProperty().getVersion();
                 }
             }
         }
-        return version == null ? "Unknown" : version; //$NON-NLS-1$
+        return version;
+    }
+
+    /**
+     * init the version of the Connection accroding to the file name.
+     * 
+     * @param connection
+     * @return
+     */
+    private String initConnectionVersion(Connection connection) {
+        String version = "0.1"; //$NON-NLS-1$
+        Resource eResource = connection.eResource();
+        if (eResource != null) {
+            URI uri = eResource.getURI();
+            if (uri != null) {
+                String fileName = uri.toString().toLowerCase();
+                String[] splits = fileName.split("_"); //$NON-NLS-1$
+                if (splits.length > 0) {
+                    String str = splits[splits.length - 1];
+                    int indexOf = str.indexOf("." + FactoriesUtil.ITEM_EXTENSION); //$NON-NLS-1$
+                    version = str.substring(0, indexOf);
+                }
+            }
+        }
+        return version;
     }
 
     // MOD mzhao 2009-05-05, bug 6587.

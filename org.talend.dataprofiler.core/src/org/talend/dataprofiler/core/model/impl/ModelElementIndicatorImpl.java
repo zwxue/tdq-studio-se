@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
@@ -63,7 +64,6 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
-
 
 /**
  * DOC xqliu  class global comment. Detailled comment
@@ -617,8 +617,8 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         return this.repositoryNode;
     }
 
-    protected void setModelElement(IRepositoryNode reposViewObj) {
-        this.repositoryNode = reposViewObj;
+    protected void setModelElement(IRepositoryNode repositoryNode) {
+        this.repositoryNode = repositoryNode;
     }
 
     public String getElementName() {

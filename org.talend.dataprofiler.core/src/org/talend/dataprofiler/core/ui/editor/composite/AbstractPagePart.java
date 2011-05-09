@@ -209,7 +209,6 @@ public abstract class AbstractPagePart {
                         dataProvider = callChangeConnectionAction(masterPage, prevSelect, dataProvider);
                         prevSelect = masterPage.getConnCombo().getSelectionIndex();
                     }
-
                 };
                 masterPage.getConnCombo().addSelectionListener(selectionListener);
             }
