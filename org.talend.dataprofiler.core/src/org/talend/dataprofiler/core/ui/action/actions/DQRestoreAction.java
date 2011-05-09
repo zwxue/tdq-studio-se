@@ -38,6 +38,8 @@ public class DQRestoreAction extends RestoreAction {
 
     @Override
     public void run() {
+        // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
+        super.setAvoidUnloadResources(true);
         super.run();
 
         CorePlugin.getDefault().refreshDQView();

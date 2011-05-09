@@ -102,7 +102,6 @@ public class DQDeleteAction extends DeleteAction {
                 // logical delete
                 if (!isStateDeleted) {
                     closeEditors(selection);
-                    RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
                     excuteSuperRun(null);
                     break;
 
@@ -232,6 +231,8 @@ public class DQDeleteAction extends DeleteAction {
         if (currentNode != null) {
             deleteConnectionForSQL(currentNode);
         }
+        // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
+        super.setAvoidUnloadResources(true);
         super.run();
         // because reuse tos codes.remove current node from its parent(simple folder) for phisical delete or logical
         // delete dependency.

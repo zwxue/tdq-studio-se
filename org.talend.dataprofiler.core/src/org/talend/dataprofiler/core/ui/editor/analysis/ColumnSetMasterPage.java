@@ -886,10 +886,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
-            // MOD qiongli 2011-4-29 bug 21035.resolve Proxy.
-            if (tdqAnalysisItem.eIsProxy()) {
-                tdqAnalysisItem = (TDQAnalysisItem) EObjectHelper.resolveObject(tdqAnalysisItem);
-            }
             // ADD gdbu 2011-3-2 bug 19179
             tdqAnalysisItem.getProperty().setLabel(columnSetAnalysisHandler.getName());
             this.nameText.setText(columnSetAnalysisHandler.getName());
