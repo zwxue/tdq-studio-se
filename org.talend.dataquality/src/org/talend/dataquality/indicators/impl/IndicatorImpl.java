@@ -1077,6 +1077,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @param objects
      * @return
+     * 
+     * @generated NOT gdbu 2011-05-09
      */
     public static Long getLongFromObject(Object objects) {
         Long c = 0L;
@@ -1099,6 +1101,8 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      * 
      * @param objects
      * @return
+     * 
+     * @generated NOT gdbu 2011-05-09
      */
     public static Integer getIntegerFromObject(Object objects) {
         Integer c = 0;
