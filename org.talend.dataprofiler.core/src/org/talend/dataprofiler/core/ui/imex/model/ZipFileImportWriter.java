@@ -50,8 +50,12 @@ public class ZipFileImportWriter extends FileSystemImportWriter {
 
         File libFolder = DqFileUtils.getFile(sourcePath.toFile(), EResourceConstant.LIBRARIES.getName(), true);
 
-        IPath projectPath = new Path(libFolder.getParentFile().getAbsolutePath());
-        return super.computeInput(projectPath);
+        if (libFolder != null && libFolder.exists()) {
+            IPath projectPath = new Path(libFolder.getParentFile().getAbsolutePath());
+            return super.computeInput(projectPath);
+        }
+
+        return null;
     }
 
     @Override
