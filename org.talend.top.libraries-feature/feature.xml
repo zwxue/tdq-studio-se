@@ -101,7 +101,8 @@
          id="org.talend.libraries.jfreechart"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="true"/>
 
    <plugin
          id="org.talend.platform.logging"
@@ -113,7 +114,8 @@
          id="org.talend.libraries.jung"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="true"/>
 
    <plugin
          id="org.eclipse.gmf.runtime.notation"
@@ -148,7 +150,7 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="javax.xml.rpc"
@@ -434,21 +436,21 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.dom4j-jaxen"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.jdom"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.apache.lucene"
@@ -462,48 +464,49 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.apache.axis2"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.apache.lucene"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.eXist"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.hibernate"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.jasperreport"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.javacsv"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.jdbc.as400"
@@ -582,7 +585,8 @@
          id="org.talend.libraries.jdbc.teradata"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="true"/>
 
    <plugin
          id="org.talend.libraries.jexcel"
