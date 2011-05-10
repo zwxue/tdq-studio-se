@@ -64,12 +64,13 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.xml.TdXmlContent;
@@ -81,12 +82,14 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -1159,8 +1162,8 @@ public final class ConnectionUtils {
      * retrieve sqlDataType if it have a name is "Null".
      */
     public static void retrieveColumn(MetadataTable tdTable) {
-        List<MetadataColumn> columnList = tdTable.getColumns();
-        if (columnList != null && columnList.size() > 0 && columnList.get(0) instanceof TdColumn) {
+        List<TdColumn> columnList = ColumnSetHelper.getColumns((ColumnSet) tdTable);
+        if (columnList != null && columnList.size() > 0) {
             TdColumn tempColumn = ((TdColumn) columnList.get(0));
             if (tempColumn.getSqlDataType() == null || "NULL".equalsIgnoreCase(tempColumn.getSqlDataType().getName())//$NON-NLS-1$
                     && 0 == tempColumn.getSqlDataType().getJavaDataType()) {
@@ -1172,11 +1175,11 @@ public final class ConnectionUtils {
                         if (connection == null) {
                             return;
                         }
-                        for (Object colobj : columnList) {
-                            TdColumn tdColumn = (TdColumn) colobj;
+                        for (TdColumn colobj : columnList) {
+                            TdColumn tdColumn = colobj;
 
                             try {
-                                List<TdSqlDataType> newDataTypeList = DatabaseContentRetriever.getDataType(
+                                List<TdSqlDataType> newDataTypeList = getDataType(
                                         getName(CatalogHelper.getParentCatalog(tdTable)),
                                         getName(SchemaHelper.getParentSchema(tdTable)), tdTable.getName(), tdColumn.getName(),
                                         connection);
@@ -1194,6 +1197,17 @@ public final class ConnectionUtils {
             }
         }
     }
+
+    public static void retrieveColumn(List<? extends MetadataTable> tdTableList) {
+        if (tdTableList == null) {
+            return;
+        }
+        List<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
+        for (MetadataTable currColumnSet : tdTableList) {
+            retrieveColumn(currColumnSet);
+        }
+    }
+
 
     /**
      * method "fillAttributeBetweenConnection".
@@ -1316,5 +1330,49 @@ public final class ConnectionUtils {
             elements = xmlContent.getXmlElements();
         }
         return elements;
+    }
+
+    /**
+     * Method "getDataType".
+     * 
+     * @param catalogName the catalog (can be null)
+     * @param schemaPattern the schema(s) (can be null)
+     * @param tablePattern the table(s)
+     * @param columnPattern the column(s)
+     * @param connection the connection
+     * @return the list of datatypes of the given columns
+     * @throws SQLException
+     */
+    public static List<TdSqlDataType> getDataType(String catalogName, String schemaPattern, String tablePattern,
+            String columnPattern, java.sql.Connection connection) throws SQLException {
+        List<TdSqlDataType> sqlDatatypes = new ArrayList<TdSqlDataType>();
+        ResultSet columns = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection).getColumns(catalogName,
+                schemaPattern, tablePattern, columnPattern);
+        while (columns.next()) {
+            sqlDatatypes.add(createDataType(columns));
+        }
+        columns.close();
+        return sqlDatatypes;
+    }
+
+    public static TdSqlDataType createDataType(ResultSet columns) throws SQLException {
+        TdSqlDataType sqlDataType = RelationalFactory.eINSTANCE.createTdSqlDataType();
+        try {
+            sqlDataType.setJavaDataType(columns.getInt(GetColumn.DATA_TYPE.name()));
+        } catch (Exception e1) {
+            log.warn(e1, e1);
+        }
+        try {
+            sqlDataType.setName(columns.getString(GetColumn.TYPE_NAME.name()));
+        } catch (Exception e1) {
+            log.warn(e1, e1);
+        }
+        try {
+            sqlDataType.setNumericPrecision(columns.getInt(GetColumn.DECIMAL_DIGITS.name()));
+            sqlDataType.setNumericPrecisionRadix(columns.getInt(GetColumn.NUM_PREC_RADIX.name()));
+        } catch (Exception e) {
+            log.warn(e);
+        }
+        return sqlDataType;
     }
 }

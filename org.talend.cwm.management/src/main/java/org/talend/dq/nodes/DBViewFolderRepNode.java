@@ -24,6 +24,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdView;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -106,6 +107,8 @@ public class DBViewFolderRepNode extends RepositoryNode {
                     if (views.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
                     }
+                } else {
+                    ConnectionUtils.retrieveColumn(views);
                 }
             } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
@@ -118,6 +121,8 @@ public class DBViewFolderRepNode extends RepositoryNode {
                     if (views.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
                     }
+                } else {
+                    ConnectionUtils.retrieveColumn(views);
                 }
             }
 
