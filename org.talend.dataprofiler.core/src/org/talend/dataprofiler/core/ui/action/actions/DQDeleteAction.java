@@ -120,8 +120,6 @@ public class DQDeleteAction extends DeleteAction {
                 } else {
                     hasDependency = RepositoryNodeHelper.hasDependencyClients(node);
                     if (!hasDependency || hasDependency && handleDependencies(node)) {
-                        ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
-                        EObjectHelper.removeDependencys(modelEle);
                         excuteSuperRun((RepositoryNode) node);
                     }
                 }
@@ -201,8 +199,6 @@ public class DQDeleteAction extends DeleteAction {
                     IFile propertyFile = PropertyHelper.getPropertyFile(mod);
                     if (propertyFile != null && propertyFile.exists()) {
                         isSucceed = false;
-                    } else {
-                        EObjectHelper.removeDependencys(mod);
                     }
                 }
             }
@@ -225,6 +221,13 @@ public class DQDeleteAction extends DeleteAction {
         }
     }
 
+    /**
+     * 
+     * DOC qiongli :excute super method run().
+     * 
+     * @param currentNode:null for logical delete a selected element by UI.none-null for physical delete or logical
+     * delete dependecy.
+     */
     private void excuteSuperRun(RepositoryNode currentNode) {
         this.currentNode = currentNode;
         // MOD klliu 2010-04-21 bug 20204 remove SQL Exploer node before phisical delete

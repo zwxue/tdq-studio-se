@@ -43,6 +43,7 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
@@ -220,5 +221,13 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             }
         }
         return super.isAnalysisOrReportItem(item);
+    }
+
+    @Override
+    public void removeAllDependecies(Item item) {
+        ModelElement modelElement = RepositoryNodeHelper.getResourceModelElement(item);
+        if (modelElement != null) {
+            EObjectHelper.removeDependencys(modelElement);
+        }
     }
 }
