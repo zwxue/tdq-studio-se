@@ -241,7 +241,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             //                return DefaultMessagesImpl.getString("ColumnFolderNode.columns"); //$NON-NLS-1$
             // }
             // ~MOD klliu 2011-03-29 bug 19936
-            else if (node instanceof DBColumnRepNode) {
+            else if (node instanceof DBTableRepNode) {
+                return ((DBTableRepNode) node).getLabel();
+            } else if (node instanceof DBViewRepNode) {
+                return ((DBViewRepNode) node).getLabel();
+            } else if (node instanceof DBColumnRepNode) {
                 DBColumnRepNode columnNode = (DBColumnRepNode) node;
                 return columnNode.getLabel() + LEFT + columnNode.getNodeDataType() + RIGHT;
             } else if (node instanceof DFColumnRepNode) {
@@ -305,7 +309,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             } else if (label.equals(EResourceConstant.METADATA.getName())) {
                 label = label.substring(0, 1).toUpperCase() + label.substring(1);
                 return label;
-
             }
             return node.getObject().getLabel();
         }
