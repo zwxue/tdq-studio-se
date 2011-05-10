@@ -233,11 +233,15 @@ public class AnalysisHandler {
                 }
 
             } else if (element instanceof MetadataColumn) {
-                // MOD qiongli 2011-1-28,for delimited file
-                MetadataTable table = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) element);
-                String tableName = table.getLabel();
-                if (!existingTables.contains(tableName)) {
-                    existingTables.add(tableName);
+                // ADD by msjian 2011-5-10 20881: select columns from views, "Tables:" should be followed by blank in
+                // the result page
+                if (!(element instanceof TdColumn)) {
+                    // MOD qiongli 2011-1-28,for delimited file
+                    MetadataTable table = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) element);
+                    String tableName = table.getLabel();
+                    if (!existingTables.contains(tableName)) {
+                        existingTables.add(tableName);
+                    }
                 }
             }
         }
