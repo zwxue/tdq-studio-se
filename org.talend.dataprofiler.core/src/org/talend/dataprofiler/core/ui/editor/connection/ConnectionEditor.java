@@ -72,5 +72,4 @@ public class ConnectionEditor extends CommonFormEditor {
     protected void setInput(IEditorInput input) {
         super.setInput(input);
     }
-
 }

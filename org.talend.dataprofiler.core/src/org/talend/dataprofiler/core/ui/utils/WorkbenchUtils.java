@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -54,8 +55,6 @@ public final class WorkbenchUtils {
 
     private static final boolean AUTO_CHANGE2DATA_PROFILER = true;
 
-    private static final int SLEEP_TIME_MILLIS = 1000;
-
     private WorkbenchUtils() {
     }
 
@@ -64,13 +63,18 @@ public final class WorkbenchUtils {
      * 
      * @param perspectiveID
      */
-    public static void changePerspective(String perspectiveID) {
-        IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        try {
-            PlatformUI.getWorkbench().showPerspective(perspectiveID, activeWindow);
-        } catch (WorkbenchException e) {
-            log.error(e.getMessage(), e);
-        }
+    public static void changePerspective(final String perspectiveID) {
+        Display.getCurrent().asyncExec(new Runnable() {
+
+            public void run() {
+                IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                try {
+                    PlatformUI.getWorkbench().showPerspective(perspectiveID, activeWindow);
+                } catch (WorkbenchException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        });
     }
 
     public static void autoChange2DataProfilerPerspective() {
@@ -86,8 +90,6 @@ public final class WorkbenchUtils {
 
                 switch (autoChange) {
                 case AUTO_CHANGE2DATA_PROFILER_TRUE:
-                    // sleep a while before auto change the perspective
-                    Thread.sleep(SLEEP_TIME_MILLIS);
                     // change perspective automatically
                     changePerspective(PluginConstant.PERSPECTIVE_ID);
                     break;
@@ -100,8 +102,6 @@ public final class WorkbenchUtils {
                             .getString("WorkbenchUtils.autoChange2DataProfilerPerspective"))) { //$NON-NLS-1$
                         ResourcesPlugin.getPlugin().getPluginPreferences()
                                 .setValue(PluginConstant.AUTO_CHANGE2DATA_PROFILER, AUTO_CHANGE2DATA_PROFILER_TRUE);
-                        // sleep a while before auto change the perspective
-                        Thread.sleep(SLEEP_TIME_MILLIS);
                         // change perspective
                         changePerspective(PluginConstant.PERSPECTIVE_ID);
                     } else {
