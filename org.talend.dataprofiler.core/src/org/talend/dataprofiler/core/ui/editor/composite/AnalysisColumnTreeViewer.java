@@ -150,6 +150,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     return false;
                 }
                 Object itemData = item.getData(INDICATOR_UNIT_KEY);
+                Object columnItemData = item.getData(MODELELEMENT_INDICATOR_KEY);
                 if (itemData != null) {
                     IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
                     if (indicatorUnit != null && !(indicatorUnit.getIndicator() instanceof CompositeIndicator)) {
@@ -157,6 +158,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     }
                     return false;
                 } else {
+                    if (columnItemData != null) {
+                        ModelElementIndicator modelElementIndicator = (ModelElementIndicator) columnItemData;
+                        IRepositoryNode modelElementRepositoryNode = modelElementIndicator.getModelElementRepositoryNode();
+                        return modelElementRepositoryNode == null ? false : true;
+                    }
                     return false;
                 }
             }
@@ -744,19 +750,28 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         ModelElement me = null;
         IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
         ModelElementIndicator meIndicator = (ModelElementIndicator) item.getData(MODELELEMENT_INDICATOR_KEY);
-        IRepositoryViewObject reposViewObj = meIndicator.getModelElementRepositoryNode().getObject();
-        // MOD klliu 2010-01-30 Distinguish MetadataColumnRepositoryObject and MetadataXmlElementTypeRepositoryObject
-        if (reposViewObj instanceof MetadataColumnRepositoryObject) {
-            me = ((MetadataColumnRepositoryObject) reposViewObj).getTdColumn();
-        } else if (reposViewObj instanceof MetadataXmlElementTypeRepositoryObject) {
-            me = ((MetadataXmlElementTypeRepositoryObject) reposViewObj).getTdXmlElementType();
+        if (indicatorUnit != null) {
+            IRepositoryViewObject reposViewObj = meIndicator.getModelElementRepositoryNode().getObject();
+            // MOD klliu 2010-01-30 Distinguish MetadataColumnRepositoryObject and
+            // MetadataXmlElementTypeRepositoryObject
+            if (reposViewObj instanceof MetadataColumnRepositoryObject) {
+                me = ((MetadataColumnRepositoryObject) reposViewObj).getTdColumn();
+            } else if (reposViewObj instanceof MetadataXmlElementTypeRepositoryObject) {
+                me = ((MetadataXmlElementTypeRepositoryObject) reposViewObj).getTdXmlElementType();
+            }
+            Connection dataprovider = ModelElementHelper.getTdDataProvider(me);
+            DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
+            Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
+            if (expression != null) {
+                expressContent = expression.getBody();
+            }
+        } else {
+            IRepositoryNode parentNodeForColumnNode = RepositoryNodeHelper.getParentNodeForColumnNode(meIndicator
+                    .getModelElementRepositoryNode());
+            expressContent = DefaultMessagesImpl.getString(
+                    "AnalysisColumnTreeViewer.columnParent", parentNodeForColumnNode.getObject().getLabel()); //$NON-NLS-1$ //$NON-NLS-2$;
         }
-        Connection dataprovider = ModelElementHelper.getTdDataProvider(me);
-        DbmsLanguage dbmsLang = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
-        Expression expression = dbmsLang.getInstantiatedExpression(indicatorUnit.getIndicator());
-        if (expression != null) {
-            expressContent = expression.getBody();
-        }
+
         return expressContent;
     }
 
