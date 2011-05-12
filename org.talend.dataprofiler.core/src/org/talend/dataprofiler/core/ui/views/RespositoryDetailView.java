@@ -86,6 +86,7 @@ import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.RuleRepNode;
@@ -309,6 +310,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 IEcosComponent ecosComponent = ((ExchangeComponentRepNode) fe).getEcosComponent();
                 IEcosComponent component = (IEcosComponent) ecosComponent;
                 createEcosComponent(component);
+                is = false;
+
+                // ADD by msjian 2011-5-12 21186: don't check whether the selected object is "MDMConnectionRepNode"
+            } else if (fe instanceof MDMConnectionRepNode) {
+                MDMConnectionRepNode mdmNode = (MDMConnectionRepNode) fe;
+                mdmNode.getChildren();
+                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(mdmNode);
+                createDataProviderDetail((Connection) fe);
                 is = false;
             }
 
