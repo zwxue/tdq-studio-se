@@ -27,7 +27,6 @@ import java.util.Map;
 
 import javax.xml.rpc.ServiceException;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
@@ -37,7 +36,10 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.talend.commons.utils.StringUtils;
+import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -66,6 +68,7 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.helper.ParameterUtil;
+import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -89,6 +92,8 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     protected TdXmlSchema tdXmlDocument;
 
     protected MdmWebserviceConnection mdmWebserviceConn;
+    
+    private boolean isBablyFormFlatFile = false;
 
     public ColumnSetIndicatorEvaluator(Analysis analysis) {
         this.analysis = analysis;
@@ -212,71 +217,48 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false); //$NON-NLS-1$ 
             return returnCode;
         }
-        CsvReader csvReader = null;
+        // CsvReader csvReader = null;
         try {
-            // FIXME encoding might be null.
-            csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
-                    encoding == null ? encoding : encoding)), ParameterUtil.trimParameter(separator).charAt(0));
-
-            String rowSep = con.getRowSeparatorValue();
-            if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-                csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
-            }
-            csvReader.setSkipEmptyRecords(true);
-            String textEnclosure = con.getTextEnclosure();
-            if (textEnclosure != null && textEnclosure.length() > 0) {
-                csvReader.setTextQualifier(ParameterUtil.trimParameter(textEnclosure).charAt(0));
-            } else {
-                csvReader.setUseTextQualifier(false);
-            }
-            String escapeChar = con.getEscapeChar();
-            if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-                csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
-            } else {
-                csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
-            }
-
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
             indicToRowMap.clear();
-            boolean isBablyForm = false;
-            while (csvReader.readRecord()) {
-                long currentRow = csvReader.getCurrentRecord();
-                if (con.isFirstLineCaption() && currentRow == Long.valueOf("0")) { //$NON-NLS-1$
-                    continue;
-                }
-                String[] rowValues = csvReader.getValues();
-                Object object = null;
-                EList<Object> objectLs = new BasicEList<Object>();
-                MetadataColumn mColumn = null;
-                for (int i = 0; i < analysisElementList.size(); i++) {
-                    mColumn = (MetadataColumn) analysisElementList.get(i);
-                    Integer position = ColumnHelper.getColumnIndex(mColumn);
-                    // MOD qiongli 2011-4-2,bug 20033,warning with a badly form file
-                    if (position == null || position >= rowValues.length) {
-                        log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData", //$NON-NLS-1$
-                                StringUtils.join(rowValues, separator.charAt(1))));
-                        if (!isBablyForm) {
-                            isBablyForm = true;
-                            Display.getDefault().asyncExec(new Runnable() {
-
-                                public void run() {
-                                    MessageDialog.openWarning(null,
-                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"), //$NON-NLS-1$
-                                            Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message")); //$NON-NLS-1$
-                                }
-                            });
-                        }
-                        continue;
+            String zero = "0"; //$NON-NLS-1$
+            int headValue = Integer.parseInt(con.getHeaderValue() == null ? zero : con.getHeaderValue());
+            int footValue = Integer.parseInt(con.getFooterValue() == null ? zero : con.getFooterValue());
+            String limitValue = con.getLimitValue();
+            if (limitValue == null || zero.equals(limitValue)) {
+                limitValue = "-1"; //$NON-NLS-1$
+            }
+            if (Escape.CSV.equals(con.getEscapeType())) {
+                // use CsvReader to parse.
+                this.useCsvReader(file, con, analysisElementList);
+            } else {
+                // use TOSDelimitedReader in FileInputDelimited to parse.
+                String rowSeparator = con.getRowSeparatorValue();
+                boolean isSpliteRecord = con.isSplitRecord();
+                boolean isSkipeEmptyRow = con.isRemoveEmptyRow();
+                String languageName = LanguageManager.getCurrentLanguage().getName();
+                FileInputDelimited fileInputDelimited = new FileInputDelimited(ParameterUtil.trimParameter(path),
+                        ParameterUtil.trimParameter(encoding), ParameterUtil.trimParameter(StringUtils.loadConvert(separator,
+                                languageName)), ParameterUtil.trimParameter(StringUtils.loadConvert(rowSeparator, languageName)),
+                        isSkipeEmptyRow, headValue, footValue, Integer.parseInt(limitValue), -1, isSpliteRecord);
+                long currentRow = headValue;
+                int columsCount = 0;
+                while (fileInputDelimited.nextRecord()) {
+                    if (!continueRun()) {
+                        break;
                     }
-                    object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
-                    // if (object == null) {
-                    // continue;
-                    // }
-                    objectLs.add(object);
-
+                    currentRow++;
+                    if (columsCount == 0) {
+                        columsCount = fileInputDelimited.getColumnsCountOfCurrentRow();
+                    }
+                    String[] rowValues = new String[columsCount];
+                    for (int i = 0; i < columsCount; i++) {
+                        rowValues[i] = fileInputDelimited.get(i);
+                    }
+                    orgnizeObjectsToHandel(con.getFilePath(), rowValues, currentRow, analysisElementList, rowSeparator);
                 }
-                handleObjects(objectLs, rowValues, mColumn);
+                fileInputDelimited.close();
             }
         } catch (Exception e) {
             log.error(e, e);
@@ -284,6 +266,96 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         }
 
         return returnCode;
+    }
+
+    private void useCsvReader(File file, DelimitedFileConnection dfCon, List<ModelElement> analysisElementList) throws Exception {
+        String encoding = dfCon.getEncoding();
+        String fieldSeparator = dfCon.getFieldSeparatorValue();
+        CsvReader csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
+                encoding == null ? "UTF-8" : encoding)), ParameterUtil.trimParameter(fieldSeparator).charAt(0));
+
+        String rowSep = dfCon.getRowSeparatorValue();
+        if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
+            csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
+        }
+        csvReader.setSkipEmptyRecords(true);
+        String textEnclosure = dfCon.getTextEnclosure();
+        if (textEnclosure != null && textEnclosure.length() > 0) {
+            csvReader.setTextQualifier(ParameterUtil.trimParameter(textEnclosure).charAt(0));
+        } else {
+            csvReader.setUseTextQualifier(false);
+        }
+        String escapeChar = dfCon.getEscapeChar();
+        if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
+            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
+        } else {
+            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
+        }
+
+        long currentRecord = 0;
+        String limitStr = dfCon.getLimitValue();
+        if (limitStr == null) {
+            limitStr = "0"; //$NON-NLS-1$
+        }
+        int limitValue = Integer.parseInt(limitStr);
+        while (csvReader.readRecord()) {
+            currentRecord = csvReader.getCurrentRecord();
+            if (!continueRun() || limitValue != 0 && currentRecord > limitValue - 1) {
+                break;
+            }
+            if (dfCon.isFirstLineCaption() && currentRecord == 0) { //$NON-NLS-1$
+                continue;
+            }
+            String[] rowValues = csvReader.getValues();
+            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord + 1, analysisElementList,
+                    fieldSeparator);
+
+        }
+    }
+
+    /**
+     * 
+     * orgnize a List by a row,then call 'handleObjects(...)'.
+     * 
+     * @param rowValues
+     * @param currentRow
+     * @param analysisElementList
+     * @param separator
+     */
+    private void orgnizeObjectsToHandel(String fileName, String[] rowValues, long currentRow,
+            List<ModelElement> analysisElementList,
+            String separator) {
+        EList<Object> objectLs = new BasicEList<Object>();
+        MetadataColumn mColumn = null;
+        Object object = null;
+        for (int i = 0; i < analysisElementList.size(); i++) {
+            mColumn = (MetadataColumn) analysisElementList.get(i);
+            Integer position = ColumnHelper.getColumnIndex(mColumn);
+            // MOD qiongli 2011-4-2,bug 20033,warning with a badly form file
+            if (position == null || position >= rowValues.length) {
+                log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData", //$NON-NLS-1$
+                        mColumn.getLabel(), currentRow, fileName));
+                if (!isBablyFormFlatFile) {
+                    isBablyFormFlatFile = true;
+                    Display.getDefault().asyncExec(new Runnable() {
+
+                        public void run() {
+                            MessageDialog.openWarning(null,
+                                    Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"), //$NON-NLS-1$
+                                    Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message")); //$NON-NLS-1$
+                        }
+                    });
+                }
+                continue;
+            }
+            object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
+            objectLs.add(object);
+
+        }
+        if (mColumn != null) {
+            List<MetadataColumn> columnList = ((MetadataTable) ColumnHelper.getColumnOwnerAsMetadataTable(mColumn)).getColumns();
+            handleObjects(objectLs, rowValues, columnList);
+        }
     }
 
     /**
@@ -437,8 +509,8 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      * @param rowValues
      * @param metadataColumn is one of analysedElements.it is used to get its Table then get the table's columns.
      */
-    private void handleObjects(EList<Object> objectLs, String[] rowValues, MetadataColumn metadataColumn) {
-        if (objectLs.size() == 0 || metadataColumn == null)
+    private void handleObjects(EList<Object> objectLs, String[] rowValues, List<MetadataColumn> columnList) {
+        if (objectLs.size() == 0)
             return;
 
         EList<Indicator> indicators = analysis.getResults().getIndicators();
@@ -455,10 +527,8 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                             continue;
                         }
                         List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
-                        List<MetadataColumn> columnList = ((MetadataTable) ColumnHelper
-                                .getColumnOwnerAsMetadataTable(metadataColumn)).getColumns();
-                        recordIncrement = valueObjectList.size();
 
+                        recordIncrement = valueObjectList.size();
                         Object[] valueObject = new Object[columnList.size()];
                         if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                             for (int j = 0; j < columnList.size(); j++) {
