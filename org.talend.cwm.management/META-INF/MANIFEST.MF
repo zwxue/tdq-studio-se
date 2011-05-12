@@ -38,7 +38,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.metadata.managment,
  org.talend.libraries.javacsv;bundle-version="2.2.0",
  org.talend.common.ui.runtime,
- org.talend.libraries.talendfile;bundle-version="1.0.0"
+ org.talend.libraries.talendfile
 Bundle-Vendor: .Talend SA.
  org.talend.dq.writer,
  org.talend.dq.writer.impl
