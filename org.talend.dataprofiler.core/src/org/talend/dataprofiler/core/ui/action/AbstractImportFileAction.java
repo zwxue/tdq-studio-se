@@ -99,7 +99,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
             if (path != null) {
                 repositoryFactory.createParentFoldersRecursively(ERepositoryObjectType.getItemType(item), path);
             }
-            repositoryFactory.create(item, path);
+            repositoryFactory.create(item, path, true);
         }
         return item;
     }

@@ -82,6 +82,11 @@ public class DQDeleteAction extends DeleteAction {
     }
 
     @Override
+    protected ISelection getRepositorySelection() {
+        return getSelection();
+    }
+
+    @Override
     public void init(TreeViewer viewer, IStructuredSelection selection) {
     }
 
