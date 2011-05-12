@@ -2300,4 +2300,14 @@ public final class RepositoryNodeHelper {
         }
         return false;
     }
+
+    public static IRepositoryNode getParentNodeForColumnNode(IRepositoryNode node) {
+        if (node instanceof DBColumnRepNode || node instanceof DFColumnRepNode) {
+            return node.getParent().getParent();
+        } else if (node instanceof MDMXmlElementRepNode) {
+            return node.getParent();
+        }
+        return null;
+
+    }
 }
