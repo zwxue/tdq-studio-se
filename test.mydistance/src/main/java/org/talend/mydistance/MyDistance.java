@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2010 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class MyDistance implements IAttributeMatcher {
         // in this example, we consider that 2 strings match if their first 4 characters are identical
         // the arguments are not null (the check for nullity is done by the caller)
         final int max = 4;
-        int nbIdenticalChar = max;
+        int nbIdenticalChar = Math.min(max, Math.min(arg0.length(), arg1.length()));
         for (int c = 0; c < max; c++) {
             if (arg0.charAt(c) != arg1.charAt(c)) {
                 nbIdenticalChar = c;
