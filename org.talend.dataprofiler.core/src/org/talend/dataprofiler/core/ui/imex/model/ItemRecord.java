@@ -406,15 +406,15 @@ public class ItemRecord {
     private boolean isValidDirectory(File file) {
         if (!file.getName().startsWith(".")) {
             IPath filePath = new Path(file.getAbsolutePath());
+            String pathStr = filePath.toPortableString();
 
             for (EResourceConstant constant : EResourceConstant.getTopConstants()) {
                 if (filePath.toString().indexOf(constant.getPath()) > 0) {
                     String lastSeg = filePath.lastSegment();
                     if (constant == EResourceConstant.METADATA) {
-                        // MOD klliu bug 19164 2011-03-03 surpport FILEDELIMITED connection
-                        return lastSeg.equals(constant.getName()) || lastSeg.equals(EResourceConstant.DB_CONNECTIONS.getName())
-                                || lastSeg.equals(EResourceConstant.MDM_CONNECTIONS.getName())
-                                || lastSeg.equals(EResourceConstant.FILEDELIMITED.getName());
+                        return lastSeg.equals(constant.getName()) || pathStr.contains(EResourceConstant.DB_CONNECTIONS.getPath())
+                                || pathStr.contains(EResourceConstant.MDM_CONNECTIONS.getPath())
+                                || pathStr.contains(EResourceConstant.FILEDELIMITED.getPath());
                     } else if (constant == EResourceConstant.LIBRARIES) {
                         return !lastSeg.equals(EResourceConstant.JRXML_TEMPLATE.getName());
                     }
