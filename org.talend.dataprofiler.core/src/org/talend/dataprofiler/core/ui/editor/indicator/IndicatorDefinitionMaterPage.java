@@ -1870,6 +1870,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     @Override
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
+        ReturnCode rc = new ReturnCode();
         // ADD klliu 2010-06-01 bug 13451: Class name of Java User Define Indicator must be validated
         if (!checkJavaUDIBeforeSave()) {
             ((IndicatorEditor) this.getEditor()).setSaveActionButtonState(false);
@@ -1878,9 +1879,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return;
         }
         // ADD xqliu 2010-02-25 feature 11201
-        if (!checkBeforeSave())
-            return;
-        // ~
+        rc = checkBeforeSave();
+        if (rc.isOk()) {
 
         EList<TdExpression> expressions = definition.getSqlGenericExpression();
         expressions.clear();
@@ -1980,10 +1980,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
+
         // Save difinition UDI Parameters
         saveDefinitionParameters(definition);
-        ReturnCode rc = UDIHelper.validate(definition);
-        if (rc.isOk()) {
+
+            rc = UDIHelper.validate(definition);
+        }
+
             // MOD by zshen for bug 18724 2011.02.23
             // EMFUtil.saveSingleResource(definition.eResource());
             // CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.INDICATORS));
@@ -1998,7 +2001,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             // IndicatorResourceFileHelper.getInstance().save(definition);
             ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem);
             this.isDirty = false;
-        } else {
+        if (!rc.isOk()) {
+            this.isDirty = true;
             MessageDialog.openError(null, "error", rc.getMessage());//$NON-NLS-1$
         }
     }
@@ -2157,7 +2161,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * @return
      */
-    private boolean checkBeforeSave() {
+    private ReturnCode checkBeforeSave() {
+        ReturnCode rc = new ReturnCode();
         Map<String, Integer> languageVersionCountMap = new HashMap<String, Integer>();
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
         while (it.hasNext()) {
@@ -2167,6 +2172,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 TdExpression expression = tempExpressionMap.get(cb);
                 String language = expression.getLanguage();
                 String version = expression.getVersion();
+                String body = expression.getBody();
+                if (null == body || body.length() + 1 < UDIHelper.MIN_EXPRESSION_LENGTH) {
+                    rc.setOk(false);
+                    rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinition.validateTooShort"));//$NON-NLS-1$
+                    return rc;
+                }
                 if (version != null && !"".equals(version)) {//$NON-NLS-1$
                     language = language + " V" + expression.getVersion();//$NON-NLS-1$
                 }
@@ -2178,16 +2189,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
+
         Iterator<String> iterator = languageVersionCountMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
             Integer integer = languageVersionCountMap.get(key);
             if (integer > 1) {
-                MessageUI.openError(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", key));//$NON-NLS-1$
-                return false;
+                rc.setOk(false);
+                rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", key));//$NON-NLS-1$
+                return rc;
             }
         }
-        return true;
+        return rc;
     }
 
     /**

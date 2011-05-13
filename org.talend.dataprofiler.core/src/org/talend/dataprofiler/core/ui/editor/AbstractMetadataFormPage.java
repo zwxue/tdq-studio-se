@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -223,7 +224,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         nameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                boolean dirty = isDirty();
                 setDirty(true);
+                if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
+                    setDirty(dirty);
+                    MessageDialog.openError(null,
+                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"));//$NON-NLS-1$//$NON-NLS-2$
+                    nameText.removeModifyListener(this);
+                    Property property = getProperty();
+                    nameText.setText(property.getLabel());
+                    nameText.addModifyListener(this);
+                }
 
                 // fireTextChange();
             }

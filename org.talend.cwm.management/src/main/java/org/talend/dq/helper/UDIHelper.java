@@ -68,7 +68,7 @@ public final class UDIHelper {
     private static Logger log = Logger.getLogger(UDIHelper.class);
 
     // ("select * from *").length
-    private static final int MIN_EXPRESSION_LENGTH = 16;
+    public static final int MIN_EXPRESSION_LENGTH = 16;
 
     public static IndicatorCategory getUDICategory(IndicatorDefinition indicatorDefinition) {
         if (indicatorDefinition != null) {

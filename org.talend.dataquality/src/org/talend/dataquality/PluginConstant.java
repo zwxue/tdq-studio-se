@@ -18,14 +18,14 @@ package org.talend.dataquality;
  */
 public final class PluginConstant {
 
-    public static final String PLUGIN_ID = "org.talend.dataquality";
+    public static final String PLUGIN_ID = "org.talend.dataquality";//$NON-NLS-1$
 
     /**
      * Default value used in frequency tables.
      */
     public static final int DEFAULT_TOP_N = 10;
 
-    public static final String EMPTY_STRING = "";
+    public static final String EMPTY_STRING = "";//$NON-NLS-1$
 
     public static final String DOT_STRING = "."; //$NON-NLS-1$
 
