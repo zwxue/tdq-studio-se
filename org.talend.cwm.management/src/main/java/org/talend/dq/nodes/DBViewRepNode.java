@@ -65,4 +65,9 @@ public class DBViewRepNode extends RepositoryNode {
         nodes.add(columnFolderNode);
         return nodes;
     }
+
+    @Override
+    public String getLabel() {
+        return this.tdView.getName();
+    }
 }
