@@ -247,8 +247,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 return ((DBViewRepNode) node).getLabel();
             } else if (node instanceof DBColumnRepNode) {
                 DBColumnRepNode columnNode = (DBColumnRepNode) node;
-                // unified Data Type to lowercase
-                return columnNode.getLabel() + LEFT + columnNode.getNodeDataType().toLowerCase() + RIGHT;
+                return columnNode.getLabel() + LEFT + columnNode.getNodeDataType() + RIGHT;
             } else if (node instanceof DFColumnRepNode) {
                 DFColumnRepNode dfColumnRepNode = (DFColumnRepNode) node;
                 String nodeDataType = dfColumnRepNode.getNodeDataType();
