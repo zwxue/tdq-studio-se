@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.cwm.compare.i18n.Messages;
@@ -464,7 +465,10 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
             // MOD mzhao 2009-03-11 copy from right to left.need reload the
             // currently selected element.
             if (!leftToRight && diffItemsCount > 0) {
-                new ReloadDatabaseAction(selectedOjbect, null).run();
+                // MOD yyi 2011-05-16 21512:need to reload the db connection element
+                if (selectedOjbect instanceof RepositoryViewObject) {
+                    new ReloadDatabaseAction(((RepositoryViewObject) selectedOjbect).getRepositoryNode(), null).run();
+                }
             }
 
         } catch (Throwable e) {
