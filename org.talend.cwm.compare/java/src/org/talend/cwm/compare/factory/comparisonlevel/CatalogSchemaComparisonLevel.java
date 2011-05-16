@@ -46,6 +46,7 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -250,17 +251,14 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
     private List<ColumnSet> reloadElementOfPackage(Package toReloadObj) throws ReloadCompareException {
         List<ColumnSet> columnSetList = new ArrayList<ColumnSet>();
         try {
+            // MOD by msjian bug 2011-5-16 20875, the reload element is not added correctly
             Catalog catalogObj = SwitchHelpers.CATALOG_SWITCH.doSwitch(toReloadObj);
             Schema schemaObj = SwitchHelpers.SCHEMA_SWITCH.doSwitch(toReloadObj);
-            if (catalogObj != null) {
-                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
-                CatalogHelper.addTables(tables, catalogObj);
-                columnSetList.addAll(tables);
-
-                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
-                CatalogHelper.addViews(views, catalogObj);
-                columnSetList.addAll(views);
-            } else if (schemaObj != null) {
+            if (schemaObj != null) {
+                List<ModelElement> elementList = schemaObj.getOwnedElement();
+                if (elementList != null && elementList.size() > 0) {
+                    elementList.clear();
+                }
                 List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, schemaObj, null, true);
                 SchemaHelper.addTables(tables, schemaObj);
                 columnSetList.addAll(tables);
@@ -270,15 +268,30 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
                 columnSetList.addAll(views);
 
             } else {
-                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, (Schema) toReloadObj, null, true);
-                SchemaHelper.addTables(tables, (Schema) toReloadObj);
+                List<ModelElement> elementList = catalogObj.getOwnedElement();
+                if (elementList != null && elementList.size() > 0) {
+                    elementList.clear();
+                }
+                List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, catalogObj, null, true);
+                CatalogHelper.addTables(tables, catalogObj);
                 columnSetList.addAll(tables);
 
-                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, (Schema) toReloadObj, null, true);
-                SchemaHelper.addViews(views, (Schema) toReloadObj);
+                List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, catalogObj, null, true);
+                CatalogHelper.addViews(views, catalogObj);
                 columnSetList.addAll(views);
-
             }
+            // else {
+            // List<TdTable> tables = DqRepositoryViewService.getTables(tempReloadProvider, (Schema) toReloadObj, null,
+            // true);
+            // SchemaHelper.addTables(tables, (Schema) toReloadObj);
+            // columnSetList.addAll(tables);
+            //
+            // List<TdView> views = DqRepositoryViewService.getViews(tempReloadProvider, (Schema) toReloadObj, null,
+            // true);
+            // SchemaHelper.addViews(views, (Schema) toReloadObj);
+            // columnSetList.addAll(views);
+            //
+            // }
         } catch (Exception e1) {
             throw new ReloadCompareException(e1);
         }
