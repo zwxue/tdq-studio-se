@@ -1263,7 +1263,8 @@ public final class ConnectionUtils {
                 packageFilter = new ArrayList<String>();
                 String dbName = connectionParam.getDbName();
                 // String otherParameter = null; // MOD scorreia 2010-10-20 bug 16562 avoid NPE
-                if (isOracle(connectionParam) || isPostgresql(connectionParam)) {
+                // MOD by msjian 2011-5-16 20875: "reload table list" for postgres have some issue
+                if (isOracle(connectionParam)) {
                     dbName = getDbName(connectionParam);
                 }
                 if (dbName != null) {
