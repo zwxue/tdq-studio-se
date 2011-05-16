@@ -254,4 +254,20 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         // }
         return super.hasChildren(element);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getParent(java.lang.Object)
+     */
+    @Override
+    public Object getParent(Object element) {
+        // MOD gdbu 2011-5-16 bug : 21188
+        if (element instanceof RepositoryNode) {
+            RepositoryNode node = (RepositoryNode) element;
+            return node.getParent();
+        }
+        return super.getParent(element);
+        // ~21188
+    }
 }
