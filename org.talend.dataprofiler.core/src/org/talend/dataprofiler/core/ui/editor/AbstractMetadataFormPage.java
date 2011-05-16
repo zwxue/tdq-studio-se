@@ -80,6 +80,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected Text authorText;
 
+    protected boolean modify;
     // protected Text lockerText;
 
     // protected Text versionText;
@@ -223,8 +224,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         nameText.addModifyListener(new ModifyListener() {
 
+
             public void modifyText(ModifyEvent e) {
                 boolean dirty = isDirty();
+                modify = true;
                 setDirty(true);
                 if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
                     setDirty(dirty);
@@ -525,5 +528,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     public void setOldDataproviderName(String oldDataproviderName) {
         this.oldDataproviderName = oldDataproviderName;
+    }
+
+    public boolean isNameTextUpdate() {
+        return modify;
     }
 }
