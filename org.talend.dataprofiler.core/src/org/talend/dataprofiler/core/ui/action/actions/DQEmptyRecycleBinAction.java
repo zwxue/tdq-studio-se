@@ -60,6 +60,12 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
     }
 
     @Override
+    protected ISelection getRepositorySelection() {
+
+        return this.getSelection();
+    }
+
+    @Override
     public void run() {
         // if these items in recycle bin are depended by others,show a warning dialog and return.
         boolean hasDependencyItem = false;

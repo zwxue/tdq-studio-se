@@ -60,4 +60,9 @@ public class DQRestoreAction extends RestoreAction {
         return selection;
     }
 
+    @Override
+    protected ISelection getRepositorySelection() {
+        return this.getSelection();
+    }
+
 }
