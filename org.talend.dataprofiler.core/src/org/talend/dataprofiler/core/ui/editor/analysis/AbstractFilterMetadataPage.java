@@ -102,6 +102,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -505,6 +506,17 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         leftLabel = new Label(leftComp, SWT.NONE);
         leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", tdSchema.size())); //$NON-NLS-1$
         leftLabel.setLayoutData(new GridData());
+        // MOD qiongli 2011-5-16
+        DataManager connection = this.analysis.getContext().getConnection();
+        if (connection != null) {
+            RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(connection);
+            if (connNode != null && connNode.getObject().isDeleted()) {
+                leftLabel = new Label(leftComp, SWT.NONE);
+                leftLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+                leftLabel.setText(DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", connNode.getLabel())); //$NON-NLS-1$
+                leftLabel.setLayoutData(new GridData());
+            }
+        }
 
         ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
 

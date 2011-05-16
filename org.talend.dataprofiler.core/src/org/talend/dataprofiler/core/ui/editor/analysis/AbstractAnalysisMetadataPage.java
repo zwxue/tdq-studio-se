@@ -27,6 +27,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -37,6 +39,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -85,6 +88,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected CCombo connCombo;
 
     protected Text textConnVersion;
+
+    protected Label labelConnDeleted;
 
     public CCombo getConnCombo() {
         return connCombo;
@@ -236,7 +241,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // ~ MOD mzhao 2009-05-05,Bug 6587.
         Composite labelButtonClient = toolkit.createComposite(parentComp);
         GridLayout labelButtonClientLayout = new GridLayout();
-        labelButtonClientLayout.numColumns = 3;
+        labelButtonClientLayout.numColumns = 4;
         labelButtonClient.setLayout(labelButtonClientLayout);
 
         toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.connBind")); //$NON-NLS-1$
@@ -256,6 +261,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         reloadDataproviderAndFillConnCombo();
         // ~
         createConnVersionText(labelButtonClient);
+        createConnDeletedLabel(labelButtonClient);
     }
 
     /**
@@ -379,10 +385,20 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
         int index = 0;
         connCombo.removeAll();
+        // MOD qiongli 2011-5-16,filter the logical delete connection except the analysis dependen on.
+        Property property = null;
+        DataManager connection = analysis.getContext().getConnection();
         for (IRepositoryNode repNode : allConnectionReposNodes) {
-            connCombo.add(repNode.getObject().getProperty().getLabel(), index);
+            property = repNode.getObject().getProperty();
+            ModelElement modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
+            if (repNode.getObject().isDeleted()) {
+                if (connection == null || modelElement != null && !connection.equals(modelElement)) {
+                    continue;
+                }
+            }
+            connCombo.add(property.getLabel(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
-            connCombo.setData(repNode.getObject().getProperty().getLabel(), index);
+            connCombo.setData(property.getLabel(), index);
             connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;
         }
@@ -406,4 +422,21 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public AbstractColumnDropTree getTreeViewer() {
         return null;
     }
+
+    /**
+     * 
+     * create a label to indicate this connection is logical deleted.
+     * 
+     * @param parentComp
+     */
+    private void createConnDeletedLabel(Composite parentComp) {
+        this.labelConnDeleted = toolkit.createLabel(parentComp, PluginConstant.EMPTY_STRING);
+        labelConnDeleted.setVisible(false);
+        labelConnDeleted.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+    }
+
+    public Label getLabelConnDeleted() {
+        return this.labelConnDeleted;
+    }
+
 }

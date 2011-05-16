@@ -34,6 +34,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.ChangeConnectionAction;
@@ -185,8 +186,8 @@ public abstract class AbstractPagePart {
 
             Object value = masterPage.getConnCombo().getData(dataManager.getName());
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
+            Property prop = PropertyHelper.getProperty((Connection) dataManager);
             if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(dataManager) != null) {
-                Property prop = PropertyHelper.getProperty((Connection) dataManager);
                 value = masterPage.getConnCombo().getData(prop.getLabel());
             }
             Integer index = 0;
@@ -194,6 +195,12 @@ public abstract class AbstractPagePart {
                 index = (Integer) value;
             }
             masterPage.getConnCombo().select(index);
+            // MOD qiongli 2011-5-16 bug 21453
+            if (prop.getItem().getState().isDeleted()) {
+                masterPage.getLabelConnDeleted().setVisible(true);
+                masterPage.getLabelConnDeleted().setText(
+                        DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", prop.getLabel()));//$NON-NLS-1$
+            }
             // MOD mzhao 2009-06-09 feature 5887
             if (selectionListener == null) {
                 selectionListener = new SelectionListener() {
