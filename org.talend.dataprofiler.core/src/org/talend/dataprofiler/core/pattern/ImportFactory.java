@@ -67,8 +67,6 @@ public final class ImportFactory {
 
     public static final char TEXT_QUAL = '"';
 
-    public static final int ESCAPE_MODE_BACKSLASH = CsvReader.ESCAPE_MODE_BACKSLASH;
-
     public static final char CURRENT_SEPARATOR = '\t';
 
     private ImportFactory() {
@@ -87,7 +85,7 @@ public final class ImportFactory {
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
             try {
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+                reader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
                 reader.setTextQualifier(TEXT_QUAL);
                 reader.setUseTextQualifier(USE_TEXT_QUAL);
 
@@ -402,7 +400,7 @@ public final class ImportFactory {
             String name = ""; //$NON-NLS-1$
             try {
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+                reader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
                 reader.setTextQualifier(TEXT_QUAL);
                 reader.setUseTextQualifier(USE_TEXT_QUAL);
 
@@ -445,9 +443,8 @@ public final class ImportFactory {
 
                     names.add(name);
 
-                    information.add(new ReturnCode(
-                            DefaultMessagesImpl.getString("ImportFactory.importedSucess") //$NON-NLS-1$
-                                    + name, true));
+                    information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess") //$NON-NLS-1$
+                            + name, true));
 
                 }
 

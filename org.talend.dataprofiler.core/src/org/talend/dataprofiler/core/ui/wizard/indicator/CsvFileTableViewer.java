@@ -197,7 +197,7 @@ public class CsvFileTableViewer extends Composite {
             e1.printStackTrace();
             return false;
         }
-        reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
+        reader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
         reader.setUseTextQualifier(useTextQualifier);
         try {
             reader.readHeaders();
