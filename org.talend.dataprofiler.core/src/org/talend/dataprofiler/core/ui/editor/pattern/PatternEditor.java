@@ -21,7 +21,6 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -104,6 +103,7 @@ public class PatternEditor extends CommonFormEditor {
     @Override
     public void setFocus() {
         super.setFocus();
-        WorkbenchUtils.autoChange2DataProfilerPerspective();
+        // don't invoke this method here, invoke it in IPartListener.partBroughtToTop()
+        // WorkbenchUtils.autoChange2DataProfilerPerspective();
     }
 }

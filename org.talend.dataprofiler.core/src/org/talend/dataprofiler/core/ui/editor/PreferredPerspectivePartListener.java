@@ -23,6 +23,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.eclipse.ui.part.EditorPart;
 
 /**
  * PreferredPerspectivePartListener is to be registered using the extension point "org.eclipse.ui.startup". It will
@@ -84,7 +85,9 @@ public class PreferredPerspectivePartListener implements IPartListener, IStartup
     }
 
     public void partBroughtToTop(IWorkbenchPart part) {
-
+        if (part instanceof EditorPart) {
+            refresh(part);
+        }
     }
 
     public void partClosed(IWorkbenchPart part) {
@@ -92,7 +95,7 @@ public class PreferredPerspectivePartListener implements IPartListener, IStartup
     }
 
     public void partDeactivated(IWorkbenchPart part) {
-        refresh(part);
+
     }
 
     public void partOpened(IWorkbenchPart part) {
