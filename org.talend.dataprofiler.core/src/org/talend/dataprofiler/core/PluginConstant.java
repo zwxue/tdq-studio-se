@@ -28,6 +28,8 @@ public final class PluginConstant {
 
     public static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
 
+    public static final String SQLEXPLORER_PERSPECTIVE_ID = "net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"; //$NON-NLS-1$
+
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
     public static final int DEFAULT_INT_VALUE = 0;

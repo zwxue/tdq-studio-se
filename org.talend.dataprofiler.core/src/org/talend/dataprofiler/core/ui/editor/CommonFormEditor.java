@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.CoreException;
@@ -36,12 +38,13 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC rli class global comment. Detailled comment
  */
-public abstract class CommonFormEditor extends FormEditor {
+public abstract class CommonFormEditor extends FormEditor implements IPrefersPerspective {
 
     private TdEditorToolBar toolBar = null;
 
@@ -303,5 +306,12 @@ public abstract class CommonFormEditor extends FormEditor {
         if (null != toolBar) {
             toolBar.getToolbarControl().setEnabled(!lock);
         }
+    }
+
+    public List<String> getPreferredPerspectiveId() {
+        List<String> result = new ArrayList<String>();
+        result.add(PluginConstant.PERSPECTIVE_ID);
+        result.add(PluginConstant.SQLEXPLORER_PERSPECTIVE_ID);
+        return result;
     }
 }

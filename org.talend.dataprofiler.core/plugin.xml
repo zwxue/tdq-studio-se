@@ -1409,5 +1409,11 @@
            saveAsServiceId="net.sourceforge.sqlexplorer.service.ISaveAsService">
      </Service>
   </extension>
+  <extension
+        point="org.eclipse.ui.startup">
+     <startup
+           class="org.talend.dataprofiler.core.ui.editor.PreferredPerspectivePartListener">
+     </startup>
+  </extension>
 
 </plugin>

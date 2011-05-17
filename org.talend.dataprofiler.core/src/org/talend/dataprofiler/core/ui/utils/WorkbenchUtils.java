@@ -84,7 +84,9 @@ public final class WorkbenchUtils {
         try {
             IPerspectiveDescriptor perspective = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getPerspective();
-            if (!PluginConstant.PERSPECTIVE_ID.equals(perspective.getId())) {
+            if (!(PluginConstant.PERSPECTIVE_ID.equals(perspective.getId()) || PluginConstant.SQLEXPLORER_PERSPECTIVE_ID
+                    .equals(perspective.getId()))) {
+
                 int autoChange = ResourcesPlugin.getPlugin().getPluginPreferences()
                         .getInt(PluginConstant.AUTO_CHANGE2DATA_PROFILER);
 

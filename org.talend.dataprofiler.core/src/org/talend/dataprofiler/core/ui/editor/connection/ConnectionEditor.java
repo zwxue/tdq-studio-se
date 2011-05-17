@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.connection;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
@@ -71,5 +73,10 @@ public class ConnectionEditor extends CommonFormEditor {
      */
     protected void setInput(IEditorInput input) {
         super.setInput(input);
+    }
+
+    @Override
+    public List<String> getPreferredPerspectiveId() {
+        return null;
     }
 }
