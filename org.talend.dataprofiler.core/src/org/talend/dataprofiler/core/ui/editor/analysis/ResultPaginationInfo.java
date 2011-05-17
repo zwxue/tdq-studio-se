@@ -105,8 +105,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             IRepositoryNode modelElementRepositoryNode = modelElementIndicator.getModelElementRepositoryNode();
             IRepositoryNode parentNodeForColumnNode = RepositoryNodeHelper.getParentNodeForColumnNode(modelElementRepositoryNode);
             String label = parentNodeForColumnNode.getObject().getLabel();
-            assert label.isEmpty();
-            if (!label.isEmpty() && label != null) {
+            if (label != null && !label.equals("")) {
                 label = label.concat(".").concat(modelElementIndicator.getElementName());//$NON-NLS-1$
             } else {
                 label = modelElementIndicator.getElementName();
