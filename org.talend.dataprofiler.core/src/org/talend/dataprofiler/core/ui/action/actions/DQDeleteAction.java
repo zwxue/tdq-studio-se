@@ -113,7 +113,7 @@ public class DQDeleteAction extends DeleteAction {
                 }
                 // show dependency dialog and phisical delete dependencies just for phisical deleting.
                 boolean hasDependency = false;
-                if (node.getType() == ENodeType.SIMPLE_FOLDER) {
+                if (node.getType() == ENodeType.SIMPLE_FOLDER || node.getType() == ENodeType.SYSTEM_FOLDER) {
                     List<IRepositoryNode> newLs = RepositoryNodeHelper.getRepositoryElementFromFolder(node, true);
                     for (IRepositoryNode subNode : newLs) {
                         hasDependency = RepositoryNodeHelper.hasDependencyClients(subNode);
