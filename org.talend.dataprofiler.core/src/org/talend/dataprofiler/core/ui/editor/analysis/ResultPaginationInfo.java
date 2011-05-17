@@ -67,9 +67,11 @@ import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * 
@@ -99,8 +101,19 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getComposite(),
                     ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
             needDispostWidgets.add(exComp);
+            //MOD klliu add more information about the column belongs to which table/view.
+            IRepositoryNode modelElementRepositoryNode = modelElementIndicator.getModelElementRepositoryNode();
+            IRepositoryNode parentNodeForColumnNode = RepositoryNodeHelper.getParentNodeForColumnNode(modelElementRepositoryNode);
+            String label = parentNodeForColumnNode.getObject().getLabel();
+            assert label.isEmpty();
+            if (!label.isEmpty() && label != null) {
+                label = label.concat(".").concat(modelElementIndicator.getElementName());//$NON-NLS-1$
+            } else {
+                label = modelElementIndicator.getElementName();
+            }
+            //~
             exComp.setText(DefaultMessagesImpl.getString(
-                    "ColumnAnalysisResultPage.Column", modelElementIndicator.getElementName())); //$NON-NLS-1$
+                    "ColumnAnalysisResultPage.Column", label)); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
