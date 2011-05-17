@@ -109,6 +109,14 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
             }
         } catch (SQLException e) {
             this.setException(e);
+        } finally {
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                this.setException(e);
+            }
         }
     }
 

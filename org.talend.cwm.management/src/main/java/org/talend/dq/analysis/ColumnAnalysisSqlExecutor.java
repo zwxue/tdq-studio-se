@@ -1334,7 +1334,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // -- release resources
         resultSet.close();
         statement.close();
-        connection.close();
 
         return myResultSet;
     }
