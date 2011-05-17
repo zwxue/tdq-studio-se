@@ -52,6 +52,7 @@ import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
@@ -227,7 +228,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             } else if (node instanceof DBConnectionSubFolderRepNode) {
                 return ((DBConnectionSubFolderRepNode) node).getObject().getLabel();
             } else if (node instanceof DBConnectionFolderRepNode) {
-                return "DB " + ((DBConnectionFolderRepNode) node).getObject().getLabel(); //$NON-NLS-1$
+                return DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.DBConnectionFolderName"); //$NON-NLS-1$
+            } else if (node instanceof DFConnectionFolderRepNode) {
+                return DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.DFConnectionFolderName");//$NON-NLS-1$
+            } else if (node instanceof MDMConnectionFolderRepNode) {
+                return DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.MDMConnectionFolderName"); //$NON-NLS-1$
             } else if (node instanceof DBTableFolderRepNode) {
                 return ((DBTableFolderRepNode) node).getNodeName();
             } else if (node instanceof DBViewFolderRepNode) {
