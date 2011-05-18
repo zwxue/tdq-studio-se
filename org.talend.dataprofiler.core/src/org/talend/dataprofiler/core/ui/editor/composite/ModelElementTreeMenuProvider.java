@@ -37,7 +37,6 @@ import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
@@ -581,7 +580,7 @@ public abstract class ModelElementTreeMenuProvider {
 
             for (int i = 0; i < items.length; i++) {
                 // MOD klliu bug 20820 change TDcolum to IRepositoryNode, then solve NPE 2011-04-29
-                ColumnIndicator data = (ColumnIndicator) items[i].getData("MODELELEMENT_INDICATOR_KEY");//$NON-NLS-1$
+                ModelElementIndicator data = (ModelElementIndicator) items[i].getData("MODELELEMENT_INDICATOR_KEY");//$NON-NLS-1$
                 IRepositoryNode modelElementRepositoryNode = data.getModelElementRepositoryNode();
                 paths[i] = new TreePath(new Object[] { modelElementRepositoryNode });
             }
