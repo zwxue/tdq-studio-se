@@ -51,14 +51,15 @@ public class PatternTransformer {
     }
 
     private String getRegexpPattern(char inputCharacter) {
+        boolean isJava = !this.dbmsLanguage.isSql();
         if (lowerCase == inputCharacter) {
-            return "[[:lower:]]"; //$NON-NLS-1$
+            return isJava ? "[a-z]" : "[[:lower:]]"; //$NON-NLS-1$
         }
         if (upperCase == inputCharacter) {
-            return "[[:upper:]]"; //$NON-NLS-1$
+            return isJava ? "[A-Z]" : "[[:upper:]]"; //$NON-NLS-1$
         }
         if (numeric == inputCharacter) {
-            return "[[:digit:]]"; //$NON-NLS-1$
+            return isJava ? "[0-9]" : "[[:digit:]]"; //$NON-NLS-1$
         }
         if (specialChar.contains(String.valueOf(inputCharacter))) {
             return "\\" + inputCharacter; //$NON-NLS-1$

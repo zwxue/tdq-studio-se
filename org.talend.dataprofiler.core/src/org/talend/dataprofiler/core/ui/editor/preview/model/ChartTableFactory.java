@@ -165,6 +165,25 @@ public final class ChartTableFactory {
                                                 }
 
                                             });
+                                            if (isPatternFrequencyIndicator(indicator)) {
+                                                if (itemEntity.getQuery() == null) {
+                                                    itemEntity.setQuery(dataEntity.getKey().toString());
+
+                                                }
+                                                MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
+                                                itemCreatePatt.setText(DefaultMessagesImpl
+                                                        .getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
+                                                itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
+                                                itemCreatePatt.addSelectionListener(new SelectionAdapter() {
+
+                                                    @Override
+                                                    public void widgetSelected(SelectionEvent e) {
+                                                        DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
+                                                        PatternTransformer pattTransformer = new PatternTransformer(language);
+                                                        createPattern(analysis, itemEntity, pattTransformer);
+                                                    }
+                                                });
+                                            }
                                         }
                                     }
                                 }
@@ -252,7 +271,11 @@ public final class ChartTableFactory {
     public static void createPattern(Analysis analysis, MenuItemEntity itemEntity, final PatternTransformer pattTransformer) {
         String language = pattTransformer.getDbmsLanguage().getDbmsName();
         String query = itemEntity.getQuery();
-        String regex = pattTransformer.getRegexp(query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1));//$NON-NLS-1$ //$NON-NLS-2$
+
+        if (analysis.getParameters().getExecutionLanguage().compareTo(ExecutionLanguage.SQL) == 0) {
+            query = query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1);//$NON-NLS-1$ //$NON-NLS-2$
+        }
+        String regex = pattTransformer.getRegexp(query);
         IFolder folder = ResourceManager.getPatternRegexFolder();
         new CreatePatternAction(folder, ExpressionType.REGEXP, "'" + regex + "'", language).run(); //$NON-NLS-1$ //$NON-NLS-2$
     }

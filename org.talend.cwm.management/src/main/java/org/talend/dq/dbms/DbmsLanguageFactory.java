@@ -29,6 +29,7 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
@@ -286,6 +287,9 @@ public final class DbmsLanguageFactory {
      */
     public static DbmsLanguage createDbmsLanguage(Analysis analysis) {
         final AnalysisContext context = analysis.getContext();
+        if (analysis.getParameters().getExecutionLanguage() == ExecutionLanguage.JAVA) {
+            return createDbmsLanguage(SupportDBUrlType.JAVADEFAULTURL);
+        }
         if (context != null) {
             final DataManager dm = context.getConnection();
             if (dm != null) {
