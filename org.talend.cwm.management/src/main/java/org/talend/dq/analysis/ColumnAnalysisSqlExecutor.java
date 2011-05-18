@@ -406,6 +406,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return
      */
     private boolean isFunction(String defValue, String table) {
+        boolean ok = false;
         try {
             String queryStmt = "select " + defValue + " from " + table;//$NON-NLS-1$//$NON-NLS-2$
             TypedReturnCode<Connection> conn = getConnection(cachedAnalysis);
@@ -413,11 +414,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
             // FIXME stat should be closed.
             Statement stat = conenction.createStatement();
-
-            return stat.execute(queryStmt);
+            ok = stat.execute(queryStmt);
+            stat.close();
         } catch (Exception e) {
-            return false;
+            log.error(e, e);
+	    ok = false;
         }
+        return ok;
     }
 
     private String addFunctionTypeConvert(String colName) {
@@ -1084,6 +1087,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws
      */
     // TDQ Guodong bu 2011-2-25, feature 19107
+    // FIXME use a static inner class instead
     class ExecutiveAnalysisJob extends Job {
 
         ColumnAnalysisSqlExecutor parent;

@@ -123,6 +123,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 }
                 statement.execute(sqlStatement);
             }
+            statement.close();
         }
 
         return ok;

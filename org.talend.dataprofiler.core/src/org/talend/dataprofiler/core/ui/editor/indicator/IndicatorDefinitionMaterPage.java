@@ -2219,7 +2219,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * FIXME this inner class should be static. Confirm and fix the error.
      */
-    private final class AggregateDateExpression implements Cloneable {
+    private static final class AggregateDateExpression implements Cloneable {
 
         private TdExpression aggregateExpression;
 

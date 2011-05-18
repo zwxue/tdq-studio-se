@@ -388,6 +388,7 @@ public final class ConnectionUtils {
                 } else {
                     stat.executeQuery("Select * from " + tableName);//$NON-NLS-1$
                 }
+                stat.close();
             }
         } catch (Exception e) {
             return false;

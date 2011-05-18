@@ -297,6 +297,7 @@ public class DbmsLanguage {
         if (schema != null && schema.trim().length() > 0) {
             qualName.append(this.quote(schema));
             // MOD gdbu 2011-4-11 bug : 18975
+            // FIXME this method should be overriden in InformixDbmsLanguage instead.
             if (dbmsName.contains(DbmsLanguage.INFOMIX)) {
                 qualName.append(DbmsLanguage.DOT);
             } else {

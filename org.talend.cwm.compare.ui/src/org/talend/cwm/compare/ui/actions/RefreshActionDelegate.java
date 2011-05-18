@@ -242,6 +242,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             snapshot.setDate(Calendar.getInstance().getTime());
             snapshot.setMatch(match);
             snapshot.setDiff(diff);
+            // MOD scorreia 2010-01-29: we may need to set the file.encoding property here.
             ModelUtils.save(snapshot, outputFile); //$NON-NLS-1$
 
         } catch (IOException e) {
