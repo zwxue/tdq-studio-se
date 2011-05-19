@@ -469,7 +469,7 @@ public class SynonymIndexBuilder {
      */
     private Document generateDocument(String word, List<String> synonyms) {
         Document doc = new Document();
-        Field field = new Field(F_WORD, word, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
+        Field field = new Field(F_WORD, word.trim(), Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
         field.setBoost(1.5F); // increase the importance of the reference word
         doc.add(field);
         // --- store entry also in synonym list so that we can search for it too
