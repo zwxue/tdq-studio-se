@@ -66,12 +66,12 @@ public class IndicatorSelectDialog extends TrayDialog {
     /**
      * Default width of the columns.
      */
-    private static final int COLI_WIDTH = 100;
+    private static final int COLI_WIDTH = 90;
 
     /**
      * Width of the first column.
      */
-    private static final int COL0_WIDTH = 200;
+    private static final int COL0_WIDTH = 288;
 
     private static final int ROW_MAX_LENGTH = 107;
 
