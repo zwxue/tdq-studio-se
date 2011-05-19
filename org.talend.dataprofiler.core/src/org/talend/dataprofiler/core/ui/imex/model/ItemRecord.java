@@ -38,13 +38,13 @@ import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -67,7 +67,7 @@ public class ItemRecord {
 
     private Property property;
 
-    private IRepositoryNode conflictNode;
+    private IRepositoryViewObject conflictObject;
 
     private Map<File, ModelElement> dependencyMap = new HashMap<File, ModelElement>();
 
@@ -471,21 +471,21 @@ public class ItemRecord {
     }
 
     /**
-     * Sets the conflictNode.
+     * Getter for conflictObject.
      * 
-     * @param conflictNode the conflictNode to set
+     * @return the conflictObject
      */
-    public void setConflictNode(IRepositoryNode conflictNode) {
-        this.conflictNode = conflictNode;
+    public IRepositoryViewObject getConflictObject() {
+        return this.conflictObject;
     }
 
     /**
-     * Getter for conflictNode.
+     * Sets the conflictObject.
      * 
-     * @return the conflictNode
+     * @param conflictObject the conflictObject to set
      */
-    public IRepositoryNode getConflictNode() {
-        return this.conflictNode;
+    public void setConflictObject(IRepositoryViewObject conflictObject) {
+        this.conflictObject = conflictObject;
     }
 
 }

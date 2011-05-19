@@ -39,6 +39,7 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -56,13 +57,10 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.RepositoryWorkUnit;
-import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -131,11 +129,15 @@ public class FileSystemImportWriter implements IImportWriter {
         if (property != null) {
             try {
 
-                RepositoryNode node = RepositoryNodeHelper.recursiveFind(property);
+                List<IRepositoryViewObject> allObjects = DqRepositoryViewService.getAllRepositoryResourceObjects(true);
 
-                if (node != null) {
-                    record.setConflictNode(node);
-                    record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");//$NON-NLS-1$ //$NON-NLS-2$ 
+                for (IRepositoryViewObject object : allObjects) {
+                    if (record.getProperty() != null && record.getProperty().getId().equals(object.getProperty().getId())) {
+                        record.setConflictObject(object);
+                        record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");//$NON-NLS-1$ //$NON-NLS-2$ 
+
+                        break;
+                    }
                 }
 
             } catch (Exception e) {
@@ -336,9 +338,8 @@ public class FileSystemImportWriter implements IImportWriter {
                             log.info("Importing " + record.getFile().getAbsolutePath());//$NON-NLS-1$
 
                             // Delete the conflict node before import.
-                            IRepositoryNode conflictNode = record.getConflictNode();
-                            if (conflictNode != null) {
-                                IRepositoryViewObject object = conflictNode.getObject();
+                            IRepositoryViewObject object = record.getConflictObject();
+                            if (object != null) {
                                 ProxyRepositoryFactory.getInstance().deleteObjectPhysical(object);
                             }
 

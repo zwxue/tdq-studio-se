@@ -145,7 +145,7 @@ public abstract class AElementPersistance {
             path = itemPath.makeRelativeTo(ResourceManager.getReportsFolder().getFullPath());
         } else if (element instanceof IndicatorDefinition) {
             if (element instanceof WhereRule) { // dqrule
-                path = itemPath.makeRelativeTo(ResourceManager.getRulesSQLFolder().getFullPath());
+                path = itemPath.makeRelativeTo(ResourceManager.getRulesFolder().getFullPath());
             } else { // indicator definition
                 path = itemPath.makeRelativeTo(ResourceManager.getIndicatorFolder().getFullPath());
             }
