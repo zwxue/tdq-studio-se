@@ -25,8 +25,10 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dq.helper.PropertyHelper;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -162,14 +164,18 @@ public abstract class AbstractFormPage extends FormPage {
     }
 
     protected Property getProperty() {
+        Property property = null;
         if (getEditorInput() instanceof AbstractItemEditorInput) {
             AbstractItemEditorInput editorInput = (AbstractItemEditorInput) getEditorInput();
             if (editorInput.getItem() != null) {
-                return editorInput.getItem().getProperty();
+                property = editorInput.getItem().getProperty();
             }
+        } else if (getEditorInput() instanceof FileEditorInput) {
+            FileEditorInput editorInput = (FileEditorInput) getEditorInput();
+            property = PropertyHelper.getProperty(editorInput.getFile());
         }
 
-        return null;
+        return property;
     }
 
     /**

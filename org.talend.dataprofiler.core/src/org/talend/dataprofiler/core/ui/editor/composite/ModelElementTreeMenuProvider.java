@@ -33,7 +33,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
-import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -49,7 +48,6 @@ import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -60,6 +58,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -197,7 +196,7 @@ public abstract class ModelElementTreeMenuProvider {
                             IJobService.class);
                     if (service != null) {
                         service.setIndicator(getSelectedIndicator(tree.getSelection()));
-                        service.setAnalysis(getAnalysis2());
+                        service.setAnalysis(getAnalysis2().getAnalysis());
                         service.executeJob();
                     }
                 }
@@ -241,9 +240,9 @@ public abstract class ModelElementTreeMenuProvider {
                             .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
                     IRepositoryNode rd = meIndicator.getModelElementRepositoryNode();
                     ModelElement me = ((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn();
-                    ModelElement ana = getAnalysis2();
+                    AnalysisRepNode ana = getAnalysis2();
                     // MOD qiongli 2011-1-12 feature 16796 :handle the case of ModelElement name is null
-                    ana.setName(ModelElementHelper.getName(me));
+                    // ana.setName(ModelElementHelper.getName(me));
                     // FIXME instanceof always return true.
                     if (me instanceof ModelElement) {
                         (new TdAddTaskAction(tree.getShell(), ana)).run();
@@ -280,7 +279,7 @@ public abstract class ModelElementTreeMenuProvider {
      */
     protected abstract void removeSelectedElements2(Tree tree);
 
-    protected abstract Analysis getAnalysis2();
+    protected abstract AnalysisRepNode getAnalysis2();
 
     private void editPattern(Tree tree) {
         TreeItem[] selection = tree.getSelection();

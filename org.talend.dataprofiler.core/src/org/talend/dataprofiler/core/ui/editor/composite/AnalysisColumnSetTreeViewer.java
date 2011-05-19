@@ -69,6 +69,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -654,6 +655,15 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         return this.masterPage.getColumnSetAnalysisHandler().getAnalysis();
     }
 
+    /**
+     * Getter for analysis.
+     * 
+     * @return the analysis
+     */
+    public AnalysisRepNode getAnalysisNode() {
+        return this.masterPage.getAnalysisRepNode();
+    }
+
     // public List<String> getComboString() {
     // return comboTextList;
     // }
@@ -794,8 +804,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         }
 
         @Override
-        protected Analysis getAnalysis2() {
-            return getAnalysis();
+        protected AnalysisRepNode getAnalysis2() {
+            return getAnalysisNode();
         }
 
     }

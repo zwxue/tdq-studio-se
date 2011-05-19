@@ -91,6 +91,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -873,6 +874,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return this.masterPage.getAnalysisHandler().getAnalysis();
     }
 
+    /**
+     * Getter for analysis.
+     * 
+     * @return the analysis
+     */
+    public AnalysisRepNode getAnalysisNode() {
+        return this.masterPage.getAnalysisRepNode();
+    }
+
     public Tree getTree() {
         return tree;
     }
@@ -948,8 +958,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
          * @see org.talend.dataprofiler.core.ui.editor.composite.ModelElementTreeMenuProvider#getAnalysis2()
          */
         @Override
-        protected Analysis getAnalysis2() {
-            return getAnalysis();
+        protected AnalysisRepNode getAnalysis2() {
+            return getAnalysisNode();
         }
 
         /*

@@ -13,11 +13,15 @@
 package org.talend.dataprofiler.core.ui.editor;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.talend.core.model.properties.Item;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 
 /**
  * 
@@ -53,6 +57,9 @@ public class AbstractItemEditorInput implements IEditorInput {
     }
 
     public Object getAdapter(Class adapter) {
+        if (adapter.equals(IFile.class)) {
+            return PropertyHelper.getItemFile(this.getItem().getProperty());
+        }
         return null;
     }
 
@@ -76,6 +83,11 @@ public class AbstractItemEditorInput implements IEditorInput {
                 }
             } else {
                 return false;
+            }
+        } else if (obj instanceof IFileEditorInput) {
+            IFile newFile = ResourceUtil.getFile(this);
+            if (newFile != null) {
+                return newFile.equals(ResourceUtil.getFile(obj));
             }
         }
         return false;
