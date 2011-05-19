@@ -33,6 +33,7 @@ import com.csvreader.CsvReader;
 /**
  * DOC scorreia class global comment. Detailed comment
  */
+// TODO move the main method and related methods into the test project.
 public class IndexBuilder {
 
     private String directoryPath;
