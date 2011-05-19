@@ -17,9 +17,7 @@ import java.io.IOException;
 import org.apache.lucene.queryParser.ParseException;
 
 /**
- * DOC klliu class global comment.
- * 
- * TODO transform this class to a junit class and move it to the appropriate test project.
+ * This class creates the lucene index file to be used in the component.
  */
 public final class HandleLuceneTest {
 
@@ -30,13 +28,17 @@ public final class HandleLuceneTest {
      * @param args
      */
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
+        // choose here to test the replace methods
+        boolean testReplace = false;
+        // choose here the appropriate input file.
         String filename = "./data/TalendGivenNames.TXT";//$NON-NLS-1$
-        // String indexfolder = "C:\\Documents and Settings\\Administrator\\����\\data\\TalendGivenNames_index";
         String indexfolder = "./data/TalendGivenNames_index";//$NON-NLS-1$
         HandleLucene hl = new HandleLuceneImpl();
         System.out.print(hl.createIndex(filename, indexfolder));
 
+        if (!testReplace) {
+            return;
+        }
         try {
 
             String res = hl.replaceName(indexfolder, "Philippe", false);//$NON-NLS-1$
@@ -51,16 +53,13 @@ public final class HandleLuceneTest {
                 String res3 = hl.replaceNameWithCountryGenderInfo(indexfolder, "Philippe", "china", "1", false);//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
                 System.out.println("replaceNameWithCountryGenderInfo:" + res3);//$NON-NLS-1$
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
             // }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
