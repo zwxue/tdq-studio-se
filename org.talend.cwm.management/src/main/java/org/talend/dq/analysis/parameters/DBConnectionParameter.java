@@ -44,7 +44,29 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     private String dbmsId;
 
-    // ADD kllliu 2010-10-09 feature 15821
+    // ADD klliu 2011-05-19 21704: Refactoring this "otherParameter" !
+    private String filterSchema;
+
+    private String filterCatalog;
+
+    public String getFilterSchema() {
+        return this.filterSchema;
+    }
+
+    public void setFilterSchema(String filterSchema) {
+        this.filterSchema = filterSchema;
+    }
+
+    public String getFilterCatalog() {
+        return this.filterCatalog;
+    }
+
+    public void setFilterCatalog(String filterCatalog) {
+        this.filterCatalog = filterCatalog;
+    }
+
+    // ~
+    // ADD klliu 2010-10-09 feature 15821
     private String otherParameter;
 
     public String getOtherParameter() {

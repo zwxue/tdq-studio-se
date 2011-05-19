@@ -94,6 +94,7 @@ public final class ParameterUtil {
         parameterMap.put("author", parameter.getAuthor());//$NON-NLS-1$
         parameterMap.put("status", parameter.getStatus());//$NON-NLS-1$
         parameterMap.put("version", parameter.getVersion());//$NON-NLS-1$
+        parameterMap.put("uiSchema", parameter.getFilterSchema());//$NON-NLS-1$
         parameterMap.put("universe", parameter.getParameters().getProperty(TaggedValueHelper.UNIVERSE));//$NON-NLS-1$
         parameterMap.put("datafilter", parameter.getParameters().getProperty(TaggedValueHelper.DATA_FILTER));//$NON-NLS-1$
         parameterMap.put(TaggedValueHelper.RETRIEVE_ALL, String.valueOf(parameter.isRetrieveAllMetadata()));

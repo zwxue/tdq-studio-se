@@ -1081,12 +1081,17 @@ public final class ConnectionUtils {
 
         if (conn instanceof DatabaseConnection) {
             connectionParam.setSqlTypeName(((DatabaseConnection) conn).getDatabaseType());
-            connectionParam.setDbmsId(((DatabaseConnection) conn).getDbmsId());
+            String dbmsId = ((DatabaseConnection) conn).getDbmsId();
+            connectionParam.setDbmsId(dbmsId);
+            // ADD klliu 2011-05-19 21704: Refactoring this "otherParameter" !
+            connectionParam.setFilterCatalog(dbmsId);
         }
         // MOD klliu if oracle set schema to other parameter
         if (conn instanceof DatabaseConnection) {
             DatabaseConnection dbConnection = (DatabaseConnection) conn;
             connectionParam.setOtherParameter(dbConnection.getUiSchema());
+            // ADD klliu 2011-05-19 21704: Refactoring this "otherParameter" !
+            connectionParam.setFilterSchema(dbConnection.getUiSchema());
         }
         // MOD mzhao adapte model. MDM connection editing need handle
         // additionally.
@@ -1209,7 +1214,6 @@ public final class ConnectionUtils {
         }
     }
 
-
     /**
      * method "fillAttributeBetweenConnection".
      * 
@@ -1276,6 +1280,8 @@ public final class ConnectionUtils {
         return packageFilter;
     }
 
+
+
     private static boolean isOracle(DBConnectionParameter connectionParam) {
         if (connectionParam == null) {
             return false;
@@ -1293,12 +1299,12 @@ public final class ConnectionUtils {
      */
     private static String getDbName(DBConnectionParameter connectionParam) {
         String dbName = null;
-        String otherParameter = null;
-        if (connectionParam != null && connectionParam.getOtherParameter() != null) {
-            otherParameter = connectionParam.getOtherParameter().toUpperCase();
+        String filterSchema = null;
+        if (connectionParam != null && connectionParam.getFilterSchema() != null) {
+            filterSchema = connectionParam.getFilterSchema().toUpperCase();
         }
-        if (otherParameter != null) {
-            dbName = otherParameter;
+        if (filterSchema != null) {
+            dbName = filterSchema;
         } else {
             dbName = connectionParam.getParameters().getProperty(TaggedValueHelper.USER).toUpperCase();
         }

@@ -116,13 +116,16 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         // EList<Package> dataPackage = ((ConnectionItem)
         // getObject().getProperty().getItem()).getConnection().getDataPackage();
         for (Package pack : dataPackage) {
-            MetadataCatalogRepositoryObject metadataCatalog = new MetadataCatalogRepositoryObject(getObject(), (Catalog) pack);
-            RepositoryNode catalogNode = new DBCatalogRepNode((IRepositoryViewObject) metadataCatalog, this,
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
-            catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
-            catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
-            metadataCatalog.setRepositoryNode(catalogNode);
-            nodes.add(catalogNode);
+            if (pack instanceof Catalog) {
+                MetadataCatalogRepositoryObject metadataCatalog = new MetadataCatalogRepositoryObject(getObject(), (Catalog) pack);
+                RepositoryNode catalogNode = new DBCatalogRepNode((IRepositoryViewObject) metadataCatalog, this,
+                        ENodeType.TDQ_REPOSITORY_ELEMENT);
+                catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
+                catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
+                metadataCatalog.setRepositoryNode(catalogNode);
+                nodes.add(catalogNode);
+            }
+
         }
         return nodes;
     }
