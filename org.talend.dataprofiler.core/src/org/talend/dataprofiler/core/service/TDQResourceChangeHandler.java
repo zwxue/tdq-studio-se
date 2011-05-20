@@ -12,17 +12,26 @@
 // ============================================================================
 package org.talend.dataprofiler.core.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.constants.FileConstants;
@@ -31,6 +40,7 @@ import org.talend.core.repository.utils.AbstractResourceChangesService;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -44,12 +54,17 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
+import org.talend.utils.files.FileUtils;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -114,7 +129,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 public void run() {
                     DeleteModelElementConfirmDialog.showDialog(null,
                             PropertyHelper.getItemFile(PropertyHelper.getProperty(modelElementFinal)), dependencyElements,
-                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.ConnectionNotBeSave"),false); //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.ConnectionNotBeSave"), false); //$NON-NLS-1$
                 }
             });
 
@@ -229,5 +244,78 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         if (modelElement != null) {
             EObjectHelper.removeDependencys(modelElement);
         }
+    }
+
+    @Override
+    public void updateDependeciesWhenVersionChange(ConnectionItem connItem, String oldVersion, String newVersion) {
+        Connection connection = connItem.getConnection();
+        if (connection != null) {
+            EList<Dependency> supplierDependencies = connection.getSupplierDependency();
+
+            if (supplierDependencies != null && !supplierDependencies.isEmpty()) {
+                Dependency[] arraySupplierDeps = supplierDependencies.toArray(new Dependency[supplierDependencies.size()]);
+
+                for (Dependency supplierDep : arraySupplierDeps) {
+                    EList<ModelElement> clients = supplierDep.getClient();
+
+                    if (clients != null && !clients.isEmpty()) {
+                        ModelElement[] arrayClients = clients.toArray(new ModelElement[clients.size()]);
+
+                        for (ModelElement client : arrayClients) {
+
+                            if (client instanceof Analysis) {
+                                IFile clientFile = AnaResourceFileHelper.findCorrespondingFile(client);
+                                if (clientFile != null) {
+                                    File file = WorkspaceUtils.ifileToFile(clientFile);
+
+                                    if (file != null) {
+                                        replaceVersionInfo(connection.getName(), file, oldVersion, newVersion);
+                                        reloadFile(file);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ResourceService.refreshStructure();
+                WorkbenchUtils.refreshAnalysesNode();
+                WorkbenchUtils.refreshMetadataNode();
+                WorkbenchUtils.refreshCurrentAnalysisEditor();
+            }
+        }
+    }
+
+    /**
+     * replace the oldVersion with newVersion in the file.
+     * 
+     * @param name
+     * @param clientFile
+     * @param oldVersion
+     * @param newVersion
+     * @throws URISyntaxException
+     * @throws IOException
+     */
+    private void replaceVersionInfo(String name, File clientFile, String oldVersion, String newVersion) {
+        String oldString = name + "_" + oldVersion; //$NON-NLS-1$
+        String newString = name + "_" + newVersion; //$NON-NLS-1$
+        try {
+            FileUtils.replaceInFile(clientFile.getAbsolutePath(), oldString, newString);
+        } catch (IOException e) {
+            log.error(e);
+        } catch (URISyntaxException e) {
+            log.error(e);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "reloadFile".
+     * 
+     * @param file
+     */
+    private void reloadFile(File file) {
+        IFile ifile = WorkspaceUtils.fileToIFile(file);
+        URI uri = URI.createPlatformResourceURI(ifile.getFullPath().toString(), false);
+        EMFSharedResources.getInstance().reloadResource(uri);
     }
 }

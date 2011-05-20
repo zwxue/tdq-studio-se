@@ -18,7 +18,6 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 
 /**
- * 
  * DOC mzhao Connection item editor input.
  */
 public class ConnectionItemEditorInput extends AbstractItemEditorInput {

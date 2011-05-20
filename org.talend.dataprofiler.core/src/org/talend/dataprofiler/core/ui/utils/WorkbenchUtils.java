@@ -18,12 +18,19 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
@@ -33,13 +40,20 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -54,6 +68,10 @@ public final class WorkbenchUtils {
     private static final int AUTO_CHANGE2DATA_PROFILER_FALSE = 2;
 
     private static final boolean AUTO_CHANGE2DATA_PROFILER = true;
+
+    private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
+
+    private static final String CONNECTION_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"; //$NON-NLS-1$
 
     private WorkbenchUtils() {
     }
@@ -303,6 +321,95 @@ public final class WorkbenchUtils {
                 // other os
                 return str1.equals(str2);
             }
+        }
+    }
+
+    public static void refreshCurrentAnalysisEditor() {
+        // Refresh current opened editors.
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorReference[] editors = activePage.getEditorReferences();
+        if (editors != null) {
+            for (IEditorReference editorRef : editors) {
+                if (editorRef.getId().equals(ANALYSIS_EDITOR_ID) || editorRef.getId().equals(CONNECTION_EDITOR_ID)) {
+                    boolean isConfirm = MessageDialog.openConfirm(
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            DefaultMessagesImpl.getString("WorkbenchUtils.ElementChange"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("WorkbenchUtils.RefreshCurrentEditor")); //$NON-NLS-1$
+                    if (!isConfirm) {
+                        return;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            try {
+                for (IEditorReference editorRef : editors) {
+                    IEditorInput editorInput = editorRef.getEditorInput();
+                    if (editorRef.getId().equals(ANALYSIS_EDITOR_ID)) {
+                        if (editorInput instanceof AnalysisItemEditorInput) {
+                            AnalysisItemEditorInput anaItemEditorInput = (AnalysisItemEditorInput) editorInput;
+                            Analysis analysis = anaItemEditorInput.getTDQAnalysisItem().getAnalysis();
+                            if (analysis.eIsProxy()) {
+                                analysis = (Analysis) EObjectHelper.resolveObject(analysis);
+                            }
+                            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+                            // close the editor
+                            activePage.closeEditor(editorRef.getEditor(false), false);
+                            // reopen the analysis
+                            if (recursiveFind != null) {
+                                new OpenItemEditorAction(recursiveFind).run();
+                            }
+                        }
+                    } else if (editorRef.getId().equals(CONNECTION_EDITOR_ID)) {
+                        if (editorInput instanceof ConnectionItemEditorInput) {
+                            ConnectionItemEditorInput connItemEditorInput = (ConnectionItemEditorInput) editorInput;
+                            Item item = connItemEditorInput.getItem();
+                            if (item instanceof ConnectionItem) {
+                                ConnectionItem connItem = (ConnectionItem) item;
+                                Connection connection = connItem.getConnection();
+                                if (connection.eIsProxy()) {
+                                    connection = (Connection) EObjectHelper.resolveObject(connection);
+                                }
+                                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
+                                // close the editor
+                                activePage.closeEditor(editorRef.getEditor(false), false);
+                                // reopen the connection
+                                if (recursiveFind != null) {
+                                    new OpenItemEditorAction(recursiveFind).run();
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (PartInitException e) {
+                log.error(e);
+            }
+        }
+    }
+
+    public static void refreshAnalysesNode() {
+        IRepositoryNode analysesNode = RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.ANALYSIS);
+        if (analysesNode != null) {
+            CorePlugin.getDefault().refreshDQView(analysesNode);
+        }
+    }
+
+    public static void refreshMetadataNode() {
+        // database connection node
+        IRepositoryNode dbNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
+        if (dbNode != null) {
+            CorePlugin.getDefault().refreshDQView(dbNode);
+        }
+        // delimited file connection node
+        IRepositoryNode dfNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.FILEDELIMITED);
+        if (dfNode != null) {
+            CorePlugin.getDefault().refreshDQView(dfNode);
+        }
+        // mdm connection node
+        IRepositoryNode mdmNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS);
+        if (mdmNode != null) {
+            CorePlugin.getDefault().refreshDQView(mdmNode);
         }
     }
 }
