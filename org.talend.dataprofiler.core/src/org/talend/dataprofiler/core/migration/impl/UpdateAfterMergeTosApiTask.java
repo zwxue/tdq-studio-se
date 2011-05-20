@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -32,6 +33,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -39,6 +42,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -101,7 +105,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             deleteOldItemFile(file);
         }
 
-        addConnectionFileToUpdate();
+        updateConnectionFile();
 
         updateFile();
 
@@ -111,7 +115,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     /**
      * DOC bZhou Comment method "addConnectionFileToUpdate".
      */
-    private void addConnectionFileToUpdate() {
+    private void updateConnectionFile() {
         File rawDir = getWorkspacePath().append(EResourceConstant.METADATA.getPath()).toFile();
         ArrayList<File> fileList = new ArrayList<File>();
 
@@ -122,6 +126,21 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                     return name.endsWith(FactoriesUtil.ITEM_EXTENSION);
                 }
             });
+        }
+
+        for (File file : fileList) {
+            IFile iFile = WorkspaceUtils.fileToIFile(file);
+            ModelElement modelElement = PrvResourceFileHelper.getInstance().getModelElement(iFile);
+            if (modelElement != null && modelElement instanceof DatabaseConnection) {
+                DatabaseConnection connection = (DatabaseConnection) modelElement;
+
+                String otherParameter = ConnectionHelper.getOtherParameter(connection);
+                if (!StringUtils.isBlank(otherParameter)) {
+                    connection.setUiSchema(otherParameter);
+
+                    EMFSharedResources.getInstance().saveResource(connection.eResource());
+                }
+            }
         }
 
         newFileList.addAll(fileList);
