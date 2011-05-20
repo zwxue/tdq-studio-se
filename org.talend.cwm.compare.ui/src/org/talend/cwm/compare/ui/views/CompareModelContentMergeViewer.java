@@ -70,15 +70,16 @@ import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
 import org.talend.cwm.compare.ui.actions.SubelementCompareAction;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
-import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -416,16 +417,18 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
         } else {
             // Folder
-            Package ctatlogSwtich = SwitchHelpers.PACKAGE_SWITCH.doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect)
-                    .getParent());
-
+            // MOD msjian 2011-5-20 20875:Change to model element
+            IRepositoryNode parentNode = DBTableRepNode.getParentPackageNode((IRepositoryNode) selectedOjbect);
+            Package ctatlogSwtich = parentNode instanceof DBCatalogRepNode ? ((DBCatalogRepNode) parentNode)
+                    .getCatalog() : null;
+            // ~
             if (ctatlogSwtich != null) {
                 resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
                         ConnectionHelper.getTdDataProvider(ctatlogSwtich));
                 modelElement = ConnectionHelper.getTdDataProvider(ctatlogSwtich);
             }
-            ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH
-                    .doSwitch((EObject) ((AbstractDatabaseFolderNode) selectedOjbect).getParent());
+            ColumnSet columnSet = parentNode instanceof DBTableRepNode ? ((DBTableRepNode) parentNode).getTdTable()
+                    : null;
             if (columnSet != null) {
                 resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
                         ConnectionHelper.getDataProvider(columnSet));
@@ -468,6 +471,9 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 // MOD yyi 2011-05-16 21512:need to reload the db connection element
                 if (selectedOjbect instanceof RepositoryViewObject) {
                     new ReloadDatabaseAction(((RepositoryViewObject) selectedOjbect).getRepositoryNode(), null).run();
+                } else {
+                    // MOD msjian 2011-5-20 20875:do copy for table list
+                    new ReloadDatabaseAction(selectedOjbect, null).run();
                 }
             }
 
