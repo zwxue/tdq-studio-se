@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -231,6 +232,10 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
     public boolean prepare() {
         TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
         this.defValue = ColumnHelper.getDefaultValue(tdColumn);
+        // MOD qiongli 2011-5-20 bug 21655,remove the redundant "\n" for default value on oracle db.
+        if (defValue != null) {
+            defValue = StringUtils.removeEnd(defValue, PluginConstant.ENTER_STRING);
+        }
         return super.prepare();
     }
 

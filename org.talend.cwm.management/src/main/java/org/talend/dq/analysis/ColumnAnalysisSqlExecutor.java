@@ -407,18 +407,25 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private boolean isFunction(String defValue, String table) {
         boolean ok = false;
+        Statement stat = null;
         try {
             String queryStmt = "select " + defValue + " from " + table;//$NON-NLS-1$//$NON-NLS-2$
             TypedReturnCode<Connection> conn = getConnection(cachedAnalysis);
             Connection conenction = conn.getObject();
 
-            // FIXME stat should be closed.
-            Statement stat = conenction.createStatement();
+            stat = conenction.createStatement();
             ok = stat.execute(queryStmt);
-            stat.close();
+            // MOD qiongli 2011-5-20,don't print error in error log view and use finnaly to close Statement.
         } catch (Exception e) {
-            log.error(e, e);
-	    ok = false;
+            ok = false;
+        } finally {
+            if (stat != null) {
+                try {
+                    stat.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return ok;
     }
