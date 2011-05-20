@@ -82,6 +82,8 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
             return;
         }
 
+        // MOD qiongli 2011-5-20 bug 21035,avoid to unload resource.
+        super.setAvoidUnloadResources(true);
         super.run();
 
         CorePlugin.getDefault().refreshDQView();
