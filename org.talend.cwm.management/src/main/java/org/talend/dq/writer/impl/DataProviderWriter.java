@@ -170,7 +170,9 @@ public class DataProviderWriter extends AElementPersistance {
             // MOD klliu 2011-02-15
             Project currentProject = ProjectManager.getInstance().getCurrentProject();
             ProxyRepositoryFactory.getInstance().save(currentProject, connItem);
-            updateDependencies(conn);
+
+            // Del by msjian bug 20875: error2 because two times updateDependencies()
+            // updateDependencies(conn);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
