@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
     <jar path="org.talend.designer.components.tdqprovider/components/tFirstnameMatch/org.talend.dataquality.standardization.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/org.talend.dataquality.standardization/jar_export.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
@@ -11,23 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.constant{PluginConstant.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{SynonymEngine.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.record{SynonymRecordSearcher.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLuceneImpl.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.record{OutputRecord.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{SynonymAnalyzer.java"/>
-        <file path="/org.talend.dataquality.standardization/META-INF/MANIFEST.MF"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{IndexBuilder.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{Error.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{SynonymFilter.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{SynonymIndexSearcher.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{WordNetSynonymEngine.java"/>
+        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java"/>
         <file path="/org.talend.dataquality.standardization/version.txt"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{SynonymIndexBuilder.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLuceneTest.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.main{HandleLucene.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.index{AllDocCollector.java"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.standardization/src\/main\/java&lt;org.talend.dataquality.standardization.query{FirstNameStandardize.java"/>
+        <folder path="/org.talend.dataquality.standardization/META-INF"/>
     </selectedElements>
 </jardesc>

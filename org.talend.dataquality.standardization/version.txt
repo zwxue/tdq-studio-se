@@ -1,4 +1,9 @@
-1.5.16 # sizhaoliu 2011/05/19
+1.5.18 # sizhaoliu 2011/05/23
+- moved Explainer class to test project.
+- included missing Messages classes in the jar.
+- added missing trim() when referencing document in update and delete method.
+
+1.5.17 # sizhaoliu 2011/05/19
 - added missed trim() for F_WORD during index creation.
 - added Explainer class of lucene scoring.  
 

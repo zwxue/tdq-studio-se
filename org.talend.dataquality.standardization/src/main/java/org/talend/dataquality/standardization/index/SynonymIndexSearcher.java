@@ -20,7 +20,6 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -108,6 +107,10 @@ public class SynonymIndexSearcher {
         if (word == null) {
             return null;
         }
+        word = word.trim();
+        if (word.equals("")) {
+            return null;
+        }
         TopDocs docs = null;
         try {
             Query query = createWordQueryFor(word);
@@ -141,7 +144,7 @@ public class SynonymIndexSearcher {
      */
     public int getSynonymCount(String word) {
         try {
-            Query query = createWordQueryFor(word);
+            Query query = createWordQueryFor(word.trim());
             TopDocs docs;
             docs = this.searcher.search(query, topDocLimit);
             if (docs.totalHits > 0) {
@@ -167,8 +170,6 @@ public class SynonymIndexSearcher {
         Document doc = null;
         try {
             doc = this.searcher.doc(docNum);
-        } catch (CorruptIndexException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

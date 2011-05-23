@@ -133,7 +133,7 @@ public class SynonymIndexBuilder {
             getWriter().addDocument(generateDocument(word, synonyms));
             return true;
         } // else
-        error.set(false, Messages.getString("SynonymIndexBuilder.aDocument", word));//$NON-NLS-1$
+        error.set(false, Messages.getString("SynonymIndexBuilder.aDocument", word.trim()));//$NON-NLS-1$
         return false;
     }
 
@@ -158,7 +158,7 @@ public class SynonymIndexBuilder {
             // error.set(false, "The document <" + word + "> doesn't exist. Cannot update.");
             break;
         case 1:
-            getWriter().updateDocument(new Term(F_WORD, word), generateDocument(word, synonyms));
+            getWriter().updateDocument(new Term(F_WORD, word.trim()), generateDocument(word, synonyms));
             nbUpdatedDocuments = 1;
             break;
         default:
@@ -185,10 +185,11 @@ public class SynonymIndexBuilder {
             error.set(false, Messages.getString("SynonymIndexBuilder.doesnotExsit", word));//$NON-NLS-1$
             return 0;
         case 1:
-            getWriter().deleteDocuments(new Term(F_WORD, word));
+            getWriter().deleteDocuments(new Term(F_WORD, word.trim()));
             // System.out.println("The document named <" + word + "> has been deleted.");
             return 1;
         default:
+            error.set(false, Messages.getString("SynonymIndexBuilder.documents", docs.totalHits, word));//$NON-NLS-1$
             break;
         }
         return 0;
@@ -215,7 +216,12 @@ public class SynonymIndexBuilder {
      */
     public int addSynonymToDocument(String word, String newSynonym) throws IOException {
         assert word != null;
-        if (newSynonym == null || newSynonym.length() == 0) {
+        if (newSynonym == null) {
+            return 0;
+        }
+        // trim synonym
+        newSynonym = newSynonym.trim();
+        if (newSynonym.length() == 0) {
             return 0;
         }
 
@@ -469,7 +475,8 @@ public class SynonymIndexBuilder {
      */
     private Document generateDocument(String word, List<String> synonyms) {
         Document doc = new Document();
-        Field field = new Field(F_WORD, word.trim(), Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
+        word = word.trim();
+        Field field = new Field(F_WORD, word, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
         field.setBoost(1.5F); // increase the importance of the reference word
         doc.add(field);
         // --- store entry also in synonym list so that we can search for it too
@@ -477,9 +484,12 @@ public class SynonymIndexBuilder {
         doc.add(createSynField(word));
         if (synonyms != null) {
             for (String syn : synonyms) {
-                if (syn != null && syn.length() > 0) {
-                    // add only non empty synonyms
-                    doc.add(createSynField(syn));
+                if (syn != null) {
+                    syn = syn.trim();
+                    if (syn.length() > 0) {
+                        // add only non empty synonyms
+                        doc.add(createSynField(syn));
+                    }
                 }
             }
         }
@@ -487,7 +497,7 @@ public class SynonymIndexBuilder {
     }
 
     private Field createSynField(String synonym) {
-        return new Field(F_SYN, synonym.trim(), Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);
+        return new Field(F_SYN, synonym, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);
     }
 
     /**
