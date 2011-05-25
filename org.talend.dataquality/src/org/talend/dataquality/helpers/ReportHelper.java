@@ -491,6 +491,8 @@ public final class ReportHelper {
      */
     public static void setAnalysisFilterDateFrom(TdReport report, String dateText) {
         if (dateText == null || dateText.trim().equals("")) {
+            // ADD by msjian 2011-5-25 20082: fixed the note 77437 when delete the date, the value should set to null
+            report.setDateFrom(null);
             return;
         }
         try {
@@ -512,6 +514,8 @@ public final class ReportHelper {
      */
     public static void setAnalysisFilterDateTo(TdReport report, String dateText) {
         if (dateText == null || dateText.trim().equals("")) {
+            // ADD by msjian 2011-5-25 20082: fixed the note 77437 when delete the date, the value should set to null
+            report.setDateTo(null);
             return;
         }
         try {
