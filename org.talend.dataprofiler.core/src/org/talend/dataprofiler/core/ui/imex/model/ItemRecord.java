@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.imex.model;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -22,20 +21,16 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.emf.FactoriesUtil.EElementEName;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -44,6 +39,8 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -58,8 +55,6 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 public class ItemRecord {
 
     private static Logger log = Logger.getLogger(ItemRecord.class);
-
-    private static final String JARFILEEXTENSION = "jar";//$NON-NLS-1$
 
     private File file;
 
@@ -94,50 +89,41 @@ public class ItemRecord {
             allItemRecords = new ArrayList<ItemRecord>();
         }
 
-        if (file != null && file.isFile()) {
-            allItemRecords.add(this);
+        try {
             initialize();
+        } catch (Exception e) {
+            String errorMessage = "Can't initialize element [" + getName() + "] : " + e.getMessage();
+            addError(errorMessage);
+            log.error(errorMessage);
         }
+
     }
 
     /**
      * DOC bZhou Comment method "initialize".
      */
     private void initialize() {
-        URI itemURI = URI.createFileURI(file.getAbsolutePath());
-        URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+        if (file != null && file.isFile()) {
+            if (!isJarFile()) {
+                URI itemURI = URI.createFileURI(file.getAbsolutePath());
+                URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-        if (ItemRecord.JARFILEEXTENSION.equals(itemURI.fileExtension())) {
-            return;
-        }
-        elementEName = EElementEName.findENameByExt(itemURI.fileExtension());
+                elementEName = EElementEName.findENameByExt(itemURI.fileExtension());
 
-        try {
-            if (property == null) {
-                Resource resource = resourceSet.getResource(propURI, true);
-                property = (Property) EcoreUtil
-                        .getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
-            }
+                if (property == null) {
+                    Resource resource = resourceSet.getResource(propURI, true);
+                    property = (Property) EcoreUtil.getObjectByType(resource.getContents(),
+                            PropertiesPackage.eINSTANCE.getProperty());
 
-            if (element == null && !isJRXml()) {
-                Resource resource = resourceSet.getResource(itemURI, true);
-                EList<EObject> contents = resource.getContents();
-                if (contents != null && !contents.isEmpty()) {
-                    if (property.getItem() instanceof ConnectionItem) {
-                        element = ((ConnectionItem) property.getItem()).getConnection();
-                    } else {
-                        EObject object = contents.get(0);
-                        element = (ModelElement) object;
+                    if (property != null) {
+                        element = PropertyHelper.getModelElement(property);
                     }
                 }
+
+                computeDependencies();
             }
-            computeDependencies();
-        } catch (Exception e) {
-            if (!isSQL()) {
-                String errorMessage = "Can't initialize element [" + getName() + "] : " + e.getMessage();//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                log.error(errorMessage);
-                this.errors.add(errorMessage);
-            }
+
+            allItemRecords.add(this);
         }
     }
 
@@ -207,30 +193,34 @@ public class ItemRecord {
                 }
             }
         } else if (element != null) {
-            List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
 
-            ModelElementHelper.iterateClientDependencies(element, dependencyElements);
             // MOD by zshen for bug 18724 2011.02.23
             TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, element.getTaggedValue());
             if (tv != null) {
-                for (IFile udiJarFile : UDIUtils.getLibJarFileList()) {
-                    if (Arrays.binarySearch(tv.getValue().split("\\|\\|"), udiJarFile.getName()) >= 0) {//$NON-NLS-1$
-                        dependencyMap.put(udiJarFile.getLocation().toFile(), null);
+                IPath libFolderPath = getFilePath().removeLastSegments(1).append("lib");
+                File libFolder = libFolderPath.toFile();
+                if (libFolder.exists()) {
+                    for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
+                        for (String str : tv.getValue().split("\\|\\|")) {//$NON-NLS-1$
+                            if (udiJarFile.getName().equals(str)) {
+                                dependencyMap.put(udiJarFile, null);
+                            }
+                        }
                     }
                 }
             }
-            for (ModelElement dElement : dependencyElements) {
 
-                EcoreUtil.resolveAll(dElement);
+            List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
 
-                if (!dElement.eIsProxy()) {
-                    URI dURI = dElement.eResource().getURI();
-                    Resource dResource = resourceSet.getResource(dURI, false);
+            ModelElementHelper.iterateClientDependencies(element, dependencyElements);
 
-                    if (dResource != null) {
-                        File depFile = new File(dResource.getURI().toFileString());
-                        dependencyMap.put(depFile, dElement);
-                    }
+            for (ModelElement depElement : dependencyElements) {
+
+                URI uri = EObjectHelper.getURI(depElement);
+
+                if (uri != null) {
+                    File depFile = new File(uri.toFileString());
+                    dependencyMap.put(depFile, depElement);
                 }
             }
         }
@@ -391,10 +381,7 @@ public class ItemRecord {
         IPath path = new Path(file.getAbsolutePath());
         IPath propPath = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-        File propFile = propPath.toFile();
-
-        return JARFILEEXTENSION.equals(path.getFileExtension()) || propFile.exists()
-                && !StringUtils.equals(path.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION);//$NON-NLS-1$
+        return FactoriesUtil.JAR.equals(path.getFileExtension()) || propPath.toFile().exists() && !propPath.equals(path);
     }
 
     /**
@@ -443,6 +430,10 @@ public class ItemRecord {
      */
     private boolean isSQL() {
         return file.getName().endsWith(FactoriesUtil.SQL);
+    }
+
+    private boolean isJarFile() {
+        return file.getName().endsWith(FactoriesUtil.JAR);
     }
 
     /**

@@ -447,7 +447,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                     DBConnectionRepNode node = (DBConnectionRepNode) element;
                     Integer selectIndex = metadataFormPage.getConnCombo().getSelectionIndex();
                     Integer connectionIndex = null;
-                    ModelElement modelelement = PropertyHelper.retrieveElement((node.getObject()).getProperty().getItem());
+                    ModelElement modelelement = PropertyHelper.getModelElement((node.getObject()).getProperty());
                     Object value = metadataFormPage.getConnCombo().getData(modelelement == null ? "" : modelelement.getName());
                     if (value != null && value instanceof Integer) {
                         connectionIndex = (Integer) value;

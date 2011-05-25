@@ -60,7 +60,6 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -410,10 +409,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
             modelElement = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedOjbect);
         } else if (selectedOjbect instanceof IRepositoryViewObject) {
             // MOD klliu 2010-10-08 bug 16173: get changes in "database compare" editor
-            ModelElement me = PropertyHelper.retrieveElement(((IRepositoryViewObject) selectedOjbect).getProperty().getItem());
-            if (me instanceof Connection) {
-                modelElement = me;
-            }
+            modelElement = PropertyHelper.getModelElement(((IRepositoryViewObject) selectedOjbect).getProperty());
 
         } else {
             // Folder

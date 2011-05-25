@@ -19,8 +19,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -39,6 +37,7 @@ import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -289,16 +288,31 @@ public final class UDIUtils {
      */
     public static List<IFile> getLibJarFileList() {
         List<IFile> fileList = new ArrayList<IFile>();
-        try {
-            for (org.eclipse.core.resources.IResource fileResource : ResourceManager.getUDIJarFolder().members()) {
-                if (IResource.FILE == fileResource.getType()
-                        && JAREXTENSIONG.equalsIgnoreCase(fileResource.getFullPath().getFileExtension())) {
-                    fileList.add((IFile) fileResource);
+
+        List<File> libJarFileList = getLibJarFileList(ResourceManager.getUDIJarFolder().getLocation().toFile());
+
+        for (File jarFile : libJarFileList) {
+            IFile ifile = WorkspaceUtils.fileToIFile(jarFile);
+            if (ifile.exists()) {
+                fileList.add(ifile);
+            }
+        }
+
+        return fileList;
+    }
+
+    public static List<File> getLibJarFileList(File udiJarFolder) {
+        List<File> fileList = new ArrayList<File>();
+
+        if (udiJarFolder.isDirectory()) {
+
+            for (File jarFile : udiJarFolder.listFiles()) {
+                if (jarFile.isFile() && jarFile.getName().endsWith(JAREXTENSIONG)) {
+                    fileList.add(jarFile);
                 }
             }
-        } catch (CoreException e) {
-            e.printStackTrace();
         }
+
         return fileList;
     }
 

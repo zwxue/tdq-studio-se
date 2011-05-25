@@ -29,8 +29,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.emf.FactoriesUtil.EElementEName;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.DelimitedFileConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -44,7 +42,6 @@ import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
-import org.talend.core.model.properties.util.PropertiesSwitch;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
@@ -178,9 +175,6 @@ public final class PropertyHelper {
      * @return property or null
      */
     public static Property getProperty(ModelElement element) {
-        if (element != null && element.eIsProxy()) {
-            element = (ModelElement) EObjectHelper.resolveObject(element);
-        }
         URI uri = element.eResource() == null ? null : element.eResource().getURI();
         if (uri != null) {
             if (uri.isPlatform()) {
@@ -241,21 +235,6 @@ public final class PropertyHelper {
         property.setItem(item);
 
         return property;
-    }
-
-    /**
-     * DOC bZhou Comment method "getTDQItem".
-     * 
-     * @param propertyFile
-     * @return Null if can't find.
-     */
-    public static TDQItem getTDQItem(IFile propertyFile) {
-        Property property = getProperty(propertyFile);
-        if (property != null) {
-            return (TDQItem) property.getItem();
-        }
-
-        return null;
     }
 
     /**
@@ -373,51 +352,6 @@ public final class PropertyHelper {
     }
 
     /**
-     * DOC bZhou Comment method "retrieveElement".
-     * 
-     * @param item
-     * @return
-     */
-    public static ModelElement retrieveElement(TDQItem item) {
-        URI itemURI = item.eResource().getURI();
-        URI elementURI = itemURI.trimSegments(1).appendSegment(item.getFilename());
-
-        Resource elementResource = item.eResource().getResourceSet().getResource(elementURI, false);
-        if (elementResource == null) {
-            elementResource = EMFSharedResources.getInstance().getResource(elementURI, true);
-            // ResourceSet resourceSet = new EMFUtil().getResourceSet();
-            // elementResource = resourceSet.getResource(elementURI, true);
-        }
-
-        return (ModelElement) elementResource.getContents().get(0);
-    }
-
-    /**
-     * DOC zshen Comment method "retrieveElement".
-     * 
-     * @param item
-     * @return
-     */
-    public static ModelElement retrieveElement(Item item) {
-        if (item == null) {
-            return null;
-        }
-        PropertiesSwitch propertiesSwitch = new PropertiesSwitch() {
-
-            @Override
-            public Object caseConnectionItem(ConnectionItem object) {
-                Connection connection = object.getConnection();
-                if (connection.getName() == null) {
-                    connection.setName(object.getProperty().getLabel());
-                }
-                return connection;
-            }
-
-        };
-        return (ModelElement) propertiesSwitch.doSwitch(item);
-    }
-
-    /**
      * DOC bZhou Comment method "extractProjectLabel".
      * 
      * This method is to extract the project technical label.
@@ -530,56 +464,56 @@ public final class PropertyHelper {
 
         assert item != null;
 
-        Object object = new org.talend.core.model.properties.util.PropertiesSwitch() {
+        ModelElement element = (ModelElement) new org.talend.core.model.properties.util.PropertiesSwitch() {
 
             @Override
             public Object caseDatabaseConnectionItem(DatabaseConnectionItem object) {
-                return ((DatabaseConnectionItem) object).getConnection();
+                return object.getConnection();
             }
 
             @Override
             public Object caseMDMConnectionItem(MDMConnectionItem object) {
-                return ((MDMConnectionItem) object).getConnection();
+                return object.getConnection();
             }
 
             @Override
             public Object caseDelimitedFileConnectionItem(DelimitedFileConnectionItem object) {
-                return ((DelimitedFileConnectionItem) object).getConnection();
+                return object.getConnection();
             }
 
         }.doSwitch(item);
 
-        if (object == null) {
-            object = new org.talend.dataquality.properties.util.PropertiesSwitch<Object>() {
+        if (element == null) {
+            element = new org.talend.dataquality.properties.util.PropertiesSwitch<ModelElement>() {
 
                 @Override
-                public Object caseTDQReportItem(TDQReportItem object) {
-                    return ((TDQReportItem) object).getReport();
+                public ModelElement caseTDQReportItem(TDQReportItem object) {
+                    return object.getReport();
                 }
 
                 @Override
-                public Object caseTDQAnalysisItem(TDQAnalysisItem object) {
-                    return ((TDQAnalysisItem) object).getAnalysis();
+                public ModelElement caseTDQAnalysisItem(TDQAnalysisItem object) {
+                    return object.getAnalysis();
                 }
 
                 @Override
-                public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
-                    return ((TDQBusinessRuleItem) object).getDqrule();
+                public ModelElement caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
+                    return object.getDqrule();
                 }
 
                 @Override
-                public Object caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
-                    return ((TDQIndicatorDefinitionItem) object).getIndicatorDefinition();
+                public ModelElement caseTDQIndicatorDefinitionItem(TDQIndicatorDefinitionItem object) {
+                    return object.getIndicatorDefinition();
                 }
 
                 @Override
-                public Object caseTDQPatternItem(TDQPatternItem object) {
-                    return ((TDQPatternItem) object).getPattern();
+                public ModelElement caseTDQPatternItem(TDQPatternItem object) {
+                    return object.getPattern();
                 }
 
             }.doSwitch(item);
         }
 
-        return object != null ? (ModelElement) object : null;
+        return element;
     }
 }

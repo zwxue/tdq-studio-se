@@ -331,8 +331,10 @@ public class ImportWizardPage extends WizardPage {
                 ModelElement element = record.getDependencyMap().get(depFile);
 
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
+
+                String dptLabel = element != null ? element.getName() : depFile.getName();
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
-                    dErrors.add("\"" + record.getName() + "\" miss dependency :" + element.getName());
+                    dErrors.add("\"" + record.getName() + "\" miss dependency :" + dptLabel);
                 }
             }
         }

@@ -108,7 +108,6 @@ public class FileSystemImportWriter implements IImportWriter {
 
             if (checkExisted) {
                 checkExisted(record);
-                checkConflict(record);
             }
 
             if (!record.isValid()) {
@@ -117,6 +116,29 @@ public class FileSystemImportWriter implements IImportWriter {
         }
 
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
+    }
+
+    /**
+     * DOC bZhou Comment method "checkExisted".
+     * 
+     * @param record
+     */
+    private void checkExisted(ItemRecord record) {
+        Property property = record.getProperty();
+        if (property != null) {
+            IPath itemPath = PropertyHelper.getItemPath(property);
+            if (itemPath != null) {
+                IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
+
+                if (itemFile.exists()) {
+                    record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());//$NON-NLS-1$ //$NON-NLS-2$ 
+                } else {
+                    checkConflict(record);
+                }
+            } else {
+                record.addError("\"" + record.getName() + "\" can't analyze the path ! ");//$NON-NLS-1$ //$NON-NLS-2$ 
+            }
+        }
     }
 
     /**
@@ -142,27 +164,6 @@ public class FileSystemImportWriter implements IImportWriter {
 
             } catch (Exception e) {
                 record.addError("\"" + record.getName() + "\" check item conflict failed!");//$NON-NLS-1$ //$NON-NLS-2$ 
-            }
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "checkExisted".
-     * 
-     * @param record
-     */
-    private void checkExisted(ItemRecord record) {
-        Property property = record.getProperty();
-        if (property != null) {
-            IPath itemPath = PropertyHelper.getItemPath(property);
-            if (itemPath != null) {
-                IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
-
-                if (itemFile.exists()) {
-                    record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());//$NON-NLS-1$ //$NON-NLS-2$ 
-                }
-            } else {
-                record.addError("\"" + record.getName() + "\" can't analyze the path ! ");//$NON-NLS-1$ //$NON-NLS-2$ 
             }
         }
     }
@@ -276,7 +277,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
             IFile desIFile = ResourceService.file2IFile(desFile);
 
-            if (isCovered) {
+            if (isCovered && FactoriesUtil.isEmfFile(desIFile.getFileExtension())) {
                 URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
                 EMFSharedResources.getInstance().reloadResource(uri);
             }

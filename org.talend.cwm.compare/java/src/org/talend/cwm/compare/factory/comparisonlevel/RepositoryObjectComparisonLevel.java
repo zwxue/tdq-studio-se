@@ -42,7 +42,7 @@ public class RepositoryObjectComparisonLevel extends DataProviderComparisonLevel
         Assert.isTrue(selectedObj instanceof IRepositoryViewObject, this.selectedObj
                 + " is not an instance of IRepositoryViewObject");//$NON-NLS-1$
         Connection returnValue = null;
-        ModelElement modelElement = PropertyHelper.retrieveElement(((IRepositoryViewObject) selectedObj).getProperty().getItem());
+        ModelElement modelElement = PropertyHelper.getModelElement(((IRepositoryViewObject) selectedObj).getProperty());
         if (modelElement instanceof Connection) {
             returnValue = (Connection) modelElement;
         }
@@ -51,7 +51,7 @@ public class RepositoryObjectComparisonLevel extends DataProviderComparisonLevel
 
     @Override
     protected boolean isValid() {
-        ModelElement modelElement = PropertyHelper.retrieveElement(((IRepositoryViewObject) selectedObj).getProperty().getItem());
+        ModelElement modelElement = PropertyHelper.getModelElement(((IRepositoryViewObject) selectedObj).getProperty());
         return modelElement instanceof Connection;
     }
 
