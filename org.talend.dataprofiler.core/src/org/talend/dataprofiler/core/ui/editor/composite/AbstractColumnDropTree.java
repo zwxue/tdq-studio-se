@@ -193,6 +193,11 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         Display.getCurrent().asyncExec(new Runnable() {
             public void run() {
                 tree.getColumn(0).setWidth(tree.getColumn(0).getWidth() + 1);
+            }
+        });
+        Display.getCurrent().asyncExec(new Runnable() {
+
+            public void run() {
                 tree.getColumn(0).setWidth(tree.getColumn(0).getWidth() - 1);
             }
         });
