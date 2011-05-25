@@ -73,6 +73,10 @@ public class TOPBrandingService implements IBrandingService {
         return true;
     }
 
+    public boolean isPoweredOnlyCamel() {
+        return false;
+    }
+
     public String getFullProductName() {
         return "Talend Open Profiler"; //$NON-NLS-1$
     }
