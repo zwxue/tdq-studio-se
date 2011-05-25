@@ -277,7 +277,8 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     protected void saveReloadResult() {
         // MOD klliu bug 15940 201-09-30
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(oldDataProvider);
+        // MOD msjian 2011-5-23 bug 20875: fix the issue2 error(because two times updateDependecy)
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(oldDataProvider, true);
         // PrvResourceFileHelper.getInstance().save(oldDataProvider);
     }
 
