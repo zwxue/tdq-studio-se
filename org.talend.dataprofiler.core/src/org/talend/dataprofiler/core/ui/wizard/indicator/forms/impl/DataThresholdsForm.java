@@ -86,7 +86,7 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
                 String min = lowerText.getText();
                 String max = higherText.getText();
-                if (!min.equals("") && !CheckValueUtils.isNumberWithNegativeValue(min)) { //$NON-NLS-1$
+                if (!min.equals("") && !CheckValueUtils.isRealNumberValue(min)) { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else if (CheckValueUtils.isAoverB(min, max)) {
                     updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
@@ -103,7 +103,7 @@ public class DataThresholdsForm extends AbstractIndicatorForm {
 
                 String max = higherText.getText();
                 String min = lowerText.getText();
-                if (!max.equals("") && !CheckValueUtils.isNumberWithNegativeValue(max)) { //$NON-NLS-1$
+                if (!max.equals("") && !CheckValueUtils.isRealNumberValue(max)) { //$NON-NLS-1$
                     updateStatus(IStatus.ERROR, MSG_ONLY_NUMBER);
                 } else if (CheckValueUtils.isAoverB(min, max)) {
                     updateStatus(IStatus.ERROR, UIMessages.MSG_LOWER_LESS_HIGHER);
