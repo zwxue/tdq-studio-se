@@ -12,11 +12,15 @@
 // ============================================================================
 package test.udi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
+import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
-import org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl;
+import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
+import org.talend.dataquality.indicators.sql.impl.JavaUserDefIndicatorImpl;
 
 /**
  * @author sizhaoliu
@@ -25,35 +29,46 @@ import org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl;
  * 
  * This example shows how to retrieve parameters from user interface of the indicator.
  */
-public class MyRegexIndicator extends UserDefIndicatorImpl {
+public class MyRegexIndicator extends JavaUserDefIndicatorImpl {
 
     private Pattern pattern;
 
     @Override
     public boolean prepare() {
         String paramValue = "";
-        // if (parameters != null) {
-        final Domain dataValidDomain = parameters.getIndicatorValidDomain();
-        if (dataValidDomain != null) {
-            for (JavaUDIIndicatorParameter param : dataValidDomain.getJavaUDIIndicatorParameter()) {
-                if (param != null) {
-                    if ("pattern".equals(param.getKey())) {
-                        paramValue = param.getValue();
-                        pattern = Pattern.compile(paramValue);
-                        System.err.println("pattern: " + paramValue);
+        List<Pattern> isSuitPatten = new ArrayList<Pattern>();
+        if (parameters != null) {
+            final Domain dataValidDomain = parameters.getIndicatorValidDomain();
+            if (dataValidDomain != null) {
+                for (JavaUDIIndicatorParameter param : dataValidDomain.getJavaUDIIndicatorParameter()) {
+                    if (param != null) {
+                        if ("index_path".equals(param.getKey())) {
+                            paramValue = param.getValue();
+                            pattern = Pattern.compile(paramValue);
+                            isSuitPatten.add(pattern);
+                        }
                     }
                 }
             }
+        } else {
+            EList<IndicatorDefinitionParameter> indicatorDefParameters = this.getIndicatorDefinition()
+                    .getIndicatorDefinitionParameter();
+            for (IndicatorDefinitionParameter indicatorDefinitionParameter : indicatorDefParameters) {
+                String key = indicatorDefinitionParameter.getKey();
+                if ("index_path".equals(key)) {
+                    paramValue = indicatorDefinitionParameter.getValue();
+                    pattern = Pattern.compile(paramValue);
+                    isSuitPatten.add(pattern);
+                }
+            }
+
         }
-        // } else {
-        // System.err.println("parameters is null");
-        // }
-        return super.prepare();
+        this.reset();
+        return !isSuitPatten.isEmpty();
     }
 
     @Override
     public boolean reset() {
-        super.reset();
         this.matchingValueCount = 0L;
         this.notMatchingValueCount = NOT_MATCHING_VALUE_COUNT_EDEFAULT;
         return true;
@@ -61,8 +76,8 @@ public class MyRegexIndicator extends UserDefIndicatorImpl {
 
     @Override
     public boolean handle(Object data) {
-        super.handle(data);
         if (data != null && pattern.matcher(data.toString()).matches()) {
+            // Fixme if the matchingValueCount is null, how to do this.
             matchingValueCount++;
         }
         return true;
@@ -89,6 +104,16 @@ public class MyRegexIndicator extends UserDefIndicatorImpl {
      */
     @Override
     public Long getUserCount() {
+        return this.matchingValueCount;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.sql.impl.JavaUserDefIndicatorImpl#getCount()
+     */
+    @Override
+    public Long getCount() {
         return this.matchingValueCount;
     }
 
