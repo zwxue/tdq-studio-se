@@ -58,7 +58,7 @@ public class MyAndRegexIndicator extends UserDefIndicatorImpl {
 
     @Override
     public boolean reset() {
-        super.reset();
+        super.reset(); // reset count and nullCount values
         matchingValueCount = 0L;
         notMatchingValueCount = NOT_MATCHING_VALUE_COUNT_EDEFAULT;
         return true;
@@ -66,13 +66,17 @@ public class MyAndRegexIndicator extends UserDefIndicatorImpl {
 
     @Override
     public boolean handle(Object data) {
+        // Check null value and increment count
         super.handle(data);
-        for (Pattern p : patternList) {
-            if (!p.matcher(data.toString()).matches()) {
-                return true;
+
+        if (data != null) {
+            for (Pattern p : patternList) {
+                if (!p.matcher(data.toString()).matches()) {
+                    return true;
+                }
             }
+            matchingValueCount++;
         }
-        matchingValueCount++;
         return true;
     }
 
