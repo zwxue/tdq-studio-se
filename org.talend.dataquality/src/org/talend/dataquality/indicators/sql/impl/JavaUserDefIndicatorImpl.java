@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
@@ -22,7 +23,7 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements JavaUserDefIndicator {
@@ -37,6 +38,7 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
         }
         return false;
     }
+
     @Override
     public boolean finalizeComputation() {
         if (isJavaEngine()) {
@@ -57,6 +59,8 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
     @Override
     public boolean prepare() {
         if (isJavaEngine()) {
+            // copy parameters of the judi as set by the user in the UI
+            javaUDI.setParameters(EcoreUtil.copy(getParameters()));
             return javaUDI.prepare();
         }
         return super.prepare();
@@ -294,6 +298,7 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected JavaUserDefIndicatorImpl() {
@@ -302,6 +307,7 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -340,6 +346,4 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
         return super.getCount();
     }
 
-    
-    
 } // JavaUserDefIndicatorImpl
