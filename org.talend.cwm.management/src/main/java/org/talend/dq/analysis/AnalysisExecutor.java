@@ -85,7 +85,16 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         String sql = createSqlStatement(analysis);
         if (sql == null) {
             return getReturnCode(false);
+        }  
+        
+        // ADD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
+        // note: this feature is not supported now, if support, delete this
+        if (errorMessage != null && !errorMessage.equals("")) {
+            if ("EXCEL".equals(dbms().getDbmsName())) {
+                return getReturnCode(true);
+            }
         }
+        // ~
 
         // --- run analysis
         boolean ok = false;
