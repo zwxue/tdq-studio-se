@@ -137,8 +137,7 @@ public final class ChartDatasetUtils {
      * @return a map [key -> aggregated values] where identifies a level of aggregation
      */
     private static Map<String, ValueAggregator> fillDataset(final EList<ModelElement> nominalColumns,
-            final List<Object[]> listRows,
-            final int firstNumericColumnIdx) {
+            final List<Object[]> listRows, final int firstNumericColumnIdx) {
         Map<String, ValueAggregator> valueAggregators = new HashMap<String, ValueAggregator>();
 
         int xPos = firstNumericColumnIdx;
@@ -147,24 +146,26 @@ public final class ChartDatasetUtils {
 
         for (int i = nominalColumns.size(); i > 0; i--) {
             String key = createKey(nominalColumns, i);
-            for (Object[] row : listRows) {
+            // ADD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
+            if (null != listRows) {
+                for (Object[] row : listRows) {
 
-                final Object xobj = row[xPos];
-                final Double xValue = xobj != null ? Double.valueOf(String.valueOf(xobj)) : null;
-                final Object yobj = row[yPos];
-                final Double yValue = yobj != null ? Double.valueOf(String.valueOf(yobj)) : null;
-                final Object zobj = row[zPos];
-                final Double zValue = zobj != null ? Double.valueOf(String.valueOf(zobj)) : null;
+                    final Object xobj = row[xPos];
+                    final Double xValue = xobj != null ? Double.valueOf(String.valueOf(xobj)) : null;
+                    final Object yobj = row[yPos];
+                    final Double yValue = yobj != null ? Double.valueOf(String.valueOf(yobj)) : null;
+                    final Object zobj = row[zPos];
+                    final Double zValue = zobj != null ? Double.valueOf(String.valueOf(zobj)) : null;
 
-                ValueAggregator valueAggregator = valueAggregators.get(key);
-                if (valueAggregator == null) {
-                    valueAggregator = new ValueAggregator();
-                    valueAggregators.put(key, valueAggregator);
+                    ValueAggregator valueAggregator = valueAggregators.get(key);
+                    if (valueAggregator == null) {
+                        valueAggregator = new ValueAggregator();
+                        valueAggregators.put(key, valueAggregator);
+                    }
+                    MultipleKey multipleKey = new MultipleKey(row, i);
+                    valueAggregator.addValue(multipleKey, new Double[] { xValue, yValue, zValue });
                 }
-                MultipleKey multipleKey = new MultipleKey(row, i);
-                valueAggregator.addValue(multipleKey, new Double[] { xValue, yValue, zValue });
             }
-
         }
 
         return valueAggregators;
@@ -182,19 +183,22 @@ public final class ChartDatasetUtils {
         int maxPos = firstDateColumnIdx + 1;
         for (int i = nominalColumns.size(); i > 0; i--) {
             String key = createKey(nominalColumns, i);
-            for (Object[] row : listRows) {
-                final Object minObj = row[minPos];
-                final Date minDate = minObj != null ? (Date) minObj : null;
-                final Object maxobj = row[maxPos];
-                final Date maxDate = maxobj != null ? (Date) maxobj : null;
+            // ADD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
+            if (null != listRows) {
+                for (Object[] row : listRows) {
+                    final Object minObj = row[minPos];
+                    final Date minDate = minObj != null ? (Date) minObj : null;
+                    final Object maxobj = row[maxPos];
+                    final Date maxDate = maxobj != null ? (Date) maxobj : null;
 
-                DateValueAggregate valueAggregator = valueAggregators.get(key);
-                if (valueAggregator == null) {
-                    valueAggregator = new DateValueAggregate();
-                    valueAggregators.put(key, valueAggregator);
+                    DateValueAggregate valueAggregator = valueAggregators.get(key);
+                    if (valueAggregator == null) {
+                        valueAggregator = new DateValueAggregate();
+                        valueAggregators.put(key, valueAggregator);
+                    }
+                    MultipleKey multipleKey = new MultipleKey(row, i);
+                    valueAggregator.addValue(multipleKey, new Date[] { minDate, maxDate });
                 }
-                MultipleKey multipleKey = new MultipleKey(row, i);
-                valueAggregator.addValue(multipleKey, new Date[] { minDate, maxDate });
             }
         }
         return valueAggregators;
