@@ -445,7 +445,9 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         }
         columnSetElementSection.setClient(sectionTableComp);
         // ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to avoid crash and add consistency.
-        setupTableGridDataLimitedSize(table, tableRows.size());
+        // MOD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
+        setupTableGridDataLimitedSize(table, tableRows != null ? tableRows.size() : 0);
+        // ~
         addColumnSorters(columnsElementViewer, table.getColumns(), this.buildSorter(tableRows));
         columnSetElementSection.setExpanded(false);
         return columnSetElementSection;
