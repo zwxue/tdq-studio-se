@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -1876,6 +1877,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             ((IndicatorEditor) this.getEditor()).setSaveActionButtonState(false);
             String message = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.classPathError");//$NON-NLS-1$
             MessageUI.openWarning(message);
+            return;
+        }
+
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        if(!checkWhithspace()){
+            MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
             return;
         }
         // ADD xqliu 2010-02-25 feature 11201

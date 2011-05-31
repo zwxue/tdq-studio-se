@@ -138,7 +138,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         if (!rc.isOk()) {
             MessageDialogWithToggle.openError(null,
                     DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
-        } else {
+        } else if(!checkWhithspace()){
+            MessageDialogWithToggle.openError(null,DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+        }else {
             super.doSave(monitor);
             try {
                 saveAnalysis();

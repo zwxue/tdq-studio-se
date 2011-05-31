@@ -47,6 +47,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -339,6 +340,11 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     @Override
     public void doSave(IProgressMonitor monitor) {
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        if(!checkWhithspace()){
+            MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+            return;
+        }
         super.doSave(monitor);
         if (savePattern()) {
             this.isDirty = false;

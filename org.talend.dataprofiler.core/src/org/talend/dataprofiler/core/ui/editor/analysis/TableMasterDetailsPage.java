@@ -365,6 +365,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         Composite sectionClient = toolkit.createComposite(dataFilterSection);
         dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
         dataFilterComp.addPropertyChangeListener(this);
+        addWhitespaceValidate(dataFilterComp.getDataFilterText());
         dataFilterSection.setClient(sectionClient);
     }
 

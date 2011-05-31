@@ -591,6 +591,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         Composite sectionClient = toolkit.createComposite(dataFilterSection);
         dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
         dataFilterComp.addPropertyChangeListener(this);
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        addWhitespaceValidate(dataFilterComp.getDataFilterText());
         dataFilterSection.setClient(sectionClient);
     }
 

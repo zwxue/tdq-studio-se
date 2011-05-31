@@ -165,6 +165,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             }
         });
 
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        addWhitespaceValidate(dataFilterComp.getDataFilterText());
         dataFilterSection.setClient(sectionClient);
     }
 

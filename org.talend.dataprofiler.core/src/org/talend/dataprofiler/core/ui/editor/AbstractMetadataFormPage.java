@@ -12,9 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -71,6 +74,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     // private static final String VERSION_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.version"); //$NON-NLS-1$
 
     private static final String STATUS_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.status"); //$NON-NLS-1$
+    
+    private static final String WHITESPACE_CHECK_MSG = DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace"); //$NON-NLS-1$
 
     protected Text nameText;
 
@@ -104,6 +109,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     private String metadataTitle;
 
     public String oldDataproviderName;
+
+    private Collection<Text> checkWhitespaceTextFields = new HashSet<Text>();
 
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -289,6 +296,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         });
 
+        addWhitespaceValidate(nameText, purposeText, descriptionText, authorText, purposeText);
         section.setClient(parent);
         return section;
     }
@@ -532,5 +540,45 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     public boolean isNameTextUpdate() {
         return modify;
+    }
+
+    /**
+     * ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+     * @param fields
+     */
+    public void addWhitespaceValidate(Text... fields) {
+        for (Text t : fields) {
+            validateWhithspace(t);
+            t.addModifyListener(new ModifyListener() {
+
+                public void modifyText(ModifyEvent e) {
+                    validateWhithspace((Text) e.widget);
+                }
+            });
+        }
+    }
+
+    private void validateWhithspace(Text field) {
+        if (field.getText().length() > 0 && PluginConstant.EMPTY_STRING.equals(field.getText().trim())) {
+            getManagedForm().getMessageManager().addMessage(WHITESPACE_CHECK_MSG, WHITESPACE_CHECK_MSG, null, IMessageProvider.ERROR, field);
+            checkWhitespaceTextFields.add(field);
+        } else {
+            getManagedForm().getMessageManager().removeMessage(WHITESPACE_CHECK_MSG, field);
+            checkWhitespaceTextFields.remove(field);
+        }
+    }
+
+    /**
+     * @return true if any text fields with validates contains whitespace. 
+     */
+    public boolean checkWhithspace() {
+        return 0 == getWhitespaceFields().size();
+    }
+    
+    /**
+     * @return whitespace contained fields
+     */
+    public Collection<Text> getWhitespaceFields(){
+        return checkWhitespaceTextFields;
     }
 }

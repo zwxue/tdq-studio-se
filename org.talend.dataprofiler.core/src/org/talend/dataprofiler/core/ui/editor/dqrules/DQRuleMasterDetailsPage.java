@@ -259,7 +259,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
         data = new GridData(GridData.FILL_BOTH);
         data.heightHint = 180;
         whereText.setLayoutData(data);
-
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        addWhitespaceValidate(criticalityLevelText, whereText);
         addModifyListeners();
 
         dqRuleDefinitionSection.setClient(newComp);
@@ -268,6 +269,12 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     @Override
     public void doSave(IProgressMonitor monitor) {
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        if(!checkWhithspace()){
+            MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+            return;
+        }
+
         super.doSave(monitor);
         if (saveDQRule()) {
             this.isDirty = false;

@@ -462,6 +462,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     @Override
     public void doSave(IProgressMonitor monitor) {
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        if(!checkWhithspace()){
+            MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+            return;
+        }
         boolean checkDBConnection = checkDBConnectionWithProgress().isOk();
         if (!checkDBConnection) {
             String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");//$NON-NLS-1$

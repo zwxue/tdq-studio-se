@@ -223,6 +223,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             }
         });
 
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        addWhitespaceValidate(dataFilterCompA.getDataFilterText(), dataFilterCompB.getDataFilterText());
         dataFilterSection.setClient(sectionClient);
     }
 
