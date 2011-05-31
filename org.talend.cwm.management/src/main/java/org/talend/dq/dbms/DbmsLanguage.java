@@ -128,6 +128,8 @@ public class DbmsLanguage {
      */
     private String dbQuoteString = ""; //$NON-NLS-1$
 
+    private String functionName = ""; //$NON-NLS-1$ 
+
     /**
      * DbmsLanguage constructor for generic ANSI SQL (independent of any DBMS).
      */
@@ -1335,5 +1337,13 @@ public class DbmsLanguage {
      */
     public boolean isSql() {
         return SQL.equals(getDbmsName());
+    }
+
+    public String getFunctionName() {
+        return this.functionName;
+    }
+
+    public void setFunctionName(String functionName) {
+        this.functionName = functionName;
     }
 }

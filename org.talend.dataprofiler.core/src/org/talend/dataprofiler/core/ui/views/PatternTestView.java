@@ -35,6 +35,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -51,8 +52,11 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.impl.DatabaseConnectionImpl;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -95,9 +99,13 @@ public class PatternTestView extends ViewPart {
 
     private CCombo dbCombo;
 
+    private static Text functionNameText;
+
     private Text testText, regularText;
 
     Button sqlButton, testButton;
+
+    private Label textAreaLabel, regularLabel;
 
     Button buttonJava, buttonSql;
 
@@ -110,6 +118,8 @@ public class PatternTestView extends ViewPart {
     private Label emoticonLabel;
 
     private Label resultLabel;
+
+    private Label functionLabel;
 
     private Pattern pattern;
 
@@ -135,11 +145,11 @@ public class PatternTestView extends ViewPart {
         GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
         layout.marginWidth = 0;
-        layout.numColumns = 1;
+        // layout.numColumns = 1;
         composite.setLayout(layout);
         Composite coboCom = new Composite(composite, SWT.NONE);
         layout = new GridLayout();
-        layout.numColumns = 3;
+        layout.numColumns = 5;
         coboCom.setLayout(layout);
         GridData data = new GridData();
         data.horizontalAlignment = GridData.CENTER;
@@ -181,21 +191,21 @@ public class PatternTestView extends ViewPart {
         data.widthHint = 100;
         // data.heightHint = 100;
         dbCombo.setLayoutData(data);
-        // IFolder folder = ResourceManager.getConnectionFolder();
 
-        listTdDataProviders = RepositoryNodeHelper.getDBConnectionRepositoryNodes(true);
+        // MOD gdbu 2011-5-31 bug : 19119
+        functionLabel = new Label(coboCom, SWT.NONE);
+        functionLabel.setText(DefaultMessagesImpl.getString("PatternTestView.FunctionName"));//$NON-NLS-1$ 
+        functionNameText = new Text(coboCom, SWT.BORDER);
+        functionNameText.setText(PluginConstant.EMPTY_STRING);
 
-        List<String> items = new ArrayList<String>();
-        for (IRepositoryNode connRepNode : listTdDataProviders) {
-            ConnectionItem connItem = (ConnectionItem) connRepNode.getObject().getProperty().getItem();
-            items.add(connItem.getConnection().getName());
-        }
-        if (!items.isEmpty()) {
-            dbCombo.setItems(items.toArray(new String[0]));
-            if (dbCombo.getText().equals("")) { //$NON-NLS-1$
-                dbCombo.setText(items.get(0));
-            }
-        }
+        GridData functionNameTextGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        functionNameTextGD.widthHint = 180;
+        functionNameText.setLayoutData(functionNameTextGD);
+
+        functionNameText.setVisible(false);
+        functionLabel.setVisible(false);
+        // ~19119
+
         Composite imgCom = new Composite(composite, SWT.NONE);
         imgCom.setLayout(layout);
         data = new GridData();
@@ -214,7 +224,8 @@ public class PatternTestView extends ViewPart {
         resultLabel = new Label(imgCom, SWT.NONE);
         resultLabel.setLayoutData(gd);
 
-        Label textAreaLabel = new Label(composite, SWT.NONE);
+        // MOD gdbu 2011-5-31 bug : 19119
+        textAreaLabel = new Label(composite, SWT.NONE);
         textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$
         testText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         data = new GridData(GridData.FILL_HORIZONTAL);
@@ -222,7 +233,17 @@ public class PatternTestView extends ViewPart {
         testText.setLayoutData(data);
         testText.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.enterHere")); //$NON-NLS-1$
 
-        Label regularLabel = new Label(composite, SWT.NONE);
+        GridData textAreaLabelGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        textAreaLabelGD.widthHint = 180;
+        textAreaLabel.setLayoutData(textAreaLabelGD);
+
+        regularLabel = new Label(composite, SWT.NONE);
+        regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
+        GridData regularLabelGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        regularLabelGD.widthHint = 1000;
+        regularLabel.setLayoutData(regularLabelGD);
+        // ~19119
+
         regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$
         this.regularText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         this.regularText.setLayoutData(data);
@@ -283,6 +304,9 @@ public class PatternTestView extends ViewPart {
                     language = regularExpression.getExpression().getLanguage();
                 } else {
                     DbmsLanguage dbmsLanguage = getDbmsLanguage();
+                    // MOD gdbu 2011-5-13 bug : 19119
+                    dbmsLanguage.setFunctionName(getFunctionName());
+                    // ~19119
                     if (dbmsLanguage != null) {
                         language = dbmsLanguage.getDbmsName();
                     }
@@ -323,6 +347,10 @@ public class PatternTestView extends ViewPart {
         scrolledComposite.setMinSize(mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         mainComposite.layout();
         activateContext();
+
+        // MOD gdbu 2011-5-31 bug : 19119
+        fillComboData();
+        // ~19119
     }
 
     /**
@@ -379,6 +407,9 @@ public class PatternTestView extends ViewPart {
                 Connection tddataprovider = connItem.getConnection();
                 if (tddataprovider.getName().equals(dbCombo.getText())) {
                     DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
+                    // MOD gdbu 2011-5-31 bug : 19119
+                    createDbmsLanguage.setFunctionName(getFunctionName());
+                    // ~19119
                     String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
                             regularText.getText());
                     TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(tddataprovider);
@@ -475,6 +506,9 @@ public class PatternTestView extends ViewPart {
         IEditorPart findEditor = page.findEditor(openSqlFileAction.getEditorInput());
 
         DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
+        // MOD gdbu 2011-5-31 bug : 19119
+        dbmsLanguage.setFunctionName(getFunctionName());
+        // ~19119
         if (dbmsLanguage != null) {
             String selectRegexpTestString = dbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText.getText());
 
@@ -493,6 +527,9 @@ public class PatternTestView extends ViewPart {
         if (pattern != null) {
             String expressionLanguage = this.regularExpression.getExpression().getLanguage();
             DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
+            // MOD gdbu 2011-5-31 bug : 19119
+            dbmsLanguage.setFunctionName(getFunctionName());
+            // ~19119
             // MOD qiongli 2011-1-7 featrue 16799.
             boolean isLanguageMatched = false;
             if (isJavaEngine && expressionLanguage.equals(ExecutionLanguage.JAVA.getLiteral()) || dbmsLanguage != null
@@ -564,5 +601,131 @@ public class PatternTestView extends ViewPart {
             }
         }
         return null;
+    }
+
+    /**
+     * MOD gdbu 2011-5-31 bug : 19119
+     * 
+     * DOC gdbu Comment method "fillComboData".
+     * 
+     * In this method, we have done several things , e.g. 1:get the combo's data , and then set those data in combo.
+     * 2:according to the value of combo(dbCombo.getText()) to determine if display the
+     * functionInfo(functionText,functionLabel). 3:add SelectionListener to combo.
+     * 
+     */
+    private void fillComboData() {
+        listTdDataProviders = RepositoryNodeHelper.getDBConnectionRepositoryNodes(true);
+        List<String> items = new ArrayList<String>();
+        for (IRepositoryNode tdDataProvider : listTdDataProviders) {
+            items.add(tdDataProvider.getLabel());
+        }
+        if (!items.isEmpty()) {
+            dbCombo.setItems(items.toArray(new String[0]));
+            if (dbCombo.getText().equals(PluginConstant.EMPTY_STRING)) {
+                dbCombo.setText(items.get(0));
+            }
+            if (!dbCombo.getText().equals(PluginConstant.EMPTY_STRING)) {
+                Connection dbConnectionName = getDBConnectionFromDBName(dbCombo.getText());
+                if (dbConnectionName != null) {
+                    setFunctionTextVisibleFromDBCOnn(dbConnectionName);
+                }
+            }
+        }
+        createDBComboListener();
+    }
+
+    /**
+     * MOD gdbu 2011-5-31 bug : 19119
+     * 
+     * DOC gdbu Comment method "createDBComboListiner".
+     * 
+     * used to add dbCombo's Selectionlistener.
+     */
+    private void createDBComboListener() {
+        dbCombo.addSelectionListener(new SelectionListener() {
+
+            public void widgetDefaultSelected(SelectionEvent arg0) {
+            }
+
+            public void widgetSelected(SelectionEvent arg0) {
+                for (IRepositoryNode node : listTdDataProviders) {
+                    Item item = node.getObject().getProperty().getItem();
+                    if (item instanceof ConnectionItem) {
+                        setFunctionTextVisibleFromDBCOnn(((ConnectionItem) item).getConnection());
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * MOD gdbu 2011-5-31 bug : 19119
+     * 
+     * DOC gdbu Comment method "dddd".
+     * 
+     * @param tdDataProvider
+     */
+    private void setFunctionTextVisibleFromDBCOnn(Connection tdDataProvider) {
+        if (tdDataProvider.getName().equals(dbCombo.getText())) {
+            if (SupportDBUrlType.MSSQL2008URL.getDBKey().equals(((DatabaseConnectionImpl) tdDataProvider).getDatabaseType())) {
+                setFunctionInfoVisible(true);
+
+            } else if (SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(
+                    ((DatabaseConnectionImpl) tdDataProvider).getDatabaseType())) {
+                setFunctionInfoVisible(true);
+            } else {
+                setFunctionInfoVisible(false);
+            }
+        }
+    }
+
+    /**
+     * MOD gdbu 2011-5-31 bug : 19119
+     * 
+     * DOC gdbu Comment method "setFunctionInfoVisible".
+     * 
+     * used to set functionLabel(Label) and functionName(Text)'s visible.
+     * 
+     * @param visible
+     */
+    private void setFunctionInfoVisible(boolean visible) {
+        functionLabel.setVisible(visible);
+        functionNameText.setVisible(visible);
+        if (visible) {
+            textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.areaParameterOne")); //$NON-NLS-1$ 
+            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameterTwo")); //$NON-NLS-1$ 
+        } else {
+            textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$ 
+            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
+        }
+    }
+
+    /**
+     * MOD gdbu 2011-5-31 bug : 19119
+     * 
+     * DOC gdbu Comment method "getDBConnectionFromDBName".
+     * 
+     * @param dbName
+     * @return
+     */
+    private Connection getDBConnectionFromDBName(String dbName) {
+        for (IRepositoryNode node : listTdDataProviders) {
+            if (node.getLabel().equals(dbName)) {
+                Item item = node.getObject().getProperty().getItem();
+                if (item instanceof ConnectionItem) {
+                    return ((ConnectionItem) item).getConnection();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * DOC gdbu Comment method "getFunctionName".
+     * 
+     * @return
+     */
+    public static String getFunctionName() {
+        return functionNameText.getText();
     }
 }
