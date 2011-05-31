@@ -31,6 +31,8 @@ public final class PluginConstant {
 
     public static final String ENTER_STRING = "\n";//$NON-NLS-1$
 
+    public static final String SINGLE_QUOTE = "\'";//$NON-NLS-1$
+
     private PluginConstant() {
 
     }
