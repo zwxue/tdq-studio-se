@@ -5,19 +5,28 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.utils.dates.DateUtils;
+import org.talend.utils.sql.Java2SqlType;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Def Value Count Indicator</b></em>'. <!--
@@ -54,6 +63,8 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
     protected Long defaultValCount = DEFAULT_VAL_COUNT_EDEFAULT;
 
     protected String defValue = null;
+
+    protected boolean isOracle = false;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -213,9 +224,23 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
         }
 
         String str = data.toString();
-        if (StringUtils.equals(str, this.defValue)) {
-            mustStoreRow = true;
-            this.defaultValCount++;
+        // MOD qiongli 2011-5-31 bug 21655,handle oracle date type.
+        try {
+            boolean isMatch = false;
+            if (isOracle && data instanceof Date) {
+                Date timeData = (Date) data;
+                if (timeData.compareTo(DateFormat.getDateInstance().parse(defValue)) == 0) {
+                    isMatch = true;
+                }
+            } else if (StringUtils.equals(str, defValue)) {
+                isMatch = true;
+            }
+            if (isMatch) {
+                mustStoreRow = true;
+                this.defaultValCount++;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         return ok;
@@ -232,11 +257,46 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
     public boolean prepare() {
         TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
         this.defValue = ColumnHelper.getDefaultValue(tdColumn);
-        // MOD qiongli 2011-5-20 bug 21655,remove the redundant "\n" for default value on oracle db.
-        if (defValue != null) {
-            defValue = StringUtils.removeEnd(defValue, PluginConstant.ENTER_STRING);
+        // MOD qiongli 2011-5-31 bug 21655,if it is oracle db,need to handel the default value.
+        Connection connection = ConnectionHelper.getConnection(tdColumn);
+        if (SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection) != null) {
+            String databaseType = ((DatabaseConnection) connection).getDatabaseType();
+            if (databaseType != null && databaseType.contains("Oracle")) {
+                isOracle = true;
+            }
+        }
+
+        if (isOracle && defValue != null) {
+            getDefValueForOracle(tdColumn);
         }
         return super.prepare();
     }
 
+    /**
+     * 
+     * DOC qiongli:handle default value and get the right value.
+     * 
+     * @param tdColumn
+     */
+    protected void getDefValueForOracle(TdColumn tdColumn) {
+        // MOD qiongli 2011-5-31 bug 21655,remove the redundant "\n" or "\'" and handle the date type for default value
+        // on oracle db.
+        defValue = StringUtils.removeEnd(defValue, PluginConstant.ENTER_STRING);
+        try {
+            if (Java2SqlType.isTextInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defValue.length() > 1
+                    && (defValue.startsWith(PluginConstant.SINGLE_QUOTE) && defValue.endsWith(PluginConstant.SINGLE_QUOTE))) {
+                defValue = defValue.substring(1, defValue.length() - 1);
+            } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defValue.startsWith("to_date(")) {
+                String[] array = StringUtils.split(defValue, PluginConstant.SINGLE_QUOTE);
+                if (array.length > 3) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(array[3]);
+                    defValue = simpleDateFormat.format(DateUtils.parse(array[3], array[1]));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 } // DefValueCountIndicatorImpl
+
