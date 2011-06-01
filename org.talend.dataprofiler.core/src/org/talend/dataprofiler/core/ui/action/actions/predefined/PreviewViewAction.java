@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions.predefined;
 import java.util.Collection;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
+import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
@@ -72,25 +73,31 @@ public class PreviewViewAction extends Action {
         Collection<Alias> aliases = default1.getAliasManager().getAliases();
         Connection tdDataProvider = ConnectionHelper.getDataProvider(view);
         String url = JavaSqlFactory.getURL(tdDataProvider);
+        // MOD gdbu 2011-6-1 bug : 19515
+        String qualifiedName = getTableQualifiedName(tdDataProvider);
+        String query = "select * from " + qualifiedName; //$NON-NLS-1$ 
+        String connectionName = tdDataProvider.getName();
+        User defaultUser = null;
         for (Alias alias : aliases) {
             if (alias.getUrl().equals(url)) {
-                String qualifiedName = getTableQualifiedName(tdDataProvider);
-                String query = "select * from " + qualifiedName; //$NON-NLS-1$
-                SQLEditorInput input = new SQLEditorInput("SQL Editor (" + SQLExplorerPlugin.getDefault().getEditorSerialNo() //$NON-NLS-1$
-                        + ").sql"); //$NON-NLS-1$
-                input.setUser(alias.getDefaultUser());
-                try {
-                    IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
-                            .getActivePage();
-                    SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
-                    editorPart.setText(query);
-                    ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
-                    execSQLAction.run();
-                } catch (PartInitException e) {
-                    log.error(e, e);
-                }
+                defaultUser = alias.getDefaultUser();
             }
         }
+        if (null == defaultUser) {
+            return;
+        }
+        SQLEditorInput input = new SQLEditorInput("SQL Editor (" + connectionName + "." + qualifiedName + ").sql"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ 
+        input.setUser(defaultUser);
+        try {
+            IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+            editorPart.setText(query);
+            ExecSQLAction execSQLAction = new ExecSQLAction(editorPart);
+            execSQLAction.run();
+        } catch (PartInitException e) {
+            log.error(e, e);
+        }
+        // ~19515
     }
 
     /**
