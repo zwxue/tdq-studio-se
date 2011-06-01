@@ -1152,9 +1152,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // TDQ Guodong bu 2011-2-25, feature 19107
         boolean ok = true;
         List<ExecutiveAnalysisJob> excuteAnalysisJober = new ArrayList<ExecutiveAnalysisJob>();
+        // MOD gdbu 2011-6-1 bug : 21273
+        TypedReturnCode<Connection> trcConn = null;
         for (Indicator indicator : indicators) {
-            // create a new Connection for each ColumnAnalysisSqlParallelExecutor
-            TypedReturnCode<Connection> trcConn = this.getConnection(analysis);
+            if (null == trcConn || !trcConn.isOk()) {
+                trcConn = this.getConnection(analysis);
+            }
             if (trcConn.isOk()) {
                 ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(this, trcConn.getObject(), elementToIndicator, indicator);
                 excuteAnalysisJober.add(eaj);
@@ -1172,6 +1175,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 ok = false;
             }
         }
+        if (null != trcConn && null != trcConn.getObject() && !trcConn.getObject().isClosed()) {
+            trcConn.getObject().close();
+        }
+        // ~21273
         return ok;
         // ~
     }
