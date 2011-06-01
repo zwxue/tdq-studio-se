@@ -16,7 +16,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.Map;
@@ -486,8 +485,7 @@ public final class TopChartFactory {
         StackedBarRenderer sbr = (StackedBarRenderer) plot.getRenderer();
         sbr.setBaseItemLabelsVisible(true);
         sbr.setRenderAsPercentages(true);
-        sbr.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{3}", NumberFormat.getIntegerInstance(), //$NON-NLS-1$
-                new DecimalFormat("0.00%"))); //$NON-NLS-1$
+        sbr.setBaseItemLabelGenerator(new DQRuleItemLabelGenerator("{3}", NumberFormat.getIntegerInstance())); //$NON-NLS-1$
         sbr.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
         // ADD xqliu 2010-03-10 feature 10834
         sbr.setBaseToolTipGenerator(new DQRuleToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat.getInstance()));
