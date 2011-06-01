@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -48,7 +50,10 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -59,6 +64,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -414,6 +420,53 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     public void updateAnalysisClientDependency() {
         DependenciesHandler.getInstance().updateAnalysisClientDependencyConnection(analysis);
+    }
+
+    /**
+     * ADD gdbu 2011-6-1 bug : 19833
+     * 
+     * DOC gdbu Comment method "updateDQRuleDependency".
+     * 
+     * @param dqRules
+     */
+    protected void updateDQRuleDependency(List<DQRule> dqRules) {
+        for (DQRule dqRule : dqRules) {
+            List<Dependency> realSupplierDependency = new ArrayList<Dependency>();
+            EList<Dependency> supplierDependency = dqRule.getSupplierDependency();
+            for (Dependency dependency : supplierDependency) {
+                EList<ModelElement> client = dependency.getClient();
+                for (ModelElement modelElement : client) {
+                    if (modelElement instanceof Analysis) {
+                        List<DQRule> dqRules2 = getDqRules((Analysis) modelElement);
+                        if (dqRules2.contains(dqRule)) {
+                            realSupplierDependency.add(dependency);
+                        }
+                    }
+                }
+            }
+            supplierDependency.clear();
+            supplierDependency.addAll(realSupplierDependency);
+        }
+    }
+
+    /**
+     * ADD gdbu 2011-6-1 bug : 19833
+     * 
+     * DOC gdbu Comment method "getDqRules". Get all DQRule from analysis.
+     * 
+     * @param analysis
+     * @return
+     */
+    public List<DQRule> getDqRules(Analysis analysis) {
+        List<DQRule> result = new ArrayList<DQRule>();
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        for (Indicator indicator : indicators) {
+            IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+            if (indicatorDefinition instanceof DQRule) {
+                result.add((DQRule) indicatorDefinition);
+            }
+        }
+        return result;
     }
 
     /**

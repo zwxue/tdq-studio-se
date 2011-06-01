@@ -85,6 +85,7 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.analysis.TableAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -620,7 +621,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     @Override
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD gdbu 2011-3-3 bug 19179
-
+        List<DQRule> oldDqRules = getDqRules(analysis);
         // remove the space from analysis name
         analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
@@ -684,6 +685,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + urlString + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
             }
+            // ADD gdbu 2011-6-1 bug 19833
+            this.updateDQRuleDependency(oldDqRules);
+            // ~
         } else {
             throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
                     "TableMasterDetailsPage.problem", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
