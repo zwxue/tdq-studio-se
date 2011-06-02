@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -157,6 +158,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     private SashForm sForm;
 
     private Composite previewComp;
+
+    private UIPagination uiPagination;
 
     public ColumnMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -485,8 +488,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         previewChartList = new ArrayList<ExpandableComposite>();
 
         final ModelElementIndicator[] modelElementIndicatores = treeViewer.getModelElementIndicator();
-        // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
-        UIPagination uiPagination = new UIPagination(toolkit, composite);
+        uiPagination = new UIPagination(toolkit, composite);
         int pageSize = IndicatorPaginationInfo.getPageSize();
         int totalPages = modelElementIndicatores.length / pageSize;
         List<ModelElementIndicator> modelElementIndicators = null;
@@ -899,6 +901,35 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             currentEditor.setRefreshResultPage(true);
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.analysisHandler.setStringDataFilter((String) evt.getNewValue());
+        } else if (PluginConstant.EXPAND_TREE.equals(evt.getPropertyName())) {
+
+            ModelElementIndicator indicator = (ModelElementIndicator) ((Widget) evt.getNewValue())
+                    .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
+
+            expandChart(indicator);
+        }
+    }
+
+    /**
+     * DOC yyi 2011-06-02 16929:expand the selected column in the graphical chart.
+     * 
+     * @param indicator
+     */
+    protected void expandChart(ModelElementIndicator indicator) {
+        int columnIndex = indexOfSelectedItem(indicator);
+        if (-1 != columnIndex) {
+            int pageIndex = (columnIndex % IndicatorPaginationInfo.getPageSize() > 0 ? columnIndex
+                    / IndicatorPaginationInfo.getPageSize() + 1 : columnIndex / IndicatorPaginationInfo.getPageSize());
+            uiPagination.setCurrentPage(pageIndex);
+
+            if (previewChartList != null && !previewChartList.isEmpty()) {
+                for (ExpandableComposite comp : previewChartList) {
+                    if (comp.getData() != indicator) {
+                        comp.setExpanded(false);
+                        comp.getParent().pack();
+                    }
+                }
+            }
         }
     }
 
@@ -909,6 +940,20 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     // this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
     // }
     // }
+
+    /**
+     * DOC yyi 2011-06-02 16929:get index of the column selected in the tree viewer.
+     */
+    protected int indexOfSelectedItem(ModelElementIndicator data) {
+        int index = -1;
+        for (int i = 0; i < treeViewer.getModelElementIndicator().length; i++) {
+            if (data == treeViewer.getModelElementIndicator()[i]) {
+                index = i + 1;
+                break;
+            }
+        }
+        return index;
+    }
 
     @Override
     public boolean isDirty() {
@@ -1112,5 +1157,4 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             dataFilterComp.getDataFilterText().setEnabled(false);
         }
     }
-
 }

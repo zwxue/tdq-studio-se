@@ -385,4 +385,9 @@ public class UIPagination {
     public Viewer getBandingViewer() {
         return this.bandingViewer;
     }
+
+    public void setCurrentPage(int pageNumber) {
+        pageGoText.setText(String.valueOf(pageNumber));
+        go();
+    }
 }

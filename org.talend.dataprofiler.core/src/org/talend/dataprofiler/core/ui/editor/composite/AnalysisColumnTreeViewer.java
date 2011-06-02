@@ -810,12 +810,16 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             @Override
             public void treeExpanded(TreeEvent e) {
+
+
                 ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
                 ScrolledForm form = masterPage.getForm();
                 Composite comp = masterPage.getChartComposite();
 
                 if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
                     theSuitedComposite.setExpanded(true);
+                } else {
+                    propertyChangeSupport.firePropertyChange(PluginConstant.EXPAND_TREE, null, e.item);
                 }
 
                 comp.layout();
