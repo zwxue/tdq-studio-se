@@ -37,7 +37,6 @@ public class MyOrRegexIndicator extends UserDefIndicatorImpl {
 
     @Override
     public boolean prepare() {
-        this.reset();
         String paramValue;
         Pattern pattern;
         if (parameters != null) {
@@ -54,7 +53,7 @@ public class MyOrRegexIndicator extends UserDefIndicatorImpl {
                 }
             }
         }
-        return !patternList.isEmpty();
+        return super.prepare();
     }
 
     @Override
