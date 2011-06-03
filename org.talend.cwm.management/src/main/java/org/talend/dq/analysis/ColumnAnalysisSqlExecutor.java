@@ -205,9 +205,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 return traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
             }
 
-            return traceError(Messages
-                    .getString(
-                            "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()), ResourceHelper.getUUID(indicatorDefinition)));//$NON-NLS-1$
+            traceError(Messages.getString(
+                    "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", new Object[] {//$NON-NLS-1$
+                    (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
+                            ResourceHelper.getUUID(indicatorDefinition), language }));
         }
 
         // --- get indicator parameters and convert them into sql expression

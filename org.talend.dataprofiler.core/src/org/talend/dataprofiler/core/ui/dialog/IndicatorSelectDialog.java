@@ -536,7 +536,9 @@ public class IndicatorSelectDialog extends TrayDialog {
                         if (null != indicatorNode.getIndicatorInstance()
                                 && !(indicatorNode.getIndicatorInstance() instanceof DatePatternFreqIndicator)
                                 && null != indicatorNode.getIndicatorInstance().getIndicatorDefinition()
-                                && dbms.getSqlExpression(indicatorNode.getIndicatorInstance().getIndicatorDefinition()) == null
+                                // MOD zshen 2011.06.01 make indicator can be select although can not found one
+                                // expression for the database on hte definition.
+                                && indicatorNode.getIndicatorInstance().getIndicatorDefinition().getSqlGenericExpression().size() < 1
                                 && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)) {
                             checkButton.setEnabled(false);
                         }
