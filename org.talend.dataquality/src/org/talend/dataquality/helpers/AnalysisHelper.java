@@ -169,7 +169,7 @@ public final class AnalysisHelper {
                     continue;
                 }
                 if (i == index) {
-                    return expression.getBody();
+                    return expression.getBody().trim();
                 } else if (i > index) {
                     return null;
                 }
