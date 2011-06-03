@@ -38,6 +38,7 @@ import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
@@ -46,6 +47,7 @@ import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
@@ -300,15 +302,14 @@ public final class DQStructureComparer {
         // MOD xqliu 2010-03-29 bug 11951 have mod by zshen 2010/11/29
         IMetadataConnection metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
                 ParameterUtil.toMap(connectionParameters));
-        List<String> packageFilter=ConnectionUtils.getPackageFilter(connectionParameters);
-        Connection conn=null;
+        List<String> packageFilter = ConnectionUtils.getPackageFilter(connectionParameters);
+        Connection conn = null;
         if (mdm) {
             conn = MetadataFillFactory.getMDMInstance().fillUIConnParams(metadataConnection, null);
             MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, packageFilter);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
-            TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(
-                    metadataConnection);
+            TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
             if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
@@ -319,7 +320,7 @@ public final class DQStructureComparer {
                     log.error(e, e);
                 }
             }
-            conn =MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
+            conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
             MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
             MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
             // returnProvider = ConnectionService.createConnection(connectionParameters);
@@ -341,8 +342,7 @@ public final class DQStructureComparer {
      * @return
      * @throws ReloadCompareException
      */
-    public static Package findMatchedPackage(Package selectedPackage, Connection matchDataProvider)
-            throws ReloadCompareException {
+    public static Package findMatchedPackage(Package selectedPackage, Connection matchDataProvider) throws ReloadCompareException {
 
         // code clean by gdbu 2011-4-18 : when conn is null , throw a ReloadCompareException.
         if (null == matchDataProvider) {
@@ -471,8 +471,7 @@ public final class DQStructureComparer {
      * @param catalog
      * @throws ReloadCompareException
      */
-    private static Catalog findMatchedCatalogObj(Catalog catalog, Connection matchDataProvider)
-            throws ReloadCompareException {
+    private static Catalog findMatchedCatalogObj(Catalog catalog, Connection matchDataProvider) throws ReloadCompareException {
         List<Catalog> tdCatalogs = ConnectionHelper.getCatalogs(matchDataProvider);
         for (Catalog matchCatalog : tdCatalogs) {
             if (catalog.getName().equals(matchCatalog.getName())) {
@@ -539,7 +538,7 @@ public final class DQStructureComparer {
     }
 
     /**
-     *Open a compare editor UI, will clear the information which hasn't relationship with current selected level
+     * Open a compare editor UI, will clear the information which hasn't relationship with current selected level
      * first(For example: if we compare the catalog level, will clear it's table(view) from every catalog), then will
      * compare current level object.
      * 
@@ -554,7 +553,9 @@ public final class DQStructureComparer {
 
         MatchModel match = null;
         try {
-            match = MatchService.doResourceMatch(leftResource, rightResource, opt);
+            boolean isTos = isTos(leftResource);
+            match = MatchService
+                    .doResourceMatch(cleanUpResource(leftResource, isTos), cleanUpResource(rightResource, isTos), opt);
         } catch (InterruptedException e) {
             throw new ReloadCompareException(e);
         }
@@ -600,5 +601,46 @@ public final class DQStructureComparer {
             guiHandler.popComparisonUI(createDiffResourceFile.getLocation(), dbName, selectedObject, compareEachOther);
         }
         return diff;
+    }
+
+    private static boolean isTos(Resource resource) {
+        EList<EObject> contents = resource.getContents();
+        for (EObject content : contents) {
+            if (content instanceof TdColumn) {
+                TdColumn tdColumn = (TdColumn) content;
+                return tdColumn.getSourceType() != null;
+            }
+        }
+        return false;
+    }
+
+    private static Resource cleanUpResource(Resource resource, boolean isTos) {
+        EList<EObject> contents = resource.getContents();
+        for (EObject content : contents) {
+            if (content instanceof TdTable) {
+                TdTable tdTable = (TdTable) content;
+                isTos = tdTable.getId() != null;
+                tdTable.setId(null);
+                tdTable.setComment(null);
+            } else if (content instanceof TdView) {
+                TdView tdView = (TdView) content;
+                tdView.setId(null);
+                tdView.setComment(null);
+            } else if (content instanceof TdColumn) {
+                TdColumn tdColumn = (TdColumn) content;
+                tdColumn.setSourceType(null);
+                if (isTos) {
+                    tdColumn.setLength(10);
+                    tdColumn.setPrecision(4);
+                    if (tdColumn.getInitialValue() != null) {
+                        tdColumn.getInitialValue().setBody(null);
+                    }
+                    tdColumn.setPattern(null);
+                    tdColumn.setKey(false);
+                    tdColumn.setId(PluginConstant.EMPTY_STRING);
+                }
+            }
+        }
+        return resource;
     }
 }

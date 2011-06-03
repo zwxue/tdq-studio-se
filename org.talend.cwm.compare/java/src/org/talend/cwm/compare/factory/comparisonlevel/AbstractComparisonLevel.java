@@ -125,6 +125,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         initSwitchValue();
         options = new HashMap<String, Object>();
         options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        options.put(MatchOptions.OPTION_IGNORE_ID, true);
     }
 
     private void initSwitchValue() {
