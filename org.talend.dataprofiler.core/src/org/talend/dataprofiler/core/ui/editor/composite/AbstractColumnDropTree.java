@@ -191,6 +191,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
         // MOD yyi 2011-05-19 20344: The element tree structure is incorrect after adding a pattern to a column
         Display.getCurrent().asyncExec(new Runnable() {
+
             public void run() {
                 tree.getColumn(0).setWidth(tree.getColumn(0).getWidth() + 1);
             }
@@ -218,8 +219,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 judi = UDIHelper.adaptToJavaUDI(indicatorUnit.getIndicator());
             } catch (Throwable e) {
                 log.error(e, e);
-                MessageDialog.openError(tree.getShell(), DefaultMessagesImpl
-                        .getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
+                MessageDialog.openError(tree.getShell(),
+                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
             }
             if (judi != null) {
                 ((JavaUserDefIndicator) judi)
@@ -322,8 +323,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
             return ImageLib.getImage(ImageLib.PATTERN_REG);
         } else if (indicatorType == IndicatorEnum.UserDefinedIndicatorEnum) {
-            if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(
-                    UDIHelper.getUDICategory(indicatorUnit.getIndicator().getIndicatorDefinition()))) {
+            if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory()
+                    .equals(UDIHelper.getUDICategory(indicatorUnit.getIndicator().getIndicatorDefinition()))) {
                 // MOD yyi 2010-04-21 12724,unify the UDI icon as "IndicatorDefinition.gif"
                 // return ImageLib.getImage(ImageLib.PATTERN_REG);
                 return ImageLib.getImage(ImageLib.IND_DEFINITION);
@@ -506,7 +507,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             }
         }
 
-
         List<ModelElementIndicator> modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             if (reposList.contains(modelElementIndicator.getModelElementRepositoryNode())) {
@@ -528,16 +528,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     private boolean hideParameters(IndicatorUnit indicatorUnit) {
         EClass indicatorEclass = indicatorUnit.getIndicator().eClass();
-        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithNullIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankNullIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithNullIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankNullIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithNullIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankNullIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getDateFrequencyIndicator())
+        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getDateFrequencyIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getWeekFrequencyIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMonthFrequencyIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getQuarterFrequencyIndicator())
@@ -546,7 +537,18 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getWeekLowFrequencyIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMonthLowFrequencyIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getQuarterLowFrequencyIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getYearLowFrequencyIndicator())) {
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getYearLowFrequencyIndicator())
+        // MOD yyi 2011-06-03 17740: enable thresholds for indicators
+        // indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithNullIndicator())
+        // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankIndicator())
+        // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankNullIndicator())
+        // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithNullIndicator())
+        // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankIndicator())
+        // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankNullIndicator())
+        // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithNullIndicator())
+        // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankIndicator())
+        // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankNullIndicator())
+        ) {
             return true;
         }
         return false;
