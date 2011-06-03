@@ -23,6 +23,7 @@ import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DB2DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.dbms.InfomixDbmsLanguage;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sql.Java2SqlType;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -80,6 +81,11 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
 
         String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : ((function == null ? colName : function)
                 + dbmsLanguage.equal() + value); //$NON-NLS-1$ //$NON-NLS-2$
+        // ADD xqliu 2011-06-03 bug 20600's note 86482
+        if (dbmsLanguage instanceof InfomixDbmsLanguage) {
+            clause = clause.replaceAll(InfomixDbmsLanguage.AS_REPLACE_COLUMN, PluginConstant.EMPTY_STRING);
+        }
+        // ~ 20600
         return clause;
     }
 

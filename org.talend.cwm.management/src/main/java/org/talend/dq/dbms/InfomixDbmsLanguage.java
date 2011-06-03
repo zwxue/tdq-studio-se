@@ -26,6 +26,8 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
 
     final String soundexColumnAliase = "soundex_column_result"; //$NON-NLS-1$
 
+    public static final String AS_REPLACE_COLUMN = "as replace_column";//$NON-NLS-1$
+
     InfomixDbmsLanguage() {
         super(DbmsLanguage.INFOMIX);
     }
@@ -162,10 +164,8 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
                 + " ,'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9',''),'0','')) from 1 for 1)as first_char,rpad(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(substring(rpad(UPPER(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace( " //$NON-NLS-1$
                 + colName
                 + " ,'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9',''),'0','')),100,'0') from 2),'A','0'),'E','0'),'H','0'),'I','0'),'O','0'),'U','0'),'W','0'),'Y','0'),'B','1'),'F','1'),'P','1'),'V','1'),'C','2'),'G','2'),'J','2'),'K','2'),'Q','2'),'S','2'),'X','2'),'Z','2'),'D','3'),'T','3'),'L','4'),'M','5'),'N','5'),'R','6'),'0',''),100,'0') as replace_str from  " //$NON-NLS-1$
-                + table
-                + " ))) as t2 ," //$NON-NLS-1$
-                + table
-                + " as t3 where t1." + colName + "='" + key //$NON-NLS-1$//$NON-NLS-2$
+                + table + " ))) as t2 ," //$NON-NLS-1$
+                + table + " as t3 where t1." + colName + "='" + key //$NON-NLS-1$//$NON-NLS-2$
                 + "' and t2.soundex_column_result=t1.soundex_column_result and t2." + colName + "=t3." + colName //$NON-NLS-1$//$NON-NLS-2$
                 + "and t3." + colName + "='" + key + "'"//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
                 + PluginConstant.EMPTY_STRING;
