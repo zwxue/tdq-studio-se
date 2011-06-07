@@ -276,7 +276,9 @@ public enum IndicatorEnum {
     ColumnDependencyIndicatorEnum(
                                   ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR,
                                   ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR,
-                                  "Column Dependency Indicator", //$NON-NLS-1$
+                                  // MOD msjian 2011-06-07 22021: fixed running the Function dependency analysis
+                                  // imported from 4.0 works well.
+                                  "Functional Dependency Indicator", //$NON-NLS-1$
                                   null),
     ColumnSetMultiValueIndicatorEnum(
                                      ColumnsetPackage.COLUMN_SET_MULTI_VALUE_INDICATOR,
