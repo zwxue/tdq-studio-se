@@ -18,6 +18,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -86,34 +88,46 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
                     continue;
                 }
 
-                List<?> connColumnSetList = null;
+                List<? extends MetadataTable> connColumnSetList = null;
                 // MOD mzhao bug 8567. 2009-08-10 (Case of MS SQL Server)
                 if (connPackage instanceof Catalog && anaPackage instanceof Schema) {
                     for (Schema sche : CatalogHelper.getSchemas((Catalog) connPackage)) {
                         if (sche.getName().equalsIgnoreCase(anaPackage.getName())) {
                             // MOD mzhao bug 8567. 2010-03-29.
                             connPackage = sche;
-                            if (anaColumnSet instanceof TdTable) {
-                                connColumnSetList = PackageHelper.getTables(sche);
-                            } else {
-                                connColumnSetList = PackageHelper.getViews(sche);
-                            }
+                            // if (anaColumnSet instanceof TdTable) {
+                            // connColumnSetList = PackageHelper.getTables(sche);
+                            // } else {
+                            // connColumnSetList = PackageHelper.getViews(sche);
+                            // }
                             break;
                         }
 
                     }
 
+                }
+                boolean loadFromDb = connPackage.getOwnedElement().size() == 0;
+                if (anaColumnSet instanceof TdTable) {
+                    connColumnSetList = DqRepositoryViewService.getTables(newDataProvider, connPackage, null, loadFromDb);
+                    // connColumnSetList = PackageHelper.getTables(connPackage);
+                    if (loadFromDb) {
+                        for (MetadataTable table : connColumnSetList) {
+                            PackageHelper.addMetadataTable(table, connPackage);
+                        }
+                    }
+                    // connColumnSetList = PackageHelper.getTables(connPackage);
                 } else {
-                    if (anaColumnSet instanceof TdTable) {
-                        connColumnSetList = PackageHelper.getTables(connPackage);
-                    } else {
-                        connColumnSetList = PackageHelper.getViews(connPackage);
+                    connColumnSetList = DqRepositoryViewService.getViews(newDataProvider, connPackage, null, loadFromDb);
+                    // connColumnSetList = PackageHelper.getViews(connPackage);
+                    if (loadFromDb) {
+                        for (MetadataTable table : connColumnSetList) {
+                            PackageHelper.addMetadataTable(table, connPackage);
+                        }
                     }
                 }
 
                 ColumnSet connColumnSet = null;
                 for (Object colSet : connColumnSetList) {
-
                     if (((ColumnSet) colSet).getName().equalsIgnoreCase(anaColumnSet.getName())) {
                         connColumnSet = (ColumnSet) colSet;
                         break;
@@ -129,7 +143,11 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
                 }
 
                 TdColumn connColumn = null;
-                for (TdColumn loopColumn : ColumnSetHelper.getColumns(connColumnSet)) {
+
+                loadFromDb = connColumnSet.getOwnedElement().size() == 0;
+                List<TdColumn> columns = DqRepositoryViewService.getColumns(newDataProvider, connColumnSet, null, loadFromDb);
+                ColumnSetHelper.addColumns(connColumnSet, columns);
+                for (TdColumn loopColumn : columns) {
                     if (loopColumn.getName().equalsIgnoreCase(column.getName())) {
                         connColumn = loopColumn;
                         break;
