@@ -112,6 +112,12 @@ public enum EDriverName {
         spDB.add("com.mysql.jdbc.Driver");
         special_database.put("org.gjt.mm.mysql.Driver", spDB);
 
+        //MOD gdbu 2011-6-9 bug : 21854
+        ArrayList oracleJDBCDB = new ArrayList();
+        oracleJDBCDB.add("oracle.jdbc.driver.OracleDriver");
+        special_database.put("oracle.jdbc.OracleDriver", oracleJDBCDB);
+        //~ 21854
+        
         // According to the above example we can continue to fill special driverclass name...
     }
     // ~18975
