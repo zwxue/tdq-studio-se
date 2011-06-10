@@ -57,6 +57,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     protected String errorMessage;
 
+    protected Boolean parallelExeStatus = Boolean.TRUE;
+
     /**
      * use {@link #dbms()} to access this attribute.
      */

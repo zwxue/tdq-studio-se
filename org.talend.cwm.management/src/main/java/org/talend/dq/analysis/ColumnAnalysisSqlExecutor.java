@@ -1017,7 +1017,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + trc.getMessage());//$NON-NLS-1$//$NON-NLS-1$  
         }
 
-        Connection connection = trc.getObject();
+        // MOD gdbu 2011-6-10 bug 21273
+        Connection connection = null;
+        ConnectionPool connPool = null;
         try {
             // store map of element to each indicator used for computation (leaf indicator)
             Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
@@ -1026,12 +1028,19 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
             // MOD xqliu 2009-08-07 bug 6194
             if (canParallel()) {
-                ok = runAnalysisIndicatorsParallel(analysis, elementToIndicator, indicators);
+                connPool = new ConnectionPool(trc);
+                try {
+                    connPool.createPool();
+                } catch (Exception e1) {
+                    log.error(e1);
+                }
+                ok = runAnalysisIndicatorsParallel(analysis, elementToIndicator, indicators, connPool);
             } else {
+                connection = trc.getObject();
                 ok = runAnalysisIndicators(connection, elementToIndicator, indicators);
             }
             // ~
-            connection.close();
+            // connection.close();
 
             // --- finalize indicators by setting the row count and null when they exist.
             setRowCountAndNullCount(elementToIndicator);
@@ -1041,8 +1050,19 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             this.errorMessage = e.getMessage();
             ok = false;
         } finally {
-            ConnectionUtils.closeConnection(connection);
+            if (null != connection) {
+                ConnectionUtils.closeConnection(connection);
+            }
+
+            if (null != connPool) {
+                try {
+                    connPool.closeConnectionPool();
+                } catch (SQLException e) {
+                    log.error("Close connection pool error : " + e);//$NON-NLS-1$ 
+                }
+            }
         }
+        // ~21273
         return ok;
     }
 
@@ -1106,11 +1126,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         Indicator indicator;
 
+        ConnectionPool connPool;
+
         String errorMessage;
 
         public ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor parent, Connection connection,
-                Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator) {
+                Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator, ConnectionPool connPool) {
             super(PluginConstant.EMPTY_STRING);
+            this.connPool = connPool;
             this.parent = parent;
             this.connection = connection;
             this.elementToIndicator = elementToIndicator;
@@ -1125,7 +1148,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         @Override
         protected IStatus run(IProgressMonitor monitor) {
             ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
-                    connection, elementToIndicator, indicator);
+                    connection, elementToIndicator, indicator, connPool);
             columnSqlParallel.run();
             if (columnSqlParallel.ok) {
                 return Status.OK_STATUS;
@@ -1149,38 +1172,38 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws SQLException
      */
     private boolean runAnalysisIndicatorsParallel(Analysis analysis, Map<ModelElement, List<Indicator>> elementToIndicator,
-            Collection<Indicator> indicators) throws SQLException {
-        // TDQ Guodong bu 2011-2-25, feature 19107
-        boolean ok = true;
+            Collection<Indicator> indicators,
+            ConnectionPool connPool) throws SQLException {
+        // MOD qiongli 2011-5-20 bug 21580.backport rightly for bug 19107 and 19522.
+
         List<ExecutiveAnalysisJob> excuteAnalysisJober = new ArrayList<ExecutiveAnalysisJob>();
-        // MOD gdbu 2011-6-1 bug : 21273
-        TypedReturnCode<Connection> trcConn = null;
-        for (Indicator indicator : indicators) {
-            if (null == trcConn || !trcConn.isOk()) {
-                trcConn = this.getConnection(analysis);
+        // MOD gdbu 2011-6-10 bug : 21273
+        try {
+            for (Indicator indicator : indicators) {
+                if (connPool.isOK()) {
+                    Connection conn = connPool.getConnection();
+                    ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn, elementToIndicator,
+                            indicator, connPool);
+                    excuteAnalysisJober.add(eaj);
+                    eaj.schedule();
+                }
             }
-            if (trcConn.isOk()) {
-                ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(this, trcConn.getObject(), elementToIndicator, indicator);
-                excuteAnalysisJober.add(eaj);
-                eaj.schedule();
+            for (ExecutiveAnalysisJob exeAnaJober : excuteAnalysisJober) {
+                try {
+                    exeAnaJober.join();
+                } catch (InterruptedException e) {
+                    log.error(e);
+                }
+                if (exeAnaJober.errorMessage != null) {
+                    ColumnAnalysisSqlExecutor.this.errorMessage = exeAnaJober.errorMessage;
+                    ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
+                }
             }
-        }
-        for (ExecutiveAnalysisJob exeAnaJober : excuteAnalysisJober) {
-            try {
-                exeAnaJober.join();
-            } catch (InterruptedException e) {
-                log.warn(e, e);
-            }
-            if (exeAnaJober.errorMessage != null) {
-                this.errorMessage = exeAnaJober.errorMessage;
-                ok = false;
-            }
-        }
-        if (null != trcConn && null != trcConn.getObject() && !trcConn.getObject().isClosed()) {
-            trcConn.getObject().close();
+        } catch (Throwable thr) {
+            log.error(thr);
         }
         // ~21273
-        return ok;
+        return parallelExeStatus;
         // ~
     }
 

@@ -29,6 +29,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor implements Runnable {
 
     protected Connection connection;
+    
+    protected ConnectionPool connPool;
 
     protected Map<ModelElement, List<Indicator>> elementToIndicator;
 
@@ -63,12 +65,13 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
     }
 
     public static ColumnAnalysisSqlParallelExecutor createInstance(ColumnAnalysisSqlExecutor parent, Connection connection,
-            Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator) {
+            Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator, ConnectionPool connPool) {
         ColumnAnalysisSqlParallelExecutor inst = createInstance(parent);
         if (inst != null) {
             inst.connection = connection;
             inst.elementToIndicator = elementToIndicator;
             inst.indicator = indicator;
+            inst.connPool = connPool;
         }
         return inst;
     }
@@ -110,15 +113,11 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
         } catch (SQLException e) {
             this.setException(e);
         }
-        // finally {
-        // try {
-        // if (connection != null && !connection.isClosed()) {
-        // connection.close();
-        // }
-        // } catch (SQLException e) {
-        // this.setException(e);
-        // }
-        // }
+        finally {
+            // MOD gdbu 2011-6-10 bug : 21273
+            connPool.returnConnection(connection);
+            // ~21273
+        }
     }
 
 }
