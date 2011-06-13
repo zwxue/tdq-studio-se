@@ -68,7 +68,8 @@ public class TooltipTree extends Tree {
                     setSelection(new TreeItem[] { (TreeItem) e.item });
                     notifyListeners(SWT.Selection, e);
                     shell.dispose();
-                    setFocus();
+                    // MOD yyi 2011-06-13:20344: sync tree layout on adding pattern
+                    // setFocus();
                     break;
                 case SWT.MouseExit:
                     shell.dispose();

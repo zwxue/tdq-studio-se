@@ -189,17 +189,11 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         createIndicatorParameters(indicatorItem, indicatorUnit);
 
-        // MOD yyi 2011-05-19 20344: The element tree structure is incorrect after adding a pattern to a column
+        // MOD yyi 2011-06-13:20344: sync tree layout on adding pattern
         Display.getCurrent().asyncExec(new Runnable() {
 
             public void run() {
-                tree.getColumn(0).setWidth(tree.getColumn(0).getWidth() + 1);
-            }
-        });
-        Display.getCurrent().asyncExec(new Runnable() {
-
-            public void run() {
-                tree.getColumn(0).setWidth(tree.getColumn(0).getWidth() - 1);
+                tree.setFocus();
             }
         });
     }
