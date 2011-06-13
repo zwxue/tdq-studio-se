@@ -528,7 +528,11 @@ public class PatternTestView extends ViewPart {
             String expressionLanguage = this.regularExpression.getExpression().getLanguage();
             DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
             // MOD gdbu 2011-5-31 bug : 19119
-            dbmsLanguage.setFunctionName(getFunctionName());
+            // MOD gdbu 2011-6-13 bug : 21695
+            if (null != dbmsLanguage) {
+                dbmsLanguage.setFunctionName(getFunctionName());
+            }
+            // ~21695
             // ~19119
             // MOD qiongli 2011-1-7 featrue 16799.
             boolean isLanguageMatched = false;
