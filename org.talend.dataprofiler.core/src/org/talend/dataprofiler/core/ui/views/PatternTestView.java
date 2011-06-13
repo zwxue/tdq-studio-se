@@ -305,11 +305,11 @@ public class PatternTestView extends ViewPart {
                 } else {
                     DbmsLanguage dbmsLanguage = getDbmsLanguage();
                     // MOD gdbu 2011-5-13 bug : 19119
-                    dbmsLanguage.setFunctionName(getFunctionName());
-                    // ~19119
                     if (dbmsLanguage != null) {
+                        dbmsLanguage.setFunctionName(getFunctionName());
                         language = dbmsLanguage.getDbmsName();
                     }
+                    // ~19119
                 }
                 // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
                 // project.
@@ -408,7 +408,9 @@ public class PatternTestView extends ViewPart {
                 if (tddataprovider.getName().equals(dbCombo.getText())) {
                     DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
                     // MOD gdbu 2011-5-31 bug : 19119
-                    createDbmsLanguage.setFunctionName(getFunctionName());
+                    if (null != createDbmsLanguage) {
+                        createDbmsLanguage.setFunctionName(getFunctionName());
+                    }
                     // ~19119
                     String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
                             regularText.getText());
@@ -506,10 +508,10 @@ public class PatternTestView extends ViewPart {
         IEditorPart findEditor = page.findEditor(openSqlFileAction.getEditorInput());
 
         DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
-        // MOD gdbu 2011-5-31 bug : 19119
-        dbmsLanguage.setFunctionName(getFunctionName());
-        // ~19119
         if (dbmsLanguage != null) {
+            // MOD gdbu 2011-6-13 bug : 19119
+            dbmsLanguage.setFunctionName(getFunctionName());
+            // ~19119
             String selectRegexpTestString = dbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText.getText());
 
             ((SQLEditor) findEditor).setText(selectRegexpTestString);
@@ -665,7 +667,7 @@ public class PatternTestView extends ViewPart {
     /**
      * MOD gdbu 2011-5-31 bug : 19119
      * 
-     * DOC gdbu Comment method "dddd".
+     * DOC gdbu Comment method "setFunctionTextVisibleFromDBCOnn".
      * 
      * @param tdDataProvider
      */
