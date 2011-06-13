@@ -109,13 +109,13 @@ public enum EDriverName {
     private static Map<String, ArrayList<String>> special_database = new HashMap<String, ArrayList<String>>();
     static {
         ArrayList spDB = new ArrayList();
-        spDB.add("com.mysql.jdbc.Driver");
-        special_database.put("org.gjt.mm.mysql.Driver", spDB);
+        spDB.add("com.mysql.jdbc.Driver");//$NON-NLS-1$
+        special_database.put("org.gjt.mm.mysql.Driver", spDB);//$NON-NLS-1$
 
         //MOD gdbu 2011-6-9 bug : 21854
         ArrayList oracleJDBCDB = new ArrayList();
-        oracleJDBCDB.add("oracle.jdbc.driver.OracleDriver");
-        special_database.put("oracle.jdbc.OracleDriver", oracleJDBCDB);
+        oracleJDBCDB.add("oracle.jdbc.driver.OracleDriver");//$NON-NLS-1$
+        special_database.put("oracle.jdbc.OracleDriver", oracleJDBCDB);//$NON-NLS-1$
         //~ 21854
         
         // According to the above example we can continue to fill special driverclass name...

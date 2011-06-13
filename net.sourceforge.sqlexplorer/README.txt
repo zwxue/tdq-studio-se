@@ -100,3 +100,7 @@ The method in class of "net.sourceforge.sqlexplorer.plugin.views.DatabaseStructu
 1. modified class 'AliasManager' : create method to get decrypt password.
 2. modified class 'User' : line 110 , chenge to get encrypt password.
 3. modified 'MANIFEST.MF' : add org.talend.model and org.talend.utils
+
+2011-6-9 gdbu bug 21854 : TOP gives an error with Oracle db connection when viewing profiled data
+---------------------------------------------------------------------------------------------------
+1.  modified class 'EDriverName' : Repair the product on the jdbc-oracle's driver class support problems.
