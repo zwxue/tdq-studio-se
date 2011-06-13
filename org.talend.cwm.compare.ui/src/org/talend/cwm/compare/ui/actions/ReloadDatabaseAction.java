@@ -81,14 +81,15 @@ public class ReloadDatabaseAction extends Action {
      */
     @Override
     public void run() {
-
-        boolean confirmed = PluginChecker.isOnlyTopLoaded() ? true : MessageDialog.openConfirm(PlatformUI.getWorkbench()
-                .getDisplay().getActiveShell(), Messages.getString("ReloadDatabaseAction.0"), //$NON-NLS-1$
-                Messages.getString("ReloadDatabaseAction.1")); //$NON-NLS-1$
-        if (!confirmed) {
+        // MOD klliu 2011-06-13 bug unified the confirm message TOP with TDQ
+        String confirmMessage = PluginChecker.isOnlyTopLoaded() ? Messages.getString("ReloadDatabaseAction.ConfirmMessage1") : Messages.getString("ReloadDatabaseAction.ConfirmMessage0"); //$NON-NLS-1$
+        boolean openConfirm = MessageDialog.openConfirm(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                Messages.getString("ReloadDatabaseAction.ConfirmMessageTitle"), //$NON-NLS-1$
+                confirmMessage);
+        if (!openConfirm) {
             return;
         }
-
+        // ~ 22251
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
