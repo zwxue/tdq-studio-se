@@ -121,6 +121,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -2309,5 +2310,117 @@ public final class RepositoryNodeHelper {
         }
         return null;
 
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "getTableFilter".
+     * 
+     * @param catalog
+     * @param schema
+     * @return
+     */
+    public static String getTableFilter(Catalog catalog, Schema schema) {
+        String tableFilter = null;
+        if (catalog != null) {
+            tableFilter = ColumnSetHelper.getTableFilter(catalog);
+            return tableFilter;
+        }
+        if (schema != null) {
+            tableFilter = ColumnSetHelper.getTableFilter(schema);
+            return tableFilter;
+        }
+        return tableFilter;
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "getViewFilter".
+     * 
+     * @param catalog
+     * @param schema
+     * @return
+     */
+    public static String getViewFilter(Catalog catalog, Schema schema) {
+        String viewFilter = null;
+        if (catalog != null) {
+            viewFilter = ColumnSetHelper.getViewFilter(catalog);
+            return viewFilter;
+        }
+        if (schema != null) {
+            viewFilter = ColumnSetHelper.getViewFilter(schema);
+            return viewFilter;
+        }
+        return viewFilter;
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "filterTables".
+     * 
+     * @param tables
+     * @param columnSetPattern
+     * @return
+     */
+    public static List<TdTable> filterTables(List<TdTable> tables, String columnSetPattern) {
+        String[] patterns = cleanPatterns(columnSetPattern.split(",")); //$NON-NLS-1$
+        List<NamedColumnSet> filterMatchingColumnSets = filterMatchingColumnSets(tables, patterns);
+        List<TdTable> filterTables = new ArrayList<TdTable>();
+        for (NamedColumnSet columnSet : filterMatchingColumnSets) {
+            TdTable table = (TdTable) columnSet;
+            filterTables.add(table);
+        }
+        return filterTables;
+
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "filterViews".
+     * 
+     * @param views
+     * @param columnSetPattern
+     * @return
+     */
+    public static List<TdView> filterViews(List<TdView> views, String columnSetPattern) {
+        String[] patterns = cleanPatterns(columnSetPattern.split(",")); //$NON-NLS-1$
+        List<NamedColumnSet> filterMatchingColumnSets = filterMatchingColumnSets(views, patterns);
+        List<TdView> filterViews = new ArrayList<TdView>();
+        for (NamedColumnSet columnSet : filterMatchingColumnSets) {
+            TdView view = (TdView) columnSet;
+            filterViews.add(view);
+        }
+        return filterViews;
+
+    }
+
+    private static String[] cleanPatterns(String[] split) {
+        ArrayList<String> ret = new ArrayList<String>();
+        for (String s : split) {
+            if (s != null && !"".equals(s) && !ret.contains(s)) { //$NON-NLS-1$
+                ret.add(s);
+            }
+        }
+        return ret.toArray(new String[ret.size()]);
+    }
+
+    private static <T extends NamedColumnSet> List<NamedColumnSet> filterMatchingColumnSets(List<T> columnSets, String[] patterns) {
+        List<NamedColumnSet> retColumnSets = new ArrayList<NamedColumnSet>();
+        int size = 0;
+        for (NamedColumnSet t : columnSets) {
+            for (String pattern : patterns) {
+                String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
+                String name = t.getName().toLowerCase();
+                if (name.matches(regex)) {
+                    retColumnSets.add(t);
+                    size++;
+                    if (size > 2000) {
+                        return retColumnSets;
+                    }
+                    break;
+                }
+            }
+        }
+        return retColumnSets;
     }
 }
