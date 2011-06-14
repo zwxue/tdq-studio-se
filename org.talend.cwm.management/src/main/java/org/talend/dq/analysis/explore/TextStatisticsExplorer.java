@@ -42,9 +42,11 @@ public class TextStatisticsExplorer extends DataExplorer {
         Map<String, String> map = new HashMap<String, String>();
 
         switch (this.indicatorEnum) {
+        case AverageLengthIndicatorEnum:
+            map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getAverageLengthRowsStatement() : null);
+            break;
         case MinLengthIndicatorEnum:
         case MaxLengthIndicatorEnum:
-        case AverageLengthIndicatorEnum:
         case MinLengthWithBlankIndicatorEnum:
         case MinLengthWithBlankNullIndicatorEnum:
         case MinLengthWithNullIndicatorEnum:
@@ -59,6 +61,16 @@ public class TextStatisticsExplorer extends DataExplorer {
         default:
         }
         return map;
+    }
+
+    /**
+     * DOC yyi 2011-06-14 22246:view rows for aveagge length
+     * 
+     * @return
+     */
+    private String getAverageLengthRowsStatement() {
+        String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
+        return dbmsLanguage.fillGenericQueryWithColumnsAndTable(dbmsLanguage.getAverageLengthRows(), this.columnName, tableName);
     }
 
 }
