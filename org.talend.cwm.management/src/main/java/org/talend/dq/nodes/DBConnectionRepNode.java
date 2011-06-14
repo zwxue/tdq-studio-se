@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -36,9 +35,9 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class DBConnectionRepNode extends ConnectionRepNode {
 
-    private DatabaseConnection databaseConnection;
+    private Connection databaseConnection;
 
-    public DatabaseConnection getDatabaseConnection() {
+    public Connection getDatabaseConnection() {
         return this.databaseConnection;
     }
 
@@ -54,7 +53,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof DatabaseConnectionItem) {
-                this.databaseConnection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
+                this.databaseConnection = (Connection) ((DatabaseConnectionItem) item).getConnection();
             }
         }
     }

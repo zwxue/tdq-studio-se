@@ -27,6 +27,7 @@ import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -100,6 +101,7 @@ public class DBTableFolderRepNode extends RepositoryNode {
      */
     private void createRepositoryNodeTableFolderNode(List<IRepositoryNode> node, IRepositoryViewObject metadataObject) {
         List<TdTable> tables = new ArrayList<TdTable>();
+        String filterCharacter = null;
         try {
             if (metadataObject instanceof MetadataCatalogRepositoryObject) {
                 viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
@@ -107,30 +109,37 @@ public class DBTableFolderRepNode extends RepositoryNode {
                 connection = item.getConnection();
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
                 tables = PackageHelper.getTables(catalog);
-
+                filterCharacter = RepositoryNodeHelper.getTableFilter(catalog, schema);
                 if (tables.isEmpty()) {
                     tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
-                    if (tables.size() > 0) {
-                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
-                    }
-                } else {
-                    ConnectionUtils.retrieveColumn(tables);
                 }
+
             } else {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
                 item = (ConnectionItem) viewObject.getProperty().getItem();
                 connection = item.getConnection();
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
                 tables = PackageHelper.getTables(schema);
+                filterCharacter = RepositoryNodeHelper.getTableFilter(catalog, schema);
+                RepositoryNode parent = metadataObject.getRepositoryNode()
+                        .getParent();
+                IRepositoryViewObject object = parent.getObject();
+                if (object instanceof MetadataCatalogRepositoryObject && filterCharacter.equals("")) {
+                    filterCharacter = RepositoryNodeHelper.getTableFilter(
+                            ((MetadataCatalogRepositoryObject) object).getCatalog(), null);
+                }
                 if (tables.isEmpty()) {
                     tables = DqRepositoryViewService.getTables(connection, schema, null, true);
-                    if (tables.size() > 0) {
-                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
-                    }
-                } else {
-                    ConnectionUtils.retrieveColumn(tables);
                 }
 
+            }
+            if (tables.size() > 0) {
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+            } else {
+                ConnectionUtils.retrieveColumn(tables);
+            }
+            if (filterCharacter != null && !filterCharacter.equals("")) {
+                tables = RepositoryNodeHelper.filterTables(tables, filterCharacter);
             }
 
         } catch (Exception e) {

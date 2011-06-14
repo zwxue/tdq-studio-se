@@ -27,6 +27,7 @@ import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdView;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -95,6 +96,7 @@ public class DBViewFolderRepNode extends RepositoryNode {
      */
     private void createRepositoryNodeViewFolderNode(List<IRepositoryNode> node, IRepositoryViewObject metadataObject) {
         List<TdView> views = new ArrayList<TdView>();
+        String filterCharacter = null;
         try {
             if (metadataObject instanceof MetadataCatalogRepositoryObject) {
                 viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
@@ -102,6 +104,7 @@ public class DBViewFolderRepNode extends RepositoryNode {
                 item = (ConnectionItem) viewObject.getProperty().getItem();
                 connection = item.getConnection();
                 views = PackageHelper.getViews(catalog);
+                filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
                 if (views.isEmpty()) {
                     views = DqRepositoryViewService.getViews(connection, catalog, null, true);
                     if (views.size() > 0) {
@@ -116,6 +119,13 @@ public class DBViewFolderRepNode extends RepositoryNode {
                 item = (ConnectionItem) viewObject.getProperty().getItem();
                 connection = item.getConnection();
                 views = PackageHelper.getViews(schema);
+                filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
+                RepositoryNode parent = metadataObject.getRepositoryNode().getParent();
+                IRepositoryViewObject object = parent.getObject();
+                if (object instanceof MetadataCatalogRepositoryObject && filterCharacter.equals("")) {
+                    filterCharacter = RepositoryNodeHelper.getViewFilter(((MetadataCatalogRepositoryObject) object).getCatalog(),
+                            null);
+                }
                 if (views.isEmpty()) {
                     views = DqRepositoryViewService.getViews(connection, schema, null, true);
                     if (views.size() > 0) {
@@ -128,6 +138,9 @@ public class DBViewFolderRepNode extends RepositoryNode {
 
         } catch (Exception e) {
             log.error(e, e);
+        }
+        if (filterCharacter != null && !filterCharacter.equals("")) {
+            views = RepositoryNodeHelper.filterViews(views, filterCharacter);
         }
         createTableRepositoryNode(views, node);
     }

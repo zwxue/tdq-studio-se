@@ -13,8 +13,13 @@
 package org.talend.dataprofiler.core.ui.wizard.database;
 
 import org.apache.log4j.Logger;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
@@ -22,7 +27,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.ProjectManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -94,18 +99,27 @@ public class TableViewFilterWizard extends AbstractWizard {
 
         String tableFilter = this.tableViewFilterWizardPage.getTableFilterText().getText();
         if (!this.getOldTableFilter().equals(tableFilter)) {
-            ColumnSetHelper.setTableFilter(tableFilter, packageObj);
             needSave = true;
         }
 
         String viewFilter = this.tableViewFilterWizardPage.getViewFilterText().getText();
         if (!this.getOldViewFilter().equals(viewFilter)) {
-            ColumnSetHelper.setViewFilter(viewFilter, packageObj);
             needSave = true;
         }
 
         if (needSave) {
-            return ElementWriterFactory.getInstance().createDataProviderWriter().save(tdDataProvider).isOk();
+
+            Property property = org.talend.dq.helper.PropertyHelper.getProperty(tdDataProvider);
+            DatabaseConnectionItem connectionItem = (DatabaseConnectionItem) property.getItem();
+            ColumnSetHelper.setTableFilter(tableFilter, packageObj);
+            ColumnSetHelper.setViewFilter(viewFilter, packageObj);
+            Project currentProject = ProjectManager.getInstance().getCurrentProject();
+            try {
+                ProxyRepositoryFactory.getInstance().save(currentProject, connectionItem);
+            } catch (PersistenceException e) {
+                return false;
+            }
+            // return ElementWriterFactory.getInstance().createDataProviderWriter().save(tdDataProvider).isOk();
         }
         return true;
     }
