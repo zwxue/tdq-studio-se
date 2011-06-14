@@ -395,8 +395,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             }
 
         });
-        
-        //ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
         addWhitespaceValidate(tableFilterText, viewFilterText);
         // ADD xqliu 2010-01-04 bug 10190
         createReloadDatabasesButton(sectionClient);
@@ -571,6 +571,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private AbstractStatisticalViewerProvider provider;
 
+    private TableViewer schemaTableViewer;
+
     private void createStatisticalSection(Composite topComp) {
         statisticalSection = this.createSection(form, topComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.statisticalinformations"), null); //$NON-NLS-1$
@@ -597,7 +599,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             createCatalogSchemaColumns(table);
             provider = new CatalogSchemaViewerProvier();
             addColumnSorters(catalogTableViewer, catalogTableViewer.getTable().getColumns(), catalogWithSchemaSorters);
-            final TableViewer schemaTableViewer = createSecondStatisticalTable(sectionClient);
+            schemaTableViewer = createSecondStatisticalTable(sectionClient);
             schemaTableViewer.addSelectionChangedListener(new DisplayTableAndViewListener());
             catalogTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -1042,7 +1044,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         return cataUIEleList;
     }
 
-
     private void createSorterColumns(final TableViewer tableViewer, String[] columnTexts, ViewerSorter[][] sorters,
             int columnWidth) {
         Table table = tableViewer.getTable();
@@ -1126,6 +1127,42 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     public void refresh() {
         doSetInput();
         refreshSumSection();
+        // MOD klliu 2011-05-09 bug 20930
+        List<OverviewIndUIElement> catalogIndicators = getCatalogIndicators();
+        List<OverviewIndUIElement> schemaIndicators = getSchemaIndicators();
+
+        if (catalogIndicators != null && catalogIndicators.size() == 1) {
+            Object data = catalogTableViewer.getTable().getItem(0).getData();
+            OverviewIndUIElement overviewIndUIElement = catalogIndicators.get(0);
+            CatalogIndicator overviewIndicator = (CatalogIndicator) overviewIndUIElement.getOverviewIndicator();
+            EList<SchemaIndicator> cataAndSchemaIndicators = overviewIndicator.getSchemaIndicators();
+            if (cataAndSchemaIndicators != null) {
+                // the count of schema
+                int size = cataAndSchemaIndicators.size();
+                if (size == 1) {
+                    // Case like MS SQL Server
+                    // Show schema TableViewer
+                    catalogTableViewer.setSelection(new StructuredSelection(catalogIndicators.get(0)));
+                    RepositoryNode schemaNode = RepositoryNodeHelper.recursiveFind(cataAndSchemaIndicators.get(0)
+                            .getAnalyzedElement());
+                    OverviewIndUIElement schemaUIEle = new OverviewIndUIElement();
+                    schemaUIEle.setNode(schemaNode);
+                    schemaUIEle.setOverviewIndicator(cataAndSchemaIndicators.get(0));
+                    schemaTableViewer.setSelection(new StructuredSelection(schemaUIEle));
+
+                } else if (size == 0) {
+                    // Case like Mysql
+
+                    catalogTableViewer.setSelection(new StructuredSelection(data));
+                }
+            }
+
+        } else if (schemaIndicators != null && schemaIndicators.size() == 1) {
+            // Case like Oracle
+            Object data = catalogTableViewer.getTable().getItem(0).getData();
+            catalogTableViewer.setSelection(new StructuredSelection(data));
+        }
+        // ~
     }
 
     @Override
