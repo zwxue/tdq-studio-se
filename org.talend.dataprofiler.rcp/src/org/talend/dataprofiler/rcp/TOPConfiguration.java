@@ -78,7 +78,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#getHiddenRepositoryCategory()
      */
-    public List<IRepositoryNode> getHiddenRepositoryCategory(IRepositoryNode parent) {
+    public List<IRepositoryNode> getHiddenRepositoryCategory(IRepositoryNode parent, String type) {
 
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
 
