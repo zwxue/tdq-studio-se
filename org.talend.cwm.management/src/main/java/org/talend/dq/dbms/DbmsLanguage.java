@@ -46,6 +46,7 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author scorreia
@@ -271,7 +272,6 @@ public class DbmsLanguage {
     public String eos() {
         return EOS;
     }
-
 
     public String getDbmsName() {
         return this.dbmsName;
@@ -1178,13 +1178,16 @@ public class DbmsLanguage {
             boolean hasTableAliasB = !StringUtils.isEmpty(tableAliasB);
 
             String operator = joinElement.getOperator();
-
-            if (joinClauseStartsWithWrongTable(leftTable, getTable(colB)) && !hasTableAliasA && !hasTableAliasB) {
+            // MOD by klliu bug 20926 #c82152
+            if (joinClauseStartsWithWrongTable(leftTable, getTable(colB)) && hasTableAliasA && hasTableAliasB) {
                 // we need to exchange the table names otherwise we could get "tableA join tableA" which would cause
                 // an SQL exception.
                 // MOD by zshen: change schemaName of sybase database to Table's owner.
                 if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
-                    schemaName = ColumnSetHelper.getTableOwner(colA);
+                    // MOD by klliu bug 20926 #c82152
+                    // schemaName = ColumnSetHelper.getTableOwner(colA);
+                    ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) colA);
+                    schemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
                 }
                 // ~11934
                 // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
@@ -1195,7 +1198,9 @@ public class DbmsLanguage {
             } else {
                 // MOD by zshen: change schemaName of sybase database to Table's owner.
                 if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
-                    schemaName = ColumnSetHelper.getTableOwner(colA);
+                    // MOD by klliu bug 20926 #c82152
+                    ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) colB);
+                    schemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
                 }
                 // ~11934
                 // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
