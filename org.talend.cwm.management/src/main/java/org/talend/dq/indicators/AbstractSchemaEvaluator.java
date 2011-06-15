@@ -584,13 +584,12 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
     }
 
     /**
-     * * yyi 2009-11-30 10187 check catalog is exist in DB
+     * * yyi 2009-11-30 10187 check catalog is exist in DB.
      * 
      * @param catName
      * @return
      */
     public boolean checkCatalog(String catName) {
-
         if (0 == catalogsName.size()) {
             Collection<Catalog> catalogs = ConnectionHelper.getAllCatalogs(getDataManager());
             for (Catalog tc : catalogs) {
@@ -606,13 +605,12 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
     }
 
     /**
-     * yyi 2009-11-30 10187 check schema is exist in DB
+     * yyi 2009-11-30 10187 check schema is exist in DB.
      * 
      * @param catName
      * @return
      */
     protected boolean checkSchemaByName(String catName) {
-
         if (0 == schemasName.size()) {
             Collection<Schema> schemas = new ArrayList<Schema>();
             try {
@@ -634,7 +632,7 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
     }
 
     /**
-     * yyi 2009-11-30 10187 check schema is exist in DB
+     * yyi 2009-11-30 10187 check schema is exist in DB.
      * 
      * @param catName
      * @return

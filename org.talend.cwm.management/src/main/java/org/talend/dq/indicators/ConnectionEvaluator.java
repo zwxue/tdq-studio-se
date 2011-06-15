@@ -13,10 +13,12 @@
 package org.talend.dq.indicators;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -100,6 +102,9 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
         this.resetCounts(connectionIndicator);
 
         List<Catalog> catalogs = ConnectionHelper.getCatalogs(dataProvider);
+        if (isTos(dataProvider)) {
+            cleanUpCatalog(catalogs);
+        }
 
         if (catalogs.isEmpty()) { // no catalog, only schemata
             List<Schema> schemata = ConnectionHelper.getSchema(dataProvider);
@@ -156,6 +161,56 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
             printCounts(connectionIndicator);
         }
         return ok;
+    }
+
+    /**
+     * if the Connection don't contain the catalog, remove the catalog from the list.
+     * 
+     * @param catalogs
+     */
+    private void cleanUpCatalog(List<Catalog> catalogs) {
+        if (catalogs != null) {
+            List<Catalog> temp = new ArrayList<Catalog>();
+            for (Catalog catalog : catalogs) {
+                if (checkCatalog(catalog.getName()) && setCatalogOk(connection, catalog.getName())) {
+                    temp.add(catalog);
+                }
+            }
+            catalogs.clear();
+            catalogs.addAll(temp);
+        }
+    }
+
+    /**
+     * call the setCatalog() method to make sure the catalog is ok.
+     * 
+     * @param connection
+     * @param name
+     * @return
+     */
+    private boolean setCatalogOk(java.sql.Connection connection, String name) {
+        if (connection != null) {
+            try {
+                connection.setCatalog(name);
+            } catch (SQLException e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * if the connection is created by TOS(DI) return true, else return false.
+     * 
+     * @param connection
+     * @return
+     */
+    private boolean isTos(Connection connection) {
+        if (connection instanceof DatabaseConnection) {
+            DatabaseConnection dbConn = (DatabaseConnection) connection;
+            return dbConn.getUiSchema() != null;
+        }
+        return false;
     }
 
     protected void printCounts(ConnectionIndicator connectionIndicator) {
