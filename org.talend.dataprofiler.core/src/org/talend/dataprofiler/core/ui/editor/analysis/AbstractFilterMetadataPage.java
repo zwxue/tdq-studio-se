@@ -1130,9 +1130,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // MOD klliu 2011-05-09 bug 20930
         List<OverviewIndUIElement> catalogIndicators = getCatalogIndicators();
         List<OverviewIndUIElement> schemaIndicators = getSchemaIndicators();
-
         if (catalogIndicators != null && catalogIndicators.size() == 1) {
-            Object data = catalogTableViewer.getTable().getItem(0).getData();
+            Object cataUIEle = catalogTableViewer.getTable().getItem(0).getData();
             OverviewIndUIElement overviewIndUIElement = catalogIndicators.get(0);
             CatalogIndicator overviewIndicator = (CatalogIndicator) overviewIndUIElement.getOverviewIndicator();
             EList<SchemaIndicator> cataAndSchemaIndicators = overviewIndicator.getSchemaIndicators();
@@ -1143,24 +1142,19 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     // Case like MS SQL Server
                     // Show schema TableViewer
                     catalogTableViewer.setSelection(new StructuredSelection(catalogIndicators.get(0)));
-                    RepositoryNode schemaNode = RepositoryNodeHelper.recursiveFind(cataAndSchemaIndicators.get(0)
-                            .getAnalyzedElement());
-                    OverviewIndUIElement schemaUIEle = new OverviewIndUIElement();
-                    schemaUIEle.setNode(schemaNode);
-                    schemaUIEle.setOverviewIndicator(cataAndSchemaIndicators.get(0));
-                    schemaTableViewer.setSelection(new StructuredSelection(schemaUIEle));
+                    Object catalogAndSchemaUIEle = schemaTableViewer.getTable().getItem(0).getData();
+                    schemaTableViewer.setSelection(new StructuredSelection(catalogAndSchemaUIEle));
 
                 } else if (size == 0) {
                     // Case like Mysql
-
-                    catalogTableViewer.setSelection(new StructuredSelection(data));
+                    catalogTableViewer.setSelection(new StructuredSelection(cataUIEle));
                 }
             }
 
         } else if (schemaIndicators != null && schemaIndicators.size() == 1) {
             // Case like Oracle
-            Object data = catalogTableViewer.getTable().getItem(0).getData();
-            catalogTableViewer.setSelection(new StructuredSelection(data));
+            Object schemaUIEle = catalogTableViewer.getTable().getItem(0).getData();
+            catalogTableViewer.setSelection(new StructuredSelection(schemaUIEle));
         }
         // ~
     }
