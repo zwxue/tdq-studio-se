@@ -14,9 +14,12 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.database.ColumnFilterWizard;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
@@ -30,6 +33,7 @@ public class ColumnFilterAction extends Action {
 
     private NamedColumnSet namedColumnSet;
 
+    private IRepositoryNode node;
     public ColumnFilterAction() {
         super(DefaultMessagesImpl.getString("ColumnFilterAction.columnFilter")); //$NON-NLS-1$
     }
@@ -39,13 +43,30 @@ public class ColumnFilterAction extends Action {
         this.namedColumnSet = namedColumnSet;
     }
 
+    /**
+     * DOC klliu ColumnFilterAction constructor comment.
+     * 
+     * @param node
+     */
+    public ColumnFilterAction(IRepositoryNode node) {
+        this();
+        this.node = node;
+        if (node.getObject() instanceof TdTableRepositoryObject) {
+            TdTableRepositoryObject tableObject = (TdTableRepositoryObject) node.getObject();
+            this.namedColumnSet = tableObject.getTdTable();
+        } else if (node.getObject() instanceof TdViewRepositoryObject) {
+            TdViewRepositoryObject viewObject = (TdViewRepositoryObject) node.getObject();
+            this.namedColumnSet = viewObject.getTdView();
+        }
+    }
+
     @Override
     public void run() {
         ColumnFilterWizard wizard = new ColumnFilterWizard(this.namedColumnSet);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         dialog.open();
-        CorePlugin.getDefault().refreshDQView();
+        CorePlugin.getDefault().refreshDQView(node);
     }
 
 }

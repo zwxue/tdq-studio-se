@@ -2394,6 +2394,45 @@ public final class RepositoryNodeHelper {
 
     }
 
+    public static List<TdColumn> filterColumns(List<TdColumn> columns, String columnSetPattern) {
+        String[] patterns = cleanPatterns(columnSetPattern.split(",")); //$NON-NLS-1$
+        List<TdColumn> filterMatchingColumnSets = filterMatchingColumns(columns, patterns);
+        List<TdColumn> filterColumns = new ArrayList<TdColumn>();
+        for (TdColumn column : filterMatchingColumnSets) {
+            TdColumn table = (TdColumn) column;
+            filterColumns.add(table);
+        }
+        return filterColumns;
+
+    }
+
+    /**
+     * DOC klliu Comment method "filterMatchingColumns".
+     * 
+     * @param columns
+     * @param patterns
+     * @return
+     */
+    private static List<TdColumn> filterMatchingColumns(List<TdColumn> columns, String[] patterns) {
+        List<TdColumn> resetColumns = new ArrayList<TdColumn>();
+        int size = 0;
+        for (TdColumn t : columns) {
+            for (String pattern : patterns) {
+                String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
+                String name = t.getName().toLowerCase();
+                if (name.matches(regex)) {
+                    resetColumns.add(t);
+                    size++;
+                    if (size > 2000) {
+                        return resetColumns;
+                    }
+                    break;
+                }
+            }
+        }
+        return resetColumns;
+    }
+
     private static String[] cleanPatterns(String[] split) {
         ArrayList<String> ret = new ArrayList<String>();
         for (String s : split) {

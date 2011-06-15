@@ -26,9 +26,11 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -106,7 +108,7 @@ public class DBColumnFolderRepNode extends RepositoryNode {
         if (!this.isReload() && !children.isEmpty()) {
             return children;
         }
-
+        String filterCharater = null;
         List<TdColumn> tdcolumns = new ArrayList<TdColumn>();
         IRepositoryViewObject meataColumnSetObject = this.getObject();
         if (meataColumnSetObject instanceof TdTableRepositoryObject) {
@@ -114,11 +116,13 @@ public class DBColumnFolderRepNode extends RepositoryNode {
             object = tdTableRepositoryObject.getViewObject();
             tdTable = tdTableRepositoryObject.getTdTable();
             columns = tdTable.getColumns();
+            filterCharater = ColumnHelper.getColumnFilter(tdTable);
         } else if (meataColumnSetObject instanceof TdViewRepositoryObject) {
             TdViewRepositoryObject tdViewRepositoryObject = (TdViewRepositoryObject) meataColumnSetObject;
             object = tdViewRepositoryObject.getViewObject();
             tdView = tdViewRepositoryObject.getTdView();
             columns = tdView.getColumns();
+            filterCharater = ColumnHelper.getColumnFilter(tdView);
         }
         item = (ConnectionItem) object.getProperty().getItem();
         connection = item.getConnection();
@@ -139,6 +143,9 @@ public class DBColumnFolderRepNode extends RepositoryNode {
             for (MetadataColumn mec : columns) {
                 tdcolumns.add((TdColumn) mec);
             }
+        }
+        if (filterCharater != null && !filterCharater.equals("")) {
+            tdcolumns = RepositoryNodeHelper.filterColumns(tdcolumns, filterCharater);
         }
         createTdcolumnsNode(tdcolumns, children);
         this.setReload(false);
