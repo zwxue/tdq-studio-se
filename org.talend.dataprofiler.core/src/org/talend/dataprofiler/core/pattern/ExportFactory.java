@@ -157,6 +157,18 @@ public final class ExportFactory {
         }
     }
 
+    /**
+     * DOC klliu Comment method "relpaceTempHasEscapeCharactor".
+     * 
+     * @param temp
+     */
+    private static String relpaceTempHasEscapeCharactor(String temps) {
+        boolean contains = temps.contains("\r");
+        if (contains) {
+            return temps.replace("\r", "");
+        }
+        return temps;
+    }
     private static Map<PatternToExcelEnum, String> getRelatedValueFromIndicatorDefinition(
             IndicatorDefinition indicatorDefinition, IFolder folder) {
 
@@ -167,10 +179,11 @@ public final class ExportFactory {
             URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
 
             // get the basic information
-            idMap.put(PatternToExcelEnum.Label, indicatorDefinition.getName());
-            idMap.put(PatternToExcelEnum.Purpose, MetadataHelper.getPurpose(indicatorDefinition));
-            idMap.put(PatternToExcelEnum.Description, MetadataHelper.getDescription(indicatorDefinition));
-            idMap.put(PatternToExcelEnum.Author, MetadataHelper.getAuthor(indicatorDefinition));
+            idMap.put(PatternToExcelEnum.Label, relpaceTempHasEscapeCharactor(indicatorDefinition.getName()));
+            idMap.put(PatternToExcelEnum.Purpose, relpaceTempHasEscapeCharactor(MetadataHelper.getPurpose(indicatorDefinition)));
+            idMap.put(PatternToExcelEnum.Description,
+                    relpaceTempHasEscapeCharactor(MetadataHelper.getDescription(indicatorDefinition)));
+            idMap.put(PatternToExcelEnum.Author, relpaceTempHasEscapeCharactor(MetadataHelper.getAuthor(indicatorDefinition)));
             idMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
             idMap.put(PatternToExcelEnum.Category, UDIHelper.getUDICategory(indicatorDefinition).getLabel());
             TaggedValue tagValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT,

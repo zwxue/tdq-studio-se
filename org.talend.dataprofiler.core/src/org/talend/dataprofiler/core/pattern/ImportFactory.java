@@ -126,7 +126,7 @@ public final class ImportFactory {
                         importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name, //$NON-NLS-1$
                                 relativePath), true));
                     } catch (Exception e) {
-                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.SaveFailed") + name, false)); //$NON-NLS-1$
+                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.SaveFailed", name), false)); //$NON-NLS-1$
                     }
 
                 }
@@ -414,7 +414,7 @@ public final class ImportFactory {
                     if (names.contains(name)) {
                         if (skip) {
                             information
-                                    .add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.Imported") + name, false)); //$NON-NLS-1$
+.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.Imported", name), false)); //$NON-NLS-1$
                             continue;
                         }
                         if (rename) {
@@ -443,8 +443,8 @@ public final class ImportFactory {
 
                     names.add(name);
 
-                    information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess") //$NON-NLS-1$
-                            + name, true));
+                    information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
+                            , name), true));
 
                 }
 
@@ -452,7 +452,7 @@ public final class ImportFactory {
 
             } catch (Exception e) {
                 log.error(e, e);
-                information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed") + name, false)); //$NON-NLS-1$
+                information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed", name), false)); //$NON-NLS-1$
             }
         }
 
