@@ -153,21 +153,16 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
                         recordIncrement = valueObjectList.size();
-                        List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
-                                .getAnalyzedElement().eContainer()));
                         for (int j = 0; j < columnCount; j++) {
-                            String newcol = columnList.get(j).getName();
-                            Object newobject = resultSet.getObject(newcol);
-                            if (newobject != null && !(newobject instanceof String)
-                                    && newobject.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$
-                                newobject = resultSet.getTimestamp(newcol);
+                            if (object != null && !(object instanceof String) && object.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$
+                                object = resultSet.getTimestamp(col);
                             }
                             if (recordIncrement < maxNumberRows) {
                                 if (recordIncrement < valueObjectList.size()) {
-                                    valueObjectList.get(recordIncrement)[j] = newobject;
+                                    valueObjectList.get(recordIncrement)[j] = object;
                                 } else {
                                     Object[] valueObject = new Object[columnCount];
-                                    valueObject[j] = newobject;
+                                    valueObject[j] = object;
                                     valueObjectList.add(valueObject);
                                 }
                             } else {
