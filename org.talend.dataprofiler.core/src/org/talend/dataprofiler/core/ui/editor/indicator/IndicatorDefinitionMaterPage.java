@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -1634,6 +1633,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
         classNameText.addModifyListener(new NeedToSetDirtyListener());
         ((GridData) classNameText.getLayoutData()).widthHint = 250;
+
+        // MOD gdbu 2011-6-16 bug : 21532
+        classNameText.addModifyListener(new ExpressTextModListener(combo));
+        // ~21532
+
         final Text jarPathText = new Text(detailComp, SWT.BORDER);
         jarPathText.setLayoutData(new GridData(GridData.FILL_BOTH));
         jarPathText.addModifyListener(new NeedToSetDirtyListener());
