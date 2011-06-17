@@ -198,7 +198,7 @@ public class DQRespositoryView extends CommonNavigator {
         SQLExplorerPlugin.getDefault().initAllDrivers();
         try {
             for (ConnectionItem item : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
-                if (item == null || item instanceof DatabaseConnectionItem) {
+                if (item == null || !(item instanceof DatabaseConnectionItem)) {
                     continue;
                 }
                 CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(item.getConnection());
