@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -99,27 +98,32 @@ public abstract class AElementPersistance {
                 ProxyRepositoryFactory.getInstance().create(item, getPath(element, itemPath), isImportItem);
                 trc.setObject(item);
                 trc.setOk(Boolean.TRUE);
-            } catch (PersistenceException e) {
+            } catch (Exception e) {
                 trc.setMessage(e.getMessage());
                 trc.setOk(Boolean.FALSE);
-                log.error(e, e);
 
-                String fname = createLogicalFileName(element, getFileExtension());
-                IFile file = folder.getFile(fname);
+                log.warn("Create item failed, try to create it by a logical name. ", e);
 
-                if (file.exists()) {
-                    // MOD yyi 2009-10-15 Feature: 9524
-                    String oriName = element.getName();
-                    element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
-                    fname = createLogicalFileName(element, getFileExtension());
-                    file = folder.getFile(fname);
+                try {
+                    String fname = createLogicalFileName(element, getFileExtension());
+                    IFile file = folder.getFile(fname);
 
-                    element.setName(oriName);
-                    ReturnCode rc = create(element, file);
-                    trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
-                } else {
-                    ReturnCode rc = create(element, file);
-                    trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
+                    if (file.exists()) {
+                        // MOD yyi 2009-10-15 Feature: 9524
+                        String oriName = element.getName();
+                        element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
+                        fname = createLogicalFileName(element, getFileExtension());
+                        file = folder.getFile(fname);
+
+                        element.setName(oriName);
+                        ReturnCode rc = create(element, file);
+                        trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
+                    } else {
+                        ReturnCode rc = create(element, file);
+                        trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
+                    }
+                } catch (Exception e2) {
+                    log.error(e2, e2);
                 }
             }
         }
@@ -136,7 +140,7 @@ public abstract class AElementPersistance {
     private IPath getPath(ModelElement element, IPath itemPath) {
         IPath path = new Path(PluginConstant.EMPTY_STRING);
         if (element instanceof DatabaseConnection) { // database connection
-            path = itemPath.makeRelativeTo(ResourceManager.getTDQConnectionFolder().getFullPath());
+            path = itemPath.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath());
         } else if (element instanceof MDMConnection) { // mdm connection
             path = itemPath.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath());
         } else if (element instanceof Analysis) { // analysis
@@ -145,7 +149,7 @@ public abstract class AElementPersistance {
             path = itemPath.makeRelativeTo(ResourceManager.getReportsFolder().getFullPath());
         } else if (element instanceof IndicatorDefinition) {
             if (element instanceof WhereRule) { // dqrule
-                path = itemPath.makeRelativeTo(ResourceManager.getRulesFolder().getFullPath());
+                path = itemPath.makeRelativeTo(ResourceManager.getRulesSQLFolder().getFullPath());
             } else { // indicator definition
                 path = itemPath.makeRelativeTo(ResourceManager.getIndicatorFolder().getFullPath());
             }
