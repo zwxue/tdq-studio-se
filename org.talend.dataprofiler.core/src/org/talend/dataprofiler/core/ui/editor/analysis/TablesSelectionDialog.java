@@ -81,6 +81,10 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         return this.tableType;
     }
 
+    public void setTableType(TableSelectionType tableType) {
+        this.tableType = tableType;
+    }
+
     public TablesSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
             List<IRepositoryNode> setList, String message) {
         super(metadataFormPage, parent, message);

@@ -66,7 +66,6 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
-import orgomg.cwm.resource.relational.View;
 
 /**
  * DOC mzhao Open TDQ items editor action.
@@ -179,7 +178,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         TdTable tdTable = SwitchHelpers.TABLE_SWITCH.caseTdTable((TdTable) modelElement);
                         connection = ConnectionHelper.getConnection(tdTable);
                     } else if (modelElement instanceof TdView) {
-                        TdView tdView = SwitchHelpers.VIEW_SWITCH.caseView((View) modelElement);
+                        TdView tdView = SwitchHelpers.VIEW_SWITCH.caseTdView((TdView) modelElement);
                         connection = ConnectionHelper.getConnection(tdView);
                     } else if (modelElement instanceof TdColumn) {
                         TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.caseTdColumn((TdColumn) modelElement);

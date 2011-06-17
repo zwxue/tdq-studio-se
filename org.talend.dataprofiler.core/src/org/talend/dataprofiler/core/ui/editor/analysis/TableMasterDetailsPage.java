@@ -71,6 +71,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.chart.ChartUtils;
+import org.talend.dataprofiler.core.ui.editor.analysis.TablesSelectionDialog.TableSelectionType;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
@@ -345,6 +346,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         TablesSelectionDialog dialog = new TablesSelectionDialog(this, null,
                 DefaultMessagesImpl.getString("TableMasterDetailsPage.tableSelection"), setList, DefaultMessagesImpl //$NON-NLS-1$
                         .getString("TableMasterDetailsPage.tableSelections")); //$NON-NLS-1$
+        dialog.setTableType(TableSelectionType.ALL);
         if (dialog.open() == Window.OK) {
             Object[] tables = dialog.getResult();
             treeViewer.setInput(tables);

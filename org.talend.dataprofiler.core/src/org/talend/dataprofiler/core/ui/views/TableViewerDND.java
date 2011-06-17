@@ -40,8 +40,10 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -90,7 +92,9 @@ public abstract class TableViewerDND {
                 if (object instanceof DBTableRepNode) {
                     receiver = new TableReceiver();
                 }
-
+                if (object instanceof DBViewRepNode) {
+                    receiver = new TableReceiver();
+                }
                 if (receiver == null) {
                     event.detail = DND.DROP_NONE;
                 } else {
@@ -221,7 +225,7 @@ public abstract class TableViewerDND {
             event.detail = DND.DROP_NONE;
             Object firstElement = ((StructuredSelection) LocalSelectionTransfer.getTransfer().getSelection()).getFirstElement();
             IRepositoryNode tableNOde = (IRepositoryNode) firstElement;
-            if (tableNOde instanceof DBTableRepNode) {
+            if (tableNOde instanceof DBTableRepNode || tableNOde instanceof DBViewRepNode) {
                 MetadataTableRepositoryObject tableViewObject = (MetadataTableRepositoryObject) tableNOde.getObject();
                 NamedColumnSet set = (NamedColumnSet) tableViewObject.getTable();
                 Tree tree = (Tree) ((DropTarget) event.widget).getControl();
@@ -239,9 +243,9 @@ public abstract class TableViewerDND {
             Tree control = (Tree) ((DropTarget) event.widget).getControl();
             AbstractTableDropTree viewer = (AbstractTableDropTree) control.getData();
             StructuredSelection selection = (StructuredSelection) localSelection.getSelection();
-            List<DBTableRepNode> list = selection.toList();
+            List<RepositoryNode> list = selection.toList();
             List<NamedColumnSet> selectedTableList = new ArrayList<NamedColumnSet>();
-            for (DBTableRepNode tableNOde : list) {
+            for (RepositoryNode tableNOde : list) {
                 MetadataTableRepositoryObject tableViewObject = (MetadataTableRepositoryObject) tableNOde.getObject();
                 NamedColumnSet set = (NamedColumnSet) tableViewObject.getTable();
                 selectedTableList.add(set);
