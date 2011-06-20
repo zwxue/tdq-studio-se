@@ -400,10 +400,9 @@ public final class ImportFactory {
             String name = ""; //$NON-NLS-1$
             try {
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                reader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
+                reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
                 reader.setTextQualifier(TEXT_QUAL);
                 reader.setUseTextQualifier(USE_TEXT_QUAL);
-
                 reader.readHeaders();
 
                 java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
@@ -413,8 +412,7 @@ public final class ImportFactory {
 
                     if (names.contains(name)) {
                         if (skip) {
-                            information
-.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.Imported", name), false)); //$NON-NLS-1$
+                            information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.Imported", name), false)); //$NON-NLS-1$
                             continue;
                         }
                         if (rename) {
@@ -431,11 +429,25 @@ public final class ImportFactory {
                     udiParameters.category = reader.get(PatternToExcelEnum.Category.getLiteral());
                     udiParameters.javaClassName = reader.get(PatternToExcelEnum.JavaClassName.getLiteral());
                     udiParameters.javaJarPath = reader.get(PatternToExcelEnum.JavaJarPath.getLiteral());
-
+                    char delimiter = reader.getDelimiter();
+                    String rawRecord = reader.getRawRecord();
+                    String[] headers = reader.getHeaders();
+                    String[] columnsValue = rawRecord.split(String.valueOf(delimiter));
+                    HashMap<String, String> record = new HashMap<String, String>();
+                    for (int i = 0; i < headers.length; i++) {
+                        record.put(headers[i], columnsValue[i]);
+                    }
+                    // String cellStr = "\"\"";
                     for (PatternLanguageType languagetype : PatternLanguageType.values()) {
-                        String cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
-                        if (cellStr != null && !cellStr.equals("")) { //$NON-NLS-1$
-                            udiParameters.regex.put(languagetype.getLiteral(), cellStr);
+                        // int index = languagetype.getExcelEnum().getIndex();
+                        // if (charArray.length < reader.getColumnCount()) {
+                        // cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
+                        // } else {
+                        // cellStr = String.valueOf(charArray[index]);
+                        // }
+                        String cellStr = record.get(languagetype.getExcelEnum().getLiteral());
+                        if (cellStr != null && !cellStr.equals("\"\"")) { //$NON-NLS-1$
+                            udiParameters.regex.put(languagetype.getLiteral(), trimQuote(cellStr));
                         }
                     }
 
@@ -522,6 +534,19 @@ public final class ImportFactory {
         return information;
     }
 
+    private static String trimQuote(String text) {
+        if (text.length() < 2)
+            return text;
+
+        int beginLen = 0;
+        int endLen = text.length();
+
+        if ('\"' == text.charAt(beginLen) && '\"' == text.charAt(endLen - 1)) {
+            return text.substring(1, endLen - 1);
+        }
+
+        return text;
+    }
     // private static boolean checkFileHeader(String[] headers) {
     //
     // List<String> patternEnum = new ArrayList<String>();

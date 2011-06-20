@@ -75,7 +75,12 @@ public class CsvFileTableViewer extends Composite {
 
             try {
                 while (csvReader.readRecord()) {
-                    rows.add(csvReader.getValues());
+                    char delimiter = reader.getDelimiter();
+                    String rawRecord = reader.getRawRecord();
+
+                    String[] columnsValue = rawRecord.split(String.valueOf(delimiter));
+                    rows.add(columnsValue);
+                    // rows.add(csvReader.getValues());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -197,7 +202,7 @@ public class CsvFileTableViewer extends Composite {
             e1.printStackTrace();
             return false;
         }
-        reader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
+        reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
         reader.setUseTextQualifier(useTextQualifier);
         try {
             reader.readHeaders();
