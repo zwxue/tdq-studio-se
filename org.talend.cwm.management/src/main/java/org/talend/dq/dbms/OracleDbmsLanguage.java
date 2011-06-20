@@ -238,4 +238,13 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
         return false;
     }
+
+    /**
+     * DOC yyi 2011-06-20 22246:view rows for average length for Oracle
+     * 
+     * @return average length sql statement
+     */
+    public String getAverageLengthRows() {
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ 
+    }
 }
