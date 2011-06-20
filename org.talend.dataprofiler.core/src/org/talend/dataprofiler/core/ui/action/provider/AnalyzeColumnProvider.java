@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnAction;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -70,8 +71,9 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
 
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
-        if (isSelectedColumnLevel(currentSelection)) {
-            IMenuManager submenu = new MenuManager(DefaultMessagesImpl.getString("AnalyzeColumnProvider.columnAnalysis"), NEW_MENU_NAME);//$NON-NLS-1$
+        if (isSelectedColumnLevel(currentSelection) || isSelectedMdmColumn(currentSelection)) {
+            IMenuManager submenu = new MenuManager(
+                    DefaultMessagesImpl.getString("AnalyzeColumnProvider.columnAnalysis"), NEW_MENU_NAME);//$NON-NLS-1$
             menu.insertAfter(ICommonMenuConstants.GROUP_NEW, submenu);
             analyzeColumnAction.setColumnSelection(currentSelection);
             submenu.add(analyzeColumnAction);
@@ -120,4 +122,19 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
         return true;
     }
 
+    /**
+     * DOC yyi 2011-06-17 22418: Missing "Analyze Column Set" menu on the MDM entities
+     * 
+     * @param currentSelection
+     * @return
+     */
+    private boolean isSelectedMdmColumn(TreeSelection currentSelection) {
+        for (Object obj : currentSelection.toList()) {
+            if (!(obj instanceof MDMXmlElementRepNode)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
