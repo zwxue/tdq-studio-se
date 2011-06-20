@@ -43,6 +43,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -223,10 +224,13 @@ public final class PatternUtilities {
 
             // MOD qiongli 2011-1-10 feature 16796
             boolean isDelimitedFileConnection = ConnectionUtils.isDelimitedFileConnection((DataProvider) dm);
+            boolean isMdmConnection = ConnectionUtils.isMdmConnection((DataProvider) dm);
             if (trc != null) {
                 java.sql.Connection conn = trc.getObject();
                 if (isDelimitedFileConnection) {
                     dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage((DelimitedFileConnection) dm);
+                } else if (isMdmConnection) {
+                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage((MDMConnection) dm);
                 } else {
                     try {
                         SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);

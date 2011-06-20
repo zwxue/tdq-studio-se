@@ -352,7 +352,7 @@ public final class MetadataHelper {
             if (modelElement instanceof TdColumn) {
                 return getDataminingType((TdColumn) modelElement);
             } else if (modelElement instanceof TdXmlElementType) {
-                DataminingType.get(((TdXmlElementType) modelElement).getContentType());
+                return DataminingType.get(((TdXmlElementType) modelElement).getContentType());
             }
         }
         return getDefaultDataminingType(0);

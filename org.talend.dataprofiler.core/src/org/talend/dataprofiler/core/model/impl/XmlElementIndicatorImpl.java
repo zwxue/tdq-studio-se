@@ -16,6 +16,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeR
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.utils.sql.TalendTypeConvert;
 
 
 /**
@@ -34,6 +35,7 @@ public class XmlElementIndicatorImpl extends ModelElementIndicatorImpl implement
     }
 
     public int getJavaType() {
-        return super.getJavaType();
+
+        return TalendTypeConvert.convertToJDBCType(getXmlElementType().getJavaType());
     }
 }

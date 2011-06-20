@@ -391,6 +391,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             DataminingType dataminingType = MetadataHelper.getDataminingType(modelElement);
             if (meIndicator instanceof DelimitedFileIndicator) {
                 dataminingType = MetadataHelper.getDefaultDataminingType(meIndicator.getJavaType());
+            } else if (meIndicator instanceof XmlElementIndicator) {
+                // MOD yyi 2011-06-15 22419:column set pattern for MDM
+                dataminingType = MetadataHelper.getDataminingType(modelElement);
             }
 
             if (dataminingType == null) {

@@ -18,9 +18,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -66,14 +63,6 @@ public class PatternMouseAdapter extends MouseAdapter {
         DataManager dm = analysis.getContext().getConnection();
         if (dm == null) {
             masterPage.doSave(null);
-        }
-
-        if (dm != null && dm instanceof Connection) {
-            Connection dp = (Connection) dm;
-            if (ConnectionUtils.isMdmConnection(dp)) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dontSupport"));//$NON-NLS-1$
-                return;
-            }
         }
 
         // IFolder libProject = ResourceManager.getLibrariesFolder();

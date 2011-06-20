@@ -855,8 +855,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                     Indicator[] inds = modelElementInd.getPatternIndicators();
                     for (Indicator ind : inds) {
                         if (ind instanceof RegexpMatchingIndicator) {
-                            ind.setAnalyzedElement(((MetadataColumnRepositoryObject) modelElementInd
-                                    .getModelElementRepositoryNode().getObject()).getTdColumn());
+                            // MOD yyi 2011-06-15 22419:column set pattern for MDM
+                            IRepositoryViewObject obj = modelElementInd.getModelElementRepositoryNode().getObject();
+                            ModelElement analyzedElt = obj instanceof MetadataColumnRepositoryObject ? ((MetadataColumnRepositoryObject) obj)
+                                    .getTdColumn() : ((MetadataXmlElementTypeRepositoryObject) obj).getModelElement();
+                            ind.setAnalyzedElement(analyzedElt);
                             allMatchIndicator.getCompositeRegexMatchingIndicators().add((RegexpMatchingIndicator) ind);
                         }
                     }
