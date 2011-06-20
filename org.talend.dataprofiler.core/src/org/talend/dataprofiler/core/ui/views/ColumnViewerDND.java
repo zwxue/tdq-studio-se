@@ -46,6 +46,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
@@ -261,44 +262,45 @@ public class ColumnViewerDND {
             // MOD mzhao, bug 13993 cannot drag and drop patterns to MDM elements currently. 2010-07-05
             TreeItem item = (TreeItem) event.item;
             Object indData = item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
-            if (!(indData instanceof ColumnIndicator)) {
-                return;
-            }
-            ColumnIndicator data = (ColumnIndicator) indData;
-
-            // MOD klliu 2010-06-12 bug 13696
-            StructuredSelection ts = (StructuredSelection) commonViewer.getSelection();
-            AbstractColumnDropTree viewer = null;
-            Analysis analysis = null;
-            ArrayList<IFile> al = new ArrayList<IFile>();
-            if (ts.iterator() != null) {
-                Iterator<IRepositoryNode> iter = (Iterator<IRepositoryNode>) ts.iterator();
-                while (iter.hasNext()) {
-                    IFile fe = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath((PatternRepNode) iter.next()));
-                    al.add(fe);
-                }
-                for (IFile fe : al) {
-                    // MOD yyi 2010-07-01 13993: Drag&drop patterns to column set analysis,get NPE.
-                    viewer = (AbstractColumnDropTree) item.getParent().getData();
-                    if (viewer instanceof AnalysisColumnTreeViewer) {
-                        analysis = ((AnalysisColumnTreeViewer) viewer).getAnalysis();
-                        TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-                        if (trc.isOk()) {
-                            ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, trc.getObject());
-                        } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) { //$NON-NLS-1$
-                            MessageUI.openError(trc.getMessage());
-                        }
-                    } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
-                        analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis();
-                        TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
-                        if (trc.isOk()) {
-                            ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, trc.getObject());
-                        } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) { //$NON-NLS-1$
-                            MessageUI.openError(trc.getMessage());
+            // MOD yyi 2011-06-15 22419:column set pattern for MDM
+            if (indData instanceof ColumnIndicator || indData instanceof XmlElementIndicator) {
+                // ColumnIndicator data = (ColumnIndicator) indData;
+                ModelElementIndicator data = (ModelElementIndicator) indData;
+                // MOD klliu 2010-06-12 bug 13696
+                StructuredSelection ts = (StructuredSelection) commonViewer.getSelection();
+                AbstractColumnDropTree viewer = null;
+                Analysis analysis = null;
+                ArrayList<IFile> al = new ArrayList<IFile>();
+                if (ts.iterator() != null) {
+                    Iterator<IRepositoryNode> iter = (Iterator<IRepositoryNode>) ts.iterator();
+                    while (iter.hasNext()) {
+                        IFile fe = ResourceManager.getRootProject().getFile(
+                                WorkbenchUtils.getFilePath((PatternRepNode) iter.next()));
+                        al.add(fe);
+                    }
+                    for (IFile fe : al) {
+                        // MOD yyi 2010-07-01 13993: Drag&drop patterns to column set analysis,get NPE.
+                        viewer = (AbstractColumnDropTree) item.getParent().getData();
+                        if (viewer instanceof AnalysisColumnTreeViewer) {
+                            analysis = ((AnalysisColumnTreeViewer) viewer).getAnalysis();
+                            TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
+                            if (trc.isOk()) {
+                                ((AnalysisColumnTreeViewer) viewer).createOneUnit(item, trc.getObject());
+                            } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) { //$NON-NLS-1$
+                                MessageUI.openError(trc.getMessage());
+                            }
+                        } else if (viewer instanceof AnalysisColumnSetTreeViewer) {
+                            analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis();
+                            TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
+                            if (trc.isOk()) {
+                                ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, trc.getObject());
+                            } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) { //$NON-NLS-1$
+                                MessageUI.openError(trc.getMessage());
+                            }
                         }
                     }
+                    viewer.setDirty(true);
                 }
-                viewer.setDirty(true);
             }
         }
     }
