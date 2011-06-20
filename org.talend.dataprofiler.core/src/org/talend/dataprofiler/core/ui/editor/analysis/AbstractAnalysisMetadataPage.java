@@ -199,7 +199,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // MOD klliu bug 19995 question2
         // After checking nametext contain empty string,must setUp FormPage's dirty is false in saving
         // process
-        setDirty(false);
+        // MOD qiongli 2011-6-20 bug 21533,don't setDirty(false) in this place.
         // ~
         return new ReturnCode(true);
         // ~19179
