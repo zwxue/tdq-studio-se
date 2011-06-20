@@ -13,12 +13,15 @@
 package org.talend.dataprofiler.core.ui.views;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEffect;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.widgets.Control;
+import org.talend.dq.helper.PropertyHelper;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -92,6 +95,14 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
             if (object instanceof IFile) {
                 IFile fe = (IFile) object;
                 if (extension != null && extension.equals(fe.getFileExtension())) {
+                    ret = true;
+                }
+            } else if (object instanceof IRepositoryNode) {
+                IPath itemPath = PropertyHelper.getItemPath(((IRepositoryNode) object).getObject().getProperty());
+                if (itemPath == null) {
+                    continue;
+                }
+                if (extension != null && extension.equals(itemPath.getFileExtension())) {
                     ret = true;
                 }
             }
