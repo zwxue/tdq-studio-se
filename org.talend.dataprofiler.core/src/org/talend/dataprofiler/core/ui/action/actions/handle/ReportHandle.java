@@ -48,11 +48,15 @@ public class ReportHandle extends EMFResourceHandle {
     protected ModelElement update(ModelElement oldObject, ModelElement newObject) {
         newObject = super.update(oldObject, newObject);
 
+        // MOD klliu 2011-06-21 bug 21812 "duplicate report" have some issue
+        TdReport report = (TdReport) newObject;
+        report.getAnalysisMap().clear();
         List<Analysis> anaLs = ReportHelper.getAnalyses((TdReport) oldObject);
         for (Analysis analysis : anaLs) {
-            DependenciesHandler.getInstance().setDependencyOn((TdReport) newObject, analysis);
+            DependenciesHandler.getInstance().setDependencyOn(report, analysis);
             ((TdReport) newObject).addAnalysis(analysis);
         }
+        // ~
 
         return newObject;
     }
