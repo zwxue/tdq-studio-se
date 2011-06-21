@@ -58,6 +58,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -238,7 +239,8 @@ public class ColumnViewerDND {
                     if (viewer instanceof AnalysisColumnSetTreeViewer) {
                         String expressionType = DomainHelper.getExpressionType(pattern);
                         boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
-                        if (isSQLPattern) {
+                        Analysis analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis(); 
+                        if (isSQLPattern|| ExecutionLanguage.SQL.equals(analysis.getParameters().getExecutionLanguage())) {
                             is = true;
                         }
                     }

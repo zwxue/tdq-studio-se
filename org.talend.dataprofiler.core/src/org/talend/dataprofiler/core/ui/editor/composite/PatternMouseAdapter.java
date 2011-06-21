@@ -18,12 +18,15 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -73,6 +76,15 @@ public class PatternMouseAdapter extends MouseAdapter {
         if (null != filters) {
             for (ViewerFilter filter : filters) {
                 dialog.addFilter(filter);
+            }
+        }
+        // MOD qiongli 2011-6-16 bug 21768,pattern in columnset just support java engine.
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        if (AnalysisType.COLUMN_SET.equals(analysisType)) {
+            if (ExecutionLanguage.SQL.equals(executionLanguage)) {
+                MessageUI.openWarning(DefaultMessagesImpl.getString("PatternMouseAdapter.noSupportForSqlEngine"));
+                return;
             }
         }
 
