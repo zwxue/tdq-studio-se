@@ -95,15 +95,9 @@ public final class ReportHelper {
         // Analysis: column comparison
         BASIC_COLUMNS_COMPARISON(BASIC, PROPS.getProperty("BASIC_COLUMNS_COMPARISON")), //$NON-NLS-1$
         EVOLUTION_COLUMNS_COMPARISON(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_COMPARISON")), //$NON-NLS-1$
-        // ORACLE
-        BASIC_COLUMNS_COMPARISON_ORALCE(BASIC, PROPS.getProperty("BASIC_COLUMNS_COMPARISON_ORACLE")), //$NON-NLS-1$
-        EVOLUTION_COLUMNS_COMPARISON_ORACLE(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_COMPARISON_ORACLE")), //$NON-NLS-1$
         // Analysis: column correation
         BASIC_COLUMNS_CORRELATION(BASIC, PROPS.getProperty("BASIC_COLUMNS_CORRELATION")), //$NON-NLS-1$
         EVOLUTION_COLUMNS_CORRELATION(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_CORRELATION")), //$NON-NLS-1$
-        // oracle
-        BASIC_COLUMNS_CORRELATION_ORACLE(BASIC, PROPS.getProperty("BASIC_COLUMNS_CORRELATION_ORACLE")), //$NON-NLS-1$
-        EVOLUTION_COLUMNS_CORRELATION_ORACLE(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMNS_CORRELATION_ORACLE")), //$NON-NLS-1$
 
         // Analysis: Functional Dependency analysis.
         BASIC_TABLE_FUNCTIONAL_DEPENDENCY(BASIC, PROPS.getProperty("BASIC_TABLE_FUNCTIONAL_DEPENDENCY")), //$NON-NLS-1$
@@ -293,32 +287,18 @@ public final class ReportHelper {
                     return EVOLUTION_TABLE;
                 }
             } else if (anaType.getName().equals(AnalysisType.COLUMNS_COMPARISON.getName())) {
-                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
-                    if (BASIC_COLUMNS_COMPARISON_ORALCE.getLabel().equals(text)) {
-                        return BASIC_COLUMNS_COMPARISON_ORALCE;
-                    } else if (EVOLUTION_COLUMNS_COMPARISON_ORACLE.getLabel().equals(text)) {
-                        return EVOLUTION_COLUMNS_COMPARISON_ORACLE;
-                    }
-                } else if (!StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
-                    if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
-                        return BASIC_COLUMNS_COMPARISON;
-                    } else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
-                        return EVOLUTION_COLUMNS_COMPARISON;
-                    }
+                // MOD qiongli 2011-6-22 bug 16570,use the same jrxml between oracle and mysql
+                if (BASIC_COLUMNS_COMPARISON.getLabel().equals(text)) {
+                    return BASIC_COLUMNS_COMPARISON;
+                } else if (EVOLUTION_COLUMNS_COMPARISON.getLabel().equals(text)) {
+                    return EVOLUTION_COLUMNS_COMPARISON;
                 }
             } else if (anaType.getName().equals(AnalysisType.COLUMN_CORRELATION.getName())) {
-                if (StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
-                    if (BASIC_COLUMNS_CORRELATION_ORACLE.getLabel().equals(text)) {
-                        return BASIC_COLUMNS_CORRELATION_ORACLE;
-                    } else if (EVOLUTION_COLUMNS_CORRELATION_ORACLE.getLabel().equals(text)) {
-                        return EVOLUTION_COLUMNS_CORRELATION_ORACLE;
-                    }
-                } else if (!StringUtils.equalsIgnoreCase(dbType, "Oracle with SID")) {
-                    if (BASIC_COLUMNS_CORRELATION.getLabel().equals(text)) {
-                        return BASIC_COLUMNS_CORRELATION;
-                    } else if (EVOLUTION_COLUMNS_CORRELATION.getLabel().equals(text)) {
-                        return EVOLUTION_COLUMNS_CORRELATION;
-                    }
+                // MOD qiongli 2011-6-22 bug 16570,use the same jrxml between oracle and mysql
+                if (BASIC_COLUMNS_CORRELATION.getLabel().equals(text)) {
+                    return BASIC_COLUMNS_CORRELATION;
+                } else if (EVOLUTION_COLUMNS_CORRELATION.getLabel().equals(text)) {
+                    return EVOLUTION_COLUMNS_CORRELATION;
                 }
 
             } else if (anaType.getName().equals(AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY.getName())) {
