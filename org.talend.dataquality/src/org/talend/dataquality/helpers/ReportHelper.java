@@ -22,6 +22,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -692,6 +694,10 @@ public final class ReportHelper {
             return null;
         }
         return reportContainer.getFolder(DOT_MARK + simpleName);
+    }
+
+    public static IPath getSubReportsPath() {
+        return new Path(PROPS.getProperty("SUB_REPORT_FOLDER"));
     }
 
 }
