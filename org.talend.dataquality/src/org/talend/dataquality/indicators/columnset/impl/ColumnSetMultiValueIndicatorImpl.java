@@ -329,8 +329,6 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
                 }
                 if (dataminingType != null && DataminingType.NOMINAL.equals(dataminingType)) {
                     nominalColumns.add(column);
-                } else if (null != mdColumn) {
-                    nominalColumns.add(column);
                 }
             }
         }
