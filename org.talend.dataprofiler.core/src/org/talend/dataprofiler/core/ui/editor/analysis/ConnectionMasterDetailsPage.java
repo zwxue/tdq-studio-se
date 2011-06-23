@@ -32,7 +32,7 @@ import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IProxyRepositoryService;
 import org.talend.repository.model.IRepositoryNode;
@@ -46,7 +46,7 @@ import orgomg.cwm.resource.relational.Catalog;
  */
 public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
 
-    private DBConnectionRepNode connectionNode;
+    private ConnectionRepNode connectionNode;
 
     public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -61,7 +61,7 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
     // }
     // }
     protected void fillDataProvider() {
-        connectionNode = (DBConnectionRepNode) getCurrentRepNodeOnUI();
+        connectionNode = (ConnectionRepNode) getCurrentRepNodeOnUI();
         if (connectionNode != null) {
             IProxyRepositoryFactory factory = ((IProxyRepositoryService) GlobalServiceRegister.getDefault().getService(
                     IProxyRepositoryService.class)).getProxyRepositoryFactory();

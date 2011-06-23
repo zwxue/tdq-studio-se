@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -34,22 +33,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.core.model.properties.PropertiesPackage;
-import org.talend.core.model.properties.Property;
-import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.objectmodel.core.CorePackage;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * 
@@ -162,6 +152,7 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
 
         return findMember;
     }
+
     private boolean checkResource(Resource resource) {
         URI uri = resource.getURI();
 
@@ -223,8 +214,8 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
         return new Runnable() {
 
             public void run() {
-                IFile propFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-                        file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
+                IFile propFile = ResourcesPlugin.getWorkspace().getRoot()
+                        .getFile(file.getFullPath().removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
                 if (propFile.exists()) {
                     try {
                         propFile.delete(true, new NullProgressMonitor());
@@ -240,78 +231,9 @@ public class ResoureceChangedListener extends WorkbenchContentProvider {
         return new Runnable() {
 
             public void run() {
-
-                IFile propFile = PropertyHelper.getPropertyFile(resource);
-
-                if (propFile != null && propFile.exists()) {
-
-                    Resource propertyResource = RepResourceFileHelper.getInstance().getFileResource(propFile);
-
-                    updateProperty(resource, propertyResource);
-
-                    updateElement(resource, propertyResource);
-
-                }
+                // do nothing.
             }
         };
     }
 
-    /**
-     * DOC bZhou Comment method "updateElement".
-     * 
-     * @param resource
-     * @param propertyResource
-     */
-    private void updateElement(final Resource resource, Resource propertyResource) {
-        EList<EObject> modelElements = resource.getContents();
-
-        ModelElement modelElement = (ModelElement) EcoreUtil.getObjectByType(modelElements, CorePackage.eINSTANCE
-                .getModelElement());
-        // Item item = DQConnectionReposViewObjDelegator.getInstance().getReposViewObjByProperty(
-        // PropertyHelper.getProperty(PropertyHelper.getPropertyFile(propertyResource))).getProperty().getItem();
-        // if (item instanceof ConnectionItem) {
-        // modelElement = ((ConnectionItem) item).getConnection();
-        // }
-
-        if (modelElement != null) {
-            MetadataHelper.setPropertyPath(propertyResource.getURI().toPlatformString(true), modelElement);
-            util.saveResource(resource);
-        }
-    }
-
-    /**
-     * DOC bZhou Comment method "updateProperty".
-     * 
-     * @param elementResource
-     * @param propertyResource
-     */
-    private void updateProperty(final Resource elementResource, Resource propertyResource) {
-        EList<EObject> contents = propertyResource.getContents();
-
-        Property property = (Property) EcoreUtil.getObjectByType(contents, PropertiesPackage.eINSTANCE.getProperty());
-
-        if (property != null) {
-            URI elementURI = elementResource.getURI();
-
-            IPath newPath = new Path(elementURI.toPlatformString(true));
-            IPath itemTypedPath = PropertyHelper.getItemTypedPath(property);
-            // MOD klliu 2010-09-08 bug 15438
-            if (itemTypedPath != null) {
-                IPath rootPath = ResourceManager.getRootProject().getFolder(itemTypedPath).getFullPath();
-
-                if (rootPath != null) {
-                    newPath = newPath.makeRelativeTo(rootPath);
-                    newPath = newPath.removeLastSegments(1);
-
-                    String oldPath = property.getItem().getState().getPath();
-                    if (!StringUtils.equals(oldPath, newPath.toString())) {
-                        property.getItem().getState().setPath(newPath.toString());
-                        URI desUri = elementResource.getURI().trimFileExtension()
-                                .appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
-                        EMFSharedResources.getInstance().saveToUri(propertyResource, desUri.trimSegments(1));
-                    }
-                }
-            }
-        }
-    }
 }

@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
@@ -130,9 +131,9 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
     private void handlePropertiesFile(File resource) throws PersistenceException {
         Property property = PropertyHelper.getProperty(resource);
 
-        Item item = property.getItem();
-        if (item instanceof TDQItem) {
-            String fileName = ((TDQItem) item).getFilename();
+        Item oldItem = property.getItem();
+        if (oldItem instanceof TDQItem) {
+            String fileName = ((TDQItem) oldItem).getFilename();
             File theFile = new File(resource.getParent() + File.separator + fileName);
 
             File desFile = new File(resource.getParent() + File.separator + fileName.substring(0, fileName.lastIndexOf('.') + 1)
@@ -154,25 +155,31 @@ public class ExchangeFileNameToReferenceTask extends AbstractWorksapceUpdateTask
                 }
 
                 if (connection != null) {
-                    ConnectionItem connectionItem = null;
+                    ConnectionItem newItem = null;
 
                     if (connection instanceof DatabaseConnection) {
-                        connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+                        newItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
                     } else {
-                        connectionItem = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
+                        newItem = PropertiesFactory.eINSTANCE.createMDMConnectionItem();
                     }
 
-                    connectionItem.setConnection(connection);
+                    newItem.setConnection(connection);
 
-                    if (item.getState() != null) {
-                        connectionItem.setState(item.getState());
+                    if (oldItem.getState() != null) {
+                        newItem.setState(oldItem.getState());
                     } else {
                         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
-                        connectionItem.setState(itemState);
+                        newItem.setState(itemState);
                     }
-                    property.setItem(connectionItem);
-                    property.eResource().getContents().add(connectionItem);
-                    ProxyRepositoryFactory.getInstance().save(property);
+
+                    property.setItem(newItem);
+                    property.eResource().getContents().remove(oldItem);
+                    property.eResource().getContents().add(newItem);
+                    if (isWorksapcePath()) {
+                        ProxyRepositoryFactory.getInstance().save(property);
+                    } else {
+                        EMFUtil.saveResource(property.eResource());
+                    }
                 }
             }
 

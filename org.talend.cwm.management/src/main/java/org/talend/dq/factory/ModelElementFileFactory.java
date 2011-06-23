@@ -110,7 +110,7 @@ public final class ModelElementFileFactory {
             modelElement = PatternResourceFileHelper.getInstance();
         } else if (FactoriesUtil.isUDIFile(fileExtension)) {
             modelElement = IndicatorResourceFileHelper.getInstance();
-        } else if (FactoriesUtil.isItemFile(fileExtension)) {
+        } else if (FactoriesUtil.isItemFile(fileExtension) || FactoriesUtil.isProvFile(fileExtension)) {
             modelElement = PrvResourceFileHelper.getInstance();
         }
         return modelElement;

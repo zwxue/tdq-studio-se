@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
@@ -28,6 +29,8 @@ import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
  * DOC bZhou class global comment. Detailled comment
  */
 public class UpdateDatabaseTypeTask extends AbstractWorksapceUpdateTask {
+
+    private static Logger log = Logger.getLogger(UpdateDatabaseTypeTask.class);
 
     private static final String RAW_JDBC_TYPE = "Generic JDBC"; //$NON-NLS-1$
 
@@ -63,15 +66,19 @@ public class UpdateDatabaseTypeTask extends AbstractWorksapceUpdateTask {
 
         for (IRepositoryViewObject object : allConnectionObject) {
             ConnectionItem item = (ConnectionItem) object.getProperty().getItem();
-            DatabaseConnection connection = (DatabaseConnection) item.getConnection();
-            String rawType = connection.getDatabaseType();
-            if (StringUtils.equalsIgnoreCase(rawType, RAW_JDBC_TYPE)) {
-                connection.setDatabaseType(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey());
-            } else if (StringUtils.equalsIgnoreCase(rawType, RAW_SYBASE_TYPE)) {
-                connection.setDatabaseType(SupportDBUrlType.SYBASEDEFAULTURL.getDBKey());
-            }
+            if (item.getConnection() instanceof DatabaseConnection) {
+                DatabaseConnection connection = (DatabaseConnection) item.getConnection();
+                String rawType = connection.getDatabaseType();
+                if (StringUtils.equalsIgnoreCase(rawType, RAW_JDBC_TYPE)) {
+                    connection.setDatabaseType(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey());
+                } else if (StringUtils.equalsIgnoreCase(rawType, RAW_SYBASE_TYPE)) {
+                    connection.setDatabaseType(SupportDBUrlType.SYBASEDEFAULTURL.getDBKey());
+                }
 
-            ProxyRepositoryFactory.getInstance().save(item);
+                ProxyRepositoryFactory.getInstance().save(item);
+            } else {
+                log.error("Update Database " + object.getProperty().getLabel() + " Failed: It's not a Database Connection!");
+            }
         }
 
         return true;

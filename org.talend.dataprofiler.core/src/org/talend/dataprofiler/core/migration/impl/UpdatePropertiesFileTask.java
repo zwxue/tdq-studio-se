@@ -27,12 +27,13 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter;
+import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -94,15 +95,10 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
                 try {
                     Resource resource = emfUtil.getResourceSet().getResource(uri, true);
 
-                    eObject = resource.getContents().get(0);
+                    ResourceFileMap resourceFileMap = ModelElementFileFactory.getResourceFileMap(uri.fileExtension());
 
-                    if (FactoriesUtil.isProvFile(uri.fileExtension())) {
-                        for (EObject object : resource.getContents()) {
-                            if (object instanceof Connection) {
-                                eObject = object;
-                                break;
-                            }
-                        }
+                    if (resourceFileMap != null) {
+                        eObject = resourceFileMap.getModelElement(resource);
                     }
                 } catch (Exception e) {
                     log.warn(DefaultMessagesImpl.getString("UpdatePropertiesFileTask_2", file.getAbsolutePath()), e); //$NON-NLS-1$
@@ -133,7 +129,7 @@ public class UpdatePropertiesFileTask extends AbstractWorksapceUpdateTask {
     private void saveObject(EMFUtil emfUtil, File file, URI uri, EObject eObject) {
         ModelElement modelElement = (ModelElement) eObject;
 
-        AElementPersistance writer = ElementWriterFactory.getInstance().create(uri.fileExtension());
+        AElementPersistance writer = ElementWriterFactory.getInstance().create(modelElement);
 
         Property oldPropery = PropertyHelper.getProperty(modelElement);
         if (writer != null) {

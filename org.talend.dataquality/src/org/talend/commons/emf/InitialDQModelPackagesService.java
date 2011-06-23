@@ -15,6 +15,7 @@ package org.talend.commons.emf;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.AbstractDQModelService;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
@@ -24,9 +25,8 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class InitialDQModelPackagesService extends AbstractDQModelService {
 
@@ -82,6 +82,18 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
             @Override
             public Object caseTDQSourceFileItem(TDQSourceFileItem object) {
                 return ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT;
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.properties.util.PropertiesSwitch#caseTDQItem(org.talend.core.model.properties.
+             * TDQItem)
+             */
+            @Override
+            public Object caseTDQItem(TDQItem object) {
+                return ERepositoryObjectType.TDQ_ELEMENT;
             }
 
             public Object defaultCase(EObject object) {

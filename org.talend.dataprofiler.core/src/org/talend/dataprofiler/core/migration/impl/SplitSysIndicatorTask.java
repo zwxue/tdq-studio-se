@@ -31,8 +31,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.writer.impl.AnalysisWriter;
-import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
@@ -68,7 +67,6 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
         // Migration for analyses (indicator definition)
         Collection<Analysis> analyses = (Collection<Analysis>) AnaResourceFileHelper.getInstance().getAllElement();
 
-        AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
         for (Analysis ana : analyses) {
             try {
                 for (Indicator ind : ana.getResults().getIndicators()) {
@@ -79,7 +77,7 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
                         }
                     }
                 }
-                analysisWriter.save(ana);
+                EMFSharedResources.getInstance().saveResource(ana.eResource());
             } catch (Exception e) {
                 log.warn(e, e);
                 ok = false;

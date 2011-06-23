@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
@@ -34,6 +35,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.analysis.Analysis;
@@ -42,7 +47,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -130,15 +135,20 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
         for (File file : fileList) {
             IFile iFile = WorkspaceUtils.fileToIFile(file);
-            ModelElement modelElement = PrvResourceFileHelper.getInstance().getModelElement(iFile);
-            if (modelElement != null && modelElement instanceof DatabaseConnection) {
-                DatabaseConnection connection = (DatabaseConnection) modelElement;
 
-                String otherParameter = ConnectionHelper.getOtherParameter(connection);
-                if (!StringUtils.isBlank(otherParameter)) {
-                    connection.setUiSchema(otherParameter);
+            Property property = PropertyHelper.getProperty(iFile);
+            if (property != null) {
+                Item item = property.getItem();
+                EResourceConstant type = EResourceConstant.getTypedConstant(item);
+                if (type == EResourceConstant.DB_CONNECTIONS) {
+                    DatabaseConnectionItem dbItem = (DatabaseConnectionItem) item;
+                    DatabaseConnection connection = (DatabaseConnection) dbItem.getConnection();
 
-                    EMFSharedResources.getInstance().saveResource(connection.eResource());
+                    String otherParameter = ConnectionHelper.getOtherParameter(connection);
+                    if (!StringUtils.isBlank(otherParameter)) {
+                        connection.setUiSchema(otherParameter);
+                        EMFSharedResources.getInstance().saveResource(connection.eResource());
+                    }
                 }
             }
         }
@@ -155,7 +165,12 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
             updateIndicatorItem(file);
 
-            reloadFile(file);
+            try {
+                reloadFile(file);
+            } catch (Exception e) {
+                log.warn(e, e);
+                // continue if any exception.
+            }
         }
 
         ResourceService.refreshStructure();
@@ -268,14 +283,21 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * DOC bZhou Comment method "deleteOldFile".
      * 
      * @param file
+     * @throws CoreException
      */
-    private void deleteOldItemFile(File file) {
-        file.delete();
-        File propFile = new Path(file.getAbsolutePath()).removeFileExtension()
-                .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
-        if (propFile.exists()) {
-            propFile.delete();
+    private void deleteOldItemFile(File file) throws CoreException {
+        IFile itemFile = WorkspaceUtils.fileToIFile(file);
+        IFile propFile = PropertyHelper.getPropertyFile(itemFile);
+
+        Property property = PropertyHelper.getProperty(propFile);
+
+        Item currentItem = property.getItem();
+        if (currentItem.getParent() instanceof FolderItem) {
+            ((FolderItem) currentItem.getParent()).getChildren().remove(currentItem);
         }
+
+        itemFile.delete(true, null);
+        propFile.delete(true, null);
     }
 
     /**

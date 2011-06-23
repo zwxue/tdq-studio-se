@@ -24,8 +24,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.writer.impl.AnalysisWriter;
-import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.dq.writer.EMFSharedResources;
 
 /**
  * 
@@ -45,7 +44,6 @@ public class RefineTextIndicatorsTask extends AbstractWorksapceUpdateTask {
         // Migration for analyses (indicator definition)
         try {
             Collection<Analysis> analyses = (Collection<Analysis>) AnaResourceFileHelper.getInstance().getAllElement();
-            AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
             for (Analysis analysis : analyses) {
                 EList<Indicator> allIndics = analysis.getResults().getIndicators();
                 List<Indicator> textIndLeaves = null;
@@ -61,7 +59,7 @@ public class RefineTextIndicatorsTask extends AbstractWorksapceUpdateTask {
                     analysis.getResults().getIndicators().remove(textIndCategory);
                     analysis.getResults().getIndicators().addAll(textIndLeaves);
                 }
-                analysisWriter.save(analysis);
+                EMFSharedResources.getInstance().saveResource(analysis.eResource());
             }
         } catch (Exception e) {
             log.error(e, e);

@@ -558,8 +558,8 @@ public final class DQStructureManager {
                     IFolder folder = desFolder.getFolder(file.getName());
                     if (!folder.exists()) {
                         // ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType., path, label)
-                        // folder.create(true, true, null);
-                        this.createDQStructure();
+                        folder.create(true, true, null);
+                        // this.createDQStructure();
                     }
 
                     copyFilesToFolder(plugin, currentPath, recurse, folder, suffix, isImportItem);

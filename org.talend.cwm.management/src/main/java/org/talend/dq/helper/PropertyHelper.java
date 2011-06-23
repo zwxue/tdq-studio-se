@@ -418,9 +418,11 @@ public final class PropertyHelper {
     public static String computePath(Property property, File file) {
         IPath filePath = new Path(file.getAbsolutePath()).setDevice(null);
 
+        boolean isConnFromOld = file.getAbsolutePath().contains(EResourceConstant.OLD_METADATA.getName());
+
         int flag = 0;
         EResourceConstant typedConstant = EResourceConstant.getTypedConstant(property.getItem());
-        if (typedConstant != null) {
+        if (typedConstant != null && !isConnFromOld) {
             String typedName = typedConstant.getName();
 
             for (int i = 0; i < filePath.segmentCount(); i++) {
@@ -433,7 +435,7 @@ public final class PropertyHelper {
         } else {
             List<EResourceConstant> typedConstantList = EResourceConstant.getTypedConstantList();
             typedConstantList.add(EResourceConstant.OLD_DB_CONNECTIONS);
-            typedConstantList.add(EResourceConstant.MDM_CONNECTIONS);
+            typedConstantList.add(EResourceConstant.OLD_MDM_CONNECTIONS);
 
             for (int i = 0; i < filePath.segmentCount() && flag == 0; i++) {
                 String seg = filePath.segment(i);

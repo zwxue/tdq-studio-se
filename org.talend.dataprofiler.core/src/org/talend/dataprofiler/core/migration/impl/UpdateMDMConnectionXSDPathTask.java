@@ -115,7 +115,6 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
         for (File sample : fileList) {
             log.info(DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo2", counter, sample.getAbsolutePath())); //$NON-NLS-1$
             try {
-                // FIXME stream should be closed.
                 BufferedReader fileReader = new BufferedReader(new FileReader(sample));
                 BufferedWriter fileWriter = new BufferedWriter(new FileWriter(new File(sample.getAbsolutePath()
                         + MIGRATION_FILE_EXT)));
@@ -130,6 +129,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
 
                 fileWriter.flush();
                 fileWriter.close();
+                fileReader.close();
             } catch (Exception e) {
                 error = e;
                 errorCounter++;
@@ -144,6 +144,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
             result = false;
         } else {
             if (rename) {
+                System.gc();
                 // remove original files and rename new ones to old ones
                 for (File sample : fileList) {
                     boolean isDeleted = sample.delete();

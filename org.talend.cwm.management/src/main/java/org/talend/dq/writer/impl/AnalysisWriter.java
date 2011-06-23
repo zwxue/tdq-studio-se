@@ -112,7 +112,7 @@ public class AnalysisWriter extends AElementPersistance {
                             pattern);
                     if (dependencyReturn.isOk()) {
                         Property property = PropertyHelper.getProperty(pattern);
-                        if (property != null) {
+                        if (property != null && property.getItem() instanceof TDQPatternItem) {
                             TDQPatternItem patternItem = (TDQPatternItem) property.getItem();
                             patternItem.setPattern(pattern);
                         }

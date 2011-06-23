@@ -212,15 +212,6 @@ public final class ResourceManager {
     }
 
     /**
-     * DOC bZhou Comment method "getConnectionFolder".
-     * 
-     * @return
-     */
-    public static IFolder getTDQConnectionFolder() {
-        return getOneFolder(EResourceConstant.DB_CONNECTIONS);
-    }
-
-    /**
      * DOC bZhou Comment method "getMDMConnectionFolder".
      * 
      * @return

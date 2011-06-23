@@ -12,9 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.util.Iterator;
+
+import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.dataprofiler.core.migration.AProjectTask;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dq.writer.EMFSharedResources;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -31,7 +35,23 @@ public class UpdateVersionsTask extends AProjectTask {
         // update workspace version.
         WorkspaceVersionHelper.storeVersion();
 
+        // clear useless resource handel.
+        clearUnloadResources();
+
         return true;
+    }
+
+    /**
+     * DOC bZhou Comment method "clearUnloadResources".
+     */
+    private void clearUnloadResources() {
+        Iterator<Resource> it = EMFSharedResources.getInstance().getResourceSet().getResources().iterator();
+        while (it.hasNext()) {
+            Resource resource = it.next();
+            if (!resource.isLoaded() || resource.getContents().isEmpty()) {
+                it.remove();
+            }
+        }
     }
 
     /*

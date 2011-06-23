@@ -143,7 +143,20 @@ public final class MigrationTaskManager {
             }
         }
 
-        return validTasks;
+        List<IMigrationTask> resortList = new ArrayList<IMigrationTask>();
+        for (IMigrationTask task : validTasks) {
+            if (task.isModelTask()) {
+                resortList.add(task);
+            }
+        }
+
+        for (IMigrationTask task : validTasks) {
+            if (!task.isModelTask()) {
+                resortList.add(task);
+            }
+        }
+
+        return resortList;
     }
 
     /**
