@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +31,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
@@ -54,10 +52,8 @@ import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
-import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.RepositoryWorkUnit;
@@ -107,7 +103,7 @@ public class FileSystemImportWriter implements IImportWriter {
             checkDependency(record);
 
             if (checkExisted) {
-                checkExisted(record);
+                checkConflict(record);
             }
 
             if (!record.isValid()) {
@@ -116,29 +112,6 @@ public class FileSystemImportWriter implements IImportWriter {
         }
 
         return inValidRecords.toArray(new ItemRecord[inValidRecords.size()]);
-    }
-
-    /**
-     * DOC bZhou Comment method "checkExisted".
-     * 
-     * @param record
-     */
-    private void checkExisted(ItemRecord record) {
-        Property property = record.getProperty();
-        if (property != null) {
-            IPath itemPath = PropertyHelper.getItemPath(property);
-            if (itemPath != null) {
-                IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
-
-                if (itemFile.exists()) {
-                    record.addError("\"" + record.getName() + "\" is existed in workspace : " + itemFile.getFullPath().toString());//$NON-NLS-1$ //$NON-NLS-2$ 
-                } else {
-                    checkConflict(record);
-                }
-            } else {
-                record.addError("\"" + record.getName() + "\" can't analyze the path ! ");//$NON-NLS-1$ //$NON-NLS-2$ 
-            }
-        }
     }
 
     /**
@@ -154,7 +127,7 @@ public class FileSystemImportWriter implements IImportWriter {
                 List<IRepositoryViewObject> allObjects = DqRepositoryViewService.getAllRepositoryResourceObjects(true);
 
                 for (IRepositoryViewObject object : allObjects) {
-                    if (record.getProperty() != null && record.getProperty().getId().equals(object.getProperty().getId())) {
+                    if (isConflict(property, object.getProperty())) {
                         record.setConflictObject(object);
                         record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");//$NON-NLS-1$ //$NON-NLS-2$ 
 
@@ -166,6 +139,19 @@ public class FileSystemImportWriter implements IImportWriter {
                 record.addError("\"" + record.getName() + "\" check item conflict failed!");//$NON-NLS-1$ //$NON-NLS-2$ 
             }
         }
+    }
+
+    private boolean isConflict(Property p1, Property p2) {
+        if (p1 != null && p2 != null) {
+            // IPath itemPath = PropertyHelper.getItemPath(p1);
+            // if (itemPath != null) {
+            // IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
+            // return itemFile.exists();
+            // }
+            return p1.getId().equals(p2.getId()) || p1.getLabel().equals(p2.getLabel());
+        }
+
+        return false;
     }
 
     /**
@@ -390,9 +376,6 @@ public class FileSystemImportWriter implements IImportWriter {
 
         deleteTempProjectFolder();
 
-        clearUnloadResources();
-
-        syncConnectionWithExplorer();
     }
 
     private void handleDefinitionFile() throws IOException {
@@ -422,24 +405,6 @@ public class FileSystemImportWriter implements IImportWriter {
             }
             FileUtils.deleteDirectory(tempFolder);
         }
-    }
-
-    private void clearUnloadResources() {
-        Iterator<Resource> it = EMFSharedResources.getInstance().getResourceSet().getResources().iterator();
-        while (it.hasNext()) {
-            Resource resource = it.next();
-            if (!resource.isLoaded() || resource.getContents().isEmpty()) {
-                it.remove();
-            }
-        }
-    }
-
-    private void syncConnectionWithExplorer() {
-        // add connection alias.
-        List<? extends ModelElement> allDBConnection = PrvResourceFileHelper.getInstance().getAllElement(
-                ResourceManager.getConnectionFolder());
-
-        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(allDBConnection.toArray(new ModelElement[0]));
     }
 
     /*
