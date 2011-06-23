@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.Status;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -30,6 +31,7 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sql.TalendTypeConvert;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -353,7 +355,12 @@ public final class MetadataHelper {
                 return getDataminingType((TdColumn) modelElement);
             } else if (modelElement instanceof TdXmlElementType) {
                 return DataminingType.get(((TdXmlElementType) modelElement).getContentType());
+            } else if (modelElement instanceof MetadataColumn) {
+                // MOD yyi 2011-06-23 22700: override the method for flatfile column
+                int javaType = TalendTypeConvert.convertToJDBCType(((MetadataColumn) modelElement).getTalendType());
+                return MetadataHelper.getDefaultDataminingType(javaType);
             }
+
         }
         return getDefaultDataminingType(0);
     }
