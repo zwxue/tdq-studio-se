@@ -261,7 +261,15 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * @see org.talend.core.ui.branding.IBrandingConfiguration#getJobDesignName()
      */
     public String getJobDesignName() {
-        // TODO Auto-generated method stub
         return ERepositoryObjectType.PROCESS.name();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ui.branding.IBrandingConfiguration#isOnlyRemoteConnection()
+     */
+    public boolean isOnlyRemoteConnection() {
+        return false;
     }
 }
