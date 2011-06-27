@@ -66,8 +66,11 @@ public class ReportWriter extends AElementPersistance {
                 try {
                     Property property = PropertyHelper.getProperty(ana);
                     if (property != null) {
-                        TDQAnalysisItem anaItem = (TDQAnalysisItem) property.getItem();
-                        anaItem.setAnalysis(ana);
+                        Item item = property.getItem();
+                        if (item instanceof TDQAnalysisItem) {
+                            TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
+                            anaItem.setAnalysis(ana);
+                        }
                     }
                     ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
                             .saveResource(ana.eResource());
