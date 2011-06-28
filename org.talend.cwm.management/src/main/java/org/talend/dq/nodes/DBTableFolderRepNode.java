@@ -16,11 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
@@ -28,7 +30,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -134,7 +136,9 @@ public class DBTableFolderRepNode extends RepositoryNode {
 
             }
             if (tables.size() > 0) {
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                // MOD qiongli 2011-6-28 bug 22019,only need to save connection in this place.
+                Project currentProject = ProjectManager.getInstance().getCurrentProject();
+                ProxyRepositoryFactory.getInstance().save(currentProject, item);
             } else {
                 ConnectionUtils.retrieveColumn(tables);
             }
