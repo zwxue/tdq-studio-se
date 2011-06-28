@@ -153,6 +153,11 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         MDMConnection mdmConn = (MDMConnection) dataProvider;
         String datamodel = mdmConn.getDatamodel();
         try {
+            // ADD msjian 2011-6-28 17672 fixed: before get the mdm version, check the connection
+            if (!checkDatabaseConnection().isOk()) {
+                return null;
+            }
+
             XtentisBindingStub stub = getXtentisBindingStub();
             WSDataModelPK[] pks = stub.getDataModelPKs(new WSRegexDataModelPKs(PluginConstant.EMPTY_STRING));
             // MOD xqliu 2010-10-11 bug 15756
@@ -345,6 +350,11 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
     public String getVersion() {
         String versionStr = PluginConstant.EMPTY_STRING;
         try {
+            // ADD msjian 2011-6-28 17672 fixed: before get the mdm version, check the connection
+            if (!checkDatabaseConnection().isOk()) {
+                return versionStr;
+            }
+
             XtentisBindingStub stub = getXtentisBindingStub();
             WSVersion wsVersion = stub.getComponentVersion(new WSGetComponentVersion(WSComponent.DataManager, null));
             versionStr = wsVersion.getMajor() + PluginConstant.DOT_STRING + wsVersion.getMinor() + PluginConstant.DOT_STRING
