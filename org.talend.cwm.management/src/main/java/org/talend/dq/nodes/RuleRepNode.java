@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -57,5 +61,11 @@ public class RuleRepNode extends RepositoryNode {
     @Override
     public boolean canExpandForDoubleClick() {
         return false;
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren() {
+        // MOD klliu 2011-06-28 bug 22669
+        return new ArrayList<IRepositoryNode>();
     }
 }
