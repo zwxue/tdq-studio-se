@@ -204,11 +204,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
                 return traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
             }
-
-            traceError(Messages.getString(
-                    "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", new Object[] {//$NON-NLS-1$
-                    (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
-                            ResourceHelper.getUUID(indicatorDefinition), language }));
+            // MOD klliu 2011-06-28 bug 22555
+            Object[] args = new Object[] { (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
+                    ResourceHelper.getUUID(indicatorDefinition) };
+            String warnInfo = Messages.getString("ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", args) + Messages.getString("ColumnAnalysisSqlExecutor.ADDEXPREEIONINFOMATION", language);//$NON-NLS-1$ ////$NON-NLS-2$
+            return traceError(warnInfo);
+            // ~
         }
 
         // --- get indicator parameters and convert them into sql expression
@@ -1179,8 +1180,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws SQLException
      */
     private boolean runAnalysisIndicatorsParallel(Analysis analysis, Map<ModelElement, List<Indicator>> elementToIndicator,
-            Collection<Indicator> indicators,
-            ConnectionPool connPool) throws SQLException {
+            Collection<Indicator> indicators, ConnectionPool connPool) throws SQLException {
         // MOD qiongli 2011-5-20 bug 21580.backport rightly for bug 19107 and 19522.
 
         List<ExecutiveAnalysisJob> excuteAnalysisJober = new ArrayList<ExecutiveAnalysisJob>();
