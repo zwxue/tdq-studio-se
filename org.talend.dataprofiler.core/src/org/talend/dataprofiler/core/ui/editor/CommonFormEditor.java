@@ -94,7 +94,8 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         }
 
         public void elementMoved(Object originalElement, Object movedElement) {
-            close(true);
+            // MOD klliu 2011-06-30 bug 22436: when the Name of model element changes,that needs not close Editor
+            // close(true);
         }
     }
 
