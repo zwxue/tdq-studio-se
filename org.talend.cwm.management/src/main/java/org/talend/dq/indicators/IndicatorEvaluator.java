@@ -125,7 +125,15 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 // ~ 13826
 
                 // --- get content of column
-                Object object = resultSet.getObject(col);
+                Object object = null;
+                try {
+                    object = resultSet.getObject(col);
+                } catch (SQLException e) {
+                    if (resultSet.getString(col).equals("0000-00-00 00:00:00"))//$NON-NLS-1$  
+                        object = null;
+
+                }
+
                 // MOD zshen, when the type of object is TIMESTAMP then need getTimestamp(col) to get correct value,or
                 // the value only is the name of type and can't be match with TIMESTAMP.
                 // FIXME this will slow down a lot the computation
@@ -153,16 +161,30 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
                         recordIncrement = valueObjectList.size();
+                        List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                                .getAnalyzedElement().eContainer()));
                         for (int j = 0; j < columnCount; j++) {
-                            if (object != null && !(object instanceof String) && object.toString().indexOf("TIMESTAMP") > -1) { //$NON-NLS-1$
-                                object = resultSet.getTimestamp(col);
+                            String newcol = columnList.get(j).getName();
+                            Object newobject = null;
+                            try {
+                                newobject = resultSet.getObject(newcol);
+                            } catch (SQLException e) {
+                                if (resultSet.getString(newcol).equals("0000-00-00 00:00:00"))//$NON-NLS-1$  
+                                    newobject = null;
+
                             }
-                            if (recordIncrement < maxNumberRows) {
-                                if (recordIncrement < valueObjectList.size()) {
-                                    valueObjectList.get(recordIncrement)[j] = object;
+                            //                            if (newobject != null && !(newobject instanceof String) && newobject.toString().equals("0000-00-00 00:00:00")) { //$NON-NLS-1$  
+                            // newobject = null;
+                            // }
+                            if (recordIncrement < maxNumberRows) {// decide whether current record is more than max
+                                                                  // Number else don't need to record more than data.
+                                if (recordIncrement < valueObjectList.size()) {// decide whether need to increase
+                                                                               // current array.
+                                    valueObjectList.get(recordIncrement)[j] = newobject;
+
                                 } else {
                                     Object[] valueObject = new Object[columnCount];
-                                    valueObject[j] = object;
+                                    valueObject[j] = newobject;
                                     valueObjectList.add(valueObject);
                                 }
                             } else {
