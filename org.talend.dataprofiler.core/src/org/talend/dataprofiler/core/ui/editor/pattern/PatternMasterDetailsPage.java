@@ -131,7 +131,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
      * DOC rli Comment method "reset".
      */
     private void reset() {
-        String[] supportTypes = PatternLanguageType.getAllLanguageTypes(true);
+        String[] supportTypes = PatternLanguageType.getAllLanguageTypesForPattern();
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(supportTypes));
         if (tempPatternComponents == null) {

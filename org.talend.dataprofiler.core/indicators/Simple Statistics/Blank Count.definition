@@ -7,6 +7,5 @@
   <sqlGenericExpression xmi:id="_-VXeVIqnEd-SocVM_rHvUg" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>  WHERE TRIM(&lt;%=__COLUMN_NAMES__%>) IS NULL &lt;%=__AND_WHERE_CLAUSE__%>" language="Oracle"/>
   <sqlGenericExpression xmi:id="_-VXeVYqnEd-SocVM_rHvUg" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>  WHERE LTRIM(RTRIM(&lt;%=__COLUMN_NAMES__%>)) = '' &lt;%=__AND_WHERE_CLAUSE__%>" language="DB2"/>
   <sqlGenericExpression xmi:id="_-VXeVoqnEd-SocVM_rHvUg" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>  WHERE LTRIM(RTRIM(&lt;%=__COLUMN_NAMES__%>)) = '' &lt;%=__AND_WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
-  <sqlGenericExpression xmi:id="_-VXeV4qnEd-SocVM_rHvUg" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%>  WHERE LTRIM(RTRIM(&lt;%=__COLUMN_NAMES__%>)) = '' &lt;%=__AND_WHERE_CLAUSE__%>" language="Adaptive Server Enterprise"/>
   <sqlGenericExpression xmi:id="_RHvIwKaiEd-3W95cColjpg" body="SELECT COUNT(&lt;%=__COLUMN_NAMES__%>) FROM &lt;%=__TABLE_NAME__%> WHERE RTRIM(LTRIM(&lt;%=__COLUMN_NAMES__%>)) = '' &lt;%=__AND_WHERE_CLAUSE__%>" language="Adaptive Server Enterprise | Sybase Adaptive Server IQ"/>
 </dataquality.indicators.definition:IndicatorDefinition>

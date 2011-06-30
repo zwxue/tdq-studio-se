@@ -65,7 +65,8 @@ public enum PatternLanguageType {
              SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage(),
              PatternToExcelEnum.InformixRegexp),
     // MOD by bzhou, currently, we won't support MDM on using pattern.
-    // MDM(12, SupportDBUrlType.MDM.getLanguage(), SupportDBUrlType.MDM.getLanguage(), PatternToExcelEnum.MDMRegexp),
+    // MOD by zshen, this will effect for the indicatorDefinition so add new method to return differents result.
+    MDM(12, SupportDBUrlType.MDM.getLanguage(), SupportDBUrlType.MDM.getLanguage(), PatternToExcelEnum.MDMRegexp),
 
     // SQLITE3(
     // 9,
@@ -173,4 +174,23 @@ public enum PatternLanguageType {
 
         return set.toArray(new String[set.size()]);
     }
+
+    /**
+     * DOC zshen 2011-06-29 bug: 22668.
+     * 
+     * @param
+     * @return
+     */
+    public static String[] getAllLanguageTypesForPattern() {
+        Set<String> set = new HashSet<String>();
+
+        for (PatternLanguageType oneType : values()) {
+            set.add(oneType.getName());
+        }
+        set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
+        set.remove(SupportDBUrlType.MDM.getLanguage());
+
+        return set.toArray(new String[set.size()]);
+    }
+
 }

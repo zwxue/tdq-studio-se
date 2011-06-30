@@ -33,6 +33,7 @@ public class UpdateSimpleStatisticsIndicatorsForSybaseIqTask extends AbstractWor
 
     private static final String SYBASE = SupportDBUrlType.SYBASEDEFAULTURL.getLanguage();
 
+    private static final String REMOVELANGUAGE = "Adaptive Server Enterprise"; //$NON-NLS-1$
     /*
      * (non-Javadoc)
      * 
@@ -63,6 +64,7 @@ public class UpdateSimpleStatisticsIndicatorsForSybaseIqTask extends AbstractWor
                             SYBASE,
                             "SELECT COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> WHERE RTRIM(LTRIM(<%=__COLUMN_NAMES__%>)) = '' <%=__AND_WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
+            IndicatorDefinitionFileHelper.removeSqlExpression(definition2, REMOVELANGUAGE);
             return IndicatorDefinitionFileHelper.save(definition0) & IndicatorDefinitionFileHelper.save(definition1)
                     & IndicatorDefinitionFileHelper.save(definition2);
         }

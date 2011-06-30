@@ -55,6 +55,30 @@ public final class IndicatorDefinitionFileHelper {
     }
 
     /**
+     * remove a sql expression for indicator.
+     * 
+     * @param definition
+     * @param language
+     * @param body
+     * @return true if sql expression be removed.
+     */
+    public static boolean removeSqlExpression(IndicatorDefinition definition, String language) {
+        if (null == definition)
+            return false;
+        TdExpression removeExpression = null;
+        for (TdExpression e : definition.getSqlGenericExpression()) {
+            if (e.getLanguage().equals(language)) {
+                removeExpression = e;
+            }
+        }
+        if (removeExpression != null) {
+            return definition.getSqlGenericExpression().remove(removeExpression);
+        }
+        return false;
+
+    }
+
+    /**
      * Save an indicator.
      * 
      * @param definition
