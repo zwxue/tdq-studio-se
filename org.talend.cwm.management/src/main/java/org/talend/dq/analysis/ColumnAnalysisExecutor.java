@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -30,7 +31,6 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
@@ -206,8 +206,10 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         }
         // MOD zshen feature 12919 select all the column to be prepare for drill down.
         if (analysis.getParameters().isStoreData()) {
-            List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(analysedElements.get(0)
-                    .eContainer()));
+            // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues columnset
+            EObject eContainer = analysedElements.get(0).eContainer();
+            List<TdColumn> columnList = ColumnSetHelper.getColumns(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eContainer));
+            // ~
             Iterator<TdColumn> iter = columnList.iterator();
             while (iter.hasNext()) {
                 TdColumn column = iter.next();
