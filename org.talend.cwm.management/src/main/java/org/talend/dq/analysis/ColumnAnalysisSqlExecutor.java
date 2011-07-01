@@ -1426,6 +1426,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)) {
                 return false;
             }
+
+            // ADD msjian 2011-6-24 22483 fixed: fixed "java.sql.SQLException: database is locked"
+            // because the sqlite db is not supported the parallel very well
+            if ("SQLite".equals(connection.getMetaData().getDatabaseProductName())) { //$NON-NLS-1$ 
+                return false;
+            }
         } catch (SQLException e) {
             log.warn(e, e);
         }
