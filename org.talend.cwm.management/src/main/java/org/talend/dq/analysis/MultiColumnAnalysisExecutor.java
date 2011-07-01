@@ -20,7 +20,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -84,6 +88,23 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             final EList<ModelElement> analyzedColumns = colSetMultValIndicator.getAnalyzedColumns();
             final EList<String> numericFunctions = initializeNumericFunctions(colSetMultValIndicator);
             final EList<String> dateFunctions = initializeDateFunctions(colSetMultValIndicator);
+
+            // ADD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
+            // note: this feature is not supported now, if support, delete this
+            final String caseStr = "SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)";//$NON-NLS-1$
+            if (SupportDBUrlType.EXCEL.getDBKey().equals(dbms().getDbmsName())
+                    && (dateFunctions.contains(caseStr) || numericFunctions.contains(caseStr))) {
+                this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.errMessage");//$NON-NLS-1$
+                Display.getDefault().syncExec(new Runnable() {
+
+                    public void run() {
+                        MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                                Messages.getString("MultiColumnAnalysisExecutor.errTitle"), errorMessage); //$NON-NLS-1$
+                        return;
+                    }
+                });
+            }
+            // ~
 
             // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
