@@ -217,6 +217,10 @@ public class DrillDownEditorInput implements IEditorInput {
         for (Object[] columnValue : newColumnElementList) {
             maxLength.add(columnValue.length);
         }
+        // ADD msjian 2011-6-20 22549: fixed another NoSuchElementException
+        if (maxLength.size() == 0 || maxLength == null) {
+            return true;
+        }
         return (Integer) Collections.max(maxLength) == Collections.min(maxLength);
     }
 

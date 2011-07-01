@@ -43,6 +43,10 @@ public class TextStatisticsExplorer extends DataExplorer {
 
         switch (this.indicatorEnum) {
         case AverageLengthIndicatorEnum:
+            // MOD msjian 2011-7-1 22549:change Sql for average length indicator
+        case AverageLengthWithBlankIndicatorEnum:
+        case AverageLengthWithNullBlankIndicatorEnum:
+        case AverageLengthWithNullIndicatorEnum:
             map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getAverageLengthRowsStatement() : null);
             break;
         case MinLengthIndicatorEnum:
@@ -53,9 +57,6 @@ public class TextStatisticsExplorer extends DataExplorer {
         case MaxLengthWithBlankIndicatorEnum:
         case MaxLengthWithBlankNullIndicatorEnum:
         case MaxLengthWithNullIndicatorEnum:
-        case AverageLengthWithBlankIndicatorEnum:
-        case AverageLengthWithNullBlankIndicatorEnum:
-        case AverageLengthWithNullIndicatorEnum:
             map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getTextRowsStatement() : null);
             break;
         default:
