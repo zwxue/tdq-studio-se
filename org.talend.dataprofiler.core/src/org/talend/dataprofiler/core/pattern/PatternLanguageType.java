@@ -187,7 +187,7 @@ public enum PatternLanguageType {
         for (PatternLanguageType oneType : values()) {
             set.add(oneType.getName());
         }
-        set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
+        // set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
         set.remove(SupportDBUrlType.MDM.getLanguage());
 
         return set.toArray(new String[set.size()]);
