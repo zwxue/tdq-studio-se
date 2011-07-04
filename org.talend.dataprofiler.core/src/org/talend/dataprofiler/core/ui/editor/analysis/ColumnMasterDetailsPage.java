@@ -917,9 +917,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      */
     protected void expandChart(ModelElementIndicator indicator) {
         int columnIndex = indexOfSelectedItem(indicator);
+        // MOD klliu bug 22407 check the uiPagination is null.
+        if (uiPagination == null) {
+            return;
+        }
         if (-1 != columnIndex) {
             int pageIndex = (columnIndex % IndicatorPaginationInfo.getPageSize() > 0 ? columnIndex
                     / IndicatorPaginationInfo.getPageSize() + 1 : columnIndex / IndicatorPaginationInfo.getPageSize());
+
             uiPagination.setCurrentPage(pageIndex);
 
             if (previewChartList != null && !previewChartList.isEmpty()) {
