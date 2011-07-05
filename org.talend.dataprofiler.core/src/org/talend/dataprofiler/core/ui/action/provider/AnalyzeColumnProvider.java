@@ -71,7 +71,7 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
 
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
 
-        if (isSelectedColumnLevel(currentSelection) || isSelectedMdmColumn(currentSelection)) {
+        if (isSelectedColumnLevel(currentSelection)) {
             IMenuManager submenu = new MenuManager(
                     DefaultMessagesImpl.getString("AnalyzeColumnProvider.columnAnalysis"), NEW_MENU_NAME);//$NON-NLS-1$
             menu.insertAfter(ICommonMenuConstants.GROUP_NEW, submenu);
