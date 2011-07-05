@@ -24,6 +24,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
 import org.talend.commons.utils.SpecialValueDisplay;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -44,6 +45,7 @@ import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author scorreia
@@ -161,8 +163,14 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
                         // MOD zshen add another loop to insert all of columnValue on the row into indicator.
                         recordIncrement = valueObjectList.size();
-                        List<TdColumn> columnList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
-                                .getAnalyzedElement().eContainer()));
+                        // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
+                        // columnset
+                        ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH
+                                .doSwitch(indicator.getAnalyzedElement().eContainer());
+                        List<TdColumn> columnList = ColumnSetHelper.getColumns(doSwitch);
+                        // List<TdColumn> columnList =
+                        // TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                        // .getAnalyzedElement().eContainer()));
                         for (int j = 0; j < columnCount; j++) {
                             String newcol = columnList.get(j).getName();
                             Object newobject = null;
