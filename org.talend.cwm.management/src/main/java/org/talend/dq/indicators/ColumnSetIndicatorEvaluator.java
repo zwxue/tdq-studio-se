@@ -46,9 +46,9 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.XmlElementHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
@@ -458,9 +458,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                             if (0 >= columnCount) {
                                 continue;
                             }
-                            List<TdColumn> columnList = TableHelper
-                                    .getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(((ColumnSetMultiValueIndicator) indicator)
-                                            .getAnalyzedColumns().get(0).eContainer()));
+                            // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
+                            // columnset
+                            List<TdColumn> columnList = ColumnSetHelper
+                                    .getColumns(SwitchHelpers.COLUMN_SET_SWITCH
+                                            .doSwitch(((ColumnSetMultiValueIndicator) indicator).getAnalyzedColumns().get(0)
+                                                    .eContainer()));
+                            // List<TdColumn> columnList = TableHelper
+                            // .getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(((ColumnSetMultiValueIndicator)
+                            // indicator)
+                            // .getAnalyzedColumns().get(0).eContainer()));
                             for (int j = 0; j < columnCount; j++) {
                                 String newcol = null;
                                 Object newobject = null;
