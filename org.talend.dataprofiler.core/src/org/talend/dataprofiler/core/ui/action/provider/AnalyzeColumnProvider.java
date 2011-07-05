@@ -79,7 +79,7 @@ public class AnalyzeColumnProvider extends AbstractCommonActionProvider {
             submenu.add(analyzeColumnAction);
         }
 
-        if (isSelectedTdColumn(currentSelection)) {
+        if (isSelectedColumnLevel(currentSelection) || isSelectedMdmColumn(currentSelection)) {
             analyzeColumnSetAction.setColumnSelection(currentSelection);
             menu.add(analyzeColumnSetAction);
         }
