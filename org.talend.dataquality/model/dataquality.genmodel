@@ -220,6 +220,7 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/maxNumberRows"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/validRow"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/inValidRow"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/Indicator/storeData"/>
         <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/handle">
           <genParameters ecoreParameter="dataquality.ecore#//indicators/Indicator/handle/data"/>
         </genOperations>
@@ -242,6 +243,9 @@
         <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/getValueType"/>
         <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/getInstanceValue"/>
         <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/mustStoreRow"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/Indicator/handle.1">
+          <genParameters ecoreParameter="dataquality.ecore#//indicators/Indicator/handle.1/datas"/>
+        </genOperations>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/RowCountIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/MeanIndicator">
