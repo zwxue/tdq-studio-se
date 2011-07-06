@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.migration;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.talend.dataprofiler.datamart.migration.AMigrationTask;
+
 /**
  * DOC bZhou class global comment. Detailled comment
  */

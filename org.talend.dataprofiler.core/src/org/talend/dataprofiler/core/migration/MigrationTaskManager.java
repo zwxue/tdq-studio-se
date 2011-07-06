@@ -28,10 +28,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.migration.IMigrationTask.MigrationTaskCategory;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.datamart.migration.IMigrationTask;
+import org.talend.dataprofiler.datamart.migration.IWorkspaceMigrationTask;
+import org.talend.dataprofiler.datamart.migration.IMigrationTask.MigrationTaskCategory;
+import org.talend.dataprofiler.datamart.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.utils.ProductVersion;
 
 /**

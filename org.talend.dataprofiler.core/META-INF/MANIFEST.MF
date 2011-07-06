@@ -48,7 +48,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.libraries.jdbc.informix,
  org.talend.commons.ui,
  org.talend.repository.mdm,
- org.eclipse.ui.intro
+ org.eclipse.ui.intro,
+ org.talend.dataprofiler.datamart;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.gridviewer,
  org.eclipse.nebula.widgets.grid,

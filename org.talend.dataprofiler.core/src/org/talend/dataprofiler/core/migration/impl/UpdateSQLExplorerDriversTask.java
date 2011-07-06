@@ -23,7 +23,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import org.apache.log4j.Logger;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AProjectTask;
-import org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask.MigrationTaskType;
+import org.talend.dataprofiler.datamart.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.resource.ResourceManager;
