@@ -25,6 +25,7 @@ import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -193,7 +194,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         Display.getCurrent().asyncExec(new Runnable() {
 
             public void run() {
-                tree.setFocus();
+                Rectangle bounds = tree.getBounds();
+                tree.setBounds(bounds.x, bounds.y, bounds.width, bounds.height - 1);
+                tree.setBounds(bounds.x, bounds.y, bounds.width, bounds.height + 1);
             }
         });
     }
