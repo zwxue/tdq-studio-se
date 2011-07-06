@@ -26,7 +26,6 @@ import org.eclipse.emf.common.util.EMap;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
@@ -203,8 +202,14 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     } else if (indicator instanceof UniqueCountIndicator
                             && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
                         List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
-                        List<TdColumn> columnElementList = TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
-                                .getAnalyzedElement().eContainer()));
+                        // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues
+                        // columnset
+                        ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH
+                                .doSwitch(indicator.getAnalyzedElement().eContainer());
+                        List<TdColumn> columnElementList = ColumnSetHelper.getColumns(doSwitch);
+                        // List<TdColumn> columnElementList =
+                        // TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                        // .getAnalyzedElement().eContainer()));
                         int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
                         for (Object[] dataObject : removeValueObjectList) {
                             if (dataObject[offsetting].equals(object)) {
