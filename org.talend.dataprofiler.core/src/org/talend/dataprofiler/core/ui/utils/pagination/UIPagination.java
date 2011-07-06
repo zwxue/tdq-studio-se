@@ -194,6 +194,17 @@ public class UIPagination {
         goImgFD.top = new FormAttachment(pageGoText, 0, SWT.TOP);
         goImgHypLnk.setLayoutData(goImgFD);
         goImgHypLnk.setText(DefaultMessagesImpl.getString("UIPagination.Go")); //$NON-NLS-1$
+
+        createExtContol(pageNavComp);
+    }
+
+    /**
+     * DOC bZhou Comment method "createExtContol".
+     * 
+     * @param parent
+     */
+    protected void createExtContol(Composite parent) {
+        // TODO Auto-generated method stub
     }
 
     public static boolean isNumeric(String originStr) {

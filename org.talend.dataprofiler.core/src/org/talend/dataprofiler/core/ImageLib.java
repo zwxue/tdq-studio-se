@@ -183,11 +183,11 @@ public final class ImageLib {
     public static final String ICON_PROCESS_WIZARD = "process_wiz.png"; //$NON-NLS-1$
 
     public static final String ICON_ERROR_INFO = "error.gif"; //$NON-NLS-1$
-    
+
     public static final String RECYCLEBIN_EMPTY = "recyclebinempty.png"; //$NON-NLS-1$
-    
+
     public static final String RECYCLEBIN_OVERLAY = "recycle_bino_verlay.gif"; //$NON-NLS-1$
-    
+
     public static final String RECYCLEBIN_FULL = "recyclebinfull.png"; //$NON-NLS-1$
 
     public static final String ICON_ERROR_VAR = "error_ovr.gif"; //$NON-NLS-1$
@@ -199,6 +199,12 @@ public final class ImageLib {
     public static final String SOURCE_FILE = "editor.gif"; //$NON-NLS-1$
 
     public static final String JAR_FILE = "jar_obj.gif"; //$NON-NLS-1$
+
+    public static final String ADD_SYN = "synonym/book_add.png";
+
+    public static final String DELETE_SYN = "synonym/book_delete.png";
+
+    public static final String EDIT_SYN = "synonym/book_edit.png";
 
     /**
      * DOC bzhou ImageLib constructor comment.
@@ -378,7 +384,7 @@ public final class ImageLib {
             return null;
         }
     }
-    
+
     /**
      * DOC qiongli Comment method "createLockedIcon".
      * 
