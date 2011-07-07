@@ -15,8 +15,8 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.ArrayList;
 
 import org.junit.Test;
-import org.talend.dataprofiler.core.migration.IMigrationTask;
 import org.talend.dataprofiler.core.migration.MigrationTaskManager;
+import org.talend.dataprofiler.datamart.migration.IMigrationTask;
 
 /**
  * DOC mzhao Test case for split system indicators.
