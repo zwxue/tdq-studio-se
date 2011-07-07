@@ -14,9 +14,9 @@ package org.talend.dataquality.standardization.index;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -287,7 +287,7 @@ public class SynonymIndexBuilder {
         if (docs.totalHits == 1) { // don't do anything if more than one document is found
             Document doc = newSynIdxSearcher.getDocument(docs.scoreDocs[0].doc);
             String[] synonyms = doc.getValues(F_SYN);
-            List<String> synonymList = new ArrayList<String>();
+            Set<String> synonymList = new HashSet<String>();
 
             for (String str : synonyms) {
                 if (str.equals(word)) {
@@ -463,7 +463,9 @@ public class SynonymIndexBuilder {
     private Document generateDocument(String word, String synonyms) {
         // System.out.println("\t Generating doc for " + word + " and " + synonyms);
         String[] split = synonyms == null ? new String[0] : StringUtils.split(synonyms, separator);
-        return generateDocument(word, Arrays.asList(split));
+        Set<String> set = new HashSet<String>();
+        Collections.addAll(set, split);
+        return generateDocument(word, set);
     }
 
     /**
@@ -473,7 +475,7 @@ public class SynonymIndexBuilder {
      * @param synonyms
      * @return
      */
-    private Document generateDocument(String word, List<String> synonyms) {
+    private Document generateDocument(String word, Set<String> synonyms) {
         Document doc = new Document();
         word = word.trim();
         Field field = new Field(F_WORD, word, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
@@ -481,7 +483,7 @@ public class SynonymIndexBuilder {
         doc.add(field);
         // --- store entry also in synonym list so that we can search for it too
         // without the need to search in the word field (will be tokenized given the analyzer)
-        doc.add(createSynField(word));
+        boolean addWordInSyn = true;
         if (synonyms != null) {
             for (String syn : synonyms) {
                 if (syn != null) {
@@ -489,9 +491,15 @@ public class SynonymIndexBuilder {
                     if (syn.length() > 0) {
                         // add only non empty synonyms
                         doc.add(createSynField(syn));
+                        if (syn.equals(word)) {
+                            addWordInSyn = false;
+                        }
                     }
                 }
             }
+        }
+        if (addWordInSyn) {
+            doc.add(createSynField(word));
         }
         return doc;
     }
