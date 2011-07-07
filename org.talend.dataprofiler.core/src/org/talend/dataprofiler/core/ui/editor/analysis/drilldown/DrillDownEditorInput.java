@@ -224,12 +224,19 @@ public class DrillDownEditorInput implements IEditorInput {
         return (Integer) Collections.max(maxLength) == Collections.min(maxLength);
     }
 
+    /**
+     * 
+     * DOC zshen Comment method "filterAdaptDataList".
+     * 
+     * @return get the data which will be displayed on the drill down editor.
+     */
     public List<Object[]> filterAdaptDataList() {
         // get columnValue
         List<Object[]> newColumnElementList = new ArrayList<Object[]>();
         AnalyzedDataSet analysisDataSet = this.getAnalysis().getResults().getIndicToRowMap().get(currIndicator);
         if (analysisDataSet.getData() != null && analysisDataSet.getData().size() > 0) {
-            newColumnElementList.addAll(getDesignatedData());
+            List<Object[]> dataList = analysisDataSet.getData();
+            newColumnElementList.addAll(getDesignatedData(dataList));
         } else if (analysisDataSet.getFrequencyData() != null && analysisDataSet.getFrequencyData().size() > 0) {
             String selectValue = this.getSelectValue();
             if (currIndicator instanceof LengthIndicator) {
@@ -238,23 +245,28 @@ public class DrillDownEditorInput implements IEditorInput {
             newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
         } else if (analysisDataSet.getPatternData() != null && analysisDataSet.getPatternData().size() > 0) {
             if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_INVALID_TYPE)) {
-                newColumnElementList.addAll((List<Object[]>) analysisDataSet.getPatternData().get(
-                        AnalyzedDataSetImpl.INVALID_VALUE));
+                newColumnElementList.addAll(getDesignatedData((List<Object[]>) analysisDataSet.getPatternData().get(
+                        AnalyzedDataSetImpl.INVALID_VALUE)));
             } else if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_VALID_TYPE)) {
-                newColumnElementList.addAll((List<Object[]>) analysisDataSet.getPatternData()
-                        .get(AnalyzedDataSetImpl.VALID_VALUE));
+                newColumnElementList.addAll(getDesignatedData((List<Object[]>) analysisDataSet.getPatternData().get(
+                        AnalyzedDataSetImpl.VALID_VALUE)));
             }
         }
         return newColumnElementList;
     }
 
-    private List<Object[]> getDesignatedData() {
-        AnalyzedDataSet analysisDataSet = this.getAnalysis().getResults().getIndicToRowMap().get(currIndicator);
-        List<Object[]> dataList = analysisDataSet.getData();
+    /**
+     * 
+     * DOC zshen Comment method "getDesignatedData".
+     * 
+     * @return make column mapping with data
+     */
+    private List<Object[]> getDesignatedData(List<Object[]> dataList) {
+
         ModelElement analysisElement = currIndicator.getAnalyzedElement();
 
         List<Object[]> returnDataList = new ArrayList<Object[]>();
-        if (analysisDataSet.getData() == null || analysisDataSet.getData().size() < 0) {
+        if (dataList == null || dataList.size() < 0) {
             return returnDataList;
         }
         if (DrillDownEditorInput.judgeMenuType(this.getMenuType(), DrillDownEditorInput.MENU_VALUE_TYPE)) {
@@ -351,6 +363,12 @@ public class DrillDownEditorInput implements IEditorInput {
 
     }
 
+    /**
+     * 
+     * DOC zshen Comment method "filterAdaptColumnHeader".
+     * 
+     * @returnget the name of column which will be displayed on the drill down editor.
+     */
     public List<String> filterAdaptColumnHeader() {
         // get columnHeader
 
