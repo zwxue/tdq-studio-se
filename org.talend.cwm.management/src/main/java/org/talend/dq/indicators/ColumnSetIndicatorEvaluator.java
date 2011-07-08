@@ -38,11 +38,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.language.LanguageManager;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
@@ -113,17 +115,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             ok = evaluateByMDM(sqlStatement, ok);
         } else {
             ok = evaluateBySql(sqlStatement, ok);
-            Statement statement = null;
-            // FIXME stat should be closed.
-            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            statement.setFetchSize(fetchSize);
-            if (continueRun()) {
-                if (log.isInfoEnabled()) {
-                    log.info("Executing query: " + sqlStatement); //$NON-NLS-1$
-                }
-                statement.execute(sqlStatement);
-            }
-            statement.close();
         }
 
         return ok;
@@ -159,41 +150,59 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      */
     private ReturnCode evaluateBySql(String sqlStatement, ReturnCode ok) throws SQLException {
         Statement statement = null;
-        // FIXME stat should be closed.
-        statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        statement.setFetchSize(fetchSize);
-        if (continueRun()) {
-            if (log.isInfoEnabled()) {
-                log.info("Executing query: " + sqlStatement); //$NON-NLS-1$
+        ResultSet resultSet = null;
+        try {
+            // MOD qiongli 2011-7-8 bug 22520,statement for sqlLite
+            Connection dataManager = (Connection) analysis.getContext().getConnection();
+            if (ConnectionUtils.isSqlite(dataManager)) {
+                statement = connection.createStatement();
+            } else {
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             }
-            statement.execute(sqlStatement);
-        }
-        // get the results
-        ResultSet resultSet = statement.getResultSet();
-        List<String> columnNames = getAnalyzedElementsName();
-
-        if (resultSet == null) {
-            String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$
-            log.warn(mess);
-            ok.setReturnCode(mess, false);
-            return ok;
-        }
-        EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
-        indicToRowMap.clear();
-        while (resultSet.next()) {
-            EList<Object> objectLs = new BasicEList<Object>();
-            Iterator<String> it = columnNames.iterator();
-            while (it.hasNext()) {
-                Object obj = resultSet.getObject(it.next());
-                if (obj != null && (PluginConstant.EMPTY_STRING.equals(obj.toString().trim()))) {
-                    obj = obj.toString().trim();
+            statement.setFetchSize(fetchSize);
+            if (continueRun()) {
+                if (log.isInfoEnabled()) {
+                    log.info("Executing query: " + sqlStatement); //$NON-NLS-1$
                 }
-                objectLs.add(obj);
+                statement.execute(sqlStatement);
             }
-            if (objectLs.size() == 0) {
-                continue;
+            // get the results
+            resultSet = statement.getResultSet();
+            List<String> columnNames = getAnalyzedElementsName();
+
+            if (resultSet == null) {
+                String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$
+                log.warn(mess);
+                ok.setReturnCode(mess, false);
+                return ok;
             }
-            handleObjects(objectLs, resultSet);
+            EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
+            indicToRowMap.clear();
+            while (resultSet.next()) {
+                EList<Object> objectLs = new BasicEList<Object>();
+                Iterator<String> it = columnNames.iterator();
+                while (it.hasNext()) {
+                    Object obj = resultSet.getObject(it.next());
+                    if (obj != null && (PluginConstant.EMPTY_STRING.equals(obj.toString().trim()))) {
+                        obj = obj.toString().trim();
+                    }
+                    objectLs.add(obj);
+                }
+                if (objectLs.size() == 0) {
+                    continue;
+                }
+                handleObjects(objectLs, resultSet);
+            }
+        } catch (Exception exc) {
+            log.error(exc, exc);
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            connection.close();
         }
 
         return ok;

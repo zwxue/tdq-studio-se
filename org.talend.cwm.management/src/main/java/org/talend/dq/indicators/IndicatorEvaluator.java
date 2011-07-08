@@ -24,6 +24,8 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
 import org.talend.commons.utils.SpecialValueDisplay;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
@@ -78,8 +80,13 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // create query statement
         // feature 0010630 zshen: Tables are not found when using Excel with ODBC connection
         Statement statement = null;
-
-        statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        // MOD qiongli 2011-6-28 bug 22520,statement for sqlLite
+        Connection dataManager = (Connection) analysis.getContext().getConnection();
+        if (ConnectionUtils.isSqlite(dataManager)) {
+            statement = connection.createStatement();
+        } else {
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        }
         // ~10630
         statement.setFetchSize(fetchSize);
         // MOD xqliu 2009-02-09 bug 6237
@@ -180,9 +187,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
                                     newobject = null;
 
                             }
-                            //                            if (newobject != null && !(newobject instanceof String) && newobject.toString().equals("0000-00-00 00:00:00")) { //$NON-NLS-1$  
-                            // newobject = null;
-                            // }
                             if (recordIncrement < maxNumberRows) {// decide whether current record is more than max
                                                                   // Number else don't need to record more than data.
                                 if (recordIncrement < valueObjectList.size()) {// decide whether need to increase
