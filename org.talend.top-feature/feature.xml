@@ -35,26 +35,45 @@
       <import plugin="org.eclipse.emf.ecore.xmi" version="2.5.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.6.0" match="compatible"/>
+      <import plugin="org.talend.libraries.apache"/>
+      <import plugin="org.talend.libraries.eXist"/>
+      <import plugin="org.eclipse.xsd"/>
+      <import plugin="org.apache.axis"/>
       <import plugin="javax.xml.rpc" version="1.1.0" match="compatible"/>
+      <import plugin="org.talend.libraries.javacsv" version="2.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore" version="2.6.0" match="compatible"/>
       <import plugin="org.eclipse.emf.edit" version="2.6.0" match="compatible"/>
       <import plugin="org.eclipse.ui.ide" version="3.6.0" match="compatible"/>
       <import plugin="org.eclipse.emf.edit.ui" version="2.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.navigator.resources" version="3.4.0" match="compatible"/>
       <import plugin="org.eclipse.ui.forms" version="3.2.0" match="compatible"/>
+      <import plugin="org.talend.libraries.jfreechart"/>
+      <import plugin="org.eclipse.ui.cheatsheets"/>
       <import plugin="org.eclipse.core.expressions" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.help" version="3.2.0" match="compatible"/>
+      <import plugin="org.eclipse.help.ui"/>
       <import plugin="org.eclipse.ui.editors" version="3.5.0" match="compatible"/>
       <import plugin="org.apache.log4j" version="1.2.13" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.browser"/>
+      <import plugin="org.talend.libraries.jung"/>
+      <import plugin="org.talend.model.migration"/>
+      <import plugin="org.talend.libraries.jdbc.informix"/>
+      <import plugin="org.eclipse.ui.intro"/>
+      <import plugin="org.eclipse.help.webapp"/>
+      <import plugin="org.eclipse.equinox.http.jetty"/>
       <import plugin="org.eclipse.emf.compare" version="0.8.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.compare.diff" version="0.8.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.compare.match" version="0.8.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.compare" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.compare.ui"/>
       <import plugin="org.apache.commons.discovery" version="0.2.0" match="compatible"/>
       <import plugin="org.eclipse.core.net" version="1.0.0" match="compatible"/>
+      <import plugin="org.talend.libraries.jackson"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.apache.commons.httpclient"/>
       <import plugin="org.eclipse.jdt.core" version="3.6.0" match="compatible"/>
       <import plugin="org.eclipse.jdt.launching" version="3.5.0" match="compatible"/>
-      <import plugin="org.apache.commons.httpclient"/>
+      <import plugin="org.eclipse.gmf.runtime.notation"/>
       <import plugin="org.eclipse.update.core" version="3.1.0" match="compatible"/>
       <import plugin="org.eclipse.ui" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.2.0" match="greaterOrEqual"/>
@@ -64,34 +83,16 @@
       <import plugin="org.eclipse.jface.text" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.editors" version="3.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface" version="3.5.0" match="compatible"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.jdt.ui"/>
       <import plugin="org.eclipse.ui.views" version="3.5.0" match="compatible"/>
+      <import plugin="org.talend.libraries.dom4j-jaxen"/>
       <import plugin="org.eclipse.debug.core" version="3.5.0" match="compatible"/>
+      <import plugin="org.talend.libraries.ui"/>
       <import plugin="org.eclipse.swt" version="3.5.0" match="compatible"/>
       <import plugin="org.eclipse.ui.views.properties.tabbed" version="3.5.0" match="compatible"/>
       <import plugin="org.eclipse.ui.workbench" version="3.5.0" match="compatible"/>
       <import plugin="org.eclipse.text" version="3.5.0" match="compatible"/>
-      <import plugin="org.talend.libraries.apache"/>
-      <import plugin="org.talend.libraries.eXist"/>
-      <import plugin="org.eclipse.xsd"/>
-      <import plugin="org.apache.axis"/>
-      <import plugin="org.talend.libraries.javacsv" version="2.2.0" match="greaterOrEqual"/>
-      <import plugin="org.talend.libraries.jfreechart"/>
-      <import plugin="org.eclipse.ui.cheatsheets"/>
-      <import plugin="org.eclipse.help.ui"/>
-      <import plugin="org.eclipse.ui.browser"/>
-      <import plugin="org.talend.libraries.jung"/>
-      <import plugin="org.talend.model.migration"/>
-      <import plugin="org.talend.libraries.jdbc.informix"/>
-      <import plugin="org.eclipse.help.webapp"/>
-      <import plugin="org.eclipse.equinox.http.jetty"/>
-      <import plugin="org.eclipse.emf.compare.ui"/>
-      <import plugin="org.talend.libraries.jackson"/>
-      <import plugin="org.junit4"/>
-      <import plugin="org.eclipse.gmf.runtime.notation"/>
-      <import plugin="org.eclipse.gef"/>
-      <import plugin="org.eclipse.jdt.ui"/>
-      <import plugin="org.talend.libraries.dom4j-jaxen"/>
-      <import plugin="org.talend.libraries.ui"/>
       <import plugin="org.apache.commons.lang"/>
       <import plugin="org.talend.libraries.apache.axis2"/>
       <import plugin="org.eclipse.datatools.enablement.oda.xml"/>
@@ -477,7 +478,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.talend.dataprofiler.datamart"
+         id="org.talend.dataprofiler.migration"
          download-size="0"
          install-size="0"
          version="0.0.0"
