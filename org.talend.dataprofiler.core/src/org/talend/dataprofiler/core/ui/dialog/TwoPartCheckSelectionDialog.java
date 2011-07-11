@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -34,6 +35,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -46,11 +49,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.eclipse.ui.progress.UIJob;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
@@ -58,7 +63,9 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -101,6 +108,11 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     protected boolean fContainerMode;
 
     private Object[] fExpandedElements;
+
+    // ADD msjian 2011-7-8 feature 22206: Add filters
+    private Text leftFilterText;
+
+    private Text rightFilterText;
 
     public Object[] getfExpandedElements() {
         return this.fExpandedElements;
@@ -351,6 +363,10 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         CheckboxTreeViewer treeViewer = createFirstPart(twoPartComp);
         sTableViewer = createSecondPart(twoPartComp);
 
+        // ADD msjian 2011-7-8 feature 22206: Add filters
+        // create the filter composite
+        Control filterComposite = createFilterTexts(composite);
+
         Control buttonComposite = createSelectionButtons(composite);
         GridData data = new GridData(GridData.FILL_BOTH);
         data.widthHint = convertWidthInCharsToPixels(fWidth);
@@ -361,6 +377,10 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         if (fIsEmpty) {
             messageLabel.setEnabled(false);
             treeWidget.setEnabled(false);
+
+            // ADD msjian 2011-7-8 feature 22206: Add filters
+            filterComposite.setEnabled(false);
+
             buttonComposite.setEnabled(false);
         }
         addCheckedListener();
@@ -595,6 +615,180 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
             }
         };
         deselectButton.addSelectionListener(listener);
+    }
+
+    // ADD msjian 2011-7-8 feature 22206: Add filters
+    /**
+     * Adds the table and column filter texts to the dialog.
+     * 
+     * @param composite the parent composite
+     * @return Composite the composite the filter texts were created in.
+     */
+    protected Composite createFilterTexts(Composite composite) {
+        Composite filterTextsComposite = new Composite(composite, 0);
+        GridLayout layout = new GridLayout(6, false);
+        layout.marginHeight = 0;
+        layout.marginWidth = 0;
+        layout.verticalSpacing = 0;
+        filterTextsComposite.setLayout(layout);
+        filterTextsComposite.setFont(composite.getFont());
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(filterTextsComposite);
+
+        Label leftFilterLabel = new Label(filterTextsComposite, SWT.NONE);
+        if (DIALOG_TYPE_TABLE == this.getDialogType()) {
+            leftFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.SchemaCatalogFilter"));//$NON-NLS-1$
+        } else {
+            leftFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.TableFilter"));//$NON-NLS-1$    
+        }
+        GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
+        gd1.horizontalSpan = 1;
+        gd1.grabExcessHorizontalSpace = false;
+        leftFilterLabel.setLayoutData(gd1);
+        
+        leftFilterText = new Text(filterTextsComposite, SWT.BORDER | SWT.SINGLE);
+        leftFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));//$NON-NSL-1$
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        gd.grabExcessHorizontalSpace = true;
+        leftFilterText.setLayoutData(gd);
+
+        Label rightFilterLabel = new Label(filterTextsComposite, SWT.NONE);
+        if (DIALOG_TYPE_TABLE == this.getDialogType()) {
+            rightFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.TableFilter"));//$NON-NLS-1$    
+        } else {
+            rightFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.ColumnFilter"));// $NON-NSL-1$
+        }
+        
+        rightFilterText = new Text(filterTextsComposite, SWT.BORDER | SWT.SINGLE);
+        rightFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));//$NON-NSL-1$
+        rightFilterText.setLayoutData(gd);
+
+        addFilterTextsListener();
+
+        return filterTextsComposite;
+    }
+
+    /**
+     * DOC msjian the FilterJob, use to run the filters.
+     */
+    class FilterJob extends UIJob {
+
+        private String filter;
+
+        private boolean isfViewer;
+
+        /**
+         * set the filter string.
+         * 
+         * @param text
+         */
+        public void setFilter(String text) {
+            this.filter = text;
+        }
+
+        /**
+         * Sets the viewer.
+         * 
+         * @param viewer (fViewer or sTableViewer)
+         */
+        public void setViewer(boolean isfViewer) {
+            this.isfViewer = isfViewer;
+        }
+
+        public FilterJob(String name, String filter, boolean isfViewer) {
+            super(name);
+            this.filter = filter;
+            this.isfViewer = isfViewer;
+        }
+
+        @Override
+        public IStatus runInUIThread(final IProgressMonitor monitor) {
+            getDisplay().asyncExec(new Runnable() {
+                public void run() {
+
+                    boolean save = DQRepositoryNode.isOnFilterring();
+                    String value = DQRepositoryNode.getFilterStr();
+                    boolean untilSchema = false;
+                    boolean untilTable = false;
+
+                    try {
+                        if (DIALOG_TYPE_TABLE == getDialogType()) {
+                            untilSchema = DQRepositoryNode.isUntilSchema();
+                        } else if (isfViewer) {
+                            untilTable = DQRepositoryNode.isUntilTable();
+                        }
+
+                        DQRepositoryNode.setFilterStr(filter);
+                        RepositoryNodeHelper.clearAllFilteredNode();
+
+                        if (filter.equals("")) { //$NON-NLS-1$
+                            DQRepositoryNode.setFiltering(false);
+                            if (isfViewer) {
+                                fViewer.refresh();
+                            } else {
+                                sTableViewer.refresh();
+                            }
+                        } else {
+                            DQRepositoryNode.setFiltering(true);
+                            if (isfViewer) {
+                                if (DIALOG_TYPE_TABLE == getDialogType()) {
+                                    DQRepositoryNode.setUntilSchema(true);
+                                } else {
+                                    DQRepositoryNode.setUntilTable(true);
+                                }
+                                fViewer.refresh();
+                                fViewer.expandAll();
+                            } else {
+                                sTableViewer.refresh();
+                            }
+                        }
+                    } finally {
+                        DQRepositoryNode.setFiltering(save);
+                        DQRepositoryNode.setFilterStr(value);
+                        if (isfViewer) {
+                            DQRepositoryNode.setUntilTable(untilTable);
+                        }
+                        if (DIALOG_TYPE_TABLE == getDialogType()) {
+                            DQRepositoryNode.setUntilSchema(untilSchema);
+                        }
+                    }
+
+                    updateOKStatus();
+                }
+            });
+            return Status.OK_STATUS;
+        }
+    }
+
+
+    /**
+     * Add the listeners for (table, column)filter texts.
+     * 
+     * @param leftFilterText
+     * @param rightFilterText
+     */
+    protected void addFilterTextsListener() {
+        final FilterJob job = new FilterJob("", leftFilterText.getText(), true);//$NON-NLS-1$
+        ModifyListener listener1 = new ModifyListener() {
+            public void modifyText(ModifyEvent e) {
+                job.cancel();
+                job.setFilter(leftFilterText.getText());
+                // if there is no input in 500 milliseconds, run the job
+                job.schedule(500);
+            }
+        };
+        leftFilterText.addModifyListener(listener1);
+
+        final FilterJob job2 = new FilterJob("", rightFilterText.getText(), false);//$NON-NLS-1$
+        ModifyListener listener2 = new ModifyListener() {
+            public void modifyText(ModifyEvent e) {
+                job2.cancel();
+                job2.setFilter(rightFilterText.getText());
+                // if there is no input in 500 milliseconds, run the job
+                job2.schedule(500);
+            }
+        };
+        rightFilterText.addModifyListener(listener2);
     }
 
     private boolean evaluateIfTreeEmpty(Object input) {

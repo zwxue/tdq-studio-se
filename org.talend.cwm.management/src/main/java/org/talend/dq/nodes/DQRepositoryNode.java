@@ -31,13 +31,53 @@ public class DQRepositoryNode extends RepositoryNode {
 
     private static List<DQRepositoryNode> getChildrenFilterStepList = new ArrayList<DQRepositoryNode>();
 
+    private static boolean untilSchema = false;
+
+    private static boolean untilTable = false;
+
+    /**
+     * Getter for untilSchema.
+     * 
+     * @return the untilSchema
+     */
+    public static boolean isUntilSchema() {
+        return untilSchema;
+    }
+
+    /**
+     * Sets the untilSchema.
+     * 
+     * @param untilSchema the untilSchema to set
+     */
+    public static void setUntilSchema(boolean untilSchema) {
+        DQRepositoryNode.untilSchema = untilSchema;
+    }
+
+    /**
+     * Getter for untilTable.
+     * 
+     * @return the untilTable
+     */
+    public static boolean isUntilTable() {
+        return untilTable;
+    }
+
+    /**
+     * Sets the untilTable.
+     * 
+     * @param untilTable the untilTable to set
+     */
+    public static void setUntilTable(boolean untilTable) {
+        DQRepositoryNode.untilTable = untilTable;
+    }
+
     public static void setFiltering(boolean onFiltering) {
         isOnFiltering = onFiltering;
     }
 
     /**
      * 
-     * DOC mzhao if the tree is rendering by filter or not
+     * DOC mzhao if the tree is rendering by filter or not.
      * 
      * @return
      */
@@ -68,6 +108,18 @@ public class DQRepositoryNode extends RepositoryNode {
             DQRepositoryNode dqRepNode = null;
             for (IRepositoryNode dqNode : sortChildren) {
                 dqRepNode = (DQRepositoryNode) dqNode;
+                if (isUntilSchema()) {
+                    if (dqRepNode instanceof DBTableRepNode || dqRepNode instanceof DBViewRepNode
+                            || dqRepNode instanceof DFTableRepNode || dqRepNode instanceof MDMSchemaRepNode
+                            || dqRepNode instanceof MDMXmlElementRepNode) {
+                        break;
+                    }
+                }
+                if (isUntilTable()) {
+                    if (dqRepNode instanceof DBColumnFolderRepNode) {
+                        break;
+                    }
+                }
                 if (dqRepNode.canMatch()) {
                     filteredChildren.add(dqRepNode);
                 }
@@ -87,13 +139,33 @@ public class DQRepositoryNode extends RepositoryNode {
     }
 
     public boolean canMatch() {
+        boolean returnVal = false;
         if (getLabel().toLowerCase().contains(getFilterStr())) {
             RepositoryNodeHelper.setAllFilterNodeList(this);
-            return true;
+            if (!isUntilSchema()) {
+                return true;
+            } else {
+                returnVal = true;
+            }
         }
         DQRepositoryNode childNode = null;
         for (IRepositoryNode child : getChildren()) {
             childNode = (DQRepositoryNode) child;
+            if (isUntilSchema()) {
+                if (childNode instanceof DBTableFolderRepNode || childNode instanceof DBViewFolderRepNode) {
+                    return returnVal ? true : false;
+                }
+                if (childNode instanceof DBTableRepNode || childNode instanceof DBViewRepNode
+                        || childNode instanceof DFTableRepNode || childNode instanceof MDMSchemaRepNode
+                        || childNode instanceof MDMXmlElementRepNode) {
+                    continue;
+                }
+            }
+            if (isUntilTable()) {
+                if (childNode instanceof DBColumnFolderRepNode) {
+                    continue;
+                }
+            }
             if (childNode.canMatch()) {
                 return true;
             }

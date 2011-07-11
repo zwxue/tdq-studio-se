@@ -469,6 +469,21 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 tableList.addAll(RepositoryNodeHelper.getNmaedColumnSetNodes(node));
             }
         }
+
+        // ADD msjian 2011-7-8 feature 22206: Add filters
+        // add the miss of before checked when use the filter
+        Iterator<?> it = packageCheckedMap.keySet().iterator();
+        while (it.hasNext()) {
+            RepositoryNodeKey packageKey = (RepositoryNodeKey) it.next();
+            TableCheckedMap tableMap = packageCheckedMap.get(packageKey);
+            List<?> checkedTableNodeList = tableMap.getCheckedTableNodeList(packageKey.getPackageNode());
+            for (int i = 0; i < checkedTableNodeList.size(); i++) {
+                if (!tableList.contains(checkedTableNodeList.get(i))) {
+                    tableList.add((IRepositoryNode) checkedTableNodeList.get(i));
+                }
+            }
+        }
+        
         return tableList;
     }
 

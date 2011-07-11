@@ -326,6 +326,20 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
             }
         }
+
+        // ADD msjian 2011-7-8 feature 22206: Add filters
+        Iterator<?> it = modelElementCheckedMap.keySet().iterator();
+        while (it.hasNext()) {
+            RepositoryNode reposNode = (RepositoryNode) it.next();
+            List<?> columnList = (ArrayList<?>) modelElementCheckedMap.get(reposNode);
+            for (int i = 0; i < columnList.size(); i++) {
+                if (columnList.get(i) instanceof DBColumnRepNode || columnList.get(i) instanceof DFColumnRepNode) {
+                    if (!allCheckedElements.contains(columnList.get(i))) {
+                        allCheckedElements.add((IRepositoryNode) columnList.get(i));
+                    }
+                }
+            }
+        }
     }
 
     private boolean getTableviewCheckedElements(List<IRepositoryNode> allCheckedElements, IRepositoryNode repNode) {
