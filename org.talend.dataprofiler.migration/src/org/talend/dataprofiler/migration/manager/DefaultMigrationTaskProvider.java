@@ -63,7 +63,6 @@ public class DefaultMigrationTaskProvider implements IMigrationTaskProvider {
      * 
      * @see org.talend.dataprofiler.migration.manager.IMigrationTaskProvider#getMigrationTasks()
      */
-    @Override
     public IMigrationTask[] getMigrationTasks() {
         return allTaskList.toArray(new IMigrationTask[allTaskList.size()]);
     }
