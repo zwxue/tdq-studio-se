@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,11 +28,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -81,7 +84,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.migration.MigrationTaskManager;
+import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
@@ -97,7 +100,9 @@ import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
+import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -118,6 +123,7 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.utils.ProductVersion;
 
 /**
  * @author rli
@@ -153,7 +159,16 @@ public class DQRespositoryView extends CommonNavigator {
         if (manager.isNeedMigration()) {
             // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
             try {
-                MigrationTaskManager.doMigrationTask(MigrationTaskManager.findWorksapceTasks());
+                IRunnableWithProgress op = new IRunnableWithProgress() {
+
+                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                        ProductVersion wVersion = WorkspaceVersionHelper.getVesion();
+                        new MigrationTaskManager(wVersion).doMigrationTask(monitor);
+                    }
+
+                };
+
+                ProgressUI.popProgressDialog(op);
             } catch (Exception e) {
                 log.error(e, e);
             }

@@ -1094,7 +1094,7 @@
      </page>
   </extension>
   <extension
-        point="org.talend.dataprofiler.core.migrationtask">
+        point="org.talend.dataprofiler.migration">
      <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"
            id="org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask"

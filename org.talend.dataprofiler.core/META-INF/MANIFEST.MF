@@ -49,7 +49,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.commons.ui,
  org.talend.repository.mdm,
  org.eclipse.ui.intro,
- org.talend.dataprofiler.datamart
+ org.talend.dataprofiler.migration
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.gridviewer,
  org.eclipse.nebula.widgets.grid,

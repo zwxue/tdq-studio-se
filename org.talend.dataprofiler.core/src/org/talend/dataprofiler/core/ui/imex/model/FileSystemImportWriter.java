@@ -48,10 +48,10 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataprofiler.core.migration.MigrationTaskManager;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
-import org.talend.dataprofiler.datamart.migration.IMigrationTask;
-import org.talend.dataprofiler.datamart.migration.IWorkspaceMigrationTask.MigrationTaskType;
+import org.talend.dataprofiler.migration.IMigrationTask;
+import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
+import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -418,7 +418,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
         if (versionFile != null && versionFile.exists()) {
             ProductVersion version = WorkspaceVersionHelper.getVesion(new Path(versionFile.getAbsolutePath()));
-            List<IMigrationTask> taskList = MigrationTaskManager.findWorkspaceTaskByType(MigrationTaskType.FILE, version);
+            MigrationTaskManager manager = new MigrationTaskManager(version, MigrationTaskType.FILE);
+            List<IMigrationTask> taskList = manager.getValidTasks();
 
             if (!taskList.isEmpty()) {
 

@@ -15,9 +15,9 @@ package org.talend.dataprofiler.core.migration.impl;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.dataprofiler.core.migration.AProjectTask;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
-import org.talend.dataprofiler.datamart.migration.IWorkspaceMigrationTask.MigrationTaskType;
+import org.talend.dataprofiler.migration.AProjectTask;
+import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dq.writer.EMFSharedResources;
 
 /**
