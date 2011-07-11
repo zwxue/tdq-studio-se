@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -24,7 +23,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu Database table repository node displayed on repository view (UI).
  */
-public class DBTableRepNode extends RepositoryNode {
+public class DBTableRepNode extends DQRepositoryNode {
 
     private TdTableRepositoryObject tdTableRepositoryObject;
 
@@ -60,11 +59,15 @@ public class DBTableRepNode extends RepositoryNode {
      */
     @Override
     public List<IRepositoryNode> getChildren() {
-        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        // MOD gdbu 2011-7-1 bug : 22204
+        if (!super.getChildren().isEmpty()) {
+            return filterResultsIfAny(super.getChildren());
+        }
         TdTableRepositoryObject viewObject = ((TdTableRepositoryObject) this.getObject());
         DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-        nodes.add(columnFolderNode);
-        return nodes;
+        super.getChildren().add(columnFolderNode);
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     /**

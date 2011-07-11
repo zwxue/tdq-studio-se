@@ -30,7 +30,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class JrxmlTempFolderRepNode extends RepositoryNode {
+public class JrxmlTempFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(JrxmlTempFolderRepNode.class);
 
@@ -87,7 +87,9 @@ public class JrxmlTempFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return super.getChildren();
+        // MOD gdbu 2011-6-29 bug : 22204
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     private boolean duplicateNode(List<IRepositoryNode> children, JrxmlTempleteRepNode jrxmlNode) {

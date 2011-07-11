@@ -28,7 +28,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC klliu Database catalog repository node displayed on repository view (UI).
  */
-public class DBCatalogRepNode extends RepositoryNode {
+public class DBCatalogRepNode extends DQRepositoryNode {
 
     private IRepositoryViewObject object;
 
@@ -66,11 +66,13 @@ public class DBCatalogRepNode extends RepositoryNode {
     public List<IRepositoryNode> getChildren() {
         MetadataCatalogRepositoryObject metadataCatalog = (MetadataCatalogRepositoryObject) getObject();
         List<Schema> schemas = CatalogHelper.getSchemas(metadataCatalog.getCatalog());
+        // MOD gdbu 2011-7-1 bug : 22204
         if (schemas != null && schemas.size() > 0) {
-            return createRepositoryNodeSchema(schemas);
+            return filterResultsIfAny(createRepositoryNodeSchema(schemas));
         } else {
-            return createTableViewFolder(metadataCatalog);
+            return filterResultsIfAny(createTableViewFolder(metadataCatalog));
         }
+        // ~22204
     }
 
     /**
@@ -113,6 +115,19 @@ public class DBCatalogRepNode extends RepositoryNode {
             schemaChildren.add(schemaNode);
         }
         return schemaChildren;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        if (getObject() == null) {
+            return this.getProperties(EProperties.LABEL).toString();
+        }
+        return this.getObject().getLabel();
     }
 
 }

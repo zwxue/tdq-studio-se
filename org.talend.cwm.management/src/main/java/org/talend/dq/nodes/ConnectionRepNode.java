@@ -19,7 +19,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC xqliu  class global comment. Detailled comment
  */
-public class ConnectionRepNode extends RepositoryNode {
+public class ConnectionRepNode extends DQRepositoryNode {
 
     /**
      * DOC xqliu ConnectionRepNode constructor comment.

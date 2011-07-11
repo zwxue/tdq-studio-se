@@ -39,7 +39,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class DBColumnFolderRepNode extends RepositoryNode {
+public class DBColumnFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(DBColumnFolderRepNode.class);
 
@@ -106,7 +106,9 @@ public class DBColumnFolderRepNode extends RepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         if (!this.isReload() && !children.isEmpty()) {
-            return children;
+            // MOD gdbu 2011-6-29 bug : 22204
+            return filterResultsIfAny(children);
+            // return children;
         }
         String filterCharater = null;
         List<TdColumn> tdcolumns = new ArrayList<TdColumn>();
@@ -126,7 +128,8 @@ public class DBColumnFolderRepNode extends RepositoryNode {
         }
         item = (ConnectionItem) object.getProperty().getItem();
         connection = item.getConnection();
-        if (columns.size() <= 0) {
+        // MOD gdbu 2011-6-28 bug : 22204
+        if (columns.size() <= 0 && !isOnFilterring()) {
             try {
                 if (tdTable != null) {
                     tdcolumns = DqRepositoryViewService.getColumns(connection, tdTable, null, true);
@@ -149,7 +152,9 @@ public class DBColumnFolderRepNode extends RepositoryNode {
         }
         createTdcolumnsNode(tdcolumns, children);
         this.setReload(false);
-        return children;
+        // MOD gdbu 2011-6-28 bug : 22204
+        return filterResultsIfAny(children);
+        // return children;
     }
 
     /**

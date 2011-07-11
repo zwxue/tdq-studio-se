@@ -17,13 +17,14 @@ import java.util.List;
 
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class ExchangeCategoryRepNode extends RepositoryNode {
+public class ExchangeCategoryRepNode extends DQRepositoryNode {
 
     /**
      * flag for get categories from web site.
@@ -93,6 +94,7 @@ public class ExchangeCategoryRepNode extends RepositoryNode {
                 list.add(new ExchangeComponentRepNode(eco, this, ENodeType.REPOSITORY_ELEMENT));
             }
         }
-        return list;
+        return filterResultsIfAny(list);
+        // return list;
     }
 }

@@ -21,7 +21,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu  class global comment. Detailled comment
  */
-public class JrxmlTempleteRepNode extends RepositoryNode {
+public class JrxmlTempleteRepNode extends DQRepositoryNode {
 
     private TDQJrxmlItem jrxmlItem;
 

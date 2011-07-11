@@ -31,7 +31,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC qiongli  class global comment. Detailled comment
  */
-public class DFConnectionFolderRepNode extends RepositoryNode {
+public class DFConnectionFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(DFConnectionFolderRepNode.class);
     /**
@@ -85,7 +85,9 @@ public class DFConnectionFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return super.getChildren();
+        // MOD gdbu 2011-7-1 bug : 22204
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
 

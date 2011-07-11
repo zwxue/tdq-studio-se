@@ -26,7 +26,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class AnalysisRepNode extends RepositoryNode {
+public class AnalysisRepNode extends DQRepositoryNode {
 
     private Analysis analysis;
 
@@ -65,7 +65,9 @@ public class AnalysisRepNode extends RepositoryNode {
             childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
             anaElement.add(childNodeFolder);
         }
-        return anaElement;
+        // MOD gdbu 2011-7-1 bug : 22204
+        return filterResultsIfAny(anaElement);
+        // ~22204
     }
 
     @Override

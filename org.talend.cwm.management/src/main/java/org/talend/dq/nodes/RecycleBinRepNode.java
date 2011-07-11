@@ -15,12 +15,11 @@ package org.talend.dq.nodes;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.commons.ui.runtime.image.ECoreImage;
 import org.talend.commons.ui.runtime.image.IImage;
-import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class RecycleBinRepNode extends RepositoryNode {
+public class RecycleBinRepNode extends DQRepositoryNode {
 
     private IImage icon;
 

@@ -25,7 +25,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class RuleRepNode extends RepositoryNode {
+public class RuleRepNode extends DQRepositoryNode {
 
     private DQRule rule;
 

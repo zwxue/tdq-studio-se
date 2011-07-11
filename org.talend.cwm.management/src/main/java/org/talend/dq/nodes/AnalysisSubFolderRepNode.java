@@ -72,6 +72,9 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
             for (ModelElement analyzedElement : analysedElements) {
                 // ModelElement analyzedElement = indicator.getAnalyzedElement();
                 IRepositoryNode elementNode = doSwichNode(analyzedElement, this);
+                if (null == elementNode) {
+                    continue;
+                }
                 if (elementNode instanceof DBConnectionRepNode) {
                     List<IRepositoryNode> children = elementNode.getChildren();
                     anaElement.addAll(children);
@@ -79,9 +82,11 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
                     anaElement.add(elementNode);
                 }
             }
-            return anaElement;
+            //MOD gdbu 2011-7-1 bug : 22204
+            return filterResultsIfAny(anaElement);
         }
-        return super.getChildren();
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     /**
@@ -92,50 +97,56 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
      */
     private IRepositoryNode doSwichNode(ModelElement analyzedElement, AnalysisSubFolderRepNode childNodeFolder) {
         RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analyzedElement);
-        IRepositoryViewObject medataViewObject = recursiveFind.getObject();
-        if (analyzedElement instanceof DatabaseConnection) {
-            DBConnectionRepNode connNode = new DBConnectionRepNode(medataViewObject, this, ENodeType.REPOSITORY_ELEMENT);
-            connNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
-            connNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
-            medataViewObject.setRepositoryNode(connNode);
-            return connNode;
-        } else if (analyzedElement instanceof Catalog) {
-            RepositoryNode catalogNode = new DBCatalogRepNode(medataViewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-            catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
-            catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
-            medataViewObject.setRepositoryNode(catalogNode);
-            return catalogNode;
-        } else if (analyzedElement instanceof Schema) {
-            RepositoryNode schemaNode = new DBSchemaRepNode(medataViewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-            schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
-            schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
-            medataViewObject.setRepositoryNode(schemaNode);
-            return schemaNode;
-        } else if (analyzedElement instanceof TdTable) {
-            DBTableRepNode tableNode = new DBTableRepNode(medataViewObject, childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT);
-            tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
-            tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
-            medataViewObject.setRepositoryNode(tableNode);
-            return tableNode;
-        } else if (analyzedElement instanceof MetadataColumn) {
-            RepositoryNode columnNode = null;
-            if (analyzedElement instanceof TdColumn) {
-                columnNode = new DBColumnRepNode(medataViewObject, childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT);
-            } else {
-                columnNode = new DFColumnRepNode(medataViewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-            }
-            columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
-            columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
-            medataViewObject.setRepositoryNode(columnNode);
-            return columnNode;
-        } else if (analyzedElement instanceof TdXmlElementType) {
-            MDMXmlElementRepNode mdmXmlElementNode = new MDMXmlElementRepNode(medataViewObject, this,
-                    ENodeType.REPOSITORY_ELEMENT);
-            mdmXmlElementNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.MDM_ELEMENT_TYPE);
-            mdmXmlElementNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
-            medataViewObject.setRepositoryNode(mdmXmlElementNode);
-            return mdmXmlElementNode;
+        IRepositoryViewObject medataViewObject = null;
+        if (recursiveFind != null) {
+            medataViewObject = recursiveFind.getObject();
         }
+        if (medataViewObject != null) {
+            if (analyzedElement instanceof DatabaseConnection) {
+                DBConnectionRepNode connNode = new DBConnectionRepNode(medataViewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                connNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
+                connNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
+                medataViewObject.setRepositoryNode(connNode);
+                return connNode;
+            } else if (analyzedElement instanceof Catalog) {
+                RepositoryNode catalogNode = new DBCatalogRepNode(medataViewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
+                catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
+                medataViewObject.setRepositoryNode(catalogNode);
+                return catalogNode;
+            } else if (analyzedElement instanceof Schema) {
+                RepositoryNode schemaNode = new DBSchemaRepNode(medataViewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
+                schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
+                medataViewObject.setRepositoryNode(schemaNode);
+                return schemaNode;
+            } else if (analyzedElement instanceof TdTable) {
+                DBTableRepNode tableNode = new DBTableRepNode(medataViewObject, childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
+                tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
+                medataViewObject.setRepositoryNode(tableNode);
+                return tableNode;
+            } else if (analyzedElement instanceof MetadataColumn) {
+                RepositoryNode columnNode = null;
+                if (analyzedElement instanceof TdColumn) {
+                    columnNode = new DBColumnRepNode(medataViewObject, childNodeFolder, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                } else {
+                    columnNode = new DFColumnRepNode(medataViewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                }
+                columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
+                columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
+                medataViewObject.setRepositoryNode(columnNode);
+                return columnNode;
+            } else if (analyzedElement instanceof TdXmlElementType) {
+                MDMXmlElementRepNode mdmXmlElementNode = new MDMXmlElementRepNode(medataViewObject, this,
+                        ENodeType.REPOSITORY_ELEMENT);
+                mdmXmlElementNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.MDM_ELEMENT_TYPE);
+                mdmXmlElementNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
+                medataViewObject.setRepositoryNode(mdmXmlElementNode);
+                return mdmXmlElementNode;
+            }
+        }
+
         return null;
     }
 
@@ -160,5 +171,15 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
 
     public boolean isVirtualFolder() {
         return this.getObject() == null;
+    }
+
+    @Override
+    public String getLabel() {
+        if (getObject() == null) {
+
+            return this.getProperties(EProperties.LABEL).toString();
+            // return this.getObject().getLabel();
+        }
+        return super.getLabel();
     }
 }

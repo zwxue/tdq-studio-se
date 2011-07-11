@@ -19,7 +19,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class PatternLanguageRepNode extends RepositoryNode {
+public class PatternLanguageRepNode extends DQRepositoryNode {
 
     private String label;
 

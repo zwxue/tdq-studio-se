@@ -30,7 +30,7 @@ import orgomg.cwm.objectmodel.core.Expression;
 /**
  * DOC klliu  class global comment. Detailled comment
  */
-public class PatternRepNode extends RepositoryNode {
+public class PatternRepNode extends DQRepositoryNode {
 
     private Pattern pattern;
 
@@ -70,7 +70,9 @@ public class PatternRepNode extends RepositoryNode {
             plrn.setLabel(language);
             languageElement.add(plrn);
         }
-        return languageElement;
+        // MOD gdbu 2011-7-11 bug : 22204
+        return filterResultsIfAny(languageElement);
+        // ~22204
     }
 
     @Override

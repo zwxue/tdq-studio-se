@@ -13,12 +13,13 @@
 package org.talend.dataprofiler.core.ui.exchange;
 
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class ExchangeComponentRepNode extends RepositoryNode {
+public class ExchangeComponentRepNode extends DQRepositoryNode {
 
     private final IEcosComponent ecosComponent;
 

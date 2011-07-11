@@ -20,13 +20,14 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class ExchangeFolderRepNode extends RepositoryNode {
+public class ExchangeFolderRepNode extends DQRepositoryNode {
 
     private boolean timeoutFlag = true;
 
@@ -59,7 +60,9 @@ public class ExchangeFolderRepNode extends RepositoryNode {
             timeoutFlag = false;
             result = new String[] { e.getMessage() };
         }
-        return buildRepositoryNode(result);
+        // MOD gdbu 2011-6-29 bug : 22204
+        return filterResultsIfAny(buildRepositoryNode(result));
+        // ~22204
     }
 
     /**

@@ -19,7 +19,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu  class global comment. Detailled comment
  */
-public class MDMConnectionSubFolderRepNode extends RepositoryNode {
+public class MDMConnectionSubFolderRepNode extends DQRepositoryNode {
 
     /**
      * DOC klliu MDMConnectionSubFolderRepNode constructor comment.

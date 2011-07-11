@@ -24,7 +24,7 @@ import org.talend.utils.sql.TalendTypeConvert;
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class DFColumnRepNode extends RepositoryNode {
+public class DFColumnRepNode extends DQRepositoryNode {
 
     private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
 
@@ -44,7 +44,9 @@ public class DFColumnRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        return super.getChildren();
+        // MOD gdbu 2011-7-1 bug : 22204
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     public MetadataColumn getMetadataColumn() {
@@ -54,7 +56,9 @@ public class DFColumnRepNode extends RepositoryNode {
     @Override
     public String getLabel() {
         if (this.getMetadataColumn() != null) {
-            return this.getMetadataColumn().getName();
+            // MOD gdbu 2011-7-1 bug : 22204
+            return this.getMetadataColumn().getLabel();
+            // ~22204
         }
         return super.getLabel();
     }

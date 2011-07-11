@@ -35,6 +35,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.PreferenceContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -43,6 +44,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -53,9 +55,14 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IMemento;
@@ -68,6 +75,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.model.IContributionService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.PersistenceException;
@@ -102,6 +110,8 @@ import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
@@ -109,6 +119,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -140,10 +151,16 @@ public class DQRespositoryView extends CommonNavigator {
 
     private ITreeContentProvider contentProvider = null;
 
+    DQStructureManager manager;
+
+    private static boolean upDownStatus = false;// true : down ; fasle : up
+
+    private static boolean isOnUpDownStatus = false;
+
     public DQRespositoryView() {
         super();
 
-        final DQStructureManager manager = DQStructureManager.getInstance();
+        manager = DQStructureManager.getInstance();
 
         if (manager.isNeedCreateStructure()) {
             ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(
@@ -236,6 +253,8 @@ public class DQRespositoryView extends CommonNavigator {
     private void initToolBar() {
         IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
         toolBarManager.add(new RefreshDQReponsitoryViewAction());
+
+//        toolBarManager.add((IAction) new FilterDQReponsitoryTreeAction());
     }
 
     private void addResourceChangedListener() {
@@ -284,8 +303,31 @@ public class DQRespositoryView extends CommonNavigator {
      */
     @Override
     public void createPartControl(Composite parent) {
-        super.createPartControl(parent);
 
+        parent.setLayout(new BorderLayout());
+
+        Composite topComp = new Composite(parent, SWT.NONE);
+        topComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        topComp.setFont(parent.getFont());
+        Composite bottomComp = new Composite(parent, SWT.NONE);
+        bottomComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        bottomComp.setFont(parent.getFont());
+
+        topComp.setLayoutData(BorderLayout.NORTH);
+        bottomComp.setLayoutData(BorderLayout.CENTER);
+
+        FillLayout topLayout = new FillLayout(SWT.FILL_WINDING);
+        topComp.setLayout(topLayout);
+
+        FillLayout bottomLayout = new FillLayout(SWT.FILL_WINDING);
+        bottomComp.setLayout(bottomLayout);
+
+        createTreeFilter(topComp);
+        super.createPartControl(bottomComp);
+        
+
+        // RepositoryNode rn =new RepositoryNode();
+        
         // For removing the popup menu of DQRepositoryView.
         MenuManager menuMgr = new MenuManager("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
@@ -306,6 +348,7 @@ public class DQRespositoryView extends CommonNavigator {
         this.addViewerFilter(FolderObjFilter.FILTER_ID);
         adjustFilter();
         activateContext();
+
         getCommonViewer().setSorter(null);
         getCommonViewer().getTree().addTreeListener(new TreeAdapter() {
 
@@ -351,22 +394,6 @@ public class DQRespositoryView extends CommonNavigator {
 
                     }
 
-                    // all object will be RepositoryNode, so these code is unused any more
-                    // if (obj instanceof Analysis) {
-                    //
-                    // Analysis analysis = (Analysis) obj;
-                    // List<RenderedObject> tempList = new ArrayList<RenderedObject>();
-                    // tempList.add(analysis);
-                    //
-                    // IFolder analysesFolder = ResourceManager.getAnalysisFolder();
-                    // IFile file = AnaResourceFileHelper.getInstance().findCorrespondingFile(tempList,
-                    // analysesFolder).get(0);
-                    //
-                    // CorePlugin.getDefault().openEditor(file, "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"); //$NON-NLS-1$
-                    // }
-
-                    // ADD hcheng 07-28-2009,8243: open the indicator definition
-                    // with a double-click.
                     if (obj instanceof IndicatorDefinition) {
                         IndicatorDefinition indicatorDefinition = (IndicatorDefinition) obj;
                         // reload object
@@ -385,7 +412,7 @@ public class DQRespositoryView extends CommonNavigator {
                         OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject) obj);
                         openItemEditorAction.run();
                     }
-                    if (obj instanceof RepositoryNode) {
+                    if (obj instanceof DQRepositoryNode) {
                         if (obj instanceof ReportFileRepNode) {
                             superDoubleClick = false;
                             ReportFileRepNode reportFileNode = (ReportFileRepNode) obj;
@@ -405,7 +432,7 @@ public class DQRespositoryView extends CommonNavigator {
                         }
                         // ~20051
                         else {
-                            RepositoryNode repoNode = (RepositoryNode) obj;
+                            DQRepositoryNode repoNode = (DQRepositoryNode) obj;
                             if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
                                 OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
                                 openItemEditorAction.run();
@@ -433,7 +460,7 @@ public class DQRespositoryView extends CommonNavigator {
                     TreeItem[] selection = tree.getSelection();
                     for (TreeItem item : selection) {
                         Object data = item.getData();
-                        RepositoryNode repoNode = (RepositoryNode) data;
+                        DQRepositoryNode repoNode = (DQRepositoryNode) data;
                         if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
                             OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
                             openItemEditorAction.run();
@@ -486,6 +513,272 @@ public class DQRespositoryView extends CommonNavigator {
 
         });
         // ~
+        
+        // MOD gdbu 2011-7-11 bug : 22204
+        getCommonViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+
+            public void selectionChanged(SelectionChangedEvent event) {
+
+                if (DQRepositoryNode.isOnFilterring() && isOnUpDownStatus()) {
+
+                    TreeItem[] selectionNodes = getCommonViewer().getTree().getSelection();
+                    TreeItem selectionNode = null;
+                    if (selectionNodes.length != 0) {
+                        selectionNode = selectionNodes[0];
+                    } else {
+                        return;
+                    }
+
+                    if (!selectionNode.getText().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                        getCommonViewer().getTree().getItem(0);
+                        if (selectionNode.getText().equals(RepositoryNodeHelper.getLastNode().getLabel())
+                                || selectionNode.equals(getCommonViewer().getTree().getItem(0))) {
+                            setOnUpDownStatus(false);
+                            return;
+                        }
+
+                        if (getUpDownStatus()) {
+                            if (selectionNode.getExpanded()) {
+                                imitateKeyboardEventDown();
+                            } else {
+                                imitateKeyboardEventRight();
+                                imitateKeyboardEventDown();
+                            }
+                        } else {
+                            imitateKeyboardEventUp();
+                        }
+                    } else {
+                        setOnUpDownStatus(false);
+                    }
+                }
+            }
+        });
+        // ~22204
+        
+    }
+
+    /**
+     * DOC gdbu Comment method "createTreeFilter".
+     * 
+     * @param parent
+     */
+    protected void createTreeFilter(Composite parent) {
+
+        parent.setLayout(new BorderLayout());
+
+        Composite centerComp = new Composite(parent, SWT.NONE);
+        centerComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        centerComp.setFont(parent.getFont());
+        Composite eastComp = new Composite(parent, SWT.NONE);
+        eastComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        eastComp.setFont(parent.getFont());
+
+        centerComp.setLayoutData(BorderLayout.CENTER);
+        eastComp.setLayoutData(BorderLayout.EAST);
+
+        FillLayout centerLayout = new FillLayout(SWT.FILL_WINDING);
+        centerComp.setLayout(centerLayout);
+
+        FillLayout leftLayout = new FillLayout(SWT.HORIZONTAL);
+        leftLayout.marginWidth = 6;
+        leftLayout.marginHeight = 2;
+        leftLayout.spacing = 5;
+        eastComp.setLayout(leftLayout);
+
+        final Text filterText = new Text(centerComp, SWT.BORDER);
+        filterText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+
+        Button leftButton = new Button(eastComp, SWT.ARROW | SWT.UP);
+        leftButton.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        Button rightButton = new Button(eastComp, SWT.ARROW | SWT.DOWN);
+        rightButton.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        
+
+        // leftButton.setImage(ImageLib.getImage(ImageLib.ICON_PAGE_PREV_LNK));
+        // rightButton.setImage(ImageLib.getImage(ImageLib.ICON_PAGE_NEXT_LNK));
+
+        filterText.addKeyListener(new KeyListener() {
+
+            public void keyReleased(KeyEvent e) {
+            }
+
+            public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.CR) {
+                    RepositoryNodeHelper.clearAllFilteredNode();
+                    expandNodes(false);
+                    try {
+                        String filterStr = filterText.getText() + "";//$NON-NLS-1$
+                        DQRepositoryNode.setFilterStr(filterStr);
+                        if (filterStr.trim().equals("")) {//$NON-NLS-1$
+                            DQRepositoryNode.setFiltering(false);
+                            refresh();
+                        } else {
+                            DQRepositoryNode.setFiltering(true);
+                            RepositoryNodeHelper.callGetChildrenMethod();
+                        }
+                    } catch (Exception exception) {
+                        RepositoryNodeHelper.getAllFilteredNode();
+                        log.error(exception.toString());
+                    } finally {
+                        DQRepositoryNode firstFilteredNode = RepositoryNodeHelper.getFirstFilteredNode();
+                        if (null != firstFilteredNode) {
+                            showSelectedElements((RepositoryNode) firstFilteredNode);
+                        }
+                    }
+                }
+            }
+        });
+
+        leftButton.addMouseListener(new MouseAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+             */
+            @Override
+            public void mouseDown(MouseEvent e) {
+                // if (DQRepositoryNode.isOnFilterring()) {
+                // TreeItem[] selectionNode = getCommonViewer().getTree().getSelection();
+                // if (0 == selectionNode.length) {
+                // DQRepositoryNode firstFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(RepositoryNodeHelper
+                // .getFilteredNode());
+                // if (null != firstFilteredNode) {
+                // showSelectedElements((RepositoryNode) firstFilteredNode);
+                // }
+                // } else {
+                // TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
+                // DQRepositoryNode repoNode = (DQRepositoryNode) selectionTreeItem.getData();
+                // DQRepositoryNode nextFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(repoNode);
+                // if (null != nextFilteredNode) {
+                // showSelectedElements((RepositoryNode) nextFilteredNode);
+                // }
+                // }
+                // }
+                // super.mouseDown(e);
+
+                TreeItem[] selections = getCommonViewer().getTree().getSelection();
+                if (0 != selections.length) {
+                    imitateKeyboardEventUp();
+                    setOnUpDownStatus(true);
+                    setUpDownStatus(false);
+                }
+            }
+        });
+
+        rightButton.addMouseListener(new MouseAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
+             */
+            @Override
+            public void mouseUp(MouseEvent e) {
+
+                TreeItem[] selections = getCommonViewer().getTree().getSelection();
+                if (0 != selections.length) {
+                    final TreeItem selection = selections[0];
+                    if (selection.getExpanded()) {
+                        imitateKeyboardEventRight();
+                    } else {
+                        imitateKeyboardEventRight();
+                        imitateKeyboardEventDown();
+                    }
+                    setOnUpDownStatus(true);
+                    setUpDownStatus(true);
+                }
+
+                // if (DQRepositoryNode.isOnFilterring()) {
+                // TreeItem[] selectionNode = getCommonViewer().getTree().getSelection();
+                // if (0 == selectionNode.length) {
+                // DQRepositoryNode ilteredNode = RepositoryNodeHelper.getNextFilteredNode(RepositoryNodeHelper
+                // .getFilteredNode());
+                // if (null != ilteredNode) {
+                // showSelectedElements((RepositoryNode) ilteredNode);
+                // }
+                // } else {
+                // TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
+                // DQRepositoryNode repoNode = (DQRepositoryNode) selectionTreeItem.getData();
+                // DQRepositoryNode nextFilteredNode = RepositoryNodeHelper.getNextFilteredNode(repoNode);
+                // if (null != nextFilteredNode) {
+                // showSelectedElements((RepositoryNode) nextFilteredNode);
+                // }
+                // }
+                // }
+                // super.mouseDown(e);
+            }
+        });
+
+    }
+
+    private void imitateKeyboardEventRight() {
+                getCommonViewer().getTree().setFocus();
+                Event evt = new Event();
+                // right
+                evt.keyCode = SWT.ARROW_RIGHT;
+                evt.type = SWT.KeyDown;
+                getCommonViewer().getTree().getDisplay().post(evt);
+                // down
+                getCommonViewer().getTree().getDisplay().wake();
+    }
+
+    private void imitateKeyboardEventDown() {
+                getCommonViewer().getTree().setFocus();
+                Event evt = new Event();
+                // right
+                evt.character = 0;
+                evt.type = SWT.KeyDown;
+                getCommonViewer().getTree().getDisplay().post(evt);
+                // down
+                evt.keyCode = SWT.ARROW_DOWN;
+                getCommonViewer().getTree().getDisplay().post(evt);
+                getCommonViewer().getTree().getDisplay().wake();
+    }
+
+    private void imitateKeyboardEventUp() {
+                getCommonViewer().getTree().setFocus();
+                Event evt = new Event();
+                // right
+                evt.character = 0;
+                evt.type = SWT.KeyDown;
+                getCommonViewer().getTree().getDisplay().post(evt);
+                // down
+                evt.keyCode = SWT.ARROW_UP;
+                getCommonViewer().getTree().getDisplay().post(evt);
+                getCommonViewer().getTree().getDisplay().wake();
+    }
+
+    private void expandNodes(boolean expand) {
+        expandTreeItems(getCommonViewer().getTree().getItems(), expand);
+        packOtherColumns();
+    }
+
+    private void expandTreeItems(TreeItem[] items, boolean expandOrCollapse) {
+        for (TreeItem item : items) {
+            item.setExpanded(expandOrCollapse);
+            TreeItem[] its = item.getItems();
+            if (its != null && its.length > 0) {
+                expandTreeItems(its, expandOrCollapse);
+            }
+        }
+    }
+
+    private void packOtherColumns() {
+        TreeColumn[] columns = getCommonViewer().getTree().getColumns();
+        for (TreeColumn column : columns) {
+            column.pack();
+        }
+        getCommonViewer().getTree().pack();
+        getCommonViewer().getTree().getParent().layout();
+    }
+
+    protected void setContentAndLabelProviders(TreeViewer treeViewer) {
+        treeViewer.setLabelProvider(new DQRepositoryViewLabelProvider());
+        IContributionService cs = (IContributionService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                .getService(IContributionService.class);
+        treeViewer.setComparator(cs.getComparatorFor(IContributionService.TYPE_PREFERENCE));
+        treeViewer.setContentProvider(new PreferenceContentProvider());
     }
 
     /**
@@ -567,7 +860,7 @@ public class DQRespositoryView extends CommonNavigator {
                 recursiveExpandTree(selectedElement);
                 getCommonViewer().setSelection(structSel);
             }
-
+            
         } catch (Exception e) {
             log.error(e, e);
         }
@@ -653,6 +946,22 @@ public class DQRespositoryView extends CommonNavigator {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
+    }
+
+    private static boolean getUpDownStatus() {
+        return upDownStatus;
+    }
+
+    private static void setUpDownStatus(boolean upDownStatus) {
+        DQRespositoryView.upDownStatus = upDownStatus;
+    }
+
+    private static boolean isOnUpDownStatus() {
+        return isOnUpDownStatus;
+    }
+
+    private static void setOnUpDownStatus(boolean isOnUpDownStatus) {
+        DQRespositoryView.isOnUpDownStatus = isOnUpDownStatus;
     }
 
 }

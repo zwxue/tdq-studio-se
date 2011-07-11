@@ -22,7 +22,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class SysIndicatorDefinitionRepNode extends RepositoryNode {
+public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
 
     boolean isSystemIndicator = false;
 

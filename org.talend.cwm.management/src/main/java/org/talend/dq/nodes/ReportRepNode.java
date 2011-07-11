@@ -27,7 +27,7 @@ import orgomg.cwmx.analysis.informationreporting.Report;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class ReportRepNode extends RepositoryNode {
+public class ReportRepNode extends DQRepositoryNode {
 
     public static final String ANA_FLODER = "Analyzes";//$NON-NLS-1$
 

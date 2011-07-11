@@ -30,7 +30,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class RulesFolderRepNode extends RepositoryNode {
+public class RulesFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(RulesFolderRepNode.class);
 
@@ -89,6 +89,6 @@ public class RulesFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return super.getChildren();
+        return filterResultsIfAny(super.getChildren());
     }
 }

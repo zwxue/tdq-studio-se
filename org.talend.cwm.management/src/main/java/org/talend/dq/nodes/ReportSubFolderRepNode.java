@@ -98,9 +98,11 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
             } catch (Exception e) {
                 log.warn(e, e);
             }
-            return this.getReportSubFolderChildren();
+            // MOD gdbu 2011-7-1 bug : 22204
+            return filterResultsIfAny(this.getReportSubFolderChildren());
         } else {
-            return super.getChildren();
+            return filterResultsIfAny(super.getChildren());
+            // ~22204
         }
     }
 

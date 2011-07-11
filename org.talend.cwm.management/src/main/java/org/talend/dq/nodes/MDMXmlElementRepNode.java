@@ -28,7 +28,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class MDMXmlElementRepNode extends RepositoryNode {
+public class MDMXmlElementRepNode extends DQRepositoryNode {
 
     private MetadataXmlElementTypeRepositoryObject metadataXmlElementTypeRepositoryObject;
 
@@ -59,12 +59,16 @@ public class MDMXmlElementRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        // MOD gdbu 2011-7-1 bug : 22204
+        if (!super.getChildren().isEmpty()) {
+            return filterResultsIfAny(super.getChildren());
+        }
+        // ~22204
+
         IRepositoryViewObject object = this.getObject();
-        List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         TdXmlElementType xmlElementType = ((MetadataXmlElementTypeRepositoryObject) object).getTdXmlElementType();
         List<TdXmlElementType> xmlElements = null;
         if (xmlElementType != null) {
-
             xmlElements = ConnectionUtils.getXMLElements(xmlElementType);
         }
 
@@ -78,9 +82,11 @@ public class MDMXmlElementRepNode extends RepositoryNode {
                 xmlElementTypeNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
                 xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
-                repsNodes.add(xmlElementTypeNode);
+                // MOD gdbu 2011-7-1 bug : 22204
+                super.getChildren().add(xmlElementTypeNode);
             }
-            return repsNodes;
+            return filterResultsIfAny(super.getChildren());
+            // ~22204
         } else {
             return new ArrayList<IRepositoryNode>();
         }

@@ -25,7 +25,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu Database column repository node displayed on repository view (UI).
  */
-public class DBColumnRepNode extends RepositoryNode {
+public class DBColumnRepNode extends DQRepositoryNode {
 
     private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
 
@@ -58,7 +58,9 @@ public class DBColumnRepNode extends RepositoryNode {
      */
     @Override
     public List<IRepositoryNode> getChildren() {
-        return super.getChildren();
+        // MOD gdbu 2011-6-28 bug : 22204
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     @Override

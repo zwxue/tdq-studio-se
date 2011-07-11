@@ -29,7 +29,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class MDMConnectionFolderRepNode extends RepositoryNode {
+public class MDMConnectionFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(MDMConnectionFolderRepNode.class);
 
@@ -56,8 +56,9 @@ public class MDMConnectionFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-
-        return fetchNodeByFolder.getChildren();
+        // MOD gdbu 2011-6-29 bug : 22204
+        return filterResultsIfAny(fetchNodeByFolder.getChildren());
+        // 22204
     }
 
     public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,

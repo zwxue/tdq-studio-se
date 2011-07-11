@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -58,12 +57,15 @@ public class MDMConnectionRepNode extends ConnectionRepNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+
         // Retrieve catalogs/schemes.
-        EList<Package> dataPackage = ((ConnectionItem) getObject().getProperty().getItem()).getConnection().getDataPackage();
+        EList<Package> dataPackage = getMdmConnection().getDataPackage();
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
             if (pack instanceof TdXmlSchemaImpl) {
-                return createRepositoryNodeSchema(dataPackage);
+                // MOD gdbu 2011-7-1 bug : 22204
+                return filterResultsIfAny(createRepositoryNodeSchema(dataPackage));
+                // ~22204
             }
         }
         return new ArrayList<IRepositoryNode>();
@@ -72,7 +74,6 @@ public class MDMConnectionRepNode extends ConnectionRepNode {
 
     private List<IRepositoryNode> createRepositoryNodeSchema(EList<Package> dataPackage) {
         IRepositoryViewObject object = this.getObject();
-        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         for (Package pack : dataPackage) {
             MetadataXmlSchemaRepositoryObject metadataXmlSchema = new MetadataXmlSchemaRepositoryObject(object,
                     (TdXmlSchemaImpl) pack);
@@ -81,9 +82,11 @@ public class MDMConnectionRepNode extends ConnectionRepNode {
             xmlSchemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_SCHEMA);
             xmlSchemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
             metadataXmlSchema.setRepositoryNode(xmlSchemaNode);
-            nodes.add(xmlSchemaNode);
+            // MOD gdbu 2011-7-1 bug : 22204
+            super.getChildren().add(xmlSchemaNode);
         }
-        return nodes;
+        return super.getChildren();
+        // ~22204
     }
 
     @Override

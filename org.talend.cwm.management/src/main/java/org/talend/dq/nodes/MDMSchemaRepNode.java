@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -29,7 +28,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class MDMSchemaRepNode extends RepositoryNode {
+public class MDMSchemaRepNode extends DQRepositoryNode {
 
     private MetadataXmlSchemaRepositoryObject metadataXmlSchemaRepositoryObject;
 
@@ -60,8 +59,12 @@ public class MDMSchemaRepNode extends RepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        // MOD gdbu 2011-7-1 bug : 22204
+        if (!super.getChildren().isEmpty()) {
+            return filterResultsIfAny(super.getChildren());
+        }
+
         MetadataXmlSchemaRepositoryObject metadataXmlSchema = (MetadataXmlSchemaRepositoryObject) this.getObject();
-        List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
 
         TdXmlSchema xmlSchema = metadataXmlSchema.getTdXmlSchema();
         List<ModelElement> xmlElements = ConnectionUtils.getXMLElements(xmlSchema);
@@ -75,10 +78,11 @@ public class MDMSchemaRepNode extends RepositoryNode {
                 xmlElementTypeNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
                 xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
-                repsNodes.add(xmlElementTypeNode);
+                super.getChildren().add(xmlElementTypeNode);
             }
         }
-        return repsNodes;
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     @Override

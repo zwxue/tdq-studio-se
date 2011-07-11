@@ -60,7 +60,12 @@ public class DFConnectionRepNode extends ConnectionRepNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        EList<Package> dataPackage = ((ConnectionItem) getObject().getProperty().getItem()).getConnection().getDataPackage();
+        // MOD gdbu 2011-7-1 bug : 22204
+        if (!super.getChildren().isEmpty()) {
+            return filterResultsIfAny(super.getChildren());
+        }
+        // ~22204
+        EList<Package> dataPackage = getDfConnection().getDataPackage();
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
             if (pack instanceof RecordFile) {
@@ -73,7 +78,6 @@ public class DFConnectionRepNode extends ConnectionRepNode {
 
     private List<IRepositoryNode> createRepositoryNodeSchema() {
         IRepositoryViewObject object = this.getObject();
-        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         Set<MetadataTable> tables = ConnectionHelper.getTables(((ConnectionItem) getObject().getProperty().getItem())
                 .getConnection());
         if (tables != null && tables.size() > 0) {
@@ -86,10 +90,10 @@ public class DFConnectionRepNode extends ConnectionRepNode {
                 tableNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
                 tableNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_TABLE);
                 mtRepObject.setRepositoryNode(tableNode);
-                nodes.add(tableNode);
+                super.getChildren().add(tableNode);
             }
         }
-        return nodes;
+        return super.getChildren();
     }
 
     @Override

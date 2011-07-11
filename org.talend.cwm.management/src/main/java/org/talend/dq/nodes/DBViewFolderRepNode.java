@@ -38,7 +38,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class DBViewFolderRepNode extends RepositoryNode {
+public class DBViewFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(DBViewFolderRepNode.class);
 
@@ -77,15 +77,17 @@ public class DBViewFolderRepNode extends RepositoryNode {
      */
     public DBViewFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-
+        
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        // MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();
         createRepositoryNodeViewFolderNode(repsNodes, object);
-        return repsNodes;
+        return filterResultsIfAny(repsNodes);
+        // ~22204
     }
 
     /**
@@ -105,7 +107,9 @@ public class DBViewFolderRepNode extends RepositoryNode {
                 connection = item.getConnection();
                 views = PackageHelper.getViews(catalog);
                 filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
-                if (views.isEmpty()) {
+                // MOD gdbu 2011-6-29 bug : 22204
+                if (views.isEmpty() && !isOnFilterring()) {
+                    // ~22204
                     views = DqRepositoryViewService.getViews(connection, catalog, null, true);
                     if (views.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
@@ -126,7 +130,9 @@ public class DBViewFolderRepNode extends RepositoryNode {
                     filterCharacter = RepositoryNodeHelper.getViewFilter(((MetadataCatalogRepositoryObject) object).getCatalog(),
                             null);
                 }
-                if (views.isEmpty()) {
+                // MOD gdbu 2011-6-29 bug : 22204
+                if (views.isEmpty() && !isOnFilterring()) {
+                    // ~22204
                     views = DqRepositoryViewService.getViews(connection, schema, null, true);
                     if (views.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
@@ -186,5 +192,18 @@ public class DBViewFolderRepNode extends RepositoryNode {
      */
     public Package getPackage() {
         return this.getCatalog() != null ? this.getCatalog() : this.getSchema();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        if (getObject() == null) {
+            return this.getProperties(EProperties.LABEL).toString();
+        }
+        return this.getObject().getLabel();
     }
 }

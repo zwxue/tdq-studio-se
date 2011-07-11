@@ -23,7 +23,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * Report generated document file RepositoryNode.
  */
-public class ReportFileRepNode extends RepositoryNode {
+public class ReportFileRepNode extends DQRepositoryNode {
 
     private IResource resource;
 

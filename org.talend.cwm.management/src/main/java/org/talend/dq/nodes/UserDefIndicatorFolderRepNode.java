@@ -30,7 +30,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment: user defined indicator folder repository node
  */
-public class UserDefIndicatorFolderRepNode extends RepositoryNode {
+public class UserDefIndicatorFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(UserDefIndicatorFolderRepNode.class);
 
@@ -91,6 +91,8 @@ public class UserDefIndicatorFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return super.getChildren();
+        // MOD gdbu 2011-6-29 bug : 22204
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 }

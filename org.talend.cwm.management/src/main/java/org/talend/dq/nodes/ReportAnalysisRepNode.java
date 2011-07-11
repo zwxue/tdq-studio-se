@@ -20,7 +20,7 @@ import orgomg.cwmx.analysis.informationreporting.Report;
 /**
  * Repost's analysis RepositoryNode.
  */
-public class ReportAnalysisRepNode extends RepositoryNode {
+public class ReportAnalysisRepNode extends DQRepositoryNode {
 
     private Report report;
 

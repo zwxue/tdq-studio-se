@@ -24,7 +24,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu Database view repository node displayed on repository view (UI).
  */
-public class DBViewRepNode extends RepositoryNode {
+public class DBViewRepNode extends DQRepositoryNode {
 
     private TdViewRepositoryObject tdViewRepositoryObject;
 
@@ -60,10 +60,12 @@ public class DBViewRepNode extends RepositoryNode {
      */
     @Override
     public List<IRepositoryNode> getChildren() {
+        //MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(getObject(), this, ENodeType.TDQ_REPOSITORY_ELEMENT);
         nodes.add(columnFolderNode);
-        return nodes;
+        return filterResultsIfAny(nodes);
+        // ~22204
     }
 
     @Override

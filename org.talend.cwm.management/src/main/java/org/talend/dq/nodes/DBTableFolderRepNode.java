@@ -30,6 +30,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -41,7 +42,7 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC klliu Folder node node displayed on repository view (UI), knowing exact folder type by folder
  * object:TDQFolderObject.
  */
-public class DBTableFolderRepNode extends RepositoryNode {
+public class DBTableFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(DBTableFolderRepNode.class);
 
@@ -55,7 +56,7 @@ public class DBTableFolderRepNode extends RepositoryNode {
 
     private Schema schema;
 
-    private List<IRepositoryNode> children;
+    // private List<IRepositoryNode> children;
 
     public Catalog getCatalog() {
         return this.catalog;
@@ -82,17 +83,19 @@ public class DBTableFolderRepNode extends RepositoryNode {
      */
     public DBTableFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        children = new ArrayList<IRepositoryNode>();
+        // children = new ArrayList<IRepositoryNode>();
     }
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        if (!children.isEmpty()) {
-            return children;
+        // MOD gdbu 2011-7-1 bug : 22204
+        if (!super.getChildren().isEmpty()) {
+            return filterResultsIfAny(super.getChildren());
         }
         IRepositoryViewObject object = this.getParent().getObject();
-        createRepositoryNodeTableFolderNode(children, object);
-        return children;
+        createRepositoryNodeTableFolderNode(super.getChildren(), object);
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     /**
@@ -112,8 +115,18 @@ public class DBTableFolderRepNode extends RepositoryNode {
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
                 tables = PackageHelper.getTables(catalog);
                 filterCharacter = RepositoryNodeHelper.getTableFilter(catalog, schema);
+                // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
                 if (tables.isEmpty()) {
-                    tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
+                    if (isOnFilterring()) {
+                        tables = DqRepositoryViewService.getTables(connection, catalog, null, false);
+                    } else {
+                        tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
+                    }
+                    if (tables.size() > 0) {
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                    }
+                } else {
+                    ConnectionUtils.retrieveColumn(tables);
                 }
 
             } else {
@@ -123,18 +136,32 @@ public class DBTableFolderRepNode extends RepositoryNode {
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
                 tables = PackageHelper.getTables(schema);
                 filterCharacter = RepositoryNodeHelper.getTableFilter(catalog, schema);
-                RepositoryNode parent = metadataObject.getRepositoryNode()
-                        .getParent();
+                RepositoryNode parent = metadataObject.getRepositoryNode().getParent();
                 IRepositoryViewObject object = parent.getObject();
                 if (object instanceof MetadataCatalogRepositoryObject && filterCharacter.equals("")) {
                     filterCharacter = RepositoryNodeHelper.getTableFilter(
                             ((MetadataCatalogRepositoryObject) object).getCatalog(), null);
                 }
+                // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
                 if (tables.isEmpty()) {
-                    tables = DqRepositoryViewService.getTables(connection, schema, null, true);
+                    if (isOnFilterring()) {
+                        tables = DqRepositoryViewService.getTables(connection, schema, null, false);
+                    } else {
+                        tables = DqRepositoryViewService.getTables(connection, schema, null, true);
+                    }
+                    if (tables.size() > 0) {
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                    }
                 }
 
+                // -------------delete this code
+                else {
+                    ConnectionUtils.retrieveColumn(tables);
+                }
+                // -------------
+
             }
+
             if (tables.size() > 0) {
                 // MOD qiongli 2011-6-28 bug 22019,only need to save connection in this place.
                 Project currentProject = ProjectManager.getInstance().getCurrentProject();

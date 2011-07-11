@@ -72,9 +72,11 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
             if (pack instanceof Schema) {
-                return createRepositoryNodeSchema(dataPackage);
+                // MOD gdbu 2011-6-29 bug : 22204
+                return filterResultsIfAny(createRepositoryNodeSchema(dataPackage));
             } else if (pack instanceof Catalog) {
-                return createRepositoryNodeCatalog(dataPackage);
+                return filterResultsIfAny(createRepositoryNodeCatalog(dataPackage));
+                // ~22204
             }
         }
         return new ArrayList<IRepositoryNode>();
@@ -132,10 +134,10 @@ public class DBConnectionRepNode extends ConnectionRepNode {
 
     @Override
     public String getLabel() {
-        if (this.getDatabaseConnection() != null) {
-            return this.getDatabaseConnection().getName();
+        if (getObject() == null) {
+            return this.getProperties(EProperties.LABEL).toString();
         }
-        return super.getLabel();
+        return this.getObject().getLabel();
     }
 
     @Override

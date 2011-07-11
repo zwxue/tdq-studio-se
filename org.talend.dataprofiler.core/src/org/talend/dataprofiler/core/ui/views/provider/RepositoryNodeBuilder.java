@@ -42,6 +42,7 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.PatternRegexFolderRepNode;
@@ -92,7 +93,7 @@ public final class RepositoryNodeBuilder {
     public RepositoryNode createRepositoryNodeSystemFolder(FolderHelper folderHelper, RepositoryNode node,
             EResourceConstant resConstant) throws PersistenceException {
         IRepositoryViewObject folder = null;
-        RepositoryNode subFolderNode = null;
+        DQRepositoryNode subFolderNode = null;
         if (folderHelper != null) {
             FolderItem folder2 = folderHelper.getFolder(resConstant.getPath());
             folder = new Folder(folder2.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
@@ -169,7 +170,7 @@ public final class RepositoryNodeBuilder {
             node.getChildren().add(exchangeFolder);
             return exchangeFolder;
         default:
-            subFolderNode = new RepositoryNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            subFolderNode = new DQRepositoryNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(subFolderNode);
             node.getChildren().add(subFolderNode);
             break;

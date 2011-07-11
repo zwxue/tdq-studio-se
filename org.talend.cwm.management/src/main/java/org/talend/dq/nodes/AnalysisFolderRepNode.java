@@ -31,7 +31,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class AnalysisFolderRepNode extends RepositoryNode {
+public class AnalysisFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(AnalysisFolderRepNode.class);
 
@@ -95,7 +95,9 @@ public class AnalysisFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return super.getChildren();
+        // MOD gdbu 2011-7-1 bug : 22204
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     public String getLabelWithCount() {

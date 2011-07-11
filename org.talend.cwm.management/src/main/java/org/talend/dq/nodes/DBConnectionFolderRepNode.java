@@ -30,7 +30,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class DBConnectionFolderRepNode extends RepositoryNode {
+public class DBConnectionFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(DBConnectionFolderRepNode.class);
 
@@ -87,7 +87,19 @@ public class DBConnectionFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return super.getChildren();
+        return filterResultsIfAny(super.getChildren());
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        if (getObject() == null) {
+            return this.getProperties(EProperties.LABEL).toString();
+        }
+        return this.getObject().getLabel();
     }
 }

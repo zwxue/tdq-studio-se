@@ -13,6 +13,8 @@
 package org.talend.dq.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
@@ -83,6 +85,7 @@ import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
@@ -135,6 +138,10 @@ public final class RepositoryNodeHelper {
     public static final String DI_REPOSITORY_NAME = "Repository"; //$NON-NLS-1$
 
     private static RecycleBinRepNode recycleBinRepNode;
+
+    private static List<DQRepositoryNode> allFilteredNode = new ArrayList<DQRepositoryNode>();
+
+    private static DQRepositoryNode filteredNode;// used to show the next filtered node
 
     public static RecycleBinRepNode getRecycleBinRepNode() {
         if (recycleBinRepNode == null) {
@@ -924,8 +931,12 @@ public final class RepositoryNodeHelper {
         if (schemaOrCatalogNode == null) {
             return null;
         }
-        List<IRepositoryNode> children = schemaOrCatalogNode.getChildren().get(0).getChildren();
-        if (children.size() > 0) {
+        List<IRepositoryNode> childrens = schemaOrCatalogNode.getChildren();
+        List<IRepositoryNode> children = null;
+        if (!childrens.isEmpty()) {
+            children = childrens.get(0).getChildren();
+        }
+        if (null != children && children.size() > 0) {
             IRepositoryNode iRepositoryNode = children.get(0);
             if (iRepositoryNode != null && iRepositoryNode instanceof DBTableRepNode) {
                 for (IRepositoryNode childNode : children) {
@@ -2462,4 +2473,180 @@ public final class RepositoryNodeHelper {
         }
         return retColumnSets;
     }
+
+    public static void clearAllFilteredNode() {
+        setFilteredNode(null);
+        allFilteredNode.clear();
+    }
+
+    public static List<DQRepositoryNode> getAllFilteredNode() {
+        return allFilteredNode;
+    }
+
+    public static void setAllFilterNodeList(DQRepositoryNode dqNode) {
+        if (!allFilteredNode.contains(dqNode)) {
+            allFilteredNode.add(dqNode);
+        }
+    }
+
+    public static DQRepositoryNode getFirstFilteredNode() {
+        if (!allFilteredNode.isEmpty()) {
+            DQRepositoryNode dqRepositoryNode = allFilteredNode.get(0);
+            setFilteredNode(dqRepositoryNode);
+            return dqRepositoryNode;
+        } else {
+            return null;
+        }
+    }
+
+    public static DQRepositoryNode getNextFilteredNode(DQRepositoryNode dqNode) {
+        if (!allFilteredNode.isEmpty()) {
+            DQRepositoryNode findFilteredNode = findNextFilteredNode(dqNode);
+            if (null != findFilteredNode) {
+                return findFilteredNode;
+            } else {
+                DQRepositoryNode findFilteredNodeByMemorySave = findNextFilteredNode(getFilteredNode());
+                if (null != findFilteredNodeByMemorySave) {
+                    return findFilteredNodeByMemorySave;
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    public static DQRepositoryNode getPreviouFilteredNode(DQRepositoryNode dqNode) {
+        if (!allFilteredNode.isEmpty()) {
+            DQRepositoryNode findFilteredNode = findPreviouFilteredNode(dqNode);
+            if (null != findFilteredNode) {
+                return findFilteredNode;
+            } else {
+                DQRepositoryNode findFilteredNodeByMemorySave = findPreviouFilteredNode(getFilteredNode());
+                if (null != findFilteredNodeByMemorySave) {
+                    return findFilteredNodeByMemorySave;
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    private static DQRepositoryNode findNextFilteredNode(DQRepositoryNode dqNode) {
+        for (int i = 0; i < allFilteredNode.size(); i++) {
+            if (allFilteredNode.get(i).equals(dqNode)) {
+                if (i != (allFilteredNode.size() - 1)) {
+                    DQRepositoryNode dqRepositoryNode = allFilteredNode.get(i + 1);
+                    setFilteredNode(dqRepositoryNode);
+                    return dqRepositoryNode;
+                } else {
+                    DQRepositoryNode dqRepositoryNode = allFilteredNode.get(0);
+                    setFilteredNode(dqRepositoryNode);
+                    return dqRepositoryNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static DQRepositoryNode findPreviouFilteredNode(DQRepositoryNode dqNode) {
+        for (int i = 0; i < allFilteredNode.size(); i++) {
+            if (allFilteredNode.get(i).equals(dqNode)) {
+                if (i != 0) {
+                    DQRepositoryNode dqRepositoryNode = allFilteredNode.get(i - 1);
+                    setFilteredNode(dqRepositoryNode);
+                    return dqRepositoryNode;
+                } else {
+                    DQRepositoryNode dqRepositoryNode = allFilteredNode.get(allFilteredNode.size() - 1);
+                    setFilteredNode(dqRepositoryNode);
+                    return dqRepositoryNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void callGetChildrenMethod() {
+        refreshNode(getRootNode(ERepositoryObjectType.METADATA, true));
+
+        List<DQRepositoryNode> metaDataFilteredNodes = new ArrayList<DQRepositoryNode>();
+        metaDataFilteredNodes.addAll(getAllFilteredNode());
+        clearAllFilteredNode();
+
+        refreshNode(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+        refreshNode(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
+
+        List<DQRepositoryNode> dataLibFilteredNodes = new ArrayList<DQRepositoryNode>();
+        dataLibFilteredNodes.addAll(getAllFilteredNode());
+
+        for (DQRepositoryNode anaIndDqRepositoryNode : dataLibFilteredNodes) {
+            if (metaDataFilteredNodes.contains(anaIndDqRepositoryNode)) {
+                getAllFilteredNode().remove(anaIndDqRepositoryNode);
+            }
+        }
+
+        for (DQRepositoryNode metaDataFilteredNode : metaDataFilteredNodes) {
+            getAllFilteredNode().add((getAllFilteredNode().size()), metaDataFilteredNode);
+        }
+    }
+
+    private static void refreshNode(IRepositoryNode iRepositoryNode) {
+        for (IRepositoryNode iRepositoryNode1 : iRepositoryNode.getChildren()) {
+            if (iRepositoryNode1.hasChildren()) {
+                refreshNode(iRepositoryNode1);
+            }
+        }
+    }
+
+    private static void setFilteredNode(DQRepositoryNode dqNode) {
+        filteredNode = dqNode;
+    }
+
+    public static DQRepositoryNode getFilteredNode() {
+        return filteredNode;
+    }
+
+    public static List<IRepositoryNode> sortChildren(List<IRepositoryNode> dqNodes) {
+
+        Object[] sortedChildren = RepositoryNodeHelper.sortChildren(dqNodes.toArray());
+        List<IRepositoryNode> sortChildrenList = new ArrayList<IRepositoryNode>();
+        for (Object obj : sortedChildren) {
+            IRepositoryNode dqNode = (IRepositoryNode) obj;
+            sortChildrenList.add(dqNode);
+        }
+        return sortChildrenList;
+    }
+
+    private static Object[] sortChildren(Object[] objects) {
+        if (objects == null || objects.length <= 1) {
+            return objects;
+        }
+        Arrays.sort(objects, buildComparator());
+        return objects;
+    }
+
+    private static Comparator buildComparator() {
+        return new RepositoryNodeComparator();
+    }
+
+    public static IRepositoryNode getLastNode() {
+        return getLastNode(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
+    }
+
+    public static IRepositoryNode getFirstNode() {
+        return getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true);
+    }
+
+
+    private static IRepositoryNode getLastNode(IRepositoryNode iRNode) {
+        if (iRNode.hasChildren()) {
+            List<IRepositoryNode> childrens = iRNode.getChildren();
+            IRepositoryNode children = getLastNode(childrens.get(childrens.size() - 1));
+            return children;
+        } else {
+            return iRNode;
+        }
+    }
+
 }

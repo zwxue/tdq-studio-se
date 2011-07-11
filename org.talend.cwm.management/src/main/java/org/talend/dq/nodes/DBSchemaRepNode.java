@@ -24,7 +24,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC klliu Database schema repository node displayed on repository view (UI).
  */
-public class DBSchemaRepNode extends RepositoryNode {
+public class DBSchemaRepNode extends DQRepositoryNode {
 
     private Schema schema;
 
@@ -50,7 +50,9 @@ public class DBSchemaRepNode extends RepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         IRepositoryViewObject object = getObject();
-        return createTableViewFolder((MetadataSchemaRepositoryObject) object);
+        // MOD gdbu 2011-6-28 bug : 22204
+        return filterResultsIfAny(createTableViewFolder((MetadataSchemaRepositoryObject) object));
+        // ~22204
     }
 
     private List<IRepositoryNode> createTableViewFolder(MetadataSchemaRepositoryObject metadataSchema) {

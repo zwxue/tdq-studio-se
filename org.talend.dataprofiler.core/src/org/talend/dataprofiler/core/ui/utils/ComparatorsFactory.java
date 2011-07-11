@@ -25,8 +25,8 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.recycle.DQRecycleBinNode;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.factory.ModelElementFileFactory;
+import org.talend.dq.helper.RepositoryNodeComparator;
 import org.talend.dq.indicators.ext.FrequencyExt;
-import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -331,24 +331,4 @@ public final class ComparatorsFactory {
 
     }
 
-    /**
-     * comparator for IRepositoryNode.
-     */
-    static class RepositoryNodeComparator implements Comparator<IRepositoryNode> {
-
-        public int compare(IRepositoryNode o1, IRepositoryNode o2) {
-            if (o1 == null || o2 == null) {
-                return 0;
-            }
-            String label1 = o1.getLabel();
-            String label2 = o2.getLabel();
-            // System.out.println("class1=" + o1.getClass().getName() + " | label1=" + label1);
-            // System.out.println("class2=" + o2.getClass().getName() + " | label2=" + label2);
-            if (label1 == null || label2 == null) {
-                return 0;
-            }
-            return label1.compareTo(label2);
-        }
-
-    }
 }

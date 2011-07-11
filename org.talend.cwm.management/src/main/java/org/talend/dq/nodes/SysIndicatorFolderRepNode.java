@@ -30,7 +30,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment: system indicator folder repository node
  */
-public class SysIndicatorFolderRepNode extends RepositoryNode {
+public class SysIndicatorFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(SysIndicatorFolderRepNode.class);
 
@@ -78,7 +78,9 @@ public class SysIndicatorFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return super.getChildren();
+        // MOD gdbu 2011-6-29 bug : 22204
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     /**

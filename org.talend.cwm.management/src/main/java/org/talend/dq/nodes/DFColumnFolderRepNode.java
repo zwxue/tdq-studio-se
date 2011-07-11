@@ -28,7 +28,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class DFColumnFolderRepNode extends RepositoryNode {
+public class DFColumnFolderRepNode extends DQRepositoryNode {
 
     private IRepositoryViewObject object;
 

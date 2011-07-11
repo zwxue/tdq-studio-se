@@ -20,7 +20,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class SourceFileRepNode extends RepositoryNode {
+public class SourceFileRepNode extends DQRepositoryNode {
 
     private TDQSourceFileItem sourceFileItem;
 

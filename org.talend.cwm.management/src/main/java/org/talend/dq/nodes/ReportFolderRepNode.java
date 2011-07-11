@@ -31,7 +31,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class ReportFolderRepNode extends RepositoryNode {
+public class ReportFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(ReportFolderRepNode.class);
 
@@ -149,7 +149,9 @@ public class ReportFolderRepNode extends RepositoryNode {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return super.getChildren();
+        // MOD gdbu 2011-6-29 bug : 22204
+        return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
 
     public boolean isVirtualFolder() {
