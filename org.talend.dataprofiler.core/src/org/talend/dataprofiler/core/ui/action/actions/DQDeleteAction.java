@@ -115,13 +115,20 @@ public class DQDeleteAction extends DeleteAction {
                 boolean hasDependency = false;
                 if (node.getType() == ENodeType.SIMPLE_FOLDER || node.getType() == ENodeType.SYSTEM_FOLDER) {
                     List<IRepositoryNode> newLs = RepositoryNodeHelper.getRepositoryElementFromFolder(node, true);
+                    // is there have sub nodes not be deleted: if the folder have sub node(s) not be deleted, the folder
+                    // should not be deleted also
+                    boolean haveSubNode = false;
                     for (IRepositoryNode subNode : newLs) {
                         hasDependency = RepositoryNodeHelper.hasDependencyClients(subNode);
                         if (!hasDependency || hasDependency && handleDependencies(subNode)) {
                             excuteSuperRun((RepositoryNode) subNode);
+                        } else {
+                            haveSubNode = true;
                         }
                     }
-                    excuteSuperRun(node);
+                    if (!haveSubNode) {
+                        excuteSuperRun(node);
+                    }
                 } else {
                     hasDependency = RepositoryNodeHelper.hasDependencyClients(node);
                     if (!hasDependency || hasDependency && handleDependencies(node)) {
@@ -227,7 +234,6 @@ public class DQDeleteAction extends DeleteAction {
     }
 
     /**
-     * 
      * DOC qiongli :excute super method run().
      * 
      * @param currentNode:null for logical delete a selected element by UI.none-null for physical delete or logical
