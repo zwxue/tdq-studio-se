@@ -389,6 +389,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             if (parentElement instanceof DBTableRepNode || parentElement instanceof DBViewRepNode
                     || parentElement instanceof DFTableRepNode) {
                 IRepositoryNode repoNode = (IRepositoryNode) parentElement;
+                // feature 22206 2011-7-12 msjian: fixed its note 91852 issue1
+                if (repoNode.getChildren().size() == 0) {
+                    return repoNode.getChildren().toArray();
+                }
                 return repoNode.getChildren().get(0).getChildren().toArray();
             }
             // if (parentElement instanceof DBColumnFolderRepNode || parentElement instanceof MDMSchemaRepNode) {

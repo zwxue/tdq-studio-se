@@ -70,6 +70,10 @@ public class DBCatalogRepNode extends DQRepositoryNode {
         if (schemas != null && schemas.size() > 0) {
             return filterResultsIfAny(createRepositoryNodeSchema(schemas));
         } else {
+            // feature 22206 2011-7-12 msjian: fixed its note 91852 issue2
+            if (DQRepositoryNode.isUntilSchema()) {
+                return createTableViewFolder(metadataCatalog);
+            }
             return filterResultsIfAny(createTableViewFolder(metadataCatalog));
         }
         // ~22204
