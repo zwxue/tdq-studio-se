@@ -134,12 +134,14 @@ public final class ChartTableFactory {
                             try {
                                 AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
                                 if (analysis.getParameters().isStoreData()) {
-                                    if (analyDataSet != null
-                                            && (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
-                                                    || analyDataSet.getFrequencyData() != null
-                                                    && analyDataSet.getFrequencyData().size() > 0 || analyDataSet
-                                                    .getPatternData() != null
-                                                    && analyDataSet.getPatternData().size() > 0)) {
+                                    // MOD gdbu 2011-7-12 bug : 22524
+                                    if (!(analyDataSet != null && (analyDataSet.getData() != null
+                                            && analyDataSet.getData().size() > 0 || analyDataSet.getFrequencyData() != null
+                                            && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
+                                            && analyDataSet.getPatternData().size() > 0))) {
+                                        return;
+                                    }
+                                    // ~22524
                                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
                                                 dataEntity);
                                         for (final MenuItemEntity itemEntity : itemEntities) {
@@ -185,7 +187,7 @@ public final class ChartTableFactory {
                                                 });
                                             }
                                         }
-                                    }
+
                                 }
                             } catch (NullPointerException nullexception) {
 

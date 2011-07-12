@@ -272,8 +272,11 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                 cc.setLayoutData(gd);
                 // MOD qiongli 2011-3-28 feature 19192.allow drill down for chart.
                 ExecutionLanguage execuLanguage = analysis.getParameters().getExecutionLanguage();
-                boolean isAllow = ExecutionLanguage.SQL.equals(execuLanguage) || ExecutionLanguage.JAVA.equals(execuLanguage)
-                        && analysis.getParameters().isStoreData();
+
+                // MOD gdbu 2011-7-12 bug : 22524
+                boolean isAllow = ExecutionLanguage.SQL.equals(execuLanguage) || ExecutionLanguage.JAVA.equals(execuLanguage);
+                // ~22524
+
                 if (isAllow) {
                     addMouseListenerForChart(cc, dataExplorer, analysis);
                 }

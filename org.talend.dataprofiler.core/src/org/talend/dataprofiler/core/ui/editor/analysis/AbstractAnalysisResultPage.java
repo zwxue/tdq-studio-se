@@ -242,6 +242,14 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
                     final ChartDataEntity currentDataEntity = getCurrentChartDateEntity(cateEntity, dataEntity);
 
                     if (currentDataEntity != null) {
+                        // MOD gdbu 2011-7-12 bug : 22524
+                        if (!analysis.getParameters().isStoreData()) {
+                            return;
+                        }
+                        if (0 == analysis.getResults().getIndicToRowMap().size()) {
+                            return;
+                        }
+                        // ~22524
                         // create menu
                         Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
                         chartComp.setMenu(menu);
