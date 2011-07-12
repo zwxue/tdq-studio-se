@@ -63,7 +63,6 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -719,7 +718,6 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                         }
 
                         DQRepositoryNode.setFilterStr(filter);
-                        RepositoryNodeHelper.clearAllFilteredNode();
 
                         if (filter.equals("")) { //$NON-NLS-1$
                             DQRepositoryNode.setFiltering(false);
