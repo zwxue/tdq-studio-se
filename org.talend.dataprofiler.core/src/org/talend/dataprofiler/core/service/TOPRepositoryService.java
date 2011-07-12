@@ -22,15 +22,18 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -71,8 +74,18 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
     }
 
+    /**
+     * Fill MDM connection only.
+     */
     public void fillMetadata(ConnectionItem connItem) {
         MetadataConnectionUtils.fillConnectionInformation(connItem);
+        // MOD gdbu 2011-7-12 bug : 22598
+        MDMConnection mdmConnection = (MDMConnection) connItem.getConnection();
+        mdmConnection.setLabel(connItem.getProperty().getLabel() + "");
+        mdmConnection.setName(connItem.getProperty().getLabel() + "");
+        ConnectionUtils.fillMdmConnectionInformation(mdmConnection);
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(mdmConnection);
+        // ~22598
     }
 
     public void refresh() {

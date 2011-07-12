@@ -152,7 +152,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         }
         initConnectionRepNode(connection);
-        return ConnectionUtils.fillConnectionInformation(connection);
+        // MOD gdbu 2011-7-12 bug : 22598
+        // TOS should use the common filler API to create the metadata objects,then TOP don't complement again.
+        return connection;
+        // ~22598
     }
 
     @Override
