@@ -827,7 +827,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      */
     public void setInput(Object[] objs) {
         List<DBTableRepNode> tableNodeList = RepositoryNodeHelper.getTableNodeList(objs);
-
+        List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
         // if (objs != null && objs.length != 0) {
         // if (!(objs[0] instanceof NamedColumnSet)) {
         // return;
@@ -836,6 +836,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         // MOD by zshen for 2011.06.13 add the support for the view.
         List<DBViewRepNode> viewNodeList = RepositoryNodeHelper.getViewNodeList(objs);
         if (tableNodeList.size() == 0 && viewNodeList.size() == 0) {
+            // feature 22206 : fixed another bug, when deselect all, the view is not changed
+            this.tableIndicators = tableIndicatorList.toArray(new TableIndicator[tableIndicatorList.size()]);
+            this.setElements(tableIndicators);
             return;
         }
         List<RepositoryNode> setList = new ArrayList<RepositoryNode>();
@@ -871,7 +874,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 setList.add(tableNode);
             }
         }
-        List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
+
         for (TableIndicator tableIndicator : tableIndicators) {
             if (setList.contains(tableIndicator.getColumnSet())) {
                 tableIndicatorList.add(tableIndicator);
