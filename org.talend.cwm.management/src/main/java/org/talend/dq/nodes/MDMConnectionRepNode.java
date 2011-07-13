@@ -83,7 +83,10 @@ public class MDMConnectionRepNode extends ConnectionRepNode {
             xmlSchemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
             metadataXmlSchema.setRepositoryNode(xmlSchemaNode);
             // MOD gdbu 2011-7-1 bug : 22204
-            super.getChildren().add(xmlSchemaNode);
+            // MOD msjian 2011-7-13 feature 22206 : fix note 0091973 issue2
+            if (!super.getChildren().contains(xmlSchemaNode)) {
+                super.getChildren().add(xmlSchemaNode);
+            }
         }
         return super.getChildren();
         // ~22204

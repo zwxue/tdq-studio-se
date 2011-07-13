@@ -50,6 +50,10 @@ public class DBSchemaRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         IRepositoryViewObject object = getObject();
+        // MOD msjian 2011-7-13 feature 22206 : fix note 0091973 issue1
+        if (DQRepositoryNode.isUntilSchema()) {
+            return createTableViewFolder((MetadataSchemaRepositoryObject) object);
+        }
         // MOD gdbu 2011-6-28 bug : 22204
         return filterResultsIfAny(createTableViewFolder((MetadataSchemaRepositoryObject) object));
         // ~22204

@@ -65,7 +65,8 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
         }
         createMdcolumnsNode(mdColumns, repsNodes);
 
-        return repsNodes;
+        // MOD msjian 2011-7-13 feature 22206 : fix note 0091973 issue3
+        return filterResultsIfAny(repsNodes);
     }
 
     /**

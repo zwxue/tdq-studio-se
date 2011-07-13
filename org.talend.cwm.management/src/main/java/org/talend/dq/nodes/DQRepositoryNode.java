@@ -140,7 +140,13 @@ public class DQRepositoryNode extends RepositoryNode {
 
     public boolean canMatch() {
         boolean returnVal = false;
-        if (getLabel().toLowerCase().contains(getFilterStr())) {
+        // MOD msjian 2011-7-13 feature 22206 : fix note 0091973 issue1
+        // when select table/view from oracle, the label is not correct
+        String label = getLabel();
+        if (isUntilSchema()) {
+            label = getObject().getLabel();
+        }
+        if (label.toLowerCase().contains(getFilterStr())) {
             RepositoryNodeHelper.setAllFilterNodeList(this);
             if (!isUntilSchema()) {
                 return true;
