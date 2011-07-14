@@ -44,6 +44,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
@@ -94,6 +96,13 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     private Object[] fExpandedElements;
 
     private List<Object> elements;
+
+    // ADD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
+    boolean isSelectTab;
+
+    private int tableFolderHeight = 25;
+
+    private CheckboxTreeViewer fManageViewer;
 
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
@@ -287,20 +296,84 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
      */
     protected Control createDialogArea(Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
-        Label messageLabel = createMessageArea(composite);
-        CheckboxTreeViewer treeViewer = createTreeViewer(composite);
-        Control buttonComposite = createSelectionButtons(composite);
+
+        // MOD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
+        final TabFolder tabFolder = new TabFolder(composite, SWT.FILL);
         GridData data = new GridData(GridData.FILL_BOTH);
         data.widthHint = convertWidthInCharsToPixels(fWidth);
-        data.heightHint = convertHeightInCharsToPixels(fHeight);
-        Tree treeWidget = treeViewer.getTree();
-        treeWidget.setLayoutData(data);
-        treeWidget.setFont(parent.getFont());
-        if (fIsEmpty) {
-            messageLabel.setEnabled(false);
-        }
-        // this.getTreeViewer().getTree().setEnabled(true);
+        data.heightHint = convertHeightInCharsToPixels(tableFolderHeight);
+        tabFolder.setLayoutData(data);
+
+        TabItem manageTabItem = new TabItem(tabFolder, SWT.FILL);
+        manageTabItem.setText(DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.ManageLib")); //$NON-NLS-1$
+        final Composite manageComposite = new Com(tabFolder, SWT.FILL, false);
+        manageComposite.setLayout(new GridLayout());
+        manageTabItem.setControl(manageComposite);
+
+        TabItem selectTabItem = new TabItem(tabFolder, SWT.FILL);
+        selectTabItem.setText(DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.SelectLib")); //$NON-NLS-1$
+        final Composite selectComposite = new Com(tabFolder, SWT.FILL, true);
+        selectComposite.setLayout(new GridLayout());
+        selectTabItem.setControl(selectComposite);
+        
+        tabFolder.addSelectionListener(new SelectionListener() {
+            public void widgetSelected(SelectionEvent e) {
+                if (DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.SelectLib").equals(
+                        tabFolder.getSelection()[0].toString())) { //$NON-NLS-1$
+                    isSelectTab = true;
+                } else {
+                    isSelectTab = false;
+                }
+            }
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+
+        tabFolder.setSelection(selectTabItem);
+        isSelectTab = true;
+
         return composite;
+    }
+
+    /**
+     * the main Composite.
+     */
+    public class Com extends Composite {
+
+        /**
+         * Create the composite.
+         * 
+         * @param parent
+         * @param style
+         * @param isSelect (if true, createTreeViewer, else createManageTreeViewer)
+         */
+        public Com(Composite parent, int style, boolean isSelect) {
+            super(parent, style);
+
+            Label messageLabel = createMessageArea(this);
+            CheckboxTreeViewer treefViewer = null;
+            if (isSelect) {
+                treefViewer = createTreeViewer(this);
+            } else {
+                treefViewer = createManageTreeViewer(this);
+            }
+
+            Control buttonComposite = createSelectionButtons(this, isSelect);
+            GridData data = new GridData(GridData.FILL_BOTH);
+            data.widthHint = convertWidthInCharsToPixels(fWidth);
+            data.heightHint = convertHeightInCharsToPixels(fHeight);
+            Tree treeWidget = treefViewer.getTree();
+            treeWidget.setLayoutData(data);
+            treeWidget.setFont(this.getFont());
+            if (fIsEmpty) {
+                messageLabel.setEnabled(false);
+            }
+        }
+
+        @Override
+        protected void checkSubclass() {
+        }
     }
 
     /**
@@ -334,12 +407,42 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     }
 
     /**
+     * DOC msjian Comment method "createManageTreeViewer".
+     * 
+     * @param parent
+     * @return
+     */
+    protected CheckboxTreeViewer createManageTreeViewer(Composite parent) {
+        if (fContainerMode) {
+            fManageViewer = new ContainerCheckedTreeViewer(parent, SWT.BORDER);
+        } else {
+            fManageViewer = new CheckboxTreeViewer(parent, SWT.BORDER);
+        }
+        fManageViewer.setContentProvider(fContentProvider);
+        fManageViewer.setLabelProvider(fLabelProvider);
+        fManageViewer.addCheckStateListener(new ICheckStateListener() {
+            public void checkStateChanged(CheckStateChangedEvent event) {
+                updateOKStatus();
+            }
+        });
+        fManageViewer.setComparator(fComparator);
+        if (fFilters != null) {
+            for (int i = 0; i != fFilters.size(); i++) {
+                fManageViewer.addFilter((ViewerFilter) fFilters.get(i));
+            }
+        }
+        fManageViewer.setInput(fInput);
+        return fManageViewer;
+    }
+
+    /**
      * Returns the tree viewer.
      * 
      * @return the tree viewer
      */
     protected CheckboxTreeViewer getTreeViewer() {
-        return fViewer;
+        // MOD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
+        return isSelectTab ? fViewer : fManageViewer;
     }
 
     /**
@@ -348,7 +451,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
      * @param composite the parent composite
      * @return Composite the composite the buttons were created in.
      */
-    protected Composite createSelectionButtons(Composite composite) {
+    protected Composite createSelectionButtons(Composite composite, boolean isSelect) {
         Composite buttonComposite = new Composite(composite, SWT.RIGHT);
         GridLayout layout = new GridLayout();
         layout.numColumns = 0;
@@ -359,107 +462,119 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         GridData data = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL);
         data.grabExcessHorizontalSpace = true;
         buttonComposite.setLayoutData(data);
-        Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID,
-                WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);//$NON-NLS-1$ 
-        SelectionListener listener = new SelectionAdapter() {
+        // MOD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
+        if (isSelect) {
+            Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID,
+                    WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);
+            SelectionListener listener = new SelectionAdapter() {
 
-            public void widgetSelected(SelectionEvent e) {
-                Object[] viewerElements = fContentProvider.getElements(fInput);
-                if (fContainerMode) {
-                    fViewer.setCheckedElements(viewerElements);
-                } else {
-                    for (int i = 0; i < viewerElements.length; i++) {
-                        fViewer.setSubtreeChecked(viewerElements[i], true);
-                    }
-                }
-                updateOKStatus();
-            }
-        };
-        selectButton.addSelectionListener(listener);
-        Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID,
-                WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);//$NON-NLS-2$
-        listener = new SelectionAdapter() {
-
-            public void widgetSelected(SelectionEvent e) {
-                getTreeViewer().setCheckedElements(new Object[0]);
-                updateOKStatus();
-            }
-        };
-        deselectButton.addSelectionListener(listener);
-
-        final Composite dialogComposite = composite;
-
-        Button addButton = createButton(buttonComposite, 22, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.add"), false);//$NON-NLS-3$
-        listener = new SelectionAdapter() {
-
-            public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(dialogComposite.getShell(), SWT.NONE | SWT.MULTI);
-                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
-                String path = dialog.open();
-
-                if (path != null) {
-                    String[] fileNames = dialog.getFileNames();
-                    // jarPathText.setText(path);
-                    // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                    // validateJavaUDI(classNameText, jarPathText);
-                    try {
-                        for (String name : fileNames) {
-                            IPath filePath = new Path(path);
-                            filePath = filePath.removeLastSegments(1).append(name);
-
-                            // File jarFile =
-                            // ResourceManager.getUDIJarFolder().getFullPath().append(filePath.lastSegment()).toFile();
-                            // boolean createNewFile = false;
-                            // if (!jarFile.getAbsoluteFile().isAbsolute()) {
-                            // createNewFile = jarFile.createNewFile();
-                            // }
-                            // if (createNewFile) {
-                            FilesUtils.copyFile(filePath.toFile(),
-                                    ResourceManager.getUDIJarFolder().getLocation().append(filePath.lastSegment()).toFile());
-                            // ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
-                            // }
-                        }
-                    } catch (IOException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-                    CorePlugin.getDefault().refreshWorkSpace();
-                }
-                getTreeViewer().refresh();
-                getTreeViewer().setInput(ResourceManager.getUDIJarFolder());
-                fIsEmpty = evaluateIfTreeEmpty(fInput);
-                // getTreeViewer().setCheckedElements(new Object[0]);
-                updateOKStatus();
-            }
-        };
-        addButton.addSelectionListener(listener);
-        Button delButton = createButton(buttonComposite, 23, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"),//$NON-NLS-3$
-                false);
-        listener = new SelectionAdapter() {
-
-            public void widgetSelected(SelectionEvent e) {
-                for (Object delFile : getTreeViewer().getCheckedElements()) {
-                    if (delFile instanceof File) {
-                        ReturnCode rc = UDIUtils.checkUDIDependency((File) delFile);
-                        if (elements.contains(delFile)) {
-                            rc.setOk(false);
-                            rc.setMessage("the File " + ((File) delFile).getName() + " has been select by the UDI");//$NON-NLS-1$ //$NON-NLS-3$
-                        }
-                        if (rc.isOk()) {
-                            ((File) delFile).delete();
-                        } else {
-                            MessageUI.openWarning(rc.getMessage());
+                public void widgetSelected(SelectionEvent e) {
+                    Object[] viewerElements = fContentProvider.getElements(fInput);
+                    if (fContainerMode) {
+                        fViewer.setCheckedElements(viewerElements);
+                    } else {
+                        for (int i = 0; i < viewerElements.length; i++) {
+                            fViewer.setSubtreeChecked(viewerElements[i], true);
                         }
                     }
-                    CorePlugin.getDefault().refreshWorkSpace();
+                    updateOKStatus();
                 }
-                getTreeViewer().refresh();
-                fIsEmpty = evaluateIfTreeEmpty(fInput);
-                updateOKStatus();
-            }
+            };
+            selectButton.addSelectionListener(listener);
+            Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID,
+                    WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);
+            listener = new SelectionAdapter() {
 
-        };
-        delButton.addSelectionListener(listener);
+                public void widgetSelected(SelectionEvent e) {
+                    fViewer.setCheckedElements(new Object[0]);
+                    updateOKStatus();
+                }
+            };
+            deselectButton.addSelectionListener(listener);
+        } else {
+            final Composite dialogComposite = composite;
+
+            Button addButton = createButton(buttonComposite, 22,
+                    DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.add"), false); //$NON-NLS-1$
+            SelectionListener listener = new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    FileDialog dialog = new FileDialog(dialogComposite.getShell(), SWT.NONE | SWT.MULTI);
+                    dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
+                    String path = dialog.open();
+
+                    if (path != null) {
+                        String[] fileNames = dialog.getFileNames();
+                        // jarPathText.setText(path);
+                        // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+                        // validateJavaUDI(classNameText, jarPathText);
+                        try {
+                            for (String name : fileNames) {
+                                IPath filePath = new Path(path);
+                                filePath = filePath.removeLastSegments(1).append(name);
+
+                                // File jarFile =
+                                // ResourceManager.getUDIJarFolder().getFullPath().append(filePath.lastSegment()).toFile();
+                                // boolean createNewFile = false;
+                                // if (!jarFile.getAbsoluteFile().isAbsolute()) {
+                                // createNewFile = jarFile.createNewFile();
+                                // }
+                                // if (createNewFile) {
+                                FilesUtils.copyFile(filePath.toFile(),
+                                        ResourceManager.getUDIJarFolder().getLocation().append(filePath.lastSegment()).toFile());
+                                // ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+                                // }
+                            }
+                        } catch (IOException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+                        CorePlugin.getDefault().refreshWorkSpace();
+                    }
+                    // MOD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
+                    fViewer.refresh();
+                    fManageViewer.refresh();
+                    fViewer.setInput(ResourceManager.getUDIJarFolder());
+                    fManageViewer.setInput(ResourceManager.getUDIJarFolder());
+
+                    fIsEmpty = evaluateIfTreeEmpty(fInput);
+                    // getTreeViewer().setCheckedElements(new Object[0]);
+                    updateOKStatus();
+                }
+            };
+            addButton.addSelectionListener(listener);
+            Button delButton = createButton(buttonComposite, 23, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"),//$NON-NLS-3$
+                    false);
+            listener = new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    for (Object delFile : fManageViewer.getCheckedElements()) {
+                        // Object delFile = manageSelectList.get(i);
+                        if (delFile instanceof File) {
+                            ReturnCode rc = UDIUtils.checkUDIDependency((File) delFile);
+                            if (elements.contains(delFile)) {
+                                rc.setOk(false);
+                                rc.setMessage("the File " + ((File) delFile).getName() + " has been select by the UDI");//$NON-NLS-1$ //$NON-NLS-3$
+                            }
+                            if (rc.isOk()) {
+                                ((File) delFile).delete();
+                            } else {
+                                MessageUI.openWarning(rc.getMessage());
+                            }
+                        }
+                        CorePlugin.getDefault().refreshWorkSpace();
+                    }
+                    // MOD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
+                    fViewer.refresh();
+                    fManageViewer.refresh();
+                    fIsEmpty = evaluateIfTreeEmpty(fInput);
+                    updateOKStatus();
+                }
+
+            };
+            delButton.addSelectionListener(listener);
+        }
+
         return buttonComposite;
     }
 
