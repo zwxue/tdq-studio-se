@@ -169,7 +169,13 @@ public final class AnalysisHelper {
                     continue;
                 }
                 if (i == index) {
-                    return expression.getBody().trim();
+                    // MOD klliu 2011-07-14 bug 23150 solve an NPE
+                    String body = expression.getBody();
+                    if (body == null) {
+                        continue;
+                    }
+                    // ~
+                    return body.trim();
                 } else if (i > index) {
                     return null;
                 }
