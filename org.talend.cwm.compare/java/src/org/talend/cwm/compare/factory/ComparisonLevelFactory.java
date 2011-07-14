@@ -44,8 +44,14 @@ public final class ComparisonLevelFactory {
             DBTableFolderRepNode dbFolderNode = (DBTableFolderRepNode) selectedObject;
             comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
         } else if (selectedObject instanceof DBViewFolderRepNode) {
-            DBViewFolderRepNode dbFolderNode = (DBViewFolderRepNode) selectedObject;
-            comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
+            if (null == ((DBViewFolderRepNode) selectedObject).getCatalog()) {
+                // MOD yyi 2011-07-14 21512:the selected obj is db connection in this case
+                IRepositoryViewObject resObject = ((DBViewFolderRepNode) selectedObject).getObject();
+                comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
+            } else {
+                DBViewFolderRepNode dbFolderNode = (DBViewFolderRepNode) selectedObject;
+                comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
+            }
         } else if (selectedObject instanceof DBColumnFolderRepNode) {
             DBColumnFolderRepNode dbFolderNode = (DBColumnFolderRepNode) selectedObject;
             comparisonLevel = new TableViewComparisonLevel(dbFolderNode);
