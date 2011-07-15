@@ -40,4 +40,16 @@ public class IngresDbmsLanguage extends DbmsLanguage {
     public String toQualifiedName(String catalog, String schema, String table) {
         return super.toQualifiedName(null, null, table);
     }
+
+    /**
+     * DOC yyi 2011-07-07 22246:view rows for average length for Oracle
+     * 
+     * @return average length sql statement
+     */
+    public String getAverageLengthRows() {
+        return "SELECT t.* FROM(" + "SELECT "
+                + "CAST(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00)+0.99 as int) c, "
+                + "CAST(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f "
+                + "FROM <%=__TABLE_NAME__%>) e, <%=__TABLE_NAME__%> t " + "where LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN f AND c";
+    }
 }
