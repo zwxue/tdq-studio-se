@@ -48,6 +48,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -236,7 +237,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                         fragment = indicatorDefinition.eResource().getURI().lastSegment();
                     }
 
-                    if (fragment != null && !fragment.contains(FILE_NAME_FLAG)) {
+                    // Omit the .Talend.definiton as it has not version contorl.
+                    if (fragment != null && !fragment.contains(FILE_NAME_FLAG) && !DefinitionHandler.FILENAME.equals(fragment)) {
                         String replace = fragment.replace(" ", "_").replace(".", FILE_NAME_FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         FileUtils.replaceInFile(file.getAbsolutePath(), fragment, replace);
                     }

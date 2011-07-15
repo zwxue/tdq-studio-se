@@ -46,6 +46,7 @@ import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
@@ -143,12 +144,10 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private boolean isConflict(Property p1, Property p2) {
         if (p1 != null && p2 != null) {
-            // IPath itemPath = PropertyHelper.getItemPath(p1);
-            // if (itemPath != null) {
-            // IFile itemFile = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath);
-            // return itemFile.exists();
-            // }
-            return p1.getId().equals(p2.getId()) || p1.getLabel().equals(p2.getLabel());
+
+            boolean isConflict = ResourceHelper.getUUID(p1).equals(ResourceHelper.getUUID(p2));
+            boolean isExisted = p1.getId().equals(p2.getId()) || p1.getLabel().equals(p2.getLabel());
+            return isConflict || isExisted;
         }
 
         return false;

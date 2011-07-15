@@ -14,11 +14,13 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.migration.AProjectTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -48,7 +50,10 @@ public class UpdateVersionsTask extends AProjectTask {
         Iterator<Resource> it = EMFSharedResources.getInstance().getResourceSet().getResources().iterator();
         while (it.hasNext()) {
             Resource resource = it.next();
-            if (!resource.isLoaded() || resource.getContents().isEmpty()) {
+            boolean isNotPlatformExist = !resource.getURI().isPlatform()
+                    || !ResourceManager.getRoot().getFile(new Path(resource.getURI().toPlatformString(false))).exists();
+
+            if (!resource.isLoaded() || resource.getContents().isEmpty() || isNotPlatformExist) {
                 it.remove();
             }
         }
