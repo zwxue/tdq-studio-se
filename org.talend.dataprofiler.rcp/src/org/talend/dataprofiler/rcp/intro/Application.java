@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp.intro;
 
+import org.apache.log4j.Logger;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -41,8 +42,10 @@ import org.talend.utils.sugars.ReturnCode;
 /**
  * This class controls all aspects of the application's execution.
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")//$NON-NLS-1$
 public class Application implements IApplication {
+
+    protected static Logger log = Logger.getLogger(Application.class);
 
     /*
      * (non-Javadoc)
@@ -55,8 +58,7 @@ public class Application implements IApplication {
         try {
             openLicenseAndRegister(shell);
         } catch (BusinessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         try {
             if (!CorePlugin.getDefault().isRepositoryInitialized()) {
@@ -90,9 +92,11 @@ public class Application implements IApplication {
                 LicenseManagement.acceptLicense();
 
             } else {
-                // FIXME this code must be removed. We must not exit the application but display a pop-up to ask for a
-                // new license
-                System.exit(0);
+                if (MessageDialog.openQuestion(shell,
+                        Messages.getString("Application.license"), Messages.getString("Application.newLicense")) //$NON-NLS-1$ //$NON-NLS-2$
+                ) {
+                    LicenseManagement.acceptLicense();
+                }
             }
         }
 
@@ -105,8 +109,6 @@ public class Application implements IApplication {
         }
 
     }
-
-
 
     public boolean licenceAccept(Shell shell) {
         if (!LicenseManagement.isLicenseValidated()) {
