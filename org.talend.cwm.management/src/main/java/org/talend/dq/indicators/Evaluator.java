@@ -43,6 +43,16 @@ public abstract class Evaluator<T> {
 
     protected Connection connection;
 
+    private boolean pooledConnection;
+
+    public boolean isPooledConnection() {
+        return this.pooledConnection;
+    }
+
+    public void setPooledConnection(boolean pooledConnection) {
+        this.pooledConnection = pooledConnection;
+    }
+
     protected int fetchSize = 0;
 
     protected Map<T, List<Indicator>> elementToIndicators = new HashMap<T, List<Indicator>>();
@@ -156,21 +166,25 @@ public abstract class Evaluator<T> {
      */
     public ReturnCode evaluateIndicators(String sqlStatement, boolean closeConnection) {
         ReturnCode rc = evaluateIndicators(sqlStatement);
-        if (!closeConnection) {
+        if (this.isPooledConnection()) {
             return rc;
         } else {
-            if (rc.isOk()) {
-                return closeConnection();
-            } else { // problem with evaluation
-                ReturnCode connRc = closeConnection();
-                if (!connRc.isOk()) {
-                    // add the message to returned code
-                    String message = rc.getMessage();
-                    message = Messages.getString("Evaluator.ConnectionProblem", message, connRc.getMessage()); //$NON-NLS-1$
-                    rc.setMessage(message);
+            if (!closeConnection) {
+                return rc;
+            } else {
+                if (rc.isOk()) {
+                    return closeConnection();
+                } else { // problem with evaluation
+                    ReturnCode connRc = closeConnection();
+                    if (!connRc.isOk()) {
+                        // add the message to returned code
+                        String message = rc.getMessage();
+                        message = Messages.getString("Evaluator.ConnectionProblem", message, connRc.getMessage()); //$NON-NLS-1$
+                        rc.setMessage(message);
+                    }
                 }
+                return rc;
             }
-            return rc;
         }
     }
 

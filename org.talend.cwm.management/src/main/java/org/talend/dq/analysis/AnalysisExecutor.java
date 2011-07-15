@@ -34,6 +34,8 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPoolMap;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
@@ -87,8 +89,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         String sql = createSqlStatement(analysis);
         if (sql == null) {
             return getReturnCode(false);
-        }  
-        
+        }
+
         // ADD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
         // note: this feature is not supported now, if support, delete this
         if (errorMessage != null && !errorMessage.equals("")) {
@@ -269,6 +271,135 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         rc.setObject(connection.getObject());
         return rc;
 
+    }
+
+    /**
+     * DOC xqliu Comment method "getPooledConnection".
+     * 
+     * @param analysis
+     * @return
+     */
+    protected TypedReturnCode<java.sql.Connection> getPooledConnection(Analysis analysis) {
+        TypedReturnCode<java.sql.Connection> rc = new TypedReturnCode<java.sql.Connection>();
+
+        DataManager datamanager = analysis.getContext().getConnection();
+        if (datamanager == null) {
+            rc.setReturnCode(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName()), false); //$NON-NLS-1$
+            return rc;
+        }
+        if (datamanager != null && datamanager.eIsProxy()) {
+            datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
+        }
+        Connection dataprovider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
+        if (dataprovider == null) {
+            rc.setReturnCode(Messages.getString("AnalysisExecutor.DataProviderNull", datamanager.getName(), //$NON-NLS-1$
+                    analysis.getName()), false);
+            return rc;
+        }
+
+        // else ok
+        java.sql.Connection pooledConnection = null;
+
+        try {
+            pooledConnection = getConnectionPool(analysis, dataprovider).getConnection();
+        } catch (Exception e) {
+            log.debug(e, e);
+        }
+
+        if (pooledConnection == null) {
+            rc.setReturnCode("Can't get any useable connection!", false);
+            return rc;
+        }
+
+        // else ok
+        rc.setObject(pooledConnection);
+        return rc;
+    }
+
+    /**
+     * DOC xqliu Comment method "resetConnectionPool".
+     * 
+     * @param analysis
+     * @param analysisDataProvider
+     */
+    protected void resetConnectionPool(Analysis analysis, Connection analysisDataProvider) {
+        this.getConnectionPool(analysis, analysisDataProvider).closeConnectionPool();
+    }
+
+    /**
+     * DOC xqliu Comment method "getPooledConnection".
+     * 
+     * @param analysis
+     * @param dataProvider
+     * @return
+     */
+    protected TypedReturnCode<java.sql.Connection> getPooledConnection(Analysis analysis, Connection dataProvider) {
+        TypedReturnCode<java.sql.Connection> rc = new TypedReturnCode<java.sql.Connection>();
+        if (dataProvider == null) {
+            return rc;
+        }
+        java.sql.Connection pooledConnection = null;
+
+        try {
+            pooledConnection = getConnectionPool(analysis, dataProvider).getConnection();
+        } catch (Exception e) {
+            log.debug(e, e);
+        }
+
+        if (pooledConnection == null) {
+            rc.setReturnCode("Can't get any useable connection!", false);
+            return rc;
+        }
+
+        // else ok
+        rc.setObject(pooledConnection);
+        return rc;
+    }
+
+    /**
+     * DOC xqliu Comment method "getConnectionPool".
+     * 
+     * @param analysis
+     * @param dataProvider
+     * @return
+     */
+    protected TdqAnalysisConnectionPool getConnectionPool(Analysis analysis, Connection dataProvider) {
+        return TdqAnalysisConnectionPoolMap.getInstance(analysis).getConnectionPool(dataProvider);
+    }
+
+    /**
+     * DOC xqliu Comment method "releasePooledConnection".
+     * 
+     * @param analysis
+     * @param dataProvider the talend Connection
+     * @param connection the java.sql.Connection
+     * @param colseConn close and remove the connection from the pool
+     */
+    protected void releasePooledConnection(Analysis analysis, Connection dataProvider, java.sql.Connection connection,
+            boolean closeConn) {
+        if (dataProvider == null) {
+            return;
+        }
+        TdqAnalysisConnectionPool connectionPool = getConnectionPool(analysis, dataProvider);
+        connectionPool.returnConnection(connection);
+        if (closeConn) {
+            connectionPool.closeConnection(connection);
+            connectionPool.removeConnection(connection);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getAnalysisDataProvider".
+     * 
+     * @param analysis
+     * @return
+     */
+    protected Connection getAnalysisDataProvider(Analysis analysis) {
+        DataManager datamanager = analysis.getContext().getConnection();
+        if (datamanager != null && datamanager.eIsProxy()) {
+            datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
+        }
+        return SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
     }
 
     private IProgressMonitor monitor;

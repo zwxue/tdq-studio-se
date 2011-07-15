@@ -234,9 +234,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             // ~
         } catch (SQLException e) {
 
-            log.warn(
-Messages.getString("AbstractSchemaEvaluator.IndexException", //$NON-NLS-1$
-                            this.dbms().toQualifiedName(catalog, schema, table), e.getLocalizedMessage()), e); //$NON-NLS-1$
+            log.warn(Messages.getString("AbstractSchemaEvaluator.IndexException", //$NON-NLS-1$
+                    this.dbms().toQualifiedName(catalog, schema, table), e.getLocalizedMessage()), e); //$NON-NLS-1$
             // Oracle increments the number of cursors to close each time a new query is executed after this exception!
             reloadConnectionAfterException(catalog);
         }
@@ -269,9 +268,8 @@ Messages.getString("AbstractSchemaEvaluator.IndexException", //$NON-NLS-1$
                     table);
             // ~
         } catch (SQLException e1) {
-            log.warn(
-Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
-                            this.dbms().toQualifiedName(catalog, schema, table), e1.getLocalizedMessage()), e1);
+            log.warn(Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
+                    this.dbms().toQualifiedName(catalog, schema, table), e1.getLocalizedMessage()), e1);
             reloadConnectionAfterException(catalog);
         }
         if (pk != null) {
@@ -324,10 +322,11 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
      */
     private long getRowCounts(String quCatalog, String quSchema, String quTable) throws SQLException {
         String sqlStatement = SELECT_COUNT_FROM + dbms().toQualifiedName(quCatalog, quSchema, quTable);
-        // Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY,
+        // Statement statement = getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY,
+        // ResultSet.CONCUR_READ_ONLY,
         // ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
-        Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        Statement statement = getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 
         long totalRowCount = 0;
         // not needed here statement.setFetchSize(fetchSize);
@@ -441,7 +440,7 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
         schemaIndic.setAnalyzedElement(hasSchema ? tdSchema : tdCatalog);
 
         // profile tables
-        TableBuilder tableBuilder = new TableBuilder(this.getDataManager());
+        TableBuilder tableBuilder = this.getTableBuilder();
         int tableCount = 0;
         final String[] tablePatterns = tablePattern != null && tablePattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
                 .split(this.tablePattern, FILTER_SEP) : new String[] { this.tablePattern };
@@ -458,7 +457,7 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
         schemaIndic.setTableCount(tableCount);
 
         // do the same for views
-        ViewBuilder viewBuilder = new ViewBuilder(this.getDataManager());
+        ViewBuilder viewBuilder = this.getViewBuilder();
         int viewCount = 0;
         final String[] viewPatterns = viewPattern != null && viewPattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
                 .split(this.viewPattern, FILTER_SEP) : new String[] { this.viewPattern };
@@ -495,6 +494,32 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
             } else {
                 log.error(Messages.getString("AbstractSchemaEvaluator.NoCatalogSchema")); //$NON-NLS-1$
             }
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getTableBuilder".
+     * 
+     * @return
+     */
+    private TableBuilder getTableBuilder() {
+        if (this.isPooledConnection()) {
+            return new TableBuilder(this.getConnection());
+        } else {
+            return new TableBuilder(this.getDataManager());
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getViewBuilder".
+     * 
+     * @return
+     */
+    private ViewBuilder getViewBuilder() {
+        if (this.isPooledConnection()) {
+            return new ViewBuilder(this.getConnection());
+        } else {
+            return new ViewBuilder(this.getDataManager());
         }
     }
 
@@ -615,7 +640,7 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
             Collection<Schema> schemas = new ArrayList<Schema>();
             try {
                 schemas = ListUtils.castList(Schema.class,
-                        MetadataFillFactory.getDBInstance().fillSchemas(null, connection.getMetaData(), null));
+                        MetadataFillFactory.getDBInstance().fillSchemas(null, getConnection().getMetaData(), null));
             } catch (SQLException e) {
                 log.error(e, e);
             }
@@ -643,9 +668,9 @@ Messages.getString("AbstractSchemaEvaluator.PrimaryException", //$NON-NLS-1$
             Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);
             if (catalog != null) {
                 try {
-                    connection.setCatalog(catalog.getName());
+                    getConnection().setCatalog(catalog.getName());
                     List<Schema> schemas = MetadataFillFactory.getDBInstance().fillSchemaToCatalog(getDataManager(),
-                            connection.getMetaData(), catalog, null);
+                            getConnection().getMetaData(), catalog, null);
                     if (schemas != null) {
                         for (Schema tdSchema : schemas) {
                             if (tdSchema.getName().equals(schema.getName()))

@@ -52,7 +52,15 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
      */
     protected boolean runAnalysisLow(Analysis analysis, String sqlStatement, AbstractSchemaEvaluator<?> eval) {
         // open a connection
-        TypedReturnCode<Connection> connection = getConnection(analysis);
+        // TypedReturnCode<Connection> connection = getConnection(analysis);
+
+        // get the dataprovider of the analysis
+        org.talend.core.model.metadata.builder.connection.Connection analysisDataProvider = getAnalysisDataProvider(analysis);
+        // reset the connection pool before run this analysis
+        resetConnectionPool(analysis, analysisDataProvider);
+        // get a pooled connection
+        TypedReturnCode<Connection> connection = getPooledConnection(analysis, analysisDataProvider);
+
         if (!connection.isOk()) {
             log.error(connection.getMessage());
             this.errorMessage = connection.getMessage();
@@ -61,6 +69,8 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
 
         // set it into the evaluator
         eval.setConnection(connection.getObject());
+        // use pooled connection
+        eval.setPooledConnection(true);
 
         // set filters
         String tablePattern = getTablePattern(analysis.getParameters());
@@ -71,6 +81,10 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
         // when to close connection
         boolean closeAtTheEnd = true;
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
+
+        // release the pooled connection
+        releasePooledConnection(analysis, analysisDataProvider, connection.getObject(), true);
+
         if (!rc.isOk()) {
             log.warn(rc.getMessage());
             this.errorMessage = rc.getMessage();
