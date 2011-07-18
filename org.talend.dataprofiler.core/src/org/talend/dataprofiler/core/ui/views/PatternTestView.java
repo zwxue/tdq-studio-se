@@ -234,17 +234,17 @@ public class PatternTestView extends ViewPart {
         testText.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.enterHere")); //$NON-NLS-1$
 
         GridData textAreaLabelGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-        textAreaLabelGD.widthHint = 180;
+        // textAreaLabelGD.widthHint = 180;
         textAreaLabel.setLayoutData(textAreaLabelGD);
 
         regularLabel = new Label(composite, SWT.NONE);
         regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
+        regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpression"));//$NON-NLS-1$ 
         GridData regularLabelGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-        regularLabelGD.widthHint = 1000;
+        regularLabelGD.widthHint = 160;
         regularLabel.setLayoutData(regularLabelGD);
         // ~19119
 
-        regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$
         this.regularText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         this.regularText.setLayoutData(data);
         regularText.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.enterHereAgainst")); //$NON-NLS-1$
@@ -698,11 +698,15 @@ public class PatternTestView extends ViewPart {
         functionLabel.setVisible(visible);
         functionNameText.setVisible(visible);
         if (visible) {
-            textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.areaParameterOne")); //$NON-NLS-1$ 
-            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameterTwo")); //$NON-NLS-1$ 
+            textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.areaParameterOne")); //$NON-NLS-1$
+            textAreaLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.areaParameterOne"));//$NON-NLS-1$
+            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$ 
+            regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameterTwo")); //$NON-NLS-1$ 
         } else {
             textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$ 
+            textAreaLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$ 
             regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
+            regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpression"));//$NON-NLS-1$
         }
     }
 
