@@ -48,19 +48,24 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
@@ -80,6 +85,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -91,6 +97,7 @@ import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
@@ -307,7 +314,7 @@ public class DQRespositoryView extends CommonNavigator {
         parent.setLayout(new BorderLayout());
 
         Composite topComp = new Composite(parent, SWT.NONE);
-        topComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        // topComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         topComp.setFont(parent.getFont());
         Composite bottomComp = new Composite(parent, SWT.NONE);
         bottomComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
@@ -514,239 +521,188 @@ public class DQRespositoryView extends CommonNavigator {
         });
         // ~
         
-        // MOD gdbu 2011-7-11 bug : 22204
-        getCommonViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-
-            public void selectionChanged(SelectionChangedEvent event) {
-
-                if (DQRepositoryNode.isOnFilterring() && isOnUpDownStatus()) {
-
-                    TreeItem[] selectionNodes = getCommonViewer().getTree().getSelection();
-                    TreeItem selectionNode = null;
-                    if (selectionNodes.length != 0) {
-                        selectionNode = selectionNodes[0];
-                    } else {
-                        return;
-                    }
-
-                    if (!selectionNode.getText().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
-                        getCommonViewer().getTree().getItem(0);
-                        if (selectionNode.getText().equals(RepositoryNodeHelper.getLastNode().getLabel())
-                                || selectionNode.equals(getCommonViewer().getTree().getItem(0))) {
-                            setOnUpDownStatus(false);
-                            return;
-                        }
-
-                        if (getUpDownStatus()) {
-                            if (selectionNode.getExpanded()) {
-                                imitateKeyboardEventDown();
-                            } else {
-                                imitateKeyboardEventRight();
-                                imitateKeyboardEventDown();
-                            }
-                        } else {
-                            imitateKeyboardEventUp();
-                        }
-                    } else {
-                        setOnUpDownStatus(false);
-                    }
-                }
-            }
-        });
-        // ~22204
-        
     }
 
     /**
      * DOC gdbu Comment method "createTreeFilter".
      * 
      * @param parent
+     * @param _catalogToolBarMgr
      */
-    protected void createTreeFilter(Composite parent) {
+    protected void createTreeFilter(final Composite parent) {
 
         parent.setLayout(new BorderLayout());
 
         Composite centerComp = new Composite(parent, SWT.NONE);
-        centerComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        // centerComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         centerComp.setFont(parent.getFont());
         Composite eastComp = new Composite(parent, SWT.NONE);
-        eastComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        // eastComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         eastComp.setFont(parent.getFont());
 
         centerComp.setLayoutData(BorderLayout.CENTER);
         eastComp.setLayoutData(BorderLayout.EAST);
 
         FillLayout centerLayout = new FillLayout(SWT.FILL_WINDING);
+        centerLayout.marginHeight = 2;
+        centerLayout.marginWidth = 2;
         centerComp.setLayout(centerLayout);
 
         FillLayout leftLayout = new FillLayout(SWT.HORIZONTAL);
-        leftLayout.marginWidth = 6;
+        leftLayout.marginWidth = 2;
         leftLayout.marginHeight = 2;
-        leftLayout.spacing = 5;
+        // leftLayout.spacing = 1;
         eastComp.setLayout(leftLayout);
 
         final Text filterText = new Text(centerComp, SWT.BORDER);
         filterText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 
-        Button leftButton = new Button(eastComp, SWT.ARROW | SWT.UP);
-        leftButton.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-        Button rightButton = new Button(eastComp, SWT.ARROW | SWT.DOWN);
-        rightButton.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        final CoolBar coolBar = new CoolBar(eastComp, SWT.FLAT);
+        CoolItem coolItem1 = new CoolItem(coolBar, SWT.FLAT);
+        ToolBar toolBar = new ToolBar(coolBar, SWT.FLAT);
+
+        ToolItem runFilterItem = new ToolItem(toolBar, SWT.FLAT);
+        runFilterItem.setImage(ImageLib.getImage(ImageLib.FILTER_RUN));
+        runFilterItem.setToolTipText(DefaultMessagesImpl.getString("DQRespositoryView.RunFilter"));//$NON-NLS-1$
+
+        ToolItem previousMatchItem = new ToolItem(toolBar, SWT.FLAT);
+        previousMatchItem.setImage(ImageLib.getImage(ImageLib.FILTER_UP));
+        previousMatchItem.setToolTipText(DefaultMessagesImpl.getString("DQRespositoryView.ShowPreviousMatch"));//$NON-NLS-1$
+
+        ToolItem nextMatchItem = new ToolItem(toolBar, SWT.FLAT);
+        nextMatchItem.setImage(ImageLib.getImage(ImageLib.FILTER_DOWN));
+        nextMatchItem.setToolTipText(DefaultMessagesImpl.getString("DQRespositoryView.ShowNextMatch"));//$NON-NLS-1$
+
+        ToolItem closeFilterItem = new ToolItem(toolBar, SWT.FLAT);
+        closeFilterItem.setImage(ImageLib.getImage(ImageLib.FILTER_CLOSE));
+        closeFilterItem.setToolTipText(DefaultMessagesImpl.getString("DQRespositoryView.CloseFilter"));//$NON-NLS-1$
+
+        toolBar.pack();
+        Point size = toolBar.getSize();
+        coolItem1.setControl(toolBar);
+        coolItem1.setSize(coolItem1.computeSize(size.x, size.y));
+        coolItem1.setMinimumSize(size);
         
+        coolBar.setLocked(true);
+        runFilterItem.addSelectionListener(new SelectionAdapter() {
 
-        // leftButton.setImage(ImageLib.getImage(ImageLib.ICON_PAGE_PREV_LNK));
-        // rightButton.setImage(ImageLib.getImage(ImageLib.ICON_PAGE_NEXT_LNK));
-
-        filterText.addKeyListener(new KeyListener() {
-
-            public void keyReleased(KeyEvent e) {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                String filterStr = filterText.getText() + PluginConstant.EMPTY_STRING;
+                runFilter(filterStr);
             }
+        });
 
+        previousMatchItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (DQRepositoryNode.isOnFilterring()) {
+                    TreeItem[] selectionNode = getCommonViewer().getTree().getSelection();
+                    if (0 == selectionNode.length) {
+                    } else {
+                        TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
+                        IRepositoryNode repoNode = (IRepositoryNode) selectionTreeItem.getData();
+                        IRepositoryNode nextFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(repoNode);
+                        if (null != nextFilteredNode) {
+                            showSelectedElements((RepositoryNode) nextFilteredNode);
+                        }
+                    }
+                }
+            }
+        });
+
+        nextMatchItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (DQRepositoryNode.isOnFilterring()) {
+                    TreeItem[] selectionNode = getCommonViewer().getTree().getSelection();
+                    if (0 == selectionNode.length) {
+                    } else {
+                        TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
+                        IRepositoryNode repoNode = (IRepositoryNode) selectionTreeItem.getData();
+                        IRepositoryNode nextFilteredNode = RepositoryNodeHelper.getNextFilteredNode(repoNode);
+                        if (null != nextFilteredNode) {
+                            showSelectedElements((RepositoryNode) nextFilteredNode);
+                        }
+                    }
+                }
+            }
+        });
+
+        closeFilterItem.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (DQRepositoryNode.isOnFilterring()) {
+                    DQRepositoryNode.setFilterStr(PluginConstant.EMPTY_STRING);
+                    DQRepositoryNode.setFiltering(false);
+                    filterText.setText(PluginConstant.EMPTY_STRING);
+                    expandNodes(false);
+                    refresh();
+                }
+            }
+        });
+
+        filterText.addKeyListener(new KeyAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.KeyAdapter#keyPressed(org.eclipse.swt.events.KeyEvent)
+             */
+            @Override
             public void keyPressed(KeyEvent e) {
                 if (e.keyCode == SWT.CR) {
-                    RepositoryNodeHelper.clearAllFilteredNode();
-                    expandNodes(false);
-                    try {
-                        String filterStr = filterText.getText() + "";//$NON-NLS-1$
-                        DQRepositoryNode.setFilterStr(filterStr);
-                        if (filterStr.trim().equals("")) {//$NON-NLS-1$
-                            DQRepositoryNode.setFiltering(false);
-                            refresh();
-                        } else {
-                            DQRepositoryNode.setFiltering(true);
-                            RepositoryNodeHelper.callGetChildrenMethod();
-                        }
-                    } catch (Exception exception) {
-                        RepositoryNodeHelper.getAllFilteredNode();
-                        log.error(exception.toString());
-                    } finally {
-                        DQRepositoryNode firstFilteredNode = RepositoryNodeHelper.getFirstFilteredNode();
-                        if (null != firstFilteredNode) {
-                            showSelectedElements((RepositoryNode) firstFilteredNode);
-                        }
-                    }
+                    String filterStr = filterText.getText() + PluginConstant.EMPTY_STRING;
+                    runFilter(filterStr);
                 }
-            }
-        });
-
-        leftButton.addMouseListener(new MouseAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-             */
-            @Override
-            public void mouseDown(MouseEvent e) {
-                // if (DQRepositoryNode.isOnFilterring()) {
-                // TreeItem[] selectionNode = getCommonViewer().getTree().getSelection();
-                // if (0 == selectionNode.length) {
-                // DQRepositoryNode firstFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(RepositoryNodeHelper
-                // .getFilteredNode());
-                // if (null != firstFilteredNode) {
-                // showSelectedElements((RepositoryNode) firstFilteredNode);
-                // }
-                // } else {
-                // TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
-                // DQRepositoryNode repoNode = (DQRepositoryNode) selectionTreeItem.getData();
-                // DQRepositoryNode nextFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(repoNode);
-                // if (null != nextFilteredNode) {
-                // showSelectedElements((RepositoryNode) nextFilteredNode);
-                // }
-                // }
-                // }
-                // super.mouseDown(e);
-
-                TreeItem[] selections = getCommonViewer().getTree().getSelection();
-                if (0 != selections.length) {
-                    imitateKeyboardEventUp();
-                    setOnUpDownStatus(true);
-                    setUpDownStatus(false);
-                }
-            }
-        });
-
-        rightButton.addMouseListener(new MouseAdapter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
-             */
-            @Override
-            public void mouseUp(MouseEvent e) {
-
-                TreeItem[] selections = getCommonViewer().getTree().getSelection();
-                if (0 != selections.length) {
-                    final TreeItem selection = selections[0];
-                    if (selection.getExpanded()) {
-                        imitateKeyboardEventRight();
-                    } else {
-                        imitateKeyboardEventRight();
-                        imitateKeyboardEventDown();
-                    }
-                    setOnUpDownStatus(true);
-                    setUpDownStatus(true);
-                }
-
-                // if (DQRepositoryNode.isOnFilterring()) {
-                // TreeItem[] selectionNode = getCommonViewer().getTree().getSelection();
-                // if (0 == selectionNode.length) {
-                // DQRepositoryNode ilteredNode = RepositoryNodeHelper.getNextFilteredNode(RepositoryNodeHelper
-                // .getFilteredNode());
-                // if (null != ilteredNode) {
-                // showSelectedElements((RepositoryNode) ilteredNode);
-                // }
-                // } else {
-                // TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
-                // DQRepositoryNode repoNode = (DQRepositoryNode) selectionTreeItem.getData();
-                // DQRepositoryNode nextFilteredNode = RepositoryNodeHelper.getNextFilteredNode(repoNode);
-                // if (null != nextFilteredNode) {
-                // showSelectedElements((RepositoryNode) nextFilteredNode);
-                // }
-                // }
-                // }
-                // super.mouseDown(e);
             }
         });
 
     }
 
-    private void imitateKeyboardEventRight() {
-                getCommonViewer().getTree().setFocus();
-                Event evt = new Event();
-                // right
-                evt.keyCode = SWT.ARROW_RIGHT;
-                evt.type = SWT.KeyDown;
-                getCommonViewer().getTree().getDisplay().post(evt);
-                // down
-                getCommonViewer().getTree().getDisplay().wake();
-    }
-
-    private void imitateKeyboardEventDown() {
-                getCommonViewer().getTree().setFocus();
-                Event evt = new Event();
-                // right
-                evt.character = 0;
-                evt.type = SWT.KeyDown;
-                getCommonViewer().getTree().getDisplay().post(evt);
-                // down
-                evt.keyCode = SWT.ARROW_DOWN;
-                getCommonViewer().getTree().getDisplay().post(evt);
-                getCommonViewer().getTree().getDisplay().wake();
-    }
-
-    private void imitateKeyboardEventUp() {
-                getCommonViewer().getTree().setFocus();
-                Event evt = new Event();
-                // right
-                evt.character = 0;
-                evt.type = SWT.KeyDown;
-                getCommonViewer().getTree().getDisplay().post(evt);
-                // down
-                evt.keyCode = SWT.ARROW_UP;
-                getCommonViewer().getTree().getDisplay().post(evt);
-                getCommonViewer().getTree().getDisplay().wake();
+    private void runFilter(String filterStr) {
+        expandNodes(false);
+        try {
+            DQRepositoryNode.setFilterStr(filterStr);
+            if (filterStr.trim().equals(PluginConstant.EMPTY_STRING)) {
+                DQRepositoryNode.setFiltering(false);
+                // refresh();
+            } else {
+                DQRepositoryNode.setFiltering(true);
+                RepositoryNodeHelper.fillTreeList();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            IRepositoryNode firstFilteredNode = RepositoryNodeHelper.getFirstFilteredNode();
+            if (null != firstFilteredNode) {
+                showSelectedElements((RepositoryNode) firstFilteredNode);
+            }
+            refresh();
+        }
     }
 
     private void expandNodes(boolean expand) {
@@ -962,6 +918,10 @@ public class DQRespositoryView extends CommonNavigator {
 
     private static void setOnUpDownStatus(boolean isOnUpDownStatus) {
         DQRespositoryView.isOnUpDownStatus = isOnUpDownStatus;
+    }
+
+    public void xxxxx() {
+
     }
 
 }
