@@ -153,12 +153,15 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         resContants.add(EResourceConstant.RULES);
                         resContants.add(EResourceConstant.SOURCE_FILES);
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                    } else if (EResourceConstant.INDICATORS.getName().equals(label)) {
-                        List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                        resContants.add(EResourceConstant.SYSTEM_INDICATORS);
-                        resContants.add(EResourceConstant.USER_DEFINED_INDICATORS);
-                        instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                    } else if (EResourceConstant.PATTERNS.getName().equals(label)) {
+                    }
+
+                    // else if (EResourceConstant.INDICATORS.getName().equals(label)) {
+                    // List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
+                    // resContants.add(EResourceConstant.SYSTEM_INDICATORS);
+                    // resContants.add(EResourceConstant.USER_DEFINED_INDICATORS);
+                    // instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
+                    // }
+                    else if (EResourceConstant.PATTERNS.getName().equals(label)) {
                         List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                         resContants.add(EResourceConstant.PATTERN_REGEX);
                         resContants.add(EResourceConstant.PATTERN_SQL);
@@ -172,7 +175,10 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         resContants.add(EResourceConstant.FILEDELIMITED);
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                     } else if (node instanceof RecycleBinRepNode) {
+                        // MOD gdbu 2011-7-15 bug : 23161
                         RecycleBinManager.getInstance().loadChildren((RecycleBinRepNode) node);
+                        return sortRepositoryNode(RecycleBinManager.getInstance().getRecycleBinChildren().toArray());
+                        // ~23161
                     }
                 }
                 return sortRepositoryNode(node.getChildren().toArray());

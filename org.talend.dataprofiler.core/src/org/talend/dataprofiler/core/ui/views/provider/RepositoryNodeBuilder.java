@@ -43,15 +43,13 @@ import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.dq.nodes.IndicatorFolderRepNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
-import org.talend.dq.nodes.PatternRegexFolderRepNode;
-import org.talend.dq.nodes.PatternSqlFolderRepNode;
+import org.talend.dq.nodes.PatternFolderRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.RulesFolderRepNode;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
-import org.talend.dq.nodes.SysIndicatorFolderRepNode;
-import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -112,18 +110,24 @@ public final class RepositoryNodeBuilder {
             folder.setRepositoryNode(repFolderNode);
             node.getChildren().add(repFolderNode);
             return repFolderNode;
-        case SYSTEM_INDICATORS:
-            SysIndicatorFolderRepNode systemIndicatorFolderNode = new SysIndicatorFolderRepNode(folder, node,
-                    ENodeType.SYSTEM_FOLDER);
-            folder.setRepositoryNode(systemIndicatorFolderNode);
-            node.getChildren().add(systemIndicatorFolderNode);
-            return systemIndicatorFolderNode;
-        case USER_DEFINED_INDICATORS:
-            UserDefIndicatorFolderRepNode userDefIndicatorFolderNode = new UserDefIndicatorFolderRepNode(folder, node,
-                    ENodeType.SYSTEM_FOLDER);
-            folder.setRepositoryNode(userDefIndicatorFolderNode);
-            node.getChildren().add(userDefIndicatorFolderNode);
-            return userDefIndicatorFolderNode;
+            // case SYSTEM_INDICATORS:
+            // SysIndicatorFolderRepNode systemIndicatorFolderNode = new SysIndicatorFolderRepNode(folder, node,
+            // ENodeType.SYSTEM_FOLDER);
+            // folder.setRepositoryNode(systemIndicatorFolderNode);
+            // node.getChildren().add(systemIndicatorFolderNode);
+            // return systemIndicatorFolderNode;
+        case INDICATORS:
+            IndicatorFolderRepNode indicatorFolderRepNode = new IndicatorFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            folder.setRepositoryNode(indicatorFolderRepNode);
+            node.getChildren().add(indicatorFolderRepNode);
+            return indicatorFolderRepNode;
+            // case USER_DEFINED_INDICATORS:
+            // UserDefIndicatorFolderRepNode userDefIndicatorFolderNode = new UserDefIndicatorFolderRepNode(folder,
+            // node,
+            // ENodeType.SYSTEM_FOLDER);
+            // folder.setRepositoryNode(userDefIndicatorFolderNode);
+            // node.getChildren().add(userDefIndicatorFolderNode);
+            // return userDefIndicatorFolderNode;
         case JRXML_TEMPLATE:
             JrxmlTempFolderRepNode jrxmlFolderNode = new JrxmlTempFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(jrxmlFolderNode);
@@ -134,17 +138,23 @@ public final class RepositoryNodeBuilder {
             folder.setRepositoryNode(sourceFileFolder);
             node.getChildren().add(sourceFileFolder);
             return sourceFileFolder;
-        case PATTERN_REGEX:
-            PatternRegexFolderRepNode regexFolder = new PatternRegexFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
-            folder.setRepositoryNode(regexFolder);
-            node.getChildren().add(regexFolder);
-            return regexFolder;
-        case PATTERN_SQL:
-            PatternSqlFolderRepNode sqlFolder = new PatternSqlFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
-            folder.setRepositoryNode(sqlFolder);
-            node.getChildren().add(sqlFolder);
-            return sqlFolder;
-        case RULES_SQL:
+            // case PATTERN_REGEX:
+            // PatternRegexFolderRepNode regexFolder = new PatternRegexFolderRepNode(folder, node,
+            // ENodeType.SYSTEM_FOLDER);
+            // folder.setRepositoryNode(regexFolder);
+            // node.getChildren().add(regexFolder);
+            // return regexFolder;
+        case PATTERNS:
+            PatternFolderRepNode regexFolder2 = new PatternFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            folder.setRepositoryNode(regexFolder2);
+            node.getChildren().add(regexFolder2);
+            return regexFolder2;
+            // case PATTERN_SQL:
+            // PatternSqlFolderRepNode sqlFolder = new PatternSqlFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            // folder.setRepositoryNode(sqlFolder);
+            // node.getChildren().add(sqlFolder);
+            // return sqlFolder;
+        case RULES:
             RulesFolderRepNode ruleFolder = new RulesFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(ruleFolder);
             node.getChildren().add(ruleFolder);

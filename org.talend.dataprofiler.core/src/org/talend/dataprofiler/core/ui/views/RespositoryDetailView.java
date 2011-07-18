@@ -259,31 +259,56 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 is = false;
             } else if (fe instanceof DBCatalogRepNode) {
                 DBCatalogRepNode catalogNode = (DBCatalogRepNode) fe;
-                catalogNode.getChildren().get(0).getChildren();
-                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(catalogNode);
-                Catalog catalog = (Catalog) fe;
-                createTdCatalogDetail(catalog);
+                // MOD gdbu 2011-7-15 bug : 23161
+                if (catalogNode.getChildren().isEmpty()) {
+                    createNameCommentDetail(catalogNode.getCatalog());
+                } else {
+                    catalogNode.getChildren().get(0).getChildren();
+                    fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(catalogNode);
+                    Catalog catalog = (Catalog) fe;
+                    createTdCatalogDetail(catalog);
+                }
+                // ~23161
                 is = false;
             } else if (fe instanceof DBSchemaRepNode) {
                 DBSchemaRepNode schemaNode = (DBSchemaRepNode) fe;
-                schemaNode.getChildren().get(0).getChildren();
-                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(schemaNode);
-                Schema schema = (Schema) fe;
-                createTdSchemaDetail(schema);
+                // MOD gdbu 2011-7-15 bug : 23161
+                if (schemaNode.getChildren().isEmpty()) {
+                    createNameCommentDetail(schemaNode.getSchema());
+                } else {
+                    schemaNode.getChildren().get(0).getChildren();
+                    fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(schemaNode);
+                    Schema schema = (Schema) fe;
+                    createTdSchemaDetail(schema);
+                }
+                // ~23161
                 is = false;
             } else if (fe instanceof DBTableRepNode) {
                 DBTableRepNode tableNode = (DBTableRepNode) fe;
-                tableNode.getChildren().get(0).getChildren();
-                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(tableNode);
-                ModelElement element = (ModelElement) fe;
-                createTableDetail((TdTable) element);
+                // MOD gdbu 2011-7-15 bug : 23161
+                if (tableNode.getChildren().isEmpty()) {
+                    createNameCommentDetail(tableNode.getTdTable());
+                } else {
+                    tableNode.getChildren().get(0).getChildren();
+                    fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(tableNode);
+                    ModelElement element = (ModelElement) fe;
+                    createTableDetail((TdTable) element);
+                }
+                // ~23161
                 is = false;
+
             } else if (fe instanceof DBViewRepNode) {
                 DBViewRepNode viewNode = (DBViewRepNode) fe;
-                viewNode.getChildren().get(0).getChildren();
-                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(viewNode);
-                ModelElement element = (ModelElement) fe;
-                createNameCommentDetail(element);
+                // MOD gdbu 2011-7-15 bug : 23161
+                if (viewNode.getChildren().isEmpty()) {
+                    createNameCommentDetail(viewNode.getTdView());
+                } else {
+                    viewNode.getChildren().get(0).getChildren();
+                    fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(viewNode);
+                    ModelElement element = (ModelElement) fe;
+                    createNameCommentDetail(element);
+                }
+                // ~23161
                 is = false;
             } else if (fe instanceof DBColumnRepNode) {
                 DBColumnRepNode columnNode = (DBColumnRepNode) fe;

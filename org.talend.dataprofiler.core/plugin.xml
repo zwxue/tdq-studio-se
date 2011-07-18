@@ -325,7 +325,7 @@
          <enablement>
             <or>
                <adapt
-                     type="org.talend.dq.nodes.RulesFolderRepNode">
+                     type="org.talend.dq.nodes.RulesSQLFolderRepNode">
                </adapt>
                <instanceof
                      value="org.talend.dq.nodes.RulesSubFolderRepNode">

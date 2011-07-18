@@ -28,14 +28,14 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * DOC klliu class global comment. Detailled comment
+ * DOC gdbu class global comment. Detailled comment
  */
 public class RulesFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(RulesFolderRepNode.class);
 
     /**
-     * DOC klliu RulesFolderRepNode constructor comment.
+     * DOC gdbu RulesFolderRepNode constructor comment.
      * 
      * @param object
      * @param parent
@@ -53,7 +53,7 @@ public class RulesFolderRepNode extends DQRepositoryNode {
     @Override
     public String getLabel() {
         if (this.getObject() != null) {
-            this.getObject().getLabel();
+            return this.getObject().getLabel();
         }
         return super.getLabel();
     }
@@ -64,31 +64,30 @@ public class RulesFolderRepNode extends DQRepositoryNode {
             super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-            // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
-                if (!withDeleted && folder.isDeleted()) {
-                    continue;
+                Folder folder = null;
+                boolean isSystem = container.getLabel().equals("SQL");
+                if (isSystem) {
+                    folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
+                    if (!withDeleted && folder.isDeleted()) {
+                        continue;
+                    }
+                    RulesSQLFolderRepNode systemIndicatorFolderNode = new RulesSQLFolderRepNode(folder, this,
+                            ENodeType.SYSTEM_FOLDER);
+                    folder.setRepositoryNode(systemIndicatorFolderNode);
+                    systemIndicatorFolderNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
+                    systemIndicatorFolderNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
+                    super.getChildren().add(systemIndicatorFolderNode);
+
                 }
-                RulesSubFolderRepNode childNodeFolder = new RulesSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
-                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
-                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
-                super.getChildren().add(childNodeFolder);
             }
-            // rule files
-            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
-                if (!withDeleted && viewObject.isDeleted()) {
-                    continue;
-                }
-                RuleRepNode repNode = new RuleRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
-                viewObject.setRepositoryNode(repNode);
-                super.getChildren().add(repNode);
-            }
+
         } catch (PersistenceException e) {
             log.error(e, e);
         }
+        // MOD gdbu 2011-6-29 bug : 22204
         return filterResultsIfAny(super.getChildren());
+        // ~22204
     }
+
 }

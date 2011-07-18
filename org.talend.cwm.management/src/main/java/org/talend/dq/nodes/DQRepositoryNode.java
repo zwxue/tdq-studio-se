@@ -140,20 +140,29 @@ public class DQRepositoryNode extends RepositoryNode {
 
     public boolean canMatch() {
         boolean returnVal = false;
+        // MOD gdbu 2011-7-18 bug : 23161
         // MOD msjian 2011-7-13 feature 22206 : fix note 0091973 issue1
         // when select table/view from oracle, the label is not correct
         String label = getLabel();
         if (isUntilSchema()) {
             label = getObject().getLabel();
+        } else {
+            if (null != this.getObject() && this.getObject().isDeleted()) {
+                label = this.getProperties(EProperties.LABEL).toString();
+            } else {
+                label = getLabel().toLowerCase();
+            }
         }
+
         if (label.toLowerCase().contains(getFilterStr())) {
-            RepositoryNodeHelper.setAllFilterNodeList(this);
             if (!isUntilSchema()) {
                 return true;
             } else {
                 returnVal = true;
             }
         }
+        // ~23161
+
         DQRepositoryNode childNode = null;
         for (IRepositoryNode child : getChildren()) {
             childNode = (DQRepositoryNode) child;

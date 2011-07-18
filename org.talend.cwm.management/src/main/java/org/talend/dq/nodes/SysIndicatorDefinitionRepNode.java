@@ -12,11 +12,14 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.List;
+
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -69,5 +72,15 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
     @Override
     public boolean canExpandForDoubleClick() {
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
+    @Override
+    public List<IRepositoryNode> getChildren() {
+        return filterResultsIfAny(super.getChildren());
     }
 }

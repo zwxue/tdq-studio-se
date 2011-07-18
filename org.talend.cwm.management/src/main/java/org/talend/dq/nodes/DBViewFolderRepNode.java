@@ -204,6 +204,6 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
         if (getObject() == null) {
             return this.getProperties(EProperties.LABEL).toString();
         }
-        return this.getObject().getLabel();
+        return this.getNodeName();
     }
 }

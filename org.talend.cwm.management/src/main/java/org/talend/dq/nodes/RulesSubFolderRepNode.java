@@ -18,7 +18,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class RulesSubFolderRepNode extends RulesFolderRepNode {
+public class RulesSubFolderRepNode extends RulesSQLFolderRepNode {
 
     /**
      * DOC klliu RulesSubFolderRepNode constructor comment.

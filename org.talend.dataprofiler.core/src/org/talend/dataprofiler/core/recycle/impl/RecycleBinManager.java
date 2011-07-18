@@ -26,12 +26,12 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
-import org.talend.repository.model.RepositoryNode;
 
 /**
  * bZhou Comment : This class is to manage the recycle bin.
@@ -40,7 +40,9 @@ public final class RecycleBinManager {
 
     private static RecycleBinManager instance;
 
-    private List<IRepositoryNode> recycleBinChildren = null;
+    // private List<IRepositoryNode> recycleBinChildren = null;
+
+    private RecycleBinRepNode rcBinNode = null;
 
     private RecycleBinManager() {
 
@@ -71,16 +73,17 @@ public final class RecycleBinManager {
      * @return
      */
     public void loadChildren(RecycleBinRepNode rcBinNode) {
-        List<RepositoryNode> foldersList = new ArrayList<RepositoryNode>();
+        this.rcBinNode = rcBinNode;
+        List<DQRepositoryNode> foldersList = new ArrayList<DQRepositoryNode>();
         Project newProject = ProjectManager.getInstance().getCurrentProject();
         List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(newProject.getEmfProject());
         for (FolderItem folder : new ArrayList<FolderItem>(folderItems)) {
             if (WorkbenchUtils.isTDQOrMetadataRootFolder(folder)) {
-                addItemToRecycleBin(rcBinNode, folder, foldersList);
+                addItemToRecycleBin(this.rcBinNode, folder, foldersList);
             }
         }
-        recycleBinChildren = rcBinNode.getChildren();
-        // return new ArrayList<IRepositoryNode>(foldersList.size());
+
+        // recycleBinChildren = rcBinNode.getChildren();
     }
 
     /**
@@ -91,16 +94,16 @@ public final class RecycleBinManager {
      * @param item
      * @param foldersList
      */
-    private void addItemToRecycleBin(RepositoryNode parentNode, Item item, List<RepositoryNode> foldersList) {
+    private void addItemToRecycleBin(DQRepositoryNode parentNode, Item item, List<DQRepositoryNode> foldersList) {
         ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
-        RepositoryNode currentParentNode = parentNode;
+        DQRepositoryNode currentParentNode = parentNode;
         if (item instanceof FolderItem) {
             itemType = getFolderContentType((FolderItem) item);
             if (item.getState() != null && item.getState().isDeleted()) {
                 // need to display this folder in the recycle bin.
                 Folder folder = new Folder(item.getProperty(), itemType);
-                RepositoryNode folderNode = null;
-                for (RepositoryNode existingFolder : foldersList) {
+                DQRepositoryNode folderNode = null;
+                for (DQRepositoryNode existingFolder : foldersList) {
                     if (existingFolder.getContentType() == null) {
                         // this can appear temporary when another user has deleted a folder
                         break;
@@ -112,7 +115,7 @@ public final class RecycleBinManager {
                     }
                 }
                 if (folderNode == null) {
-                    folderNode = new RepositoryNode(folder, parentNode, ENodeType.SIMPLE_FOLDER);
+                    folderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SIMPLE_FOLDER);
                     folderNode.setProperties(EProperties.CONTENT_TYPE, itemType);
                     folderNode.setProperties(EProperties.LABEL, folder.getLabel());
                     foldersList.add(folderNode);
@@ -133,7 +136,8 @@ public final class RecycleBinManager {
             try {
                 if (item.getProperty().getVersion()
                         .equals(ProxyRepositoryFactory.getInstance().getLastVersion(item.getProperty().getId()).getVersion())) {
-                    RepositoryNode repNode = new RepositoryNode(new RepositoryViewObject(item.getProperty()), currentParentNode,
+                    DQRepositoryNode repNode = new DQRepositoryNode(new RepositoryViewObject(item.getProperty()),
+                            currentParentNode,
                             ENodeType.REPOSITORY_ELEMENT);
                     repNode.setProperties(EProperties.CONTENT_TYPE, itemType);
                     repNode.setProperties(EProperties.LABEL, item.getProperty().getLabel());
@@ -194,9 +198,12 @@ public final class RecycleBinManager {
     }
 
     public List<IRepositoryNode> getRecycleBinChildren() {
-        if (recycleBinChildren == null) {
-            recycleBinChildren = new ArrayList<IRepositoryNode>();
-        }
-        return this.recycleBinChildren;
+        // MOD gdbu 2011-7-15 bug : 23161
+        List<IRepositoryNode> filterResultsIfAny = new ArrayList<IRepositoryNode>();
+        filterResultsIfAny.addAll(rcBinNode.filterResultsIfAny(rcBinNode.getChildren()));
+        rcBinNode.getChildren().clear();
+        rcBinNode.getChildren().addAll(filterResultsIfAny);
+        return rcBinNode.getChildren();
+        // ~23161
     }
 }

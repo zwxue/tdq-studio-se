@@ -105,7 +105,7 @@ import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
-import org.talend.dq.nodes.RulesFolderRepNode;
+import org.talend.dq.nodes.RulesSQLFolderRepNode;
 import org.talend.dq.nodes.RulesSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
@@ -139,9 +139,7 @@ public final class RepositoryNodeHelper {
 
     private static RecycleBinRepNode recycleBinRepNode;
 
-    private static List<DQRepositoryNode> allFilteredNode = new ArrayList<DQRepositoryNode>();
-
-    private static DQRepositoryNode filteredNode;// used to show the next filtered node
+    private static List<IRepositoryNode> allFilteredNodeList = new ArrayList<IRepositoryNode>();
 
     public static RecycleBinRepNode getRecycleBinRepNode() {
         if (recycleBinRepNode == null) {
@@ -663,13 +661,13 @@ public final class RepositoryNodeHelper {
 
     public static List<RuleRepNode> getRuleRepNodes(IRepositoryNode parrentNode, boolean recursiveFind, boolean withDeleted) {
         List<RuleRepNode> result = new ArrayList<RuleRepNode>();
-        if (parrentNode != null && (parrentNode instanceof RulesFolderRepNode || parrentNode instanceof RulesSubFolderRepNode)) {
+        if (parrentNode != null && (parrentNode instanceof RulesSQLFolderRepNode || parrentNode instanceof RulesSubFolderRepNode)) {
             List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof RuleRepNode) {
                         result.add((RuleRepNode) inode);
-                    } else if (inode instanceof RulesFolderRepNode || inode instanceof RulesSubFolderRepNode) {
+                    } else if (inode instanceof RulesSQLFolderRepNode || inode instanceof RulesSubFolderRepNode) {
                         if (recursiveFind) {
                             result.addAll(getRuleRepNodes(inode, recursiveFind, withDeleted));
                         }
@@ -993,6 +991,14 @@ public final class RepositoryNodeHelper {
         if (columnSetNode == null) {
             return null;
         }
+        // MOD gdbu 2011-7-18 bug 23161
+        if (!columnSetNode.hasChildren()) {
+            return null;
+        }
+        if (!columnSetNode.getChildren().get(0).hasChildren()) {
+            return null;
+        }
+        // ~23161
         List<IRepositoryNode> children = columnSetNode.getChildren().get(0).getChildren();
         IRepositoryNode iRepositoryNode = children.get(0);
         if (iRepositoryNode != null && iRepositoryNode instanceof DBColumnRepNode) {
@@ -1591,7 +1597,7 @@ public final class RepositoryNodeHelper {
                         || EResourceConstant.RULES.getName().equals((subNode.getObject().getLabel()))) {
                     List<IRepositoryNode> subChildren = subNode.getChildren();
                     for (IRepositoryNode udisNode : subChildren) {
-                        if (udisNode instanceof UserDefIndicatorFolderRepNode || udisNode instanceof RulesFolderRepNode) {
+                        if (udisNode instanceof UserDefIndicatorFolderRepNode || udisNode instanceof RulesSQLFolderRepNode) {
                             udisNodes.addAll(getModelElementFromFolder(udisNode, withDeleted));
                         }
                     }
@@ -2232,7 +2238,7 @@ public final class RepositoryNodeHelper {
                     isFolder = !repFolderRepNode.isVirtualFolder();
                 } else if (node instanceof UserDefIndicatorFolderRepNode || node instanceof PatternRegexFolderRepNode
                         || node instanceof PatternRegexSubFolderRepNode || node instanceof PatternSqlFolderRepNode
-                        || node instanceof PatternSqlSubFolderRepNode || node instanceof RulesFolderRepNode) {
+                        || node instanceof PatternSqlSubFolderRepNode || node instanceof RulesSQLFolderRepNode) {
                     isFolder = true;
                 }
                 if (isFolder && recursive) {
@@ -2474,139 +2480,6 @@ public final class RepositoryNodeHelper {
         return retColumnSets;
     }
 
-    public static void clearAllFilteredNode() {
-        setFilteredNode(null);
-        allFilteredNode.clear();
-    }
-
-    public static List<DQRepositoryNode> getAllFilteredNode() {
-        return allFilteredNode;
-    }
-
-    public static void setAllFilterNodeList(DQRepositoryNode dqNode) {
-        if (!allFilteredNode.contains(dqNode)) {
-            allFilteredNode.add(dqNode);
-        }
-    }
-
-    public static DQRepositoryNode getFirstFilteredNode() {
-        if (!allFilteredNode.isEmpty()) {
-            DQRepositoryNode dqRepositoryNode = allFilteredNode.get(0);
-            setFilteredNode(dqRepositoryNode);
-            return dqRepositoryNode;
-        } else {
-            return null;
-        }
-    }
-
-    public static DQRepositoryNode getNextFilteredNode(DQRepositoryNode dqNode) {
-        if (!allFilteredNode.isEmpty()) {
-            DQRepositoryNode findFilteredNode = findNextFilteredNode(dqNode);
-            if (null != findFilteredNode) {
-                return findFilteredNode;
-            } else {
-                DQRepositoryNode findFilteredNodeByMemorySave = findNextFilteredNode(getFilteredNode());
-                if (null != findFilteredNodeByMemorySave) {
-                    return findFilteredNodeByMemorySave;
-                }
-            }
-            return null;
-        } else {
-            return null;
-        }
-    }
-
-    public static DQRepositoryNode getPreviouFilteredNode(DQRepositoryNode dqNode) {
-        if (!allFilteredNode.isEmpty()) {
-            DQRepositoryNode findFilteredNode = findPreviouFilteredNode(dqNode);
-            if (null != findFilteredNode) {
-                return findFilteredNode;
-            } else {
-                DQRepositoryNode findFilteredNodeByMemorySave = findPreviouFilteredNode(getFilteredNode());
-                if (null != findFilteredNodeByMemorySave) {
-                    return findFilteredNodeByMemorySave;
-                }
-            }
-            return null;
-        } else {
-            return null;
-        }
-    }
-
-    private static DQRepositoryNode findNextFilteredNode(DQRepositoryNode dqNode) {
-        for (int i = 0; i < allFilteredNode.size(); i++) {
-            if (allFilteredNode.get(i).equals(dqNode)) {
-                if (i != (allFilteredNode.size() - 1)) {
-                    DQRepositoryNode dqRepositoryNode = allFilteredNode.get(i + 1);
-                    setFilteredNode(dqRepositoryNode);
-                    return dqRepositoryNode;
-                } else {
-                    DQRepositoryNode dqRepositoryNode = allFilteredNode.get(0);
-                    setFilteredNode(dqRepositoryNode);
-                    return dqRepositoryNode;
-                }
-            }
-        }
-        return null;
-    }
-
-    private static DQRepositoryNode findPreviouFilteredNode(DQRepositoryNode dqNode) {
-        for (int i = 0; i < allFilteredNode.size(); i++) {
-            if (allFilteredNode.get(i).equals(dqNode)) {
-                if (i != 0) {
-                    DQRepositoryNode dqRepositoryNode = allFilteredNode.get(i - 1);
-                    setFilteredNode(dqRepositoryNode);
-                    return dqRepositoryNode;
-                } else {
-                    DQRepositoryNode dqRepositoryNode = allFilteredNode.get(allFilteredNode.size() - 1);
-                    setFilteredNode(dqRepositoryNode);
-                    return dqRepositoryNode;
-                }
-            }
-        }
-        return null;
-    }
-
-    public static void callGetChildrenMethod() {
-        refreshNode(getRootNode(ERepositoryObjectType.METADATA, true));
-
-        List<DQRepositoryNode> metaDataFilteredNodes = new ArrayList<DQRepositoryNode>();
-        metaDataFilteredNodes.addAll(getAllFilteredNode());
-        clearAllFilteredNode();
-
-        refreshNode(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
-        refreshNode(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
-
-        List<DQRepositoryNode> dataLibFilteredNodes = new ArrayList<DQRepositoryNode>();
-        dataLibFilteredNodes.addAll(getAllFilteredNode());
-
-        for (DQRepositoryNode anaIndDqRepositoryNode : dataLibFilteredNodes) {
-            if (metaDataFilteredNodes.contains(anaIndDqRepositoryNode)) {
-                getAllFilteredNode().remove(anaIndDqRepositoryNode);
-            }
-        }
-
-        for (DQRepositoryNode metaDataFilteredNode : metaDataFilteredNodes) {
-            getAllFilteredNode().add((getAllFilteredNode().size()), metaDataFilteredNode);
-        }
-    }
-
-    private static void refreshNode(IRepositoryNode iRepositoryNode) {
-        for (IRepositoryNode iRepositoryNode1 : iRepositoryNode.getChildren()) {
-            if (iRepositoryNode1.hasChildren()) {
-                refreshNode(iRepositoryNode1);
-            }
-        }
-    }
-
-    private static void setFilteredNode(DQRepositoryNode dqNode) {
-        filteredNode = dqNode;
-    }
-
-    public static DQRepositoryNode getFilteredNode() {
-        return filteredNode;
-    }
-
     public static List<IRepositoryNode> sortChildren(List<IRepositoryNode> dqNodes) {
 
         Object[] sortedChildren = RepositoryNodeHelper.sortChildren(dqNodes.toArray());
@@ -2630,23 +2503,141 @@ public final class RepositoryNodeHelper {
         return new RepositoryNodeComparator();
     }
 
-    public static IRepositoryNode getLastNode() {
-        return getLastNode(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
-    }
+    /**
+     * DOC gdbu Comment method "getFirstFilteredNode".
+     * 
+     * @return
+     */
+    public static IRepositoryNode getFirstFilteredNode() {
+        if (!allFilteredNodeList.isEmpty()) {
+            for (IRepositoryNode iNode : allFilteredNodeList) {
+                if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                    return iNode;
 
-    public static IRepositoryNode getFirstNode() {
-        return getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true);
-    }
-
-
-    private static IRepositoryNode getLastNode(IRepositoryNode iRNode) {
-        if (iRNode.hasChildren()) {
-            List<IRepositoryNode> childrens = iRNode.getChildren();
-            IRepositoryNode children = getLastNode(childrens.get(childrens.size() - 1));
-            return children;
+                }
+            }
+            return null;
         } else {
-            return iRNode;
+            return null;
         }
     }
+
+    /**
+     * DOC gdbu Comment method "getNextFilteredNode".
+     * 
+     * @param repoNode
+     * @return
+     */
+    public static IRepositoryNode getNextFilteredNode(IRepositoryNode repoNode) {
+        if (!allFilteredNodeList.isEmpty()) {
+            IRepositoryNode findFilteredNode = findNextFilteredNode(repoNode);
+            if (null != findFilteredNode) {
+                return findFilteredNode;
+            } else {
+                // DQRepositoryNode findFilteredNodeByMemorySave = findNextFilteredNode(getFilteredNode());
+                // if (null != findFilteredNodeByMemorySave) {
+                // return findFilteredNodeByMemorySave;
+                // }
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    private static IRepositoryNode findNextFilteredNode(IRepositoryNode dqNode) {
+        boolean findGivenNode = false;
+        for (int i = 0; i < allFilteredNodeList.size(); i++) {
+            if (allFilteredNodeList.get(i).equals(dqNode) || findGivenNode) {
+                if (!findGivenNode) {
+                    findGivenNode = true;
+                    continue;
+                }
+                if (allFilteredNodeList.get(i).getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                    return allFilteredNodeList.get(i);
+                }
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * DOC gdbu Comment method "getPreviouFilteredNode".
+     * 
+     * @param repoNode
+     * @return
+     */
+    public static IRepositoryNode getPreviouFilteredNode(IRepositoryNode repoNode) {
+        if (!allFilteredNodeList.isEmpty()) {
+            IRepositoryNode findFilteredNode = findPreviouFilteredNode(repoNode);
+            if (null != findFilteredNode) {
+                return findFilteredNode;
+            } else {
+                // IRepositoryNode findFilteredNodeByMemorySave = findPreviouFilteredNode(getFilteredNode());
+                // if (null != findFilteredNodeByMemorySave) {
+                // return findFilteredNodeByMemorySave;
+                // }
+            }
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    private static IRepositoryNode findPreviouFilteredNode(IRepositoryNode dqNode) {
+        boolean findGivenNode = false;
+        for (int i = allFilteredNodeList.size() - 1; i >= 0; i--) {
+            if (allFilteredNodeList.get(i).equals(dqNode) || findGivenNode) {
+                if (!findGivenNode) {
+                    findGivenNode = true;
+                    continue;
+                }
+                if (allFilteredNodeList.get(i).getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                    return allFilteredNodeList.get(i);
+                }
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 
+     * DOC gdbu Comment method "getAllTreeList".
+     */
+    public static void fillTreeList() {
+
+        allFilteredNodeList.clear();
+
+        List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
+        list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+        list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
+        list.add(getRootNode(ERepositoryObjectType.METADATA, true));
+        list.add(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
+        for (IRepositoryNode iRepositoryNode : list) {
+            allFilteredNodeList.addAll(getTreeList(iRepositoryNode));
+        }
+
+    }
+
+    /**
+     * 
+     * DOC gdbu Comment method "getTreeList".
+     * 
+     * @param node
+     * @return
+     */
+    private static List<IRepositoryNode> getTreeList(IRepositoryNode node) {
+        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
+        children.add(node);
+        if (node.hasChildren()) {
+            for (IRepositoryNode iNode : node.getChildren()) {
+                children.addAll(getTreeList(iNode));
+            }
+        }
+        return children;
+    }
+
 
 }
