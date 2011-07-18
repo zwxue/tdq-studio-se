@@ -77,6 +77,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     
     private static final String WHITESPACE_CHECK_MSG = DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace"); //$NON-NLS-1$
 
+    private static final String NAMECONNOTBEEMPTY = DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"); //$NON-NLS-1$
+
     protected Text nameText;
 
     protected Text purposeText;
@@ -233,18 +235,27 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
 
             public void modifyText(ModifyEvent e) {
-                boolean dirty = isDirty();
+                // boolean dirty = isDirty();
                 modify = true;
                 setDirty(true);
-                if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
-                    setDirty(dirty);
-                    MessageDialog.openError(null,
-                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"));//$NON-NLS-1$//$NON-NLS-2$
-                    nameText.removeModifyListener(this);
-                    Property property = getProperty();
-                    nameText.setText(property.getLabel());
-                    nameText.addModifyListener(this);
+
+                // MOD msjian 2011-7-18 23216: when changed the name of a connection to null, write a warning
+                if (PluginConstant.EMPTY_STRING.equals(nameText.getText())) {
+                    getManagedForm().getMessageManager().addMessage(NAMECONNOTBEEMPTY, NAMECONNOTBEEMPTY, null,
+                            IMessageProvider.ERROR, nameText);
+                } else {
+                    getManagedForm().getMessageManager().removeMessage(NAMECONNOTBEEMPTY, nameText);
                 }
+
+                // if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
+                // setDirty(dirty);
+                // MessageDialog.openError(null,
+                //                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"));//$NON-NLS-1$//$NON-NLS-2$
+                // nameText.removeModifyListener(this);
+                // Property property = getProperty();
+                // nameText.setText(property.getLabel());
+                // nameText.addModifyListener(this);
+                // }
 
                 // fireTextChange();
             }
@@ -422,11 +433,22 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         saveTextChange();
     }
 
-    protected void saveTextChange() {
-        // MOD gdbu 2011-4-8 bug : 19976
-        nameText.setText(WorkspaceUtils.normalize(nameText.getText()));
-        currentModelElement.setName(WorkspaceUtils.normalize(nameText.getText()));
-        // ~19976
+    protected boolean saveTextChange() {
+        // MOD msjian 2011-7-18 23216: when saved, and when the name of a connection is null, open an error
+        if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) {
+            MessageDialog
+                    .openError(
+                            null,
+                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"));//$NON-NLS-1$//$NON-NLS-2$
+            nameText.setText(currentModelElement.getName());
+            nameText.setFocus();
+        } else {
+            // MOD gdbu 2011-4-8 bug : 19976
+            nameText.setText(WorkspaceUtils.normalize(nameText.getText()));
+            currentModelElement.setName(WorkspaceUtils.normalize(nameText.getText()));
+            // ~19976
+        }
+
         MetadataHelper.setPurpose(purposeText.getText(), currentModelElement);
         MetadataHelper.setDescription(descriptionText.getText(), currentModelElement);
         MetadataHelper.setAuthor(currentModelElement, authorText.getText());
@@ -445,6 +467,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             // property.setVersion(versionText.getText());
         }
         // }
+        
+        // ADD msjian 2011-7-18 23216: when there is no error for name, do set
+        if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) {
+            return false;
+        }
+        return true;
     }
 
     public boolean performGlobalAction(String actionId) {

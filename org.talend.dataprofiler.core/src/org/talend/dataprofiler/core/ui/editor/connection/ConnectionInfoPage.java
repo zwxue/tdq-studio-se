@@ -484,14 +484,15 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         }
 
-        saveTextChange();
+        // MOD msjian 2011-7-18 23216: there are two times saveTextChange
+        // saveTextChange();
+        super.doSave(monitor);
 
         if (isUrlChanged) {
             updateConnection(tmpParam);
             storeDriveInfoToPerference(tmpParam);
         }
 
-        super.doSave(monitor);
         try {
             saveConnectionInfo();
 
@@ -566,13 +567,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#saveTextChange()
      */
     @Override
-    protected void saveTextChange() {
+    protected boolean saveTextChange() {
         if (connection != null && connection.eIsProxy()) {
             connection = (Connection) EObjectHelper.resolveObject(connection);
         }
-        super.saveTextChange();
-        ConnectionUtils.setName(connection, nameText.getText());
-        PropertyHelper.getProperty(connection).setLabel(nameText.getText());
+
         JavaSqlFactory.setUsername(connection, loginText.getText());
         JavaSqlFactory.setPassword(connection, passwordText.getText());
         JavaSqlFactory.setURL(connection, urlText.getText());
@@ -581,6 +580,14 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());
         }
         // ~12327
+        // MOD msjian 2011-7-18 23216: when there is no error for name, do set
+        if (super.saveTextChange()) {
+            ConnectionUtils.setName(connection, nameText.getText());
+            PropertyHelper.getProperty(connection).setLabel(nameText.getText());
+        } else {
+            return false;
+        }
+        return true;
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
