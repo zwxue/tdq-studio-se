@@ -206,6 +206,14 @@ public final class ImageLib {
 
     public static final String EDIT_SYN = "synonym/book_edit.png";
 
+    public static final String FILTER_UP = "search_prev.gif";
+
+    public static final String FILTER_DOWN = "search_next.gif";
+
+    public static final String FILTER_RUN = "searchres.gif";
+
+    public static final String FILTER_CLOSE = "search_rem.gif";
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */
