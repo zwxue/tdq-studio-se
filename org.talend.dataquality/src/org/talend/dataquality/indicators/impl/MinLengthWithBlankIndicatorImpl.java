@@ -7,10 +7,8 @@ package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MinLengthWithBlankIndicator;
-import org.talend.dataquality.indicators.TextParameters;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Min Length With Blank Indicator</b></em>'. <!--
@@ -55,16 +53,9 @@ public class MinLengthWithBlankIndicatorImpl extends MinLengthIndicatorImpl impl
 
     @Override
     public IndicatorParameters getParameters() {
-        // MOD yyi 2010-12-23 17740:enable thresholds
-        if (parameters != null) {
-            TextParameters textParameters = parameters.getTextParameter();
-            if (textParameters == null) {
-                textParameters = IndicatorsFactory.eINSTANCE.createTextParameters();
-            }
-            textParameters.setUseNulls(false);
-            textParameters.setUseBlank(true);
-            parameters.setTextParameter(textParameters);
-        }
+        parameters = super.getParameters();
+        parameters.getTextParameter().setUseNulls(false);
+        parameters.getTextParameter().setUseBlank(true);
         return parameters;
     }
 } // MinLengthWithBlankIndicatorImpl

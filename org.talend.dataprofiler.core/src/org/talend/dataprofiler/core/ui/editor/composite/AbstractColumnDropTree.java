@@ -389,7 +389,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
 
         TextParameters tParameter = parameters.getTextParameter();
-        if (tParameter != null) {
+        if (tParameter != null && !hideTextParameters(indicatorUnit)) {
             iParamItem = new TreeItem(indicatorItem, SWT.NONE);
             iParamItem.setText(0, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.textParameters")); //$NON-NLS-1$
             iParamItem.setData(DATA_PARAM, DATA_PARAM);
@@ -546,6 +546,28 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankIndicator())
         // || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankNullIndicator())
         ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * ADD yyi 2011-07-18 17740: hide text parameter tree node for splited length indicators
+     * 
+     * @param indicatorUnit
+     * @return
+     */
+    private boolean hideTextParameters(IndicatorUnit indicatorUnit) {
+        EClass indicatorEclass = indicatorUnit.getIndicator().eClass();
+        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithNullIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankNullIndicator())) {
             return true;
         }
         return false;
