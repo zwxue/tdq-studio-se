@@ -56,7 +56,10 @@ public class Application implements IApplication {
         Display display = PlatformUI.createDisplay();
         Shell shell = new Shell(display, SWT.ON_TOP);
         try {
-            openLicenseAndRegister(shell);
+            boolean accept = openLicenseAndRegister(shell);
+            if (!accept) {
+                return IApplication.EXIT_OK;
+            }
         } catch (BusinessException e) {
             log.error(e.getMessage());
         }
@@ -81,7 +84,7 @@ public class Application implements IApplication {
         }
     }
 
-    private void openLicenseAndRegister(Shell shell) throws BusinessException {
+    private boolean openLicenseAndRegister(Shell shell) throws BusinessException {
         IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getService(
                 IBrandingService.class);
         if (!LicenseManagement.isLicenseValidated()) {
@@ -92,11 +95,9 @@ public class Application implements IApplication {
                 LicenseManagement.acceptLicense();
 
             } else {
-                if (MessageDialog.openQuestion(shell,
-                        Messages.getString("Application.license"), Messages.getString("Application.newLicense")) //$NON-NLS-1$ //$NON-NLS-2$
-                ) {
-                    LicenseManagement.acceptLicense();
-                }
+                shell.dispose();
+                return false;
+
             }
         }
 
@@ -107,7 +108,7 @@ public class Application implements IApplication {
                 dialog.open();
             }
         }
-
+        return true;
     }
 
     public boolean licenceAccept(Shell shell) {
