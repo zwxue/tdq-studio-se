@@ -6,7 +6,9 @@
  */
 package org.talend.dataquality.rules.impl;
 
+import java.util.List;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
@@ -69,8 +71,39 @@ public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
             case RulesPackage.INFERRED_DQ_RULE: return createInferredDQRule();
             case RulesPackage.WHERE_RULE: return createWhereRule();
             case RulesPackage.JOIN_ELEMENT: return createJoinElement();
+            case RulesPackage.PARSER_RULE: return createParserRule();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+        }
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Object createFromString(EDataType eDataType, String initialValue) {
+        switch (eDataType.getClassifierID()) {
+            case RulesPackage.TD_EXPRESSION_LIST:
+                return createTdExpressionListFromString(eDataType, initialValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+        }
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String convertToString(EDataType eDataType, Object instanceValue) {
+        switch (eDataType.getClassifierID()) {
+            case RulesPackage.TD_EXPRESSION_LIST:
+                return convertTdExpressionListToString(eDataType, instanceValue);
+            default:
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
         }
     }
 
@@ -122,6 +155,35 @@ public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
     public JoinElement createJoinElement() {
         JoinElementImpl joinElement = new JoinElementImpl();
         return joinElement;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public ParserRule createParserRule() {
+        ParserRuleImpl parserRule = new ParserRuleImpl();
+        return parserRule;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @SuppressWarnings("unchecked")
+    public List createTdExpressionListFromString(EDataType eDataType, String initialValue) {
+        return (List)super.createFromString(initialValue);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String convertTdExpressionListToString(EDataType eDataType, Object instanceValue) {
+        return super.convertToString(instanceValue);
     }
 
     /**

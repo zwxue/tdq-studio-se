@@ -19,6 +19,7 @@ package org.talend.dataquality.rules;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
@@ -1339,6 +1340,306 @@ public interface RulesPackage extends EPackage {
 
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.rules.impl.ParserRuleImpl <em>Parser Rule</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.rules.impl.ParserRuleImpl
+     * @see org.talend.dataquality.rules.impl.RulesPackageImpl#getParserRule()
+     * @generated
+     */
+    int PARSER_RULE = 5;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__NAME = DQ_RULE__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__VISIBILITY = DQ_RULE__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__CLIENT_DEPENDENCY = DQ_RULE__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__SUPPLIER_DEPENDENCY = DQ_RULE__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__CONSTRAINT = DQ_RULE__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__NAMESPACE = DQ_RULE__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__IMPORTER = DQ_RULE__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__STEREOTYPE = DQ_RULE__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__TAGGED_VALUE = DQ_RULE__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__DOCUMENT = DQ_RULE__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__DESCRIPTION = DQ_RULE__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__RESPONSIBLE_PARTY = DQ_RULE__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__ELEMENT_NODE = DQ_RULE__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__SET = DQ_RULE__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__RENDERED_OBJECT = DQ_RULE__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__VOCABULARY_ELEMENT = DQ_RULE__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__MEASUREMENT = DQ_RULE__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__CHANGE_REQUEST = DQ_RULE__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__DASDL_PROPERTY = DQ_RULE__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Categories</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__CATEGORIES = DQ_RULE__CATEGORIES;
+
+    /**
+     * The feature id for the '<em><b>Aggregated Definitions</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__AGGREGATED_DEFINITIONS = DQ_RULE__AGGREGATED_DEFINITIONS;
+
+    /**
+     * The feature id for the '<em><b>Label</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__LABEL = DQ_RULE__LABEL;
+
+    /**
+     * The feature id for the '<em><b>Sub Categories</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__SUB_CATEGORIES = DQ_RULE__SUB_CATEGORIES;
+
+    /**
+     * The feature id for the '<em><b>Sql Generic Expression</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__SQL_GENERIC_EXPRESSION = DQ_RULE__SQL_GENERIC_EXPRESSION;
+
+    /**
+     * The feature id for the '<em><b>Aggregate1arg Functions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__AGGREGATE1ARG_FUNCTIONS = DQ_RULE__AGGREGATE1ARG_FUNCTIONS;
+
+    /**
+     * The feature id for the '<em><b>Date1arg Functions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__DATE1ARG_FUNCTIONS = DQ_RULE__DATE1ARG_FUNCTIONS;
+
+    /**
+     * The feature id for the '<em><b>Characters Mapping</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__CHARACTERS_MAPPING = DQ_RULE__CHARACTERS_MAPPING;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition Parameter</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__INDICATOR_DEFINITION_PARAMETER = DQ_RULE__INDICATOR_DEFINITION_PARAMETER;
+
+    /**
+     * The feature id for the '<em><b>Criticality Level</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__CRITICALITY_LEVEL = DQ_RULE__CRITICALITY_LEVEL;
+
+    /**
+     * The feature id for the '<em><b>Elements</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE__ELEMENTS = DQ_RULE__ELEMENTS;
+
+    /**
+     * The number of structural features of the '<em>Parser Rule</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PARSER_RULE_FEATURE_COUNT = DQ_RULE_FEATURE_COUNT + 0;
+
+    /**
+     * The meta object id for the '<em>Td Expression List</em>' data type.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see java.util.List
+     * @see org.talend.dataquality.rules.impl.RulesPackageImpl#getTdExpressionList()
+     * @generated
+     */
+    int TD_EXPRESSION_LIST = 6;
+
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.rules.DQRule <em>DQ Rule</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1521,6 +1822,27 @@ public interface RulesPackage extends EPackage {
     EAttribute getJoinElement_ColumnAliasB();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.rules.ParserRule <em>Parser Rule</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Parser Rule</em>'.
+     * @see org.talend.dataquality.rules.ParserRule
+     * @generated
+     */
+    EClass getParserRule();
+
+    /**
+     * Returns the meta object for data type '{@link java.util.List <em>Td Expression List</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for data type '<em>Td Expression List</em>'.
+     * @see java.util.List
+     * @model instanceClass="java.util.List<org.talend.cwm.relational.TdExpression>"
+     * @generated
+     */
+    EDataType getTdExpressionList();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1687,6 +2009,26 @@ public interface RulesPackage extends EPackage {
          * @generated
          */
         EAttribute JOIN_ELEMENT__COLUMN_ALIAS_B = eINSTANCE.getJoinElement_ColumnAliasB();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.rules.impl.ParserRuleImpl <em>Parser Rule</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.rules.impl.ParserRuleImpl
+         * @see org.talend.dataquality.rules.impl.RulesPackageImpl#getParserRule()
+         * @generated
+         */
+        EClass PARSER_RULE = eINSTANCE.getParserRule();
+
+        /**
+         * The meta object literal for the '<em>Td Expression List</em>' data type.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see java.util.List
+         * @see org.talend.dataquality.rules.impl.RulesPackageImpl#getTdExpressionList()
+         * @generated
+         */
+        EDataType TD_EXPRESSION_LIST = eINSTANCE.getTdExpressionList();
 
     }
 

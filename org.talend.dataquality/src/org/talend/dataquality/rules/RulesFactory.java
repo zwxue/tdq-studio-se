@@ -82,6 +82,15 @@ public interface RulesFactory extends EFactory {
     JoinElement createJoinElement();
 
     /**
+     * Returns a new object of class '<em>Parser Rule</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Parser Rule</em>'.
+     * @generated
+     */
+    ParserRule createParserRule();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

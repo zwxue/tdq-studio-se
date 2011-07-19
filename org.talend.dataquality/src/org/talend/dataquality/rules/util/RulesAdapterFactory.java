@@ -98,6 +98,10 @@ public class RulesAdapterFactory extends AdapterFactoryImpl {
                 return createJoinElementAdapter();
             }
             @Override
+            public Adapter caseParserRule(ParserRule object) {
+                return createParserRuleAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -196,6 +200,20 @@ public class RulesAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createJoinElementAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.ParserRule <em>Parser Rule</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.ParserRule
+     * @generated
+     */
+    public Adapter createParserRuleAdapter() {
         return null;
     }
 

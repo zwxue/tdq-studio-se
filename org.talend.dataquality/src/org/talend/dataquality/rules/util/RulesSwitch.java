@@ -141,6 +141,16 @@ public class RulesSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case RulesPackage.PARSER_RULE: {
+                ParserRule parserRule = (ParserRule)theEObject;
+                T result = caseParserRule(parserRule);
+                if (result == null) result = caseDQRule(parserRule);
+                if (result == null) result = caseIndicatorDefinition(parserRule);
+                if (result == null) result = caseModelElement(parserRule);
+                if (result == null) result = caseElement(parserRule);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -217,6 +227,21 @@ public class RulesSwitch<T> {
      * @generated
      */
     public T caseJoinElement(JoinElement object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Parser Rule</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Parser Rule</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseParserRule(ParserRule object) {
         return null;
     }
 

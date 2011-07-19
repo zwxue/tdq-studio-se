@@ -1174,6 +1174,18 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnAliasA" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnAliasB" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ParserRule" eSuperTypes="#//rules/DQRule">
+      <eOperations name="addExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean">
+        <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+        <eParameters name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+        <eParameters name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      </eOperations>
+      <eOperations name="getExpression" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression">
+        <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String"/>
+      </eOperations>
+      <eOperations name="getExpression" eType="#//rules/TdExpressionList"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EDataType" name="TdExpressionList" instanceTypeName="java.util.List&lt;org.talend.cwm.relational.TdExpression>"/>
   </eSubpackages>
   <eSubpackages name="properties" nsURI="http://dataquality.properties" nsPrefix="dataquality.properties">
     <eClassifiers xsi:type="ecore:EClass" name="TDQAnalysisItem" eSuperTypes="../../org.talend.model/model/properties.ecore#//TDQItem">

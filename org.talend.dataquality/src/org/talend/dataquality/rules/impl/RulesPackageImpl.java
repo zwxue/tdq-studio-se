@@ -6,12 +6,17 @@
  */
 package org.talend.dataquality.rules.impl;
 
+import java.util.List;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.cwm.relational.RelationalPackage;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.category.CategoryPackage;
@@ -41,6 +46,7 @@ import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.InferredDQRule;
 import org.talend.dataquality.rules.JoinElement;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.SpecifiedDQRule;
@@ -90,6 +96,20 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
     private EClass joinElementEClass = null;
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass parserRuleEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EDataType tdExpressionListEDataType = null;
+
+    /**
      * Creates an instance of the model <b>Package</b>, registered with
      * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
      * package URI value.
@@ -137,6 +157,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
 
         // Initialize simple dependencies
         PropertiesPackage.eINSTANCE.eClass();
+        XMLTypePackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
         AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
@@ -352,6 +373,24 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getParserRule() {
+        return parserRuleEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EDataType getTdExpressionList() {
+        return tdExpressionListEDataType;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public RulesFactory getRulesFactory() {
         return (RulesFactory)getEFactoryInstance();
     }
@@ -396,6 +435,11 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         createEAttribute(joinElementEClass, JOIN_ELEMENT__TABLE_ALIAS_B);
         createEAttribute(joinElementEClass, JOIN_ELEMENT__COLUMN_ALIAS_A);
         createEAttribute(joinElementEClass, JOIN_ELEMENT__COLUMN_ALIAS_B);
+
+        parserRuleEClass = createEClass(PARSER_RULE);
+
+        // Create data types
+        tdExpressionListEDataType = createEDataType(TD_EXPRESSION_LIST);
     }
 
     /**
@@ -424,6 +468,8 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         // Obtain other dependent packages
         DefinitionPackage theDefinitionPackage = (DefinitionPackage)EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI);
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+        XMLTypePackage theXMLTypePackage = (XMLTypePackage)EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
+        RelationalPackage theRelationalPackage = (RelationalPackage)EPackage.Registry.INSTANCE.getEPackage(RelationalPackage.eNS_URI);
 
         // Create type parameters
 
@@ -434,6 +480,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         specifiedDQRuleEClass.getESuperTypes().add(this.getDQRule());
         inferredDQRuleEClass.getESuperTypes().add(this.getDQRule());
         whereRuleEClass.getESuperTypes().add(this.getSpecifiedDQRule());
+        parserRuleEClass.getESuperTypes().add(this.getDQRule());
 
         // Initialize classes and features; add operations and parameters
         initEClass(dqRuleEClass, DQRule.class, "DQRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -457,6 +504,21 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         initEAttribute(getJoinElement_TableAliasB(), ecorePackage.getEString(), "tableAliasB", null, 0, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getJoinElement_ColumnAliasA(), ecorePackage.getEString(), "columnAliasA", null, 0, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getJoinElement_ColumnAliasB(), ecorePackage.getEString(), "columnAliasB", null, 0, 1, JoinElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(parserRuleEClass, ParserRule.class, "ParserRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        EOperation op = addEOperation(parserRuleEClass, theXMLTypePackage.getBoolean(), "addExpression", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theXMLTypePackage.getString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theXMLTypePackage.getString(), "type", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theXMLTypePackage.getString(), "value", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        op = addEOperation(parserRuleEClass, theRelationalPackage.getTdExpression(), "getExpression", 0, 1, IS_UNIQUE, IS_ORDERED);
+        addEParameter(op, theXMLTypePackage.getString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        addEOperation(parserRuleEClass, this.getTdExpressionList(), "getExpression", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        // Initialize data types
+        initEDataType(tdExpressionListEDataType, List.class, "TdExpressionList", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<org.talend.cwm.relational.TdExpression>");
 
         // Create resource
         createResource(eNS_URI);
