@@ -359,7 +359,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                 treefViewer = createManageTreeViewer(this);
             }
 
-            Control buttonComposite = createSelectionButtons(this, isSelect);
+            Control buttonComposite = createButtons(this, isSelect);
             GridData data = new GridData(GridData.FILL_BOTH);
             data.widthHint = convertWidthInCharsToPixels(fWidth);
             data.heightHint = convertHeightInCharsToPixels(fHeight);
@@ -451,7 +451,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
      * @param composite the parent composite
      * @return Composite the composite the buttons were created in.
      */
-    protected Composite createSelectionButtons(Composite composite, boolean isSelect) {
+    protected Composite createButtons(Composite composite, final boolean isSelect) {
         Composite buttonComposite = new Composite(composite, SWT.RIGHT);
         GridLayout layout = new GridLayout();
         layout.numColumns = 0;
@@ -463,40 +463,51 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         data.grabExcessHorizontalSpace = true;
         buttonComposite.setLayoutData(data);
         // MOD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
-        if (isSelect) {
-            Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID,
-                    WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);
-            SelectionListener listener = new SelectionAdapter() {
-
-                public void widgetSelected(SelectionEvent e) {
-                    Object[] viewerElements = fContentProvider.getElements(fInput);
-                    if (fContainerMode) {
+        Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID,
+                WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);
+        SelectionListener listener = new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                Object[] viewerElements = fContentProvider.getElements(fInput);
+                if (fContainerMode) {
+                    if (isSelect) {
                         fViewer.setCheckedElements(viewerElements);
                     } else {
-                        for (int i = 0; i < viewerElements.length; i++) {
+                        fManageViewer.setCheckedElements(viewerElements);
+                    }
+                } else {
+                    for (int i = 0; i < viewerElements.length; i++) {
+                        if (isSelect) {
                             fViewer.setSubtreeChecked(viewerElements[i], true);
+                        } else {
+                            fManageViewer.setSubtreeChecked(viewerElements[i], true);
                         }
                     }
-                    updateOKStatus();
                 }
-            };
-            selectButton.addSelectionListener(listener);
-            Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID,
-                    WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);
-            listener = new SelectionAdapter() {
+                updateOKStatus();
+            }
+        };
+        selectButton.addSelectionListener(listener);
 
-                public void widgetSelected(SelectionEvent e) {
+        Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID,
+                WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);
+        listener = new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                if (isSelect) {
                     fViewer.setCheckedElements(new Object[0]);
-                    updateOKStatus();
+                } else {
+                    fManageViewer.setCheckedElements(new Object[0]);
                 }
-            };
-            deselectButton.addSelectionListener(listener);
-        } else {
+                updateOKStatus();
+            }
+        };
+        deselectButton.addSelectionListener(listener);
+
+        if (!isSelect) {
             final Composite dialogComposite = composite;
 
             Button addButton = createButton(buttonComposite, 22,
                     DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.add"), false); //$NON-NLS-1$
-            SelectionListener listener = new SelectionAdapter() {
+            SelectionListener listenerAdd = new SelectionAdapter() {
 
                 public void widgetSelected(SelectionEvent e) {
                     FileDialog dialog = new FileDialog(dialogComposite.getShell(), SWT.NONE | SWT.MULTI);
@@ -542,11 +553,11 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                     updateOKStatus();
                 }
             };
-            addButton.addSelectionListener(listener);
+            addButton.addSelectionListener(listenerAdd);
+
             Button delButton = createButton(buttonComposite, 23, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"),//$NON-NLS-3$
                     false);
-            listener = new SelectionAdapter() {
-
+            SelectionListener listenerDel = new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent e) {
                     for (Object delFile : fManageViewer.getCheckedElements()) {
                         // Object delFile = manageSelectList.get(i);
@@ -572,7 +583,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                 }
 
             };
-            delButton.addSelectionListener(listener);
+            delButton.addSelectionListener(listenerDel);
         }
 
         return buttonComposite;
