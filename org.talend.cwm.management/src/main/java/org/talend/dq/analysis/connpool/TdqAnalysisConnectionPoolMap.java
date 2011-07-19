@@ -15,7 +15,9 @@ package org.talend.dq.analysis.connpool;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataquality.analysis.Analysis;
 
 /**
@@ -89,18 +91,29 @@ public final class TdqAnalysisConnectionPoolMap {
     }
 
     /**
-     * DOC xqliu Comment method "clearPools".
+     * DOC xqliu Comment method "closePools".
      */
-    public synchronized void clearPools() {
+    public synchronized void closePools() {
+        Set<Connection> keySet = connectionPools.keySet();
+        for (Connection key : keySet) {
+            TdqAnalysisConnectionPool tdqAnalysisConnectionPool = connectionPools.get(key);
+            if (tdqAnalysisConnectionPool != null) {
+                tdqAnalysisConnectionPool.closeConnectionPool();
+            }
+        }
         connectionPools.clear();
     }
 
     /**
-     * DOC xqliu Comment method "clearPool".
+     * DOC xqliu Comment method "closePool".
      * 
      * @param key
      */
-    public synchronized void clearPool(org.talend.core.model.metadata.builder.connection.Connection key) {
-        connectionPools.remove(key);
+    public synchronized void closePool(org.talend.core.model.metadata.builder.connection.Connection key) {
+        TdqAnalysisConnectionPool tdqAnalysisConnectionPool = connectionPools.get(key);
+        if (tdqAnalysisConnectionPool != null) {
+            tdqAnalysisConnectionPool.closeConnectionPool();
+            connectionPools.remove(key);
+        }
     }
 }

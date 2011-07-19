@@ -303,13 +303,15 @@ public class TdqAnalysisConnectionPool {
      * @param conn
      */
     public synchronized void closeConnection(Connection conn) {
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            log.debug(e, e);
-        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                log.debug(e);
+            }
 
-        showConnectionInfo();
+            showConnectionInfo();
+        }
     }
 
     /**

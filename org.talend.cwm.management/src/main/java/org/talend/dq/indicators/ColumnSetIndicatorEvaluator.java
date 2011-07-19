@@ -94,7 +94,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     protected TdXmlSchema tdXmlDocument;
 
     protected MdmWebserviceConnection mdmWebserviceConn;
-    
+
     private boolean isBablyFormFlatFile = false;
 
     public ColumnSetIndicatorEvaluator(Analysis analysis) {
@@ -317,8 +317,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 continue;
             }
             String[] rowValues = csvReader.getValues();
-            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord + 1, analysisElementList,
-                    fieldSeparator);
+            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord + 1, analysisElementList, fieldSeparator);
 
         }
     }
@@ -333,8 +332,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      * @param separator
      */
     private void orgnizeObjectsToHandel(String fileName, String[] rowValues, long currentRow,
-            List<ModelElement> analysisElementList,
-            String separator) {
+            List<ModelElement> analysisElementList, String separator) {
         EList<Object> objectLs = new BasicEList<Object>();
         MetadataColumn mColumn = null;
         Object object = null;
@@ -437,7 +435,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
      * DOC qiongli Comment method "handleObjects".
      * 
      * @param objectLs
@@ -513,13 +510,11 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                         }
                     }
                 }
-
             }
         }
     }
 
     /**
-     * 
      * handle Objects and store data for delimited file .
      * 
      * @param objectLs
@@ -527,8 +522,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      * @param metadataColumn is one of analysedElements.it is used to get its Table then get the table's columns.
      */
     private void handleObjects(EList<Object> objectLs, String[] rowValues, List<MetadataColumn> columnList) {
-        if (objectLs.size() == 0)
+        if (objectLs.size() == 0) {
             return;
+        }
 
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
@@ -665,7 +661,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
      * store data which from 'simpleIndicator.getListRows()' except RowCountIndicator.
      * 
      * @param indicToRowMap

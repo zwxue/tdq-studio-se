@@ -326,9 +326,14 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         // ResultSet.CONCUR_READ_ONLY,
         // ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
-        Statement statement = getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-
         long totalRowCount = 0;
+        java.sql.Connection conn = getConnection();
+        if (conn == null || conn.isClosed()) {
+            return totalRowCount;
+        }
+
+        Statement statement = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+
         // not needed here statement.setFetchSize(fetchSize);
         try {
             if (log.isInfoEnabled()) {

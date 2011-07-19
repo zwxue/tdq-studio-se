@@ -32,6 +32,8 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
 
     private static Logger log = Logger.getLogger(AbstactSchemaAnalysisExecutor.class);
 
+    private static final boolean POOLED_CONNECTION = true;
+
     /*
      * (non-Javadoc)
      * 
@@ -59,7 +61,12 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
         // reset the connection pool before run this analysis
         resetConnectionPool(analysis, analysisDataProvider);
         // get a pooled connection
-        TypedReturnCode<Connection> connection = getPooledConnection(analysis, analysisDataProvider);
+        TypedReturnCode<Connection> connection = null;
+        if (POOLED_CONNECTION) {
+            connection = getPooledConnection(analysis, analysisDataProvider);
+        } else {
+            connection = getConnection(analysis);
+        }
 
         if (!connection.isOk()) {
             log.error(connection.getMessage());
@@ -70,7 +77,7 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
         // set it into the evaluator
         eval.setConnection(connection.getObject());
         // use pooled connection
-        eval.setPooledConnection(true);
+        eval.setPooledConnection(POOLED_CONNECTION);
 
         // set filters
         String tablePattern = getTablePattern(analysis.getParameters());
@@ -82,8 +89,10 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
         boolean closeAtTheEnd = true;
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
 
-        // release the pooled connection
-        releasePooledConnection(analysis, analysisDataProvider, connection.getObject(), true);
+        if (POOLED_CONNECTION) {
+            // release the pooled connection
+            releasePooledConnection(analysis, analysisDataProvider, connection.getObject(), true);
+        }
 
         if (!rc.isOk()) {
             log.warn(rc.getMessage());

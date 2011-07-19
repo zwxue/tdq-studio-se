@@ -64,7 +64,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
     protected boolean isMdm = false;
 
     /**
-     * DOC yyi 2011-02-24 17871:delimitefile
+     * DOC yyi 2011-02-24 17871:delimitefile.
      */
     public ColumnSetAnalysisExecutor(boolean isDelimitedFile, boolean isMdm) {
         super();
@@ -112,7 +112,6 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
             eval.setMdmWebserviceConn(mdmReturnObj.getObject());
         } else if (!isDelimitedFile) {
-
             TypedReturnCode<java.sql.Connection> connection = getConnection(analysis);
             if (!connection.isOk()) {
                 log.error(connection.getMessage());
@@ -334,5 +333,4 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         rc.setMessage(dataProvider.getPathname());
         return rc;
     }
-
 }

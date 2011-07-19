@@ -29,7 +29,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor implements Runnable {
 
     protected Connection connection;
-    
+
     protected ConnectionPool connPool;
 
     protected Map<ModelElement, List<Indicator>> elementToIndicator;
@@ -112,12 +112,10 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
             }
         } catch (SQLException e) {
             this.setException(e);
-        }
-        finally {
+        } finally {
             // MOD gdbu 2011-6-10 bug : 21273
             connPool.returnConnection(connection);
             // ~21273
         }
     }
-
 }
