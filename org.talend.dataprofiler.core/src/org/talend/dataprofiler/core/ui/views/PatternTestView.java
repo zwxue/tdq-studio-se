@@ -158,7 +158,7 @@ public class PatternTestView extends ViewPart {
         buttonJava = new Button(coboCom, SWT.RADIO);
         buttonJava.setText(ExecutionLanguage.JAVA.getLiteral());
         data = new GridData();
-        data.widthHint = 120;
+        // data.widthHint = 50;
         buttonJava.setLayoutData(data);
         buttonJava.addSelectionListener(new SelectionAdapter() {
 
@@ -167,6 +167,7 @@ public class PatternTestView extends ViewPart {
                 isJavaEngine = true;
                 sqlButton.setEnabled(false);
                 dbCombo.setEnabled(false);
+                functionNameText.setEnabled(false);
             }
 
         });
@@ -179,6 +180,7 @@ public class PatternTestView extends ViewPart {
                 isJavaEngine = false;
                 sqlButton.setEnabled(true);
                 dbCombo.setEnabled(true);
+                functionNameText.setEnabled(true);
             }
 
         });//$NON-NLS-1$
@@ -188,7 +190,7 @@ public class PatternTestView extends ViewPart {
         dbCombo = new CCombo(coboCom, SWT.DROP_DOWN | SWT.BORDER);
         dbCombo.setEditable(false);
         data = new GridData();
-        data.widthHint = 100;
+        data.widthHint = 90;
         // data.heightHint = 100;
         dbCombo.setLayoutData(data);
 
@@ -199,7 +201,7 @@ public class PatternTestView extends ViewPart {
         functionNameText.setText(PluginConstant.EMPTY_STRING);
 
         GridData functionNameTextGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-        functionNameTextGD.widthHint = 180;
+        functionNameTextGD.widthHint = 100;
         functionNameText.setLayoutData(functionNameTextGD);
 
         functionNameText.setVisible(false);
