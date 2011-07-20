@@ -30,7 +30,7 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
 
     protected Connection connection;
 
-    protected ConnectionPool connPool;
+    // protected ConnectionPool connPool;
 
     protected Map<ModelElement, List<Indicator>> elementToIndicator;
 
@@ -64,14 +64,26 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
         return inst;
     }
 
+    // public static ColumnAnalysisSqlParallelExecutor createInstance(ColumnAnalysisSqlExecutor parent, Connection
+    // connection,
+    // Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator, ConnectionPool connPool) {
+    // ColumnAnalysisSqlParallelExecutor inst = createInstance(parent);
+    // if (inst != null) {
+    // inst.connection = connection;
+    // inst.elementToIndicator = elementToIndicator;
+    // inst.indicator = indicator;
+    // inst.connPool = connPool;
+    // }
+    // return inst;
+    // }
+
     public static ColumnAnalysisSqlParallelExecutor createInstance(ColumnAnalysisSqlExecutor parent, Connection connection,
-            Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator, ConnectionPool connPool) {
+            Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator) {
         ColumnAnalysisSqlParallelExecutor inst = createInstance(parent);
         if (inst != null) {
             inst.connection = connection;
             inst.elementToIndicator = elementToIndicator;
             inst.indicator = indicator;
-            inst.connPool = connPool;
         }
         return inst;
     }
@@ -114,7 +126,7 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
             this.setException(e);
         } finally {
             // MOD gdbu 2011-6-10 bug : 21273
-            connPool.returnConnection(connection);
+            // connPool.returnConnection(connection); // return the connection in the ExecutiveAnalysisJob.run()
             // ~21273
         }
     }

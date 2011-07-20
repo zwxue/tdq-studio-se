@@ -92,8 +92,19 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             eval.storeIndicator(columnName, indicator);
         }
 
+        // get the dataprovider of the analysis
+        org.talend.core.model.metadata.builder.connection.Connection analysisDataProvider = getAnalysisDataProvider(analysis);
+        // reset the connection pool before run this analysis
+        resetConnectionPool(analysis, analysisDataProvider);
+
         // open a connection
-        TypedReturnCode<java.sql.Connection> connection = getConnection(analysis);
+        TypedReturnCode<java.sql.Connection> connection = null;
+        if (POOLED_CONNECTION) {
+            connection = getPooledConnection(analysis, analysisDataProvider);
+        } else {
+            connection = getConnection(analysis);
+        }
+
         if (!connection.isOk()) {
             log.error(connection.getMessage());
             this.errorMessage = connection.getMessage();
@@ -102,6 +113,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         // set it into the evaluator
         eval.setConnection(connection.getObject());
+        // use pooled connection
+        eval.setPooledConnection(POOLED_CONNECTION);
+
         // when to close connection
         boolean closeAtTheEnd = true;
         Package catalog = schemata.values().iterator().next();
@@ -109,6 +123,12 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             log.warn(Messages.getString("ColumnAnalysisExecutor.FAILEDTOSELECTCATALOG", catalog.getName()));//$NON-NLS-1$
         }
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
+
+        if (POOLED_CONNECTION) {
+            // release the pooled connection
+            releasePooledConnection(analysis, analysisDataProvider, connection.getObject(), true);
+        }
+
         if (!rc.isOk()) {
             log.warn(rc.getMessage());
             this.errorMessage = rc.getMessage();

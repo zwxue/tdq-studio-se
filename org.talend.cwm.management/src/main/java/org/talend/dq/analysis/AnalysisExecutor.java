@@ -61,6 +61,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     protected Boolean parallelExeStatus = Boolean.TRUE;
 
+    protected static final boolean POOLED_CONNECTION = Boolean.TRUE;
+
     /**
      * use {@link #dbms()} to access this attribute.
      */
@@ -327,6 +329,22 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
+     * DOC xqliu Comment method "resetConnectionPool".
+     * 
+     * @param analysis
+     */
+    protected void resetConnectionPool(Analysis analysis) {
+        this.getConnectionPool(analysis).closeConnectionPool();
+    }
+
+    /**
+     * DOC xqliu Comment method "resetConnectionPool".
+     */
+    protected void resetConnectionPool() {
+        this.resetConnectionPool(cachedAnalysis);
+    }
+
+    /**
      * DOC xqliu Comment method "getPooledConnection".
      * 
      * @param analysis
@@ -385,6 +403,77 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         if (closeConn) {
             connectionPool.closeConnection(connection);
             connectionPool.removeConnection(connection);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "releasePooledConnection".
+     * 
+     * @param connection
+     * @param closeConn
+     */
+    protected void releasePooledConnection(java.sql.Connection connection, boolean closeConn) {
+        TdqAnalysisConnectionPool connectionPool = getConnectionPool();
+        if (connectionPool != null) {
+            connectionPool.returnConnection(connection);
+            if (closeConn) {
+                connectionPool.closeConnection(connection);
+                connectionPool.removeConnection(connection);
+            }
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "releasePooledConnection".
+     * 
+     * @param connection
+     * @param closeConn
+     */
+    protected void releasePooledConnection(Analysis analysis, java.sql.Connection connection, boolean closeConn) {
+        TdqAnalysisConnectionPool connectionPool = getConnectionPool(analysis);
+        if (connectionPool != null) {
+            connectionPool.returnConnection(connection);
+            if (closeConn) {
+                connectionPool.closeConnection(connection);
+                connectionPool.removeConnection(connection);
+            }
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "returnPooledConnection".
+     * 
+     * @param connection
+     * @param closeConn
+     */
+    protected void returnPooledConnection(java.sql.Connection connection) {
+        TdqAnalysisConnectionPool connectionPool = getConnectionPool();
+        if (connectionPool != null) {
+            connectionPool.returnConnection(connection);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getConnectionPool".
+     * 
+     * @return
+     */
+    protected TdqAnalysisConnectionPool getConnectionPool() {
+        return getConnectionPool(cachedAnalysis);
+    }
+
+    /**
+     * DOC xqliu Comment method "getConnectionPool".
+     * 
+     * @param analysis
+     * @return
+     */
+    protected TdqAnalysisConnectionPool getConnectionPool(Analysis analysis) {
+        Connection analysisDataProvider = getAnalysisDataProvider(analysis);
+        if (analysisDataProvider != null) {
+            return getConnectionPool(analysis, analysisDataProvider);
+        } else {
+            return null;
         }
     }
 

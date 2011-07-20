@@ -155,9 +155,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             // MOD qiongli 2011-7-8 bug 22520,statement for sqlLite
             Connection dataManager = (Connection) analysis.getContext().getConnection();
             if (ConnectionUtils.isSqlite(dataManager)) {
-                statement = connection.createStatement();
+                statement = getConnection().createStatement();
             } else {
-                statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                statement = getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             }
             statement.setFetchSize(fetchSize);
             if (continueRun()) {
@@ -202,7 +202,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             if (statement != null) {
                 statement.close();
             }
-            connection.close();
+            getConnection().close();
         }
 
         return ok;

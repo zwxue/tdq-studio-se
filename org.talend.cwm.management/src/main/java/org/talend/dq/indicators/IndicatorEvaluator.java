@@ -83,9 +83,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // MOD qiongli 2011-6-28 bug 22520,statement for sqlLite
         Connection dataManager = (Connection) analysis.getContext().getConnection();
         if (ConnectionUtils.isSqlite(dataManager)) {
-            statement = connection.createStatement();
+            statement = getConnection().createStatement();
         } else {
-            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            statement = getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         }
         // ~10630
         statement.setFetchSize(fetchSize);
@@ -225,12 +225,13 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
             }
         }
+
         // --- release resultset
         resultSet.close();
         // --- release statement
         statement.close();
         // --- close connection
-        connection.close();
+        getConnection().close();
 
         return ok;
     }

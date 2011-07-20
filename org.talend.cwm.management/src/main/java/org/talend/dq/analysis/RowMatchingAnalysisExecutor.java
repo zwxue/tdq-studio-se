@@ -304,10 +304,28 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;
-        TypedReturnCode<Connection> trc = this.getConnection(analysis);
+
+        // reset the connection pool before run this analysis
+        resetConnectionPool(analysis);
+
+        // TypedReturnCode<Connection> trc = this.getConnection(analysis);
+        // if (!trc.isOk()) {
+        //            return traceError(Messages.getString("FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(),//$NON-NLS-1$
+        // trc.getMessage()));
+        // }
+
+        TypedReturnCode<java.sql.Connection> trc = null;
+        if (POOLED_CONNECTION) {
+            trc = getPooledConnection(analysis);
+        } else {
+            trc = getConnection(analysis);
+        }
+
         if (!trc.isOk()) {
-            return traceError(Messages.getString("FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(),//$NON-NLS-1$
-                    trc.getMessage()));
+            log.error(trc.getMessage());
+            this.errorMessage = trc.getMessage();
+            return traceError(Messages.getString(
+                    "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
         }
 
         Connection connection = trc.getObject();
@@ -335,17 +353,21 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
             }
 
-            connection.close();
-
+            if (POOLED_CONNECTION) {
+                releasePooledConnection(analysis, connection, true);
+            } else {
+                connection.close();
+            }
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
         } catch (AnalysisExecutionException e) {
             ok = traceError(e.getMessage());
-        } finally {
-            ConnectionUtils.closeConnection(connection);
         }
+        // finally {
+        // ConnectionUtils.closeConnection(connection);
+        // }
         return ok;
     }
 

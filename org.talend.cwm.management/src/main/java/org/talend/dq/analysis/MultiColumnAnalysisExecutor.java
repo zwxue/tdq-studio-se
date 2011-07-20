@@ -210,7 +210,6 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         ColumnSet set = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
         MetadataTable mdColumn = SwitchHelpers.METADATA_TABLE_SWITCH.doSwitch(owner);
 
-
         String tableName = PluginConstant.EMPTY_STRING;
         ModelElement columnSetOwner = null;
         if (null == set && mdColumn != null) {
@@ -264,15 +263,33 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;
-        TypedReturnCode<Connection> trc = this.getConnection(analysis);
+
+        // reset the connection pool before run this analysis
+        resetConnectionPool(analysis);
+
+        // TypedReturnCode<Connection> trc = this.getConnection(analysis);
+        // if (!trc.isOk()) {
+        // return traceError(Messages.getString(
+        //                    "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
+        // }
+        //
+
+        TypedReturnCode<java.sql.Connection> trc = null;
+        if (POOLED_CONNECTION) {
+            trc = getPooledConnection(analysis);
+        } else {
+            trc = getConnection(analysis);
+        }
+
         if (!trc.isOk()) {
+            log.error(trc.getMessage());
+            this.errorMessage = trc.getMessage();
             return traceError(Messages.getString(
                     "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
         }
 
         Connection connection = trc.getObject();
         try {
-
             // execute the sql statement for each indicator
             EList<Indicator> indicators = analysis.getResults().getIndicators();
             for (Indicator indicator : indicators) {
@@ -292,15 +309,19 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
             }
 
-            connection.close();
-
+            if (POOLED_CONNECTION) {
+                releasePooledConnection(analysis, connection, true);
+            } else {
+                connection.close();
+            }
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
-        } finally {
-            ConnectionUtils.closeConnection(connection);
         }
+        // finally {
+        // ConnectionUtils.closeConnection(connection);
+        // }
         return ok;
     }
 

@@ -192,10 +192,15 @@ public class TdqAnalysisConnectionPool {
         while (enumerate.hasMoreElements()) {
             PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
             try {
-                if (!pConn.isBusy() && !pConn.getConnection().isClosed()) {
-                    conn = pConn.getConnection();
-                    pConn.setBusy(true);
-                    break;
+                if (!pConn.isBusy()) {
+                    Connection tempConn = pConn.getConnection();
+                    if (tempConn.isClosed()) {
+                        removeConnection(tempConn);
+                    } else {
+                        conn = tempConn;
+                        pConn.setBusy(true);
+                        break;
+                    }
                 }
             } catch (Exception e) {
                 log.debug(e);
@@ -235,11 +240,16 @@ public class TdqAnalysisConnectionPool {
             int i = 0;
             Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
             try {
+                boolean hasElement = false;
                 while (enumerate.hasMoreElements()) {
+                    hasElement = true;
                     PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
                     i++;
-                    System.out.println("pConn: id=[" + i + "] conn=[" + pConn.getConnection().toString() + "] [closed="
+                    log.info("pConn: id=[" + i + "] conn=[" + pConn.getConnection().toString() + "] [closed="
                             + pConn.getConnection().isClosed() + "] busy=[" + pConn.isBusy() + "]");
+                }
+                if (!hasElement) {
+                    log.info("the connection pool is empty!");
                 }
             } catch (Exception e) {
                 log.debug(e);
@@ -305,7 +315,9 @@ public class TdqAnalysisConnectionPool {
     public synchronized void closeConnection(Connection conn) {
         if (conn != null) {
             try {
-                conn.close();
+                if (!conn.isClosed()) {
+                    conn.close();
+                }
             } catch (Exception e) {
                 log.debug(e);
             }

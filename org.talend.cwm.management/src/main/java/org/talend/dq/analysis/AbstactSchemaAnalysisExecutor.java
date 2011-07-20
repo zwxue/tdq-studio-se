@@ -32,8 +32,6 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
 
     private static Logger log = Logger.getLogger(AbstactSchemaAnalysisExecutor.class);
 
-    private static final boolean POOLED_CONNECTION = true;
-
     /*
      * (non-Javadoc)
      * 

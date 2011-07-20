@@ -103,6 +103,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
         }
 
+        TypedReturnCode<java.sql.Connection> connection = null;
         // MOD yyi 2011-02-22 17871:delimitefile
         if (isMdm) {
             TypedReturnCode<MdmWebserviceConnection> mdmReturnObj = getMdmConnection(analysis);
@@ -112,7 +113,12 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
             eval.setMdmWebserviceConn(mdmReturnObj.getObject());
         } else if (!isDelimitedFile) {
-            TypedReturnCode<java.sql.Connection> connection = getConnection(analysis);
+            if (POOLED_CONNECTION) {
+                connection = getPooledConnection(analysis);
+            } else {
+                connection = getConnection(analysis);
+            }
+
             if (!connection.isOk()) {
                 log.error(connection.getMessage());
                 this.errorMessage = connection.getMessage();
@@ -121,11 +127,20 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
             // set it into the evaluator
             eval.setConnection(connection.getObject());
+            // use pooled connection
+            eval.setPooledConnection(POOLED_CONNECTION);
+
         }
 
         // when to close connection
         boolean closeAtTheEnd = true;
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
+
+        if (POOLED_CONNECTION) {
+            // release the pooled connection
+            releasePooledConnection(connection.getObject(), true);
+        }
+
         if (!rc.isOk()) {
             log.warn(rc.getMessage());
             this.errorMessage = rc.getMessage();
