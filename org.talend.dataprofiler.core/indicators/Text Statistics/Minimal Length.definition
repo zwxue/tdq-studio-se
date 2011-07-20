@@ -8,4 +8,5 @@
   <sqlGenericExpression xmi:id="_-VcW1YqnEd-SocVM_rHvUg" body="SELECT MIN(LEN(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
   <sqlGenericExpression xmi:id="_-VcW1oqnEd-SocVM_rHvUg" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
   <sqlGenericExpression xmi:id="_-VcW14qnEd-SocVM_rHvUg" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Ingres"/>
+  <sqlGenericExpression xmi:id="_-VcW15qnEd-SocVM_rHvUg" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQLite"/>
 </dataquality.indicators.definition:IndicatorDefinition>

@@ -8,4 +8,5 @@
   <sqlGenericExpression xmi:id="_-hzp9pSOEd-TE5ti6XNR2Q" body="SELECT MAX(LEN(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Microsoft SQL Server"/>
   <sqlGenericExpression xmi:id="_-hzp95SOEd-TE5ti6XNR2Q" body="SELECT MAX(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
   <sqlGenericExpression xmi:id="_-hzp-JSOEd-TE5ti6XNR2Q" body="SELECT MAX(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Ingres"/>
+  <sqlGenericExpression xmi:id="_-hzp-QSOEd-TE5ti6XNR2Q" body="SELECT MAX(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQLite"/>
 </dataquality.indicators.definition:IndicatorDefinition>

@@ -57,4 +57,16 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
                 + ",'s','a'),'t','a'),'u','a'),'v','a'),'w','a'),'x','a'),'y','a')" //$NON-NLS-1$
                 + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9')"; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    // ADD by msjian 2011-7-20 22517: no such function: CHAR_LENGTH for SQLite
+    /**
+     * Method "charLength".
+     * 
+     * @param columnName
+     * @return CHAR_LENGTH(columnName)
+     */
+    @Override
+    public String charLength(String columnName) {
+        return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

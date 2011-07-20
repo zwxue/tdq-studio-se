@@ -1240,6 +1240,12 @@
            version="4.1.0">
      </workspacetask>
      <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateTextStatisticsIndicatorsForSQLiteTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateTextStatisticsIndicatorsForSQLiteTask"
+           name="Update TextStatistics Indicators For SQLite Task"
+           version="5.0.0">
+     </workspacetask>
+     <workspacetask
            class="org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask"
            name="Update analysis and DQRule File After Merge Connection"

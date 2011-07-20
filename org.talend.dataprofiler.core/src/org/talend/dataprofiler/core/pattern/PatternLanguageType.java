@@ -68,11 +68,12 @@ public enum PatternLanguageType {
     // MOD by zshen, this will effect for the indicatorDefinition so add new method to return differents result.
     MDM(12, SupportDBUrlType.MDM.getLanguage(), SupportDBUrlType.MDM.getLanguage(), PatternToExcelEnum.MDMRegexp),
 
-    // SQLITE3(
-    // 9,
-    // SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
-    // SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
-    // PatternToExcelEnum.SQLite3Regexp),
+    // ADD by msjian 2011-7-20 22517: no such function: CHAR_LENGTH for SQLite
+    SQLITE3(
+            9,
+            SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
+            SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage(),
+            PatternToExcelEnum.SQLite3Regexp),
     // MOD scorreia 2008-12-16 removed "generic jdbc" because its meaning is the same as ALL_DATABASE_TYPE
     TERADATA(
              10,
