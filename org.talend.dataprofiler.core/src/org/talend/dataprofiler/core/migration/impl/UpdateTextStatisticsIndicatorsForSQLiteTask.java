@@ -49,7 +49,7 @@ public class UpdateTextStatisticsIndicatorsForSQLiteTask extends AbstractWorksap
 
     private static final String MINIMAL_LENGTH_WITH_NULL = "Minimal Length With Null"; //$NON-NLS-1$
 
-    private static final String SQLite = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
+    private static final String SQLITE = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
     
     /*
      * (non-Javadoc)
@@ -76,40 +76,40 @@ public class UpdateTextStatisticsIndicatorsForSQLiteTask extends AbstractWorksap
                 && definition5 != null && definition6 != null && definition7 != null && definition8 != null
                 && definition9 != null && definition10 != null && definition11 != null) {
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition0, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition0, SQLITE,
                     "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition1, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition1, SQLITE,
                     "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition2, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition2, SQLITE,
                     "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition3, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition3, SQLITE,
                     "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition4, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition4, SQLITE,
                     "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition5, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition5, SQLITE,
                     "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition6, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition6, SQLITE,
                     "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition7, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition7, SQLITE,
                     "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition8, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition8, SQLITE,
                     "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition9, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition9, SQLITE,
                     "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition10, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition10, SQLITE,
                     "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition11, SQLite,
+            IndicatorDefinitionFileHelper.addSqlExpression(definition11, SQLITE,
                     "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
 
             return IndicatorDefinitionFileHelper.save(definition0) & IndicatorDefinitionFileHelper.save(definition1)
