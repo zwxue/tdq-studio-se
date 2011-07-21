@@ -98,8 +98,10 @@ public final class ModelElementIndicatorRule {
             // MOD klliu 2011-07-19 bug 22980 from repository as same as indicator dialog
             if (me instanceof TdXmlElementType) {
                 return false;
+            } else {
+                return true;
             }
-            break;
+
         case TextIndicatorEnum:
         case MinLengthIndicatorEnum:
         case MinLengthWithNullIndicatorEnum:
