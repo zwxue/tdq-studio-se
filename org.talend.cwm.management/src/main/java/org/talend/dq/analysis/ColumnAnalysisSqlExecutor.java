@@ -61,6 +61,7 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
+import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -1427,7 +1428,22 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // give result to indicator so that it handles the results
         boolean ret = false;
         try {
-            List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
+            
+            // MOD msjian 22946: Duplicate count indicator result is wrong for column analsis with OracleDB
+            // because the count(column name) not contained the null value
+            List<Object[]> myResultSet = new ArrayList<Object[]>();
+            if (indicator instanceof DistinctCountIndicator) {
+                String tmp = queryStmt.replaceAll("COUNT\\(", " "); // $NON-NSL-1$ // $NON-NSL-2$
+                tmp = tmp.replaceAll("\\)", ""); // $NON-NSL-1$ // $NON-NSL-2$
+                List<Object[]> myRs = executeQuery(cat, connection, tmp);
+                
+                Object[] result = new Object[1];
+                result[0] = myRs.size();
+                myResultSet.add(result);
+                
+            } else {
+                myResultSet = executeQuery(cat, connection, queryStmt);
+            }
 
             ret = indicator.storeSqlResults(myResultSet);
         } catch (Exception e) {
