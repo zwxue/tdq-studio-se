@@ -86,6 +86,11 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();
         createRepositoryNodeViewFolderNode(repsNodes, object);
+        // ADD msjian 2011-7-22 22206: fix the note 93101
+        if (DQRepositoryNode.isUntilSchema()) {
+            return repsNodes;
+        }
+        // ~22206
         return filterResultsIfAny(repsNodes);
         // ~22204
     }
