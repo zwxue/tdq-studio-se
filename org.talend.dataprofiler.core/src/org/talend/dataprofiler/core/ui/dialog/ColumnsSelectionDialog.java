@@ -348,7 +348,10 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             return false;
         }
         for (IRepositoryNode column : columnFolder) {
-            allCheckedElements.add(column);
+            // MOD msjian 2011-7-25 22206: for filter, avoid to add the exsit column
+            if (!allCheckedElements.contains(column)) {
+                allCheckedElements.add(column);
+            }
         }
         return columnFolder.size() > 0;
     }
