@@ -41,6 +41,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
@@ -75,7 +77,6 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
@@ -86,6 +87,7 @@ import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -253,67 +255,32 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 is = createFileDetail(is, (IRepositoryViewObject) fe);
             } else if (fe instanceof DBConnectionRepNode) {
                 DBConnectionRepNode connNode = (DBConnectionRepNode) fe;
-                connNode.getChildren();
-                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(connNode);
-                createDataProviderDetail((Connection) fe);
+                DatabaseConnection databaseConnection = connNode.getDatabaseConnection();
+                createDataProviderDetail(databaseConnection);
                 is = false;
             } else if (fe instanceof DBCatalogRepNode) {
                 DBCatalogRepNode catalogNode = (DBCatalogRepNode) fe;
-                // MOD gdbu 2011-7-15 bug : 23161
-                if (catalogNode.getChildren().isEmpty()) {
-                    createNameCommentDetail(catalogNode.getCatalog());
-                } else {
-                    catalogNode.getChildren().get(0).getChildren();
-                    fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(catalogNode);
-                    Catalog catalog = (Catalog) fe;
-                    createTdCatalogDetail(catalog);
-                }
-                // ~23161
+                Catalog catalog = catalogNode.getCatalog();
+                createTdCatalogDetail(catalog);
                 is = false;
             } else if (fe instanceof DBSchemaRepNode) {
                 DBSchemaRepNode schemaNode = (DBSchemaRepNode) fe;
-                // MOD gdbu 2011-7-15 bug : 23161
-                if (schemaNode.getChildren().isEmpty()) {
-                    createNameCommentDetail(schemaNode.getSchema());
-                } else {
-                    schemaNode.getChildren().get(0).getChildren();
-                    fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(schemaNode);
-                    Schema schema = (Schema) fe;
-                    createTdSchemaDetail(schema);
-                }
-                // ~23161
+                Schema schema = schemaNode.getSchema();
+                createTdSchemaDetail(schema);
                 is = false;
             } else if (fe instanceof DBTableRepNode) {
                 DBTableRepNode tableNode = (DBTableRepNode) fe;
-                // MOD gdbu 2011-7-15 bug : 23161
-                if (tableNode.getChildren().isEmpty()) {
-                    createNameCommentDetail(tableNode.getTdTable());
-                } else {
-                    tableNode.getChildren().get(0).getChildren();
-                    fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(tableNode);
-                    ModelElement element = (ModelElement) fe;
-                    createTableDetail((TdTable) element);
-                }
-                // ~23161
+                TdTable tdTable = tableNode.getTdTable();
+                createTableDetail(tdTable);
                 is = false;
 
             } else if (fe instanceof DBViewRepNode) {
                 DBViewRepNode viewNode = (DBViewRepNode) fe;
-                // MOD gdbu 2011-7-15 bug : 23161
-                if (viewNode.getChildren().isEmpty()) {
-                    createNameCommentDetail(viewNode.getTdView());
-                } else {
-                    viewNode.getChildren().get(0).getChildren();
-                    fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(viewNode);
-                    ModelElement element = (ModelElement) fe;
-                    createNameCommentDetail(element);
-                }
-                // ~23161
+                createNameCommentDetail(viewNode.getTdView());
                 is = false;
             } else if (fe instanceof DBColumnRepNode) {
                 DBColumnRepNode columnNode = (DBColumnRepNode) fe;
-                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(columnNode);
-                TdColumn column = (TdColumn) fe;
+                TdColumn column = columnNode.getTdColumn();
                 createTdColumn(column);
                 is = false;
             } else if (fe instanceof IEcosComponent) {
@@ -340,12 +307,16 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 // ADD by msjian 2011-5-12 21186: don't check whether the selected object is "MDMConnectionRepNode"
             } else if (fe instanceof MDMConnectionRepNode) {
                 MDMConnectionRepNode mdmNode = (MDMConnectionRepNode) fe;
-                mdmNode.getChildren();
-                fe = RepositoryNodeHelper.getModelElementFromRepositoryNode(mdmNode);
-                createDataProviderDetail((Connection) fe);
+                MDMConnection mdmConnection = mdmNode.getMdmConnection();
+                createDataProviderDetail(mdmConnection);
+                is = false;
+            } else if (fe instanceof DFConnectionRepNode) {
+                DFConnectionRepNode dfNode = (DFConnectionRepNode) fe;
+                DelimitedFileConnection dfConnection = dfNode.getDfConnection();
+                createDFconnectionName(dfNode.getObject().getLabel());
+                createDataProviderDetail(dfConnection);
                 is = false;
             }
-
             if (PluginChecker.isTDQLoaded()) {
                 if (fe instanceof EObject) {
                     createTechnicalDetail((EObject) fe);
@@ -377,6 +348,16 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 tContainer.layout();
             }
         }
+    }
+
+    /**
+     * DOC klliu Comment method "createDFconnectionName".
+     * 
+     * @param label
+     */
+    private void createDFconnectionName(String label) {
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.name"), label); //$NON-NLS-1$
+
     }
 
     /**
@@ -591,7 +572,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createDataProviderDetail(Connection dataProvider) {
-        createName(dataProvider);
+        boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataProvider);
+        if (!isDelimitedFile) {
+            createName(dataProvider);
+        }
         createPurpose(dataProvider);
         createDescription(dataProvider);
         // MOD mzhao xmldb have no actual connection.
@@ -609,7 +593,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         String version = PluginConstant.EMPTY_STRING;
         if (softwareSystem == null) {
             boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
-            boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataProvider);
             subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage()
                     : PluginConstant.EMPTY_STRING;
             version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
