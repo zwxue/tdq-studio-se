@@ -213,7 +213,7 @@ public class LengthIndicatorImpl extends IndicatorImpl implements LengthIndicato
     @Override
     public IndicatorParameters getParameters() {
         if (null == super.getParameters()) {
-            parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+            setParameters(IndicatorsFactory.eINSTANCE.createIndicatorParameters());
         }
         if (null == parameters.getTextParameter()) {
             parameters.setTextParameter(IndicatorsFactory.eINSTANCE.createTextParameters());
