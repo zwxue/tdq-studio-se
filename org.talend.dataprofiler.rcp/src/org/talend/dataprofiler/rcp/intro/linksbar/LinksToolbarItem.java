@@ -62,9 +62,6 @@ public class LinksToolbarItem extends ContributionItem {
         layout.marginHeight = 0;
         composite.setLayout(layout);
 
-        // blank label
-        new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
         // 1.learn
         Label learnLabel = new Label(composite, SWT.NONE);
 
@@ -82,9 +79,6 @@ public class LinksToolbarItem extends ContributionItem {
             }
         });
 
-        // blank label
-        new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
         // 2.ask
         Label askLabel = new Label(composite, SWT.NONE);
 
@@ -101,29 +95,6 @@ public class LinksToolbarItem extends ContributionItem {
                 openBrower(event.text);
             }
         });
-
-        // blank label
-        new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
-        // 3.share
-//        Label shareLabel = new Label(composite, SWT.NONE);
-//
-//        shareLabel.setImage(Activator.getImageDescriptor("icons/Globe2.png").createImage()); //$NON-NLS-1$
-
-//        Link share = new Link(composite, SWT.NONE);
-//        share.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-//        share.setText(SHARE_URL);
-//        share.setToolTipText(Messages.getString("LinksToolbarItem_9"));
-//
-//        share.addListener(SWT.Selection, new Listener() {
-//
-//            public void handleEvent(Event event) {
-//                openBrower(event.text);
-//            }
-//        });
-
-        // blank label
-//        new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
         // 4.upgrade
         Label upgradeLabel = new Label(composite, SWT.NONE);
