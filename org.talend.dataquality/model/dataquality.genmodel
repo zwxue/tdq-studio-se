@@ -694,6 +694,7 @@
     </nestedGenPackages>
     <nestedGenPackages prefix="Rules" basePackage="org.talend.dataquality" disposableProviderFactory="true"
         ecorePackage="dataquality.ecore#//rules">
+      <genDataTypes ecoreDataType="dataquality.ecore#//rules/TdExpressionList"/>
       <genClasses ecoreClass="dataquality.ecore#//rules/DQRule">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/DQRule/criticalityLevel"/>
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
@@ -716,6 +717,17 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/JoinElement/tableAliasB"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/JoinElement/columnAliasA"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/JoinElement/columnAliasB"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//rules/ParserRule">
+        <genOperations ecoreOperation="dataquality.ecore#//rules/ParserRule/addExpression">
+          <genParameters ecoreParameter="dataquality.ecore#//rules/ParserRule/addExpression/name"/>
+          <genParameters ecoreParameter="dataquality.ecore#//rules/ParserRule/addExpression/type"/>
+          <genParameters ecoreParameter="dataquality.ecore#//rules/ParserRule/addExpression/value"/>
+        </genOperations>
+        <genOperations ecoreOperation="dataquality.ecore#//rules/ParserRule/getExpression">
+          <genParameters ecoreParameter="dataquality.ecore#//rules/ParserRule/getExpression/name"/>
+        </genOperations>
+        <genOperations ecoreOperation="dataquality.ecore#//rules/ParserRule/getExpression.1"/>
       </genClasses>
     </nestedGenPackages>
     <nestedGenPackages prefix="Properties" basePackage="org.talend.dataquality" resource="XML"
