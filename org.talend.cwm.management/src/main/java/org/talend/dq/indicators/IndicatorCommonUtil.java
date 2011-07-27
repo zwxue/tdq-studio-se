@@ -29,6 +29,7 @@ import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.InvalidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
@@ -45,11 +46,17 @@ import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.SoundexFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
+import org.talend.dataquality.indicators.ValidRegCodeCountIndicator;
+import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dq.helper.UDIHelper;
@@ -227,6 +234,28 @@ public final class IndicatorCommonUtil {
                     case WhereRuleIndicatorEnum:
                         Long userCount = ((WhereRuleIndicator) indicator).getUserCount();
                         value = userCount == null ? 0 : userCount;
+                        break;
+                    // MOD qiongli 2011-7-21 feature 22362
+                    case ValidPhoneCountIndicatorEnum:
+                        value = ((ValidPhoneCountIndicator) indicator).getValidPhoneNumCount();
+                        break;
+                    case ValidRegCodeCountIndicatorEnum:
+                        value = ((ValidRegCodeCountIndicator) indicator).getValidRegCount();
+                        break;
+                    case InvalidRegCodeCountIndicatorEnum:
+                        value = ((InvalidRegCodeCountIndicator) indicator).getInvalidRegCount();
+                        break;
+                    case WellFormE164PhoneCountIndicatorEnum:
+                        value = ((WellFormE164PhoneCountIndicator) indicator).getWellFormE164PhoneCount();
+                        break;
+                    case WellFormIntePhoneCountIndicatorEnum:
+                        value = ((WellFormIntePhoneCountIndicator) indicator).getWellFormIntePhoneCount();
+                        break;
+                    case WellFormNationalPhoneCountIndicatorEnum:
+                        value = ((WellFormNationalPhoneCountIndicator) indicator).getWellFormNatiPhoneCount();
+                        break;
+                    case PossiblePhoneCountIndicatorEnum:
+                        value = ((PossiblePhoneCountIndicator) indicator).getPossiblePhoneCount();
                         break;
 
                     default:

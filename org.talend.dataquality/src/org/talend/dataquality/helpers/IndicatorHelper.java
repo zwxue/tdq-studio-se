@@ -36,6 +36,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.InvalidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxValueIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
@@ -45,11 +46,17 @@ import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
+import org.talend.dataquality.indicators.ValidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
@@ -543,6 +550,41 @@ public final class IndicatorHelper {
             @Override
             public String caseValueIndicator(ValueIndicator object) {
                 return object.getValue();
+            }
+
+            @Override
+            public String caseValidPhoneCountIndicator(ValidPhoneCountIndicator object) {
+                return String.valueOf(object.getValidPhoneNumCount());
+            }
+
+            @Override
+            public String casePossiblePhoneCountIndicator(PossiblePhoneCountIndicator object) {
+                return String.valueOf(object.getPossiblePhoneCount());
+            }
+
+            @Override
+            public String caseValidRegCodeCountIndicator(ValidRegCodeCountIndicator object) {
+                return String.valueOf(object.getValidRegCount());
+            }
+
+            @Override
+            public String caseInvalidRegCodeCountIndicator(InvalidRegCodeCountIndicator object) {
+                return String.valueOf(object.getInvalidRegCount());
+            }
+
+            @Override
+            public String caseWellFormE164PhoneCountIndicator(WellFormE164PhoneCountIndicator object) {
+                return String.valueOf(object.getWellFormE164PhoneCount());
+            }
+
+            @Override
+            public String caseWellFormIntePhoneCountIndicator(WellFormIntePhoneCountIndicator object) {
+                return String.valueOf(object.getWellFormIntePhoneCount());
+            }
+
+            @Override
+            public String caseWellFormNationalPhoneCountIndicator(WellFormNationalPhoneCountIndicator object) {
+                return String.valueOf(object.getWellFormNatiPhoneCount());
             }
 
         };
