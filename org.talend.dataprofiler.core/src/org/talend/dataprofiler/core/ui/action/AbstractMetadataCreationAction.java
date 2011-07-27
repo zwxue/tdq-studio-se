@@ -22,13 +22,14 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-
+import org.talend.repository.ui.wizards.RepositoryWizard;
 
 /**
- * DOC bZhou  class global comment. Detailled comment
+ * DOC bZhou class global comment. Detailled comment
  */
 public abstract class AbstractMetadataCreationAction extends Action implements ICheatSheetAction {
 
@@ -37,6 +38,8 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
     private static final int HEIGHT = 550;
 
     protected RepositoryNode node;
+
+    private ConnectionItem connectionItem;
 
     protected AbstractMetadataCreationAction() {
         setText(getActionLabel());
@@ -59,11 +62,18 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
             if (Window.OK == dialog.open()) {
                 CorePlugin.getDefault().refreshDQView();
             }
+
+            if (wizard instanceof RepositoryWizard) {
+                connectionItem = ((RepositoryWizard) wizard).getConnectionItem();
+            }
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[], org.eclipse.ui.cheatsheets.ICheatSheetManager)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
+     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
         initCheateSheetRun(params, manager);
@@ -133,6 +143,14 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
         return names;
     }
 
+    /**
+     * Getter for connectionItem.
+     * 
+     * @return the connectionItem
+     */
+    public ConnectionItem getConnectionItem() {
+        return this.connectionItem;
+    }
 
     /**
      * DOC bZhou Comment method "createWizard".
