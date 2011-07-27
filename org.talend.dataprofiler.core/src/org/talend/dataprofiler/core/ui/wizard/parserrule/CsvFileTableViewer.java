@@ -53,6 +53,9 @@ public class CsvFileTableViewer extends Composite {
 
     private boolean hasPatternHeaders = false;
 
+    /**
+     * DOC bZhou CsvFileTableViewer class global comment. Detailled comment
+     */
     static class ViewContentProvider implements IStructuredContentProvider {
 
         public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -84,6 +87,9 @@ public class CsvFileTableViewer extends Composite {
         }
     }
 
+    /**
+     * DOC bZhou CsvFileTableViewer class global comment. Detailled comment
+     */
     class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 
         public String getColumnText(Object obj, int index) {

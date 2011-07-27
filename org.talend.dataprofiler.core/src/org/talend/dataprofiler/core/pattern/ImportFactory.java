@@ -743,6 +743,9 @@ public final class ImportFactory {
 
     }
 
+    /**
+     * DOC bZhou ImportFactory class global comment. Detailled comment
+     */
     private class ParserRuleParameters {
 
         String label;
@@ -771,6 +774,9 @@ public final class ImportFactory {
         }
     }
 
+    /**
+     * DOC bZhou ImportFactory class global comment. Detailled comment
+     */
     private class ParserRuleTdExpresstion {
 
         String name;
