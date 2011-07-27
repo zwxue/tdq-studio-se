@@ -162,7 +162,8 @@ public class BlankCountIndicatorImpl extends IndicatorImpl implements BlankCount
 
         // Check on the correct type of data must be done when constructing the indicator.
         assert data instanceof String : "Cannot check for blank on non string: " + data;
-        String str = (String) data;
+        // MOD xwang convert object 'data' to String type
+        String str = String.valueOf(data);
         if (StringUtils.isBlank(str)) {
             // MOD mzhao feature: 12919
             mustStoreRow = true;
