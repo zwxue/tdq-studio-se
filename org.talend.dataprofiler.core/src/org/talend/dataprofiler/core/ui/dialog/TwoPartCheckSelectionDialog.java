@@ -728,6 +728,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                             if (isfViewer) {
                                 fViewer.refresh();
                             } else {
+                                // ADD msjian 2011-7-27 22206: fixed note 93509 when cleared the filter, the selected
+                                // turn to unselected
+                                unfoldToCheckedElements();
                                 sTableViewer.refresh();
                             }
                         } else {
