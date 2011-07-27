@@ -27,7 +27,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.CWMPlugin;
@@ -69,7 +68,9 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
     public void run() {
         // if these items in recycle bin are depended by others,show a warning dialog and return.
         boolean hasDependencyItem = false;
-        List<IRepositoryNode> children = RecycleBinManager.getInstance().getRecycleBinChildren();
+        // MOD gdbu 2011-7-25 bug : 23220
+        List<IRepositoryNode> children = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode()).getChildren(false);
+        // ~23220
         for (IRepositoryNode obj : children) {
             if (RepositoryNodeHelper.hasDependencyClients(obj)) {
                 hasDependencyItem = true;

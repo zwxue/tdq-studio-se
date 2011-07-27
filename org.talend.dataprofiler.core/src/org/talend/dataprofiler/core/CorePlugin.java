@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.help.internal.base.BaseHelpSystem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.osgi.service.datalocation.Location;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -84,6 +85,7 @@ import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.ProductVersion;
@@ -372,6 +374,17 @@ public class CorePlugin extends AbstractUIPlugin {
 
     public void refreshDQView() {
         getRepositoryView().getCommonViewer().refresh();
+    }
+
+    public IRepositoryNode getCurrentSelectionNode() {
+        TreeItem[] selectionTreeItem = getRepositoryView().getCommonViewer().getTree().getSelection();
+        if (null != selectionTreeItem && null != selectionTreeItem[0]) {
+            IRepositoryNode repoNode = (IRepositoryNode) selectionTreeItem[0].getData();
+            return repoNode;
+        } else {
+            return null;
+        }
+
     }
 
     public void refreshDQView(Object object) {

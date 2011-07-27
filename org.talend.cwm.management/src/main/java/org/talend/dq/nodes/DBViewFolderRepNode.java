@@ -21,14 +21,15 @@ import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdView;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -113,15 +114,19 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
                 views = PackageHelper.getViews(catalog);
                 filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
                 // MOD gdbu 2011-6-29 bug : 22204
-                if (views.isEmpty() && !isOnFilterring()) {
-                    // ~22204
-                    views = DqRepositoryViewService.getViews(connection, catalog, null, true);
-                    if (views.size() > 0) {
-                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                if (views.isEmpty()) {
+                    if (!isOnFilterring()) {
+                        // MOD gdbu 2011-7-21 bug 23220
+                        views = DqRepositoryViewService.getViews(connection, catalog, null, true);
+                        if (views.size() > 0) {
+                            ProxyRepositoryFactory.getInstance().save(item);
+                        }
+                        // ~23220
                     }
                 } else {
                     ConnectionUtils.retrieveColumn(views);
                 }
+                // ~22204
             } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
@@ -131,29 +136,33 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
                 filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
                 RepositoryNode parent = metadataObject.getRepositoryNode().getParent();
                 IRepositoryViewObject object = parent.getObject();
-                if (object instanceof MetadataCatalogRepositoryObject && filterCharacter.equals("")) {
+                if (object instanceof MetadataCatalogRepositoryObject && filterCharacter.equals(PluginConstant.EMPTY_STRING)) {
                     filterCharacter = RepositoryNodeHelper.getViewFilter(((MetadataCatalogRepositoryObject) object).getCatalog(),
                             null);
                 }
                 // MOD gdbu 2011-6-29 bug : 22204
-                if (views.isEmpty() && !isOnFilterring()) {
-                    // ~22204
-                    views = DqRepositoryViewService.getViews(connection, schema, null, true);
-                    if (views.size() > 0) {
-                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                if (views.isEmpty()) {
+                    if (!isOnFilterring()) {
+                        // MOD gdbu 2011-7-20 bug 23220
+                        views = DqRepositoryViewService.getViews(connection, schema, null, true);
+                        if (views.size() > 0) {
+                            ProxyRepositoryFactory.getInstance().save(item);
+                        }
+                        // ~23220
                     }
                 } else {
                     ConnectionUtils.retrieveColumn(views);
                 }
+                // ~22204
             }
 
         } catch (Exception e) {
             log.error(e, e);
         }
-        if (filterCharacter != null && !filterCharacter.equals("")) {
+        if (filterCharacter != null && !filterCharacter.equals(PluginConstant.EMPTY_STRING)) {
             views = RepositoryNodeHelper.filterViews(views, filterCharacter);
         }
-        createTableRepositoryNode(views, node);
+        createViewRepositoryNode(views, node);
     }
 
     /**
@@ -161,7 +170,7 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
      * 
      * @param tables
      */
-    private void createTableRepositoryNode(List<TdView> views, List<IRepositoryNode> node) {
+    private void createViewRepositoryNode(List<TdView> views, List<IRepositoryNode> node) {
         for (TdView view : views) {
             // create view object
             TdViewRepositoryObject metadataView = new TdViewRepositoryObject(viewObject, view);
@@ -178,16 +187,73 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
         }
     }
 
-    public String getNodeName() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
         return "Views (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    public int getChildrenCount() {
-        List<IRepositoryNode> children2 = this.getChildren();
-        if (children2 != null) {
-            return children2.size();
+    /*
+     * ADD gdbu 2011-7-25 bug : 23220
+     * 
+     * children count : only read from the file
+     */
+    private int getChildrenCount() {
+        List<TdView> tables = new ArrayList<TdView>();
+        IRepositoryViewObject object = this.getParent().getObject();
+        if (object instanceof MetadataCatalogRepositoryObject) {
+            catalog = ((MetadataCatalogRepositoryObject) object).getCatalog();
+            tables = PackageHelper.getViews(catalog);
+        } else {
+            schema = ((MetadataSchemaRepositoryObject) object).getSchema();
+            tables = PackageHelper.getViews(schema);
         }
-        return 0;
+        return tables.size();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#hasChildren()
+     */
+    @Override
+    public boolean hasChildren() {
+        return hasChildrenInDataBase();
+    }
+
+    private boolean hasChildrenInDataBase() {
+
+        boolean hasChildrenInDB = false;
+
+        IRepositoryViewObject object = this.getParent().getObject();
+        if (object instanceof MetadataCatalogRepositoryObject) {
+            viewObject = ((MetadataCatalogRepositoryObject) object).getViewObject();
+            item = (ConnectionItem) viewObject.getProperty().getItem();
+            connection = item.getConnection();
+            catalog = ((MetadataCatalogRepositoryObject) object).getCatalog();
+            try {
+                hasChildrenInDB = DqRepositoryViewService.isContainsView(connection, catalog, null);
+            } catch (Exception e) {
+                log.error(e.toString());
+            }
+
+        } else {
+            viewObject = ((MetadataSchemaRepositoryObject) object).getViewObject();
+            item = (ConnectionItem) viewObject.getProperty().getItem();
+            connection = item.getConnection();
+            schema = ((MetadataSchemaRepositoryObject) object).getSchema();
+            try {
+                hasChildrenInDB = DqRepositoryViewService.isContainsView(connection, schema, null);
+            } catch (Exception e) {
+                log.error(e.toString());
+            }
+        }
+
+        return hasChildrenInDB;
     }
 
     /**
@@ -199,16 +265,4 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
         return this.getCatalog() != null ? this.getCatalog() : this.getSchema();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.repository.model.RepositoryNode#getLabel()
-     */
-    @Override
-    public String getLabel() {
-        if (getObject() == null) {
-            return this.getProperties(EProperties.LABEL).toString();
-        }
-        return this.getNodeName();
-    }
 }

@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.filters;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.EObject;
@@ -21,9 +19,7 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.Viewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.model.nodes.foldernode.AnaElementFolderNode;
-import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -98,14 +94,16 @@ public class EMFObjFilter extends AbstractViewerFilter {
             if (((SysIndicatorFolderRepNode) element).getLabel().equals(EResourceConstant.SYSTEM_INDICATORS_OVERVIEW.getName())) {//$NON-NLS-1$
                 return false;
             }
-        } else if (element instanceof SysIndicatorDefinitionRepNode
-                && ((SysIndicatorDefinitionRepNode) element).isSystemIndicator()) {
-            List<TdExpression> indiExpression = ((SysIndicatorDefinitionRepNode) element).getIndicatorDefinition()
-                    .getSqlGenericExpression();
-            if (indiExpression == null || indiExpression.size() == 0) {
-                return false;
-            }
         }
+
+        // else if (element instanceof SysIndicatorDefinitionRepNode
+        // && ((SysIndicatorDefinitionRepNode) element).isSystemIndicator()) {
+        // List<TdExpression> indiExpression = ((SysIndicatorDefinitionRepNode) element).getIndicatorDefinition()
+        // .getSqlGenericExpression();
+        // if (indiExpression == null || indiExpression.size() == 0) {
+        // return false;
+        // }
+        // }
 
         return true;
     }

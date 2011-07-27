@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -60,9 +61,8 @@ public class MDMSchemaRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         // MOD gdbu 2011-7-1 bug : 22204
-        if (!super.getChildren().isEmpty()) {
-            return filterResultsIfAny(super.getChildren());
-        }
+
+        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
 
         MetadataXmlSchemaRepositoryObject metadataXmlSchema = (MetadataXmlSchemaRepositoryObject) this.getObject();
 
@@ -78,10 +78,10 @@ public class MDMSchemaRepNode extends DQRepositoryNode {
                 xmlElementTypeNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
                 xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
-                super.getChildren().add(xmlElementTypeNode);
+                children.add(xmlElementTypeNode);
             }
         }
-        return filterResultsIfAny(super.getChildren());
+        return filterResultsIfAny(children);
         // ~22204
     }
 

@@ -59,6 +59,7 @@ import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternLanguageRepNode;
@@ -222,6 +223,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     public String getText(Object element) {
         if (element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
+            System.out.println(node.getLabel());
             if (node instanceof RecycleBinRepNode || node instanceof ExchangeCategoryRepNode
                     || node instanceof ExchangeComponentRepNode) {
                 // virtual node, get the lable of node directly
@@ -234,12 +236,16 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 return ((DFConnectionSubFolderRepNode) node).getObject().getLabel();
             } else if (node instanceof DFConnectionFolderRepNode) {
                 return DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.DFConnectionFolderName");//$NON-NLS-1$
+            } else if (node instanceof MDMSchemaRepNode) {
+                return ((MDMSchemaRepNode) node).getLabel();
+            } else if (node instanceof MDMConnectionSubFolderRepNode) {
+                return ((MDMConnectionSubFolderRepNode) node).getObject().getLabel();
             } else if (node instanceof MDMConnectionFolderRepNode) {
                 return DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.MDMConnectionFolderName"); //$NON-NLS-1$
             } else if (node instanceof DBTableFolderRepNode) {
-                return ((DBTableFolderRepNode) node).getNodeName();
+                return ((DBTableFolderRepNode) node).getLabel();
             } else if (node instanceof DBViewFolderRepNode) {
-                return ((DBViewFolderRepNode) node).getNodeName();
+                return ((DBViewFolderRepNode) node).getLabel();
             } else if (node instanceof DBColumnFolderRepNode) {
                 return ((DBColumnFolderRepNode) node).getNodeName();
             } else if (node instanceof DFColumnFolderRepNode) {

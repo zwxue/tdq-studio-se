@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -23,6 +24,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -47,8 +49,8 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        List<IRepositoryNode> childrens = new ArrayList<IRepositoryNode>();
         try {
-            super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
             // sub folders
@@ -61,10 +63,11 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
                 SysIndicatorFolderRepNode childNodeFolder = new SysIndicatorFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
-                super.getChildren().add(childNodeFolder);
+                childrens.add(childNodeFolder);
             }
             // rule files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+
                 if (!viewObject.isDeleted()) {
                     SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
                             ENodeType.REPOSITORY_ELEMENT);
@@ -72,14 +75,22 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
                     repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
                     viewObject.setRepositoryNode(repNode);
                     repNode.setSystemIndicator(true);
-                    super.getChildren().add(repNode);
+                    // MOD gdbu 2011-7-27 bug : 23161
+                    List<TdExpression> indiExpression = repNode.getIndicatorDefinition()
+                            .getSqlGenericExpression();
+                    if (indiExpression == null || indiExpression.size() == 0) {
+                        continue;
+                    }
+                    // ~23161
+
+                    childrens.add(repNode);
                 }
             }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
         // MOD gdbu 2011-6-29 bug : 22204
-        return filterResultsIfAny(super.getChildren());
+        return filterResultsIfAny(childrens);
         // ~22204
     }
 

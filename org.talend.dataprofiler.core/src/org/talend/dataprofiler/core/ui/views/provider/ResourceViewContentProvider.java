@@ -20,6 +20,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
@@ -34,13 +38,14 @@ import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeR
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.recycle.impl.RecycleBinManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -57,6 +62,8 @@ import common.Logger;
 public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     private static Logger log = Logger.getLogger(ResourceViewContentProvider.class);
+
+    private TreeViewer treeViewer = null;
 
     /**
      * DOC rli ResourceViewContentProvider constructor comment.
@@ -131,8 +138,43 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
                 return folders.toArray();
             } else if (element instanceof RepositoryNode) {
-                RepositoryNode node = (RepositoryNode) element;
-                if (node.getChildren().size() <= 0) {
+                final RepositoryNode node = (RepositoryNode) element;
+                // MOD gdbu 2011-7-20 bug : 23220
+                List<IRepositoryNode> children = node.getChildren();
+
+                if (node instanceof DBTableFolderRepNode || node instanceof DBViewFolderRepNode) {
+                    if (0 < children.size()) {
+                        try {
+
+                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) node);
+
+                            if (null != treeViewer) {
+                                ISelection tempSelection = treeViewer.getSelection();
+                                treeViewer.setSelection(structSel);
+                                TreeItem[] selectionItems = treeViewer.getTree().getSelection();
+                                if (0 != selectionItems.length) {
+                                    selectionItems[0].setText(node.getLabel());
+                                    treeViewer.setSelection(tempSelection);
+                                }
+                            } else {
+                                ISelection dqTreeSelection = RepositoryNodeHelper.getDQCommonViewer().getSelection();
+
+                                RepositoryNodeHelper.getDQCommonViewer().setSelection(structSel);
+                                TreeItem[] selections = RepositoryNodeHelper.getDQCommonViewer().getTree().getSelection();
+                                if (0 != selections.length) {
+                                    selections[0].setText(node.getLabel());
+                                }
+                                RepositoryNodeHelper.getDQCommonViewer().setSelection(dqTreeSelection);
+                            }
+
+                        } catch (Exception e) {
+                            log.error(e.toString());
+                        }
+                    }
+                }
+
+                if (children.size() <= 0) {
+                    // ~23220
                     IRepositoryViewObject viewObject = node.getObject();
                     String label = viewObject == null ? null : viewObject.getLabel();
                     if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
@@ -176,12 +218,11 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                     } else if (node instanceof RecycleBinRepNode) {
                         // MOD gdbu 2011-7-15 bug : 23161
-                        RecycleBinManager.getInstance().loadChildren((RecycleBinRepNode) node);
-                        return sortRepositoryNode(RecycleBinManager.getInstance().getRecycleBinChildren().toArray());
+                        return sortRepositoryNode(node.getChildren().toArray());
                         // ~23161
                     }
                 }
-                return sortRepositoryNode(node.getChildren().toArray());
+                return sortRepositoryNode(children.toArray());
             }
         } catch (CoreException e) {
             log.error(e);
@@ -258,6 +299,19 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         // }
         // return false;
         // }
+
+        if (element instanceof DBTableFolderRepNode) {
+            DBTableFolderRepNode dbTableFolder = (DBTableFolderRepNode) element;
+
+            return dbTableFolder.hasChildren();
+        }
+
+        if (element instanceof DBViewFolderRepNode) {
+            DBViewFolderRepNode dbViewFolder = (DBViewFolderRepNode) element;
+
+            return dbViewFolder.hasChildren();
+        }
+
         return super.hasChildren(element);
     }
 
@@ -276,4 +330,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         return super.getParent(element);
         // ~21188
     }
+
+    public void setTreeViewer(TreeViewer fViewer) {
+        this.treeViewer = fViewer;
+    }
+
 }

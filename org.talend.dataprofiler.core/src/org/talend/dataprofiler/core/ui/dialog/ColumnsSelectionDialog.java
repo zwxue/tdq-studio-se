@@ -445,8 +445,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 if (parentElement instanceof MDMSchemaRepNode || parentElement instanceof MDMXmlElementRepNode) {
                     return RepositoryNodeHelper.getMdmChildren(parentElement, true);
                 }
-                IRepositoryNode repoNode = (IRepositoryNode) parentElement;
-                return repoNode.getChildren().toArray();
+                // IRepositoryNode repoNode = (IRepositoryNode) parentElement;
+                // return repoNode.getChildren().toArray();
             }
             return super.getChildren(parentElement);
         }

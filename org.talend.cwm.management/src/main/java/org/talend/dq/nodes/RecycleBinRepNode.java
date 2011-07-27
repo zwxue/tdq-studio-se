@@ -12,9 +12,25 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.ui.runtime.image.ECoreImage;
 import org.talend.commons.ui.runtime.image.IImage;
+import org.talend.core.model.general.Project;
+import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.FolderType;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataquality.PluginConstant;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -81,4 +97,153 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     public boolean isBin() {
         return true;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren()
+     */
+    @Override
+    public List<IRepositoryNode> getChildren() {
+        super.getChildren().clear();
+        List<DQRepositoryNode> foldersList = new ArrayList<DQRepositoryNode>();
+        Project newProject = ProjectManager.getInstance().getCurrentProject();
+        List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(newProject.getEmfProject());
+        for (FolderItem folderItem : new ArrayList<FolderItem>(folderItems)) {
+            if (isTDQOrMetadataRootFolder(folderItem)) {
+                addItemToRecycleBin(this, folderItem, foldersList);
+            }
+        }
+        return filterRecycleBin(super.getChildren());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getChildren(boolean)
+     */
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
+        // override this method just used to get super getChildren method
+        return super.getChildren();
+    }
+
+    public boolean isTDQOrMetadataRootFolder(FolderItem folderItem) {
+
+        String path = getFullFolderPath(folderItem, PluginConstant.EMPTY_STRING);
+        if (path != null && (path.startsWith("TDQ") || path.startsWith("metadata"))) { //$NON-NLS-1$ //$NON-NLS-2$
+            return true;
+        }
+        return false;
+    }
+
+    private String getFullFolderPath(FolderItem folder, String path) {
+        if (folder.getParent() instanceof FolderItem) {
+            return getFullFolderPath((FolderItem) folder.getParent(), folder.getProperty().getLabel() + "/" + path);//$NON-NLS-1$
+        }
+        return folder.getProperty().getLabel() + "/" + path;//$NON-NLS-1$
+    }
+
+    private void addItemToRecycleBin(DQRepositoryNode parentNode, Item item, List<DQRepositoryNode> foldersList) {
+        ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
+        DQRepositoryNode currentParentNode = parentNode;
+        if (item instanceof FolderItem) {
+            itemType = getFolderContentType((FolderItem) item);
+            if (item.getState() != null && item.getState().isDeleted()) {
+                // need to display this folder in the recycle bin.
+                Folder folder = new Folder(item.getProperty(), itemType);
+                DQRepositoryNode folderNode = null;
+                for (DQRepositoryNode existingFolder : foldersList) {
+                    if (existingFolder.getContentType() == null) {
+                        // this can appear temporary when another user has deleted a folder
+                        break;
+                    }
+                    if (existingFolder.getContentType().equals(folder.getRepositoryObjectType())
+                            && existingFolder.getProperties(EProperties.LABEL).equals(folder.getLabel())) {
+                        folderNode = existingFolder;
+                        break;
+                    }
+                }
+                if (folderNode == null) {
+                    folderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SIMPLE_FOLDER);
+                    folderNode.setProperties(EProperties.CONTENT_TYPE, itemType);
+                    folderNode.setProperties(EProperties.LABEL, folder.getLabel());
+                    foldersList.add(folderNode);
+                    parentNode.getChildren(false).add(folderNode);
+                    folderNode.setParent(parentNode);
+                }
+
+                for (Item curItem : (List<Item>) new ArrayList(((FolderItem) item).getChildren())) {
+                    addItemToRecycleBin(folderNode, curItem, foldersList);
+                }
+                currentParentNode = folderNode;
+            } else {
+                for (Item curItem : (List<Item>) new ArrayList(((FolderItem) item).getChildren())) {
+                    addItemToRecycleBin(parentNode, curItem, foldersList);
+                }
+            }
+        } else if (item.getState() != null && item.getState().isDeleted()) {
+            try {
+                if (item.getProperty().getVersion()
+                        .equals(ProxyRepositoryFactory.getInstance().getLastVersion(item.getProperty().getId()).getVersion())) {
+                    DQRepositoryNode repNode = new DQRepositoryNode(new RepositoryViewObject(item.getProperty()),
+                            currentParentNode, ENodeType.REPOSITORY_ELEMENT);
+                    repNode.setProperties(EProperties.CONTENT_TYPE, itemType);
+                    repNode.setProperties(EProperties.LABEL, item.getProperty().getLabel());
+                    currentParentNode.getChildren(false).add(repNode);
+                    repNode.setParent(currentParentNode);
+                }
+            } catch (PersistenceException e) {
+                ExceptionHandler.process(e);
+            }
+        }
+    }
+
+    private ERepositoryObjectType getFolderContentType(FolderItem folderItem) {
+        if (!folderItem.getType().equals(FolderType.SYSTEM_FOLDER_LITERAL)) {
+            if (!(folderItem.getParent() instanceof FolderItem)) {
+                return null; // appears only for a folder for expression builder !
+            }
+            return getFolderContentType((FolderItem) folderItem.getParent());
+        }
+        for (ERepositoryObjectType objectType : (ERepositoryObjectType[]) ERepositoryObjectType.values()) {
+            String folderName;
+            try {
+                folderName = ERepositoryObjectType.getFolderName(objectType);
+            } catch (Exception e) {
+                // just catch exception to avoid the types who don't have folders
+                continue;
+            }
+            if (folderName.contains("/")) { //$NON-NLS-1$
+                String[] folders = folderName.split("/"); //$NON-NLS-1$
+                FolderItem currentFolderItem = folderItem;
+                boolean found = true;
+                for (int i = folders.length - 1; i >= 0; i--) {
+                    if (!currentFolderItem.getProperty().getLabel().equals(folders[i])) {
+                        found = false;
+                        break;
+                    }
+                    if (i > 0) {
+                        if (!(currentFolderItem.getParent() instanceof FolderItem)) {
+                            found = false;
+                            break;
+                        }
+                        currentFolderItem = (FolderItem) currentFolderItem.getParent();
+                    }
+                }
+                if (found) {
+                    return objectType;
+                }
+            } else {
+                if (folderName.equals(folderItem.getProperty().getLabel())) {
+                    return objectType;
+                }
+            }
+        }
+        if (folderItem.getParent() instanceof FolderItem) {
+            return getFolderContentType((FolderItem) folderItem.getParent());
+        }
+        return null;
+    }
+
 }

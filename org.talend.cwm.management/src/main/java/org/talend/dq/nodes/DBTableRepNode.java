@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -60,13 +61,11 @@ public class DBTableRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         // MOD gdbu 2011-7-1 bug : 22204
-        if (!super.getChildren().isEmpty()) {
-            return filterResultsIfAny(super.getChildren());
-        }
+        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         TdTableRepositoryObject viewObject = ((TdTableRepositoryObject) this.getObject());
         DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-        super.getChildren().add(columnFolderNode);
-        return filterResultsIfAny(super.getChildren());
+        children.add(columnFolderNode);
+        return filterResultsIfAny(children);
         // ~22204
     }
 

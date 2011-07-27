@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -74,6 +75,7 @@ public class FolderWizard extends Wizard {
     public boolean performFinish() {
         String folderName = mainPage.getName();
         if (defaultLabel == null) {
+            IRepositoryNode currentSelectionNode = CorePlugin.getDefault().getCurrentSelectionNode();
             IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
             IFolder newFolder = folder.getFolder(folderName);
             try {
@@ -88,8 +90,9 @@ public class FolderWizard extends Wizard {
                 }
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
-                findView.getCommonViewer().refresh();
                 findView.getCommonViewer().setExpandedState(newFolder, true);
+                findView.getCommonViewer().refresh(currentSelectionNode);
+
 
             } catch (CoreException e) {
                 MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("FolderWizard.error"), //$NON-NLS-1$

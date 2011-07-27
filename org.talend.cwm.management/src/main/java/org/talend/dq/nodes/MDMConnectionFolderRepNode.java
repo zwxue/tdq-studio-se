@@ -12,17 +12,19 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
+import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -47,55 +49,43 @@ public class MDMConnectionFolderRepNode extends DQRepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        RepositoryNode fetchNodeByFolder = new RepositoryNode(this.getObject(), this.getParent(), this.getType());
-        ERepositoryObjectType contentType = this.getContentType();
-        Container container = null;
+        return getChildren(false);
+    }
+
+    @Override
+    public List<IRepositoryNode> getChildren(boolean withDeleted) {
+        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         try {
-            container = ProxyRepositoryFactory.getInstance().getMetadata(ERepositoryObjectType.METADATA_MDMCONNECTION);
-            fetchRepositoryNodeByFolder(container, contentType, fetchNodeByFolder);
+            RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
+                    .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
+            // sub folders
+            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+                Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.METADATA_MDMCONNECTION);
+                if (!withDeleted && folder.isDeleted()) {
+                    continue;
+                }
+                MDMConnectionSubFolderRepNode childNodeFolder = new MDMConnectionSubFolderRepNode(folder, this,
+                        ENodeType.SIMPLE_FOLDER);
+                childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_MDMCONNECTION);
+                childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_MDMCONNECTION);
+                folder.setRepositoryNode(childNodeFolder);
+                children.add(childNodeFolder);
+            }
+            // connection files
+            for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+                if (!withDeleted && viewObject.isDeleted()) {
+                    continue;
+                }
+
+                MDMConnectionRepNode repNode = new MDMConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_MDMCONNECTION);
+                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_MDMCONNECTION);
+                viewObject.setRepositoryNode(repNode);
+                children.add(repNode);
+            }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        // MOD gdbu 2011-6-29 bug : 22204
-        return filterResultsIfAny(fetchNodeByFolder.getChildren());
-        // 22204
-    }
-
-    public RepositoryNode fetchRepositoryNodeByFolder(Container patterns, ERepositoryObjectType parentItemType,
-            RepositoryNode node) {
-        RepositoryNode parent = node;
-        for (Object object : patterns.getSubContainer()) {
-            Container container = (Container) object;
-            Property property = (Property) container.getProperty();
-            // Item item = property.getItem();
-            ERepositoryObjectType itemType = ERepositoryObjectType.getTypeFromKey(property.getLabel());
-
-            if (itemType == null) {
-                itemType = parentItemType;
-            }
-            Folder folder = new Folder(((Property) property), itemType);
-            if (folder.isDeleted()) {
-                continue;
-            }
-            MDMConnectionSubFolderRepNode childNodeFolder = new MDMConnectionSubFolderRepNode(folder, parent,
-                    ENodeType.SIMPLE_FOLDER);
-            childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_MDMCONNECTION);
-            childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_MDMCONNECTION);
-            parent.getChildren().add(childNodeFolder);
-            fetchRepositoryNodeByFolder(container, itemType, childNodeFolder);
-        }
-        // not folder or folders have no subFolder
-        for (Object obj : patterns.getMembers()) {
-            RepositoryViewObject viewObject = new RepositoryViewObject(((IRepositoryViewObject) obj).getProperty());
-            if (!viewObject.isDeleted()) {
-                MDMConnectionRepNode repNode = new MDMConnectionRepNode(viewObject, node, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_MDMCONNECTION);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_MDMCONNECTION);
-                viewObject.setRepositoryNode(repNode);
-                parent.getChildren().add(repNode);
-
-            }
-        }
-        return parent;
+        return filterResultsIfAny(children);
     }
 }

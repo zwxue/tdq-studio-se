@@ -23,21 +23,26 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
+import org.talend.dataquality.analysis.impl.AnalysisImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwmx.analysis.informationreporting.impl.ReportFieldImpl;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -47,6 +52,9 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
     @Override
     public boolean performFinish() {
         ReturnCode checkResult = checkMetadata();
+
+        IRepositoryNode currentSelectionNode = CorePlugin.getDefault().getCurrentSelectionNode();
+
         if (checkResult.isOk()) {
             // MOD mzhao feature 15750 Use repository object represent ModelElement.
             ModelElement modelElement = initCWMResourceBuilder();
@@ -59,8 +67,14 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     if (savedObj instanceof Item) {
                         openEditor((Item) savedObj);
                     }
+
+                    if (modelElement instanceof AnalysisImpl || modelElement instanceof ReportFieldImpl) {
+                        CorePlugin.getDefault().refreshDQView(
+                                RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING));
+                    }
+
                     CorePlugin.getDefault().refreshWorkSpace();
-                    CorePlugin.getDefault().refreshDQView();
+                    CorePlugin.getDefault().refreshDQView(currentSelectionNode);
 
                     return true;
                 } else {

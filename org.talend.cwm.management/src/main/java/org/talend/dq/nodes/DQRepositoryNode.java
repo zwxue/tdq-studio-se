@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -28,8 +29,6 @@ public class DQRepositoryNode extends RepositoryNode {
     private static String treeFilter = "";//$NON-NLS-1$
 
     private static boolean isOnFiltering = false;
-
-    private static List<DQRepositoryNode> getChildrenFilterStepList = new ArrayList<DQRepositoryNode>();
 
     private static boolean untilSchema = false;
 
@@ -104,7 +103,7 @@ public class DQRepositoryNode extends RepositoryNode {
         List<IRepositoryNode> sortChildren = RepositoryNodeHelper.sortChildren(children);
 
         List<IRepositoryNode> filteredChildren = new ArrayList<IRepositoryNode>();
-        if (!getFilterStr().equals("")) {//$NON-NLS-1$ 
+        if (!getFilterStr().equals(PluginConstant.EMPTY_STRING)) {
             DQRepositoryNode dqRepNode = null;
             for (IRepositoryNode dqNode : sortChildren) {
                 dqRepNode = (DQRepositoryNode) dqNode;
@@ -147,13 +146,13 @@ public class DQRepositoryNode extends RepositoryNode {
         if (isUntilSchema()) {
             label = getObject().getLabel();
         } else {
-            if (null != this.getObject() && this.getObject().isDeleted()) {
-                label = this.getProperties(EProperties.LABEL).toString();
-            } else {
-                label = getLabel().toLowerCase();
+            if (!(this instanceof MDMSchemaRepNode || this instanceof MDMXmlElementRepNode)) {
+                if (null != this.getObject() && this.getObject().isDeleted()) {
+                    label = this.getProperties(EProperties.LABEL) == null ? PluginConstant.EMPTY_STRING : this.getProperties(
+                            EProperties.LABEL).toString();
+                }
             }
         }
-
         if (label.toLowerCase().contains(getFilterStr())) {
             if (!isUntilSchema()) {
                 return true;
@@ -162,7 +161,6 @@ public class DQRepositoryNode extends RepositoryNode {
             }
         }
         // ~23161
-
         DQRepositoryNode childNode = null;
         for (IRepositoryNode child : getChildren()) {
             childNode = (DQRepositoryNode) child;
@@ -186,6 +184,58 @@ public class DQRepositoryNode extends RepositoryNode {
             }
         }
         return false;
+    }
+
+    /**
+     * ADD gdbu 2011-7-26 bug : 23220
+     * 
+     * DOC gdbu Comment method "filterRecycleBin". This method just used to filter Recycle Bin node .
+     * 
+     * @param children
+     * @return
+     */
+    public List<IRepositoryNode> filterRecycleBin(List<IRepositoryNode> children) {
+        if (!isOnFilterring()) {
+            return children;
+        }
+        List<IRepositoryNode> sortChildren = RepositoryNodeHelper.sortChildren(children);
+        List<IRepositoryNode> filteredChildren = new ArrayList<IRepositoryNode>();
+        if (!getFilterStr().equals(PluginConstant.EMPTY_STRING)) {
+            DQRepositoryNode dqRepNode = null;
+            for (IRepositoryNode dqNode : sortChildren) {
+                dqRepNode = (DQRepositoryNode) dqNode;
+                if (dqRepNode.canMatchRecycleBin()) {
+                    filteredChildren.add(dqRepNode);
+                }
+            }
+        }
+        return filteredChildren;
+    }
+
+    private boolean canMatchRecycleBin() {
+        boolean returnVal = false;
+        String label = getLabel();
+        if (null != this.getObject() && this.getObject().isDeleted()) {
+            label = this.getProperties(EProperties.LABEL) == null ? PluginConstant.EMPTY_STRING : this.getProperties(
+                    EProperties.LABEL).toString();
+        }
+        if (label.toLowerCase().contains(getFilterStr())) {
+            returnVal = true;
+        }
+        List<IRepositoryNode> children = getChildren();
+        boolean matchRecycleBin = false;
+        DQRepositoryNode childNode = null;
+        List<IRepositoryNode> filteredChildren = new ArrayList<IRepositoryNode>();
+        for (IRepositoryNode child : children) {
+            childNode = (DQRepositoryNode) child;
+            if (childNode.canMatchRecycleBin()) {
+                matchRecycleBin = true;
+            } else {
+                filteredChildren.add(child);
+            }
+        }
+        this.getChildren().removeAll(filteredChildren);
+        return returnVal || matchRecycleBin;
     }
 
     public static String getFilterStr() {

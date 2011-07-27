@@ -60,11 +60,7 @@ public class MDMXmlElementRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         // MOD gdbu 2011-7-1 bug : 22204
-        if (!super.getChildren().isEmpty()) {
-            return filterResultsIfAny(super.getChildren());
-        }
-        // ~22204
-
+        List<IRepositoryNode> childrenNode = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getObject();
         TdXmlElementType xmlElementType = ((MetadataXmlElementTypeRepositoryObject) object).getTdXmlElementType();
         List<TdXmlElementType> xmlElements = null;
@@ -83,9 +79,9 @@ public class MDMXmlElementRepNode extends DQRepositoryNode {
                 xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
                 // MOD gdbu 2011-7-1 bug : 22204
-                super.getChildren().add(xmlElementTypeNode);
+                childrenNode.add(xmlElementTypeNode);
             }
-            return filterResultsIfAny(super.getChildren());
+            return filterResultsIfAny(childrenNode);
             // ~22204
         } else {
             return new ArrayList<IRepositoryNode>();

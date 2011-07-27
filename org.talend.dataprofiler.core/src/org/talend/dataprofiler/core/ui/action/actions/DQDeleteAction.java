@@ -93,7 +93,7 @@ public class DQDeleteAction extends DeleteAction {
     @Override
     public void run() {
         ISelection selection = this.getSelection();
-        boolean onlyDeleteReportFile = true;
+        // boolean onlyDeleteReportFile = true;
         for (Object obj : ((IStructuredSelection) selection).toArray()) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
@@ -102,7 +102,7 @@ public class DQDeleteAction extends DeleteAction {
                     deleteReportFile((ReportFileRepNode) node);
                     continue;
                 }
-                onlyDeleteReportFile = false;
+                // onlyDeleteReportFile = false;
                 boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
                 // logical delete
                 if (!isStateDeleted) {
@@ -139,10 +139,8 @@ public class DQDeleteAction extends DeleteAction {
         }
 
         // the deleteReportFile() mothed have refresh the workspace and dqview
-        if (!onlyDeleteReportFile) {
-            CorePlugin.getDefault().refreshWorkSpace();
-            CorePlugin.getDefault().refreshDQView();
-        }
+        CorePlugin.getDefault().refreshWorkSpace();
+        CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
     }
 
     private boolean handleDependencies(IRepositoryNode node) {
@@ -247,6 +245,7 @@ public class DQDeleteAction extends DeleteAction {
         }
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
         super.setAvoidUnloadResources(true);
+        IRepositoryNode node = getCurrentRepositoryNode();
         super.run();
         // because reuse tos codes.remove current node from its parent(simple folder) for phisical delete or logical
         // delete dependency.
@@ -257,6 +256,9 @@ public class DQDeleteAction extends DeleteAction {
                             ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", PluginConstant.SPACE_STRING)))) {//$NON-NLS-1$
                 parent.getChildren(true).remove(currentNode);
             }
+        }
+        if (null != node) {
+            CorePlugin.getDefault().refreshDQView(node.getParent());
         }
     }
 
@@ -287,10 +289,10 @@ public class DQDeleteAction extends DeleteAction {
                 latestRepIFile.delete(true, null);
 
                 // refresh the wrokspace and dqview (Reports node and RecycleBin node)
-                CorePlugin.getDefault().refreshWorkSpace();
+//                CorePlugin.getDefault().refreshWorkSpace();
                 IRepositoryNode reportsNode = RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS);
                 if (reportsNode != null) {
-                    CorePlugin.getDefault().refreshDQView(reportsNode);
+                    CorePlugin.getDefault().refreshDQView(repFileNode.getParent());
                 }
                 RecycleBinRepNode recycleBinRepNode = RepositoryNodeHelper.getRecycleBinRepNode();
                 if (recycleBinRepNode != null) {

@@ -103,6 +103,9 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         fViewer.setContentProvider(fContentProvider);
         fViewer.setLabelProvider(fLabelProvider);
         fViewer.setInput(this.getMetadataFolder());
+        // MOD gdbu 2011-7-25 bug : 23220
+        ((ResourceViewContentProvider) fContentProvider).setTreeViewer(fViewer);
+        // ~23220
     }
 
     protected abstract void addListeners();

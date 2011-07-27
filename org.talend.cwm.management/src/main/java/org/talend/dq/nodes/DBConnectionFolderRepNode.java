@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -54,8 +55,8 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren(boolean withDeleted) {
+        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         try {
-            super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
             // sub folders
@@ -70,7 +71,7 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
                 folder.setRepositoryNode(childNodeFolder);
-                super.getChildren().add(childNodeFolder);
+                children.add(childNodeFolder);
             }
             // connection files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
@@ -82,12 +83,12 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
                 repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
                 repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
                 viewObject.setRepositoryNode(repNode);
-                super.getChildren().add(repNode);
+                children.add(repNode);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return filterResultsIfAny(super.getChildren());
+        return filterResultsIfAny(children);
     }
 
     /*

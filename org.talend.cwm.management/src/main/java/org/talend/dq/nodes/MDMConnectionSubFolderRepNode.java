@@ -19,7 +19,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu  class global comment. Detailled comment
  */
-public class MDMConnectionSubFolderRepNode extends DQRepositoryNode {
+public class MDMConnectionSubFolderRepNode extends MDMConnectionFolderRepNode {
 
     /**
      * DOC klliu MDMConnectionSubFolderRepNode constructor comment.
@@ -29,6 +29,19 @@ public class MDMConnectionSubFolderRepNode extends DQRepositoryNode {
      */
     public MDMConnectionSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        if (null != this.getObject()) {
+            return this.getObject().getProperty().getLabel();
+        }
+        return super.getLabel();
     }
 
 }

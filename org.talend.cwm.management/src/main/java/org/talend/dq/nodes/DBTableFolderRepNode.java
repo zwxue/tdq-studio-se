@@ -89,22 +89,15 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         // MOD gdbu 2011-7-1 bug : 22204
-        if (!super.getChildren().isEmpty()) {
-            // ADD msjian 2011-7-22 22206: fix the note 93101
-            if (DQRepositoryNode.isUntilSchema()) {
-                return super.getChildren();
-            }
-            // ~22206
-            return filterResultsIfAny(super.getChildren());
-        }
+        List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();
-        createRepositoryNodeTableFolderNode(super.getChildren(), object);
+        createRepositoryNodeTableFolderNode(children, object);
         // ADD msjian 2011-7-22 22206: fix the note 93101
         if (DQRepositoryNode.isUntilSchema()) {
-            return super.getChildren();
+            return children;
         }
         // ~22206
-        return filterResultsIfAny(super.getChildren());
+        return filterResultsIfAny(children);
         // ~22204
     }
 

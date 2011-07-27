@@ -500,6 +500,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void newLabelAndText(Composite composite, String labelString, String inputText) {
+        if (composite.isDisposed()) {
+            return;
+        }
         Label label = new Label(composite, SWT.NONE);
         label.setText(labelString);
         newText(composite, inputText, DefaultMessagesImpl.getString("RespositoryDetailView.none")); //$NON-NLS-1$

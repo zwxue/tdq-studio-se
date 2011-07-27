@@ -47,7 +47,8 @@ public class TableContentProvider extends ResourceViewContentProvider {
     public Object[] getChildren(Object parentElement) {
         List<RepositoryNode> analyzeNode = new ArrayList<RepositoryNode>();
         if (parentElement instanceof DBTableFolderRepNode || parentElement instanceof DBViewFolderRepNode) {
-            return ((IRepositoryNode) parentElement).getChildren().toArray();
+            // return ((IRepositoryNode) parentElement).getChildren().toArray();
+            return super.getChildren(parentElement);
         } else if (parentElement instanceof IContainer) {
             IContainer container = (IContainer) parentElement;
             if (ResourceManager.isMetadataFolder(container)) {

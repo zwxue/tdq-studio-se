@@ -62,6 +62,7 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
@@ -515,6 +516,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         applyDialogFont(fViewer.getTree());
 
         fViewer.setContentProvider(fContentProvider);
+        //mod gdbu 2011-7-25 bug 23220
+        ((ResourceViewContentProvider) fContentProvider).setTreeViewer(fViewer);
+        //~23220
         fViewer.setLabelProvider(fLabelProvider);
         fViewer.addCheckStateListener(new ICheckStateListener() {
 
