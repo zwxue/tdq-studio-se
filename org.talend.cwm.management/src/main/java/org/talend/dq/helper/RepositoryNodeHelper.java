@@ -141,6 +141,8 @@ public final class RepositoryNodeHelper {
 
     private static List<IRepositoryNode> allFilteredNodeList = new ArrayList<IRepositoryNode>();
 
+    private static IRepositoryNode filteredNode = null;// Record the current filter position
+
     public static RecycleBinRepNode getRecycleBinRepNode() {
         if (recycleBinRepNode == null) {
             recycleBinRepNode = initRecycleBinRepNode();
@@ -2511,9 +2513,9 @@ public final class RepositoryNodeHelper {
     public static IRepositoryNode getFirstFilteredNode() {
         if (!allFilteredNodeList.isEmpty()) {
             for (IRepositoryNode iNode : allFilteredNodeList) {
-                if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
-                    return iNode;
-
+                IRepositoryNode comparedNode = compareNodeLabelWithFilterStr(iNode);
+                if (null != comparedNode) {
+                    return comparedNode;
                 }
             }
             return null;
@@ -2553,8 +2555,12 @@ public final class RepositoryNodeHelper {
                     findGivenNode = true;
                     continue;
                 }
-                if (allFilteredNodeList.get(i).getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
-                    return allFilteredNodeList.get(i);
+                // if (allFilteredNodeList.get(i).getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                // return allFilteredNodeList.get(i);
+                // }
+                IRepositoryNode comparedNode = compareNodeLabelWithFilterStr(allFilteredNodeList.get(i));
+                if (null != comparedNode) {
+                    return comparedNode;
                 }
             }
         }
@@ -2593,14 +2599,30 @@ public final class RepositoryNodeHelper {
                     findGivenNode = true;
                     continue;
                 }
-                if (allFilteredNodeList.get(i).getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
-                    return allFilteredNodeList.get(i);
+                // if (allFilteredNodeList.get(i).getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                // return allFilteredNodeList.get(i);
+                // }
+                IRepositoryNode comparedNode = compareNodeLabelWithFilterStr(allFilteredNodeList.get(i));
+                if (null != comparedNode) {
+                    return comparedNode;
                 }
             }
         }
         return null;
     }
 
+    public static IRepositoryNode compareNodeLabelWithFilterStr(IRepositoryNode iNode) {
+        if (null != iNode.getObject()) {
+            if (iNode.getObject().getProperty().getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                return iNode;
+            }
+        }
+        if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())
+                && !(iNode instanceof MDMConnectionFolderRepNode)) {
+            return iNode;
+        }
+        return null;
+    }
 
     /**
      * 
@@ -2632,7 +2654,7 @@ public final class RepositoryNodeHelper {
         List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         children.add(node);
         if (node.hasChildren()) {
-            for (IRepositoryNode iNode : node.getChildren()) {
+            for (IRepositoryNode iNode : sortChildren(node.getChildren())) {
                 children.addAll(getTreeList(iNode));
             }
         }
@@ -2640,4 +2662,13 @@ public final class RepositoryNodeHelper {
     }
 
 
+    public static IRepositoryNode getFilteredNode() {
+        return filteredNode;
+    }
+
+    public static void setFilteredNode(IRepositoryNode fNode) {
+        filteredNode = fNode;
+    }
+
+    
 }

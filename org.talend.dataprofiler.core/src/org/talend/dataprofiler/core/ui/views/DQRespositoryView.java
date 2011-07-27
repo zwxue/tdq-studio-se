@@ -610,12 +610,19 @@ public class DQRespositoryView extends CommonNavigator {
                 if (DQRepositoryNode.isOnFilterring()) {
                     TreeItem[] selectionNode = getCommonViewer().getTree().getSelection();
                     if (0 == selectionNode.length) {
+                        IRepositoryNode filteredNode = RepositoryNodeHelper.getFilteredNode();
+                        IRepositoryNode previousFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(filteredNode);
+                        if (null != previousFilteredNode) {
+                            RepositoryNodeHelper.setFilteredNode(previousFilteredNode);
+                            showSelectedElements((RepositoryNode) previousFilteredNode);
+                        }
                     } else {
                         TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
                         IRepositoryNode repoNode = (IRepositoryNode) selectionTreeItem.getData();
-                        IRepositoryNode nextFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(repoNode);
-                        if (null != nextFilteredNode) {
-                            showSelectedElements((RepositoryNode) nextFilteredNode);
+                        IRepositoryNode previousFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(repoNode);
+                        if (null != previousFilteredNode) {
+                            RepositoryNodeHelper.setFilteredNode(previousFilteredNode);
+                            showSelectedElements((RepositoryNode) previousFilteredNode);
                         }
                     }
                 }
@@ -634,11 +641,18 @@ public class DQRespositoryView extends CommonNavigator {
                 if (DQRepositoryNode.isOnFilterring()) {
                     TreeItem[] selectionNode = getCommonViewer().getTree().getSelection();
                     if (0 == selectionNode.length) {
+                        IRepositoryNode filteredNode = RepositoryNodeHelper.getFilteredNode();
+                        IRepositoryNode nextFilteredNode = RepositoryNodeHelper.getNextFilteredNode(filteredNode);
+                        if (null != nextFilteredNode) {
+                            RepositoryNodeHelper.setFilteredNode(nextFilteredNode);
+                            showSelectedElements((RepositoryNode) nextFilteredNode);
+                        }
                     } else {
                         TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
                         IRepositoryNode repoNode = (IRepositoryNode) selectionTreeItem.getData();
                         IRepositoryNode nextFilteredNode = RepositoryNodeHelper.getNextFilteredNode(repoNode);
                         if (null != nextFilteredNode) {
+                            RepositoryNodeHelper.setFilteredNode(nextFilteredNode);
                             showSelectedElements((RepositoryNode) nextFilteredNode);
                         }
                     }
@@ -656,6 +670,7 @@ public class DQRespositoryView extends CommonNavigator {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (DQRepositoryNode.isOnFilterring()) {
+                    RepositoryNodeHelper.setFilteredNode(null);
                     DQRepositoryNode.setFilterStr(PluginConstant.EMPTY_STRING);
                     DQRepositoryNode.setFiltering(false);
                     filterText.setText(PluginConstant.EMPTY_STRING);
@@ -689,7 +704,7 @@ public class DQRespositoryView extends CommonNavigator {
             DQRepositoryNode.setFilterStr(filterStr);
             if (filterStr.trim().equals(PluginConstant.EMPTY_STRING)) {
                 DQRepositoryNode.setFiltering(false);
-                // refresh();
+
             } else {
                 DQRepositoryNode.setFiltering(true);
                 RepositoryNodeHelper.fillTreeList();
@@ -699,10 +714,11 @@ public class DQRespositoryView extends CommonNavigator {
         } finally {
             IRepositoryNode firstFilteredNode = RepositoryNodeHelper.getFirstFilteredNode();
             if (null != firstFilteredNode) {
+                RepositoryNodeHelper.setFilteredNode(firstFilteredNode);
                 showSelectedElements((RepositoryNode) firstFilteredNode);
             }
-            refresh();
         }
+        refresh();
     }
 
     private void expandNodes(boolean expand) {
