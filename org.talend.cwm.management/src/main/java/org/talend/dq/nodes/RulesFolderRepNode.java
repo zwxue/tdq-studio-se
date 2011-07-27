@@ -64,23 +64,8 @@ public class RulesFolderRepNode extends DQRepositoryNode {
             super.getChildren().clear();
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
                     .getTdqRepositoryViewObjects(getContentType(), RepositoryNodeHelper.getPath(this).toString());
-            for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
-                Folder folder = null;
-                boolean isSystem = container.getLabel().equals("SQL");
-                if (isSystem) {
-                    folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
-                    if (!withDeleted && folder.isDeleted()) {
-                        continue;
-                    }
-                    RulesSQLFolderRepNode systemIndicatorFolderNode = new RulesSQLFolderRepNode(folder, this,
-                            ENodeType.SYSTEM_FOLDER);
-                    folder.setRepositoryNode(systemIndicatorFolderNode);
-                    systemIndicatorFolderNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
-                    systemIndicatorFolderNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
-                    super.getChildren().add(systemIndicatorFolderNode);
-
-                }
-            }
+            // create child node for folder of rules
+            createRulesChildFolderNode(withDeleted, tdqViewObjects);
 
         } catch (PersistenceException e) {
             log.error(e, e);
@@ -88,6 +73,40 @@ public class RulesFolderRepNode extends DQRepositoryNode {
         // MOD gdbu 2011-6-29 bug : 22204
         return filterResultsIfAny(super.getChildren());
         // ~22204
+    }
+
+    private void createRulesChildFolderNode(boolean withDeleted, RootContainer<String, IRepositoryViewObject> tdqViewObjects) {
+        for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
+            Folder folder = null;
+            boolean isSql = container.getLabel().equals("SQL");
+            boolean isParser = container.getLabel().equals("Parser");
+            if (isSql) {
+                folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
+                if (!withDeleted && folder.isDeleted()) {
+                    continue;
+                }
+                RulesSQLFolderRepNode systemIndicatorFolderNode = new RulesSQLFolderRepNode(folder, this,
+                        ENodeType.SYSTEM_FOLDER);
+                folder.setRepositoryNode(systemIndicatorFolderNode);
+                systemIndicatorFolderNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
+                systemIndicatorFolderNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
+                super.getChildren().add(systemIndicatorFolderNode);
+
+            }
+            if (isParser) {
+                folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_PARSER);
+                if (!withDeleted && folder.isDeleted()) {
+                    continue;
+                }
+                RulesParserFolderRepNode systemIndicatorFolderNode = new RulesParserFolderRepNode(folder, this,
+                        ENodeType.SYSTEM_FOLDER);
+                folder.setRepositoryNode(systemIndicatorFolderNode);
+                systemIndicatorFolderNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_PARSER);
+                systemIndicatorFolderNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_PARSER);
+                super.getChildren().add(systemIndicatorFolderNode);
+            }
+
+        }
     }
 
 }

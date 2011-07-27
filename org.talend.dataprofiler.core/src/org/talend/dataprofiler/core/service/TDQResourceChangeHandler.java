@@ -51,6 +51,7 @@ import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -195,10 +196,15 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             case org.talend.dataquality.properties.PropertiesPackage.TDQ_BUSINESS_RULE_ITEM:
                 fileExtension = FileConstants.RULE_EXTENSION;
                 // MOD gdbu 2011-6-10 bug : 21823 2011-06-27 revert the error type code by klliu
-                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
-                        ERepositoryObjectType.TDQ_RULES_SQL, false, fileExtension);
-                // ~21823
                 DQRule dqrule = ((TDQBusinessRuleItem) item).getDqrule();
+                if (dqrule instanceof WhereRule) {
+                    itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                            ERepositoryObjectType.TDQ_RULES_SQL, false, fileExtension);
+                } else {
+                    itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                            ERepositoryObjectType.TDQ_RULES_PARSER, false, fileExtension);
+                }
+                // ~21823
                 DQRuleWriter createdRuleWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createdRuleWriter();
                 createdRuleWriter.addResourceContent(itemResource, dqrule);
 

@@ -50,6 +50,8 @@ import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInpu
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
@@ -61,6 +63,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -99,6 +102,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
         this.repNode = repNode;
         this.repViewObj = repNode.getObject();
+
     }
 
     @Override
@@ -197,8 +201,17 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 result = new IndicatorDefinitionItemEditorInput(item);
                 editorID = IndicatorEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_RULES.getKey().equals(key)) {
-                result = new BusinessRuleItemEditorInput(item);
-                editorID = DQRuleEditor.class.getName();
+                // MOD klliu feature 23109
+                ERepositoryObjectType properties = (ERepositoryObjectType) repViewObj.getRepositoryNode().getProperties(
+                        EProperties.CONTENT_TYPE);
+                if (properties.equals(ERepositoryObjectType.TDQ_RULES_PARSER)) {
+                    result = new ParserRuleItemEditorInput(item);
+                    editorID = ParserRuleEditor.class.getName();
+                } else {
+                    result = new BusinessRuleItemEditorInput(item);
+                    editorID = DQRuleEditor.class.getName();
+                }
+
             } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
                 result = new PatternItemEditorInput(item);
                 editorID = PatternEditor.class.getName();

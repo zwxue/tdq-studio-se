@@ -20,6 +20,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -28,12 +29,15 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleToExcelEnum;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -93,6 +97,55 @@ public final class ExportFactory {
                     out.writeRecord(temp);
                 }
 
+                out.flush();
+                out.close();
+
+            } catch (FileNotFoundException fe) {
+                MessageDialogWithToggle
+                        .openError(
+                                null,
+                                DefaultMessagesImpl.getString("ExportFactory.errorOne"), DefaultMessagesImpl.getString("ExportFactory.notFoundFile")); //$NON-NLS-1$ //$NON-NLS-2$
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
+
+    public static void export(File exportFile, IFolder folder, ParserRule... parserRules) {
+        if (exportFile.isDirectory()) {
+            for (ParserRule pr : parserRules) {
+                File file = new File(exportFile, pr.getName() + ".csv"); //$NON-NLS-1$
+                export(file, folder, pr);
+            }
+        }
+
+        String fileExtName = getFileExtName(exportFile);
+
+        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+
+            try {
+
+                CsvWriter out = new CsvWriter(new FileOutputStream(exportFile), CURRENT_SEPARATOR, Charset.defaultCharset());
+                out.setEscapeMode(CsvWriter.ESCAPE_MODE_DOUBLED);
+                out.setTextQualifier(TEXT_QUAL);
+                out.setForceQualifier(USE_TEXT_QUAL);
+                List<TdExpression> expressions = parserRules[0].getExpression();
+                ParserRuleToExcelEnum[] values = ParserRuleToExcelEnum.values();
+                String[] temp = new String[values.length];
+
+                for (int i = 0; i < expressions.toArray().length + 1; i++) {
+                    for (int j = 0; j < values.length; j++) {
+                        if (i == 0) {
+                            temp[j] = values[j].getLiteral();
+                        } else {
+                            Map<ParserRuleToExcelEnum, String> relatedValueFromParserRule = getRelatedValueFromParserRule(
+                                    parserRules[0], folder, expressions.get(i - 1));
+                            temp[j] = relatedValueFromParserRule.get(values[j]);
+                        }
+                    }
+
+                    out.writeRecord(temp);
+                }
                 out.flush();
                 out.close();
 
@@ -169,6 +222,31 @@ public final class ExportFactory {
         }
         return temps;
     }
+
+    private static Map<ParserRuleToExcelEnum, String> getRelatedValueFromParserRule(ParserRule parserRule, IFolder folder,
+            TdExpression tde) {
+
+        Map<ParserRuleToExcelEnum, String> idMap = new HashMap<ParserRuleToExcelEnum, String>();
+
+        if (folder != null) {
+            IFile file = ResourceFileMap.findCorrespondingFile(parserRule);
+            URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
+
+            // get the basic information
+            idMap.put(ParserRuleToExcelEnum.Label, relpaceTempHasEscapeCharactor(parserRule.getName()));
+            idMap.put(ParserRuleToExcelEnum.Purpose, relpaceTempHasEscapeCharactor(MetadataHelper.getPurpose(parserRule)));
+            idMap.put(ParserRuleToExcelEnum.Description, relpaceTempHasEscapeCharactor(MetadataHelper.getDescription(parserRule)));
+            idMap.put(ParserRuleToExcelEnum.Author, relpaceTempHasEscapeCharactor(MetadataHelper.getAuthor(parserRule)));
+            idMap.put(ParserRuleToExcelEnum.RelativePath, relativeURI.toString());
+            idMap.put(ParserRuleToExcelEnum.Name, tde.getName());
+            idMap.put(ParserRuleToExcelEnum.Body, tde.getBody());
+            idMap.put(ParserRuleToExcelEnum.Language, tde.getLanguage());
+
+        }
+
+        return idMap;
+    }
+
     private static Map<PatternToExcelEnum, String> getRelatedValueFromIndicatorDefinition(
             IndicatorDefinition indicatorDefinition, IFolder folder) {
 

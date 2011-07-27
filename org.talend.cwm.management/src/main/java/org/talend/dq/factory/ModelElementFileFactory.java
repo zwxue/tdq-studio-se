@@ -59,7 +59,7 @@ public final class ModelElementFileFactory {
         } else if (FactoriesUtil.isReportFile(fileExtension)) {
             modelElement = RepResourceFileHelper.getInstance().findReport(file);
         } else if (FactoriesUtil.isDQRuleFile(fileExtension)) {
-            modelElement = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
+            modelElement = DQRuleResourceFileHelper.getInstance().findDQRule(file);
         } else if (FactoriesUtil.isPatternFile(fileExtension)) {
             modelElement = PatternResourceFileHelper.getInstance().findPattern(file);
         } else if (FactoriesUtil.isUDIFile(fileExtension)) {

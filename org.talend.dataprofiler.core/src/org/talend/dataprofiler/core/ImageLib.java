@@ -58,6 +58,14 @@ public final class ImageLib {
 
     public static final String ADD_ACTION = "add.gif"; //$NON-NLS-1$
 
+    public static final String UP_ACTION = "up.gif"; //$NON-NLS-1$
+
+    public static final String DOWN_ACTION = "down.gif"; //$NON-NLS-1$
+
+    public static final String PASTE_ACTION = "paste.gif"; //$NON-NLS-1$
+
+    public static final String COPY_ACTION = "copy.gif"; //$NON-NLS-1$
+
     public static final String SECTION_PREVIEW = "eye.png"; //$NON-NLS-1$
 
     public static final String ACTION_NEW_REPORT = "report_add.png"; //$NON-NLS-1$

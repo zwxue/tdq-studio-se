@@ -82,6 +82,8 @@ public final class DQStructureManager {
 
     public static final String RULES_PATH = "/dqrules"; //$NON-NLS-1$
 
+    public static final String RULES_PARSER = "/parser"; //$NON-NLS-1$
+
     private static final String PATTERN_PATH = "/patterns"; //$NON-NLS-1$
 
     private static final String SQL_LIKE_PATH = "/sql_like";//$NON-NLS-1$
@@ -161,6 +163,8 @@ public final class DQStructureManager {
                     Path.EMPTY, EResourceConstant.RULES.getName());
             Folder rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
                     EResourceConstant.RULES_SQL.getName());
+            Folder rulesParserFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES,
+                    Path.EMPTY, EResourceConstant.RULES_PARSER.getName());
 
             Folder exchangeFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                     Path.EMPTY, EResourceConstant.EXCHANGE.getName());
@@ -196,7 +200,7 @@ public final class DQStructureManager {
             copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
             copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
             copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
-
+            copyFilesToFolder(plugin, RULES_PARSER, true, rulesParserFoler, null, ERepositoryObjectType.TDQ_RULES_PARSER);
             WorkspaceVersionHelper.storeVersion();
 
             ResourceService.refreshStructure();
@@ -276,7 +280,7 @@ public final class DQStructureManager {
                 if (type.equals(ERepositoryObjectType.TDQ_PATTERN_ELEMENT)) {
                     folderName = ERepositoryObjectType.getFolderName(type);
                 }
-                if (type.equals(ERepositoryObjectType.TDQ_RULES_SQL)) {
+                if (type.equals(ERepositoryObjectType.TDQ_RULES_SQL) || type.equals(ERepositoryObjectType.TDQ_RULES_PARSER)) {
                     folderName = ERepositoryObjectType.getFolderName(type);
                 } else if (type.equals(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT)) {
                     folderName = ERepositoryObjectType.getFolderName(type);

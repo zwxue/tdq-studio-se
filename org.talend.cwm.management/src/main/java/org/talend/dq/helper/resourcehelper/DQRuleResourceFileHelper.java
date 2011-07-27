@@ -12,10 +12,17 @@
 // ============================================================================
 package org.talend.dq.helper.resourcehelper;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
 import org.talend.resource.ResourceManager;
@@ -26,6 +33,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public final class DQRuleResourceFileHelper extends ResourceFileMap {
 
+    private static Logger log = Logger.getLogger(DQRuleResourceFileHelper.class);
     private static DQRuleResourceFileHelper instance;
 
     RulesSwitch<WhereRule> rulesSwitch = new RulesSwitch<WhereRule>() {
@@ -35,6 +43,14 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
             return object;
         }
 
+    };
+
+    RulesSwitch<DQRule> dqRulesSwitch = new RulesSwitch<DQRule>() {
+
+        @Override
+        public DQRule caseDQRule(DQRule object) {
+            return object;
+        }
     };
 
     private DQRuleResourceFileHelper() {
@@ -55,12 +71,43 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
      * @param file
      * @return
      */
+    public DQRule findDQRule(IFile file) {
+        if (checkFile(file)) {
+            return (DQRule) getModelElement(file);
+        }
+
+        return null;
+    }
+
     public WhereRule findWhereRule(IFile file) {
         if (checkFile(file)) {
             return (WhereRule) getModelElement(file);
         }
 
         return null;
+    }
+
+    public Set<String> getAllParserRlueNames(IFolder folder) {
+        Set<String> list = new HashSet<String>();
+        return getNestFolderParserRuleNames(list, folder);
+    }
+
+    private Set<String> getNestFolderParserRuleNames(Set<String> list, IFolder folder) {
+        try {
+            for (IResource resource : folder.members()) {
+                if (resource instanceof IFile) {
+                    DQRule findDQRule = findDQRule((IFile) resource);
+                    if (findDQRule != null) {
+                        list.add(findDQRule.getName());
+                    }
+                } else {
+                    getNestFolderParserRuleNames(list, (IFolder) resource);
+                }
+            }
+        } catch (CoreException e) {
+            log.error(e, e);
+        }
+        return list;
     }
 
     /*
@@ -80,7 +127,7 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
      */
     @Override
     public ModelElement doSwitch(EObject object) {
-        return rulesSwitch.doSwitch(object);
+        return dqRulesSwitch.doSwitch(object);
     }
 
     /*

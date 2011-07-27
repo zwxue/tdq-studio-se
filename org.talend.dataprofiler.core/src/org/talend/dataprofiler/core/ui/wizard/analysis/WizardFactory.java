@@ -30,11 +30,13 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.table.FunctionDependencyW
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
+import org.talend.dataprofiler.core.ui.wizard.parserrule.NewParserRulesWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.analysis.parameters.DQParserRulesParameter;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
 import org.talend.dq.analysis.parameters.FuncationDependencyParameter;
 import org.talend.dq.analysis.parameters.NamedColumnSetAnalysisParameter;
@@ -159,6 +161,9 @@ public final class WizardFactory {
         return new NewDQRulesWizard(parameter);
     }
 
+    public static NewParserRulesWizard createNewParserRuleWizard(DQParserRulesParameter parameter) {
+        return new NewParserRulesWizard(parameter);
+    }
     public static NewUDIndicatorWizard createNewUDIWizard(UDIndicatorParameter parameter) {
         return new NewUDIndicatorWizard(parameter);
     }

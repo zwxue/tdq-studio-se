@@ -116,6 +116,8 @@ public enum EResourceConstant {
     PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     RULES("Rules", "TDQ_Libraries/Rules", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
+    // MOD klliu feature 23019
+    RULES_PARSER("Parser", "TDQ_Libraries/Rules/Parser", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     DB_CONNECTIONS("connections", "metadata/connections", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     MDM_CONNECTIONS("MDMconnections", "metadata/MDMconnections", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$

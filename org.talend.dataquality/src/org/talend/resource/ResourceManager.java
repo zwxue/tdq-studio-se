@@ -130,6 +130,15 @@ public final class ResourceManager {
     }
 
     /**
+     * 
+     * DOC klliu Comment method "getRulesParserFolder".
+     * 
+     * @return
+     */
+    public static IFolder getRulesParserFolder() {
+        return getOneFolder(EResourceConstant.RULES_PARSER);
+    }
+    /**
      * DOC bZhou Comment method "getPatternFolder".
      * 
      * @return

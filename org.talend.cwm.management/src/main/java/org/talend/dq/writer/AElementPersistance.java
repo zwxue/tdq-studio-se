@@ -56,6 +56,7 @@ import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
@@ -150,6 +151,8 @@ public abstract class AElementPersistance {
         } else if (element instanceof IndicatorDefinition) {
             if (element instanceof WhereRule) { // dqrule
                 path = itemPath.makeRelativeTo(ResourceManager.getRulesSQLFolder().getFullPath());
+            } else if (element instanceof ParserRule) { // parserrule
+                path = itemPath.makeRelativeTo(ResourceManager.getRulesParserFolder().getFullPath());
             } else { // indicator definition
                 path = itemPath.makeRelativeTo(ResourceManager.getIndicatorFolder().getFullPath());
             }

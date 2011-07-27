@@ -42,14 +42,20 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
+import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleToExcelEnum;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.rules.ParserRule;
+import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -547,6 +553,7 @@ public final class ImportFactory {
 
         return text;
     }
+
     // private static boolean checkFileHeader(String[] headers) {
     //
     // List<String> patternEnum = new ArrayList<String>();
@@ -638,4 +645,145 @@ public final class ImportFactory {
             FilesUtils.copyFile(importFile, file);
         }
     }
+
+    /**
+     * 
+     * DOC klliu Comment method "importParserRuleToStucture".
+     * 
+     * @param importFile
+     * @param selectionFolder
+     * @param skip
+     * @param rename
+     * @return
+     */
+    public static List<ReturnCode> importParserRuleToStucture(File importFile, IFolder selectionFolder, boolean skip,
+            boolean rename) {
+        List<ReturnCode> information = new ArrayList<ReturnCode>();
+
+        Set<String> names = DQRuleResourceFileHelper.getInstance().getAllParserRlueNames(selectionFolder);
+        ParserRuleParameters prParameters = new ImportFactory().new ParserRuleParameters();
+        String fileExtName = getFileExtName(importFile);
+
+        if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+            String name = ""; //$NON-NLS-1$
+            boolean isNeedToCreate = true;
+            try {
+                CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
+                reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
+                reader.setTextQualifier(TEXT_QUAL);
+                reader.setUseTextQualifier(USE_TEXT_QUAL);
+                reader.readHeaders();
+
+                java.text.SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("yyyyMMddHHmmssSSS"); //$NON-NLS-1$
+
+                while (reader.readRecord()) {
+                    name = reader.get(ParserRuleToExcelEnum.Label.getLiteral());
+
+                    if (names.contains(name)) {
+                        if (skip) {
+                            information.add(new ReturnCode(DefaultMessagesImpl
+                                    .getString("ImportFactory.ParserRuleImported", name), false)); //$NON-NLS-1$
+                            isNeedToCreate = false;
+                            break;
+                        }
+                        if (rename) {
+                            name = name + "(" + simpleDateFormat.format(new Date()) + Math.random() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+                        }
+                    }
+                    prParameters.label = reader.get(ParserRuleToExcelEnum.Label.getLiteral());
+                    prParameters.auther = reader.get(ParserRuleToExcelEnum.Author.getLiteral());
+                    prParameters.description = reader.get(ParserRuleToExcelEnum.Description.getLiteral());
+                    prParameters.purpose = reader.get(ParserRuleToExcelEnum.Purpose.getLiteral());
+                    ParserRuleTdExpresstion prExpresstion = new ImportFactory().new ParserRuleTdExpresstion();
+                    prExpresstion.name = reader.get(ParserRuleToExcelEnum.Name.getLiteral());
+                    prExpresstion.body = reader.get(ParserRuleToExcelEnum.Body.getLiteral());
+                    prExpresstion.language = reader.get(ParserRuleToExcelEnum.Language.getLiteral());
+                    prParameters.prExpresstions.add(prExpresstion);
+                }
+                if (isNeedToCreate) {
+                    names.add(name);
+                    information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedParserRuleSucess" //$NON-NLS-1$
+                            , name), true));
+                    createAndStoreParserRule(prParameters, selectionFolder);
+                }
+
+                reader.close();
+
+            } catch (Exception e) {
+                log.error(e, e);
+                information.add(new ReturnCode(
+                        DefaultMessagesImpl.getString("ImportFactory.importedParserRuleFailed", name), false)); //$NON-NLS-1$
+            }
+        }
+        return information;
+    }
+
+    /**
+     * DOC klliu Comment method "createAndStoreParserRule".
+     * 
+     * @param prParameters
+     * @param selectionFolder
+     */
+    public static void createAndStoreParserRule(ParserRuleParameters prParameters, IFolder selectionFolder) {
+        DqRuleBuilder ruleBuilder = new DqRuleBuilder();
+        boolean ruleInitialized = ruleBuilder.initializeParserRuleBuilder(prParameters.label);
+        if (ruleInitialized) {
+            ParserRule parserRule = ruleBuilder.getParserRule();
+            TaggedValueHelper.setValidStatus(true, parserRule);
+            List<ParserRuleTdExpresstion> prExpresstions = prParameters.getPrExpresstions();
+            for (ParserRuleTdExpresstion prtde : prExpresstions) {
+                parserRule.addExpression(prtde.name, prtde.language, prtde.body);
+            }
+            IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
+            if (ruleIndicatorCategory != null && !parserRule.getCategories().contains(ruleIndicatorCategory)) {
+                parserRule.getCategories().add(ruleIndicatorCategory);
+            }
+            ElementWriterFactory.getInstance().createdRuleWriter().create(parserRule, selectionFolder);
+        }
+
+    }
+
+    private class ParserRuleParameters {
+
+        String label;
+
+        String auther;
+
+        String description;
+
+        String purpose;
+
+        String status;
+
+        List<ParserRuleTdExpresstion> prExpresstions;
+
+        public ParserRuleParameters() {
+            label = ""; //$NON-NLS-1$
+            auther = ""; //$NON-NLS-1$
+            description = ""; //$NON-NLS-1$
+            purpose = ""; //$NON-NLS-1$
+            status = DevelopmentStatus.DRAFT.getLiteral();
+            prExpresstions = new ArrayList<ParserRuleTdExpresstion>();
+        }
+
+        public List<ParserRuleTdExpresstion> getPrExpresstions() {
+            return this.prExpresstions;
+        }
+    }
+
+    private class ParserRuleTdExpresstion {
+
+        String name;
+
+        String body;
+
+        String language;
+
+        public ParserRuleTdExpresstion() {
+            name = ""; //$NON-NLS-1$
+            body = ""; //$NON-NLS-1$
+            language = ""; //$NON-NLS-1$
+        }
+    }
+
 }

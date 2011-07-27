@@ -339,6 +339,27 @@
             </or>
          </enablement>
       </actionProvider>
+      <actionProvider
+            appearsBefore="org.talend.dataprofiler.core.ui.action.provider.CreateUserFolderProvider"
+            class="org.talend.dataprofiler.core.ui.action.provider.ParserRuleActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.CreateParserRuleActionProvider">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.talend.dq.nodes.RulesParserFolderRepNode">
+               </adapt>
+               <instanceof
+                     value="org.talend.dq.nodes.RulesSubFolderRepNode">
+               </instanceof>
+               <adapt
+                     type="java.util.Collection">
+                  <count
+                        value="0">
+                  </count>
+               </adapt>
+            </or>
+         </enablement>
+      </actionProvider>
        <actionProvider
              class="org.talend.dataprofiler.core.ui.action.provider.UDIActionProvider"
              id="org.talend.dataprofiler.core.ui.action.provider.UserDefinedIndicatorsActionProvider">
@@ -819,6 +840,13 @@
             icon="icons/magnifier.png"
             id="org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"
             name="drillDownResultEditor">
+      </editor>
+      <editor
+            class="org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor"
+            extensions="rules"
+            icon="icons/dqrule_red.png"
+            id="org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor"
+            name="%editor.name.ParserRuleEditor">
       </editor>
    </extension>
   <extension

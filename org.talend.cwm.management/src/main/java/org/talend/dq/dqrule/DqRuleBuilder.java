@@ -15,6 +15,7 @@ package org.talend.dq.dqrule;
 import org.apache.log4j.Logger;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -30,6 +31,27 @@ public class DqRuleBuilder {
 
     private WhereRule whereRule;
 
+    private ParserRule parserRule;
+
+    public boolean initializeParserRuleBuilder(String ruleName) {
+
+        if (initialized) {
+            log.warn(Messages.getString("DqRuleBuilder.Initialized")); //$NON-NLS-1$
+            return false;
+        }
+
+        this.parserRule = RulesFactory.eINSTANCE.createParserRule();
+        parserRule.setName(ruleName);
+        IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
+        if (ruleIndicatorCategory != null) {
+            parserRule.getCategories().add(ruleIndicatorCategory);
+        }
+        return true;
+    }
+
+    public ParserRule getParserRule() {
+        return parserRule;
+    }
     public boolean initializeDqRuleBuilder(String ruleName) {
 
         if (initialized) {
