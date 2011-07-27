@@ -295,7 +295,51 @@ public enum IndicatorEnum {
                           ColumnsetPackage.ALL_MATCH_INDICATOR,
                           ColumnsetPackage.Literals.ALL_MATCH_INDICATOR,
                           "All Match Indicator", //$NON-NLS-1$
-                          null);
+                          null),
+    ValidPhoneCountIndicatorEnum(
+                                 IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR,
+                                 IndicatorsPackage.Literals.VALID_PHONE_COUNT_INDICATOR,
+                                 "Valid Phone Count", //$NON-NLS-1$
+                                 null),
+    PossiblePhoneCountIndicatorEnum(
+                                    IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR,
+                                    IndicatorsPackage.Literals.POSSIBLE_PHONE_COUNT_INDICATOR,
+                                    "Possible Phone Count", //$NON-NLS-1$
+                                    null),
+    ValidRegCodeCountIndicatorEnum(
+                                   IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR,
+                                   IndicatorsPackage.Literals.VALID_REG_CODE_COUNT_INDICATOR,
+                                   "Valid Region Code Count", //$NON-NLS-1$
+                                   null),
+    InvalidRegCodeCountIndicatorEnum(
+                                     IndicatorsPackage.INVALID_REG_CODE_COUNT_INDICATOR,
+                                     IndicatorsPackage.Literals.INVALID_REG_CODE_COUNT_INDICATOR,
+                                     "Invalid Region Code Count", //$NON-NLS-1$
+                                     null),
+    WellFormIntePhoneCountIndicatorEnum(
+                                        IndicatorsPackage.WELL_FORM_INTE_PHONE_COUNT_INDICATOR,
+                                        IndicatorsPackage.Literals.WELL_FORM_INTE_PHONE_COUNT_INDICATOR,
+                                           "Well Formed International Phone Count", //$NON-NLS-1$
+                                           null),
+    WellFormNationalPhoneCountIndicatorEnum(
+                                            IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR,
+                                            IndicatorsPackage.Literals.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR,
+                                              "Well Formed national Phone Count", //$NON-NLS-1$
+                                          null),
+    WellFormE164PhoneCountIndicatorEnum(
+                                          IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR,
+                                          IndicatorsPackage.Literals.WELL_FORM_E164_PHONE_COUNT_INDICATOR,
+                                          "Well Formed E164 Phone Count", //$NON-NLS-1$
+                                        null),
+    PhoneNumbStatisticsIndicatorEnum(
+                            IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR,
+                            IndicatorsPackage.Literals.PHONE_NUMB_STATISTICS_INDICATOR,
+                                     "Phone Nubmber Statistics", //$NON-NLS-1$
+                            new IndicatorEnum[] { ValidPhoneCountIndicatorEnum, ValidRegCodeCountIndicatorEnum,
+                                    InvalidRegCodeCountIndicatorEnum, PossiblePhoneCountIndicatorEnum,
+                                    WellFormIntePhoneCountIndicatorEnum, WellFormNationalPhoneCountIndicatorEnum,
+                                    WellFormE164PhoneCountIndicatorEnum });
+
 
     private EClass indicatorType;
 
@@ -497,6 +541,22 @@ public enum IndicatorEnum {
             returnEnum = ColumnDependencyIndicatorEnum;
         } else if (indicatorType == AllMatchIndicatorEnum.getIndicatorType()) {
             returnEnum = AllMatchIndicatorEnum;
+        } else if (indicatorType == ValidPhoneCountIndicatorEnum.getIndicatorType()) {
+            returnEnum = ValidPhoneCountIndicatorEnum;
+        } else if (indicatorType == ValidRegCodeCountIndicatorEnum.getIndicatorType()) {
+            returnEnum = ValidRegCodeCountIndicatorEnum;
+        } else if (indicatorType == PossiblePhoneCountIndicatorEnum.getIndicatorType()) {
+            returnEnum = PossiblePhoneCountIndicatorEnum;
+        } else if (indicatorType == InvalidRegCodeCountIndicatorEnum.getIndicatorType()) {
+            returnEnum = InvalidRegCodeCountIndicatorEnum;
+        } else if (indicatorType == WellFormE164PhoneCountIndicatorEnum.getIndicatorType()) {
+            returnEnum = WellFormE164PhoneCountIndicatorEnum;
+        } else if (indicatorType == WellFormIntePhoneCountIndicatorEnum.getIndicatorType()) {
+            returnEnum = WellFormIntePhoneCountIndicatorEnum;
+        } else if (indicatorType == WellFormNationalPhoneCountIndicatorEnum.getIndicatorType()) {
+            returnEnum = WellFormNationalPhoneCountIndicatorEnum;
+        } else if (indicatorType == PhoneNumbStatisticsIndicatorEnum.getIndicatorType()) {
+            returnEnum = PhoneNumbStatisticsIndicatorEnum;
         }
 
         return returnEnum;

@@ -10907,13 +10907,22 @@ public interface IndicatorsPackage extends EPackage {
     int TEXT_PARAMETERS__REPLACEMENT_CHARACTERS = 5;
 
     /**
+     * The feature id for the '<em><b>Country Code</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TEXT_PARAMETERS__COUNTRY_CODE = 6;
+
+    /**
      * The number of structural features of the '<em>Text Parameters</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TEXT_PARAMETERS_FEATURE_COUNT = 6;
+    int TEXT_PARAMETERS_FEATURE_COUNT = 7;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.LowerQuartileIndicatorImpl <em>Lower Quartile Indicator</em>}' class.
@@ -19934,6 +19943,2588 @@ public interface IndicatorsPackage extends EPackage {
     int BIN_LOW_FREQUENCY_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.ValidPhoneCountIndicatorImpl <em>Valid Phone Count Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.ValidPhoneCountIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getValidPhoneCountIndicator()
+     * @generated
+     */
+    int VALID_PHONE_COUNT_INDICATOR = 62;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__NAME = INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__SET = INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__COUNT = INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__COMPUTED = INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__JOIN_CONDITIONS = INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__MAX_NUMBER_ROWS = INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__VALID_ROW = INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Valid Phone Num Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Valid Phone Count Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_PHONE_COUNT_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.PossiblePhoneCountIndicatorImpl <em>Possible Phone Count Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.PossiblePhoneCountIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPossiblePhoneCountIndicator()
+     * @generated
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR = 63;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__NAME = INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__SET = INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__COUNT = INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__COMPUTED = INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__JOIN_CONDITIONS = INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__MAX_NUMBER_ROWS = INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__VALID_ROW = INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Possible Phone Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Possible Phone Count Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int POSSIBLE_PHONE_COUNT_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.ValidRegCodeCountIndicatorImpl <em>Valid Reg Code Count Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.ValidRegCodeCountIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getValidRegCodeCountIndicator()
+     * @generated
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR = 64;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__NAME = INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__SET = INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__COUNT = INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__COMPUTED = INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__JOIN_CONDITIONS = INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__MAX_NUMBER_ROWS = INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__VALID_ROW = INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Valid Reg Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Valid Reg Code Count Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int VALID_REG_CODE_COUNT_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.InvalidRegCodeCountIndicatorImpl <em>Invalid Reg Code Count Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.InvalidRegCodeCountIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getInvalidRegCodeCountIndicator()
+     * @generated
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR = 65;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__NAME = INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__SET = INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__COUNT = INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__COMPUTED = INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__JOIN_CONDITIONS = INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__MAX_NUMBER_ROWS = INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__VALID_ROW = INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Invalid Reg Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR__INVALID_REG_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Invalid Reg Code Count Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int INVALID_REG_CODE_COUNT_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl <em>Well Form National Phone Count Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWellFormNationalPhoneCountIndicator()
+     * @generated
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR = 66;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__NAME = INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__SET = INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__COUNT = INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__COMPUTED = INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__JOIN_CONDITIONS = INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__MAX_NUMBER_ROWS = INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__VALID_ROW = INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Well Form Nati Phone Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Well Form National Phone Count Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WellFormIntePhoneCountIndicatorImpl <em>Well Form Inte Phone Count Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.WellFormIntePhoneCountIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWellFormIntePhoneCountIndicator()
+     * @generated
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR = 67;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__NAME = INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__SET = INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__COUNT = INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__COMPUTED = INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__JOIN_CONDITIONS = INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__MAX_NUMBER_ROWS = INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__VALID_ROW = INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Well Form Inte Phone Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR__WELL_FORM_INTE_PHONE_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Well Form Inte Phone Count Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_INTE_PHONE_COUNT_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImpl <em>Well Form E164 Phone Count Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWellFormE164PhoneCountIndicator()
+     * @generated
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR = 68;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__NAME = INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__SET = INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__COUNT = INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__COMPUTED = INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__JOIN_CONDITIONS = INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__MAX_NUMBER_ROWS = INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__VALID_ROW = INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Well Form E164 Phone Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT = INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>Well Form E164 Phone Count Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WELL_FORM_E164_PHONE_COUNT_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.PhoneNumbStatisticsIndicatorImpl <em>Phone Numb Statistics Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.PhoneNumbStatisticsIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR = 69;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__NAME = COMPOSITE_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__VISIBILITY = COMPOSITE_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__CLIENT_DEPENDENCY = COMPOSITE_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__SUPPLIER_DEPENDENCY = COMPOSITE_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__CONSTRAINT = COMPOSITE_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__NAMESPACE = COMPOSITE_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__IMPORTER = COMPOSITE_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__STEREOTYPE = COMPOSITE_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__TAGGED_VALUE = COMPOSITE_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__DOCUMENT = COMPOSITE_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__DESCRIPTION = COMPOSITE_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__RESPONSIBLE_PARTY = COMPOSITE_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__ELEMENT_NODE = COMPOSITE_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__SET = COMPOSITE_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__RENDERED_OBJECT = COMPOSITE_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__VOCABULARY_ELEMENT = COMPOSITE_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__MEASUREMENT = COMPOSITE_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__CHANGE_REQUEST = COMPOSITE_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__DASDL_PROPERTY = COMPOSITE_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__COUNT = COMPOSITE_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__NULL_COUNT = COMPOSITE_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__PARAMETERS = COMPOSITE_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__ANALYZED_ELEMENT = COMPOSITE_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__DATAMINING_TYPE = COMPOSITE_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__INDICATOR_DEFINITION = COMPOSITE_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__INSTANTIATED_EXPRESSIONS = COMPOSITE_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__COMPUTED = COMPOSITE_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__JOIN_CONDITIONS = COMPOSITE_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__MAX_NUMBER_ROWS = COMPOSITE_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__VALID_ROW = COMPOSITE_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__IN_VALID_ROW = COMPOSITE_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__STORE_DATA = COMPOSITE_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Well Form National Phone Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Well Form Inte Phone Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_INTE_PHONE_COUNT_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The feature id for the '<em><b>Well Form E164 Phone Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_E164_PHONE_COUNT_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 2;
+
+    /**
+     * The feature id for the '<em><b>Invalid Reg Code Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__INVALID_REG_CODE_COUNT_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 3;
+
+    /**
+     * The feature id for the '<em><b>Possible Phone Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__POSSIBLE_PHONE_COUNT_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 4;
+
+    /**
+     * The feature id for the '<em><b>Valid Reg Code Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__VALID_REG_CODE_COUNT_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 5;
+
+    /**
+     * The feature id for the '<em><b>Valid Phone Count Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 6;
+
+    /**
+     * The number of structural features of the '<em>Phone Numb Statistics Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR_FEATURE_COUNT = COMPOSITE_INDICATOR_FEATURE_COUNT + 7;
+
+    /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -19941,7 +22532,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getEnumStatistics()
      * @generated
      */
-    int ENUM_STATISTICS = 62;
+    int ENUM_STATISTICS = 70;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DataminingType <em>Datamining Type</em>}' enum.
@@ -19951,7 +22542,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDataminingType()
      * @generated
      */
-    int DATAMINING_TYPE = 63;
+    int DATAMINING_TYPE = 71;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DateGrain <em>Date Grain</em>}' enum.
@@ -19961,7 +22552,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateGrain()
      * @generated
      */
-    int DATE_GRAIN = 64;
+    int DATE_GRAIN = 72;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.MatchingAlgorithm <em>Matching Algorithm</em>}' enum.
@@ -19971,7 +22562,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingAlgorithm()
      * @generated
      */
-    int MATCHING_ALGORITHM = 65;
+    int MATCHING_ALGORITHM = 73;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.IndicatorValueType <em>Indicator Value Type</em>}' enum.
@@ -19981,7 +22572,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getIndicatorValueType()
      * @generated
      */
-    int INDICATOR_VALUE_TYPE = 66;
+    int INDICATOR_VALUE_TYPE = 74;
 
     /**
      * The meta object id for the '<em>Java Set</em>' data type.
@@ -19991,7 +22582,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaSet()
      * @generated
      */
-    int JAVA_SET = 67;
+    int JAVA_SET = 75;
 
     /**
      * The meta object id for the '<em>Java Hash Map</em>' data type.
@@ -20001,7 +22592,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaHashMap()
      * @generated
      */
-    int JAVA_HASH_MAP = 68;
+    int JAVA_HASH_MAP = 76;
 
     /**
      * The meta object id for the '<em>Java Tree Map</em>' data type.
@@ -20011,7 +22602,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaTreeMap()
      * @generated
      */
-    int JAVA_TREE_MAP = 69;
+    int JAVA_TREE_MAP = 77;
 
     /**
      * The meta object id for the '<em>Object Array</em>' data type.
@@ -20020,7 +22611,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getObjectArray()
      * @generated
      */
-    int OBJECT_ARRAY = 70;
+    int OBJECT_ARRAY = 78;
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
@@ -21077,6 +23668,17 @@ public interface IndicatorsPackage extends EPackage {
     EAttribute getTextParameters_ReplacementCharacters();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.TextParameters#getCountryCode <em>Country Code</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Country Code</em>'.
+     * @see org.talend.dataquality.indicators.TextParameters#getCountryCode()
+     * @see #getTextParameters()
+     * @generated
+     */
+    EAttribute getTextParameters_CountryCode();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.LowerQuartileIndicator <em>Lower Quartile Indicator</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -21477,6 +24079,240 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      */
     EClass getBinLowFrequencyIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.ValidPhoneCountIndicator <em>Valid Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Valid Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.ValidPhoneCountIndicator
+     * @generated
+     */
+    EClass getValidPhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.ValidPhoneCountIndicator#getValidPhoneNumCount <em>Valid Phone Num Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Valid Phone Num Count</em>'.
+     * @see org.talend.dataquality.indicators.ValidPhoneCountIndicator#getValidPhoneNumCount()
+     * @see #getValidPhoneCountIndicator()
+     * @generated
+     */
+    EAttribute getValidPhoneCountIndicator_ValidPhoneNumCount();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.PossiblePhoneCountIndicator <em>Possible Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Possible Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PossiblePhoneCountIndicator
+     * @generated
+     */
+    EClass getPossiblePhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.PossiblePhoneCountIndicator#getPossiblePhoneCount <em>Possible Phone Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Possible Phone Count</em>'.
+     * @see org.talend.dataquality.indicators.PossiblePhoneCountIndicator#getPossiblePhoneCount()
+     * @see #getPossiblePhoneCountIndicator()
+     * @generated
+     */
+    EAttribute getPossiblePhoneCountIndicator_PossiblePhoneCount();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.ValidRegCodeCountIndicator <em>Valid Reg Code Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Valid Reg Code Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.ValidRegCodeCountIndicator
+     * @generated
+     */
+    EClass getValidRegCodeCountIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.ValidRegCodeCountIndicator#getValidRegCount <em>Valid Reg Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Valid Reg Count</em>'.
+     * @see org.talend.dataquality.indicators.ValidRegCodeCountIndicator#getValidRegCount()
+     * @see #getValidRegCodeCountIndicator()
+     * @generated
+     */
+    EAttribute getValidRegCodeCountIndicator_ValidRegCount();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.InvalidRegCodeCountIndicator <em>Invalid Reg Code Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Invalid Reg Code Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.InvalidRegCodeCountIndicator
+     * @generated
+     */
+    EClass getInvalidRegCodeCountIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.InvalidRegCodeCountIndicator#getInvalidRegCount <em>Invalid Reg Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Invalid Reg Count</em>'.
+     * @see org.talend.dataquality.indicators.InvalidRegCodeCountIndicator#getInvalidRegCount()
+     * @see #getInvalidRegCodeCountIndicator()
+     * @generated
+     */
+    EAttribute getInvalidRegCodeCountIndicator_InvalidRegCount();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator <em>Well Form National Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Well Form National Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator
+     * @generated
+     */
+    EClass getWellFormNationalPhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator#getWellFormNatiPhoneCount <em>Well Form Nati Phone Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Well Form Nati Phone Count</em>'.
+     * @see org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator#getWellFormNatiPhoneCount()
+     * @see #getWellFormNationalPhoneCountIndicator()
+     * @generated
+     */
+    EAttribute getWellFormNationalPhoneCountIndicator_WellFormNatiPhoneCount();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator <em>Well Form Inte Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Well Form Inte Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator
+     * @generated
+     */
+    EClass getWellFormIntePhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator#getWellFormIntePhoneCount <em>Well Form Inte Phone Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Well Form Inte Phone Count</em>'.
+     * @see org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator#getWellFormIntePhoneCount()
+     * @see #getWellFormIntePhoneCountIndicator()
+     * @generated
+     */
+    EAttribute getWellFormIntePhoneCountIndicator_WellFormIntePhoneCount();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator <em>Well Form E164 Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Well Form E164 Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator
+     * @generated
+     */
+    EClass getWellFormE164PhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator#getWellFormE164PhoneCount <em>Well Form E164 Phone Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Well Form E164 Phone Count</em>'.
+     * @see org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator#getWellFormE164PhoneCount()
+     * @see #getWellFormE164PhoneCountIndicator()
+     * @generated
+     */
+    EAttribute getWellFormE164PhoneCountIndicator_WellFormE164PhoneCount();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator <em>Phone Numb Statistics Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Phone Numb Statistics Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator
+     * @generated
+     */
+    EClass getPhoneNumbStatisticsIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getWellFormNationalPhoneCountIndicator <em>Well Form National Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Well Form National Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getWellFormNationalPhoneCountIndicator()
+     * @see #getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    EReference getPhoneNumbStatisticsIndicator_WellFormNationalPhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getWellFormIntePhoneCountIndicator <em>Well Form Inte Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Well Form Inte Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getWellFormIntePhoneCountIndicator()
+     * @see #getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    EReference getPhoneNumbStatisticsIndicator_WellFormIntePhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getWellFormE164PhoneCountIndicator <em>Well Form E164 Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Well Form E164 Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getWellFormE164PhoneCountIndicator()
+     * @see #getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    EReference getPhoneNumbStatisticsIndicator_WellFormE164PhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getInvalidRegCodeCountIndicator <em>Invalid Reg Code Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Invalid Reg Code Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getInvalidRegCodeCountIndicator()
+     * @see #getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    EReference getPhoneNumbStatisticsIndicator_InvalidRegCodeCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getPossiblePhoneCountIndicator <em>Possible Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Possible Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getPossiblePhoneCountIndicator()
+     * @see #getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    EReference getPhoneNumbStatisticsIndicator_PossiblePhoneCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getValidRegCodeCountIndicator <em>Valid Reg Code Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Valid Reg Code Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getValidRegCodeCountIndicator()
+     * @see #getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    EReference getPhoneNumbStatisticsIndicator_ValidRegCodeCountIndicator();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getValidPhoneCountIndicator <em>Valid Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Valid Phone Count Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getValidPhoneCountIndicator()
+     * @see #getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    EReference getPhoneNumbStatisticsIndicator_ValidPhoneCountIndicator();
 
     /**
      * Returns the meta object for enum '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}'.
@@ -22456,6 +25292,14 @@ public interface IndicatorsPackage extends EPackage {
         EAttribute TEXT_PARAMETERS__REPLACEMENT_CHARACTERS = eINSTANCE.getTextParameters_ReplacementCharacters();
 
         /**
+         * The meta object literal for the '<em><b>Country Code</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TEXT_PARAMETERS__COUNTRY_CODE = eINSTANCE.getTextParameters_CountryCode();
+
+        /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.LowerQuartileIndicatorImpl <em>Lower Quartile Indicator</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -22820,6 +25664,198 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EClass BIN_LOW_FREQUENCY_INDICATOR = eINSTANCE.getBinLowFrequencyIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.ValidPhoneCountIndicatorImpl <em>Valid Phone Count Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.ValidPhoneCountIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getValidPhoneCountIndicator()
+         * @generated
+         */
+        EClass VALID_PHONE_COUNT_INDICATOR = eINSTANCE.getValidPhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Valid Phone Num Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT = eINSTANCE.getValidPhoneCountIndicator_ValidPhoneNumCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.PossiblePhoneCountIndicatorImpl <em>Possible Phone Count Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.PossiblePhoneCountIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPossiblePhoneCountIndicator()
+         * @generated
+         */
+        EClass POSSIBLE_PHONE_COUNT_INDICATOR = eINSTANCE.getPossiblePhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Possible Phone Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT = eINSTANCE.getPossiblePhoneCountIndicator_PossiblePhoneCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.ValidRegCodeCountIndicatorImpl <em>Valid Reg Code Count Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.ValidRegCodeCountIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getValidRegCodeCountIndicator()
+         * @generated
+         */
+        EClass VALID_REG_CODE_COUNT_INDICATOR = eINSTANCE.getValidRegCodeCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Valid Reg Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT = eINSTANCE.getValidRegCodeCountIndicator_ValidRegCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.InvalidRegCodeCountIndicatorImpl <em>Invalid Reg Code Count Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.InvalidRegCodeCountIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getInvalidRegCodeCountIndicator()
+         * @generated
+         */
+        EClass INVALID_REG_CODE_COUNT_INDICATOR = eINSTANCE.getInvalidRegCodeCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Invalid Reg Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute INVALID_REG_CODE_COUNT_INDICATOR__INVALID_REG_COUNT = eINSTANCE.getInvalidRegCodeCountIndicator_InvalidRegCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl <em>Well Form National Phone Count Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWellFormNationalPhoneCountIndicator()
+         * @generated
+         */
+        EClass WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR = eINSTANCE.getWellFormNationalPhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form Nati Phone Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT = eINSTANCE.getWellFormNationalPhoneCountIndicator_WellFormNatiPhoneCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.WellFormIntePhoneCountIndicatorImpl <em>Well Form Inte Phone Count Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.WellFormIntePhoneCountIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWellFormIntePhoneCountIndicator()
+         * @generated
+         */
+        EClass WELL_FORM_INTE_PHONE_COUNT_INDICATOR = eINSTANCE.getWellFormIntePhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form Inte Phone Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute WELL_FORM_INTE_PHONE_COUNT_INDICATOR__WELL_FORM_INTE_PHONE_COUNT = eINSTANCE.getWellFormIntePhoneCountIndicator_WellFormIntePhoneCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImpl <em>Well Form E164 Phone Count Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getWellFormE164PhoneCountIndicator()
+         * @generated
+         */
+        EClass WELL_FORM_E164_PHONE_COUNT_INDICATOR = eINSTANCE.getWellFormE164PhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form E164 Phone Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT = eINSTANCE.getWellFormE164PhoneCountIndicator_WellFormE164PhoneCount();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.PhoneNumbStatisticsIndicatorImpl <em>Phone Numb Statistics Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.PhoneNumbStatisticsIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getPhoneNumbStatisticsIndicator()
+         * @generated
+         */
+        EClass PHONE_NUMB_STATISTICS_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form National Phone Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_WellFormNationalPhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form Inte Phone Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_INTE_PHONE_COUNT_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_WellFormIntePhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form E164 Phone Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_E164_PHONE_COUNT_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_WellFormE164PhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Invalid Reg Code Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference PHONE_NUMB_STATISTICS_INDICATOR__INVALID_REG_CODE_COUNT_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_InvalidRegCodeCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Possible Phone Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference PHONE_NUMB_STATISTICS_INDICATOR__POSSIBLE_PHONE_COUNT_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_PossiblePhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Valid Reg Code Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference PHONE_NUMB_STATISTICS_INDICATOR__VALID_REG_CODE_COUNT_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_ValidRegCodeCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Valid Phone Count Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_ValidPhoneCountIndicator();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

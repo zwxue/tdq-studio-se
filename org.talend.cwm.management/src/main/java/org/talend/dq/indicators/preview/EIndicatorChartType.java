@@ -77,7 +77,9 @@ public enum EIndicatorChartType {
     YEAR_LOW_FREQUENCE_STATISTICS(
                                   Messages.getString("EIndicatorChartType.YearLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
     // ~
-    SIMPLE_TEXT_STATISTICS(Messages.getString("EIndicatorChartType.SimpleTextStatistics"), new TextStatisticsExplorer()); //$NON-NLS-1$
+    SIMPLE_TEXT_STATISTICS(Messages.getString("EIndicatorChartType.SimpleTextStatistics"), new TextStatisticsExplorer()), //$NON-NLS-1$
+
+    PHONE_NUMBER_STATISTICS(Messages.getString("EIndicatorChartType.PhoneNumbStatistics"), null); //$NON-NLS-1$
 
     private String literal;
 

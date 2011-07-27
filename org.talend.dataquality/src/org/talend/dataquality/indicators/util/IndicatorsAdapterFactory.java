@@ -370,6 +370,38 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
                 return createBinLowFrequencyIndicatorAdapter();
             }
             @Override
+            public Adapter caseValidPhoneCountIndicator(ValidPhoneCountIndicator object) {
+                return createValidPhoneCountIndicatorAdapter();
+            }
+            @Override
+            public Adapter casePossiblePhoneCountIndicator(PossiblePhoneCountIndicator object) {
+                return createPossiblePhoneCountIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseValidRegCodeCountIndicator(ValidRegCodeCountIndicator object) {
+                return createValidRegCodeCountIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseInvalidRegCodeCountIndicator(InvalidRegCodeCountIndicator object) {
+                return createInvalidRegCodeCountIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseWellFormNationalPhoneCountIndicator(WellFormNationalPhoneCountIndicator object) {
+                return createWellFormNationalPhoneCountIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseWellFormIntePhoneCountIndicator(WellFormIntePhoneCountIndicator object) {
+                return createWellFormIntePhoneCountIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseWellFormE164PhoneCountIndicator(WellFormE164PhoneCountIndicator object) {
+                return createWellFormE164PhoneCountIndicatorAdapter();
+            }
+            @Override
+            public Adapter casePhoneNumbStatisticsIndicator(PhoneNumbStatisticsIndicator object) {
+                return createPhoneNumbStatisticsIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -1262,6 +1294,118 @@ public class IndicatorsAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createBinLowFrequencyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.ValidPhoneCountIndicator <em>Valid Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.ValidPhoneCountIndicator
+     * @generated
+     */
+    public Adapter createValidPhoneCountIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.PossiblePhoneCountIndicator <em>Possible Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.PossiblePhoneCountIndicator
+     * @generated
+     */
+    public Adapter createPossiblePhoneCountIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.ValidRegCodeCountIndicator <em>Valid Reg Code Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.ValidRegCodeCountIndicator
+     * @generated
+     */
+    public Adapter createValidRegCodeCountIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.InvalidRegCodeCountIndicator <em>Invalid Reg Code Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.InvalidRegCodeCountIndicator
+     * @generated
+     */
+    public Adapter createInvalidRegCodeCountIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator <em>Well Form National Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator
+     * @generated
+     */
+    public Adapter createWellFormNationalPhoneCountIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator <em>Well Form Inte Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator
+     * @generated
+     */
+    public Adapter createWellFormIntePhoneCountIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator <em>Well Form E164 Phone Count Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator
+     * @generated
+     */
+    public Adapter createWellFormE164PhoneCountIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator <em>Phone Numb Statistics Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator
+     * @generated
+     */
+    public Adapter createPhoneNumbStatisticsIndicatorAdapter() {
         return null;
     }
 

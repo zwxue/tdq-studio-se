@@ -33,6 +33,8 @@ public final class PluginConstant {
 
     public static final String SINGLE_QUOTE = "\'";//$NON-NLS-1$
 
+    public static final String SPACE_STRING = " ";//$NON-NLS-1$
+
     private PluginConstant() {
 
     }

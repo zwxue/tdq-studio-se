@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.InvalidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
@@ -53,6 +54,8 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
+import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.QuarterFrequencyIndicator;
 import org.talend.dataquality.indicators.QuarterLowFrequencyIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
@@ -65,8 +68,13 @@ import org.talend.dataquality.indicators.SumIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
+import org.talend.dataquality.indicators.ValidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.WeekFrequencyIndicator;
 import org.talend.dataquality.indicators.WeekLowFrequencyIndicator;
+import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.YearFrequencyIndicator;
 import org.talend.dataquality.indicators.YearLowFrequencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
@@ -612,6 +620,46 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     @Override
     public Boolean caseUpperQuartileIndicator(UpperQuartileIndicator object) {
         return setIndicatorDefinition(object, "Upper Quartile"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseValidPhoneCountIndicator(ValidPhoneCountIndicator object) {
+        return setIndicatorDefinition(object, "Valid Phone Number Count"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean casePossiblePhoneCountIndicator(PossiblePhoneCountIndicator object) {
+        return setIndicatorDefinition(object, "Possible Phone Number Count"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseValidRegCodeCountIndicator(ValidRegCodeCountIndicator object) {
+        return setIndicatorDefinition(object, "Valid Region Code Count"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseInvalidRegCodeCountIndicator(InvalidRegCodeCountIndicator object) {
+        return setIndicatorDefinition(object, "Invalid Region Code Count"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseWellFormNationalPhoneCountIndicator(WellFormNationalPhoneCountIndicator object) {
+        return setIndicatorDefinition(object, "Well Formed National Phone Number Count"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseWellFormIntePhoneCountIndicator(WellFormIntePhoneCountIndicator object) {
+        return setIndicatorDefinition(object, "Well Formed International Phone Number Count"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseWellFormE164PhoneCountIndicator(WellFormE164PhoneCountIndicator object) {
+        return setIndicatorDefinition(object, "Well Formed E164 Phone Number Count"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean casePhoneNumbStatisticsIndicator(PhoneNumbStatisticsIndicator object) {
+        return setIndicatorDefinition(object, "Phone Number Statistics"); //$NON-NLS-1$
     }
 
 }

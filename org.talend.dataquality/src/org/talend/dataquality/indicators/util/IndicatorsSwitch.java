@@ -746,6 +746,79 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR: {
+                ValidPhoneCountIndicator validPhoneCountIndicator = (ValidPhoneCountIndicator)theEObject;
+                T result = caseValidPhoneCountIndicator(validPhoneCountIndicator);
+                if (result == null) result = caseIndicator(validPhoneCountIndicator);
+                if (result == null) result = caseModelElement(validPhoneCountIndicator);
+                if (result == null) result = caseElement(validPhoneCountIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR: {
+                PossiblePhoneCountIndicator possiblePhoneCountIndicator = (PossiblePhoneCountIndicator)theEObject;
+                T result = casePossiblePhoneCountIndicator(possiblePhoneCountIndicator);
+                if (result == null) result = caseIndicator(possiblePhoneCountIndicator);
+                if (result == null) result = caseModelElement(possiblePhoneCountIndicator);
+                if (result == null) result = caseElement(possiblePhoneCountIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR: {
+                ValidRegCodeCountIndicator validRegCodeCountIndicator = (ValidRegCodeCountIndicator)theEObject;
+                T result = caseValidRegCodeCountIndicator(validRegCodeCountIndicator);
+                if (result == null) result = caseIndicator(validRegCodeCountIndicator);
+                if (result == null) result = caseModelElement(validRegCodeCountIndicator);
+                if (result == null) result = caseElement(validRegCodeCountIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.INVALID_REG_CODE_COUNT_INDICATOR: {
+                InvalidRegCodeCountIndicator invalidRegCodeCountIndicator = (InvalidRegCodeCountIndicator)theEObject;
+                T result = caseInvalidRegCodeCountIndicator(invalidRegCodeCountIndicator);
+                if (result == null) result = caseIndicator(invalidRegCodeCountIndicator);
+                if (result == null) result = caseModelElement(invalidRegCodeCountIndicator);
+                if (result == null) result = caseElement(invalidRegCodeCountIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR: {
+                WellFormNationalPhoneCountIndicator wellFormNationalPhoneCountIndicator = (WellFormNationalPhoneCountIndicator)theEObject;
+                T result = caseWellFormNationalPhoneCountIndicator(wellFormNationalPhoneCountIndicator);
+                if (result == null) result = caseIndicator(wellFormNationalPhoneCountIndicator);
+                if (result == null) result = caseModelElement(wellFormNationalPhoneCountIndicator);
+                if (result == null) result = caseElement(wellFormNationalPhoneCountIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.WELL_FORM_INTE_PHONE_COUNT_INDICATOR: {
+                WellFormIntePhoneCountIndicator wellFormIntePhoneCountIndicator = (WellFormIntePhoneCountIndicator)theEObject;
+                T result = caseWellFormIntePhoneCountIndicator(wellFormIntePhoneCountIndicator);
+                if (result == null) result = caseIndicator(wellFormIntePhoneCountIndicator);
+                if (result == null) result = caseModelElement(wellFormIntePhoneCountIndicator);
+                if (result == null) result = caseElement(wellFormIntePhoneCountIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR: {
+                WellFormE164PhoneCountIndicator wellFormE164PhoneCountIndicator = (WellFormE164PhoneCountIndicator)theEObject;
+                T result = caseWellFormE164PhoneCountIndicator(wellFormE164PhoneCountIndicator);
+                if (result == null) result = caseIndicator(wellFormE164PhoneCountIndicator);
+                if (result == null) result = caseModelElement(wellFormE164PhoneCountIndicator);
+                if (result == null) result = caseElement(wellFormE164PhoneCountIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR: {
+                PhoneNumbStatisticsIndicator phoneNumbStatisticsIndicator = (PhoneNumbStatisticsIndicator)theEObject;
+                T result = casePhoneNumbStatisticsIndicator(phoneNumbStatisticsIndicator);
+                if (result == null) result = caseCompositeIndicator(phoneNumbStatisticsIndicator);
+                if (result == null) result = caseIndicator(phoneNumbStatisticsIndicator);
+                if (result == null) result = caseModelElement(phoneNumbStatisticsIndicator);
+                if (result == null) result = caseElement(phoneNumbStatisticsIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -1450,6 +1523,126 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseBinLowFrequencyIndicator(BinLowFrequencyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Valid Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Valid Phone Count Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseValidPhoneCountIndicator(ValidPhoneCountIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Possible Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Possible Phone Count Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T casePossiblePhoneCountIndicator(PossiblePhoneCountIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Valid Reg Code Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Valid Reg Code Count Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseValidRegCodeCountIndicator(ValidRegCodeCountIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Invalid Reg Code Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Invalid Reg Code Count Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseInvalidRegCodeCountIndicator(InvalidRegCodeCountIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Well Form National Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Well Form National Phone Count Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseWellFormNationalPhoneCountIndicator(WellFormNationalPhoneCountIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Well Form Inte Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Well Form Inte Phone Count Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseWellFormIntePhoneCountIndicator(WellFormIntePhoneCountIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Well Form E164 Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Well Form E164 Phone Count Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseWellFormE164PhoneCountIndicator(WellFormE164PhoneCountIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Phone Numb Statistics Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Phone Numb Statistics Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T casePhoneNumbStatisticsIndicator(PhoneNumbStatisticsIndicator object) {
         return null;
     }
 

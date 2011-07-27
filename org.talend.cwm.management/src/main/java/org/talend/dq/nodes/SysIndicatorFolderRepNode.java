@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
@@ -25,6 +26,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -78,7 +80,13 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
                     // MOD gdbu 2011-7-27 bug : 23161
                     List<TdExpression> indiExpression = repNode.getIndicatorDefinition()
                             .getSqlGenericExpression();
-                    if (indiExpression == null || indiExpression.size() == 0) {
+                    // MOD qiongli 2011-7-27,feature 22362
+                    EList<IndicatorCategory> categories = repNode.getIndicatorDefinition().getCategories();
+                    boolean isPhoneNumberStatics = false;
+                    if (categories.size() == 1 && "Phone Number Statistics".equals(categories.get(0).getLabel())) {
+                        isPhoneNumberStatics = true;
+                    }
+                    if (!isPhoneNumberStatics && (indiExpression == null || indiExpression.size() == 0)) {
                         continue;
                     }
                     // ~23161
@@ -127,6 +135,9 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
             return ERepositoryObjectType.SYSTEM_INDICATORS_SUMMARY_STATISTICS;
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS).endsWith(label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS).endsWith(
+                label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS;
         }
         return null;
     }

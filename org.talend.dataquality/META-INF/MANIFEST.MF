@@ -68,6 +68,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.talend.model,
  org.talend.dataquality.matching,
  org.talend.core.repository,
- org.talend.core.runtime
+ org.talend.core.runtime,
+ org.talend.libraries.google.libphonumber
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.apache.log4j

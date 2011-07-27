@@ -178,6 +178,14 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.QUARTER_LOW_FREQUENCY_INDICATOR: return createQuarterLowFrequencyIndicator();
             case IndicatorsPackage.YEAR_LOW_FREQUENCY_INDICATOR: return createYearLowFrequencyIndicator();
             case IndicatorsPackage.BIN_LOW_FREQUENCY_INDICATOR: return createBinLowFrequencyIndicator();
+            case IndicatorsPackage.VALID_PHONE_COUNT_INDICATOR: return createValidPhoneCountIndicator();
+            case IndicatorsPackage.POSSIBLE_PHONE_COUNT_INDICATOR: return createPossiblePhoneCountIndicator();
+            case IndicatorsPackage.VALID_REG_CODE_COUNT_INDICATOR: return createValidRegCodeCountIndicator();
+            case IndicatorsPackage.INVALID_REG_CODE_COUNT_INDICATOR: return createInvalidRegCodeCountIndicator();
+            case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR: return createWellFormNationalPhoneCountIndicator();
+            case IndicatorsPackage.WELL_FORM_INTE_PHONE_COUNT_INDICATOR: return createWellFormIntePhoneCountIndicator();
+            case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR: return createWellFormE164PhoneCountIndicator();
+            case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR: return createPhoneNumbStatisticsIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -843,6 +851,86 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public BinLowFrequencyIndicator createBinLowFrequencyIndicator() {
         BinLowFrequencyIndicatorImpl binLowFrequencyIndicator = new BinLowFrequencyIndicatorImpl();
         return binLowFrequencyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public ValidPhoneCountIndicator createValidPhoneCountIndicator() {
+        ValidPhoneCountIndicatorImpl validPhoneCountIndicator = new ValidPhoneCountIndicatorImpl();
+        return validPhoneCountIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public PossiblePhoneCountIndicator createPossiblePhoneCountIndicator() {
+        PossiblePhoneCountIndicatorImpl possiblePhoneCountIndicator = new PossiblePhoneCountIndicatorImpl();
+        return possiblePhoneCountIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public ValidRegCodeCountIndicator createValidRegCodeCountIndicator() {
+        ValidRegCodeCountIndicatorImpl validRegCodeCountIndicator = new ValidRegCodeCountIndicatorImpl();
+        return validRegCodeCountIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public InvalidRegCodeCountIndicator createInvalidRegCodeCountIndicator() {
+        InvalidRegCodeCountIndicatorImpl invalidRegCodeCountIndicator = new InvalidRegCodeCountIndicatorImpl();
+        return invalidRegCodeCountIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public WellFormNationalPhoneCountIndicator createWellFormNationalPhoneCountIndicator() {
+        WellFormNationalPhoneCountIndicatorImpl wellFormNationalPhoneCountIndicator = new WellFormNationalPhoneCountIndicatorImpl();
+        return wellFormNationalPhoneCountIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public WellFormIntePhoneCountIndicator createWellFormIntePhoneCountIndicator() {
+        WellFormIntePhoneCountIndicatorImpl wellFormIntePhoneCountIndicator = new WellFormIntePhoneCountIndicatorImpl();
+        return wellFormIntePhoneCountIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public WellFormE164PhoneCountIndicator createWellFormE164PhoneCountIndicator() {
+        WellFormE164PhoneCountIndicatorImpl wellFormE164PhoneCountIndicator = new WellFormE164PhoneCountIndicatorImpl();
+        return wellFormE164PhoneCountIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public PhoneNumbStatisticsIndicator createPhoneNumbStatisticsIndicator() {
+        PhoneNumbStatisticsIndicatorImpl phoneNumbStatisticsIndicator = new PhoneNumbStatisticsIndicatorImpl();
+        return phoneNumbStatisticsIndicator;
     }
 
     /**

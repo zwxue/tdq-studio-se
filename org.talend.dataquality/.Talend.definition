@@ -100,4 +100,8 @@
     <taggedValue xmi:id="_02aaEJU7Ed-bydhkMeCarg" tag="Description" value="applying business rules on analyzed tables"/>
     <taggedValue xmi:id="_D2pfEJU8Ed-bydhkMeCarg" tag="Purpose" value="Analyze tables with rules"/>
   </categories>
+  <categories xmi:id="_Ohyz4bEEEeCVE-ofo1XCug" name="Phone Number Statistics" label="Phone Number Statistics">
+    <taggedValue xmi:id="_ZSFGoLEEEeCVE-ofo1XCug" tag="Description" value="do some phone number statistics by several counting methods"/>
+    <taggedValue xmi:id="_rEFIoLEEEeCVE-ofo1XCug" tag="Purpose" value="evaluate different phone number of records"/>
+  </categories>
 </dataquality.indicators.definition:IndicatorsDefinitions>

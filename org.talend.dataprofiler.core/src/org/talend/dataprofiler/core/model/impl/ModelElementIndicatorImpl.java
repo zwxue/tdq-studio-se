@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
@@ -40,6 +39,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.InvalidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MaxLengthWithBlankIndicator;
@@ -54,11 +54,18 @@ import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
+import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
+import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
+import org.talend.dataquality.indicators.ValidRegCodeCountIndicator;
+import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
+import org.talend.dataquality.indicators.impl.WellFormIntePhoneCountIndicatorImpl;
+import org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
@@ -316,6 +323,41 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
             this.plainIndicatorUnitMap.put(IndicatorEnum.MinValueIndicatorEnum, createPlainIndicatorUnit(
                     IndicatorEnum.MinValueIndicatorEnum, rangeIndicator.getLowerValue()));
             break;
+        case PhoneNumbStatisticsIndicatorEnum:
+            PhoneNumbStatisticsIndicator phoneNumbIndicator = (PhoneNumbStatisticsIndicator) indicator;
+            this.plainIndicatorUnitMap.put(IndicatorEnum.PhoneNumbStatisticsIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.PhoneNumbStatisticsIndicatorEnum, phoneNumbIndicator));
+
+            // add indicatorUnit to indicatorUnitMap
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.ValidPhoneCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.ValidPhoneCountIndicatorEnum,
+                            phoneNumbIndicator.getValidPhoneCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.PossiblePhoneCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.PossiblePhoneCountIndicatorEnum,
+                            phoneNumbIndicator.getPossiblePhoneCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.ValidRegCodeCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.ValidRegCodeCountIndicatorEnum,
+                            phoneNumbIndicator.getValidRegCodeCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.InvalidRegCodeCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.InvalidRegCodeCountIndicatorEnum,
+                            phoneNumbIndicator.getInvalidRegCodeCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.WellFormE164PhoneCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.WellFormE164PhoneCountIndicatorEnum,
+                            phoneNumbIndicator.getWellFormE164PhoneCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.WellFormIntePhoneCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.WellFormIntePhoneCountIndicatorEnum,
+                            phoneNumbIndicator.getWellFormIntePhoneCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.WellFormNationalPhoneCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.WellFormNationalPhoneCountIndicatorEnum,
+                            phoneNumbIndicator.getWellFormNationalPhoneCountIndicator()));
+            break;
         default:
             this.plainIndicatorUnitMap.put(indicatorEnum, createPlainIndicatorUnit(indicatorEnum, indicator));
             break;
@@ -503,6 +545,27 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                 rangeIndicator.setUpperValue((MaxValueIndicator) getIndicatorUnit(IndicatorEnum.MaxValueIndicatorEnum)
                         .getIndicator());
                 indicatorUnit.setChildren(createCategoryIndicatorUnits(IndicatorEnum.RangeIndicatorEnum.getChildren()));
+                indicatorUnitList.add(indicatorUnit);
+                break;
+            case PhoneNumbStatisticsIndicatorEnum:
+                PhoneNumbStatisticsIndicator phoneNumbIndicator = (PhoneNumbStatisticsIndicator) indicatorUnit.getIndicator();
+                phoneNumbIndicator.setValidPhoneCountIndicator((ValidPhoneCountIndicator) getIndicatorUnit(
+                        IndicatorEnum.ValidPhoneCountIndicatorEnum).getIndicator());
+                phoneNumbIndicator.setPossiblePhoneCountIndicator((PossiblePhoneCountIndicator) getIndicatorUnit(
+                        IndicatorEnum.PossiblePhoneCountIndicatorEnum).getIndicator());
+                phoneNumbIndicator.setValidRegCodeCountIndicator((ValidRegCodeCountIndicator) getIndicatorUnit(
+                        IndicatorEnum.ValidRegCodeCountIndicatorEnum).getIndicator());
+                phoneNumbIndicator.setInvalidRegCodeCountIndicator((InvalidRegCodeCountIndicator) getIndicatorUnit(
+                        IndicatorEnum.InvalidRegCodeCountIndicatorEnum).getIndicator());
+                phoneNumbIndicator.setWellFormE164PhoneCountIndicator((WellFormE164PhoneCountIndicator) getIndicatorUnit(
+                        IndicatorEnum.WellFormE164PhoneCountIndicatorEnum).getIndicator());
+                phoneNumbIndicator.setWellFormIntePhoneCountIndicator((WellFormIntePhoneCountIndicatorImpl) getIndicatorUnit(
+                        IndicatorEnum.WellFormIntePhoneCountIndicatorEnum).getIndicator());
+                phoneNumbIndicator
+                        .setWellFormNationalPhoneCountIndicator((WellFormNationalPhoneCountIndicatorImpl) getIndicatorUnit(
+                                IndicatorEnum.WellFormNationalPhoneCountIndicatorEnum).getIndicator());
+                indicatorUnit.setChildren(createCategoryIndicatorUnits(IndicatorEnum.PhoneNumbStatisticsIndicatorEnum
+                        .getChildren()));
                 indicatorUnitList.add(indicatorUnit);
                 break;
             default:

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.dataquality.indicators.TextParameters#isUseNulls <em>Use Nulls</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.TextParameters#getCharactersToReplace <em>Characters To Replace</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.TextParameters#getReplacementCharacters <em>Replacement Characters</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.TextParameters#getCountryCode <em>Country Code</em>}</li>
  * </ul>
  * </p>
  *
@@ -189,5 +190,32 @@ public interface TextParameters extends EObject {
      * @generated
      */
     void setReplacementCharacters(String value);
+
+    /**
+     * Returns the value of the '<em><b>Country Code</b></em>' attribute.
+     * The default value is <code>"CN"</code>.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Country Code</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Country Code</em>' attribute.
+     * @see #setCountryCode(String)
+     * @see org.talend.dataquality.indicators.IndicatorsPackage#getTextParameters_CountryCode()
+     * @model default="CN"
+     * @generated
+     */
+    String getCountryCode();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.indicators.TextParameters#getCountryCode <em>Country Code</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Country Code</em>' attribute.
+     * @see #getCountryCode()
+     * @generated
+     */
+    void setCountryCode(String value);
 
 } // TextParameters

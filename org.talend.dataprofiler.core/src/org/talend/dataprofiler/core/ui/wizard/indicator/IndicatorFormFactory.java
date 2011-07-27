@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.IndicatorThre
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.JavaOptionsForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.JavaUDIParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.NumbericNominalForm;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.PhoneNumberForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextLengthForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TextParametersForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.TimeSlicesForm;
@@ -113,6 +114,9 @@ public final class IndicatorFormFactory {
         case JavaUDIParametersForm:
 
             form = new JavaUDIParametersForm(parent, SWT.NONE, parameters);
+            break;
+        case PhoneNumberForm:
+            form = new PhoneNumberForm(parent, SWT.NONE, parameters);
             break;
 
         default:

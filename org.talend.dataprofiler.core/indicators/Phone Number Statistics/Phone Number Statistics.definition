@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_JOE-0LQ2EeCrhIKO626ZRQ" name="Phone Number Statistics" label="Phone Number Statistics">
+  <taggedValue xmi:id="_KBL2wLQ2EeCrhIKO626ZRQ" tag="Description" value="contain several count indicators"/>
+  <taggedValue xmi:id="_KjAxcLQ2EeCrhIKO626ZRQ" tag="Purpose" value="analyze and statistic the data of phone number"/>
+  <aggregatedDefinitions href="Invalid%20Region%20Code%20Count.definition#_LuVZgLEfEeCVE-ofo1XCug"/>
+  <aggregatedDefinitions href="Possible%20Phone%20Number%20Count.definition#_wnCBkLEJEeCVE-ofo1XCug"/>
+  <aggregatedDefinitions href="Valid%20Phone%20Number%20Count.definition#_wnCBkLEJEeCVE-ofo1XCug"/>
+  <aggregatedDefinitions href="Valid%20Region%20Code%20Number%20Count.definition#_aXbmULEeEeCVE-ofo1XCug"/>
+  <aggregatedDefinitions href="Well%20Formed%20E164%20Phone%20Number%20Count.definition#_e3AMILEiEeCVE-ofo1XCug"/>
+  <aggregatedDefinitions href="Well%20Formed%20International%20Phone%20Number%20Count.definition#_qqT3kLEhEeCVE-ofo1XCug"/>
+  <aggregatedDefinitions href="Well%20Formed%20National%20Phone%20Number%20Count.definition#_TWXscLEgEeCVE-ofo1XCug"/>
+</dataquality.indicators.definition:IndicatorDefinition>

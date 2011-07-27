@@ -49,6 +49,7 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -493,6 +494,10 @@ public class IndicatorSelectDialog extends TrayDialog {
                 Button rowCheckButton = null;
                 Button commonCheckButton;
                 List<Button> rowButtonList = new ArrayList<Button>();
+                // MOD qiongli 2011-7-22 feature 22362
+                IIndicatorNode parentNode = indicatorNode.getParent();
+                boolean isParentPhoneStatistics = parentNode != null && parentNode.getIndicatorInstance() != null
+                        && parentNode.getIndicatorInstance() instanceof PhoneNumbStatisticsIndicator;
                 for (int j = 0; j < treeColumns.length; j++) {
                     IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();
                     if (j == 0) {
@@ -539,7 +544,8 @@ public class IndicatorSelectDialog extends TrayDialog {
                                 // MOD zshen 2011.06.01 make indicator can be select although can not found one
                                 // expression for the database on hte definition.
                                 && indicatorNode.getIndicatorInstance().getIndicatorDefinition().getSqlGenericExpression().size() < 1
-                                && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)) {
+                                && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)
+                                && !isParentPhoneStatistics) {
                             checkButton.setEnabled(false);
                         }
                         // ~

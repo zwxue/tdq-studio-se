@@ -196,6 +196,19 @@ public final class ModelElementIndicatorRule {
                 return true;
             }
             break;
+        case ValidPhoneCountIndicatorEnum:
+        case PossiblePhoneCountIndicatorEnum:
+        case ValidRegCodeCountIndicatorEnum:
+        case InvalidRegCodeCountIndicatorEnum:
+        case WellFormE164PhoneCountIndicatorEnum:
+        case WellFormIntePhoneCountIndicatorEnum:
+        case WellFormNationalPhoneCountIndicatorEnum:
+        case PhoneNumbStatisticsIndicatorEnum:
+            if (ExecutionLanguage.JAVA.equals(language)
+                    && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
+                return true;
+            }
+            break;
         default:
             return false;
         }

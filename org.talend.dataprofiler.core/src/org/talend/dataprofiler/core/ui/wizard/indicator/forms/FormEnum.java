@@ -44,7 +44,8 @@ public enum FormEnum {
     NumbericNominalForm("Frequency Table Parameters", ""), //$NON-NLS-1$ //$NON-NLS-2$
     JavaUDIParametersForm("Java UDI Parameters", ""), //$NON-NLS-1$ //$NON-NLS-2$
     ExpectedValueForm("Expected Value", "html/wizard/indicator/ExpectedValue.html"), //$NON-NLS-1$ //$NON-NLS-2$
-    JavaOptionsForm("Java Options", "html/wizard/indicator/JavaOptions.html"); //$NON-NLS-1$ //$NON-NLS-2$
+    JavaOptionsForm("Java Options", "html/wizard/indicator/JavaOptions.html"), //$NON-NLS-1$ //$NON-NLS-2$
+    PhoneNumberForm("Phone Number", "html/wizard/indicator/TextParameter.html"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private String formName;
 
@@ -230,6 +231,14 @@ public enum FormEnum {
 
                 forms = new FormEnum[] { FreqBinsDesignerForm };
             }
+            break;
+        case ValidPhoneCountIndicatorEnum:
+        case PossiblePhoneCountIndicatorEnum:
+        case WellFormNationalPhoneCountIndicatorEnum:
+        case WellFormIntePhoneCountIndicatorEnum:
+        case WellFormE164PhoneCountIndicatorEnum:
+            forms = new FormEnum[] { PhoneNumberForm };
+
             break;
 
         default:

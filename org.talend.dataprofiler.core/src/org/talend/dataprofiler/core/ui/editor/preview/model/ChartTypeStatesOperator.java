@@ -19,6 +19,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ModeStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.PhoneNumbStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleTextStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
@@ -129,6 +130,8 @@ public final class ChartTypeStatesOperator {
             return new DateLowFrequencyStatisticsState(units, EIndicatorChartType.YEAR_LOW_FREQUENCE_STATISTICS);
         case SIMPLE_TEXT_STATISTICS:
             return new SimpleTextStatisticsState(units);
+        case PHONE_NUMBER_STATISTICS:
+            return new PhoneNumbStatisticsState(units);
         default:
             return null;
         }

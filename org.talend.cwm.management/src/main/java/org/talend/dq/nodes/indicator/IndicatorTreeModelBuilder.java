@@ -53,6 +53,7 @@ public final class IndicatorTreeModelBuilder {
         IndicatorCategoryNode soundexCategoryNode = new IndicatorCategoryNode(Messages
                 .getString("IndicatorTreeModelBuilder.SoundexStatistics"), //$NON-NLS-1$
                 soundexIndicatorEnums);
+        IndicatorCategoryNode phoneCategoryNode = new IndicatorCategoryNode(IndicatorEnum.PhoneNumbStatisticsIndicatorEnum);
 
         // build Nominal Statistic categoryNode
         IndicatorEnum[] advanceIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.ModeIndicatorEnum,
@@ -67,7 +68,7 @@ public final class IndicatorTreeModelBuilder {
                 .getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums); //$NON-NLS-1$
 
         indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
-                advanceCategoryNode, patternFinderCategoryNode, soundexCategoryNode };
+                advanceCategoryNode, patternFinderCategoryNode, soundexCategoryNode, phoneCategoryNode };
         return indicatorCategoryNodes;
     }
 }

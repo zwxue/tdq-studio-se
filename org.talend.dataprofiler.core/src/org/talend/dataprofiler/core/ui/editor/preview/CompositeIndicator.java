@@ -43,7 +43,7 @@ public final class CompositeIndicator {
     private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, soundexFrequencyList,
             soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, datePatternFrequencyList, summaryList,
             patternList, sqlPatternList, modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList,
-            dateFrequencyList, dateLowFrequencyList, simpleTextList;
+            dateFrequencyList, dateLowFrequencyList, simpleTextList, phoneNumbList;
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
@@ -112,6 +112,7 @@ public final class CompositeIndicator {
         yearFrequencyList = new ArrayList<IndicatorUnit>();
         yearLowFrequencyList = new ArrayList<IndicatorUnit>();
         // ~
+        phoneNumbList = new ArrayList<IndicatorUnit>();
     }
 
     private void clear() {
@@ -153,6 +154,7 @@ public final class CompositeIndicator {
         quarterLowFrequencyList.clear();
         yearFrequencyList.clear();
         yearLowFrequencyList.clear();
+        phoneNumbList.clear();
     }
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
@@ -292,6 +294,15 @@ public final class CompositeIndicator {
                     udiRealValueList.add(one);
                 }
                 break;
+            case ValidPhoneCountIndicatorEnum:
+            case PossiblePhoneCountIndicatorEnum:
+            case ValidRegCodeCountIndicatorEnum:
+            case InvalidRegCodeCountIndicatorEnum:
+            case WellFormE164PhoneCountIndicatorEnum:
+            case WellFormIntePhoneCountIndicatorEnum:
+            case WellFormNationalPhoneCountIndicatorEnum:
+                phoneNumbList.add(one);
+                break;
 
             default:
             }
@@ -331,6 +342,7 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.UDI_FREQUENCY, udiFrequencyList);
         separatedMap.put(EIndicatorChartType.UDI_MATCHING, udiMatchingList);
         separatedMap.put(EIndicatorChartType.UDI_REALVALUE, udiRealValueList);
+        separatedMap.put(EIndicatorChartType.PHONE_NUMBER_STATISTICS, phoneNumbList);
 
         return separatedMap;
     }

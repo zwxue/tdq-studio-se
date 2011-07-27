@@ -27,6 +27,7 @@ import org.talend.dataquality.indicators.TextParameters;
  *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#isUseNulls <em>Use Nulls</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#getCharactersToReplace <em>Characters To Replace</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#getReplacementCharacters <em>Replacement Characters</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.TextParametersImpl#getCountryCode <em>Country Code</em>}</li>
  * </ul>
  * </p>
  *
@@ -152,6 +153,26 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
      * @ordered
      */
     protected String replacementCharacters = REPLACEMENT_CHARACTERS_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getCountryCode() <em>Country Code</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getCountryCode()
+     * @generated
+     * @ordered
+     */
+    protected static final String COUNTRY_CODE_EDEFAULT = "CN";
+
+    /**
+     * The cached value of the '{@link #getCountryCode() <em>Country Code</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getCountryCode()
+     * @generated
+     * @ordered
+     */
+    protected String countryCode = COUNTRY_CODE_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -303,6 +324,27 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setCountryCode(String newCountryCode) {
+        String oldCountryCode = countryCode;
+        countryCode = newCountryCode;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.TEXT_PARAMETERS__COUNTRY_CODE, oldCountryCode, countryCode));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
@@ -318,6 +360,8 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
                 return getCharactersToReplace();
             case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
                 return getReplacementCharacters();
+            case IndicatorsPackage.TEXT_PARAMETERS__COUNTRY_CODE:
+                return getCountryCode();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -347,6 +391,9 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
                 return;
             case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
                 setReplacementCharacters((String)newValue);
+                return;
+            case IndicatorsPackage.TEXT_PARAMETERS__COUNTRY_CODE:
+                setCountryCode((String)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -378,6 +425,9 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
             case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
                 setReplacementCharacters(REPLACEMENT_CHARACTERS_EDEFAULT);
                 return;
+            case IndicatorsPackage.TEXT_PARAMETERS__COUNTRY_CODE:
+                setCountryCode(COUNTRY_CODE_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -402,6 +452,8 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
                 return CHARACTERS_TO_REPLACE_EDEFAULT == null ? charactersToReplace != null : !CHARACTERS_TO_REPLACE_EDEFAULT.equals(charactersToReplace);
             case IndicatorsPackage.TEXT_PARAMETERS__REPLACEMENT_CHARACTERS:
                 return REPLACEMENT_CHARACTERS_EDEFAULT == null ? replacementCharacters != null : !REPLACEMENT_CHARACTERS_EDEFAULT.equals(replacementCharacters);
+            case IndicatorsPackage.TEXT_PARAMETERS__COUNTRY_CODE:
+                return COUNTRY_CODE_EDEFAULT == null ? countryCode != null : !COUNTRY_CODE_EDEFAULT.equals(countryCode);
         }
         return super.eIsSet(featureID);
     }
@@ -428,6 +480,8 @@ public class TextParametersImpl extends EObjectImpl implements TextParameters {
         result.append(charactersToReplace);
         result.append(", replacementCharacters: ");
         result.append(replacementCharacters);
+        result.append(", countryCode: ");
+        result.append(countryCode);
         result.append(')');
         return result.toString();
     }

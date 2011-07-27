@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.talend.core.model.properties.PropertiesPackage;
-import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.category.CategoryPackage;
 import org.talend.dataquality.analysis.category.impl.CategoryPackageImpl;
@@ -60,6 +59,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.InvalidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
@@ -84,6 +84,8 @@ import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
+import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.QuarterFrequencyIndicator;
 import org.talend.dataquality.indicators.QuarterLowFrequencyIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
@@ -97,9 +99,14 @@ import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
+import org.talend.dataquality.indicators.ValidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.ValueIndicator;
 import org.talend.dataquality.indicators.WeekFrequencyIndicator;
 import org.talend.dataquality.indicators.WeekLowFrequencyIndicator;
+import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.YearFrequencyIndicator;
 import org.talend.dataquality.indicators.YearLowFrequencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -528,6 +535,62 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass binLowFrequencyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass validPhoneCountIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass possiblePhoneCountIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass validRegCodeCountIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass invalidRegCodeCountIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass wellFormNationalPhoneCountIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass wellFormIntePhoneCountIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass wellFormE164PhoneCountIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass phoneNumbStatisticsIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1510,6 +1573,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTextParameters_CountryCode() {
+        return (EAttribute)textParametersEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -1859,6 +1931,204 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getValidPhoneCountIndicator() {
+        return validPhoneCountIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getValidPhoneCountIndicator_ValidPhoneNumCount() {
+        return (EAttribute)validPhoneCountIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getPossiblePhoneCountIndicator() {
+        return possiblePhoneCountIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getPossiblePhoneCountIndicator_PossiblePhoneCount() {
+        return (EAttribute)possiblePhoneCountIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getValidRegCodeCountIndicator() {
+        return validRegCodeCountIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getValidRegCodeCountIndicator_ValidRegCount() {
+        return (EAttribute)validRegCodeCountIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getInvalidRegCodeCountIndicator() {
+        return invalidRegCodeCountIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getInvalidRegCodeCountIndicator_InvalidRegCount() {
+        return (EAttribute)invalidRegCodeCountIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getWellFormNationalPhoneCountIndicator() {
+        return wellFormNationalPhoneCountIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getWellFormNationalPhoneCountIndicator_WellFormNatiPhoneCount() {
+        return (EAttribute)wellFormNationalPhoneCountIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getWellFormIntePhoneCountIndicator() {
+        return wellFormIntePhoneCountIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getWellFormIntePhoneCountIndicator_WellFormIntePhoneCount() {
+        return (EAttribute)wellFormIntePhoneCountIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getWellFormE164PhoneCountIndicator() {
+        return wellFormE164PhoneCountIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getWellFormE164PhoneCountIndicator_WellFormE164PhoneCount() {
+        return (EAttribute)wellFormE164PhoneCountIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getPhoneNumbStatisticsIndicator() {
+        return phoneNumbStatisticsIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getPhoneNumbStatisticsIndicator_WellFormNationalPhoneCountIndicator() {
+        return (EReference)phoneNumbStatisticsIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getPhoneNumbStatisticsIndicator_WellFormIntePhoneCountIndicator() {
+        return (EReference)phoneNumbStatisticsIndicatorEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getPhoneNumbStatisticsIndicator_WellFormE164PhoneCountIndicator() {
+        return (EReference)phoneNumbStatisticsIndicatorEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getPhoneNumbStatisticsIndicator_InvalidRegCodeCountIndicator() {
+        return (EReference)phoneNumbStatisticsIndicatorEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getPhoneNumbStatisticsIndicator_PossiblePhoneCountIndicator() {
+        return (EReference)phoneNumbStatisticsIndicatorEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getPhoneNumbStatisticsIndicator_ValidRegCodeCountIndicator() {
+        return (EReference)phoneNumbStatisticsIndicatorEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getPhoneNumbStatisticsIndicator_ValidPhoneCountIndicator() {
+        return (EReference)phoneNumbStatisticsIndicatorEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -2088,6 +2358,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(textParametersEClass, TEXT_PARAMETERS__USE_NULLS);
         createEAttribute(textParametersEClass, TEXT_PARAMETERS__CHARACTERS_TO_REPLACE);
         createEAttribute(textParametersEClass, TEXT_PARAMETERS__REPLACEMENT_CHARACTERS);
+        createEAttribute(textParametersEClass, TEXT_PARAMETERS__COUNTRY_CODE);
 
         lowerQuartileIndicatorEClass = createEClass(LOWER_QUARTILE_INDICATOR);
 
@@ -2154,6 +2425,36 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         yearLowFrequencyIndicatorEClass = createEClass(YEAR_LOW_FREQUENCY_INDICATOR);
 
         binLowFrequencyIndicatorEClass = createEClass(BIN_LOW_FREQUENCY_INDICATOR);
+
+        validPhoneCountIndicatorEClass = createEClass(VALID_PHONE_COUNT_INDICATOR);
+        createEAttribute(validPhoneCountIndicatorEClass, VALID_PHONE_COUNT_INDICATOR__VALID_PHONE_NUM_COUNT);
+
+        possiblePhoneCountIndicatorEClass = createEClass(POSSIBLE_PHONE_COUNT_INDICATOR);
+        createEAttribute(possiblePhoneCountIndicatorEClass, POSSIBLE_PHONE_COUNT_INDICATOR__POSSIBLE_PHONE_COUNT);
+
+        validRegCodeCountIndicatorEClass = createEClass(VALID_REG_CODE_COUNT_INDICATOR);
+        createEAttribute(validRegCodeCountIndicatorEClass, VALID_REG_CODE_COUNT_INDICATOR__VALID_REG_COUNT);
+
+        invalidRegCodeCountIndicatorEClass = createEClass(INVALID_REG_CODE_COUNT_INDICATOR);
+        createEAttribute(invalidRegCodeCountIndicatorEClass, INVALID_REG_CODE_COUNT_INDICATOR__INVALID_REG_COUNT);
+
+        wellFormNationalPhoneCountIndicatorEClass = createEClass(WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR);
+        createEAttribute(wellFormNationalPhoneCountIndicatorEClass, WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT);
+
+        wellFormIntePhoneCountIndicatorEClass = createEClass(WELL_FORM_INTE_PHONE_COUNT_INDICATOR);
+        createEAttribute(wellFormIntePhoneCountIndicatorEClass, WELL_FORM_INTE_PHONE_COUNT_INDICATOR__WELL_FORM_INTE_PHONE_COUNT);
+
+        wellFormE164PhoneCountIndicatorEClass = createEClass(WELL_FORM_E164_PHONE_COUNT_INDICATOR);
+        createEAttribute(wellFormE164PhoneCountIndicatorEClass, WELL_FORM_E164_PHONE_COUNT_INDICATOR__WELL_FORM_E164_PHONE_COUNT);
+
+        phoneNumbStatisticsIndicatorEClass = createEClass(PHONE_NUMB_STATISTICS_INDICATOR);
+        createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR);
+        createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_INTE_PHONE_COUNT_INDICATOR);
+        createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__WELL_FORM_E164_PHONE_COUNT_INDICATOR);
+        createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__INVALID_REG_CODE_COUNT_INDICATOR);
+        createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__POSSIBLE_PHONE_COUNT_INDICATOR);
+        createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__VALID_REG_CODE_COUNT_INDICATOR);
+        createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR);
 
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
@@ -2270,6 +2571,14 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         quarterLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         yearLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         binLowFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        validPhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        possiblePhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        validRegCodeCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        invalidRegCodeCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        wellFormNationalPhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        wellFormIntePhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        wellFormE164PhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        phoneNumbStatisticsIndicatorEClass.getESuperTypes().add(this.getCompositeIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2475,6 +2784,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getTextParameters_UseNulls(), ecorePackage.getEBoolean(), "useNulls", null, 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTextParameters_CharactersToReplace(), ecorePackage.getEString(), "charactersToReplace", "abcdefghijklmnopqrstuvwxyz\u00e7\u00e2\u00ea\u00ee\u00f4\u00fb\u00e9\u00e8\u00f9\u00ef\u00f6\u00fcABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c7\u00c2\u00ca\u00ce\u00d4\u00db\u00c9\u00c8\u00d9\u00cf\u00d6\u00dc0123456789", 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTextParameters_ReplacementCharacters(), ecorePackage.getEString(), "replacementCharacters", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999", 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTextParameters_CountryCode(), ecorePackage.getEString(), "countryCode", "CN", 0, 1, TextParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(lowerQuartileIndicatorEClass, LowerQuartileIndicator.class, "LowerQuartileIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -2546,6 +2856,50 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEClass(yearLowFrequencyIndicatorEClass, YearLowFrequencyIndicator.class, "YearLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(binLowFrequencyIndicatorEClass, BinLowFrequencyIndicator.class, "BinLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(validPhoneCountIndicatorEClass, ValidPhoneCountIndicator.class, "ValidPhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getValidPhoneCountIndicator_ValidPhoneNumCount(), ecorePackage.getELongObject(), "validPhoneNumCount", null, 0, 1, ValidPhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        addEOperation(validPhoneCountIndicatorEClass, this.getJavaSet(), "getValidPhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(possiblePhoneCountIndicatorEClass, PossiblePhoneCountIndicator.class, "PossiblePhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getPossiblePhoneCountIndicator_PossiblePhoneCount(), ecorePackage.getELongObject(), "possiblePhoneCount", null, 0, 1, PossiblePhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        addEOperation(possiblePhoneCountIndicatorEClass, this.getJavaSet(), "getPossiblePhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(validRegCodeCountIndicatorEClass, ValidRegCodeCountIndicator.class, "ValidRegCodeCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getValidRegCodeCountIndicator_ValidRegCount(), theEcorePackage.getELongObject(), "validRegCount", null, 0, 1, ValidRegCodeCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        addEOperation(validRegCodeCountIndicatorEClass, this.getJavaSet(), "getValidRegValues", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(invalidRegCodeCountIndicatorEClass, InvalidRegCodeCountIndicator.class, "InvalidRegCodeCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getInvalidRegCodeCountIndicator_InvalidRegCount(), ecorePackage.getELongObject(), "invalidRegCount", null, 0, 1, InvalidRegCodeCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        addEOperation(invalidRegCodeCountIndicatorEClass, this.getJavaSet(), "getInvalidRegValues", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(wellFormNationalPhoneCountIndicatorEClass, WellFormNationalPhoneCountIndicator.class, "WellFormNationalPhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getWellFormNationalPhoneCountIndicator_WellFormNatiPhoneCount(), ecorePackage.getELongObject(), "wellFormNatiPhoneCount", null, 0, 1, WellFormNationalPhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        addEOperation(wellFormNationalPhoneCountIndicatorEClass, this.getJavaSet(), "getWellFormNatiPhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(wellFormIntePhoneCountIndicatorEClass, WellFormIntePhoneCountIndicator.class, "WellFormIntePhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getWellFormIntePhoneCountIndicator_WellFormIntePhoneCount(), ecorePackage.getELongObject(), "wellFormIntePhoneCount", null, 0, 1, WellFormIntePhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        addEOperation(wellFormIntePhoneCountIndicatorEClass, this.getJavaSet(), "getWellFormIntePhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(wellFormE164PhoneCountIndicatorEClass, WellFormE164PhoneCountIndicator.class, "WellFormE164PhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getWellFormE164PhoneCountIndicator_WellFormE164PhoneCount(), ecorePackage.getELongObject(), "wellFormE164PhoneCount", null, 0, 1, WellFormE164PhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        addEOperation(wellFormE164PhoneCountIndicatorEClass, this.getJavaSet(), "getWellFormE164PhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(phoneNumbStatisticsIndicatorEClass, PhoneNumbStatisticsIndicator.class, "PhoneNumbStatisticsIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getPhoneNumbStatisticsIndicator_WellFormNationalPhoneCountIndicator(), this.getWellFormNationalPhoneCountIndicator(), null, "wellFormNationalPhoneCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getPhoneNumbStatisticsIndicator_WellFormIntePhoneCountIndicator(), this.getWellFormIntePhoneCountIndicator(), null, "wellFormIntePhoneCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getPhoneNumbStatisticsIndicator_WellFormE164PhoneCountIndicator(), this.getWellFormE164PhoneCountIndicator(), null, "wellFormE164PhoneCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getPhoneNumbStatisticsIndicator_InvalidRegCodeCountIndicator(), this.getInvalidRegCodeCountIndicator(), null, "invalidRegCodeCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getPhoneNumbStatisticsIndicator_PossiblePhoneCountIndicator(), this.getPossiblePhoneCountIndicator(), null, "possiblePhoneCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getPhoneNumbStatisticsIndicator_ValidRegCodeCountIndicator(), this.getValidRegCodeCountIndicator(), null, "validRegCodeCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getPhoneNumbStatisticsIndicator_ValidPhoneCountIndicator(), this.getValidPhoneCountIndicator(), null, "validPhoneCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

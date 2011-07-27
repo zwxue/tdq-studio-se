@@ -241,6 +241,8 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.SYSTEM_INDICATORS_SOUNDEX;
         } else if (EResourceConstant.SYSTEM_INDICATORS_SUMMARY_STATISTICS.getPath().equals(path)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_SUMMARY_STATISTICS;
+        } else if (EResourceConstant.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS.getPath().equals(path)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS;
         } else if (EResourceConstant.SYSTEM_INDICATORS_TEXT_STATISTICS.getPath().equals(path)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS;
         } else if (EResourceConstant.USER_DEFINED_INDICATORS.getPath().equals(path)) {

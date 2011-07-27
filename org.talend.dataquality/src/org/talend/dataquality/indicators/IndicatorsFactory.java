@@ -566,6 +566,78 @@ public interface IndicatorsFactory extends EFactory {
     BinLowFrequencyIndicator createBinLowFrequencyIndicator();
 
     /**
+     * Returns a new object of class '<em>Valid Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Valid Phone Count Indicator</em>'.
+     * @generated
+     */
+    ValidPhoneCountIndicator createValidPhoneCountIndicator();
+
+    /**
+     * Returns a new object of class '<em>Possible Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Possible Phone Count Indicator</em>'.
+     * @generated
+     */
+    PossiblePhoneCountIndicator createPossiblePhoneCountIndicator();
+
+    /**
+     * Returns a new object of class '<em>Valid Reg Code Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Valid Reg Code Count Indicator</em>'.
+     * @generated
+     */
+    ValidRegCodeCountIndicator createValidRegCodeCountIndicator();
+
+    /**
+     * Returns a new object of class '<em>Invalid Reg Code Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Invalid Reg Code Count Indicator</em>'.
+     * @generated
+     */
+    InvalidRegCodeCountIndicator createInvalidRegCodeCountIndicator();
+
+    /**
+     * Returns a new object of class '<em>Well Form National Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Well Form National Phone Count Indicator</em>'.
+     * @generated
+     */
+    WellFormNationalPhoneCountIndicator createWellFormNationalPhoneCountIndicator();
+
+    /**
+     * Returns a new object of class '<em>Well Form Inte Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Well Form Inte Phone Count Indicator</em>'.
+     * @generated
+     */
+    WellFormIntePhoneCountIndicator createWellFormIntePhoneCountIndicator();
+
+    /**
+     * Returns a new object of class '<em>Well Form E164 Phone Count Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Well Form E164 Phone Count Indicator</em>'.
+     * @generated
+     */
+    WellFormE164PhoneCountIndicator createWellFormE164PhoneCountIndicator();
+
+    /**
+     * Returns a new object of class '<em>Phone Numb Statistics Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Phone Numb Statistics Indicator</em>'.
+     * @generated
+     */
+    PhoneNumbStatisticsIndicator createPhoneNumbStatisticsIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
