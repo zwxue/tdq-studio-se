@@ -204,16 +204,60 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
         }
     }
 
-    public String getNodeName() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
         return "Tables (" + this.getChildrenCount() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    public int getChildrenCount() {
-        List<IRepositoryNode> children2 = this.getChildren();
-        if (children2 != null) {
-            return children2.size();
+    private int getChildrenCount() {
+        List<TdTable> tables = new ArrayList<TdTable>();
+        IRepositoryViewObject object = this.getParent().getObject();
+        if (object instanceof MetadataCatalogRepositoryObject) {
+            catalog = ((MetadataCatalogRepositoryObject) object).getCatalog();
+            tables = PackageHelper.getTables(catalog);
+        } else {
+            schema = ((MetadataSchemaRepositoryObject) object).getSchema();
+            tables = PackageHelper.getTables(schema);
         }
-        return 0;
+        return tables.size();
+    }
+
+    public boolean hasChildren() {
+        return hasChildrenInDataBase();
+    }
+
+    private boolean hasChildrenInDataBase() {
+
+        boolean hasChildrenInDB = false;
+
+        IRepositoryViewObject object = this.getParent().getObject();
+        if (object instanceof MetadataCatalogRepositoryObject) {
+            viewObject = ((MetadataCatalogRepositoryObject) object).getViewObject();
+            item = (ConnectionItem) viewObject.getProperty().getItem();
+            connection = item.getConnection();
+            catalog = ((MetadataCatalogRepositoryObject) object).getCatalog();
+            try {
+                hasChildrenInDB = DqRepositoryViewService.isContainsTable(connection, catalog, null);
+            } catch (Exception e) {
+                log.error(e.toString());
+            }
+        } else {
+            viewObject = ((MetadataSchemaRepositoryObject) object).getViewObject();
+            item = (ConnectionItem) viewObject.getProperty().getItem();
+            connection = item.getConnection();
+            schema = ((MetadataSchemaRepositoryObject) object).getSchema();
+            try {
+                hasChildrenInDB = DqRepositoryViewService.isContainsTable(connection, schema, null);
+            } catch (Exception e) {
+                log.error(e.toString());
+            }
+        }
+        return hasChildrenInDB;
     }
 
     /**
