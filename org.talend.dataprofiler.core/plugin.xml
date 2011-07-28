@@ -1339,6 +1339,12 @@
            name="Update Database Type Task (JDBC, SYBASE)"
            version="4.2.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.UpdateStartWithBlankPatternTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateStartWithBlankPatternTask"
+           name="Update Start With Blank Task"
+           version="4.2.3">
+     </workspacetask>
      
 
   </extension>

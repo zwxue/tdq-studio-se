@@ -183,9 +183,6 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 Iterator<String> it = columnNames.iterator();
                 while (it.hasNext()) {
                     Object obj = resultSet.getObject(it.next());
-                    if (obj != null && (PluginConstant.EMPTY_STRING.equals(obj.toString().trim()))) {
-                        obj = obj.toString().trim();
-                    }
                     objectLs.add(obj);
                 }
                 if (objectLs.size() == 0) {
