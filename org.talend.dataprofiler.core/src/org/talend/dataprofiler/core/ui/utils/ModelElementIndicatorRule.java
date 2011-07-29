@@ -96,7 +96,8 @@ public final class ModelElementIndicatorRule {
             break;
         case BlankCountIndicatorEnum:
             // MOD klliu 2011-07-19 bug 22980 from repository as same as indicator dialog
-            if (me instanceof TdXmlElementType) {
+            // MOD xwang 2011-07-29 bug TDQ-1731 disable blank count checkable for other data type but Text
+            if (me instanceof TdXmlElementType || !Java2SqlType.isTextInSQL(javaType)) {
                 return false;
             } else {
                 return true;
