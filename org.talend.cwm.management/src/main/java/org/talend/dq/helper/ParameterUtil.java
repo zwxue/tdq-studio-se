@@ -33,15 +33,15 @@ import org.talend.dq.analysis.parameters.DBConnectionParameter;
  */
 public final class ParameterUtil {
 
-    private ParameterUtil() {
-
-    }
     private static Logger log = Logger.getLogger(ParameterUtil.class);
+
+    private ParameterUtil() {
+    }
 
     private static Map<String, String> toMap(Object parameter) {
         Class<?> parClass = parameter.getClass();
         Map<String, String> parameterMap = new HashMap<String, String>();
-        List<Field> fieldList=new ArrayList<Field>();
+        List<Field> fieldList = new ArrayList<Field>();
         fieldList.addAll(Arrays.asList(parClass.getDeclaredFields()));
         for (Field theField : fieldList) {
             String methodName = theField.getName();
@@ -71,13 +71,10 @@ public final class ParameterUtil {
             }
         }
 
-        
-
         return parameterMap;
     }
 
     /**
-     * 
      * zshen Comment method "toMap".
      * 
      * @param parameter the object which pass to parameter infomation.It can't be null.
@@ -87,6 +84,7 @@ public final class ParameterUtil {
         if (parameter == null) {
             return null;
         }
+
         Map<String, String> parameterMap = toMap((Object) parameter);
         parameterMap.put("name", parameter.getName());//$NON-NLS-1$
         parameterMap.put("purpose", parameter.getPurpose());//$NON-NLS-1$
@@ -114,6 +112,7 @@ public final class ParameterUtil {
         if (value == null) {
             return null;
         }
+
         int length = value.length();
         String result = TalendQuoteUtils.removeQuotes(value);
         if (length > 1 && ((value.startsWith("\"") && value.endsWith("\""))) || (value.startsWith("\'") && value.endsWith("\'"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$

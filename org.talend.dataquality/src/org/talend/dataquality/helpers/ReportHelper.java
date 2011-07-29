@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -612,7 +613,7 @@ public final class ReportHelper {
         TaggedValue taggedValue = TaggedValueHelper
                 .getTaggedValue(TaggedValueHelper.OUTPUT_FILENAME_TAG, report.getTaggedValue());
         if (taggedValue == null) {
-            return "";
+            return PluginConstant.EMPTY_STRING;
         }
 
         return taggedValue.getValue();
@@ -630,6 +631,257 @@ public final class ReportHelper {
     }
 
     /**
+     * DOC xqliu Comment method "getDbType".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getDbType(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_DBTYPE, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getDbName".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getDbName(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_DBNAME, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getUser".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getUser(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_USER, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getPassword".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getPassword(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper
+                .getTaggedValue(TaggedValueHelper.REP_DBINFO_PASSWORD, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getDriver".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getDriver(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_DRIVER, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getDialect".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getDialect(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_DIALECT, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getUrl".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getUrl(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_URL, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getHost".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getHost(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_HOST, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getPort".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getPort(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_PORT, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "getSchema".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getSchema(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_SCHEMA, report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
+     * DOC xqliu Comment method "setDbType".
+     * 
+     * @param dbType
+     * @param report
+     * @return
+     */
+    public static boolean setDbType(String dbType, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_DBTYPE, dbType);
+    }
+
+    /**
+     * DOC xqliu Comment method "setDbName".
+     * 
+     * @param dbName
+     * @param report
+     * @return
+     */
+    public static boolean setDbName(String dbName, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_DBNAME, dbName);
+    }
+
+    /**
+     * DOC xqliu Comment method "setUser".
+     * 
+     * @param user
+     * @param report
+     * @return
+     */
+    public static boolean setUser(String user, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_USER, user);
+    }
+
+    /**
+     * DOC xqliu Comment method "setPassword".
+     * 
+     * @param password
+     * @param report
+     * @return
+     */
+    public static boolean setPassword(String password, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_PASSWORD, password);
+    }
+
+    /**
+     * DOC xqliu Comment method "setDriver".
+     * 
+     * @param driver
+     * @param report
+     * @return
+     */
+    public static boolean setDriver(String driver, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_DRIVER, driver);
+    }
+
+    /**
+     * DOC xqliu Comment method "setDialect".
+     * 
+     * @param dialect
+     * @param report
+     * @return
+     */
+    public static boolean setDialect(String dialect, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_DIALECT, dialect);
+    }
+
+    /**
+     * DOC xqliu Comment method "setUrl".
+     * 
+     * @param url
+     * @param report
+     * @return
+     */
+    public static boolean setUrl(String url, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_URL, url);
+    }
+
+    /**
+     * DOC xqliu Comment method "setHost".
+     * 
+     * @param host
+     * @param report
+     * @return
+     */
+    public static boolean setHost(String host, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_HOST, host);
+    }
+
+    /**
+     * DOC xqliu Comment method "setPort".
+     * 
+     * @param port
+     * @param report
+     * @return
+     */
+    public static boolean setPort(String port, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_PORT, port);
+    }
+
+    /**
+     * DOC xqliu Comment method "setSchema".
+     * 
+     * @param schema
+     * @param report
+     * @return
+     */
+    public static boolean setSchema(String schema, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_SCHEMA, schema);
+    }
+
+    /**
      * DOC bZhou Comment method "getOutputFolderName".
      * 
      * @param report
@@ -638,7 +890,7 @@ public final class ReportHelper {
     public static String getOutputFolderNameAssinged(Report report) {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.OUTPUT_FOLDER_TAG, report.getTaggedValue());
         if (taggedValue == null) {
-            return "";
+            return PluginConstant.EMPTY_STRING;
         }
 
         return taggedValue.getValue();
@@ -676,8 +928,12 @@ public final class ReportHelper {
         return reportContainer.getFolder(DOT_MARK + simpleName);
     }
 
+    /**
+     * DOC yyi Comment method "getSubReportsPath".
+     * 
+     * @return
+     */
     public static IPath getSubReportsPath() {
         return new Path(PROPS.getProperty("SUB_REPORT_FOLDER"));
     }
-
 }
