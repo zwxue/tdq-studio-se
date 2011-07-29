@@ -223,7 +223,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     public String getText(Object element) {
         if (element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
-            System.out.println(node.getLabel());
             if (node instanceof RecycleBinRepNode || node instanceof ExchangeCategoryRepNode
                     || node instanceof ExchangeComponentRepNode) {
                 // virtual node, get the lable of node directly
