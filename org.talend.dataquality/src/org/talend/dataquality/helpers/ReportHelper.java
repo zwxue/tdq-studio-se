@@ -25,6 +25,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.PluginConstant;
@@ -61,6 +62,8 @@ public final class ReportHelper {
 
     private static final TypedProperties PROPS = PropertiesLoader
             .getProperties(ReportHelper.class, "predefined_jrxml.properties");
+
+    public static final boolean USE_REPORT_DB_CONN = true;
 
     /**
      * The report types.
@@ -684,7 +687,13 @@ public final class ReportHelper {
         if (taggedValue == null) {
             return PluginConstant.EMPTY_STRING;
         }
-        return taggedValue.getValue();
+        // decrypt the password
+        String password = taggedValue.getValue();
+        String decryptPassword = ConnectionHelper.getDecryptPassword(password);
+        if (decryptPassword != null) {
+            password = decryptPassword;
+        }
+        return password;
     }
 
     /**
@@ -812,6 +821,11 @@ public final class ReportHelper {
      * @return
      */
     public static boolean setPassword(String password, Report report) {
+        // encrypt the password
+        String encryptPassword = ConnectionHelper.getEncryptPassword(password);
+        if (encryptPassword != null) {
+            password = encryptPassword;
+        }
         return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_PASSWORD, password);
     }
 
