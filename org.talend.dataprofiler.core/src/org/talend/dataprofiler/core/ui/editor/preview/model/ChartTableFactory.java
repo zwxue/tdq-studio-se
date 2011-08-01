@@ -50,7 +50,12 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
@@ -233,6 +238,9 @@ public final class ChartTableFactory {
                                 } else if (isAllMatchIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
                                     item.setText("Generate an ETL job to handle rows");//$NON-NLS-1$ 
+                                } else if (isPhonseNumberIndicator(indicator)) {
+                                    item = new MenuItem(menu, SWT.PUSH);
+                                    item.setText("Generate a standardization phone number job");
                                 }
 
                                 if (item != null) {
@@ -394,6 +402,51 @@ public final class ChartTableFactory {
 
             @Override
             public Indicator caseDatePatternFreqIndicator(DatePatternFreqIndicator object) {
+                return object;
+            }
+        };
+
+        return iSwitch.doSwitch(indicator) != null;
+    }
+    
+    /**
+     * DOC Administrator Comment method "isPhonseNumberIndicator".
+     * 
+     * @param indicator
+     * @return
+     */
+    public static boolean isPhonseNumberIndicator(Indicator indicator) {
+        IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
+
+
+            @Override
+            public Indicator casePossiblePhoneCountIndicator(PossiblePhoneCountIndicator object) {
+                // TODO Auto-generated method stub
+                return object;
+            }
+
+            @Override
+            public Indicator caseValidPhoneCountIndicator(ValidPhoneCountIndicator object) {
+                // TODO Auto-generated method stub
+                return object;
+            }
+
+
+            @Override
+            public Indicator caseWellFormE164PhoneCountIndicator(WellFormE164PhoneCountIndicator object) {
+                // TODO Auto-generated method stub
+                return object;
+            }
+
+            @Override
+            public Indicator caseWellFormIntePhoneCountIndicator(WellFormIntePhoneCountIndicator object) {
+                // TODO Auto-generated method stub
+                return object;
+            }
+
+            @Override
+            public Indicator caseWellFormNationalPhoneCountIndicator(WellFormNationalPhoneCountIndicator object) {
+                // TODO Auto-generated method stub
                 return object;
             }
         };
