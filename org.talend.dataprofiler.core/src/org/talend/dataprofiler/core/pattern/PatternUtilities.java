@@ -152,7 +152,9 @@ public final class PatternUtilities {
 
         for (Indicator indicator : modelElementIndicator.getIndicators()) {
             // MOD xqliu 2009-08-12 bug 7810
-            if (UDIHelper.getMatchingIndicatorName(indicatorDefinition, pattern).equals(indicator.getName())) {
+            // MOD xwang 2011-08-01 bug TDQ-2730
+            if (UDIHelper.getMatchingIndicatorName(indicatorDefinition, pattern).equals(indicator.getName())
+                    && indicator instanceof PatternMatchingIndicator) {
                 result.setOk(false);
                 result.setMessage(DefaultMessagesImpl.getString("PatternUtilities.Selected")); //$NON-NLS-1$
                 return result;

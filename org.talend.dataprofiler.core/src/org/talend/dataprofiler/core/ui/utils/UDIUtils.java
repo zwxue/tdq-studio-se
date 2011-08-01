@@ -62,6 +62,7 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
@@ -103,8 +104,9 @@ public final class UDIUtils {
 
         // can't add the same user defined indicator
         for (Indicator indicator : meIndicator.getIndicators()) {
-            if (udid.getName().equals(indicator.getName())) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("UDIUtils.UDISelected") //$NON-NLS-1$
+            // MOD xwang 2011-08-01 bug TDQ-2730
+            if (udid.getName().equals(indicator.getName()) && indicator instanceof UserDefIndicator) {
+                MessageUI.openWarning(DefaultMessagesImpl.getString("UDIUtils.UDISelected", udid.getName()) //$NON-NLS-1$
                         + udid.getName());
                 return null;
             }
