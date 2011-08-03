@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
@@ -27,20 +30,35 @@ import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
+import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class TOPRepositoryService implements ITDQRepositoryService {
+
+    private static final String RULE_VALUE = "RULE_VALUE"; //$NON-NLS-1$
+
+    private static final String RULE_TYPE = "RULE_TYPE"; //$NON-NLS-1$
+
+    private static final String RULE_NAME = "RULE_NAME"; //$NON-NLS-1$
 
     public IViewPart getTDQRespositoryView() {
         return CorePlugin.getDefault().getRepositoryView();
@@ -108,7 +126,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     public boolean removeAliasInSQLExplorer(IRepositoryNode children) {
         boolean hasDependencyItem = true;
-        //MOD klliu 2011-04-28 bug 20204 removing connection is synced to the connection view of SQL explore 
+        // MOD klliu 2011-04-28 bug 20204 removing connection is synced to the connection view of SQL explore
         Item item = children.getObject().getProperty().getItem();
         // MOD mzhao filter the connections which is not a type of database.
         if (item != null && item instanceof ConnectionItem
@@ -123,5 +141,33 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
 
         return hasDependencyItem;
+    }
+
+    public void createParserRuleItem(ArrayList<HashMap<String, Object>> values, String parserRuleName) {
+        ParserRule parserRule = null;
+        DqRuleBuilder ruleBuilder = new DqRuleBuilder();
+        boolean ruleInitialized = ruleBuilder.initializeParserRuleBuilder(parserRuleName);
+        if (ruleInitialized) {
+            parserRule = ruleBuilder.getParserRule();
+        }
+        TaggedValueHelper.setValidStatus(true, parserRule);
+        for (HashMap<String, Object> expression : values) {
+
+            parserRule.addExpression(expression.get(RULE_NAME).toString(),
+                    expression.get(RULE_TYPE) instanceof Integer ? Integer.toString((Integer) expression.get(RULE_TYPE))
+                            : expression.get(RULE_TYPE).toString(), expression.get(RULE_VALUE).toString());
+        }
+        IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
+        if (ruleIndicatorCategory != null && !parserRule.getCategories().contains(ruleIndicatorCategory)) {
+            parserRule.getCategories().add(ruleIndicatorCategory);
+        }
+        IFolder folder = ResourceManager.getRulesParserFolder();
+        TypedReturnCode<Object> returnObject = ElementWriterFactory.getInstance().createdRuleWriter().create(parserRule, folder);
+        Object object = returnObject.getObject();
+        if (object instanceof Item) {
+            ParserRuleItemEditorInput parserRuleEditorInput = new ParserRuleItemEditorInput((Item) object);
+            CorePlugin.getDefault().openEditor(parserRuleEditorInput, ParserRuleEditor.class.getName());
+            this.refresh();
+        }
     }
 }

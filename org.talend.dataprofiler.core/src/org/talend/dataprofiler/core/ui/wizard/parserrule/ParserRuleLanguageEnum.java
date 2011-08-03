@@ -25,7 +25,7 @@ public enum ParserRuleLanguageEnum {
     Index(3, "Index"), //$NON-NLS-1$
     Shape(4, "Shape"), //$NON-NLS-1$
     Format(5, "Format"), //$NON-NLS-1$
-    Default(6, "Default");//$NON-NLS-1$
+    Default(6, "Please Select...");//$NON-NLS-1$
 
     private String literal;
 

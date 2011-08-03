@@ -128,7 +128,7 @@ public class ParserRuleTableViewer {
     public TdExpression addTdExpression() {
         TdExpression tdExpression = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdExpression();
         tdExpression.setBody("");
-        tdExpression.setLanguage("Default");
+        tdExpression.setLanguage("Please Select...");//$NON-NLS-1$
         tdExpression.setName("");
         TdExpressionContentProvider contentProvider = (TdExpressionContentProvider) parserRuleTableViewer.getContentProvider();
         List<TdExpression> movedElements = contentProvider.getMovedElements();
@@ -345,6 +345,10 @@ public class ParserRuleTableViewer {
                 result = tdExpression == null ? "" : tdExpression.getName(); //$NON-NLS-1$
                 break;
             case 1:
+                if (tdExpression.getLanguage().equals("SELECT")) {//$NON-NLS-1$
+                    result = ParserRuleLanguageEnum.Default.getLiteral().trim();
+                    break;
+                }
                 result = tdExpression == null ? "" : tdExpression.getLanguage(); //$NON-NLS-1$
                 break;
             case 2:
