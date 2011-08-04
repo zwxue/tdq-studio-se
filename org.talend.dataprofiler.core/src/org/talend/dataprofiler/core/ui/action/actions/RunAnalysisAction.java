@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -131,6 +132,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 // MOD klliu bug 19991 3td 2011-03-29
                 ReturnCode canSave = anaEditor.getMasterPage().canSave();
                 if (!canSave.isOk()) {
+                    MessageDialog.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"),
+                            canSave.getMessage());
                     return;
                 }
                 // ~
