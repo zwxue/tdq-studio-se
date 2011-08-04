@@ -15,7 +15,9 @@ package org.talend.dataprofiler.core.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPartListener;
@@ -31,6 +33,7 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
@@ -42,6 +45,7 @@ import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -169,5 +173,28 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             CorePlugin.getDefault().openEditor(parserRuleEditorInput, ParserRuleEditor.class.getName());
             this.refresh();
         }
+    }
+
+    /*
+     * Added yyi 2011-08-04 TDQ-3186
+     * 
+     * @see org.talend.core.ITDQRepositoryService#getPaserRulesFromResources(java.lang.Object[])
+     */
+    public List<Map<String, String>> getPaserRulesFromResources(Object[] rules) {
+        List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
+        for (Object rule : rules) {
+            if (rule instanceof IFile) {
+                ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule((IFile) rule);
+                parserRule.getElements();
+                for (TdExpression exp : parserRule.getExpression()) {
+                    Map<String, String> pr = new HashMap<String, String>();
+                    pr.put("RULE_NAME", exp.getName());
+                    pr.put("RULE_VALUE", exp.getBody());
+                    pr.put("RULE_TYPE", exp.getLanguage().toUpperCase());
+                    ruleValues.add(pr);
+                }
+            }
+        }
+        return ruleValues;
     }
 }
