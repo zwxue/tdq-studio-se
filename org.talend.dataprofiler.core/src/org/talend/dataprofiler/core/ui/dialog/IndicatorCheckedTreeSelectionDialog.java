@@ -17,8 +17,8 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
+import org.talend.dataprofiler.core.ui.filters.RuleFolderFliter;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -27,7 +27,7 @@ public class IndicatorCheckedTreeSelectionDialog extends CheckedTreeSelectionDia
 
     public IndicatorCheckedTreeSelectionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
         super(parent, labelProvider, contentProvider);
-        addFilter(new DQFolderFliter(true));
+        addFilter(new RuleFolderFliter(true));
         addFilter(new RecycleBinFilter());
     }
 

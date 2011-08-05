@@ -24,7 +24,7 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.filters.RuleFolderFliter;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -62,7 +62,7 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
         cViewer.setLabelProvider(new DQRuleLabelProvider());
         cViewer.setContentProvider(new WorkbenchContentProvider());
         cViewer.setInput(ResourceManager.getLibrariesFolder());
-        cViewer.addFilter(new DQFolderFliter(true));
+        cViewer.addFilter(new RuleFolderFliter(true));
         cViewer.addFilter(new ViewerFilter() {
 
             @Override
