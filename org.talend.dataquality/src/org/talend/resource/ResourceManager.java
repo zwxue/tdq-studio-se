@@ -57,6 +57,16 @@ public final class ResourceManager {
         return ReponsitoryContextBridge.getProjectName();
     }
 
+    // ADD msjian 2011-8-5 TDQ-3165: get the Project Description
+    /**
+     * DOC msjian Comment method "getRootProjectDescription".
+     * 
+     * @return
+     */
+    public static String getRootProjectDescription() {
+        return ReponsitoryContextBridge.getProjectDescription();
+    }
+
     /**
      * DOC bZhou Comment method "getDataProfilingFolder".
      * 
