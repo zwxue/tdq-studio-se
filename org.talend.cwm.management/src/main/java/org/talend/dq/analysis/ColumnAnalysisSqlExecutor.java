@@ -144,10 +144,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * Method "createSqlQuery".
      * 
      * @param dataFilterExpression
-     * 
      * @param analysis
-     * 
      * @param indicator
+     * 
      * @throws ParseException
      * @throws AnalysisExecutionException
      */
@@ -193,7 +192,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         if (indicatorDefinition == null) {
-
             return traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
@@ -294,6 +292,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (completedSqlString != null) {
                 whereExpression = duplicateForCrossJoin(completedSqlString, whereExpression, tdColumn);
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+            } else {
+                if (isOracle()) {
+                    completedSqlString = "select 0 from dual";
+                }
             }
         } else
 
@@ -848,8 +850,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         if (count == 0) {
-            this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.CannotComputeQuantile",//$NON-NLS-1$
-                    dbms().toQualifiedName(catalogOrSchema, null, colName));
+            if (!isOracle()) {
+                this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.CannotComputeQuantile",//$NON-NLS-1$
+                        dbms().toQualifiedName(catalogOrSchema, null, colName));
+            }
             return null;
             // throw new AnalysisExecutionException(errorMessage);
         }
@@ -1428,7 +1432,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // give result to indicator so that it handles the results
         boolean ret = false;
         try {
-            
+
             // MOD msjian 22946: Duplicate count indicator result is wrong for column analsis with OracleDB
             // because the count(column name) not contained the null value
             List<Object[]> myResultSet = new ArrayList<Object[]>();
@@ -1436,11 +1440,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 String tmp = queryStmt.replaceAll("COUNT\\(", " "); // $NON-NSL-1$ // $NON-NSL-2$
                 tmp = tmp.replaceAll("\\)", ""); // $NON-NSL-1$ // $NON-NSL-2$
                 List<Object[]> myRs = executeQuery(cat, connection, tmp);
-                
+
                 Object[] result = new Object[1];
                 result[0] = myRs.size();
                 myResultSet.add(result);
-                
+
             } else {
                 myResultSet = executeQuery(cat, connection, queryStmt);
             }

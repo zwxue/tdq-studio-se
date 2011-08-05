@@ -365,4 +365,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         String table = quote(ColumnHelper.getTableFullName(column));
         return table;
     }
+
+    protected boolean isOracle() {
+        return ConnectionHelper.isOracle(dataprovider);
+    }
+
 }
