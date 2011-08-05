@@ -62,8 +62,7 @@ public class UpdateStartWithBlankPatternTask extends AbstractWorksapceUpdateTask
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
-        // TODO Auto-generated method stub
-        return null;
+        return MigrationTaskType.FILE;
     }
 
     /*

@@ -1340,7 +1340,7 @@
            version="4.2.0">
      </workspacetask>
      <workspacetask
-           class="org.talend.dataprofiler.core.UpdateStartWithBlankPatternTask"
+           class="org.talend.dataprofiler.core.migration.impl.UpdateStartWithBlankPatternTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateStartWithBlankPatternTask"
            name="Update Start With Blank Task"
            version="4.2.3">
