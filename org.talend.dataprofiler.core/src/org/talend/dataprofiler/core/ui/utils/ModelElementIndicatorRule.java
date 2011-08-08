@@ -149,7 +149,6 @@ public final class ModelElementIndicatorRule {
             break;
         case MeanIndicatorEnum:
         case MedianIndicatorEnum:
-        case BoxIIndicatorEnum:
         case IQRIndicatorEnum:
         case LowerQuartileIndicatorEnum:
         case UpperQuartileIndicatorEnum:
@@ -162,6 +161,7 @@ public final class ModelElementIndicatorRule {
                 }
             }
             break;
+        case BoxIIndicatorEnum:
         case RangeIndicatorEnum:
         case MinValueIndicatorEnum:
         case MaxValueIndicatorEnum:
