@@ -233,9 +233,12 @@ public final class UDIUtils {
      * @param udiJarProject
      * @return
      */
-    public static JavaUdiJarSelectDialog createUdiJarCheckedTreeSelectionDialog(IFolder udiJarProject, String[] selectionPath) {
-
-        JavaUdiJarSelectDialog dialog = new JavaUdiJarSelectDialog(null, new UdiLabelProvider(), new UdiJarContentProvider());
+    // MOD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already. 
+    public static JavaUdiJarSelectDialog createUdiJarCheckedTreeSelectionDialog(IndicatorDefinition definition,
+            IFolder udiJarProject, String[] selectionPath) {
+        JavaUdiJarSelectDialog dialog = new JavaUdiJarSelectDialog(definition, null, new UdiLabelProvider(),
+                new UdiJarContentProvider());
+        // MOD end
         // dialog.addFilter(new RecycleBinFilter());
         // dialog.addFilter(new FolderObjFilter());
         dialog.setInput(udiJarProject);
@@ -339,7 +342,7 @@ public final class UDIUtils {
         return fileList;
     }
 
-    public static ReturnCode checkUDIDependency(File delFile) {
+    public static ReturnCode checkUDIDependency(IndicatorDefinition definition, File delFile) {
         ReturnCode result = new ReturnCode(true);
         IPath filePath = new Path(delFile.getPath());
         if (!ResourceManager.getUDIJarFolder().getLocation().isPrefixOf(filePath)) {
@@ -359,6 +362,14 @@ public final class UDIUtils {
             } else {
                 continue;
             }
+
+            // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already. 
+            // when it is itself, don't use this check.
+            if (indiDef == definition) {
+                continue;
+            }
+            // ADD end
+
             TaggedValue tv = TaggedValueHelper.getTaggedValue(PluginConstant.JAR_FILE_PATH, indiDef.getTaggedValue());
             if (tv == null) {
                 continue;

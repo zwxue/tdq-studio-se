@@ -16,8 +16,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -42,10 +45,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
@@ -57,6 +60,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.io.FilesUtils;
 import org.talend.utils.sugars.ReturnCode;
@@ -103,6 +107,15 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     private int tableFolderHeight = 25;
 
     private CheckboxTreeViewer fManageViewer;
+    // ADD end
+
+    // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
+    private Text jarPathText;
+
+    private Map<Object, Boolean> selectedJars;
+
+    private IndicatorDefinition definition;
+    // ADD end
 
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
@@ -111,7 +124,8 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
      * @param labelProvider the label provider to render the entries
      * @param contentProvider the content provider to evaluate the tree structure
      */
-    public JavaUdiJarSelectDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
+    public JavaUdiJarSelectDialog(IndicatorDefinition definition, Shell parent, ILabelProvider labelProvider,
+            ITreeContentProvider contentProvider) {
         super(parent);
         fLabelProvider = labelProvider;
         fContentProvider = contentProvider;
@@ -119,6 +133,9 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         setStatusLineAboveButtons(true);
         fContainerMode = false;
         fExpandedElements = null;
+        // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
+        selectedJars = new HashMap<Object, Boolean>();
+        this.definition = definition;
     }
 
     /**
@@ -255,13 +272,14 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         super.create();
     }
 
-    /**
-     * Handles cancel button pressed event.
-     */
-    protected void cancelPressed() {
-        setResult(null);
-        super.cancelPressed();
-    }
+   // DEL msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
+//    /**
+//     * Handles cancel button pressed event.
+//     */
+//    protected void cancelPressed() {
+//        setResult(null);
+//        super.cancelPressed();
+//    }
 
     /*
      * @see SelectionStatusDialog#computeResult()
@@ -281,6 +299,11 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
             public void run() {
                 accessSuperCreate();
                 fViewer.setCheckedElements(getInitialElementSelections().toArray());
+                // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
+                for (Object obj : getInitialElementSelections().toArray()) {
+                    selectedJars.put(obj, true);
+                }
+                // ADD end
                 if (fExpandedElements != null) {
                     fViewer.setExpandedElements(fExpandedElements);
                 }
@@ -351,7 +374,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         public Com(Composite parent, int style, boolean isSelect) {
             super(parent, style);
 
-            Label messageLabel = createMessageArea(this);
+            // Label messageLabel = createMessageArea(this);
             CheckboxTreeViewer treefViewer = null;
             if (isSelect) {
                 treefViewer = createTreeViewer(this);
@@ -366,14 +389,25 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
             Tree treeWidget = treefViewer.getTree();
             treeWidget.setLayoutData(data);
             treeWidget.setFont(this.getFont());
-            if (fIsEmpty) {
-                messageLabel.setEnabled(false);
-            }
+            // if (fIsEmpty) {
+            // messageLabel.setEnabled(false);
+            // }
         }
 
         @Override
         protected void checkSubclass() {
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.dialogs.SelectionDialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        // TODO Auto-generated method stub
+        // super.createButtonsForButtonBar(parent);
     }
 
     /**
@@ -393,6 +427,9 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         fViewer.addCheckStateListener(new ICheckStateListener() {
 
             public void checkStateChanged(CheckStateChangedEvent event) {
+                // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
+                handleChecked();
+                // ADD end
                 updateOKStatus();
             }
         });
@@ -404,6 +441,28 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         }
         fViewer.setInput(fInput);
         return fViewer;
+    }
+
+    // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
+    /**
+     * DOC msjian Comment method "handleChecked".
+     */
+    public void handleChecked() {
+        computeResult();
+        selectedJars.clear();
+        String path = "";//$NON-NLS-1$
+        for (Object obj : getResult()) {
+            selectedJars.put(obj, true);
+            if (obj instanceof File) {
+                IFile file = ResourceManager.getRoot().getFile(new org.eclipse.core.runtime.Path(((File) obj).getPath()));
+                if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
+                    path += "||";//$NON-NLS-1$
+                }
+                path += file.getName();
+                // setDirty(true);
+            }
+        }
+        jarPathText.setText(path);
     }
 
     /**
@@ -471,6 +530,10 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                 if (fContainerMode) {
                     if (isSelect) {
                         fViewer.setCheckedElements(viewerElements);
+                        // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used
+                        // already.
+                        handleChecked();
+                        // ADD end
                     } else {
                         fManageViewer.setCheckedElements(viewerElements);
                     }
@@ -494,6 +557,10 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
             public void widgetSelected(SelectionEvent e) {
                 if (isSelect) {
                     fViewer.setCheckedElements(new Object[0]);
+                    // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used
+                    // already.
+                    handleChecked();
+                    // ADD end
                 } else {
                     fManageViewer.setCheckedElements(new Object[0]);
                 }
@@ -562,11 +629,14 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                     for (Object delFile : fManageViewer.getCheckedElements()) {
                         // Object delFile = manageSelectList.get(i);
                         if (delFile instanceof File) {
-                            ReturnCode rc = UDIUtils.checkUDIDependency((File) delFile);
-                            if (elements.contains(delFile)) {
+                            // MOD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used
+                            // already.
+                            ReturnCode rc = UDIUtils.checkUDIDependency(definition, (File) delFile);
+                            if (selectedJars.containsKey(delFile)) {
                                 rc.setOk(false);
                                 rc.setMessage("the File " + ((File) delFile).getName() + " has been select by the UDI");//$NON-NLS-1$ //$NON-NLS-3$
                             }
+                            // MOD end
                             if (rc.isOk()) {
                                 ((File) delFile).delete();
                             } else {
@@ -619,5 +689,14 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         if (treeViewer != null) {
             treeViewer.setCheckedElements(elements.toArray());
         }
+    }
+
+    /**
+     * DOC msjian Comment method "setControl".
+     * 
+     * @param jarPathText
+     */
+    public void setControl(Text jarPathText) {
+        this.jarPathText = jarPathText;
     }
 }

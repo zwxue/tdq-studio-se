@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.indicator;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -1331,38 +1329,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             // MOD by zshen for bug 18724 2011.02.23
             public void widgetSelected(SelectionEvent e) {
-                String jarpathStr = jarPathText.getText();
-                JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(
-                        ResourceManager.getUDIJarFolder(), jarpathStr.split("\\|\\|"));//$NON-NLS-1$
-                if (selectDialog.open() == Window.OK) {
-
-                    String path = "";//$NON-NLS-1$
-                    for (Object obj : selectDialog.getResult()) {
-                        if (obj instanceof File) {
-
-                            IFile file = ResourceManager.getRoot().getFile(
-                                    new org.eclipse.core.runtime.Path(((File) obj).getPath()));
-
-                            if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
-                                path += "||";//$NON-NLS-1$
-                            }
-                            path += file.getName();
-                            setDirty(true);
-                        }
-                    }
-                    jarPathText.setText(path);
-                    // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                    validateJavaUDI(classNameText, jarPathText);
-                    ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
-                }
-                // FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
-                //                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
-                // String path = dialog.open();
-                // if (path != null) {
-                // jarPathText.setText(path);
-                // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                // validateJavaUDI(classNameText, jarPathText);
-                // }
+                // MOD msjian 2011-8-9 TDQ-3199 fixed: define a new method use the exsit sourse, because there are two
+                // places used the same sourse
+                openJarSelectDialog(jarPathText, classNameText);
             }
         });
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
@@ -1767,36 +1736,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             // MOD by zshen for bug 18724 2011.02.23
             public void widgetSelected(SelectionEvent e) {
-                JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(
-                        ResourceManager.getUDIJarFolder(), jarPathText.getText().split("\\|\\|"));//$NON-NLS-1$
-                if (selectDialog.open() == Window.OK) {
-                    String path = "";//$NON-NLS-1$
-                    for (Object obj : selectDialog.getResult()) {
-                        if (obj instanceof File) {
-
-                            IFile file = ResourceManager.getRoot().getFile(
-                                    new org.eclipse.core.runtime.Path(((File) obj).getPath()));
-
-                            if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
-                                path += "||";//$NON-NLS-1$
-                            }
-                            path += file.getName();
-                            setDirty(true);
-                        }
-                    }
-                    jarPathText.setText(path);
-                    // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                    validateJavaUDI(classNameText, jarPathText);
-                    ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
-                }
-                // FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
-                //                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
-                // String path = dialog.open();
-                // if (path != null) {
-                // jarPathText.setText(path);
-                // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-                // validateJavaUDI(classNameText, jarPathText);
-                // }
+                // MOD msjian 2011-8-9 TDQ-3199 fixed: define a new method use the exsit sourse, because there are two
+                // places used the same sourse
+                openJarSelectDialog(jarPathText, classNameText);
             }
         });
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
@@ -1831,6 +1773,52 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         definitionSection.setExpanded(false);
         definitionSection.setExpanded(true);
+    }
+
+    // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
+    /**
+     * DOC msjian Comment method "openJarSelectDialog".
+     * 
+     * @param jarPathText
+     * @param classNameText
+     */
+    private void openJarSelectDialog(Text jarPathText, Text classNameText) {
+        String jarpathStr = jarPathText.getText();
+        JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(definition,
+                ResourceManager.getUDIJarFolder(),
+                jarpathStr.split("\\|\\|"));//$NON-NLS-1$
+        selectDialog.setControl(jarPathText);
+        selectDialog.open();
+
+        // if (selectDialog.open() == Window.OK) {
+        //                    String path = "";//$NON-NLS-1$
+        // for (Object obj : selectDialog.getResult()) {
+        // if (obj instanceof File) {
+        //
+        // IFile file = ResourceManager.getRoot().getFile(
+        // new org.eclipse.core.runtime.Path(((File) obj).getPath()));
+        //
+        //                            if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
+        //                                path += "||";//$NON-NLS-1$
+        // }
+        // path += file.getName();
+        // setDirty(true);
+        // }
+        // }
+        // jarPathText.setText(path);
+        // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+        validateJavaUDI(classNameText, jarPathText);
+        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+        // }
+
+        // FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
+        //                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
+        // String path = dialog.open();
+        // if (path != null) {
+        // jarPathText.setText(path);
+        // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
+        // validateJavaUDI(classNameText, jarPathText);
+        // }
     }
 
     /**
