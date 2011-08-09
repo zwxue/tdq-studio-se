@@ -13,14 +13,23 @@
 package org.talend.dataprofiler.core.ui.editor.dqrules;
 
 import org.apache.log4j.Level;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.IFormPage;
+import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleMasterDetailsPage;
+import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.ParserRule;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -28,6 +37,8 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 public class DQRuleEditor extends CommonFormEditor {
 
     private DQRuleMasterDetailsPage masterPage;
+
+    private ParserRuleMasterDetailsPage parserPage;
 
     private static final String ID = "DQRuleEditor.masterPage";//$NON-NLS-1$
 
@@ -37,11 +48,39 @@ public class DQRuleEditor extends CommonFormEditor {
     // ~
 
     protected void addPages() {
-        masterPage = new DQRuleMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
-        // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind the method 'addPage(...)'
+        IEditorInput editorInput = this.getEditorInput();
         try {
-            addPage(masterPage);
-            setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+
+            if (editorInput instanceof ParserRuleItemEditorInput) {
+                parserPage = new ParserRuleMasterDetailsPage(this, ID, "Parser Rule Settings"); //$NON-NLS-1$ 
+                addPage(parserPage);
+                setPartName(((ParserRuleMasterDetailsPage) parserPage).getIntactElemenetName()); //$NON-NLS-1$
+            } else if (editorInput instanceof FileEditorInput) {
+                DQRule findDQRule = null;
+                FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+                IFile file = fileEditorInput.getFile();
+                String label = file.getFullPath().toString();
+                if (FactoriesUtil.isDQRuleFile(file.getFileExtension())) {
+                    findDQRule = DQRuleResourceFileHelper.getInstance().findDQRule(file);
+
+                }
+                if (findDQRule instanceof ParserRule) {
+                    parserPage = new ParserRuleMasterDetailsPage(this, ID, "Parser Rule Settings"); //$NON-NLS-1$ 
+                    addPage(parserPage);
+                    setPartName(((ParserRuleMasterDetailsPage) parserPage).getIntactElemenetName()); //$NON-NLS-1$
+                } else {
+                    masterPage = new DQRuleMasterDetailsPage(this, ID,
+                            DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
+                    addPage(masterPage);
+                    setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+                }
+            } else {
+                masterPage = new DQRuleMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
+                addPage(masterPage);
+                setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+            }
+            // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind the method 'addPage(...)'
+
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }

@@ -704,7 +704,7 @@ public final class ImportFactory {
                     names.add(name);
                     information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedParserRuleSucess" //$NON-NLS-1$
                             , name), true));
-                    createAndStoreParserRule(prParameters, selectionFolder);
+                    createAndStoreParserRule(prParameters, selectionFolder, name);
                 }
 
                 reader.close();
@@ -724,11 +724,12 @@ public final class ImportFactory {
      * @param prParameters
      * @param selectionFolder
      */
-    public static void createAndStoreParserRule(ParserRuleParameters prParameters, IFolder selectionFolder) {
+    public static void createAndStoreParserRule(ParserRuleParameters prParameters, IFolder selectionFolder, String name) {
         DqRuleBuilder ruleBuilder = new DqRuleBuilder();
         boolean ruleInitialized = ruleBuilder.initializeParserRuleBuilder(prParameters.label);
         if (ruleInitialized) {
             ParserRule parserRule = ruleBuilder.getParserRule();
+            parserRule.setName(name);
             TaggedValueHelper.setValidStatus(true, parserRule);
             List<ParserRuleTdExpresstion> prExpresstions = prParameters.getPrExpresstions();
             for (ParserRuleTdExpresstion prtde : prExpresstions) {

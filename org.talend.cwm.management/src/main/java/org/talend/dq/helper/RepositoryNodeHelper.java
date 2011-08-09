@@ -65,6 +65,7 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -105,6 +106,7 @@ import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.nodes.RulesParserFolderRepNode;
 import org.talend.dq.nodes.RulesSQLFolderRepNode;
 import org.talend.dq.nodes.RulesSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
@@ -497,6 +499,9 @@ public final class RepositoryNodeHelper {
         } else if (modelElement instanceof IndicatorDefinition) {
             if (modelElement instanceof WhereRule) {
                 node = recursiveFindRuleSql((WhereRule) modelElement);
+            }
+            if (modelElement instanceof ParserRule) {
+                node = recursiveFindRuleParser((ParserRule) modelElement);
             } else {
                 node = recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
             }
@@ -513,6 +518,31 @@ public final class RepositoryNodeHelper {
         // + modelElement.getName() + "] NOT FOUND!!!");
         // }
         // return repNode;
+    }
+
+    /**
+     * DOC klliu Comment method "recursiveFindRuleParser".
+     * 
+     * @param modelElement
+     * @return
+     */
+    private static RepositoryNode recursiveFindRuleParser(ParserRule rule) {
+        if (rule == null) {
+            return null;
+        }
+        String uuid = ResourceHelper.getUUID(rule);
+        if (uuid == null) {
+            return null;
+        }
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_PARSER), true, true);
+        if (ruleRepNodes.size() > 0) {
+            for (RuleRepNode childNode : ruleRepNodes) {
+                if (uuid.equals(ResourceHelper.getUUID(childNode.getRule()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
     }
 
     public static List<DBConnectionRepNode> getDBConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
@@ -665,7 +695,8 @@ public final class RepositoryNodeHelper {
 
     public static List<RuleRepNode> getRuleRepNodes(IRepositoryNode parrentNode, boolean recursiveFind, boolean withDeleted) {
         List<RuleRepNode> result = new ArrayList<RuleRepNode>();
-        if (parrentNode != null && (parrentNode instanceof RulesSQLFolderRepNode || parrentNode instanceof RulesSubFolderRepNode)) {
+        if (parrentNode != null
+                && (parrentNode instanceof RulesSQLFolderRepNode || parrentNode instanceof RulesSubFolderRepNode || parrentNode instanceof RulesParserFolderRepNode)) {
             List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
@@ -2569,7 +2600,6 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
-
     /**
      * DOC gdbu Comment method "getPreviouFilteredNode".
      * 
@@ -2663,7 +2693,6 @@ public final class RepositoryNodeHelper {
         return children;
     }
 
-
     public static IRepositoryNode getFilteredNode() {
         return filteredNode;
     }
@@ -2672,5 +2701,4 @@ public final class RepositoryNodeHelper {
         filteredNode = fNode;
     }
 
-    
 }

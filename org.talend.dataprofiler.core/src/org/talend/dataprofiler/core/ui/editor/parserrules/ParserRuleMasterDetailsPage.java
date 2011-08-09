@@ -17,12 +17,14 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,7 +37,10 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
@@ -49,9 +54,8 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
-import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -100,10 +104,13 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
             Property property = PropertyHelper.getProperty(parserRule);
             this.parserRuleItem = (TDQBusinessRuleItem) property.getItem();
         }
+        // this.repositoryNode = this.ruleRepNode;
+        // this.repositoryViewObject = (RepositoryViewObject) this.ruleRepNode.getObject();
     }
 
     public ParserRuleMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+        getCurrentModelElement(editor);
     }
 
     @Override
@@ -153,7 +160,6 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
             MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
             return;
         }
-
         super.doSave(monitor);
         if (saveParserRule()) {
             this.isDirty = false;
@@ -166,9 +172,16 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         parserRule.getExpression().addAll(parserRuleTableViewer.getParserRuleTdExpressions());
         TDQBusinessRuleItem parserRuleItem = this.getParserRuleItem();
         parserRuleItem.setDqrule(parserRule);
-        ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(parserRuleItem);
-
-        return rc.isOk();
+        // parserRuleItem.setFilename(parserRule.getName());
+        // ProxyRepositoryFactory.getInstance().save(null, parserRuleItem, null);
+        // ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(parserRuleItem);
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        try {
+            ProxyRepositoryFactory.getInstance().save(currentProject, parserRuleItem);
+        } catch (PersistenceException e) {
+            return false;
+        }
+        return true;
 
     }
 
@@ -182,6 +195,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
         Label label = new Label(parserRuleDefinitionSection, SWT.WRAP);
         label.setText("Type in the definition of your Parser Rules."); //$NON-NLS-1$
+
         parserRuleDefinitionSection.setDescriptionControl(label);
         createParserRuleDefinitionComp();
     }
@@ -193,18 +207,25 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
      */
     private Composite createParserRuleDefinitionComp() {
         Composite newComp = toolkit.createComposite(parserRuleDefinitionSection);
-        newComp.setLayout(new GridLayout());
-        Composite container = new Composite(newComp, SWT.NONE);
-        GridLayout gdLayout = new GridLayout(2, false);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(container);
-        container.setLayout(gdLayout);
-        Label label1 = new Label(container, SWT.NONE);
+        FormLayout fromlayout = new FormLayout();
+        newComp.setLayout(fromlayout);
+        // create parser rules label
+        Label label1 = new Label(newComp, SWT.ON_TOP);
         label1.setText("Parser Rules"); //$NON-NLS-1$
-        Composite ruleViewerComp = new Composite(container, SWT.None);
-        GridData parData = new GridData(GridData.FILL_BOTH);
-        ruleViewerComp.setLayoutData(parData);
+        FormData data = new FormData();
+        data.top = new FormAttachment(0, 10);
+        data.left = new FormAttachment(0, 5);
+        data.bottom = new FormAttachment(50, -5);
+        data.right = new FormAttachment(10, -5);
+        label1.setLayoutData(data);
+        // create expresstion viewer
+        Composite ruleViewerComp = new Composite(newComp, SWT.None);
         GridLayout layout = new GridLayout(1, false);
         ruleViewerComp.setLayout(layout);
+        data = new FormData();
+        data.top = new FormAttachment(0, 5);
+        data.left = new FormAttachment(label1, 5);
+        ruleViewerComp.setLayoutData(data);
 
         createParserRuleViewColumns(ruleViewerComp);
         parserRuleDefinitionSection.setClient(newComp);
@@ -236,6 +257,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         labelGd.widthHint = 30;
 
         final Button addButton = new Button(buttonsComposite, SWT.NONE);
+        addButton.setToolTipText("Add New Item");
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
@@ -246,6 +268,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         });
 
         final Button delButton = new Button(buttonsComposite, SWT.NONE);
+        delButton.setToolTipText("Delete Selcetion Item");
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setLayoutData(labelGd);
         delButton.addSelectionListener(new SelectionAdapter() {
@@ -259,6 +282,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
             }
         });
         final Button upButton = new Button(buttonsComposite, SWT.NONE);
+        upButton.setToolTipText("Move Item Up");
         upButton.setImage(ImageLib.getImage(ImageLib.UP_ACTION));
         upButton.setLayoutData(labelGd);
         upButton.addSelectionListener(new SelectionAdapter() {
@@ -273,6 +297,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         });
 
         final Button downButton = new Button(buttonsComposite, SWT.NONE);
+        downButton.setToolTipText("Move Item Down");
         downButton.setImage(ImageLib.getImage(ImageLib.DOWN_ACTION));
         downButton.setLayoutData(labelGd);
         downButton.addSelectionListener(new SelectionAdapter() {
@@ -286,6 +311,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
             }
         });
         final Button copyButton = new Button(buttonsComposite, SWT.NONE);
+        copyButton.setToolTipText("Copy Selcetion Item");
         copyButton.setImage(ImageLib.getImage(ImageLib.COPY_ACTION));
         copyButton.setLayoutData(labelGd);
         copyButton.addSelectionListener(new SelectionAdapter() {
@@ -298,6 +324,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         });
 
         final Button pasteButton = new Button(buttonsComposite, SWT.NONE);
+        pasteButton.setToolTipText("Paste Selcetion Item");
         pasteButton.setImage(ImageLib.getImage(ImageLib.PASTE_ACTION));
         pasteButton.setLayoutData(labelGd);
         pasteButton.addSelectionListener(new SelectionAdapter() {

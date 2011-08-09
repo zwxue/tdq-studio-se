@@ -50,7 +50,6 @@ import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInpu
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
-import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
@@ -206,11 +205,10 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         EProperties.CONTENT_TYPE);
                 if (properties.equals(ERepositoryObjectType.TDQ_RULES_PARSER)) {
                     result = new ParserRuleItemEditorInput(item);
-                    editorID = ParserRuleEditor.class.getName();
                 } else {
                     result = new BusinessRuleItemEditorInput(item);
-                    editorID = DQRuleEditor.class.getName();
                 }
+                editorID = DQRuleEditor.class.getName();
 
             } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
                 result = new PatternItemEditorInput(item);
