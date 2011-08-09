@@ -841,13 +841,6 @@
             id="org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"
             name="drillDownResultEditor">
       </editor>
-      <editor
-            class="org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor"
-            extensions="rules"
-            icon="icons/dqrule_red.png"
-            id="org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor"
-            name="%editor.name.ParserRuleEditor">
-      </editor>
    </extension>
   <extension
         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
