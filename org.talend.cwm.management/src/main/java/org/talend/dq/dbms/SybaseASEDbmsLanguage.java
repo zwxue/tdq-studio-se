@@ -50,4 +50,12 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
         return super.toQualifiedName(catalog, schema, table);
     }
 
+    /**
+     * DOC yyi 2011-08-10 22246:view rows for aveagge length
+     * 
+     * @return average length sql statement
+     */
+    public String getAverageLengthRows() {
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE CHAR_LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(CHAR_LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEILING(SUM(CHAR_LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
+    }
 }
