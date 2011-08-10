@@ -1437,9 +1437,21 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // because the count(column name) not contained the null value
             List<Object[]> myResultSet = new ArrayList<Object[]>();
             if (indicator instanceof DistinctCountIndicator) {
-                String tmp = queryStmt.replaceAll("COUNT\\(", " "); // $NON-NSL-1$ // $NON-NSL-2$
-                tmp = tmp.replaceAll("\\)", ""); // $NON-NSL-1$ // $NON-NSL-2$
-                List<Object[]> myRs = executeQuery(cat, connection, tmp);
+                // MOD msjian 2011-8-10 TDQ-1679: fixed when there is filter, the sql is error
+                String myRsSql = queryStmt;
+                int whereIndex = queryStmt.indexOf("WHERE");// $NON-NSL-1$
+                if (whereIndex != -1) {
+                    String sqlSelectPart = queryStmt.substring(0, whereIndex);
+                    String sqlWherePart = queryStmt.substring(whereIndex);
+                    sqlSelectPart = sqlSelectPart.replaceAll("COUNT\\(", " "); // $NON-NSL-1$ // $NON-NSL-2$
+                    sqlSelectPart = sqlSelectPart.replaceAll("\\)", ""); // $NON-NSL-1$ // $NON-NSL-2$
+                    myRsSql = sqlSelectPart + sqlWherePart;
+                } else {
+                    myRsSql = queryStmt.replaceAll("COUNT\\(", " "); // $NON-NSL-1$ // $NON-NSL-2$
+                    myRsSql = myRsSql.replaceAll("\\)", ""); // $NON-NSL-1$ // $NON-NSL-2$
+                }
+
+                List<Object[]> myRs = executeQuery(cat, connection, myRsSql);
 
                 Object[] result = new Object[1];
                 result[0] = myRs.size();
