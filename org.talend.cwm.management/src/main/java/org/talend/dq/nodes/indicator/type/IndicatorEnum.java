@@ -334,7 +334,7 @@ public enum IndicatorEnum {
     PhoneNumbStatisticsIndicatorEnum(
                             IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR,
                             IndicatorsPackage.Literals.PHONE_NUMB_STATISTICS_INDICATOR,
-                                     "Phone Nubmber Statistics", //$NON-NLS-1$
+                                     "Phone Number Statistics", //$NON-NLS-1$
                             new IndicatorEnum[] { ValidPhoneCountIndicatorEnum, ValidRegCodeCountIndicatorEnum,
                                     InvalidRegCodeCountIndicatorEnum, PossiblePhoneCountIndicatorEnum,
                                     WellFormIntePhoneCountIndicatorEnum, WellFormNationalPhoneCountIndicatorEnum,
