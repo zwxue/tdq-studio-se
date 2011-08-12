@@ -30,8 +30,14 @@ public class DQRepositoryNode extends RepositoryNode {
 
     private static boolean isOnFiltering = false;
 
+    /**
+     * this will be only used in the "table select dialog", when do the schema filter.
+     */
     private static boolean untilSchema = false;
 
+    /**
+     * this will be only used in the "column select dialog", when do the table filter.
+     */
     private static boolean untilTable = false;
 
     /**
