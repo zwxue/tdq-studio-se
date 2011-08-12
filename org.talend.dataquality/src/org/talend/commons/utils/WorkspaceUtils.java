@@ -44,6 +44,9 @@ public final class WorkspaceUtils {
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         IPath location = Path.fromOSString(file.getAbsolutePath());
         IFile ifile = workspace.getRoot().getFileForLocation(location);
+        if (ifile == null) {
+            ifile = workspace.getRoot().getFile(location);
+        }
         return ifile;
     }
 
