@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleLanguageEnum;
 import org.talend.dataquality.rules.ParserRule;
 
@@ -127,9 +128,9 @@ public class ParserRuleTableViewer {
      */
     public TdExpression addTdExpression() {
         TdExpression tdExpression = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdExpression();
-        tdExpression.setBody("");
-        tdExpression.setLanguage("Please Select...");//$NON-NLS-1$
-        tdExpression.setName("");
+        tdExpression.setBody("");//$NON-NLS-1$
+        tdExpression.setLanguage(DefaultMessagesImpl.getString("ParserRuleTableViewer.languageSelection")); //$NON-NLS-1$
+        tdExpression.setName("");//$NON-NLS-1$
         TdExpressionContentProvider contentProvider = (TdExpressionContentProvider) parserRuleTableViewer.getContentProvider();
         List<TdExpression> movedElements = contentProvider.getMovedElements();
         movedElements.add(tdExpression);
