@@ -85,6 +85,7 @@ Export-Package: org.eclipse.nebula.jface.gridviewer,
  org.talend.dataprofiler.core.ui.editor.analysis,
  org.talend.dataprofiler.core.ui.editor.composite,
  org.talend.dataprofiler.core.ui.editor.connection,
+ org.talend.dataprofiler.core.ui.editor.parserrules,
  org.talend.dataprofiler.core.ui.editor.pattern,
  org.talend.dataprofiler.core.ui.editor.preview,
  org.talend.dataprofiler.core.ui.editor.preview.model,
@@ -105,6 +106,7 @@ Export-Package: org.eclipse.nebula.jface.gridviewer,
  org.talend.dataprofiler.core.ui.wizard.analysis.provider,
  org.talend.dataprofiler.core.ui.wizard.database,
  org.talend.dataprofiler.core.ui.wizard.indicator,
+ org.talend.dataprofiler.core.ui.wizard.parserrule,
  org.talend.dataprofiler.core.ui.wizard.urlsetup
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.apache.log4j

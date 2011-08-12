@@ -378,7 +378,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     public IRepositoryNode getCurrentSelectionNode() {
         TreeItem[] selectionTreeItem = getRepositoryView().getCommonViewer().getTree().getSelection();
-        if (null != selectionTreeItem && null != selectionTreeItem[0]) {
+        if (null != selectionTreeItem && selectionTreeItem.length > 0 && null != selectionTreeItem[0]) {
             IRepositoryNode repoNode = (IRepositoryNode) selectionTreeItem[0].getData();
             return repoNode;
         } else {
@@ -388,7 +388,11 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     public void refreshDQView(Object object) {
+        if (object == null) {
+            refreshDQView();
+        } else {
         getRepositoryView().getCommonViewer().refresh(object);
+        }
     }
 
     /**

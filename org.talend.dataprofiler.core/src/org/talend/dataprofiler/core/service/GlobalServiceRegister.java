@@ -75,6 +75,24 @@ public class GlobalServiceRegister {
     }
 
     /**
+     * 
+     * zshen adjust whether the service has been registered.
+     * 
+     * @param klass
+     * @return
+     */
+    public boolean isServiceRegistered(Class klass) {
+        IService service = services.get(klass);
+        if (service == null) {
+            service = findService(klass);
+            if (service == null) {
+                return false;
+            }
+            services.put(klass, service);
+        }
+        return true;
+    }
+    /**
      * Gets the specific IService.overide klliu 2010-09-15 bug 15520.
      * 
      * @param klass the Service type you want to get

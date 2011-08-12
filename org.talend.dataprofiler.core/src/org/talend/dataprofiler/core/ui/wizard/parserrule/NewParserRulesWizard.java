@@ -68,17 +68,32 @@ public class NewParserRulesWizard extends AbstractWizard {
         mPage2.setDescription(DefaultMessagesImpl.getString("NewParserRulesWizard.defineRules")); //$NON-NLS-1$
 
         addPage(mPage);
+        if (!isComeFromTestEditor()) {
         addPage(mPage2);
+        }
+    }
+
+    /**
+     * DOC zshen Comment method "isComeFromTestEditor".
+     * 
+     * @return
+     */
+    private boolean isComeFromTestEditor() {
+        return getParameter().getParserRule() != null;
     }
 
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
         ParserRule parserRule = (ParserRule) cwmElement;
-
         TaggedValueHelper.setValidStatus(true, parserRule);
-        parserRule.addExpression(parameter.getParserRuleName(), parameter.getParserRuleType(), parameter.getParserRuleValue());
-        IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
-        if (ruleIndicatorCategory != null && !parserRule.getCategories().contains(ruleIndicatorCategory)) {
-            parserRule.getCategories().add(ruleIndicatorCategory);
+        if (isComeFromTestEditor()) {
+            parserRule.getSqlGenericExpression().addAll(parameter.getParserRule().getSqlGenericExpression());
+        } else {
+            parserRule
+                    .addExpression(parameter.getParserRuleName(), parameter.getParserRuleType(), parameter.getParserRuleValue());
+            IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
+            if (ruleIndicatorCategory != null && !parserRule.getCategories().contains(ruleIndicatorCategory)) {
+                parserRule.getCategories().add(ruleIndicatorCategory);
+            }
         }
         IFolder folder = parameter.getFolderProvider().getFolderResource();
         return ElementWriterFactory.getInstance().createdRuleWriter().create(parserRule, folder);
@@ -118,6 +133,9 @@ public class NewParserRulesWizard extends AbstractWizard {
 
     @Override
     public boolean canFinish() {
+        if (isComeFromTestEditor()) {
+            return true;
+        }
         if (mPage2 != null) {
             if (getParameter().getParserRuleName() != null && !"".equals(getParameter().getParserRuleName())) { //$NON-NLS-1$
                 return mPage2.isPageComplete();
@@ -131,4 +149,5 @@ public class NewParserRulesWizard extends AbstractWizard {
         ParserRuleItemEditorInput parserRuleEditorInput = new ParserRuleItemEditorInput(item);
         CorePlugin.getDefault().openEditor(parserRuleEditorInput, ParserRuleEditor.class.getName());
     }
+
 }

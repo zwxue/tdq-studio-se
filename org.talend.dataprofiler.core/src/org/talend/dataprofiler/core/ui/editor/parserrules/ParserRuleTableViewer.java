@@ -57,16 +57,27 @@ public class ParserRuleTableViewer {
 
     private Composite parentComposite;
 
+    private ParserRule parserRule;
+
     private String[] headers = { "Name", "Type", "Value" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     private int[] widths = { 100, 100, 300 };
 
     private Table ruleTable;
 
+    private boolean isDirty = false;
+
     public ParserRuleTableViewer(Composite parent, ParserRuleMasterDetailsPage masterPage) {
-        this.parentComposite = parent;
+        this(parent, (ParserRule) masterPage.getCurrentModelElement(masterPage.getEditor()));
         this.masterPage = masterPage;
+
+    }
+
+    public ParserRuleTableViewer(Composite parent, ParserRule parserRule) {
+        this.parentComposite = parent;
+        this.parserRule = parserRule;
         this.ruleTable = createTable(parent);
+
     }
 
     /**
@@ -79,7 +90,8 @@ public class ParserRuleTableViewer {
         final Table table = new Table(parentComposite, style);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        table.setLayoutData(new GridData(GridData.FILL_BOTH));
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        table.setLayoutData(gd);
 
         for (int i = 0; i < headers.length; ++i) {
             TableColumn tableColumn = new TableColumn(table, SWT.LEFT, i);
@@ -88,7 +100,6 @@ public class ParserRuleTableViewer {
         }
 
         parserRuleTableViewer = new TableViewer(table);
-
         parserRuleTableViewer.setUseHashlookup(true);
         parserRuleTableViewer.setColumnProperties(headers);
 
@@ -128,15 +139,17 @@ public class ParserRuleTableViewer {
      */
     public TdExpression addTdExpression() {
         TdExpression tdExpression = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdExpression();
-        tdExpression.setBody("");//$NON-NLS-1$
-        tdExpression.setLanguage(DefaultMessagesImpl.getString("ParserRuleTableViewer.languageSelection")); //$NON-NLS-1$
-        tdExpression.setName("");//$NON-NLS-1$
+
+        tdExpression.setBody("\"\"");//$NON-NLS-1$
+        tdExpression.setLanguage(DefaultMessagesImpl.getString("ParserRuleTableViewer.languageSelection"));//$NON-NLS-1$
+        tdExpression.setName("\"\"");//$NON-NLS-1$
+
         TdExpressionContentProvider contentProvider = (TdExpressionContentProvider) parserRuleTableViewer.getContentProvider();
         List<TdExpression> movedElements = contentProvider.getMovedElements();
         movedElements.add(tdExpression);
         parserRuleTableViewer.setInput(movedElements);
         this.parserRuleTdExpression.add(tdExpression);
-        this.masterPage.setDirty(true);
+        setDirty(true);
         this.parserRuleTableViewer.refresh();
         return tdExpression;
     }
@@ -159,7 +172,7 @@ public class ParserRuleTableViewer {
             parserRuleTableViewer.setInput(movedElements);
             this.parserRuleTdExpression.add(newExpresstion);
         }
-        this.masterPage.setDirty(true);
+        setDirty(true);
         this.parserRuleTableViewer.refresh();
     }
 
@@ -184,7 +197,30 @@ public class ParserRuleTableViewer {
         // this.parserRuleTableViewer.remove(tdExpression);
         this.parserRuleTdExpression.remove(tdExpression);
         parserRuleTableViewer.setInput(movedElements);
-        this.masterPage.setDirty(true);
+        setDirty(true);
+        parserRuleTableViewer.refresh();
+    }
+
+    /**
+     * 
+     * zshen remove all of expression on the tableViewer.
+     */
+    public void removeAllTdExpression() {
+        List<TdExpression> movedElements = new ArrayList<TdExpression>();
+        this.parserRuleTdExpression.clear();
+        parserRuleTableViewer.setInput(movedElements);
+        setDirty(true);
+        parserRuleTableViewer.refresh();
+    }
+
+    /**
+     * 
+     * zshen add one expression List on the tableViewer.
+     */
+    public void addAllTdExpression(List<TdExpression> movedElements) {
+        parserRuleTdExpression.addAll(movedElements);
+        parserRuleTableViewer.setInput(movedElements);
+        setDirty(true);
         parserRuleTableViewer.refresh();
     }
 
@@ -289,7 +325,7 @@ public class ParserRuleTableViewer {
                     default:
                     }
                     tableViewer.update(tdExpression, null);
-                    ParserRuleTableViewer.this.masterPage.setDirty(true);
+                    setDirty(true);
                 }
             }
         }
@@ -365,14 +401,28 @@ public class ParserRuleTableViewer {
     }
 
     public List<TdExpression> getParserRuleTdExpressions() {
-        ParserRule parserRule = (ParserRule) this.masterPage.getCurrentModelElement(this.masterPage.getEditor());
         parserRuleTdExpression = parserRule.getSqlGenericExpression();
         return this.parserRuleTdExpression;
     }
 
-    public void setDirty(boolean b) {
-        // TODO Auto-generated method stub
+    public boolean isDirty() {
+        return isDirty;
+    }
 
+    public void setDirty(boolean isDirty) {
+        this.isDirty = isDirty;
+        if (this.masterPage != null) {
+            this.masterPage.setDirty(isDirty);
+        }
+    }
+
+    
+    public Table getRuleTable() {
+        return ruleTable;
+    }
+
+    public TableViewer getParserRuleTableViewer() {
+        return parserRuleTableViewer;
     }
 
 }

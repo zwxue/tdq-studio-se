@@ -58,11 +58,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class TOPRepositoryService implements ITDQRepositoryService {
 
-    private static final String RULE_VALUE = "RULE_VALUE"; //$NON-NLS-1$
 
-    private static final String RULE_TYPE = "RULE_TYPE"; //$NON-NLS-1$
-
-    private static final String RULE_NAME = "RULE_NAME"; //$NON-NLS-1$
 
     public IViewPart getTDQRespositoryView() {
         return CorePlugin.getDefault().getRepositoryView();
@@ -175,6 +171,21 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
     }
 
+    public List<Map<String, String>> getPaserRulesFromRules(Object parser) {
+        if (parser != null && parser instanceof ParserRule) {
+        List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
+            for (TdExpression exp : ((ParserRule) parser).getExpression()) {
+            Map<String, String> pr = new HashMap<String, String>();
+                pr.put(RULE_NAME, exp.getName());
+                pr.put(RULE_VALUE, exp.getBody());
+                pr.put(RULE_TYPE, exp.getLanguage().toUpperCase());
+            ruleValues.add(pr);
+        }
+        return ruleValues;
+        }
+        return null;
+    }
+
     /*
      * Added yyi 2011-08-04 TDQ-3186
      * 
@@ -185,14 +196,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         for (Object rule : rules) {
             if (rule instanceof IFile) {
                 ParserRule parserRule = (ParserRule) DQRuleResourceFileHelper.getInstance().findDQRule((IFile) rule);
-                parserRule.getElements();
-                for (TdExpression exp : parserRule.getExpression()) {
-                    Map<String, String> pr = new HashMap<String, String>();
-                    pr.put("RULE_NAME", exp.getName());
-                    pr.put("RULE_VALUE", exp.getBody());
-                    pr.put("RULE_TYPE", exp.getLanguage().toUpperCase());
-                    ruleValues.add(pr);
-                }
+                ruleValues.addAll(getPaserRulesFromRules(parserRule));
             }
         }
         return ruleValues;

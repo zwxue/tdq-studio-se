@@ -46,6 +46,8 @@ import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.service.GlobalServiceRegister;
+import org.talend.dataprofiler.core.service.IAntlrEditorUIService;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
@@ -250,7 +252,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
      */
     private void createButtons(Composite parent, final ParserRuleTableViewer parserRuleTableViewer) {
         Composite buttonsComposite = new Composite(parent, SWT.NONE);
-        buttonsComposite.setLayout(new GridLayout(6, true));
+        buttonsComposite.setLayout(new GridLayout(7, true));
 
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
@@ -334,6 +336,25 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
             }
         });
+        final Button testButton = new Button(buttonsComposite, SWT.NONE);
+        testButton.setImage(ImageLib.getImage(ImageLib.RULE_TEST));
+        testButton.setToolTipText(DefaultMessagesImpl.getString("ParserRuleMasterDetailsPage.testRule"));//$NON-NLS-1$
+        testButton.setLayoutData(labelGd);
+        testButton.addSelectionListener(new SelectionAdapter() {
+
+            public void widgetSelected(SelectionEvent e) {
+                if (GlobalServiceRegister.getDefault().isServiceRegistered(IAntlrEditorUIService.class)) {
+                IAntlrEditorUIService antlrEditorUIService = (IAntlrEditorUIService) GlobalServiceRegister.getDefault()
+                        .getService(IAntlrEditorUIService.class);
+                    antlrEditorUIService.runTestRuleAction(parserRule, ParserRuleMasterDetailsPage.this.getEditor());
+                }
+
+            }
+        });
+    }
+
+    public ParserRuleTableViewer getParserRuleTableViewer() {
+        return parserRuleTableViewer;
     }
 
 }

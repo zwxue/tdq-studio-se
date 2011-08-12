@@ -222,6 +222,8 @@ public final class ImageLib {
 
     public static final String FILTER_CLOSE = "search_rem.gif";
 
+    public static final String RULE_TEST = "test.gif";
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */
