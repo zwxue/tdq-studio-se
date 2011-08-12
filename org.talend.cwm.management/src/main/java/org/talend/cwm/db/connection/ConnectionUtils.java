@@ -52,6 +52,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.database.XMLSchemaBuilder;
@@ -1034,15 +1035,14 @@ public final class ConnectionUtils {
                     sqlConn = (java.sql.Connection) MetadataConnectionUtils.checkConnection(metaConnection).getObject();
 
                     if (sqlConn != null) {
-                        MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, sqlConn.getMetaData(),
-                                MetadataConnectionUtils.getPackageFilter(dbConn, sqlConn.getMetaData(), true));
-                        MetadataFillFactory.getDBInstance().fillSchemas(dbConn, sqlConn.getMetaData(),
-                                MetadataConnectionUtils.getPackageFilter(dbConn, sqlConn.getMetaData(), false));
+                        DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, metaConnection.getDbType());
+                        MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, dm,
+                                MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
+                        MetadataFillFactory.getDBInstance().fillSchemas(dbConn, dm,
+                                MetadataConnectionUtils.getPackageFilter(dbConn, dm, false));
                     }
 
                 }
-            } catch (SQLException e) {
-                log.error(e, e);
             } finally {
                 if (sqlConn != null) {
                     ConnectionUtils.closeConnection(sqlConn);
@@ -1279,8 +1279,6 @@ public final class ConnectionUtils {
         }
         return packageFilter;
     }
-
-
 
     private static boolean isOracle(DBConnectionParameter connectionParam) {
         if (connectionParam == null) {
