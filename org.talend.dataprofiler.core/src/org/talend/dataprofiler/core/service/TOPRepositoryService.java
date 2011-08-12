@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.ui.IEditorInput;
@@ -57,8 +58,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public class TOPRepositoryService implements ITDQRepositoryService {
-
-
 
     public IViewPart getTDQRespositoryView() {
         return CorePlugin.getDefault().getRepositoryView();
@@ -173,15 +172,16 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     public List<Map<String, String>> getPaserRulesFromRules(Object parser) {
         if (parser != null && parser instanceof ParserRule) {
-        List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
             for (TdExpression exp : ((ParserRule) parser).getExpression()) {
-            Map<String, String> pr = new HashMap<String, String>();
-                pr.put(RULE_NAME, exp.getName());
-                pr.put(RULE_VALUE, exp.getBody());
-                pr.put(RULE_TYPE, exp.getLanguage().toUpperCase());
-            ruleValues.add(pr);
-        }
-        return ruleValues;
+                Map<String, String> pr = new HashMap<String, String>();
+                // MOD yyi 2011-08-12 TDQ-1698:avoid importing null value
+                pr.put(RULE_NAME, null == exp.getName() ? StringUtils.EMPTY : exp.getName());
+                pr.put(RULE_VALUE, null == exp.getBody() ? StringUtils.EMPTY : exp.getBody());
+                pr.put(RULE_TYPE, null == exp.getLanguage() ? StringUtils.EMPTY : exp.getLanguage().toUpperCase());
+                ruleValues.add(pr);
+            }
+            return ruleValues;
         }
         return null;
     }
