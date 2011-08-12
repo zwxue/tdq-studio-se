@@ -4,7 +4,6 @@ Bundle-Name: Libphonumber
 Bundle-SymbolicName: org.talend.libraries.google.libphonumber
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: .Talend SA.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/libphonenumber-2.6.jar,
  .
 Export-Package: com.google.i18n.phonenumbers
