@@ -380,7 +380,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     // MOD mzhao 2009-05-05, bug 6587.
-    protected void reloadDataproviderAndFillConnCombo() {
+    public void reloadDataproviderAndFillConnCombo() {
         // MOD yyi 2010-09-27 14549: delete or hide connections when a connection is moved to the trash bin
         // MOD xqliu 2010-09-26 bug 15685
         // Collection<Connection> connections = ProxyRepositoryViewObject.getAllDatabaseConnections(true);

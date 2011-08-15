@@ -183,6 +183,9 @@ public abstract class AbstractPagePart {
 
     private void setConnectionState(final AbstractAnalysisMetadataPage masterPage, final DataManager dataManager) {
         if (dataManager != null) {
+            // MOD gdbu 2011-8-15 bug : TDQ-3213
+            masterPage.reloadDataproviderAndFillConnCombo();
+            // ~TDQ-3213
 
             Object value = masterPage.getConnCombo().getData(dataManager.getName());
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
