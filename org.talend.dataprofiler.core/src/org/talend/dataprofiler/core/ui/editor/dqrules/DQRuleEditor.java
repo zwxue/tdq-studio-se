@@ -26,7 +26,6 @@ import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
-import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleMasterDetailsPage;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;

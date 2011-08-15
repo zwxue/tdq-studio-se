@@ -24,6 +24,9 @@ import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.ParserRule;
+import org.talend.dataquality.rules.WhereRule;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -56,6 +59,14 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
 
             @Override
             public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
+                // MOD klliu bug TDQ-3225
+                DQRule dqrule = object.getDqrule();
+                if (dqrule instanceof ParserRule) {
+                    return ERepositoryObjectType.TDQ_RULES_PARSER;
+                } else if (dqrule instanceof WhereRule) {
+                    return ERepositoryObjectType.TDQ_RULES_SQL;
+                }
+                // ~
                 return ERepositoryObjectType.TDQ_RULES;
             }
 

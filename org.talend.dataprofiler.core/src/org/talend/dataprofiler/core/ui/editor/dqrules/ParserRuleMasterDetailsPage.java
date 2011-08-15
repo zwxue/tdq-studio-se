@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui.editor.parserrules;
+package org.talend.dataprofiler.core.ui.editor.dqrules;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -49,6 +49,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IAntlrEditorUIService;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.ParserRule;
@@ -134,7 +135,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
     public void setDirty(boolean isDirty) {
         if (this.isDirty != isDirty) {
             this.isDirty = isDirty;
-            ((ParserRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+            ((DQRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
             // MOD klliu 2009-06-25 bug 7687
             this.firePropertyChange(IEditorPart.PROP_DIRTY);
             // ~
@@ -143,7 +144,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-            ((ParserRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+            ((DQRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
         }
     }
 

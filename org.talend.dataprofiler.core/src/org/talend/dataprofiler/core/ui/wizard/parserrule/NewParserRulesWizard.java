@@ -21,7 +21,6 @@ import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
-import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
@@ -147,7 +146,7 @@ public class NewParserRulesWizard extends AbstractWizard {
     @Override
     public void openEditor(Item item) {
         ParserRuleItemEditorInput parserRuleEditorInput = new ParserRuleItemEditorInput(item);
-        CorePlugin.getDefault().openEditor(parserRuleEditorInput, ParserRuleEditor.class.getName());
+        CorePlugin.getDefault().openEditor(parserRuleEditorInput, DQRuleEditor.class.getName());
     }
 
 }

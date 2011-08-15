@@ -39,7 +39,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
-import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleEditor;
+import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.ParserRule;
@@ -165,7 +165,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         Object object = returnObject.getObject();
         if (object instanceof Item) {
             ParserRuleItemEditorInput parserRuleEditorInput = new ParserRuleItemEditorInput((Item) object);
-            CorePlugin.getDefault().openEditor(parserRuleEditorInput, ParserRuleEditor.class.getName());
+            CorePlugin.getDefault().openEditor(parserRuleEditorInput, DQRuleEditor.class.getName());
             this.refresh();
         }
     }

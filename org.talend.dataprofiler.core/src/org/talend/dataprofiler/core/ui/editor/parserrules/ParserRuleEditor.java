@@ -20,6 +20,7 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataprofiler.core.ui.editor.dqrules.ParserRuleMasterDetailsPage;
 
 /**
  * DOC klliu class global comment. Detailled comment
