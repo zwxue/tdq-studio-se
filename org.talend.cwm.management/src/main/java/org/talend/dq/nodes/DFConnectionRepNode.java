@@ -60,16 +60,11 @@ public class DFConnectionRepNode extends ConnectionRepNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        // MOD gdbu 2011-7-1 bug : 22204
-        if (!super.getChildren().isEmpty()) {
-            return filterResultsIfAny(super.getChildren());
-        }
-        // ~22204
         EList<Package> dataPackage = getDfConnection().getDataPackage();
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
             if (pack instanceof RecordFile) {
-                return createRepositoryNodeSchema();
+                return filterResultsIfAny(createRepositoryNodeSchema());
             }
         }
 
@@ -77,6 +72,7 @@ public class DFConnectionRepNode extends ConnectionRepNode {
     }
 
     private List<IRepositoryNode> createRepositoryNodeSchema() {
+        super.getChildren().clear();
         IRepositoryViewObject object = this.getObject();
         Set<MetadataTable> tables = ConnectionHelper.getTables(((ConnectionItem) getObject().getProperty().getItem())
                 .getConnection());
@@ -99,5 +95,18 @@ public class DFConnectionRepNode extends ConnectionRepNode {
     @Override
     public boolean canExpandForDoubleClick() {
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        if (getObject() == null) {
+            return this.getProperties(EProperties.LABEL).toString();
+        }
+        return this.getObject().getLabel();
     }
 }

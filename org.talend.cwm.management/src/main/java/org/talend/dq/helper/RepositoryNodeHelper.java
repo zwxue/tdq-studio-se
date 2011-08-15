@@ -1027,14 +1027,16 @@ public final class RepositoryNodeHelper {
             return null;
         }
         // MOD gdbu 2011-7-18 bug 23161
-        if (!columnSetNode.hasChildren()) {
+        List<IRepositoryNode> childrens = columnSetNode.getChildren();
+        if (childrens.size() == 0) {
             return null;
         }
-        if (!columnSetNode.getChildren().get(0).hasChildren()) {
+
+        List<IRepositoryNode> children = childrens.get(0).getChildren();
+        if (children.size() == 0) {
             return null;
         }
         // ~23161
-        List<IRepositoryNode> children = columnSetNode.getChildren().get(0).getChildren();
         IRepositoryNode iRepositoryNode = children.get(0);
         if (iRepositoryNode != null && iRepositoryNode instanceof DBColumnRepNode) {
             for (IRepositoryNode childNode : children) {
@@ -2569,12 +2571,8 @@ public final class RepositoryNodeHelper {
             if (null != findFilteredNode) {
                 return findFilteredNode;
             } else {
-                // DQRepositoryNode findFilteredNodeByMemorySave = findNextFilteredNode(getFilteredNode());
-                // if (null != findFilteredNodeByMemorySave) {
-                // return findFilteredNodeByMemorySave;
-                // }
+                return repoNode;
             }
-            return null;
         } else {
             return null;
         }
@@ -2612,12 +2610,8 @@ public final class RepositoryNodeHelper {
             if (null != findFilteredNode) {
                 return findFilteredNode;
             } else {
-                // IRepositoryNode findFilteredNodeByMemorySave = findPreviouFilteredNode(getFilteredNode());
-                // if (null != findFilteredNodeByMemorySave) {
-                // return findFilteredNodeByMemorySave;
-                // }
+                return repoNode;
             }
-            return null;
         } else {
             return null;
         }
@@ -2649,6 +2643,9 @@ public final class RepositoryNodeHelper {
                 return iNode;
             }
         }
+        if ((iNode instanceof DFColumnRepNode) && iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+            return iNode;
+        }
         if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())
                 && !(iNode instanceof MDMConnectionFolderRepNode)) {
             return iNode;
@@ -2664,6 +2661,8 @@ public final class RepositoryNodeHelper {
 
         allFilteredNodeList.clear();
 
+        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
+
         List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
         list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
         list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
@@ -2672,7 +2671,7 @@ public final class RepositoryNodeHelper {
         for (IRepositoryNode iRepositoryNode : list) {
             allFilteredNodeList.addAll(getTreeList(iRepositoryNode));
         }
-
+        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
     }
 
     /**
@@ -2685,8 +2684,9 @@ public final class RepositoryNodeHelper {
     private static List<IRepositoryNode> getTreeList(IRepositoryNode node) {
         List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         children.add(node);
-        if (node.hasChildren()) {
-            for (IRepositoryNode iNode : sortChildren(node.getChildren())) {
+        List<IRepositoryNode> childrenNode = node.getChildren();
+        if (childrenNode.size() > 0) {
+            for (IRepositoryNode iNode : sortChildren(childrenNode)) {
                 children.addAll(getTreeList(iNode));
             }
         }

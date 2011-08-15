@@ -12,12 +12,9 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import java.util.List;
-
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.TalendTypeConvert;
 
@@ -42,12 +39,12 @@ public class DFColumnRepNode extends DQRepositoryNode {
         metadataColumn = (MetadataColumn) metadataColumnRepositoryObject.getTdColumn();
     }
 
-    @Override
-    public List<IRepositoryNode> getChildren() {
-        // MOD gdbu 2011-7-1 bug : 22204
-        return filterResultsIfAny(super.getChildren());
-        // ~22204
-    }
+    // @Override
+    // public List<IRepositoryNode> getChildren() {
+    // // MOD gdbu 2011-7-1 bug : 22204
+    // return filterResultsIfAny(super.getChildren());
+    // // ~22204
+    // }
 
     public MetadataColumn getMetadataColumn() {
         return this.metadataColumn;

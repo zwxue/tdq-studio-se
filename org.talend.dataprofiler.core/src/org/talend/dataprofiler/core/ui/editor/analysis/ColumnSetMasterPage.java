@@ -245,8 +245,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             // DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
 
             Collection<Indicator> indicatorList = columnSetAnalysisHandler.getRegexMathingIndicators(element);
-            currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
-            meIndicatorList.add(currentIndicator);
+            if (null != currentIndicator) {
+                currentIndicator.setIndicators(indicatorList.toArray(new Indicator[indicatorList.size()]));
+                meIndicatorList.add(currentIndicator);
+            }
         }
         currentModelElementIndicators = meIndicatorList.toArray(new ModelElementIndicator[meIndicatorList.size()]);
 

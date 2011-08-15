@@ -19,15 +19,19 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
@@ -115,7 +119,21 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
     private List<IRepositoryNode> buildChildrenAnalysis(List<Analysis> analyses) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         for (Analysis analysis : analyses) {
-            ReportAnalysisRepNode node = new ReportAnalysisRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+
+            ModelElement anaEleModelElement = analysis.getModelElement();
+            if (null == anaEleModelElement) {
+                continue;
+            }
+            Property anaEleProperty = PropertyHelper.getProperty(anaEleModelElement);
+            IRepositoryViewObject medataViewObject = null;
+            try {
+                medataViewObject = ProxyRepositoryFactory.getInstance().getLastVersion(anaEleProperty.getId());
+            } catch (Exception e) {
+                log.error(e);
+            }
+
+            ReportAnalysisRepNode node = new ReportAnalysisRepNode(medataViewObject, this,
+                    ENodeType.TDQ_REPOSITORY_ELEMENT);
             node.setReport(this.getReport());
             node.setAnalysis(analysis);
             node.setId(this.getReport().getName() + analysis.getName());

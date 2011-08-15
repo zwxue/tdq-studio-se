@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -43,19 +44,28 @@ public class DFTableRepNode extends DQRepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        // MOD gdbu 2011-7-1 bug : 22204
-        if (!super.getChildren().isEmpty()) {
-            return filterResultsIfAny(super.getChildren());
-        }
-        // ~22204
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         MetadataTableRepositoryObject viewObject = (MetadataTableRepositoryObject) this.getObject();
         DFColumnFolderRepNode columnFolderNode = new DFColumnFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-        super.getChildren().add(columnFolderNode);
-        return super.getChildren();
+        nodes.add(columnFolderNode);
+        return filterResultsIfAny(nodes);
     }
 
     public MetadataTable getMetadataTable() {
         return this.metadataTable;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        if (getObject() == null) {
+            return this.getProperties(EProperties.LABEL).toString();
+        }
+        return this.getObject().getLabel();
     }
 
 }

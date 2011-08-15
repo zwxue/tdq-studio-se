@@ -29,7 +29,9 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -59,6 +61,8 @@ import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
@@ -83,6 +87,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.model.IContributionService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
@@ -311,17 +316,32 @@ public class DQRespositoryView extends CommonNavigator {
     @Override
     public void createPartControl(Composite parent) {
 
-        parent.setLayout(new BorderLayout());
+        GridLayout gl = new GridLayout();
+        gl.horizontalSpacing = 0;
+        gl.verticalSpacing = 0;
+        gl.marginWidth = 0;
+        gl.marginHeight = 0;
+        parent.setLayout(gl);
 
         Composite topComp = new Composite(parent, SWT.NONE);
-        // topComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         topComp.setFont(parent.getFont());
         Composite bottomComp = new Composite(parent, SWT.NONE);
         bottomComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         bottomComp.setFont(parent.getFont());
 
-        topComp.setLayoutData(BorderLayout.NORTH);
-        bottomComp.setLayoutData(BorderLayout.CENTER);
+        GridData gridDataTop = new GridData();
+        gridDataTop.horizontalAlignment = GridData.FILL;
+        gridDataTop.verticalAlignment = GridData.FILL;
+        gridDataTop.grabExcessHorizontalSpace = true;
+        gridDataTop.heightHint = 22;
+        topComp.setLayoutData(gridDataTop);
+
+        GridData gridDataBottom = new GridData();
+        gridDataBottom.horizontalAlignment = GridData.FILL;
+        gridDataBottom.verticalAlignment = GridData.FILL;
+        gridDataBottom.grabExcessVerticalSpace = true;
+        gridDataBottom.grabExcessHorizontalSpace = true;
+        bottomComp.setLayoutData(gridDataBottom);
 
         FillLayout topLayout = new FillLayout(SWT.FILL_WINDING);
         topComp.setLayout(topLayout);
@@ -331,10 +351,7 @@ public class DQRespositoryView extends CommonNavigator {
 
         createTreeFilter(topComp);
         super.createPartControl(bottomComp);
-        
 
-        // RepositoryNode rn =new RepositoryNode();
-        
         // For removing the popup menu of DQRepositoryView.
         MenuManager menuMgr = new MenuManager("org.talend.dataprofiler.core.ui.views.DQRespositoryView"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
@@ -520,7 +537,7 @@ public class DQRespositoryView extends CommonNavigator {
 
         });
         // ~
-        
+
     }
 
     /**
@@ -544,12 +561,12 @@ public class DQRespositoryView extends CommonNavigator {
         eastComp.setLayoutData(BorderLayout.EAST);
 
         FillLayout centerLayout = new FillLayout(SWT.FILL_WINDING);
-        centerLayout.marginHeight = 2;
-        centerLayout.marginWidth = 2;
+        centerLayout.marginHeight = 1;
+        // centerLayout.marginWidth = 2;
         centerComp.setLayout(centerLayout);
 
         FillLayout leftLayout = new FillLayout(SWT.HORIZONTAL);
-        leftLayout.marginWidth = 2;
+        leftLayout.marginWidth = 1;
         leftLayout.marginHeight = 2;
         // leftLayout.spacing = 1;
         eastComp.setLayout(leftLayout);
@@ -582,7 +599,7 @@ public class DQRespositoryView extends CommonNavigator {
         coolItem1.setControl(toolBar);
         coolItem1.setSize(coolItem1.computeSize(size.x, size.y));
         coolItem1.setMinimumSize(size);
-        
+
         coolBar.setLocked(true);
         runFilterItem.addSelectionListener(new SelectionAdapter() {
 
@@ -670,12 +687,7 @@ public class DQRespositoryView extends CommonNavigator {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (DQRepositoryNode.isOnFilterring()) {
-                    RepositoryNodeHelper.setFilteredNode(null);
-                    DQRepositoryNode.setFilterStr(PluginConstant.EMPTY_STRING);
-                    DQRepositoryNode.setFiltering(false);
-                    filterText.setText(PluginConstant.EMPTY_STRING);
-                    expandNodes(false);
-                    refresh();
+                    closeFilterStatus(filterText);
                 }
             }
         });
@@ -689,17 +701,57 @@ public class DQRespositoryView extends CommonNavigator {
              */
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.keyCode == SWT.CR) {
+                if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
                     String filterStr = filterText.getText() + PluginConstant.EMPTY_STRING;
                     runFilter(filterStr);
                 }
             }
-        });
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
+             */
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (DQRepositoryNode.isOnFilterring()) {
+                    if (e.keyCode == SWT.BS || e.keyCode == SWT.DEL) {
+                        if (isFilterTextEmpty(filterText)) {
+                            new UIJob(PluginConstant.EMPTY_STRING) {
+                                public IStatus runInUIThread(IProgressMonitor monitor) {
+                                    if (isFilterTextEmpty(filterText)) {
+                                        closeFilterStatus(filterText);
+                                    }
+                                    return Status.OK_STATUS;
+                                }
+                            }.schedule(2000);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void closeFilterStatus(Text filterText) {
+        RepositoryNodeHelper.setFilteredNode(null);
+        DQRepositoryNode.setFilterStr(PluginConstant.EMPTY_STRING);
+        DQRepositoryNode.setFiltering(false);
+        filterText.setText(PluginConstant.EMPTY_STRING);
+        getCommonViewer().collapseAll();
+        refresh();
+    }
+
+    private boolean isFilterTextEmpty(Text filterText) {
+        String filterString = filterText.getText().trim() + PluginConstant.EMPTY_STRING;
+        if (filterString.equals(PluginConstant.EMPTY_STRING)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void runFilter(String filterStr) {
-        expandNodes(false);
+        getCommonViewer().collapseAll();
         try {
             DQRepositoryNode.setFilterStr(filterStr);
             if (filterStr.trim().equals(PluginConstant.EMPTY_STRING)) {
@@ -718,7 +770,6 @@ public class DQRespositoryView extends CommonNavigator {
                 showSelectedElements((RepositoryNode) firstFilteredNode);
             }
         }
-        refresh();
     }
 
     private void expandNodes(boolean expand) {
@@ -832,7 +883,6 @@ public class DQRespositoryView extends CommonNavigator {
                 recursiveExpandTree(selectedElement);
                 getCommonViewer().setSelection(structSel);
             }
-            
         } catch (Exception e) {
             log.error(e, e);
         }

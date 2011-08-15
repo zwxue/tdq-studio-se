@@ -79,6 +79,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
@@ -453,6 +454,20 @@ public class CorePlugin extends AbstractUIPlugin {
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<AnalysisEditor> getCurrentOpenAnalysisEditor() {
+        IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorReference[] editorReferences = activePage.getEditorReferences();
+        List<AnalysisEditor> result = new ArrayList<AnalysisEditor>();
+
+        for (IEditorReference iEditorReference : editorReferences) {
+            IEditorPart editor = iEditorReference.getEditor(false);
+            if (editor instanceof AnalysisEditor) {
+                result.add((AnalysisEditor) editor);
+            }
+        }
+        return result;
     }
 
     /**

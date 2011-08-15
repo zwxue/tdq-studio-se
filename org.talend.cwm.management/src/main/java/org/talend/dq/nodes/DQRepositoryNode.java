@@ -26,9 +26,21 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class DQRepositoryNode extends RepositoryNode {
 
+    /**
+     * when filtering , record the filter's contents.
+     */
     private static String treeFilter = "";//$NON-NLS-1$
 
+    /**
+     * Record whether the user is filtering. true : is filtering ; false : not filtering.
+     */
     private static boolean isOnFiltering = false;
+
+    /**
+     * when filtering , this value is used to determine whether to return all of the nodes.(if not filtering , this
+     * value is useless.)
+     */
+    private static boolean isReturnAllNodesWhenFiltering = true;
 
     /**
      * this will be only used in the "table select dialog", when do the schema filter.
@@ -101,8 +113,20 @@ public class DQRepositoryNode extends RepositoryNode {
         super(object, parent, type);
     }
 
+    /**
+     * filter method
+     * 
+     * DOC gdbu Comment method "filterResultsIfAny".
+     * 
+     * @param children
+     * @return
+     */
     public List<IRepositoryNode> filterResultsIfAny(List<IRepositoryNode> children) {
         if (!isOnFilterring()) {
+            return children;
+        }
+
+        if (isReturnAllNodesWhenFiltering()) {
             return children;
         }
 
@@ -168,7 +192,8 @@ public class DQRepositoryNode extends RepositoryNode {
         }
         // ~23161
         DQRepositoryNode childNode = null;
-        for (IRepositoryNode child : getChildren()) {
+        List<IRepositoryNode> nodes = getChildren();
+        for (IRepositoryNode child : nodes) {
             childNode = (DQRepositoryNode) child;
             if (isUntilSchema()) {
                 if (childNode instanceof DBTableFolderRepNode || childNode instanceof DBViewFolderRepNode) {
@@ -202,6 +227,9 @@ public class DQRepositoryNode extends RepositoryNode {
      */
     public List<IRepositoryNode> filterRecycleBin(List<IRepositoryNode> children) {
         if (!isOnFilterring()) {
+            return children;
+        }
+        if (isReturnAllNodesWhenFiltering()) {
             return children;
         }
         List<IRepositoryNode> sortChildren = RepositoryNodeHelper.sortChildren(children);
@@ -250,6 +278,19 @@ public class DQRepositoryNode extends RepositoryNode {
 
     public static void setFilterStr(String filterStrInput) {
         treeFilter = filterStrInput;
+    }
+
+    public static boolean isReturnAllNodesWhenFiltering() {
+        return isReturnAllNodesWhenFiltering;
+    }
+
+    /**
+     * DOC gdbu Comment method "setExpandNodeWhenFiltering".
+     * 
+     * @param isExpandNodeWhenFiltering
+     */
+    public static void setIsReturnAllNodesWhenFiltering(boolean isExpandNodeWhenFiltering) {
+        DQRepositoryNode.isReturnAllNodesWhenFiltering = isExpandNodeWhenFiltering;
     }
 
 }

@@ -46,6 +46,7 @@ import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -140,7 +141,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (element instanceof RepositoryNode) {
                 final RepositoryNode node = (RepositoryNode) element;
                 // MOD gdbu 2011-7-20 bug : 23220
+                DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
                 List<IRepositoryNode> children = node.getChildren();
+                DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
 
                 if (node instanceof DBTableFolderRepNode || node instanceof DBViewFolderRepNode) {
                     if (0 < children.size()) {
@@ -216,11 +219,12 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         resContants.add(EResourceConstant.MDM_CONNECTIONS);
                         resContants.add(EResourceConstant.FILEDELIMITED);
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                    } else if (node instanceof RecycleBinRepNode) {
-                        // MOD gdbu 2011-7-15 bug : 23161
-                        return sortRepositoryNode(node.getChildren().toArray());
-                        // ~23161
                     }
+                    // else if (node instanceof RecycleBinRepNode) {
+                    // // MOD gdbu 2011-7-15 bug : 23161
+                    // return sortRepositoryNode(children.toArray());
+                    // // ~23161
+                    // }
                 }
                 return sortRepositoryNode(children.toArray());
             }
