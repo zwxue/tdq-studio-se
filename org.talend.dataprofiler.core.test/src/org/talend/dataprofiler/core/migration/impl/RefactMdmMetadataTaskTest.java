@@ -12,15 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
-import org.talend.dataprofiler.core.migration.MigrationTaskManager;
-import org.talend.dataprofiler.datamart.migration.IMigrationTask;
-
 
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class RefactMdmMetadataTaskTest {
 
@@ -29,10 +24,12 @@ public class RefactMdmMetadataTaskTest {
      */
     @Test
     public void testDoExecute() {
-        ArrayList<IMigrationTask> taskList = new ArrayList<IMigrationTask>();
-        taskList.add(MigrationTaskManager
-                .findMigrationTaskByPID("org.talend.dataprofiler.core.migration.impl.RefactMdmMetadataTask"));
-        MigrationTaskManager.doMigrationTask(taskList);
+        try {
+            RefactMdmMetadataTask refactMdmMetadataTask = new RefactMdmMetadataTask();
+            refactMdmMetadataTask.doExecute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

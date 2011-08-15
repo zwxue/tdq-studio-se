@@ -12,11 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
-import org.talend.dataprofiler.core.migration.MigrationTaskManager;
-import org.talend.dataprofiler.datamart.migration.IMigrationTask;
 
 /**
  * DOC mzhao Test case for split system indicators.
@@ -28,10 +24,12 @@ public class SplitSysIndicatorTaskTest {
      */
     @Test
     public void testExecute() {
-        ArrayList<IMigrationTask> taskList = new ArrayList<IMigrationTask>();
-        taskList.add(MigrationTaskManager
-                .findMigrationTaskByPID("org.talend.dataprofiler.core.migration.impl.SplitSysIndicatorTask"));
-        MigrationTaskManager.doMigrationTask(taskList);
+        try {
+            SplitSysIndicatorTask splitSysIndicatorTask = new SplitSysIndicatorTask();
+            splitSysIndicatorTask.doExecute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
