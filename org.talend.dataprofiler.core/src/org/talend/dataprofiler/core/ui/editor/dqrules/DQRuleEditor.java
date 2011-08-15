@@ -94,11 +94,19 @@ public class DQRuleEditor extends CommonFormEditor {
     }
 
     public void doSave(IProgressMonitor monitor) {
-        if (masterPage.isDirty()) {
-            masterPage.doSave(monitor);
-            setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+        if (masterPage != null) {
+            if (masterPage.isDirty()) {
+                masterPage.doSave(monitor);
+                setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+            }
+            setEditorObject(masterPage.getRuleRepNode());
+        } else if (parserPage != null) {
+            if (parserPage.isDirty()) {
+                parserPage.doSave(monitor);
+                setPartName(parserPage.getIntactElemenetName()); //$NON-NLS-1$
+            }
+            setEditorObject(parserPage.getRuleRepNode());
         }
-        setEditorObject(masterPage.getRuleRepNode());
         super.doSave(monitor);
 
     }
@@ -125,6 +133,8 @@ public class DQRuleEditor extends CommonFormEditor {
         // ADD xqliu 2009-07-02 bug 7686
         if (masterPage != null) {
             setSaveActionButtonState(false);
+        } else if (parserPage != null) {
+            setSaveActionButtonState(false);
         }
     }
 
@@ -144,5 +154,9 @@ public class DQRuleEditor extends CommonFormEditor {
         super.setFocus();
         // don't invoke this method here, invoke it in IPartListener.partBroughtToTop()
         // WorkbenchUtils.autoChange2DataProfilerPerspective();
+    }
+
+    public ParserRuleMasterDetailsPage getParserPage() {
+        return this.parserPage;
     }
 }
