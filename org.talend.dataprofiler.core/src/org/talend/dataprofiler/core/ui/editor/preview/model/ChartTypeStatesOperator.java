@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIMatchStati
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDISimpleStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BinFrequencyStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BinLowFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.DateFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.DateLowFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.DatePatternFrequencyStatisticsState;
@@ -80,7 +81,8 @@ public final class ChartTypeStatesOperator {
             return new BinFrequencyStatisticsState(units);
             // ~21803 ;
         case BIN_LOW_FREQUENCE_STATISTICS:
-            return new LowFrequencyStatisticsState(units);
+            // MOD xwang 2011-08-15 bug TDQ-2594
+            return new BinLowFrequencyStatisticsState(units);
 
         case PATTERN_FREQUENCE_STATISTICS:
             return new PatternFrequencyStatisticsState(units);
