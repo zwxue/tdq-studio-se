@@ -124,7 +124,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         }
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
 
-        if (POOLED_CONNECTION) {
+        // MOD gdbu 2011-8-15 : file delimited connection is null
+        if (POOLED_CONNECTION && null != connection) {
             // release the pooled connection
             releasePooledConnection(analysis, analysisDataProvider, connection.getObject(), true);
         }
