@@ -44,6 +44,8 @@ public final class IndicatorCategoryHelper {
     
     public static final String SYSTEM_CORRELATION = "_-DfJgLrcEd2PGrJOyhNk-w";
 
+    public static final String SYSTEM_PHONENUMBER = "_Ohyz4bEEEeCVE-ofo1XCug";
+
     public static final boolean isUserDefCount(IndicatorCategory indicatorCategory) {
         if (indicatorCategory != null) {
             return USER_DEFINED_COUNT_CATEGORY.equals(ResourceHelper.getUUID(indicatorCategory));
@@ -94,5 +96,19 @@ public final class IndicatorCategoryHelper {
             return getCategory(indicator.getIndicatorDefinition());
         }
         return null;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "isPhoneNumberCategory".
+     * 
+     * @param indicatorCategory
+     * @return
+     */
+    public static final boolean isPhoneNumberCategory(IndicatorCategory indicatorCategory) {
+        if (indicatorCategory != null) {
+            return SYSTEM_PHONENUMBER.equals(ResourceHelper.getUUID(indicatorCategory));
+        }
+        return false;
     }
 }

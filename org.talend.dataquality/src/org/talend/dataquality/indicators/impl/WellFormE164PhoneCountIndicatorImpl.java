@@ -202,11 +202,12 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
             // countryCode and nationalSignificantNumber are a String removed the '0' from original data
             String nationalSignificantNumber = PhoneNumberUtil.getNationalSignificantNumber(phoneNumeber);
             int countryCode = phoneNumeber.getCountryCode();
-            if ((data.toString().equals(PLUS_SIGN + countryCode + nationalSignificantNumber))) {
+            // int countryCode = phoneUtil.getCountryCodeForRegion(country);
+            if (data.toString().startsWith(PLUS_SIGN + countryCode)
+                    && (data.toString().equals(PLUS_SIGN + countryCode + nationalSignificantNumber))) {
                 wellFormE164PhoneCount++;
                 this.mustStoreRow = true;
             }
-
         } catch (NumberParseException e) {
             return false;
         }

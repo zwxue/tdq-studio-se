@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.EList;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
@@ -26,6 +25,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -81,9 +81,9 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
                     List<TdExpression> indiExpression = repNode.getIndicatorDefinition()
                             .getSqlGenericExpression();
                     // MOD qiongli 2011-7-27,feature 22362
-                    EList<IndicatorCategory> categories = repNode.getIndicatorDefinition().getCategories();
                     boolean isPhoneNumberStatics = false;
-                    if (categories.size() == 1 && "Phone Number Statistics".equals(categories.get(0).getLabel())) {
+                    IndicatorCategory category = IndicatorCategoryHelper.getCategory(repNode.getIndicatorDefinition());
+                    if (category != null && IndicatorCategoryHelper.isPhoneNumberCategory(category)) {
                         isPhoneNumberStatics = true;
                     }
                     if (!isPhoneNumberStatics && (indiExpression == null || indiExpression.size() == 0)) {

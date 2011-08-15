@@ -201,7 +201,8 @@ public class WellFormIntePhoneCountIndicatorImpl extends IndicatorImpl implement
             PhoneNumber phoneNumeber = phoneUtil.parse(data.toString(), country);
             String nationalSignificantNumber = PhoneNumberUtil.getNationalSignificantNumber(phoneNumeber);
             int countryCode = phoneNumeber.getCountryCode();
-            if (data.toString().equals(PLUS_SIGN + countryCode + PluginConstant.SPACE_STRING + nationalSignificantNumber)) {
+            if (data.toString().startsWith(PLUS_SIGN + countryCode)
+                    && data.toString().equals(PLUS_SIGN + countryCode + PluginConstant.SPACE_STRING + nationalSignificantNumber)) {
                 wellFormIntePhoneCount++;
                 this.mustStoreRow = true;
             }

@@ -1923,6 +1923,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         labelGd.horizontalAlignment = SWT.CENTER;
         labelGd.widthHint = 65;
         addButton.setLayoutData(labelGd);
+        // MOD qiongli 2011-8-15 feature TDQ-1894:disable for phone nuber indicator
+        if (definition != null && category != null && IndicatorCategoryHelper.isPhoneNumberCategory(category)) {
+            addButton.setEnabled(false);
+        }
         addButton.addSelectionListener(new SelectionAdapter() {
 
             // MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-27
