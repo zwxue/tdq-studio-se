@@ -163,9 +163,11 @@ public final class DQStructureManager {
                     Path.EMPTY, EResourceConstant.RULES.getName());
             Folder rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
                     EResourceConstant.RULES_SQL.getName());
-            Folder rulesParserFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES,
-                    Path.EMPTY, EResourceConstant.RULES_PARSER.getName());
-
+            Folder rulesParserFoler = null;
+            if (!ReponsitoryContextBridge.isDefautProject()) {
+                rulesParserFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
+                        EResourceConstant.RULES_PARSER.getName());
+            }
             Folder exchangeFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
                     Path.EMPTY, EResourceConstant.EXCHANGE.getName());
 
@@ -200,7 +202,9 @@ public final class DQStructureManager {
             copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
             copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
             copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
-            copyFilesToFolder(plugin, RULES_PARSER, true, rulesParserFoler, null, ERepositoryObjectType.TDQ_RULES_PARSER);
+            if (rulesParserFoler != null) {
+                copyFilesToFolder(plugin, RULES_PARSER, true, rulesParserFoler, null, ERepositoryObjectType.TDQ_RULES_PARSER);
+            }
             WorkspaceVersionHelper.storeVersion();
 
             ResourceService.refreshStructure();
