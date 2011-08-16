@@ -83,6 +83,8 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
 
     private final List<IndicatorEnum> countsEnumChildren = Arrays.asList(IndicatorEnum.CountsIndicatorEnum.getChildren());
 
+    private final List<IndicatorEnum> boxEnumChildren = Arrays.asList(IndicatorEnum.BoxIIndicatorEnum.getChildren());
+
     // private TdColumn tdColumn;
 
     private List<IndicatorEnum> tempIndicatorEnums = new ArrayList<IndicatorEnum>();
@@ -426,13 +428,18 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         listCopy(categoryEnumList, flatIndicatorEnumList);
         Iterator<IndicatorEnum> iterator = flatIndicatorEnumList.iterator();
         List<IndicatorEnum> currentCountsChildren = new ArrayList<IndicatorEnum>();
+        List<IndicatorEnum> currentBOXChildren = new ArrayList<IndicatorEnum>();
         while (iterator.hasNext()) {
             IndicatorEnum indEnum = iterator.next();
             if (countsEnumChildren.contains(indEnum)) {
                 currentCountsChildren.add(indEnum);
                 continue;
             }
-            if ((indEnum != IndicatorEnum.CountsIndicatorEnum) && indEnum.hasChildren()) {
+            if (boxEnumChildren.contains(indEnum)) {
+                currentBOXChildren.add(indEnum);
+            }
+            if ((indEnum != IndicatorEnum.CountsIndicatorEnum) && (indEnum != IndicatorEnum.BoxIIndicatorEnum)
+                    && indEnum.hasChildren()) {
                 for (IndicatorEnum childrenEnum : indEnum.getChildren()) {
                     categoryEnumList.remove(childrenEnum);
                 }
@@ -444,6 +451,12 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
             categoryEnumList.removeAll(currentCountsChildren);
         } else {
             categoryEnumList.remove(IndicatorEnum.CountsIndicatorEnum);
+        }
+        if (currentBOXChildren.size() == boxEnumChildren.size()
+                && flatIndicatorEnumList.contains(IndicatorEnum.BoxIIndicatorEnum)) {
+            categoryEnumList.removeAll(currentBOXChildren);
+        } else {
+            categoryEnumList.remove(IndicatorEnum.BoxIIndicatorEnum);
         }
         plainIndicatorUnits = createCategoryIndicatorUnits(categoryEnumList.toArray(new IndicatorEnum[categoryEnumList.size()]));
     }
