@@ -160,20 +160,22 @@ public class ParserRuleTableViewer {
     }
 
     public void pasteTdExpression() {
-        for (TdExpression tdExpression : copyTdExpression) {
-            TdExpression newExpresstion = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdExpression();
-            newExpresstion.setBody(tdExpression.getBody());
-            newExpresstion.setLanguage(tdExpression.getLanguage());
-            newExpresstion.setName(tdExpression.getName());
-            TdExpressionContentProvider contentProvider = (TdExpressionContentProvider) parserRuleTableViewer
-                    .getContentProvider();
-            List<TdExpression> movedElements = contentProvider.getMovedElements();
-            movedElements.add(newExpresstion);
-            parserRuleTableViewer.setInput(movedElements);
-            this.parserRuleTdExpression.add(newExpresstion);
+        if (copyTdExpression != null) {
+            for (TdExpression tdExpression : copyTdExpression) {
+                TdExpression newExpresstion = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdExpression();
+                newExpresstion.setBody(tdExpression.getBody());
+                newExpresstion.setLanguage(tdExpression.getLanguage());
+                newExpresstion.setName(tdExpression.getName());
+                TdExpressionContentProvider contentProvider = (TdExpressionContentProvider) parserRuleTableViewer
+                        .getContentProvider();
+                List<TdExpression> movedElements = contentProvider.getMovedElements();
+                movedElements.add(newExpresstion);
+                parserRuleTableViewer.setInput(movedElements);
+                this.parserRuleTdExpression.add(newExpresstion);
+            }
+            setDirty(true);
+            this.parserRuleTableViewer.refresh();
         }
-        setDirty(true);
-        this.parserRuleTableViewer.refresh();
     }
 
     /**
