@@ -290,11 +290,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // TODO scorreia test type of column and cast when needed
             completedSqlString = getCompletedStringForQuantiles(indicator, sqlGenericExpression, colName, table, whereExpression);
             if (completedSqlString != null) {
-                whereExpression = duplicateForCrossJoin(completedSqlString, whereExpression, tdColumn);
-                completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
-            } else {
-                if (isOracle()) {
-                    completedSqlString = "select 0 from dual";
+                if (!PluginConstant.EMPTY_STRING.equals(completedSqlString)) {
+                    whereExpression = duplicateForCrossJoin(completedSqlString, whereExpression, tdColumn);
+                    completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+                } else {
+                    // MOD xqliu 2011-08-17 TDQ-3210
+                    completedSqlString = "select count(*) from " + table; //$NON-NLS-1$
+                    // ~ TDQ-3210
                 }
             }
         } else
@@ -345,7 +347,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         colName = dbms().getPatternFinderDefaultFunction(colName);
                     }
                     if (colName == null) { // no replacement found, try the default one
-
                         return traceError(Messages.getString(
                                 "ColumnAnalysisSqlExecutor.NOREPLACEMENTFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
                     }
@@ -850,11 +851,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         if (count == 0) {
-            if (!isOracle()) {
-                this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.CannotComputeQuantile",//$NON-NLS-1$
-                        dbms().toQualifiedName(catalogOrSchema, null, colName));
-            }
-            return null;
+            //            this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.CannotComputeQuantile",//$NON-NLS-1$
+            // dbms().toQualifiedName(catalogOrSchema, null, colName));
+            return PluginConstant.EMPTY_STRING;
             // throw new AnalysisExecutionException(errorMessage);
         }
 

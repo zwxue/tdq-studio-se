@@ -367,8 +367,93 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         return table;
     }
 
+    /**
+     * DOC xqliu Comment method "isOracle".
+     * 
+     * @return
+     */
     protected boolean isOracle() {
         return ConnectionHelper.isOracle(dataprovider);
     }
 
+    /**
+     * DOC xqliu Comment method "isMysql".
+     * 
+     * @return
+     */
+    protected boolean isMysql() {
+        return ConnectionHelper.isMysql(dataprovider);
+    }
+
+    /**
+     * DOC xqliu Comment method "isMssql".
+     * 
+     * @return
+     */
+    protected boolean isMssql() {
+        return ConnectionHelper.isMssql(dataprovider);
+    }
+
+    /**
+     * DOC xqliu Comment method "isPostgresql".
+     * 
+     * @return
+     */
+    protected boolean isPostgresql() {
+        return ConnectionHelper.isPostgresql(dataprovider);
+    }
+
+    /**
+     * DOC xqliu Comment method "isInformix".
+     * 
+     * @return
+     */
+    protected boolean isInformix() {
+        return ConnectionHelper.isInformix(dataprovider);
+    }
+
+    /**
+     * DOC xqliu Comment method "isIngress".
+     * 
+     * @return
+     */
+    protected boolean isIngress() {
+        return ConnectionHelper.isIngress(dataprovider);
+    }
+
+    /**
+     * DOC xqliu Comment method "isDb2".
+     * 
+     * @return
+     */
+    protected boolean isDb2() {
+        return ConnectionHelper.isDb2(dataprovider);
+    }
+
+    /**
+     * DOC xqliu Comment method "isSybase".
+     * 
+     * @return
+     */
+    protected boolean isSybase() {
+        return ConnectionHelper.isSybase(dataprovider);
+    }
+
+    /**
+     * DOC xqliu Comment method "isTeradata".
+     * 
+     * @return
+     */
+    protected boolean isTeradata() {
+        return ConnectionHelper.isTeradata(dataprovider);
+    }
+
+    /**
+     * DOC xqliu Comment method "isNetezza".
+     * 
+     * @return
+     */
+    protected boolean isNetezza() {
+        return ConnectionHelper.isNetezza(dataprovider);
+    }
 }
