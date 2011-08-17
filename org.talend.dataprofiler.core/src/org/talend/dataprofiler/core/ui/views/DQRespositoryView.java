@@ -333,7 +333,6 @@ public class DQRespositoryView extends CommonNavigator {
         gridDataTop.horizontalAlignment = GridData.FILL;
         gridDataTop.verticalAlignment = GridData.FILL;
         gridDataTop.grabExcessHorizontalSpace = true;
-        gridDataTop.heightHint = 22;
         topComp.setLayoutData(gridDataTop);
 
         GridData gridDataBottom = new GridData();
@@ -593,6 +592,9 @@ public class DQRespositoryView extends CommonNavigator {
         ToolItem closeFilterItem = new ToolItem(toolBar, SWT.FLAT);
         closeFilterItem.setImage(ImageLib.getImage(ImageLib.FILTER_CLOSE));
         closeFilterItem.setToolTipText(DefaultMessagesImpl.getString("DQRespositoryView.CloseFilter"));//$NON-NLS-1$
+
+        // MOD gdbu 2011-8-17 bug TDQ-3276 : set the filter buttons composite height
+        ((GridData) parent.getLayoutData()).heightHint = nextMatchItem.getImage().getImageData().height + 8;
 
         toolBar.pack();
         Point size = toolBar.getSize();
