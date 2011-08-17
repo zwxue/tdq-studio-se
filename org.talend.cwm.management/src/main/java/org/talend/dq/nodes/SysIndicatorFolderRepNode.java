@@ -70,7 +70,7 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
             // rule files
             for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
 
-                if (!viewObject.isDeleted()) {
+                if (!viewObject.isDeleted() && !viewObject.getLabel().equals("Sum")) {//$NON-NLS-1$
                     SysIndicatorDefinitionRepNode repNode = new SysIndicatorDefinitionRepNode(viewObject, this,
                             ENodeType.REPOSITORY_ELEMENT);
                     repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
