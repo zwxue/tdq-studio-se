@@ -28,8 +28,20 @@ public class DBSchemaRepNode extends DQRepositoryNode {
 
     private Schema schema;
 
+    private MetadataSchemaRepositoryObject metadataSchemaObject = null;
+
     public Schema getSchema() {
         return this.schema;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getObject()
+     */
+    @Override
+    public IRepositoryViewObject getObject() {
+        return this.metadataSchemaObject;
     }
 
     /**
@@ -42,7 +54,7 @@ public class DBSchemaRepNode extends DQRepositoryNode {
     public DBSchemaRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         if (object instanceof MetadataSchemaRepositoryObject) {
-            MetadataSchemaRepositoryObject metadataSchemaObject = (MetadataSchemaRepositoryObject) object;
+            metadataSchemaObject = (MetadataSchemaRepositoryObject) object;
             this.schema = metadataSchemaObject.getSchema();
         }
     }
@@ -60,13 +72,13 @@ public class DBSchemaRepNode extends DQRepositoryNode {
     }
 
     private List<IRepositoryNode> createTableViewFolder(MetadataSchemaRepositoryObject metadataSchema) {
-        IRepositoryViewObject viewObject = metadataSchema.getViewObject();
+        // IRepositoryViewObject viewObject = metadataSchema.getViewObject();
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         // table folder node under catalog
-        DBTableFolderRepNode tableFloderNode = new DBTableFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBTableFolderRepNode tableFloderNode = new DBTableFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
         repsNodes.add(tableFloderNode);
         // view folder node under catalog
-        DBViewFolderRepNode viewFolderNode = new DBViewFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBViewFolderRepNode viewFolderNode = new DBViewFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
         repsNodes.add(viewFolderNode);
         return repsNodes;
     }

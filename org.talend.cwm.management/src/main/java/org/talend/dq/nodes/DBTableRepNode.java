@@ -62,9 +62,10 @@ public class DBTableRepNode extends DQRepositoryNode {
     public List<IRepositoryNode> getChildren() {
         // MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
-        TdTableRepositoryObject viewObject = ((TdTableRepositoryObject) this.getObject());
-        DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        // TdTableRepositoryObject viewObject = ((TdTableRepositoryObject) this.getObject());
+        DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
         children.add(columnFolderNode);
+
         return filterResultsIfAny(children);
         // ~22204
     }

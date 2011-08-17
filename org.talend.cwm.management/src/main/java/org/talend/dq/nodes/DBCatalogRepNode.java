@@ -30,7 +30,7 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class DBCatalogRepNode extends DQRepositoryNode {
 
-    private IRepositoryViewObject object;
+    private MetadataCatalogRepositoryObject metadataCatalogObject;
 
     private List<IRepositoryNode> schemaChildren;
 
@@ -49,14 +49,23 @@ public class DBCatalogRepNode extends DQRepositoryNode {
      */
     public DBCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type) {
         super(viewObject, parent, type);
-        object = viewObject;
+
         schemaChildren = new ArrayList<IRepositoryNode>();
-        if (object instanceof MetadataCatalogRepositoryObject) {
-            MetadataCatalogRepositoryObject metadataCatalogObject = (MetadataCatalogRepositoryObject) object;
+        if (viewObject instanceof MetadataCatalogRepositoryObject) {
+            metadataCatalogObject = (MetadataCatalogRepositoryObject) viewObject;
             this.catalog = metadataCatalogObject.getCatalog();
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getObject()
+     */
+    @Override
+    public IRepositoryViewObject getObject() {
+        return metadataCatalogObject;
+    }
     /*
      * (non-Jsdoc)
      * 
@@ -86,13 +95,13 @@ public class DBCatalogRepNode extends DQRepositoryNode {
      * @return
      */
     private List<IRepositoryNode> createTableViewFolder(MetadataCatalogRepositoryObject metadataCatalog) {
-        IRepositoryViewObject viewObject = metadataCatalog.getViewObject();
+        // IRepositoryViewObject viewObject = metadataCatalog.getViewObject();
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         // table folder node under catalog
-        DBTableFolderRepNode tableFloderNode = new DBTableFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBTableFolderRepNode tableFloderNode = new DBTableFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
         repsNodes.add(tableFloderNode);
         // view folder node under catalog
-        DBViewFolderRepNode viewFolderNode = new DBViewFolderRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        DBViewFolderRepNode viewFolderNode = new DBViewFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
         repsNodes.add(viewFolderNode);
         return repsNodes;
     }

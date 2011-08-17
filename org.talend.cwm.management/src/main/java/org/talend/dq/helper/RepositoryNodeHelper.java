@@ -2638,17 +2638,25 @@ public final class RepositoryNodeHelper {
     }
 
     public static IRepositoryNode compareNodeLabelWithFilterStr(IRepositoryNode iNode) {
-        if (null != iNode.getObject()) {
-            if (iNode.getObject().getProperty().getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+
+        if (iNode instanceof DBCatalogRepNode || iNode instanceof DBSchemaRepNode) {
+            if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
                 return iNode;
             }
-        }
-        if ((iNode instanceof DFColumnRepNode) && iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
-            return iNode;
-        }
-        if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())
-                && !(iNode instanceof MDMConnectionFolderRepNode)) {
-            return iNode;
+        } else {
+
+            if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())
+                    && !(iNode instanceof MDMConnectionFolderRepNode)) {
+                return iNode;
+            }
+            if (null != iNode.getObject()) {
+                if (iNode.getObject().getProperty().getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                    return iNode;
+                }
+            }
+            if ((iNode instanceof DFColumnRepNode) && iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
+                return iNode;
+            }
         }
         return null;
     }

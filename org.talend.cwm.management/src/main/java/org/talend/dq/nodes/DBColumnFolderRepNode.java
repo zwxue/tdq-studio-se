@@ -43,8 +43,6 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(DBColumnFolderRepNode.class);
 
-    private IRepositoryViewObject object;
-
     private ConnectionItem item;
 
     private Connection connection;
@@ -65,10 +63,6 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
 
     public void setReload(boolean reload) {
         this.reload = reload;
-    }
-
-    public void setObject(IRepositoryViewObject object) {
-        this.object = object;
     }
 
     public ConnectionItem getItem() {
@@ -112,21 +106,21 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
         }
         String filterCharater = null;
         List<TdColumn> tdcolumns = new ArrayList<TdColumn>();
-        IRepositoryViewObject meataColumnSetObject = this.getObject();
+        IRepositoryViewObject meataColumnSetObject = this.getParent().getObject();
         if (meataColumnSetObject instanceof TdTableRepositoryObject) {
             TdTableRepositoryObject tdTableRepositoryObject = (TdTableRepositoryObject) meataColumnSetObject;
-            object = tdTableRepositoryObject.getViewObject();
+            // object = tdTableRepositoryObject.getViewObject();
             tdTable = tdTableRepositoryObject.getTdTable();
             columns = tdTable.getColumns();
             filterCharater = ColumnHelper.getColumnFilter(tdTable);
         } else if (meataColumnSetObject instanceof TdViewRepositoryObject) {
             TdViewRepositoryObject tdViewRepositoryObject = (TdViewRepositoryObject) meataColumnSetObject;
-            object = tdViewRepositoryObject.getViewObject();
+            // object = tdViewRepositoryObject.getViewObject();
             tdView = tdViewRepositoryObject.getTdView();
             columns = tdView.getColumns();
             filterCharater = ColumnHelper.getColumnFilter(tdView);
         }
-        item = (ConnectionItem) object.getProperty().getItem();
+        item = (ConnectionItem) this.getParent().getObject().getProperty().getItem();
         connection = item.getConnection();
         // MOD gdbu 2011-6-28 bug : 22204
         if (columns.size() <= 0 && !isOnFilterring()) {
@@ -165,7 +159,8 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
      */
     private void createTdcolumnsNode(List<TdColumn> tdcolumns, List<IRepositoryNode> repsNodes) {
         for (MetadataColumn tdColumn : tdcolumns) {
-            MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(object, tdColumn);
+            MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(this.getParent().getObject(),
+                    tdColumn);
             metadataColumn.setId(tdColumn.getName());
             metadataColumn.setLabel(tdColumn.getName());
             DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
@@ -195,5 +190,15 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
             return children2.size();
         }
         return 0;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        return getNodeName();
     }
 }
