@@ -237,12 +237,12 @@ public enum FormEnum {
         case WellFormNationalPhoneCountIndicatorEnum:
         case WellFormIntePhoneCountIndicatorEnum:
         case WellFormE164PhoneCountIndicatorEnum:
-            forms = new FormEnum[] { PhoneNumberForm };
-
+            forms = new FormEnum[] { PhoneNumberForm, DataThresholdsForm };
             break;
-
+        case PhoneNumbStatisticsIndicatorEnum:
+            forms = new FormEnum[] { PhoneNumberForm };
+            break;
         default:
-
         }
         return forms;
     }
