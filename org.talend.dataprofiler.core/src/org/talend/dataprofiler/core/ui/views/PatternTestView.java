@@ -211,10 +211,9 @@ public class PatternTestView extends ViewPart {
         Composite imgCom = new Composite(composite, SWT.NONE);
         layout = new GridLayout();
         layout.numColumns = 2;
-        layout.marginRight = 50;
         imgCom.setLayout(layout);
         data = new GridData();
-        data.horizontalAlignment = GridData.END;
+        data.horizontalAlignment = GridData.BEGINNING;
         imgCom.setLayoutData(data);
 
         emoticonLabel = new Label(imgCom, SWT.NONE);
