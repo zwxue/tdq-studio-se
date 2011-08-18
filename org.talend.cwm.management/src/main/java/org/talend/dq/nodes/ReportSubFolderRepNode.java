@@ -31,7 +31,6 @@ import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
@@ -120,19 +119,21 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         for (Analysis analysis : analyses) {
 
-            ModelElement anaEleModelElement = analysis.getModelElement();
-            if (null == anaEleModelElement) {
-                continue;
-            }
-            Property anaEleProperty = PropertyHelper.getProperty(anaEleModelElement);
-            IRepositoryViewObject medataViewObject = null;
+            // MOD gdbu 2011-8-18 TDQ-3301
+            Property anaEleProperty = PropertyHelper.getProperty(analysis);
+            IRepositoryViewObject viewObject = null;
             try {
-                medataViewObject = ProxyRepositoryFactory.getInstance().getLastVersion(anaEleProperty.getId());
+                viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(anaEleProperty.getId());
             } catch (Exception e) {
                 log.error(e);
             }
 
-            ReportAnalysisRepNode node = new ReportAnalysisRepNode(medataViewObject, this,
+            if (null == viewObject) {
+                continue;
+            }
+            // ~TDQ-3301
+
+            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this,
                     ENodeType.TDQ_REPOSITORY_ELEMENT);
             node.setReport(this.getReport());
             node.setAnalysis(analysis);

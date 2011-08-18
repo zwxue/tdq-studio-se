@@ -1837,7 +1837,7 @@ public final class RepositoryNodeHelper {
         return node instanceof AnalysisRepNode || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
                 || node instanceof JrxmlTempleteRepNode || node instanceof SourceFileRepNode || node instanceof RuleRepNode
                 || node instanceof DBConnectionRepNode || node instanceof MDMConnectionRepNode || node instanceof ReportRepNode
-                || node instanceof ReportFileRepNode;
+                || node instanceof ReportFileRepNode || node instanceof ReportAnalysisRepNode;
     }
 
     public static List<IRepositoryNode> getNmaedColumnSetNodes(IRepositoryNode node) {
