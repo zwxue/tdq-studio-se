@@ -410,6 +410,12 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             subParamItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.useNulls") + tParameter.isUseNulls()); //$NON-NLS-1$
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
+
+            subParamItem = new TreeItem(iParamItem, SWT.NONE);
+            subParamItem
+                    .setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.countryCode") + tParameter.getCountryCode()); //$NON-NLS-1$
+            subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
+            subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }
         DateParameters dParameters = parameters.getDateParameters();
         if (dParameters != null) {
@@ -567,6 +573,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthWithBlankNullIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithNullIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPhoneNumbStatisticsIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankNullIndicator())) {
             return true;
         }

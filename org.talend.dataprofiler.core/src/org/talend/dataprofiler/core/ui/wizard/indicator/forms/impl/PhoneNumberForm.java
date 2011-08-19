@@ -30,8 +30,9 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.TextParameters;
 
 /**
@@ -61,12 +62,8 @@ public class PhoneNumberForm extends AbstractIndicatorForm {
         if (combo != null) {
             selectCountryCode = combo.getData(combo.getText()).toString();
         }
-        TextParameters textParameter = parameters.getTextParameter();
-        if (textParameter == null) {
-            textParameter = IndicatorsFactory.eINSTANCE.createTextParameters();
-        }
-        textParameter.setCountryCode(selectCountryCode);
-        parameters.setTextParameter(textParameter);
+        Indicator indicator = (Indicator) parameters.eContainer();
+        IndicatorHelper.propagateCountyCodeInChildren(indicator, selectCountryCode);
         return true;
     }
 

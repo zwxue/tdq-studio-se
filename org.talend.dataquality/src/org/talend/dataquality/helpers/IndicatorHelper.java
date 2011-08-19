@@ -46,6 +46,7 @@ import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
 import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -688,4 +689,53 @@ public final class IndicatorHelper {
         }
         return c;
     }
+
+    /**
+     * 
+     * DOC qiongli Comment method "propagateCountyCodeInChildren".
+     * 
+     * @param indicator
+     * @param countryCode
+     */
+    public static void propagateCountyCodeInChildren(Indicator indicator, String countryCode) {
+
+        if (IndicatorsPackage.eINSTANCE.getPhoneNumbStatisticsIndicator().equals(indicator.eClass())) {
+            PhoneNumbStatisticsIndicator phoneIndicator = (PhoneNumbStatisticsIndicator) indicator;
+            WellFormE164PhoneCountIndicator wellFormE164Indi = phoneIndicator.getWellFormE164PhoneCountIndicator();
+            WellFormIntePhoneCountIndicator wellFormInteIndi = phoneIndicator.getWellFormIntePhoneCountIndicator();
+            WellFormNationalPhoneCountIndicator wellFormNatiIndi = phoneIndicator
+                    .getWellFormNationalPhoneCountIndicator();
+            ValidPhoneCountIndicator validPhoneIndi = phoneIndicator.getValidPhoneCountIndicator();
+            PossiblePhoneCountIndicator possiblePhoneIndi = phoneIndicator.getPossiblePhoneCountIndicator();
+            setCountryCodeParameter(wellFormE164Indi, countryCode);
+            setCountryCodeParameter(wellFormInteIndi, countryCode);
+            setCountryCodeParameter(wellFormNatiIndi, countryCode);
+            setCountryCodeParameter(validPhoneIndi, countryCode);
+            setCountryCodeParameter(possiblePhoneIndi, countryCode);
+        } else {
+            setCountryCodeParameter(indicator, countryCode);
+        }
+    }
+
+    /**
+     * 
+     * set country code as parameter for indicator
+     * 
+     * @param indicator
+     * @param countryCode
+     */
+    public static void setCountryCodeParameter(Indicator indicator, String countryCode) {
+        IndicatorParameters parameters = indicator.getParameters();
+        if (parameters == null) {
+            parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+            indicator.setParameters(parameters);
+        }
+        TextParameters textParameter = parameters.getTextParameter();
+        if (textParameter == null) {
+            textParameter = IndicatorsFactory.eINSTANCE.createTextParameters();
+        }
+        textParameter.setCountryCode(countryCode);
+        parameters.setTextParameter(textParameter);
+    }
+
 }
