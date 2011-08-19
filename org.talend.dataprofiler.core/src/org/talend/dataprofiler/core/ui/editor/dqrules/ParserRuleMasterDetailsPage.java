@@ -252,6 +252,11 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
      * @param parent
      */
     private void createButtons(Composite parent, final ParserRuleTableViewer parserRuleTableViewer) {
+        boolean isNeedTestButton = false;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IAntlrEditorUIService.class)) {
+            isNeedTestButton = true;
+        }
+
         Composite buttonsComposite = new Composite(parent, SWT.NONE);
         buttonsComposite.setLayout(new GridLayout(7, true));
 
@@ -337,6 +342,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
             }
         });
+        if (false) {
         final Button testButton = new Button(buttonsComposite, SWT.NONE);
         testButton.setImage(ImageLib.getImage(ImageLib.RULE_TEST));
         testButton.setToolTipText(DefaultMessagesImpl.getString("ParserRuleMasterDetailsPage.testRule"));//$NON-NLS-1$
@@ -352,6 +358,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
             }
         });
+        }
     }
 
     public ParserRuleTableViewer getParserRuleTableViewer() {
