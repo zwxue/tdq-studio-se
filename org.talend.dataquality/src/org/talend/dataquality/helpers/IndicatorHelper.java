@@ -712,9 +712,8 @@ public final class IndicatorHelper {
             setCountryCodeParameter(wellFormNatiIndi, countryCode);
             setCountryCodeParameter(validPhoneIndi, countryCode);
             setCountryCodeParameter(possiblePhoneIndi, countryCode);
-        } else {
-            setCountryCodeParameter(indicator, countryCode);
         }
+        setCountryCodeParameter(indicator, countryCode);
     }
 
     /**
