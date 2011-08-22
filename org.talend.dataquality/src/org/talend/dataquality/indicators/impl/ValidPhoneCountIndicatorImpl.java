@@ -6,7 +6,6 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -44,7 +43,7 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
      * @generated
      * @ordered
      */
-    protected static final Long VALID_PHONE_NUM_COUNT_EDEFAULT = null;
+    protected static final Long VALID_PHONE_NUM_COUNT_EDEFAULT = new Long(0L);
 
     /**
      * The cached value of the '{@link #getValidPhoneNumCount() <em>Valid Phone Num Count</em>}' attribute.
@@ -55,8 +54,6 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
      * @ordered
      */
     protected Long validPhoneNumCount = VALID_PHONE_NUM_COUNT_EDEFAULT;
-
-    private Set<Object> validPhoneObjects = new HashSet<Object>();
 
     /**
      * <!-- begin-user-doc -->
@@ -206,8 +203,7 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
             PhoneNumber phoneNumber = phoneUtil.parse(data.toString(), country);
             if (phoneUtil.isValidNumberForRegion(phoneNumber, country)) {
                 // if (phoneUtil.isValidNumber(phoneNumber)) {
-                validPhoneObjects.add(phoneNumber);
-                // super.handle(data);
+                validPhoneNumCount++;
                 this.mustStoreRow = true;
             }
 
@@ -225,7 +221,6 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
      */
     @Override
     public boolean reset() {
-        this.validPhoneObjects.clear();
         this.validPhoneNumCount = VALID_PHONE_NUM_COUNT_EDEFAULT;
         return super.reset();
     }
@@ -237,7 +232,6 @@ public class ValidPhoneCountIndicatorImpl extends IndicatorImpl implements Valid
      */
     @Override
     public boolean finalizeComputation() {
-        this.setValidPhoneNumCount(Long.valueOf(validPhoneObjects.size()));
         return super.finalizeComputation();
     }
 
