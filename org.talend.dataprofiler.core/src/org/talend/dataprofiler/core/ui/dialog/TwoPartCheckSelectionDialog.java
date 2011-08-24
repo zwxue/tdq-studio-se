@@ -741,10 +741,17 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                                 } else {
                                     DQRepositoryNode.setUntilTable(true);
                                 }
+                                // MOD msjian 2011-8-24: TDQ-3282 because there is something changed in
+                                // DQRepositoryNode.filterResultsIfAny
+                                DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
                                 fViewer.refresh();
                                 fViewer.expandAll();
+                                DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
                             } else {
+                                DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
                                 sTableViewer.refresh();
+                                DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
+                                // TDQ-3282 ~
                             }
                         }
                     } finally {
