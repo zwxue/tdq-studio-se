@@ -207,11 +207,13 @@ public class DistinctCountIndicatorImpl extends IndicatorImpl implements Distinc
     public boolean handle(Object data) {
         this.mustStoreRow = false;
         super.handle(data);
-        if (data != null) {
+        // MOD msjian 2011-8-24 TDQ-1679: when run with java engine, the Duplicate count should contain "null"
+        // if (data != null) {
             if (this.distinctObjects.add(data)) {
                 this.mustStoreRow = true;
             }
-        }
+        // }
+        // TDQ-1679 ~
         return true;
     }
 
