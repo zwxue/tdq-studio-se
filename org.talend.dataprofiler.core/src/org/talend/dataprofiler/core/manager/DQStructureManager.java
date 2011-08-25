@@ -56,6 +56,8 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
@@ -123,7 +125,7 @@ public final class DQStructureManager {
      * DOC bZhou Comment method "createDQStructure".
      */
     public void createDQStructure() {
-
+        RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         Plugin plugin = CorePlugin.getDefault();
         try {
 
@@ -147,64 +149,102 @@ public final class DQStructureManager {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA, Path.EMPTY,
                         EResourceConstant.FILEDELIMITED.getName());
             }
-
-            ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
-                    EResourceConstant.ANALYSIS.getName());
-
-            if (!ReponsitoryContextBridge.isDefautProject()) {
-                Folder reportFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING,
-                        Path.EMPTY, EResourceConstant.REPORTS.getName());
+            if (!project.getFolder(EResourceConstant.ANALYSIS.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
+                        EResourceConstant.ANALYSIS.getName());
             }
-
-            Folder patternFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
-                    Path.EMPTY, EResourceConstant.PATTERNS.getName());
-
-            Folder rulesFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
-                    Path.EMPTY, EResourceConstant.RULES.getName());
-            Folder rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
-                    EResourceConstant.RULES_SQL.getName());
-            Folder rulesParserFoler = null;
             if (!ReponsitoryContextBridge.isDefautProject()) {
-                rulesParserFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
-                        EResourceConstant.RULES_PARSER.getName());
+                if (!project.getFolder(EResourceConstant.REPORTS.getPath()).exists()) {
+                    Folder reportFoler = ProxyRepositoryFactory.getInstance().createFolder(
+                            ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY, EResourceConstant.REPORTS.getName());
+                }
             }
-            Folder exchangeFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
-                    Path.EMPTY, EResourceConstant.EXCHANGE.getName());
+            if (!project.getFolder(EResourceConstant.PATTERNS.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
+                        EResourceConstant.PATTERNS.getName());
+            }
+            if (!project.getFolder(EResourceConstant.RULES.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
+                        EResourceConstant.RULES.getName());
+            }
+            Folder rulesSQLFoler = null;
+            if (!project.getFolder(EResourceConstant.RULES_SQL.getPath()).exists()) {
+                rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
+                        EResourceConstant.RULES_SQL.getName());
+            } else {
+                rulesSQLFoler = instance.getObjectFolder(EResourceConstant.RULES_SQL);
+            }
+            rulesSQLFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_RULES_SQL.getFolder());
 
-            Folder indicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
-                    Path.EMPTY, EResourceConstant.INDICATORS.getName());
-            Folder systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(
-                    ERepositoryObjectType.TDQ_INDICATOR_ELEMENT, Path.EMPTY, EResourceConstant.SYSTEM_INDICATORS.getName());
+            if (!project.getFolder(EResourceConstant.EXCHANGE.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
+                        EResourceConstant.EXCHANGE.getName());
+            }
+            if (!project.getFolder(EResourceConstant.INDICATORS.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
+                        EResourceConstant.INDICATORS.getName());
+            }
+            Folder systemIndicatorFoler = null;
+            if (!project.getFolder(EResourceConstant.SYSTEM_INDICATORS.getPath()).exists()) {
+                systemIndicatorFoler = ProxyRepositoryFactory.getInstance().createFolder(
+                        ERepositoryObjectType.TDQ_INDICATOR_ELEMENT, Path.EMPTY, EResourceConstant.SYSTEM_INDICATORS.getName());
+            } else {
+                systemIndicatorFoler = instance.getObjectFolder(EResourceConstant.SYSTEM_INDICATORS);
+            }
+            systemIndicatorFoler.getProperty().getItem().getState()
+                    .setPath(ERepositoryObjectType.TDQ_SYSTEM_INDICATORS.getFolder());
 
-            Folder udiFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT,
-                    Path.EMPTY, EResourceConstant.USER_DEFINED_INDICATORS.getName());
-            // MOD zhsne 18724: Java UDI enhancements add lib folder under UDI folder.
-            Folder udiLibFoler = ProxyRepositoryFactory.getInstance().createFolder(
-                    ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS, Path.EMPTY,
-                    EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
+            if (!project.getFolder(EResourceConstant.USER_DEFINED_INDICATORS.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT, Path.EMPTY,
+                        EResourceConstant.USER_DEFINED_INDICATORS.getName());
+            }
+            if (!project.getFolder(EResourceConstant.USER_DEFINED_INDICATORS_LIB.getPath()).exists()) {
+                // MOD zhsne 18724: Java UDI enhancements add lib folder under UDI folder.
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS, Path.EMPTY,
+                        EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
+            }
+            if (!project.getFolder(EResourceConstant.JRXML_TEMPLATE.getPath()).exists()) {
+                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
+                        EResourceConstant.JRXML_TEMPLATE.getName());
+            }
+            Folder patternRegexFoler = null;
+            if (!project.getFolder(EResourceConstant.PATTERN_REGEX.getPath()).exists()) {
+                patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_ELEMENT,
+                        Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
+            } else {
+                patternRegexFoler = instance.getObjectFolder(EResourceConstant.PATTERN_REGEX);
+            }
+            patternRegexFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_PATTERN_REGEX.getFolder());
 
-            Folder jrxmlFolder = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
-                    Path.EMPTY, EResourceConstant.JRXML_TEMPLATE.getName());
+            Folder patternSQLFoler = null;
+            if (!project.getFolder(EResourceConstant.PATTERN_SQL.getPath()).exists()) {
+                patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_ELEMENT,
+                        Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
+            } else {
+                patternSQLFoler = instance.getObjectFolder(EResourceConstant.PATTERN_SQL);
+            }
+            patternSQLFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_PATTERN_SQL.getFolder());
 
-            Folder patternRegexFoler = ProxyRepositoryFactory.getInstance().createFolder(
-                    ERepositoryObjectType.TDQ_PATTERN_ELEMENT, Path.EMPTY, EResourceConstant.PATTERN_REGEX.getName());
-
-            Folder patternSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_PATTERN_ELEMENT,
-                    Path.EMPTY, EResourceConstant.PATTERN_SQL.getName());
-
-            Folder sourceFileFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
-                    Path.EMPTY, EResourceConstant.SOURCE_FILES.getName());
-
+            Folder sourceFileFoler = null;
+            if (!project.getFolder(EResourceConstant.SOURCE_FILES.getPath()).exists()) {
+                sourceFileFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES,
+                        Path.EMPTY, EResourceConstant.SOURCE_FILES.getName());
+            } else {
+                sourceFileFoler = instance.getObjectFolder(EResourceConstant.SOURCE_FILES);
+            }
+            sourceFileFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getFolder());
             // use the tos create folder API
-            copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null,
-                    ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
-            copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null, ERepositoryObjectType.TDQ_PATTERN_REGEX);
-            copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
-            copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
-            copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
-            if (rulesParserFoler != null) {
-                copyFilesToFolder(plugin, RULES_PARSER, true, rulesParserFoler, null, ERepositoryObjectType.TDQ_RULES_PARSER);
+            if (systemIndicatorFoler != null && patternRegexFoler != null && patternSQLFoler != null && sourceFileFoler != null
+                    && rulesSQLFoler != null) {
+
+                copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null,
+                        ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+                copyFilesToFolder(plugin, PATTERN_PATH, true, patternRegexFoler, null, ERepositoryObjectType.TDQ_PATTERN_REGEX);
+                copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
+                copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+                copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
             }
+
             WorkspaceVersionHelper.storeVersion();
 
             ResourceService.refreshStructure();
@@ -254,22 +294,25 @@ public final class DQStructureManager {
                     if (file.getName().startsWith(".")) { //$NON-NLS-1$
                         continue;
                     }
-                    Folder folder = null;
-                    if (!project.getFolder(file.getPath()).exists()) {
-                        folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
+                    Folder sourcefolder = null;
+                    IFolder targetfolder = WorkbenchUtils.folder2IFolder(desFolder);
+                    if (!targetfolder.getFolder(file.getName()).exists()) {
+                        sourcefolder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
                     } else {
-                        IPath fullPath = new Path(file.getPath());
-                        int count = fullPath.segmentCount();
                         FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                                ProjectManager.getInstance().getCurrentProject(), type, fullPath.removeFirstSegments(count - 1));
+                                ProjectManager.getInstance().getCurrentProject(), type, new Path(file.getName()));
 
                         if (folderItem == null) {
-                            folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
+                            sourcefolder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
+                            String subSourceFolder = type.getFolder().concat("/").concat(file.getName());
+                            sourcefolder.getProperty().getItem().getState().setPath(subSourceFolder);
                         } else {
-                            folder = new Folder(folderItem.getProperty(), type);
+                            String subSourceFolder = type.getFolder().concat("/").concat(file.getName());
+                            sourcefolder = new Folder(folderItem.getProperty(), type);
+                            sourcefolder.getProperty().getItem().getState().setPath(subSourceFolder);
                         }
                     }
-                    copyFilesToFolder(plugin, currentPath, recurse, folder, suffix, type);
+                    copyFilesToFolder(plugin, currentPath, recurse, sourcefolder, suffix, type);
                     continue;
                 }
 

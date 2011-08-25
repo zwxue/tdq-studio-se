@@ -323,4 +323,11 @@ public final class RepositoryNodeBuilder {
         }
         return instance;
     }
+
+    public Folder getObjectFolder(EResourceConstant resConstant) {
+        FolderHelper folderHelper = getFolderHelper();
+        FolderItem folder2 = folderHelper.getFolder(resConstant.getPath());
+        Folder folder = new Folder(folder2.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
+        return folder;
+    }
 }
