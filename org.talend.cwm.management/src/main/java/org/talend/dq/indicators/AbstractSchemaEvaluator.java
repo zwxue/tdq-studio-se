@@ -230,7 +230,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         try {
             // MOD xqliu 2009-07-13 bug 7888
             idx = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(getConnection()).getIndexInfo(catalog, schema,
-                    table, false, false);
+                    table, false, true);
             // ~
         } catch (SQLException e) {
 
