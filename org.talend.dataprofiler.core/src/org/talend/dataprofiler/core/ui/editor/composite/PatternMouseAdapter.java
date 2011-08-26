@@ -68,8 +68,27 @@ public class PatternMouseAdapter extends MouseAdapter {
             masterPage.doSave(null);
         }
 
-        // IFolder libProject = ResourceManager.getLibrariesFolder();
-        IRepositoryNode patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);
+        // MOD gdbu 2011-8-26 bug : TDQ-2169
+        IRepositoryNode patternFolderNode = null;
+
+        // MOD qiongli 2011-6-16 bug 21768,pattern in columnset just support java engine.
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        if (AnalysisType.COLUMN_SET.equals(analysisType)) {
+            if (ExecutionLanguage.SQL.equals(executionLanguage)) {
+                MessageUI.openWarning(DefaultMessagesImpl.getString("PatternMouseAdapter.noSupportForSqlEngine"));
+                return;
+            } else if (ExecutionLanguage.JAVA.equals(executionLanguage)) {
+                patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);
+            }
+        } else if (AnalysisType.MULTIPLE_COLUMN.equals(analysisType)) {
+            if (ExecutionLanguage.JAVA.equals(executionLanguage)) {
+                patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);
+            }
+        }
+        if (null == patternFolderNode) {
+            patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERNS);
+        }
 
         CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(patternFolderNode);
 
@@ -78,15 +97,8 @@ public class PatternMouseAdapter extends MouseAdapter {
                 dialog.addFilter(filter);
             }
         }
-        // MOD qiongli 2011-6-16 bug 21768,pattern in columnset just support java engine.
-        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
-        if (AnalysisType.COLUMN_SET.equals(analysisType)) {
-            if (ExecutionLanguage.SQL.equals(executionLanguage)) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("PatternMouseAdapter.noSupportForSqlEngine"));
-                return;
-            }
-        }
+
+        // ~TDQ-2169
 
         // IFile[] selectedFiles =
         // PatternUtilities.getPatternFileByIndicator(clmIndicator);

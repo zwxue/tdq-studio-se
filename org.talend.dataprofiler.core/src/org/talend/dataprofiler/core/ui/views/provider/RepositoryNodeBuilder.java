@@ -183,6 +183,11 @@ public final class RepositoryNodeBuilder {
             subFolderNode = new DQRepositoryNode(folder, node, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(subFolderNode);
             node.getChildren().add(subFolderNode);
+            if (resConstant.equals(EResourceConstant.PATTERNS)) {
+                // MOD gdbu 2011-8-26 bug 23303 : initialization regex and sql folder when initialization pattern folder
+                createRepositoryNodeSystemFolder(folderHelper, subFolderNode, EResourceConstant.PATTERN_REGEX);
+                createRepositoryNodeSystemFolder(folderHelper, subFolderNode, EResourceConstant.PATTERN_SQL);
+            }
             break;
         }
         return subFolderNode;

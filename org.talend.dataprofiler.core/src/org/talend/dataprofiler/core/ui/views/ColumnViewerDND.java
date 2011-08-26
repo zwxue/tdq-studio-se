@@ -243,6 +243,14 @@ public class ColumnViewerDND {
                         if (isSQLPattern|| ExecutionLanguage.SQL.equals(analysis.getParameters().getExecutionLanguage())) {
                             is = true;
                         }
+                    } else if (viewer instanceof AnalysisColumnTreeViewer) {
+                        // MOD gdbu 2011-8-26 bug :
+                        String expressionType = DomainHelper.getExpressionType(pattern);
+                        boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
+                        Analysis analysis = ((AnalysisColumnTreeViewer) viewer).getAnalysis();
+                        if (isSQLPattern && ExecutionLanguage.JAVA.equals(analysis.getParameters().getExecutionLanguage())) {
+                            is = true;
+                        }
                     }
                 }
             }
