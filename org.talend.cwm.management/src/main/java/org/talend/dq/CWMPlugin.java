@@ -15,11 +15,13 @@ package org.talend.dq;
 import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
+import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -28,6 +30,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -82,6 +85,7 @@ public class CWMPlugin extends Plugin {
     public void addConnetionAliasToSQLPlugin(ModelElement... dataproviders) {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
+        DriverManager driverManager = sqlPlugin.getDriverModel();
 
         for (ModelElement dataProvider : dataproviders) {
             try {
@@ -119,10 +123,11 @@ public class CWMPlugin extends Plugin {
                     alias.setConnectAtStartup(true);
                     alias.setUrl(url);
 
-                    ManagedDriver manDr = sqlPlugin.getDriverModel().getDriver(
-                            EDriverName.getId(JavaSqlFactory.getDriverClass(connection)));
+                    ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(JavaSqlFactory.getDriverClass(connection)));
 
                     if (manDr != null) {
+                        addJars(connection, manDr);
+
                         alias.setDriver(manDr);
                     }
 
@@ -140,10 +145,26 @@ public class CWMPlugin extends Plugin {
 
         try {
             aliasManager.saveAliases();
+            driverManager.saveDrivers();
         } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
             log.error(e, e);
         }
         aliasManager.modelChanged();
+    }
+
+    private void addJars(Connection connection, ManagedDriver manDr) {
+        DatabaseConnection dbConnnection = (DatabaseConnection) connection;
+        String driverJarPath = dbConnnection.getDriverJarPath();
+
+        if (ConnectionHelper.isJDBC(dbConnnection) && driverJarPath != null) {
+            String[] pathArray = driverJarPath.split(";");
+            for (String path : pathArray) {
+                path = new Path(path).toPortableString();
+                if (!manDr.getJars().contains(path)) {
+                    manDr.getJars().add(path);
+                }
+            }
+        }
     }
 
     /**
