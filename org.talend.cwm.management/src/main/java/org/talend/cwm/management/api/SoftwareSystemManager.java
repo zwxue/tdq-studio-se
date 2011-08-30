@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
@@ -58,20 +59,25 @@ public final class SoftwareSystemManager {
             if (log.isDebugEnabled()) {
                 log.debug("Trying to create the softwareSystem object from the given data provider " + dataProvider.getName());//$NON-NLS-1$
             }
+
+            java.sql.Connection connection = null;
+
             try {
                 // create it
                 TypedReturnCode<java.sql.Connection> trc = JavaSqlFactory.createConnection(dataProvider);
                 if (trc.isOk()) {
-                    java.sql.Connection connection = trc.getObject();
+                    connection = trc.getObject();
                     softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
                     if (softwareSystem != null) { // store it
                         if (ConnectionHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
                             saveSoftwareSystem(softwareSystem);
-                            }
                         }
                     }
+                }
             } catch (SQLException e) {
                 log.error(e, e);
+            } finally {
+                ConnectionUtils.closeConnection(connection);
             }
         } else if (log.isDebugEnabled()) { // only debug
             log.debug("The softwareSystem " + softwareSystem.getName() + " has been found for the given data provider "//$NON-NLS-1$//$NON-NLS-2$
