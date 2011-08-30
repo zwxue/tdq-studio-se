@@ -243,6 +243,8 @@ public final class PatternUtilities {
                         dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
                     } catch (SQLException e) {
                         log.error(e, e);
+                    } finally {
+                        ConnectionUtils.closeConnection(conn);
                     }
                 }
             }

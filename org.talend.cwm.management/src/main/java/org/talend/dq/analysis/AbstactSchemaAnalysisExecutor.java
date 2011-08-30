@@ -16,6 +16,7 @@ import java.sql.Connection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
@@ -90,6 +91,8 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
         if (POOLED_CONNECTION) {
             // release the pooled connection
             releasePooledConnection(analysis, analysisDataProvider, connection.getObject(), true);
+        } else {
+            ConnectionUtils.closeConnection(connection.getObject());
         }
 
         if (!rc.isOk()) {

@@ -420,25 +420,20 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private boolean isFunction(String defValue, String table) {
         boolean ok = false;
-        Statement stat = null;
+        Connection conenction = null;
         try {
             String queryStmt = "select " + defValue + " from " + table;//$NON-NLS-1$//$NON-NLS-2$
             TypedReturnCode<Connection> conn = getConnection(cachedAnalysis);
-            Connection conenction = conn.getObject();
+            conenction = conn.getObject();
 
-            stat = conenction.createStatement();
+            Statement stat = conenction.createStatement();
             ok = stat.execute(queryStmt);
             // MOD qiongli 2011-5-20,don't print error in error log view and use finnaly to close Statement.
+            stat.close();
         } catch (Exception e) {
             ok = false;
         } finally {
-            if (stat != null) {
-                try {
-                    stat.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            ConnectionUtils.closeConnection(conenction);
         }
         return ok;
     }
@@ -967,6 +962,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String queryStmt = "SELECT COUNT(" + colName + ") FROM " + table + whereExp; // + dbms().eos(); //$NON-NLS-1$ //$NON-NLS-2$
 
         List<Object[]> myResultSet = executeQuery(catalogName, connection, queryStmt);
+
+        org.talend.utils.sql.ConnectionUtils.closeConnection(connection);
 
         if (myResultSet.isEmpty() || myResultSet.size() > 1) {
             log.error(Messages.getString("ColumnAnalysisSqlExecutor.TOOMANYRESULTOBTAINED") + myResultSet);//$NON-NLS-1$  
@@ -1545,9 +1542,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return
      */
     private boolean canParallel() {
+        Connection connection = null;
         try {
             TypedReturnCode<Connection> typedReturnCode = this.getConnection(cachedAnalysis);
-            Connection connection = typedReturnCode.getObject();
+            connection = typedReturnCode.getObject();
             DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
             if (connectionMetadata.getDriverName() != null
                     && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)) {
@@ -1561,6 +1559,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         } catch (SQLException e) {
             log.warn(e, e);
+        } finally {
+            ConnectionUtils.closeConnection(connection);
         }
         return this.parallel;
     }

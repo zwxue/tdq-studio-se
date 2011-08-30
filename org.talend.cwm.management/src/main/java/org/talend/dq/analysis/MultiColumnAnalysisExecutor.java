@@ -41,6 +41,7 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -312,12 +313,14 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             if (POOLED_CONNECTION) {
                 releasePooledConnection(analysis, connection, true);
             } else {
-                connection.close();
+                ReturnCode rc = ConnectionUtils.closeConnection(connection);
+                ok = rc.isOk();
+                if (!ok) {
+                    this.errorMessage = rc.getMessage();
+                }
             }
-        } catch (SQLException e) {
-            log.error(e, e);
-            this.errorMessage = e.getMessage();
-            ok = false;
+        } catch (Exception e) {
+            ok = traceError(e.getMessage());
         }
         // finally {
         // ConnectionUtils.closeConnection(connection);

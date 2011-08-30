@@ -167,6 +167,8 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         if (POOLED_CONNECTION) {
             // release the pooled connection
             releasePooledConnection(analysis, connection.getObject(), true);
+        } else {
+            ConnectionUtils.closeConnection(connection.getObject());
         }
 
         if (!rc.isOk()) {

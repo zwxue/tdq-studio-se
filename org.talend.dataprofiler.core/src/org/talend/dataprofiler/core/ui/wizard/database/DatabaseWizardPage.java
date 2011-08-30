@@ -362,11 +362,12 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                 errorMsg = e1.getLocalizedMessage();
             }
             if (externalDriver != null) {
+                Connection connection = null;
                 try {
                     DriverManager.registerDriver(externalDriver);
                     // MOD xqliu 2009-02-03 bug 5261
-                    Connection connection = ConnectionUtils.createConnectionWithTimeout(externalDriver,
-                            this.connectionParam.getJdbcUrl(), this.connectionParam.getParameters());
+                    connection = ConnectionUtils.createConnectionWithTimeout(externalDriver, this.connectionParam.getJdbcUrl(),
+                            this.connectionParam.getParameters());
                     if (connection == null) {
                         rc.setOk(false);
                         rc.setMessage(DefaultMessagesImpl.getString("DatabaseWizardPage.connIsNULL")); //$NON-NLS-1$
@@ -375,6 +376,8 @@ public class DatabaseWizardPage extends AbstractWizardPage {
                     rc.setOk(false);
                     rc.setMessage(e.getLocalizedMessage());
                     log.error(e, e);
+                } finally {
+                    ConnectionUtils.closeConnection(connection);
                 }
             } else {
                 rc.setOk(false);

@@ -140,6 +140,8 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         if (POOLED_CONNECTION && null != connection) {
             // release the pooled connection
             releasePooledConnection(connection.getObject(), true);
+        } else {
+            ConnectionUtils.closeConnection(connection.getObject());
         }
 
         if (!rc.isOk()) {

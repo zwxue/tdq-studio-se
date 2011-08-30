@@ -26,9 +26,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
-import org.talend.core.model.metadata.builder.database.TableBuilder;
-import org.talend.core.model.metadata.builder.database.ViewBuilder;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -51,6 +50,7 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 import orgomg.cwm.resource.relational.Schema;
@@ -445,7 +445,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         schemaIndic.setAnalyzedElement(hasSchema ? tdSchema : tdCatalog);
 
         // profile tables
-        TableBuilder tableBuilder = this.getTableBuilder();
         int tableCount = 0;
         final String[] tablePatterns = tablePattern != null && tablePattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
                 .split(this.tablePattern, FILTER_SEP) : new String[] { this.tablePattern };
@@ -453,16 +452,22 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             // MOD zshen bug 12041: the variable trimPat must be null(not a "") if it isn't a table name.
             String trimPat = pat != null && !PluginConstant.EMPTY_STRING.equals(pat) ? pat.trim() : null;
             // ~12041
-            List<? extends NamedColumnSet> tables = tableBuilder.getColumnSets(catName, schemaName, trimPat);
-            for (NamedColumnSet t : tables) {
-                tableCount++;
-                evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);
+
+            try {
+                Package pacage = tdSchema == null ? tdCatalog : tdSchema;
+                List<? extends NamedColumnSet> tables = DqRepositoryViewService
+                        .getTables(getDataManager(), pacage, trimPat, true);
+                for (NamedColumnSet t : tables) {
+                    tableCount++;
+                    evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);
+                }
+            } catch (Exception e) {
+                log.error(e, e);
             }
         }
         schemaIndic.setTableCount(tableCount);
 
         // do the same for views
-        ViewBuilder viewBuilder = this.getViewBuilder();
         int viewCount = 0;
         final String[] viewPatterns = viewPattern != null && viewPattern.contains(String.valueOf(FILTER_SEP)) ? StringUtils
                 .split(this.viewPattern, FILTER_SEP) : new String[] { this.viewPattern };
@@ -470,10 +475,17 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             // MOD zshen bug 12041: the variable trimPat must be null(not a "") if it isn't a view name.
             String trimPat = pat != null && !PluginConstant.EMPTY_STRING.equals(pat) ? pat.trim() : null;
             // ~12041
-            List<? extends NamedColumnSet> views = viewBuilder.getColumnSets(catName, schemaName, trimPat);
-            for (NamedColumnSet t : views) {
-                viewCount++;
-                evalAllCounts(catName, schemaName, t, schemaIndic, false, ok);
+
+            try {
+                Package pacage = tdSchema == null ? tdCatalog : tdSchema;
+                List<? extends NamedColumnSet> views = DqRepositoryViewService.getViews(getDataManager(), pacage, trimPat, true);
+                for (NamedColumnSet t : views) {
+                    viewCount++;
+                    evalAllCounts(catName, schemaName, t, schemaIndic, false, ok);
+                }
+            } catch (Exception e) {
+
+                log.error(e, e);
             }
         }
         schemaIndic.setViewCount(viewCount);
@@ -499,32 +511,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             } else {
                 log.error(Messages.getString("AbstractSchemaEvaluator.NoCatalogSchema")); //$NON-NLS-1$
             }
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "getTableBuilder".
-     * 
-     * @return
-     */
-    private TableBuilder getTableBuilder() {
-        if (this.isPooledConnection()) {
-            return new TableBuilder(this.getConnection());
-        } else {
-            return new TableBuilder(this.getDataManager());
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "getViewBuilder".
-     * 
-     * @return
-     */
-    private ViewBuilder getViewBuilder() {
-        if (this.isPooledConnection()) {
-            return new ViewBuilder(this.getConnection());
-        } else {
-            return new ViewBuilder(this.getDataManager());
         }
     }
 
@@ -619,7 +605,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @param catName
      * @return
      */
-    public boolean checkCatalog(String catName) {
+    protected boolean checkCatalog(String catName) {
         if (0 == catalogsName.size()) {
             Collection<Catalog> catalogs = ConnectionHelper.getAllCatalogs(getDataManager());
             for (Catalog tc : catalogs) {
@@ -667,7 +653,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @param catName
      * @return
      */
-    public boolean checkSchema(Schema schema) {
+    protected boolean checkSchema(Schema schema) {
         EObject container = schema.eContainer();
         if (container != null) {
             Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(container);

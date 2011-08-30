@@ -128,6 +128,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         if (POOLED_CONNECTION && null != connection) {
             // release the pooled connection
             releasePooledConnection(analysis, analysisDataProvider, connection.getObject(), true);
+        } else {
+            ConnectionUtils.closeConnection(connection.getObject());
         }
 
         if (!rc.isOk()) {

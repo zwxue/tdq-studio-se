@@ -52,6 +52,7 @@ import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.utils.collections.MultiMapHelper;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -303,13 +304,17 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             if (POOLED_CONNECTION) {
                 releasePooledConnection(analysis, connection, true);
             } else {
-                connection.close();
+                ReturnCode rc = ConnectionUtils.closeConnection(connection);
+                ok = rc.isOk();
+                if (!ok) {
+                    this.errorMessage = rc.getMessage();
+                }
             }
 
             // --- finalize indicators by setting the row count and null when they exist.
             ColumnAnalysisSqlExecutor finalization = new ColumnAnalysisSqlExecutor();
             finalization.setRowCountAndNullCount(elementToIndicator);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;

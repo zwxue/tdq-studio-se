@@ -36,6 +36,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -356,12 +357,12 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             if (POOLED_CONNECTION) {
                 releasePooledConnection(analysis, connection, true);
             } else {
-                connection.close();
+                ReturnCode rc = ConnectionUtils.closeConnection(connection);
+                ok = rc.isOk();
+                if (!ok) {
+                    this.errorMessage = rc.getMessage();
+                }
             }
-        } catch (SQLException e) {
-            log.error(e, e);
-            this.errorMessage = e.getMessage();
-            ok = false;
         } catch (AnalysisExecutionException e) {
             ok = traceError(e.getMessage());
         }
