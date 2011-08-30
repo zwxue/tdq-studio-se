@@ -224,6 +224,8 @@ public final class ImageLib {
 
     public static final String RULE_TEST = "test.gif";
 
+    public static final String ICON_LOCK_BYOTHER = "locked_red_overlay.gif"; //$NON-NLS-1$ 
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */
@@ -445,6 +447,16 @@ public final class ImageLib {
     public static ImageDescriptor createAddedIcon(ImageDescriptor originalImg) {
         ImageDescriptor addImg = getImageDescriptor(ICON_ADD_VAR);
         return originalImg != null ? new DecorationOverlayIcon(originalImg.createImage(), addImg, IDecoration.TOP_RIGHT) : null;
+    }
+
+    public static ImageDescriptor createLockedByOtherIcon(String originalImgName) {
+        return createLockedByOtherIcon(getImageDescriptor(originalImgName));
+    }
+
+    public static ImageDescriptor createLockedByOtherIcon(ImageDescriptor originalImg) {
+        ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK_BYOTHER);
+
+        return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
 }

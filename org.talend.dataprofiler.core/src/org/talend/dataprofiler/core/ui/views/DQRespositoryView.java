@@ -89,6 +89,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.PluginChecker;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.ConnectionItem;
@@ -505,6 +506,18 @@ public class DQRespositoryView extends CommonNavigator {
                 TreeSelection selection = (TreeSelection) event.getSelection();
                 if (selection.size() != 1) {
                     return;
+                }
+                // ADD xwang 2011-08-30
+                if (PluginChecker.isSVNProviderPluginLoaded()) {
+                    RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open editor") {
+
+                        @Override
+                        protected void run() {
+
+                        }
+                    };
+                    workUnit.setAvoidUnloadResources(true);
+                    ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
                 }
                 Object selectedElement = selection.getFirstElement();
                 if (selectedElement instanceof TdTable || selectedElement instanceof TdView) {

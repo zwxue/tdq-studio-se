@@ -176,6 +176,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     // MOD yyi 2011-04-07 19696: "Lock element"
                     if (ERepositoryStatus.LOCK_BY_USER == ProxyRepositoryFactory.getInstance().getStatus(viewObject)) {
                         image = ImageLib.createLockedIcon(ImageDescriptor.createFromImage(image)).createImage();
+                    } else if (ERepositoryStatus.LOCK_BY_OTHER == ProxyRepositoryFactory.getInstance().getStatus(viewObject)) {
+                        image = ImageLib.createLockedByOtherIcon(ImageDescriptor.createFromImage(image)).createImage();
                     }
                 }
             } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
