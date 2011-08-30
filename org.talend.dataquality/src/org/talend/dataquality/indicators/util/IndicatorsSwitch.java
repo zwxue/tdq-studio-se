@@ -819,6 +819,16 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.FORMAT_FREQ_PIE_INDICATOR: {
+                FormatFreqPieIndicator formatFreqPieIndicator = (FormatFreqPieIndicator)theEObject;
+                T result = caseFormatFreqPieIndicator(formatFreqPieIndicator);
+                if (result == null) result = caseFrequencyIndicator(formatFreqPieIndicator);
+                if (result == null) result = caseIndicator(formatFreqPieIndicator);
+                if (result == null) result = caseModelElement(formatFreqPieIndicator);
+                if (result == null) result = caseElement(formatFreqPieIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -1643,6 +1653,21 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T casePhoneNumbStatisticsIndicator(PhoneNumbStatisticsIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Format Freq Pie Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Format Freq Pie Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseFormatFreqPieIndicator(FormatFreqPieIndicator object) {
         return null;
     }
 

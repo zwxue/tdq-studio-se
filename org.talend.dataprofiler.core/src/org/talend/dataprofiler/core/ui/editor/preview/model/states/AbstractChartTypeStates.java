@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.general.PieDataset;
 import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
@@ -145,6 +146,10 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
     }
 
     public ICustomerDataset getCustomerXYDataset() {
+        return null;
+    }
+
+    public PieDataset getPieDataset() {
         return null;
     }
 }

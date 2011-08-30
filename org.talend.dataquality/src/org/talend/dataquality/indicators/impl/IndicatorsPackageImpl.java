@@ -52,6 +52,7 @@ import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.EnumStatistics;
+import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -591,6 +592,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass phoneNumbStatisticsIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass formatFreqPieIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2129,6 +2137,69 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getPhoneNumbStatisticsIndicator_FormatFreqPieIndicator() {
+        return (EReference)phoneNumbStatisticsIndicatorEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getFormatFreqPieIndicator() {
+        return formatFreqPieIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getFormatFreqPieIndicator_WellFormE164Count() {
+        return (EAttribute)formatFreqPieIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getFormatFreqPieIndicator_WellFormInteCount() {
+        return (EAttribute)formatFreqPieIndicatorEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getFormatFreqPieIndicator_WellFormNatiCount() {
+        return (EAttribute)formatFreqPieIndicatorEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getFormatFreqPieIndicator_InvalidFormCount() {
+        return (EAttribute)formatFreqPieIndicatorEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getFormatFreqPieIndicator_CurrentKey() {
+        return (EAttribute)formatFreqPieIndicatorEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -2455,6 +2526,14 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__POSSIBLE_PHONE_COUNT_INDICATOR);
         createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__VALID_REG_CODE_COUNT_INDICATOR);
         createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR);
+        createEReference(phoneNumbStatisticsIndicatorEClass, PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR);
+
+        formatFreqPieIndicatorEClass = createEClass(FORMAT_FREQ_PIE_INDICATOR);
+        createEAttribute(formatFreqPieIndicatorEClass, FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_E164_COUNT);
+        createEAttribute(formatFreqPieIndicatorEClass, FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_INTE_COUNT);
+        createEAttribute(formatFreqPieIndicatorEClass, FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_NATI_COUNT);
+        createEAttribute(formatFreqPieIndicatorEClass, FORMAT_FREQ_PIE_INDICATOR__INVALID_FORM_COUNT);
+        createEAttribute(formatFreqPieIndicatorEClass, FORMAT_FREQ_PIE_INDICATOR__CURRENT_KEY);
 
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
@@ -2579,6 +2658,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         wellFormIntePhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
         wellFormE164PhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
         phoneNumbStatisticsIndicatorEClass.getESuperTypes().add(this.getCompositeIndicator());
+        formatFreqPieIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2858,37 +2938,37 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEClass(binLowFrequencyIndicatorEClass, BinLowFrequencyIndicator.class, "BinLowFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(validPhoneCountIndicatorEClass, ValidPhoneCountIndicator.class, "ValidPhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getValidPhoneCountIndicator_ValidPhoneNumCount(), ecorePackage.getELongObject(), "validPhoneNumCount", null, 0, 1, ValidPhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getValidPhoneCountIndicator_ValidPhoneNumCount(), ecorePackage.getELongObject(), "validPhoneNumCount", "0", 0, 1, ValidPhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(validPhoneCountIndicatorEClass, this.getJavaSet(), "getValidPhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(possiblePhoneCountIndicatorEClass, PossiblePhoneCountIndicator.class, "PossiblePhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getPossiblePhoneCountIndicator_PossiblePhoneCount(), ecorePackage.getELongObject(), "possiblePhoneCount", null, 0, 1, PossiblePhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getPossiblePhoneCountIndicator_PossiblePhoneCount(), ecorePackage.getELongObject(), "possiblePhoneCount", "0", 0, 1, PossiblePhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(possiblePhoneCountIndicatorEClass, this.getJavaSet(), "getPossiblePhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(validRegCodeCountIndicatorEClass, ValidRegCodeCountIndicator.class, "ValidRegCodeCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getValidRegCodeCountIndicator_ValidRegCount(), theEcorePackage.getELongObject(), "validRegCount", null, 0, 1, ValidRegCodeCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getValidRegCodeCountIndicator_ValidRegCount(), theEcorePackage.getELongObject(), "validRegCount", "0", 0, 1, ValidRegCodeCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(validRegCodeCountIndicatorEClass, this.getJavaSet(), "getValidRegValues", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(invalidRegCodeCountIndicatorEClass, InvalidRegCodeCountIndicator.class, "InvalidRegCodeCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getInvalidRegCodeCountIndicator_InvalidRegCount(), ecorePackage.getELongObject(), "invalidRegCount", null, 0, 1, InvalidRegCodeCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getInvalidRegCodeCountIndicator_InvalidRegCount(), ecorePackage.getELongObject(), "invalidRegCount", "0", 0, 1, InvalidRegCodeCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(invalidRegCodeCountIndicatorEClass, this.getJavaSet(), "getInvalidRegValues", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(wellFormNationalPhoneCountIndicatorEClass, WellFormNationalPhoneCountIndicator.class, "WellFormNationalPhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getWellFormNationalPhoneCountIndicator_WellFormNatiPhoneCount(), ecorePackage.getELongObject(), "wellFormNatiPhoneCount", null, 0, 1, WellFormNationalPhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getWellFormNationalPhoneCountIndicator_WellFormNatiPhoneCount(), ecorePackage.getELongObject(), "wellFormNatiPhoneCount", "0", 0, 1, WellFormNationalPhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(wellFormNationalPhoneCountIndicatorEClass, this.getJavaSet(), "getWellFormNatiPhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(wellFormIntePhoneCountIndicatorEClass, WellFormIntePhoneCountIndicator.class, "WellFormIntePhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getWellFormIntePhoneCountIndicator_WellFormIntePhoneCount(), ecorePackage.getELongObject(), "wellFormIntePhoneCount", null, 0, 1, WellFormIntePhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getWellFormIntePhoneCountIndicator_WellFormIntePhoneCount(), ecorePackage.getELongObject(), "wellFormIntePhoneCount", "0", 0, 1, WellFormIntePhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(wellFormIntePhoneCountIndicatorEClass, this.getJavaSet(), "getWellFormIntePhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         initEClass(wellFormE164PhoneCountIndicatorEClass, WellFormE164PhoneCountIndicator.class, "WellFormE164PhoneCountIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getWellFormE164PhoneCountIndicator_WellFormE164PhoneCount(), ecorePackage.getELongObject(), "wellFormE164PhoneCount", null, 0, 1, WellFormE164PhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getWellFormE164PhoneCountIndicator_WellFormE164PhoneCount(), ecorePackage.getELongObject(), "wellFormE164PhoneCount", "0", 0, 1, WellFormE164PhoneCountIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(wellFormE164PhoneCountIndicatorEClass, this.getJavaSet(), "getWellFormE164PhoneValues", 0, 1, IS_UNIQUE, IS_ORDERED);
 
@@ -2900,6 +2980,14 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEReference(getPhoneNumbStatisticsIndicator_PossiblePhoneCountIndicator(), this.getPossiblePhoneCountIndicator(), null, "possiblePhoneCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getPhoneNumbStatisticsIndicator_ValidRegCodeCountIndicator(), this.getValidRegCodeCountIndicator(), null, "validRegCodeCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getPhoneNumbStatisticsIndicator_ValidPhoneCountIndicator(), this.getValidPhoneCountIndicator(), null, "validPhoneCountIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getPhoneNumbStatisticsIndicator_FormatFreqPieIndicator(), this.getFormatFreqPieIndicator(), null, "formatFreqPieIndicator", null, 0, 1, PhoneNumbStatisticsIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(formatFreqPieIndicatorEClass, FormatFreqPieIndicator.class, "FormatFreqPieIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getFormatFreqPieIndicator_WellFormE164Count(), ecorePackage.getELong(), "wellFormE164Count", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getFormatFreqPieIndicator_WellFormInteCount(), ecorePackage.getELong(), "wellFormInteCount", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getFormatFreqPieIndicator_WellFormNatiCount(), ecorePackage.getELong(), "wellFormNatiCount", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getFormatFreqPieIndicator_InvalidFormCount(), ecorePackage.getELong(), "invalidFormCount", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getFormatFreqPieIndicator_CurrentKey(), ecorePackage.getEString(), "currentKey", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");

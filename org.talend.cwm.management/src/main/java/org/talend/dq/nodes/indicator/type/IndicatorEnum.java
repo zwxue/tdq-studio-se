@@ -331,6 +331,11 @@ public enum IndicatorEnum {
                                           IndicatorsPackage.Literals.WELL_FORM_E164_PHONE_COUNT_INDICATOR,
                                           "Well Formed E164 Phone Count", //$NON-NLS-1$
                                         null),
+    FormatFreqPieIndictorEnum(
+                              IndicatorsPackage.FORMAT_FREQ_PIE_INDICATOR,
+                              IndicatorsPackage.Literals.FORMAT_FREQ_PIE_INDICATOR,
+                              "Format Phone Number Frequency",
+                              null),
     PhoneNumbStatisticsIndicatorEnum(
                             IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR,
                             IndicatorsPackage.Literals.PHONE_NUMB_STATISTICS_INDICATOR,
@@ -338,8 +343,7 @@ public enum IndicatorEnum {
                             new IndicatorEnum[] { ValidPhoneCountIndicatorEnum, ValidRegCodeCountIndicatorEnum,
                                     InvalidRegCodeCountIndicatorEnum, PossiblePhoneCountIndicatorEnum,
                                     WellFormIntePhoneCountIndicatorEnum, WellFormNationalPhoneCountIndicatorEnum,
-                                    WellFormE164PhoneCountIndicatorEnum });
-
+                                             WellFormE164PhoneCountIndicatorEnum, FormatFreqPieIndictorEnum });
 
     private EClass indicatorType;
 
@@ -557,6 +561,8 @@ public enum IndicatorEnum {
             returnEnum = WellFormNationalPhoneCountIndicatorEnum;
         } else if (indicatorType == PhoneNumbStatisticsIndicatorEnum.getIndicatorType()) {
             returnEnum = PhoneNumbStatisticsIndicatorEnum;
+        } else if (indicatorType == FormatFreqPieIndictorEnum.getIndicatorType()) {
+            returnEnum = FormatFreqPieIndictorEnum;
         }
 
         return returnEnum;

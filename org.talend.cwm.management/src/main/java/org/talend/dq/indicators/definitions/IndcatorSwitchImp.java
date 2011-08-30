@@ -28,6 +28,7 @@ import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -660,6 +661,11 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     @Override
     public Boolean casePhoneNumbStatisticsIndicator(PhoneNumbStatisticsIndicator object) {
         return setIndicatorDefinition(object, "Phone Number Statistics"); //$NON-NLS-1$
+    }
+
+    @Override
+    public Boolean caseFormatFreqPieIndicator(FormatFreqPieIndicator object) {
+        return setIndicatorDefinition(object, "Format Frequency Pie");
     }
 
 }

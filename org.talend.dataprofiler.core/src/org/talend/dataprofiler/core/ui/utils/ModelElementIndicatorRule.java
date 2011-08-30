@@ -205,6 +205,7 @@ public final class ModelElementIndicatorRule {
         case WellFormIntePhoneCountIndicatorEnum:
         case WellFormNationalPhoneCountIndicatorEnum:
         case PhoneNumbStatisticsIndicatorEnum:
+        case FormatFreqPieIndictorEnum:
             if (ExecutionLanguage.JAVA.equals(language)
                     && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
                 return true;

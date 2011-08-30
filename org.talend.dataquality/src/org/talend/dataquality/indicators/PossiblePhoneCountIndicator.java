@@ -29,6 +29,7 @@ public interface PossiblePhoneCountIndicator extends Indicator {
 
     /**
      * Returns the value of the '<em><b>Possible Phone Count</b></em>' attribute.
+     * The default value is <code>"0"</code>.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Possible Phone Count</em>' attribute isn't clear,
@@ -38,7 +39,7 @@ public interface PossiblePhoneCountIndicator extends Indicator {
      * @return the value of the '<em>Possible Phone Count</em>' attribute.
      * @see #setPossiblePhoneCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getPossiblePhoneCountIndicator_PossiblePhoneCount()
-     * @model
+     * @model default="0"
      * @generated
      */
     Long getPossiblePhoneCount();

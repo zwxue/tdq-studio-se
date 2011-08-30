@@ -46,6 +46,7 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.urls.StandardXYZURLGenerator;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.gantt.TaskSeriesCollection;
+import org.jfree.data.general.PieDataset;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
@@ -523,5 +524,21 @@ public final class TopChartFactory {
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
         return chart;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "createPieChart".
+     * 
+     * @param title
+     * @param dataset
+     * @param showLegend
+     * @param toolTips,if show the toolTips.
+     * @param urls
+     * @return
+     */
+    public static JFreeChart createPieChart(String title, PieDataset dataset, boolean showLegend, boolean toolTips,
+            boolean urls) {
+        return ChartFactory.createPieChart(title, dataset, showLegend, toolTips, urls);
     }
 }

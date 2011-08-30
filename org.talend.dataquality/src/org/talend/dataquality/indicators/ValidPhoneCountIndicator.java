@@ -29,6 +29,7 @@ public interface ValidPhoneCountIndicator extends Indicator {
 
     /**
      * Returns the value of the '<em><b>Valid Phone Num Count</b></em>' attribute.
+     * The default value is <code>"0"</code>.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Valid Phone Num Count</em>' attribute isn't clear,
@@ -38,7 +39,7 @@ public interface ValidPhoneCountIndicator extends Indicator {
      * @return the value of the '<em>Valid Phone Num Count</em>' attribute.
      * @see #setValidPhoneNumCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getValidPhoneCountIndicator_ValidPhoneNumCount()
-     * @model
+     * @model default="0"
      * @generated
      */
     Long getValidPhoneNumCount();

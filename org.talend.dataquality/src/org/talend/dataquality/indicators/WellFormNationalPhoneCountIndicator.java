@@ -29,6 +29,7 @@ public interface WellFormNationalPhoneCountIndicator extends Indicator {
 
     /**
      * Returns the value of the '<em><b>Well Form Nati Phone Count</b></em>' attribute.
+     * The default value is <code>"0"</code>.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Well Form Nati Phone Count</em>' attribute isn't clear,
@@ -38,7 +39,7 @@ public interface WellFormNationalPhoneCountIndicator extends Indicator {
      * @return the value of the '<em>Well Form Nati Phone Count</em>' attribute.
      * @see #setWellFormNatiPhoneCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getWellFormNationalPhoneCountIndicator_WellFormNatiPhoneCount()
-     * @model
+     * @model default="0"
      * @generated
      */
     Long getWellFormNatiPhoneCount();

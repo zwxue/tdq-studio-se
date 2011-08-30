@@ -732,35 +732,42 @@
     <eClassifiers xsi:type="ecore:EClass" name="BinLowFrequencyIndicator" eSuperTypes="#//indicators/FrequencyIndicator"/>
     <eClassifiers xsi:type="ecore:EClass" name="ValidPhoneCountIndicator" eSuperTypes="#//indicators/Indicator">
       <eOperations name="getValidPhoneValues" eType="#//indicators/JavaSet"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="validPhoneNumCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="validPhoneNumCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+          defaultValueLiteral="0"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="PossiblePhoneCountIndicator" eSuperTypes="#//indicators/Indicator">
       <eOperations name="getPossiblePhoneValues" eType="#//indicators/JavaSet"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="possiblePhoneCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="possiblePhoneCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+          defaultValueLiteral="0"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="ValidRegCodeCountIndicator" eSuperTypes="#//indicators/Indicator">
       <eOperations name="getValidRegValues" eType="#//indicators/JavaSet"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="validRegCount" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//ELongObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="validRegCount" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//ELongObject"
+          defaultValueLiteral="0"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="InvalidRegCodeCountIndicator" eSuperTypes="#//indicators/Indicator">
       <eOperations name="getInvalidRegValues" eType="#//indicators/JavaSet"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="invalidRegCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="invalidRegCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+          defaultValueLiteral="0"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="WellFormNationalPhoneCountIndicator"
         eSuperTypes="#//indicators/Indicator">
       <eOperations name="getWellFormNatiPhoneValues" eType="#//indicators/JavaSet"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="wellFormNatiPhoneCount"
-          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+          defaultValueLiteral="0"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="WellFormIntePhoneCountIndicator" eSuperTypes="#//indicators/Indicator">
       <eOperations name="getWellFormIntePhoneValues" eType="#//indicators/JavaSet"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="wellFormIntePhoneCount"
-          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+          defaultValueLiteral="0"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="WellFormE164PhoneCountIndicator" eSuperTypes="#//indicators/Indicator">
       <eOperations name="getWellFormE164PhoneValues" eType="#//indicators/JavaSet"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="wellFormE164PhoneCount"
-          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"/>
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+          defaultValueLiteral="0"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="PhoneNumbStatisticsIndicator" eSuperTypes="#//indicators/CompositeIndicator">
       <eStructuralFeatures xsi:type="ecore:EReference" name="wellFormNationalPhoneCountIndicator"
@@ -777,6 +784,15 @@
           eType="#//indicators/ValidRegCodeCountIndicator" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="validPhoneCountIndicator"
           eType="#//indicators/ValidPhoneCountIndicator" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="formatFreqPieIndicator"
+          eType="#//indicators/FormatFreqPieIndicator" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FormatFreqPieIndicator" eSuperTypes="#//indicators/FrequencyIndicator">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="wellFormE164Count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="wellFormInteCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="wellFormNatiCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="invalidFormCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentKey" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
     <eSubpackages name="schema" nsURI="http://dataquality.indicators.schema" nsPrefix="dataquality.indicators.schema">
       <eClassifiers xsi:type="ecore:EClass" name="SchemaIndicator" eSuperTypes="#//indicators/CompositeIndicator">

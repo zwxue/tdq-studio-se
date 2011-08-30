@@ -240,6 +240,7 @@ public enum FormEnum {
             forms = new FormEnum[] { PhoneNumberForm, DataThresholdsForm };
             break;
         case PhoneNumbStatisticsIndicatorEnum:
+        case FormatFreqPieIndictorEnum:
             forms = new FormEnum[] { PhoneNumberForm };
             break;
         default:

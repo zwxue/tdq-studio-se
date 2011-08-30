@@ -32,7 +32,7 @@ public class PhoneNumbStatisticsExplorer extends DataExplorer {
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
-        if (!isXml() || !isSqlEngine) {
+        if (!isXml() && !isSqlEngine) {
             switch (this.indicatorEnum) {
             case ValidPhoneCountIndicatorEnum:
             case PossiblePhoneCountIndicatorEnum:
@@ -41,8 +41,8 @@ public class PhoneNumbStatisticsExplorer extends DataExplorer {
             case WellFormE164PhoneCountIndicatorEnum:
             case WellFormIntePhoneCountIndicatorEnum:
             case WellFormNationalPhoneCountIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
-                map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
+                map.put(MENU_VIEW_ROWS, null);
+                map.put(MENU_VIEW_VALUES, null);
                 break;
 
             default:

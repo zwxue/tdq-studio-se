@@ -79,7 +79,9 @@ public enum EIndicatorChartType {
     // ~
     SIMPLE_TEXT_STATISTICS(Messages.getString("EIndicatorChartType.SimpleTextStatistics"), new TextStatisticsExplorer()), //$NON-NLS-1$
 
-    PHONE_NUMBER_STATISTICS(Messages.getString("EIndicatorChartType.PhoneNumbStatistics"), null); //$NON-NLS-1$
+    PHONE_NUMBER_STATISTICS(Messages.getString("EIndicatorChartType.PhoneNumbStatistics"), null), //$NON-NLS-1$
+
+    FORMAT_FREQ_PIE_STATISTICS(Messages.getString("EIndicatorChartType.FormatFreqPieStatistics"), null); //$NON-NLS-1$
 
     private String literal;
 

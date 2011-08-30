@@ -43,7 +43,7 @@ public final class CompositeIndicator {
     private List<IndicatorUnit> simpleList, textList, frequencyList, lowFrequencyList, soundexFrequencyList,
             soundexLowFrequencyList, patternFrequencylist, patternLowFrequencyList, datePatternFrequencyList, summaryList,
             patternList, sqlPatternList, modelIndicatorList, udiCountList, udiFrequencyList, udiMatchingList, udiRealValueList,
-            dateFrequencyList, dateLowFrequencyList, simpleTextList, phoneNumbList;
+            dateFrequencyList, dateLowFrequencyList, simpleTextList, phoneNumbList, formatFreqList;
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
@@ -113,6 +113,7 @@ public final class CompositeIndicator {
         yearLowFrequencyList = new ArrayList<IndicatorUnit>();
         // ~
         phoneNumbList = new ArrayList<IndicatorUnit>();
+        formatFreqList = new ArrayList<IndicatorUnit>();
     }
 
     private void clear() {
@@ -155,6 +156,7 @@ public final class CompositeIndicator {
         yearFrequencyList.clear();
         yearLowFrequencyList.clear();
         phoneNumbList.clear();
+        formatFreqList.clear();
     }
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
@@ -303,7 +305,8 @@ public final class CompositeIndicator {
             case WellFormNationalPhoneCountIndicatorEnum:
                 phoneNumbList.add(one);
                 break;
-
+            case FormatFreqPieIndictorEnum:
+                formatFreqList.add(one);
             default:
             }
         }
@@ -343,6 +346,7 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.UDI_MATCHING, udiMatchingList);
         separatedMap.put(EIndicatorChartType.UDI_REALVALUE, udiRealValueList);
         separatedMap.put(EIndicatorChartType.PHONE_NUMBER_STATISTICS, phoneNumbList);
+        separatedMap.put(EIndicatorChartType.FORMAT_FREQ_PIE_STATISTICS, formatFreqList);
 
         return separatedMap;
     }

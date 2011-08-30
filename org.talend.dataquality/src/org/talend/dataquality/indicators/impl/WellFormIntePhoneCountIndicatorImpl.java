@@ -177,9 +177,9 @@ public class WellFormIntePhoneCountIndicatorImpl extends IndicatorImpl implement
         if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" wellFormIntePhoneCount: ");
+        result.append(" (wellFormIntePhoneCount: ");
         result.append(wellFormIntePhoneCount);
-
+        result.append(')');
         return result.toString();
     }
 
@@ -221,7 +221,6 @@ public class WellFormIntePhoneCountIndicatorImpl extends IndicatorImpl implement
 
     @Override
     public Long getIntegerValue() {
-        // TODO Auto-generated method stub
         return this.getWellFormIntePhoneCount();
     }
 

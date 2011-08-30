@@ -22516,13 +22516,419 @@ public interface IndicatorsPackage extends EPackage {
     int PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 6;
 
     /**
+     * The feature id for the '<em><b>Format Freq Pie Indicator</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR = COMPOSITE_INDICATOR_FEATURE_COUNT + 7;
+
+    /**
      * The number of structural features of the '<em>Phone Numb Statistics Indicator</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int PHONE_NUMB_STATISTICS_INDICATOR_FEATURE_COUNT = COMPOSITE_INDICATOR_FEATURE_COUNT + 7;
+    int PHONE_NUMB_STATISTICS_INDICATOR_FEATURE_COUNT = COMPOSITE_INDICATOR_FEATURE_COUNT + 8;
+
+    /**
+     * The meta object id for the '{@link org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImpl <em>Format Freq Pie Indicator</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImpl
+     * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getFormatFreqPieIndicator()
+     * @generated
+     */
+    int FORMAT_FREQ_PIE_INDICATOR = 70;
+
+    /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
+
+    /**
+     * The feature id for the '<em><b>Visibility</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
+
+    /**
+     * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
+
+    /**
+     * The feature id for the '<em><b>Constraint</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
+
+    /**
+     * The feature id for the '<em><b>Namespace</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
+
+    /**
+     * The feature id for the '<em><b>Importer</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
+
+    /**
+     * The feature id for the '<em><b>Stereotype</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
+
+    /**
+     * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
+
+    /**
+     * The feature id for the '<em><b>Document</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
+
+    /**
+     * The feature id for the '<em><b>Description</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
+
+    /**
+     * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
+
+    /**
+     * The feature id for the '<em><b>Element Node</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
+
+    /**
+     * The feature id for the '<em><b>Set</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
+
+    /**
+     * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
+
+    /**
+     * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Measurement</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
+
+    /**
+     * The feature id for the '<em><b>Change Request</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
+
+    /**
+     * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
+
+    /**
+     * The feature id for the '<em><b>Null Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Parameters</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
+
+    /**
+     * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
+
+    /**
+     * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
+
+    /**
+     * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
+
+    /**
+     * The feature id for the '<em><b>Computed</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
+
+    /**
+     * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
+
+    /**
+     * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
+
+    /**
+     * The feature id for the '<em><b>Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
+
+    /**
+     * The feature id for the '<em><b>Store Data</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
+
+    /**
+     * The feature id for the '<em><b>Well Form E164 Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_E164_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
+
+    /**
+     * The feature id for the '<em><b>Well Form Inte Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_INTE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 1;
+
+    /**
+     * The feature id for the '<em><b>Well Form Nati Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_NATI_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 2;
+
+    /**
+     * The feature id for the '<em><b>Invalid Form Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__INVALID_FORM_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 3;
+
+    /**
+     * The feature id for the '<em><b>Current Key</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR__CURRENT_KEY = FREQUENCY_INDICATOR_FEATURE_COUNT + 4;
+
+    /**
+     * The number of structural features of the '<em>Format Freq Pie Indicator</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int FORMAT_FREQ_PIE_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 5;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.
@@ -22532,7 +22938,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getEnumStatistics()
      * @generated
      */
-    int ENUM_STATISTICS = 70;
+    int ENUM_STATISTICS = 71;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DataminingType <em>Datamining Type</em>}' enum.
@@ -22542,7 +22948,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDataminingType()
      * @generated
      */
-    int DATAMINING_TYPE = 71;
+    int DATAMINING_TYPE = 72;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.DateGrain <em>Date Grain</em>}' enum.
@@ -22552,7 +22958,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getDateGrain()
      * @generated
      */
-    int DATE_GRAIN = 72;
+    int DATE_GRAIN = 73;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.MatchingAlgorithm <em>Matching Algorithm</em>}' enum.
@@ -22562,7 +22968,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getMatchingAlgorithm()
      * @generated
      */
-    int MATCHING_ALGORITHM = 73;
+    int MATCHING_ALGORITHM = 74;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.IndicatorValueType <em>Indicator Value Type</em>}' enum.
@@ -22572,7 +22978,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getIndicatorValueType()
      * @generated
      */
-    int INDICATOR_VALUE_TYPE = 74;
+    int INDICATOR_VALUE_TYPE = 75;
 
     /**
      * The meta object id for the '<em>Java Set</em>' data type.
@@ -22582,7 +22988,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaSet()
      * @generated
      */
-    int JAVA_SET = 75;
+    int JAVA_SET = 76;
 
     /**
      * The meta object id for the '<em>Java Hash Map</em>' data type.
@@ -22592,7 +22998,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaHashMap()
      * @generated
      */
-    int JAVA_HASH_MAP = 76;
+    int JAVA_HASH_MAP = 77;
 
     /**
      * The meta object id for the '<em>Java Tree Map</em>' data type.
@@ -22602,7 +23008,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getJavaTreeMap()
      * @generated
      */
-    int JAVA_TREE_MAP = 77;
+    int JAVA_TREE_MAP = 78;
 
     /**
      * The meta object id for the '<em>Object Array</em>' data type.
@@ -22611,7 +23017,7 @@ public interface IndicatorsPackage extends EPackage {
      * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getObjectArray()
      * @generated
      */
-    int OBJECT_ARRAY = 78;
+    int OBJECT_ARRAY = 79;
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.indicators.Indicator <em>Indicator</em>}'.
@@ -24315,6 +24721,82 @@ public interface IndicatorsPackage extends EPackage {
     EReference getPhoneNumbStatisticsIndicator_ValidPhoneCountIndicator();
 
     /**
+     * Returns the meta object for the containment reference '{@link org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getFormatFreqPieIndicator <em>Format Freq Pie Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Format Freq Pie Indicator</em>'.
+     * @see org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator#getFormatFreqPieIndicator()
+     * @see #getPhoneNumbStatisticsIndicator()
+     * @generated
+     */
+    EReference getPhoneNumbStatisticsIndicator_FormatFreqPieIndicator();
+
+    /**
+     * Returns the meta object for class '{@link org.talend.dataquality.indicators.FormatFreqPieIndicator <em>Format Freq Pie Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Format Freq Pie Indicator</em>'.
+     * @see org.talend.dataquality.indicators.FormatFreqPieIndicator
+     * @generated
+     */
+    EClass getFormatFreqPieIndicator();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.FormatFreqPieIndicator#getWellFormE164Count <em>Well Form E164 Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Well Form E164 Count</em>'.
+     * @see org.talend.dataquality.indicators.FormatFreqPieIndicator#getWellFormE164Count()
+     * @see #getFormatFreqPieIndicator()
+     * @generated
+     */
+    EAttribute getFormatFreqPieIndicator_WellFormE164Count();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.FormatFreqPieIndicator#getWellFormInteCount <em>Well Form Inte Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Well Form Inte Count</em>'.
+     * @see org.talend.dataquality.indicators.FormatFreqPieIndicator#getWellFormInteCount()
+     * @see #getFormatFreqPieIndicator()
+     * @generated
+     */
+    EAttribute getFormatFreqPieIndicator_WellFormInteCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.FormatFreqPieIndicator#getWellFormNatiCount <em>Well Form Nati Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Well Form Nati Count</em>'.
+     * @see org.talend.dataquality.indicators.FormatFreqPieIndicator#getWellFormNatiCount()
+     * @see #getFormatFreqPieIndicator()
+     * @generated
+     */
+    EAttribute getFormatFreqPieIndicator_WellFormNatiCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.FormatFreqPieIndicator#getInvalidFormCount <em>Invalid Form Count</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Invalid Form Count</em>'.
+     * @see org.talend.dataquality.indicators.FormatFreqPieIndicator#getInvalidFormCount()
+     * @see #getFormatFreqPieIndicator()
+     * @generated
+     */
+    EAttribute getFormatFreqPieIndicator_InvalidFormCount();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.indicators.FormatFreqPieIndicator#getCurrentKey <em>Current Key</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Current Key</em>'.
+     * @see org.talend.dataquality.indicators.FormatFreqPieIndicator#getCurrentKey()
+     * @see #getFormatFreqPieIndicator()
+     * @generated
+     */
+    EAttribute getFormatFreqPieIndicator_CurrentKey();
+
+    /**
      * Returns the meta object for enum '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -25856,6 +26338,64 @@ public interface IndicatorsPackage extends EPackage {
          * @generated
          */
         EReference PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_ValidPhoneCountIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Format Freq Pie Indicator</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR = eINSTANCE.getPhoneNumbStatisticsIndicator_FormatFreqPieIndicator();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImpl <em>Format Freq Pie Indicator</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImpl
+         * @see org.talend.dataquality.indicators.impl.IndicatorsPackageImpl#getFormatFreqPieIndicator()
+         * @generated
+         */
+        EClass FORMAT_FREQ_PIE_INDICATOR = eINSTANCE.getFormatFreqPieIndicator();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form E164 Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_E164_COUNT = eINSTANCE.getFormatFreqPieIndicator_WellFormE164Count();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form Inte Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_INTE_COUNT = eINSTANCE.getFormatFreqPieIndicator_WellFormInteCount();
+
+        /**
+         * The meta object literal for the '<em><b>Well Form Nati Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute FORMAT_FREQ_PIE_INDICATOR__WELL_FORM_NATI_COUNT = eINSTANCE.getFormatFreqPieIndicator_WellFormNatiCount();
+
+        /**
+         * The meta object literal for the '<em><b>Invalid Form Count</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute FORMAT_FREQ_PIE_INDICATOR__INVALID_FORM_COUNT = eINSTANCE.getFormatFreqPieIndicator_InvalidFormCount();
+
+        /**
+         * The meta object literal for the '<em><b>Current Key</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute FORMAT_FREQ_PIE_INDICATOR__CURRENT_KEY = eINSTANCE.getFormatFreqPieIndicator_CurrentKey();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.indicators.EnumStatistics <em>Enum Statistics</em>}' enum.

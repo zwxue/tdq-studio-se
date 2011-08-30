@@ -29,6 +29,7 @@ public interface ValidRegCodeCountIndicator extends Indicator {
 
     /**
      * Returns the value of the '<em><b>Valid Reg Count</b></em>' attribute.
+     * The default value is <code>"0"</code>.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Valid Reg Count</em>' attribute isn't clear,
@@ -38,7 +39,7 @@ public interface ValidRegCodeCountIndicator extends Indicator {
      * @return the value of the '<em>Valid Reg Count</em>' attribute.
      * @see #setValidRegCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getValidRegCodeCountIndicator_ValidRegCount()
-     * @model
+     * @model default="0"
      * @generated
      */
     Long getValidRegCount();

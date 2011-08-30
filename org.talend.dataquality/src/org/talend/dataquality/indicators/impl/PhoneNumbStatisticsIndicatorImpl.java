@@ -13,6 +13,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.InvalidRegCodeCountIndicator;
@@ -38,6 +39,7 @@ import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
  *   <li>{@link org.talend.dataquality.indicators.impl.PhoneNumbStatisticsIndicatorImpl#getPossiblePhoneCountIndicator <em>Possible Phone Count Indicator</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.PhoneNumbStatisticsIndicatorImpl#getValidRegCodeCountIndicator <em>Valid Reg Code Count Indicator</em>}</li>
  *   <li>{@link org.talend.dataquality.indicators.impl.PhoneNumbStatisticsIndicatorImpl#getValidPhoneCountIndicator <em>Valid Phone Count Indicator</em>}</li>
+ *   <li>{@link org.talend.dataquality.indicators.impl.PhoneNumbStatisticsIndicatorImpl#getFormatFreqPieIndicator <em>Format Freq Pie Indicator</em>}</li>
  * </ul>
  * </p>
  *
@@ -107,6 +109,16 @@ public class PhoneNumbStatisticsIndicatorImpl extends CompositeIndicatorImpl imp
      * @ordered
      */
     protected ValidPhoneCountIndicator validPhoneCountIndicator;
+
+    /**
+     * The cached value of the '{@link #getFormatFreqPieIndicator() <em>Format Freq Pie Indicator</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getFormatFreqPieIndicator()
+     * @generated
+     * @ordered
+     */
+    protected FormatFreqPieIndicator formatFreqPieIndicator;
 
     /**
      * <!-- begin-user-doc -->
@@ -433,6 +445,49 @@ public class PhoneNumbStatisticsIndicatorImpl extends CompositeIndicatorImpl imp
      * <!-- end-user-doc -->
      * @generated
      */
+    public FormatFreqPieIndicator getFormatFreqPieIndicator() {
+        return formatFreqPieIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public NotificationChain basicSetFormatFreqPieIndicator(FormatFreqPieIndicator newFormatFreqPieIndicator, NotificationChain msgs) {
+        FormatFreqPieIndicator oldFormatFreqPieIndicator = formatFreqPieIndicator;
+        formatFreqPieIndicator = newFormatFreqPieIndicator;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR, oldFormatFreqPieIndicator, newFormatFreqPieIndicator);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setFormatFreqPieIndicator(FormatFreqPieIndicator newFormatFreqPieIndicator) {
+        if (newFormatFreqPieIndicator != formatFreqPieIndicator) {
+            NotificationChain msgs = null;
+            if (formatFreqPieIndicator != null)
+                msgs = ((InternalEObject)formatFreqPieIndicator).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR, null, msgs);
+            if (newFormatFreqPieIndicator != null)
+                msgs = ((InternalEObject)newFormatFreqPieIndicator).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR, null, msgs);
+            msgs = basicSetFormatFreqPieIndicator(newFormatFreqPieIndicator, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR, newFormatFreqPieIndicator, newFormatFreqPieIndicator));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -450,6 +505,8 @@ public class PhoneNumbStatisticsIndicatorImpl extends CompositeIndicatorImpl imp
                 return basicSetValidRegCodeCountIndicator(null, msgs);
             case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR:
                 return basicSetValidPhoneCountIndicator(null, msgs);
+            case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR:
+                return basicSetFormatFreqPieIndicator(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -476,6 +533,8 @@ public class PhoneNumbStatisticsIndicatorImpl extends CompositeIndicatorImpl imp
                 return getValidRegCodeCountIndicator();
             case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR:
                 return getValidPhoneCountIndicator();
+            case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR:
+                return getFormatFreqPieIndicator();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -508,6 +567,9 @@ public class PhoneNumbStatisticsIndicatorImpl extends CompositeIndicatorImpl imp
                 return;
             case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR:
                 setValidPhoneCountIndicator((ValidPhoneCountIndicator)newValue);
+                return;
+            case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR:
+                setFormatFreqPieIndicator((FormatFreqPieIndicator)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -542,6 +604,9 @@ public class PhoneNumbStatisticsIndicatorImpl extends CompositeIndicatorImpl imp
             case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR:
                 setValidPhoneCountIndicator((ValidPhoneCountIndicator)null);
                 return;
+            case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR:
+                setFormatFreqPieIndicator((FormatFreqPieIndicator)null);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -568,6 +633,8 @@ public class PhoneNumbStatisticsIndicatorImpl extends CompositeIndicatorImpl imp
                 return validRegCodeCountIndicator != null;
             case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__VALID_PHONE_COUNT_INDICATOR:
                 return validPhoneCountIndicator != null;
+            case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR__FORMAT_FREQ_PIE_INDICATOR:
+                return formatFreqPieIndicator != null;
         }
         return super.eIsSet(featureID);
     }
@@ -587,6 +654,7 @@ public class PhoneNumbStatisticsIndicatorImpl extends CompositeIndicatorImpl imp
         addChildToList(this.getWellFormE164PhoneCountIndicator(), children);
         addChildToList(this.getWellFormIntePhoneCountIndicator(), children);
         addChildToList(this.getWellFormNationalPhoneCountIndicator(), children);
+        addChildToList(this.getFormatFreqPieIndicator(), children);
         return children;
     }
 

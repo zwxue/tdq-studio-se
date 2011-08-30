@@ -638,6 +638,15 @@ public interface IndicatorsFactory extends EFactory {
     PhoneNumbStatisticsIndicator createPhoneNumbStatisticsIndicator();
 
     /**
+     * Returns a new object of class '<em>Format Freq Pie Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Format Freq Pie Indicator</em>'.
+     * @generated
+     */
+    FormatFreqPieIndicator createFormatFreqPieIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

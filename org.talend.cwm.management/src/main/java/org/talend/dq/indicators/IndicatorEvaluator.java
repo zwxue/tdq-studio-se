@@ -37,6 +37,7 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
@@ -278,6 +279,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 key = ((PatternLowFreqIndicator) indicator).convertCharacters(object.toString());
             } else if (indicator instanceof PatternFreqIndicator) {
                 key = ((PatternFreqIndicator) indicator).convertCharacters(object.toString());
+            } else if (indicator instanceof FormatFreqPieIndicator) {
+                // MOD qiongli 2011-8-26,feature TDQ-3253.
+                key = ((FormatFreqPieIndicator) indicator).getCurrentKey();
             } else {
                 key = object.toString();
             }

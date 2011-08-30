@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -26,6 +29,7 @@ import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -257,6 +261,8 @@ public final class IndicatorCommonUtil {
                     case PossiblePhoneCountIndicatorEnum:
                         value = ((PossiblePhoneCountIndicator) indicator).getPossiblePhoneCount();
                         break;
+                    case FormatFreqPieIndictorEnum:
+                        value = handleFreqPie(indicator);
 
                     default:
 
@@ -380,6 +386,38 @@ public final class IndicatorCommonUtil {
             object = ((UserDefIndicator) indicator).getRealValue();
         }
         return object;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "handleFreqPie".
+     * 
+     * @param indicator
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+    private static Object handleFreqPie(Indicator indicator) {
+        FrequencyExt[] frequencyExt = null;
+        FormatFreqPieIndicator formatFreqIndicator = (FormatFreqPieIndicator) indicator;
+        HashMap<Object, Long> valueToFreq = formatFreqIndicator.getValueToFreq();
+        if (valueToFreq == null) {
+            return null;
+        }
+        int i = 0;
+        frequencyExt = new FrequencyExt[valueToFreq.size()];
+        Iterator iter = valueToFreq.entrySet().iterator();
+        while (iter.hasNext()) {
+            Entry entry = (Entry) iter.next();
+            frequencyExt[i] = new FrequencyExt();
+            Object key = entry.getKey();
+            long value = Long.valueOf(entry.getValue().toString());
+            frequencyExt[i].setKey(key.toString());
+            frequencyExt[i].setValue(value);
+            frequencyExt[i].setFrequency(formatFreqIndicator.getFrequency(key));
+            i++;
+        }
+
+        return frequencyExt;
     }
 
 }

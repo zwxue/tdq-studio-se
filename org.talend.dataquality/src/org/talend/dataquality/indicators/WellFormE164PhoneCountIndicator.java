@@ -29,6 +29,7 @@ public interface WellFormE164PhoneCountIndicator extends Indicator {
 
     /**
      * Returns the value of the '<em><b>Well Form E164 Phone Count</b></em>' attribute.
+     * The default value is <code>"0"</code>.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Well Form E164 Phone Count</em>' attribute isn't clear,
@@ -38,7 +39,7 @@ public interface WellFormE164PhoneCountIndicator extends Indicator {
      * @return the value of the '<em>Well Form E164 Phone Count</em>' attribute.
      * @see #setWellFormE164PhoneCount(Long)
      * @see org.talend.dataquality.indicators.IndicatorsPackage#getWellFormE164PhoneCountIndicator_WellFormE164PhoneCount()
-     * @model
+     * @model default="0"
      * @generated
      */
     Long getWellFormE164PhoneCount();

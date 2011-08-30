@@ -64,6 +64,7 @@ import org.talend.dataquality.indicators.UpperQuartileIndicator;
 import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
 import org.talend.dataquality.indicators.ValidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
+import org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImpl;
 import org.talend.dataquality.indicators.impl.WellFormIntePhoneCountIndicatorImpl;
 import org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -359,6 +360,10 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                     IndicatorEnum.WellFormNationalPhoneCountIndicatorEnum,
                     createPlainIndicatorUnit(IndicatorEnum.WellFormNationalPhoneCountIndicatorEnum,
                             phoneNumbIndicator.getWellFormNationalPhoneCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.FormatFreqPieIndictorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.FormatFreqPieIndictorEnum,
+                            phoneNumbIndicator.getFormatFreqPieIndicator()));
             break;
         default:
             this.plainIndicatorUnitMap.put(indicatorEnum, createPlainIndicatorUnit(indicatorEnum, indicator));
@@ -577,6 +582,8 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                 phoneNumbIndicator
                         .setWellFormNationalPhoneCountIndicator((WellFormNationalPhoneCountIndicatorImpl) getIndicatorUnit(
                                 IndicatorEnum.WellFormNationalPhoneCountIndicatorEnum).getIndicator());
+                phoneNumbIndicator.setFormatFreqPieIndicator((FormatFreqPieIndicatorImpl) getIndicatorUnit(
+                        IndicatorEnum.FormatFreqPieIndictorEnum).getIndicator());
                 indicatorUnit.setChildren(createCategoryIndicatorUnits(IndicatorEnum.PhoneNumbStatisticsIndicatorEnum
                         .getChildren()));
                 indicatorUnitList.add(indicatorUnit);

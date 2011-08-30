@@ -14,12 +14,14 @@ package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import java.util.List;
 
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ModeStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.PhoneNumbStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.PieStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleTextStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
@@ -134,6 +136,8 @@ public final class ChartTypeStatesOperator {
             return new SimpleTextStatisticsState(units);
         case PHONE_NUMBER_STATISTICS:
             return new PhoneNumbStatisticsState(units);
+        case FORMAT_FREQ_PIE_STATISTICS:
+            return new PieStatisticsState(units, DefaultMessagesImpl.getString("PieStatisticsState.Title"));
         default:
             return null;
         }

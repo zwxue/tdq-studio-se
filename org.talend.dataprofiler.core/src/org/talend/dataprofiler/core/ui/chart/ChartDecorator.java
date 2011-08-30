@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.ui.chart;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,7 +25,9 @@ import java.util.regex.Pattern;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
@@ -31,6 +35,7 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -89,6 +94,10 @@ public final class ChartDecorator {
                     // ~14173
                     ((XYPlot) plot).getRenderer().setSeriesPaint(i, colorList.get(i));
                 }
+            }
+
+            if (plot instanceof PiePlot) {
+                decoratePiePlot(chart);
             }
         }
     }
@@ -215,6 +224,35 @@ public final class ChartDecorator {
         }
 
         font = null;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "decoratePiePlot".
+     * 
+     * @param chart
+     */
+    private static void decoratePiePlot(JFreeChart chart) {
+
+        Font font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);//$NON-NLS-1$
+        TextTitle textTitle = chart.getTitle();
+        textTitle.setFont(font);
+        font = new Font("Tahoma", Font.PLAIN, BASE_ITEM_LABEL_SIZE);//$NON-NLS-1$
+        LegendTitle legend = chart.getLegend();
+        legend.setItemFont(font);
+        PiePlot plot = (PiePlot) chart.getPlot();
+        font = new Font("Monospaced", Font.PLAIN, 10);//$NON-NLS-1$
+        plot.setLabelFont(font);
+        plot.setNoDataMessage(DefaultMessagesImpl.getString("PieTypeState.NoDataMessage"));
+        StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),
+                NumberFormat.getNumberInstance(), new DecimalFormat("0.00%"));
+        plot.setLabelGenerator(standardPieSectionLabelGenerator);
+        plot.setLabelLinkPaint(Color.GRAY);
+        plot.setLabelOutlinePaint(Color.WHITE);
+        plot.setLabelGap(0.02D);
+        plot.setOutlineVisible(false);
+        plot.setMaximumLabelWidth(0.2D);
+        plot.setCircular(false);
     }
 
     private static final Color COLOR_0 = new Color(244, 147, 32);
