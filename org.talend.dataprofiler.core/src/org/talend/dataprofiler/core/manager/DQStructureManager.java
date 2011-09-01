@@ -175,7 +175,16 @@ public final class DQStructureManager {
                 rulesSQLFoler = instance.getObjectFolder(EResourceConstant.RULES_SQL);
             }
             rulesSQLFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_RULES_SQL.getFolder());
-
+            Folder rulesParserFoler = null;
+            if (!project.getFolder(EResourceConstant.RULES_PARSER.getPath()).exists()) {
+                if (!ReponsitoryContextBridge.isDefautProject()) {
+                    rulesParserFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES,
+                            Path.EMPTY, EResourceConstant.RULES_PARSER.getName());
+                }
+            } else {
+                rulesParserFoler = instance.getObjectFolder(EResourceConstant.RULES_PARSER);
+            }
+            rulesParserFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_RULES_PARSER.getFolder());
             if (!project.getFolder(EResourceConstant.EXCHANGE.getPath()).exists()) {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
                         EResourceConstant.EXCHANGE.getName());
@@ -235,7 +244,7 @@ public final class DQStructureManager {
             sourceFileFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getFolder());
             // use the tos create folder API
             if (systemIndicatorFoler != null && patternRegexFoler != null && patternSQLFoler != null && sourceFileFoler != null
-                    && rulesSQLFoler != null) {
+                    && rulesSQLFoler != null && rulesParserFoler != null) {
 
                 copyFilesToFolder(plugin, SYSTEM_INDICATOR_PATH, true, systemIndicatorFoler, null,
                         ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
@@ -243,6 +252,7 @@ public final class DQStructureManager {
                 copyFilesToFolder(plugin, SQL_LIKE_PATH, true, patternSQLFoler, null, ERepositoryObjectType.TDQ_PATTERN_SQL);
                 copyFilesToFolder(plugin, DEMO_PATH, true, sourceFileFoler, null, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
                 copyFilesToFolder(plugin, RULES_PATH, true, rulesSQLFoler, null, ERepositoryObjectType.TDQ_RULES_SQL);
+                copyFilesToFolder(plugin, RULES_PARSER, true, rulesParserFoler, null, ERepositoryObjectType.TDQ_RULES_PARSER);
             }
 
             WorkspaceVersionHelper.storeVersion();
