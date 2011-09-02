@@ -110,13 +110,13 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
                 viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
                 item = (ConnectionItem) viewObject.getProperty().getItem();
-                connection = item.getConnection();
                 views = PackageHelper.getViews(catalog);
                 filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
                 // MOD gdbu 2011-6-29 bug : 22204
                 if (views.isEmpty()) {
                     if (!isOnFilterring()) {
                         // MOD gdbu 2011-7-21 bug 23220
+                        connection = item.getConnection();
                         views = DqRepositoryViewService.getViews(connection, catalog, null, true);
                         if (views.size() > 0) {
                             ProxyRepositoryFactory.getInstance().save(item);
@@ -131,7 +131,6 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
                 item = (ConnectionItem) viewObject.getProperty().getItem();
-                connection = item.getConnection();
                 views = PackageHelper.getViews(schema);
                 filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
                 RepositoryNode parent = metadataObject.getRepositoryNode().getParent();
@@ -143,6 +142,7 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
                 // MOD gdbu 2011-6-29 bug : 22204
                 if (views.isEmpty()) {
                     if (!isOnFilterring()) {
+                        connection = item.getConnection();
                         // MOD gdbu 2011-7-20 bug 23220
                         views = DqRepositoryViewService.getViews(connection, schema, null, true);
                         if (views.size() > 0) {
@@ -222,7 +222,36 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
      */
     @Override
     public boolean hasChildren() {
-        return hasChildrenInDataBase();
+        // MOD gdbu 2011-9-1 TDQ-3457
+        if (!hasChildrenInFile()) {
+            if (!hasChildrenInDataBase()) {
+                return false;
+            }
+        }
+        return true;
+        // ~ TDQ-3457
+    }
+
+    private boolean hasChildrenInFile() {
+        IRepositoryViewObject object = this.getParent().getObject();
+        if (object instanceof MetadataCatalogRepositoryObject) {
+            Catalog catalogInFile = ((MetadataCatalogRepositoryObject) object).getCatalog();
+            List<TdView> views = PackageHelper.getViews(catalogInFile);
+            if (views.isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (object instanceof MetadataSchemaRepositoryObject) {
+            Schema schemaInFile = ((MetadataSchemaRepositoryObject) object).getSchema();
+            List<TdView> views = PackageHelper.getViews(schemaInFile);
+            if (views.isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean hasChildrenInDataBase() {

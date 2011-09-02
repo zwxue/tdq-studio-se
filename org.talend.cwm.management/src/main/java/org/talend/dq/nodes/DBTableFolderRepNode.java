@@ -228,7 +228,36 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
     }
 
     public boolean hasChildren() {
-        return hasChildrenInDataBase();
+        // MOD gdbu 2011-9-1 TDQ-3457
+        if (!hasChildrenInFile()) {
+            if (!hasChildrenInDataBase()) {
+                return false;
+            }
+        }
+        return true;
+        // ~ TDQ-3457
+    }
+
+    private boolean hasChildrenInFile() {
+        IRepositoryViewObject object = this.getParent().getObject();
+        if (object instanceof MetadataCatalogRepositoryObject) {
+            Catalog catalogInFile = ((MetadataCatalogRepositoryObject) object).getCatalog();
+            List<TdTable> tables = PackageHelper.getTables(catalogInFile);
+            if (tables.isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (object instanceof MetadataSchemaRepositoryObject) {
+            Schema schemaInFile = ((MetadataSchemaRepositoryObject) object).getSchema();
+            List<TdTable> tables = PackageHelper.getTables(schemaInFile);
+            if (tables.isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean hasChildrenInDataBase() {

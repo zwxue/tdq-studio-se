@@ -66,7 +66,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -89,6 +91,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.ui.swt.dialogs.ProgressDialog;
 import org.talend.core.PluginChecker;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
@@ -626,7 +629,8 @@ public class DQRespositoryView extends CommonNavigator {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 String filterStr = filterText.getText() + PluginConstant.EMPTY_STRING;
-                runFilter(filterStr);
+                Shell shell = filterText.getShell();
+                runFilter(filterStr, shell);
             }
         });
 
@@ -718,7 +722,8 @@ public class DQRespositoryView extends CommonNavigator {
             public void keyPressed(KeyEvent e) {
                 if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
                     String filterStr = filterText.getText() + PluginConstant.EMPTY_STRING;
-                    runFilter(filterStr);
+                    Shell shell = filterText.getShell();
+                    runFilter(filterStr, shell);
                 }
             }
 
@@ -765,26 +770,71 @@ public class DQRespositoryView extends CommonNavigator {
         }
     }
 
-    private void runFilter(String filterStr) {
-        getCommonViewer().collapseAll();
-        try {
-            DQRepositoryNode.setFilterStr(filterStr);
-            if (filterStr.trim().equals(PluginConstant.EMPTY_STRING)) {
-                DQRepositoryNode.setFiltering(false);
+    /**
+     * 
+     * DOC gdbu DQRespositoryView class global comment. Detailled comment
+     */
+    class RunFilterThread extends Thread {
 
-            } else {
-                DQRepositoryNode.setFiltering(true);
-                RepositoryNodeHelper.fillTreeList();
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        } finally {
-            IRepositoryNode firstFilteredNode = RepositoryNodeHelper.getFirstFilteredNode();
-            if (null != firstFilteredNode) {
-                RepositoryNodeHelper.setFilteredNode(firstFilteredNode);
-                showSelectedElements((RepositoryNode) firstFilteredNode);
-            }
+        private Shell shell = null;
+
+        private String filterStr = null;
+
+        public RunFilterThread(String filterStr, Shell shell) {
+            this.shell = shell;
+            this.filterStr = filterStr;
         }
+
+        @Override
+        public void run() {
+
+            Display.getDefault().asyncExec(new Runnable() {
+
+                public void run() {
+                    ProgressDialog progressDialog = new ProgressDialog(shell) {
+
+                        @Override
+                        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+                            monitor.beginTask("Filtering...", 11); //$NON-NLS-1$
+
+                            getCommonViewer().collapseAll();
+                            monitor.worked(1);
+                            try {
+                                DQRepositoryNode.setFilterStr(filterStr);
+                                if (filterStr.trim().equals(PluginConstant.EMPTY_STRING)) {
+                                    DQRepositoryNode.setFiltering(false);
+
+                                } else {
+                                    DQRepositoryNode.setFiltering(true);
+                                    RepositoryNodeHelper.fillTreeList(monitor);
+                                }
+                            } catch (Exception exception) {
+                                exception.printStackTrace();
+                            } finally {
+                                final IRepositoryNode firstFilteredNode = RepositoryNodeHelper.getFirstFilteredNode();
+                                if (null != firstFilteredNode) {
+                                    RepositoryNodeHelper.setFilteredNode(firstFilteredNode);
+                                    monitor.worked(1);
+                                    showSelectedElements((RepositoryNode) firstFilteredNode);
+                                    monitor.worked(1);
+                                }
+                                monitor.done();
+                            }
+                        }
+                    };
+                    try {
+                        progressDialog.executeProcess();
+                    } catch (Exception eProgress) {
+                    }
+                }
+            });
+        }
+    }
+
+    private void runFilter(final String filterStr, final Shell shell) {
+        RunFilterThread runFilterThread = new RunFilterThread(filterStr, shell);
+        runFilterThread.run();
     }
 
     private void expandNodes(boolean expand) {

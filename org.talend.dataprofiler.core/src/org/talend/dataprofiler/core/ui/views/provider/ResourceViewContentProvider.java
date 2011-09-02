@@ -44,8 +44,12 @@ import org.talend.dataprofiler.core.ui.exchange.ExchangeFolderRepNode;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.SysIndicatorFolderRepNode;
@@ -304,17 +308,39 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         // return false;
         // }
 
+        // MOD gdbu 2011-9-1 TDQ-3457
         if (element instanceof DBTableFolderRepNode) {
+            if (DQRepositoryNode.isOnFilterring()) {
+                return true;
+            }
             DBTableFolderRepNode dbTableFolder = (DBTableFolderRepNode) element;
-
             return dbTableFolder.hasChildren();
         }
 
-        if (element instanceof DBViewFolderRepNode) {
-            DBViewFolderRepNode dbViewFolder = (DBViewFolderRepNode) element;
+        if (element instanceof DBTableRepNode) {
+            return true;
+        }
 
+        if (element instanceof DBViewRepNode) {
+            return true;
+        }
+
+        if (element instanceof DBCatalogRepNode) {
+            return true;
+        }
+
+        if (element instanceof DBSchemaRepNode) {
+            return true;
+        }
+
+        if (element instanceof DBViewFolderRepNode) {
+            if (DQRepositoryNode.isOnFilterring()) {
+                return true;
+            }
+            DBViewFolderRepNode dbViewFolder = (DBViewFolderRepNode) element;
             return dbViewFolder.hasChildren();
         }
+        // ~TDQ-3457
 
         return super.hasChildren(element);
     }

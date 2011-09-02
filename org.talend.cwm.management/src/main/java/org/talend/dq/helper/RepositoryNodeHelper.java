@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.TreeItem;
@@ -2639,14 +2640,14 @@ public final class RepositoryNodeHelper {
 
     public static IRepositoryNode compareNodeLabelWithFilterStr(IRepositoryNode iNode) {
 
-        if (iNode instanceof DBCatalogRepNode || iNode instanceof DBSchemaRepNode) {
+        if (iNode instanceof DBCatalogRepNode || iNode instanceof DBSchemaRepNode || iNode instanceof RecycleBinRepNode ) {
             if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())) {
                 return iNode;
             }
         } else {
 
             if (iNode.getLabel().toLowerCase().contains(DQRepositoryNode.getFilterStr())
-                    && !(iNode instanceof MDMConnectionFolderRepNode)) {
+                    && !(iNode instanceof MDMConnectionFolderRepNode) && null != iNode.getParent()) {
                 return iNode;
             }
             if (null != iNode.getObject()) {
@@ -2665,7 +2666,7 @@ public final class RepositoryNodeHelper {
      * 
      * DOC gdbu Comment method "getAllTreeList".
      */
-    public static void fillTreeList() {
+    public static void fillTreeList(IProgressMonitor monitor) {
 
         allFilteredNodeList.clear();
 
@@ -2678,6 +2679,7 @@ public final class RepositoryNodeHelper {
         list.add(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
         for (IRepositoryNode iRepositoryNode : list) {
             allFilteredNodeList.addAll(getTreeList(iRepositoryNode));
+            monitor.worked(2);
         }
         DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
     }
