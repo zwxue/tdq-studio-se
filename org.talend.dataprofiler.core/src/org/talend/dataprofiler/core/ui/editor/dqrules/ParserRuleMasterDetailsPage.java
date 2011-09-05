@@ -342,7 +342,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
             }
         });
-        if (false) {
+        if (isNeedTestButton) {
         final Button testButton = new Button(buttonsComposite, SWT.NONE);
         testButton.setImage(ImageLib.getImage(ImageLib.RULE_TEST));
         testButton.setToolTipText(DefaultMessagesImpl.getString("ParserRuleMasterDetailsPage.testRule"));//$NON-NLS-1$

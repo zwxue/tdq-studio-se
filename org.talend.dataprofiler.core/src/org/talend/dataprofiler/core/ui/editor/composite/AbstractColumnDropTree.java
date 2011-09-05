@@ -314,7 +314,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
      * @param indicatorUnit
      * @return
      */
-    private Image getIndicatorImage(IndicatorUnit indicatorUnit) {
+    protected Image getIndicatorImage(IndicatorUnit indicatorUnit) {
         IndicatorEnum indicatorType = indicatorUnit.getType();
         if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
                 || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
@@ -339,7 +339,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
      * @param unit
      * @return
      */
-    private String getIndicatorName(IndicatorUnit unit) {
+    protected String getIndicatorName(IndicatorUnit unit) {
         IndicatorEnum indicatorType = unit.getType();
         if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
                 || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
@@ -529,7 +529,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         this.setElements(modelElementIndicators);
     }
 
-    private boolean hideParameters(IndicatorUnit indicatorUnit) {
+    protected boolean hideParameters(IndicatorUnit indicatorUnit) {
         EClass indicatorEclass = indicatorUnit.getIndicator().eClass();
         if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getDateFrequencyIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getWeekFrequencyIndicator())
@@ -563,7 +563,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
      * @param indicatorUnit
      * @return
      */
-    private boolean hideTextParameters(IndicatorUnit indicatorUnit) {
+    protected boolean hideTextParameters(IndicatorUnit indicatorUnit) {
         EClass indicatorEclass = indicatorUnit.getIndicator().eClass();
         if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithNullIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthWithBlankIndicator())
