@@ -120,7 +120,10 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
             columns = tdView.getColumns();
             filterCharater = ColumnHelper.getColumnFilter(tdView);
         }
-        item = (ConnectionItem) this.getParent().getObject().getProperty().getItem();
+        // MOD klliu 2011-09-06 bug TDQ-3414
+        TdTableRepositoryObject object = (TdTableRepositoryObject) this.getParent().getObject();
+        item = (ConnectionItem) object.getViewObject().getProperty().getItem();
+        // ~
         connection = item.getConnection();
         // MOD gdbu 2011-6-28 bug : 22204
         if (columns.size() <= 0 && !isOnFilterring()) {
