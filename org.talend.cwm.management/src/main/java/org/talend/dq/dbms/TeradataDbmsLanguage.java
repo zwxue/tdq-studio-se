@@ -49,4 +49,25 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
                 + "FROM <%=__TABLE_NAME__%>) e, <%=__TABLE_NAME__%> t "
                 + "where character_length(<%=__COLUMN_NAMES__%>) between f and c";
     }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithBlankRows() {
+        String whereExpression = "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL ";
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE CHAR_LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(CHAR_LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%> " + whereExpression + ")"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithNullBlankRows() {
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE CHAR_LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(CHAR_LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
+    }
 }

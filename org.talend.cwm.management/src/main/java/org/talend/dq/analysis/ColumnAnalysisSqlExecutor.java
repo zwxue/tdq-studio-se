@@ -251,6 +251,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 } else if (textParameter.isUseBlank()
                         && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {
                     colName = dbms().trim(colName);
+                } else if (textParameter.isUseBlank()
+                        && IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().isSuperTypeOf(indicatorEclass)
+                        && !IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().equals(indicatorEclass)) {
+                    // MOD qiongli 2011-8-10 TDQ-2474,trim for blank data.
+                    colName = dbms().trimIfBlank(colName);
                 }
             }
         }

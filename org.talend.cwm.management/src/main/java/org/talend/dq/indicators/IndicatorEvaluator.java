@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
@@ -45,6 +44,10 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.dbms.MSSqlDbmsLanguage;
+import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -83,10 +86,11 @@ public class IndicatorEvaluator extends Evaluator<String> {
         Statement statement = null;
         // MOD qiongli 2011-6-28 bug 22520,statement for sqlLite
         Connection dataManager = (Connection) analysis.getContext().getConnection();
-        if (ConnectionUtils.isSqlite(dataManager)) {
-            statement = getConnection().createStatement();
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dataManager);
+        if (dbmsLanguage instanceof MSSqlDbmsLanguage || dbmsLanguage instanceof SQLiteDbmsLanguage) {
+            statement = connection.createStatement();
         } else {
-            statement = getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         }
         // ~10630
         statement.setFetchSize(fetchSize);

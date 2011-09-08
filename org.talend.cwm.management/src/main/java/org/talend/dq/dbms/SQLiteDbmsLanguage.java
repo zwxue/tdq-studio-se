@@ -69,4 +69,50 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
     public String charLength(String columnName) {
         return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithBlankRows() {
+        String sql = "SELECT t.* FROM(SELECT CAST(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>")
+                + ")) / (COUNT(<%=__COLUMN_NAMES__%> )*1.00)+0.99 as int) c," + "CAST(SUM(LENGTH("
+                + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f "
+                + "FROM <%=__TABLE_NAME__%> WHERE(<%=__COLUMN_NAMES__%> IS NOT NULL)) e, <%=__TABLE_NAME__%> t "
+                + "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL AND LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>")
+                + ") BETWEEN f AND c";
+        return sql;
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
+     */
+    @Override
+    public String getAverageLengthWithNullRows() {
+        String whereExpress = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")";
+        String sql = "SELECT t.* FROM(SELECT "
+                + "CAST(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%> )*1.00)+0.99 as int) c,"
+                + "CAST(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f "
+                + "FROM <%=__TABLE_NAME__%> " + whereExpress + ") e, <%=__TABLE_NAME__%> t " + whereExpress
+                + " AND LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN f AND c";
+        return sql;
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithNullBlankRows() {
+        String sql = "SELECT t.* FROM(SELECT CAST(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>")
+                + ")) / (COUNT(*)*1.00)+0.99 as int) c," + "CAST(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>")
+                + ")) / (COUNT(*)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> ) e, <%=__TABLE_NAME__%> t " + "WHERE LENGTH("
+                + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN f AND c";
+        return sql;
+    }
 }

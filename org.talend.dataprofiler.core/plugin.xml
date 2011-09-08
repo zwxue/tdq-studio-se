@@ -1338,6 +1338,12 @@
            name="Update Start With Blank Task"
            version="4.2.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateOracleAverageLengthTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateOracleAverageLengthTask"
+           name="Update Oracle Average Length Task"
+           version="4.2.3">
+     </workspacetask>
      
 
   </extension>

@@ -90,7 +90,8 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     @Override
     public String replaceNullsWithString(String colName, String replacement) {
         if ("''".equals(replacement)) { //$NON-NLS-1$
-            return colName;
+            // MOD qiongli 2011-8-8 TDQ-2474.
+            return super.replaceNullsWithString(colName, replacement);
         }
         return " NVL(" + colName + "," + replacement + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
@@ -246,5 +247,10 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     public String getAverageLengthRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ 
+    }
+
+    @Override
+    public String trimIfBlank(String colName) {
+        return " CASE WHEN " + colName + " IS NOT NULL AND  LENGTH(" + trim(colName) + ") IS NULL  THEN '' ELSE  " + colName + " END"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 }

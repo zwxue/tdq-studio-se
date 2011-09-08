@@ -1360,4 +1360,39 @@ public class DbmsLanguage {
     public void setFunctionName(String functionName) {
         this.functionName = functionName;
     }
+
+    public String trimIfBlank(String colName) {
+        // just trim for blank data
+        return " CASE WHEN  CHAR_LENGTH(" + trim(colName) + ")=0  THEN '' ELSE  " + colName + " END"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    /**
+     * DOC qiongli TDQ-2474: view rows for average length with blank.
+     * 
+     * @return average length with blank sql statement
+     */
+    public String getAverageLengthWithBlankRows() {
+        String whereExpression = "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL ";
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%> " + whereExpression + ")"; //$NON-NLS-1$
+    }
+
+    /**
+     * DOC qiongli TDQ-2474 :view rows for average length with null blank.
+     * 
+     * @return average length with null blank sql statement
+     */
+    public String getAverageLengthWithNullBlankRows() {
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
+    }
+
+    /**
+     * DOC qiongli TDQ-2474:view rows for average length with null.
+     * 
+     * @return average length with null sql statement
+     */
+    public String getAverageLengthWithNullRows() {
+        String whereExpression = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")";
+        return "SELECT * FROM <%=__TABLE_NAME__%> " + whereExpression + "AND LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT( * )) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT(*)) FROM <%=__TABLE_NAME__%>  " + whereExpression + ")"; //$NON-NLS-1$
+    }
+
 }

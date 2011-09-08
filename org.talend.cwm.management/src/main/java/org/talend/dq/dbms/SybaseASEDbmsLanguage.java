@@ -58,4 +58,14 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
     public String getAverageLengthRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE CHAR_LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(CHAR_LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEILING(SUM(CHAR_LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
     }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#trim(java.lang.String)
+     */
+    @Override
+    public String trim(String colName) {
+        return " LTRIM(RTRIM(" + colName + ")) "; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }
