@@ -15,18 +15,25 @@ package org.talend.dataprofiler.core.ui.dialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -35,6 +42,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.TypedListener;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -103,6 +112,38 @@ public class IndicatorSelectDialog extends TrayDialog {
 
     private List<Button> checkButtons = new ArrayList<Button>();
 
+    private int pageSize = 10;// Record how many columns will be display in every page.
+
+    private int limitPageCount = 5;// More than 5, use the paging.
+
+    private int allColumnsCountSize = 0;// Record the total number of Columns.
+
+    private int currentPage = 1;// Record the current page number.
+
+    private int totalPages = 0;// Record the total number of pages.
+
+    private Tree tree = null;
+
+    private Button okButton = null;
+
+    Composite parent = null;
+
+    Composite buttomComp = null;
+
+    protected ImageHyperlink pageLastImgHypLnk = null;
+
+    protected ImageHyperlink pageNextImgHypLnk = null;
+
+    protected ImageHyperlink pagePreviouseImgHypLnk = null;
+
+    protected ImageHyperlink pageFirstImgHypLnk = null;
+
+    private FormToolkit toolkit;
+
+    private Combo pageGoTo;
+
+    private Composite pageNavComp;
+
     /**
      * DOC xqliu IndicatorSelectDialog constructor comment.
      * 
@@ -119,6 +160,11 @@ public class IndicatorSelectDialog extends TrayDialog {
         int shellStyle = getShellStyle();
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
 
+        this.allColumnsCountSize = this.modelElementIndicators.length;
+        this.totalPages = this.allColumnsCountSize / this.pageSize;
+        if (this.allColumnsCountSize % this.pageSize != 0) {
+            this.totalPages += 1;
+        }
     }
 
     /**
@@ -352,11 +398,11 @@ public class IndicatorSelectDialog extends TrayDialog {
                     if (selection && ModelElementIndicatorRule.match(node, columnIndicator, language)) {
                         btn.setSelection(true);
                         if (indicEnum != null) {
-                            columnIndicator.addTempIndicatorEnum(node.getIndicatorEnum());
+                            addTempIndicatorForPages(node, indicEnum);
                         }
                     } else {
                         btn.setSelection(false);
-                        columnIndicator.removeTempIndicatorEnum(node.getIndicatorEnum());
+                        removeTempIndicatorForPages(indicEnum);
                     }
                 }
             }
@@ -364,9 +410,29 @@ public class IndicatorSelectDialog extends TrayDialog {
 
     }
 
+    private void addTempIndicatorForPages(IIndicatorNode node, IndicatorEnum indicator) {
+        for (int i = 0; i < this.allColumnsCountSize; i++) {
+            if (isMatchCurrentIndicator(modelElementIndicators[i], node)) {
+                modelElementIndicators[i].addTempIndicatorEnum(indicator);
+            }
+        }
+    }
+
+    private void removeTempIndicatorForPages(IndicatorEnum indicator) {
+        for (int i = 0; i < this.allColumnsCountSize; i++) {
+            modelElementIndicators[i].removeTempIndicatorEnum(indicator);
+        }
+    }
+
     protected Control createDialogArea(Composite parent) {
         Composite comp = (Composite) super.createDialogArea(parent);
-        Tree tree = new TooltipTree(comp, SWT.BORDER) {
+        this.parent = comp;
+        initializationTree(comp);
+        return comp;
+    }
+
+    private void initializationTree(Composite comp) {
+        this.tree = new TooltipTree(comp, SWT.BORDER) {
 
             // protected boolean isValidItem(TreeItem item) {
             // return (item != null) && (item.getData(INDICATORITEM) != null);
@@ -430,7 +496,7 @@ public class IndicatorSelectDialog extends TrayDialog {
         });
         tree.pack();
 
-        Composite buttomComp = new Composite(comp, SWT.NONE);
+        this.buttomComp = new Composite(comp, SWT.NONE);
         buttomComp.setLayout(new GridLayout());
         buttomComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
@@ -439,7 +505,6 @@ public class IndicatorSelectDialog extends TrayDialog {
         descriptionLabel = new Label(buttomComp, SWT.NULL);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(descriptionLabel);
 
-        return comp;
     }
 
     /**
@@ -449,6 +514,9 @@ public class IndicatorSelectDialog extends TrayDialog {
      */
     public void selectAllIndicators(boolean selected) {
         for (Button checkButton : checkButtons) {
+            if (checkButton.isDisposed()) {
+                continue;
+            }
             if (checkButton.isEnabled() && selected != checkButton.getSelection()) {
                 checkButton.setSelection(selected);
 
@@ -464,6 +532,53 @@ public class IndicatorSelectDialog extends TrayDialog {
                 }
             }
         }
+
+        if (isUsePaging()) {
+            selectPagesAllIndicator();
+        }
+    }
+
+    private void selectPagesAllIndicator() {
+        IIndicatorNode[] branchNodes = IndicatorTreeModelBuilder.buildIndicatorCategory();
+        for (ModelElementIndicator modelEleIndi : getResult()) {
+            List<IndicatorEnum> tempIndicator = modelEleIndi.getTempIndicator();
+            if (null != tempIndicator) {
+                tempIndicator.clear();
+            }
+            for (IIndicatorNode iIndicatorNode : branchNodes) {
+                addModelElementIndicator(modelEleIndi, iIndicatorNode);
+            }
+        }
+    }
+
+    private void addModelElementIndicator(ModelElementIndicator modelEleIndi, IIndicatorNode branchNode) {
+        if (isMatchCurrentIndicator(modelEleIndi, branchNode)) {
+            modelEleIndi.getTempIndicator().add(branchNode.getIndicatorEnum());
+        }
+        if (branchNode.hasChildren()) {
+            for (IIndicatorNode chilrenNode : branchNode.getChildren()) {
+                addModelElementIndicator(modelEleIndi, chilrenNode);
+            }
+        }
+    }
+
+    private boolean isMatchCurrentIndicator(ModelElementIndicator currentIndicator, IIndicatorNode indicatorNode) {
+        boolean returnCurrentIndicator = true;
+        IIndicatorNode parentNode = indicatorNode.getParent();
+        boolean isParentPhoneStatistics = parentNode != null && parentNode.getIndicatorInstance() != null
+                && parentNode.getIndicatorInstance() instanceof PhoneNumbStatisticsIndicator;
+        if (!ModelElementIndicatorRule.match(indicatorNode, currentIndicator, this.language)) {
+            returnCurrentIndicator = false;
+        }
+        if (null != indicatorNode.getIndicatorInstance()
+                && !(indicatorNode.getIndicatorInstance() instanceof DatePatternFreqIndicator)
+                && null != indicatorNode.getIndicatorInstance().getIndicatorDefinition()
+                && indicatorNode.getIndicatorInstance().getIndicatorDefinition().getSqlGenericExpression().size() < 1
+                && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)
+                && !isParentPhoneStatistics) {
+            returnCurrentIndicator = false;
+        }
+        return returnCurrentIndicator;
     }
 
     private void createTreeStructure(Tree tree) {
@@ -495,9 +610,9 @@ public class IndicatorSelectDialog extends TrayDialog {
                 Button commonCheckButton;
                 List<Button> rowButtonList = new ArrayList<Button>();
                 // MOD qiongli 2011-7-22 feature 22362
-                IIndicatorNode parentNode = indicatorNode.getParent();
-                boolean isParentPhoneStatistics = parentNode != null && parentNode.getIndicatorInstance() != null
-                        && parentNode.getIndicatorInstance() instanceof PhoneNumbStatisticsIndicator;
+                // IIndicatorNode parentNode = indicatorNode.getParent();
+                // boolean isParentPhoneStatistics = parentNode != null && parentNode.getIndicatorInstance() != null
+                // && parentNode.getIndicatorInstance() instanceof PhoneNumbStatisticsIndicator;
                 for (int j = 0; j < treeColumns.length; j++) {
                     IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();
                     if (j == 0) {
@@ -523,12 +638,17 @@ public class IndicatorSelectDialog extends TrayDialog {
                         checkButton = new Button(tree, SWT.CHECK);
                         checkButton.setData(indicatorNode);
 
-                        if (((ModelElementIndicator) treeColumns[j].getData()).contains(indicatorEnum)) {
-                            checkButton.setSelection(true);
-                            expanded = true;
+                        ModelElementIndicator pageIndicator = (ModelElementIndicator) treeColumns[j].getData();
+
+                        boolean isMatch = isMatchCurrentIndicator(pageIndicator, indicatorNode);
+                        if (null != pageIndicator && pageIndicator.tempContains(indicatorEnum)) {
+                            if (isMatch) {
+                                checkButton.setSelection(true);
+                                expanded = true;
+                            }
                         }
-                        final ModelElementIndicator currentIndicator = (ModelElementIndicator) treeColumns[j].getData();
-                        checkButton.setEnabled(ModelElementIndicatorRule.match(indicatorNode, currentIndicator, this.language));
+
+                        checkButton.setEnabled(isMatch);
 
                         // ADD yyi 2010-05-06 10494: Disable the indicator buttons which are not support MS Access
                         // Remove the language compare to support all DB type, if needed.
@@ -538,25 +658,26 @@ public class IndicatorSelectDialog extends TrayDialog {
                         // the database type is clearly specified nor a default database
                         // type is defined), disable the indicator selection.
                         // 2010-05-06
-                        if (null != indicatorNode.getIndicatorInstance()
-                                && !(indicatorNode.getIndicatorInstance() instanceof DatePatternFreqIndicator)
-                                && null != indicatorNode.getIndicatorInstance().getIndicatorDefinition()
-                                // MOD zshen 2011.06.01 make indicator can be select although can not found one
-                                // expression for the database on hte definition.
-                                && indicatorNode.getIndicatorInstance().getIndicatorDefinition().getSqlGenericExpression().size() < 1
-                                && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)
-                                && !isParentPhoneStatistics) {
-                            checkButton.setEnabled(false);
-                        }
+                        // if (null != indicatorNode.getIndicatorInstance()
+                        // && !(indicatorNode.getIndicatorInstance() instanceof DatePatternFreqIndicator)
+                        // && null != indicatorNode.getIndicatorInstance().getIndicatorDefinition()
+                        // // MOD zshen 2011.06.01 make indicator can be select although can not found one
+                        // // expression for the database on hte definition.
+                        // &&
+                        // indicatorNode.getIndicatorInstance().getIndicatorDefinition().getSqlGenericExpression().size()
+                        // < 1
+                        // && !indicatorNode.hasChildren() && !(currentIndicator instanceof DelimitedFileIndicator)
+                        // && !isParentPhoneStatistics) {
+                        // checkButton.setEnabled(false);
+                        // }
                         // ~
 
-                        checkButton
-                                .addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum, currentIndicator));
+                        checkButton.addSelectionListener(new ButtonSelectionListener(j, treeItem, indicatorEnum, pageIndicator));
                         if (indicatorEnum != null) {
                             checkButton.setToolTipText(DefaultMessagesImpl.getString(
-                                    "IndicatorSelectDialog.enable", indicatorEnum.getLabel(), currentIndicator.getElementName())); //$NON-NLS-1$ //$NON-NLS-2$
+                                    "IndicatorSelectDialog.enable", indicatorEnum.getLabel(), pageIndicator.getElementName())); //$NON-NLS-1$
                         }
-                        checkButton.setData(MODELELEMENTINDICATORFLAG, currentIndicator);
+                        checkButton.setData(MODELELEMENTINDICATORFLAG, pageIndicator);
                         commonCheckButton = checkButton;
 
                         rowButtonList.add(checkButton);
@@ -600,8 +721,8 @@ public class IndicatorSelectDialog extends TrayDialog {
         tree.setHeaderVisible(true);
         TreeColumn[] treeColumn = null;
 
-        if (this.modelElementIndicators.length > 1) {
-            treeColumn = new TreeColumn[modelElementIndicators.length + 2];
+        if (this.allColumnsCountSize > 1 && !isUsePaging()) {
+            treeColumn = new TreeColumn[allColumnsCountSize + 2];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[0].setWidth(COL0_WIDTH);
             treeColumn[0].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicator")); //$NON-NLS-1$
@@ -610,29 +731,325 @@ public class IndicatorSelectDialog extends TrayDialog {
             treeColumn[1].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.allColumn")); //$NON-NLS-1$
             treeColumn[1].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.string")); //$NON-NLS-1$
 
-            for (int i = 0; i < this.modelElementIndicators.length; i++) {
+            for (int i = 0; i < this.allColumnsCountSize; i++) {
                 treeColumn[i + 2] = new TreeColumn(tree, SWT.CENTER);
                 treeColumn[i + 2].setWidth(COLI_WIDTH);
-                treeColumn[i + 2].setText(modelElementIndicators[i].getElementName());
-                treeColumn[i + 2].setData(modelElementIndicators[i]);
+                treeColumn[i + 2].setText(getResult()[i].getElementName());
+                treeColumn[i + 2].setData(getResult()[i]);
                 treeColumn[i + 2].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.analyzeColumn")); //$NON-NLS-1$
-                modelElementIndicators[i].copyOldIndicatorEnum();
+                getResult()[i].copyOldIndicatorEnum();
+            }
+        } else if (this.allColumnsCountSize > 1 && isUsePaging()) {
+            int treeColumnSize = 0;
+            if (this.currentPage != this.totalPages) {
+                treeColumnSize = this.pageSize;
+            } else {
+                treeColumnSize = this.allColumnsCountSize - (this.currentPage - 1) * this.pageSize;
+            }
+            treeColumn = new TreeColumn[treeColumnSize + 2];
+            treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
+            treeColumn[0].setWidth(COL0_WIDTH);
+            treeColumn[0].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicator")); //$NON-NLS-1$
+            treeColumn[1] = new TreeColumn(tree, SWT.CENTER);
+            treeColumn[1].setWidth(COLI_WIDTH);
+            treeColumn[1].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.allColumn")); //$NON-NLS-1$
+            treeColumn[1].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.string")); //$NON-NLS-1$
+
+            for (int i = 0; i < treeColumnSize; i++) {
+                treeColumn[i + 2] = new TreeColumn(tree, SWT.CENTER);
+                treeColumn[i + 2].setWidth(COLI_WIDTH);
+                treeColumn[i + 2].setText(getResult()[(this.currentPage - 1) * this.pageSize + i].getElementName());
+                treeColumn[i + 2].setData(getResult()[(this.currentPage - 1) * this.pageSize + i]);
+                treeColumn[i + 2].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.analyzeColumn")); //$NON-NLS-1$
+                ModelElementIndicator modelElementIndicator = getResult()[(this.currentPage - 1) * this.pageSize + i];
+                List<IndicatorEnum> tempIndicator = modelElementIndicator.getTempIndicator();
+                if (null != tempIndicator && tempIndicator.isEmpty()) {
+                    modelElementIndicator.copyOldIndicatorEnum();
+                }
             }
         } else {
-            treeColumn = new TreeColumn[modelElementIndicators.length + 1];
+            treeColumn = new TreeColumn[allColumnsCountSize + 1];
             treeColumn[0] = new TreeColumn(tree, SWT.CENTER);
             treeColumn[0].setWidth(COL0_WIDTH);
             treeColumn[0].setText(DefaultMessagesImpl.getString("IndicatorSelectDialog.indicators")); //$NON-NLS-1$
-            for (int i = 0; i < this.modelElementIndicators.length; i++) {
+            for (int i = 0; i < this.allColumnsCountSize; i++) {
                 treeColumn[i + 1] = new TreeColumn(tree, SWT.CENTER);
                 treeColumn[i + 1].setWidth(COLI_WIDTH);
-                treeColumn[i + 1].setText(modelElementIndicators[i].getElementName());
-                treeColumn[i + 1].setData(modelElementIndicators[i]);
-                modelElementIndicators[i].copyOldIndicatorEnum();
+                treeColumn[i + 1].setText(getResult()[i].getElementName());
+                treeColumn[i + 1].setData(getResult()[i]);
+                getResult()[i].copyOldIndicatorEnum();
             }
         }
-
         return treeColumn;
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        parent.setLayout(new GridLayout(4, false));
+        if (isUsePaging()) {
+            pageGoTo = new Combo(parent, SWT.READ_ONLY);
+            createNavComposite(parent);
+            okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+            createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+            initializationPagesStatus();
+            initializationMonitor();
+        } else {
+            okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+            createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+        }
+    }
+
+    private void initializationPagesStatus() {
+        for (int i = 1; i <= this.totalPages; i++) {
+            pageGoTo.add(i + " / " + this.totalPages, i - 1);//$NON-NLS-1$
+        }
+        pageGoTo.select(0);
+        okButton.setEnabled(false);
+        pageFirstImgHypLnk.setEnabled(false);
+        pagePreviouseImgHypLnk.setEnabled(false);
+    }
+
+    private void initializationMonitor() {
+        pageFirstImgHypLnk.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                if (currentPage != 1) {
+                    loadPageTempIndicator(1);
+                    currentPage = 1;
+                    tree.dispose();
+                    buttomComp.dispose();
+                    if (IndicatorSelectDialog.this.parent != null) {
+                        initializationTree(IndicatorSelectDialog.this.parent);
+                        IndicatorSelectDialog.this.parent.layout();
+                    }
+                    pageFirstImgHypLnk.setEnabled(false);
+                    pagePreviouseImgHypLnk.setEnabled(false);
+                    pageNextImgHypLnk.setEnabled(true);
+                    pageLastImgHypLnk.setEnabled(true);
+                    okButton.setEnabled(false);
+                    pageGoTo.select(currentPage - 1);
+                }
+            }
+        });
+
+        pagePreviouseImgHypLnk.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                if (currentPage > 1) {
+                    currentPage--;
+                    tree.dispose();
+                    buttomComp.dispose();
+                    if (IndicatorSelectDialog.this.parent != null) {
+                        initializationTree(IndicatorSelectDialog.this.parent);
+                        IndicatorSelectDialog.this.parent.layout();
+                    }
+                    pageNextImgHypLnk.setEnabled(true);
+                    pageLastImgHypLnk.setEnabled(true);
+                    okButton.setEnabled(false);
+                    if (currentPage <= 1) {
+                        pageFirstImgHypLnk.setEnabled(false);
+                        pagePreviouseImgHypLnk.setEnabled(false);
+                    }
+                    pageGoTo.select(currentPage - 1);
+                }
+            }
+        });
+
+        pageNextImgHypLnk.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    tree.dispose();
+                    buttomComp.dispose();
+                    if (IndicatorSelectDialog.this.parent != null) {
+                        initializationTree(IndicatorSelectDialog.this.parent);
+                        IndicatorSelectDialog.this.parent.layout();
+                    }
+                    pageFirstImgHypLnk.setEnabled(true);
+                    pagePreviouseImgHypLnk.setEnabled(true);
+                    if (currentPage >= totalPages) {
+                        okButton.setEnabled(true);
+                        pageNextImgHypLnk.setEnabled(false);
+                        pageLastImgHypLnk.setEnabled(false);
+                    }
+                    pageGoTo.select(currentPage - 1);
+                }
+            }
+        });
+
+        pageLastImgHypLnk.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+
+            @Override
+            public void mouseUp(MouseEvent e) {
+                if (currentPage != totalPages) {
+                    loadPageTempIndicator(totalPages);
+                    currentPage = totalPages;
+                    tree.dispose();
+                    buttomComp.dispose();
+                    if (IndicatorSelectDialog.this.parent != null) {
+                        initializationTree(IndicatorSelectDialog.this.parent);
+                        IndicatorSelectDialog.this.parent.layout();
+                    }
+                    pageFirstImgHypLnk.setEnabled(true);
+                    pagePreviouseImgHypLnk.setEnabled(true);
+                    pageNextImgHypLnk.setEnabled(false);
+                    pageLastImgHypLnk.setEnabled(false);
+                    okButton.setEnabled(true);
+                    pageGoTo.select(currentPage - 1);
+                }
+            }
+        });
+
+        pageGoTo.addSelectionListener(new SelectionAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                int toPage = pageGoTo.getSelectionIndex() + 1;
+                loadPageTempIndicator(toPage);
+                currentPage = toPage;
+                tree.dispose();
+                buttomComp.dispose();
+                if (IndicatorSelectDialog.this.parent != null) {
+                    initializationTree(IndicatorSelectDialog.this.parent);
+                    IndicatorSelectDialog.this.parent.layout();
+                }
+
+                if (currentPage == 1) {
+                    pageFirstImgHypLnk.setEnabled(false);
+                    pagePreviouseImgHypLnk.setEnabled(false);
+                    pageNextImgHypLnk.setEnabled(true);
+                    pageLastImgHypLnk.setEnabled(true);
+                    okButton.setEnabled(false);
+                } else if (currentPage == totalPages) {
+                    pageFirstImgHypLnk.setEnabled(true);
+                    pagePreviouseImgHypLnk.setEnabled(true);
+                    pageNextImgHypLnk.setEnabled(false);
+                    pageLastImgHypLnk.setEnabled(false);
+                    okButton.setEnabled(true);
+                } else {
+                    pageFirstImgHypLnk.setEnabled(true);
+                    pagePreviouseImgHypLnk.setEnabled(true);
+                    pageNextImgHypLnk.setEnabled(true);
+                    pageLastImgHypLnk.setEnabled(true);
+                    okButton.setEnabled(false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Add frist/previous/next/last button.
+     * 
+     * DOC gdbu Comment method "createNavComposite".
+     * 
+     * @param searchMainComp
+     */
+    private void createNavComposite(Composite searchMainComp) {
+        toolkit = new FormToolkit(searchMainComp.getDisplay());
+        pageNavComp = toolkit.createComposite(searchMainComp, SWT.NONE);
+        pageNavComp.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        final GridData pageNavCompGD = new GridData(SWT.FILL, SWT.CENTER, true, false);
+        pageNavCompGD.heightHint = 25;
+        pageNavCompGD.minimumWidth = 0;
+        pageNavComp.setLayoutData(pageNavCompGD);
+        pageNavComp.setLayout(new FormLayout());
+        toolkit.paintBordersFor(pageNavComp);
+
+        pageLastImgHypLnk = toolkit.createImageHyperlink(pageNavComp, SWT.NONE);
+        pageLastImgHypLnk.setImage(ImageLib.getImage(ImageLib.ICON_PAGE_LAST_LNK));
+        pageLastImgHypLnk.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        final FormData fdImageHyperlink = new FormData();
+        fdImageHyperlink.bottom = new FormAttachment(100, 0);
+        fdImageHyperlink.top = new FormAttachment(0, 5);
+        fdImageHyperlink.right = new FormAttachment(100, -10);
+        fdImageHyperlink.width = 50;
+        pageLastImgHypLnk.setLayoutData(fdImageHyperlink);
+
+        pageNextImgHypLnk = toolkit.createImageHyperlink(pageNavComp, SWT.NONE);
+        pageNextImgHypLnk.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        pageNextImgHypLnk.setImage(ImageLib.getImage(ImageLib.ICON_PAGE_NEXT_LNK));
+        final FormData pgNextImgFD = new FormData();
+        pgNextImgFD.right = new FormAttachment(pageLastImgHypLnk, -10, SWT.LEFT);
+        pgNextImgFD.bottom = new FormAttachment(pageLastImgHypLnk, 0, SWT.BOTTOM);
+        pgNextImgFD.top = new FormAttachment(pageLastImgHypLnk, 0, SWT.TOP);
+        pgNextImgFD.width = 50;
+        pageNextImgHypLnk.setLayoutData(pgNextImgFD);
+
+        pagePreviouseImgHypLnk = toolkit.createImageHyperlink(pageNavComp, SWT.NONE);
+        pagePreviouseImgHypLnk.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        pagePreviouseImgHypLnk.setImage(ImageLib.getImage(ImageLib.ICON_PAGE_PREV_LNK));
+        final FormData pgPreImgFD = new FormData();
+        pgPreImgFD.right = new FormAttachment(pageNextImgHypLnk, -10, SWT.LEFT);
+        pgPreImgFD.bottom = new FormAttachment(pageNextImgHypLnk, 0, SWT.BOTTOM);
+        pgPreImgFD.top = new FormAttachment(pageNextImgHypLnk, 0, SWT.TOP);
+        pgPreImgFD.width = 50;
+        pagePreviouseImgHypLnk.setLayoutData(pgPreImgFD);
+
+        pageFirstImgHypLnk = toolkit.createImageHyperlink(pageNavComp, SWT.NONE);
+        pageFirstImgHypLnk.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        pageFirstImgHypLnk.setImage(ImageLib.getImage(ImageLib.ICON_PAGE_FIRST_LNK));
+        final FormData pgFirImgFD = new FormData();
+        pgFirImgFD.right = new FormAttachment(pagePreviouseImgHypLnk, -10, SWT.LEFT);
+        pgFirImgFD.bottom = new FormAttachment(pagePreviouseImgHypLnk, 0, SWT.BOTTOM);
+        pgFirImgFD.top = new FormAttachment(pagePreviouseImgHypLnk, 0, SWT.TOP);
+        pgFirImgFD.width = 50;
+        pageFirstImgHypLnk.setLayoutData(pgFirImgFD);
+
+    }
+
+    private boolean isUsePaging() {
+        if (this.totalPages >= this.limitPageCount) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * when user paging from page1 to page10 ,if we turn to the last page ,the page2-page9 have not been loaded ,and
+     * this method is used to load temp indicators on those(2-9) pages.
+     * 
+     * DOC gdbu Comment method "loadPageTempIndicator".
+     * 
+     * @param toPage
+     */
+    private void loadPageTempIndicator(int toPage) {
+        if (this.currentPage < toPage) {
+            while (this.currentPage < toPage) {
+                this.currentPage++;
+                int from = (this.currentPage - 1) * this.pageSize;
+                int end = this.currentPage * this.pageSize;
+                for (int i = from; i < end; i++) {
+                    List<IndicatorEnum> tempIndicator = getResult()[i].getTempIndicator();
+                    if (null != tempIndicator && tempIndicator.isEmpty()) {
+                        getResult()[i].copyOldIndicatorEnum();
+                    }
+                }
+            }
+        } else if (this.currentPage > toPage) {
+            while (this.currentPage > toPage) {
+                this.currentPage--;
+                int from = (this.currentPage - 1) * this.pageSize;
+                int end = this.currentPage * this.pageSize;
+                for (int i = from; i > end; i--) {
+                    List<IndicatorEnum> tempIndicator = getResult()[i].getTempIndicator();
+                    if (null != tempIndicator && tempIndicator.isEmpty()) {
+                        getResult()[i].copyOldIndicatorEnum();
+                    }
+                }
+            }
+        } else {
+            return;
+        }
     }
 
     public ModelElementIndicator[] getResult() {

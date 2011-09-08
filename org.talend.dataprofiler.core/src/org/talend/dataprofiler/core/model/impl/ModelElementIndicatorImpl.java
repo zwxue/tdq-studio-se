@@ -110,6 +110,14 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         return this.flatIndicatorEnumList.contains(indicatorEnum);
     }
 
+    public boolean tempContains(IndicatorEnum indicatorEnum) {
+        return this.tempIndicatorEnums.contains(indicatorEnum);
+    }
+
+    public List<IndicatorEnum> getTempIndicator() {
+        return tempIndicatorEnums;
+    }
+
     /**
      * If the Indicator is a plain indicator, will remove the indicator value from field 'flatIndicatorEnumList' and
      * 'indicatorUnitMap', contains the parent and children of indicatorTypeMapping.getType();Else, will remove it from
@@ -443,7 +451,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
             if (boxEnumChildren.contains(indEnum)) {
                 currentBOXChildren.add(indEnum);
             }
-            if ((indEnum != IndicatorEnum.CountsIndicatorEnum) && (indEnum != IndicatorEnum.BoxIIndicatorEnum)
+            if (null != indEnum && (indEnum != IndicatorEnum.CountsIndicatorEnum) && (indEnum != IndicatorEnum.BoxIIndicatorEnum)
                     && indEnum.hasChildren()) {
                 for (IndicatorEnum childrenEnum : indEnum.getChildren()) {
                     categoryEnumList.remove(childrenEnum);
@@ -476,6 +484,9 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         List<IndicatorUnit> indicatorUnitList = new ArrayList<IndicatorUnit>();
         IndicatorUnit indicatorUnit;
         for (IndicatorEnum categoryEnum : categoryEnums) {
+            if (null == categoryEnum) {
+                continue;
+            }
             if (!IndicatorEnum.isPlainIndicatorEnum(categoryEnum)) {
                 continue;
             }

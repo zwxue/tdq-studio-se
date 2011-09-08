@@ -681,6 +681,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
             this.setElements(result);
             return;
+        } else {
+            ModelElementIndicator[] result = dialog.getResult();
+            for (ModelElementIndicator modelElementIndicator : result) {
+                modelElementIndicator.getTempIndicator().clear();
+            }
+            return;
         }
     }
 

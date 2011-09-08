@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.model;
 
+import java.util.List;
+
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -23,6 +25,10 @@ import org.talend.repository.model.IRepositoryNode;
 public interface ModelElementIndicator {
 
     public boolean contains(IndicatorEnum indicatorEnum);
+
+    public boolean tempContains(IndicatorEnum indicatorEnum);
+
+    public List<IndicatorEnum> getTempIndicator();
 
     /**
      * If the Indicator is a plain indicator, will remove the indicator value from field 'flatIndicatorEnumList' and
