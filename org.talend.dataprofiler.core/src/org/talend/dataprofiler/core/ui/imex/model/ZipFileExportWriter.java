@@ -25,6 +25,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -159,12 +160,15 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
         File tempFile = File.createTempFile(zipFile.getName(), null);
         // delete it, otherwise you cannot rename your existing zip to it.
         tempFile.delete();
-
-        boolean renameOk = zipFile.renameTo(tempFile);
-        if (!renameOk) {
-            throw new RuntimeException("could not rename the file " + zipFile.getAbsolutePath() + " to "//$NON-NLS-1$ //$NON-NLS-2$
-                    + tempFile.getAbsolutePath());
-        }
+        // MOD klliu bug TDQ-1691 2011-09-09
+        FileUtils.copyFile(zipFile, tempFile);
+        // renameTo works on windows, don't work on linux
+        // boolean renameOk = zipFile.renameTo(tempFile);
+        // if (!renameOk) {
+        //            throw new RuntimeException("could not rename the file " + zipFile.getAbsolutePath() + " to "//$NON-NLS-1$ //$NON-NLS-2$
+        // + tempFile.getAbsolutePath());
+        // }
+        // ~
         byte[] buf = new byte[4096];
 
         ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
