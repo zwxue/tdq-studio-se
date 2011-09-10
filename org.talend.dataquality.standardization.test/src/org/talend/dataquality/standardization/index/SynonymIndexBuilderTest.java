@@ -13,9 +13,12 @@
 package org.talend.dataquality.standardization.index;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryParser.ParseException;
@@ -222,9 +225,11 @@ public class SynonymIndexBuilderTest {
             String[] values = document.getValues(SynonymIndexSearcher.F_SYN);
             // expect to see "salut" and "synonym" and "toto"
             assertEquals(3, values.length);
-            assertEquals(word, values[0]);
-            assertEquals("synonym", values[1]);
-            assertEquals("toto", values[2]);
+            
+            List<String> valueList = Arrays.asList(values);
+            assertTrue(valueList.contains(word));
+            assertTrue(valueList.contains("synonym"));
+            assertTrue(valueList.contains("toto"));
         }
 
         TopDocs updatedDocs = search.searchDocumentByWord(toupdate);
@@ -232,15 +237,21 @@ public class SynonymIndexBuilderTest {
         for (int i = 0; i < updatedDocs.scoreDocs.length; i++) {
             ScoreDoc scoreDoc = updatedDocs.scoreDocs[i];
             Document document = search.getDocument(scoreDoc.doc);
-            String syn = document.get(SynonymIndexSearcher.F_SYN);
-            assertEquals("the first synonym field should be the same as the word (after being analyzed)", toupdate, syn);
+            
+            // [M]assertion removed: the order of synonyms is not important
+            // -sizhaoliu 08 Sep 2011
+            // String syn = document.get(SynonymIndexSearcher.F_SYN);
+            // assertEquals("the first synonym field should be the same as the word (after being analyzed)", toupdate, syn);
+            
             String[] values = document.getValues(SynonymIndexSearcher.F_SYN);
             // expect to see "salut" and "synonym" and "toto"
             assertEquals("there should 3 synonyms + the reference word", 4, values.length);
-            assertEquals(toupdate, values[0]);
-            assertEquals("a new list of 3 synonyms", values[1]);
-            assertEquals("test", values[2]);
-            assertEquals("ok", values[3]);
+
+            List<String> valueList = Arrays.asList(values);
+            assertTrue(valueList.contains(toupdate));
+            assertTrue(valueList.contains("a new list of 3 synonyms"));
+            assertTrue(valueList.contains("test"));
+            assertTrue(valueList.contains("ok"));
         }
         search.close();
     }
