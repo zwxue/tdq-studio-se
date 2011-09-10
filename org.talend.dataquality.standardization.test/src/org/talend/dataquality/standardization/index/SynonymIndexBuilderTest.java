@@ -213,8 +213,12 @@ public class SynonymIndexBuilderTest {
         for (int i = 0; i < salutDocs.scoreDocs.length; i++) {
             ScoreDoc scoreDoc = salutDocs.scoreDocs[i];
             Document document = search.getDocument(scoreDoc.doc);
-            String syn = document.get(SynonymIndexSearcher.F_SYN);
-            assertEquals("the first synonym field should be the same as the word (after being analyzed)", word, syn);
+
+            // [M]assertion removed: the order of synonyms is not important
+            // -sizhaoliu 08 Sep 2011
+            // String syn = document.get(SynonymIndexSearcher.F_SYN);
+            // assertEquals("the first synonym field should be the same as the word (after being analyzed)", word, syn);
+
             String[] values = document.getValues(SynonymIndexSearcher.F_SYN);
             // expect to see "salut" and "synonym" and "toto"
             assertEquals(3, values.length);
