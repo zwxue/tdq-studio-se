@@ -43,6 +43,7 @@ import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
@@ -95,6 +96,8 @@ import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.ui.utils.DBConnectionContextUtils;
+import org.talend.repository.ui.utils.FileConnectionContextUtils;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -576,11 +579,22 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private void createDataProviderDetail(Connection dataProvider) {
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataProvider);
-        if (!isDelimitedFile) {
-            createName(dataProvider);
+        // MOD qiongli 2011-1
+        Connection origValueConn = null;
+        if (dataProvider.isContextMode()) {
+            if (dataProvider instanceof DatabaseConnection) {
+                origValueConn = (Connection) DBConnectionContextUtils
+                        .cloneOriginalValueConnection((DatabaseConnection) dataProvider);
+            } else if (dataProvider instanceof FileConnection) {
+                origValueConn = (Connection) FileConnectionContextUtils
+                        .cloneOriginalValueConnection((FileConnection) dataProvider);
+            }
         }
-        createPurpose(dataProvider);
-        createDescription(dataProvider);
+        if (!isDelimitedFile) {
+            createName(origValueConn == null ? dataProvider : origValueConn);
+        }
+        createPurpose(origValueConn == null ? dataProvider : origValueConn);
+        createDescription(origValueConn == null ? dataProvider : origValueConn);
         // MOD mzhao xmldb have no actual connection.
         if (dataProvider != null) {
             String connectionString = JavaSqlFactory.getURL(dataProvider);

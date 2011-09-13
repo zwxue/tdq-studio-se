@@ -49,6 +49,7 @@ import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -78,17 +79,20 @@ import org.talend.cwm.xml.TdXmlContent;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.ui.utils.ConnectionContextHelper;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
@@ -104,7 +108,7 @@ public final class ConnectionUtils {
     public static final int LOGIN_TEMEOUT_MILLISECOND = 20000;
 
     public static final int LOGIN_TIMEOUT_SECOND = 20;
-
+    
     private static boolean timeout = Platform.getPreferencesService().getBoolean(
             CWMPlugin.getDefault().getBundle().getSymbolicName(), PluginConstant.CONNECTION_TIMEOUT, false, null);
 
@@ -812,7 +816,12 @@ public final class ConnectionUtils {
     public static String getServerName(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
         if (dbConn != null) {
-            return dbConn.getServerName();
+
+            String serverName = dbConn.getServerName();
+            if (dbConn.isContextMode()) {
+                serverName = getOriginalConntextValue(dbConn, serverName);
+            }
+            return serverName;
         }
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
@@ -847,7 +856,11 @@ public final class ConnectionUtils {
     public static String getPort(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
         if (dbConn != null) {
-            return dbConn.getPort();
+            String port = dbConn.getPort();
+            if (dbConn.isContextMode()) {
+                port = getOriginalConntextValue(dbConn, port);
+            }
+            return port;
         }
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
@@ -882,7 +895,11 @@ public final class ConnectionUtils {
     public static String getSID(Connection conn) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
         if (dbConn != null) {
-            return dbConn.getSID();
+            String sid = dbConn.getSID();
+            if (conn.isContextMode()) {
+                sid = getOriginalConntextValue(dbConn, sid);
+            }
+            return sid;
         }
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
@@ -1381,4 +1398,81 @@ public final class ConnectionUtils {
         }
         return sqlDataType;
     }
+
+    /**
+     * 
+     * if the connection has sid return false, else return true (don't need the TaggedValue any more).
+     * 
+     * @param element
+     * @return
+     */
+    public static boolean getRetrieveAllMetadata(ModelElement element) {
+        if (element != null && element instanceof Connection) {
+            if (element instanceof DatabaseConnection) {
+                DatabaseConnection dbConn = (DatabaseConnection) element;
+                String sid = getSID(dbConn);
+                if (sid != null && !"".equals(sid.trim())) {
+                    // MOD klliu bug 22900
+                    TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.RETRIEVE_ALL,
+                            element.getTaggedValue());
+                    // if connection is created by 4.2 or 5.0 ,the tagedValue(RETRIEVE_ALL) has been removed.
+                    if (taggedValue != null) {
+                        String value = taggedValue.getValue();
+                        if (value.equals("true")) {
+                            return true;
+                        }
+                    }
+                    // ~
+                    if (ConnectionHelper.isOracle(dbConn) || isPostgresql(dbConn)) {
+                        String uiSchema = dbConn.getUiSchema();
+                        if (uiSchema != null && !"".equals(uiSchema.trim())) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return true;
+                }
+            } else if (element instanceof MDMConnection) {
+                MDMConnection mdmConn = (MDMConnection) element;
+                String context = mdmConn.getContext();
+                if (context != null && !"".equals(context.trim())) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else if (element instanceof FileConnection) {
+                // do file connection can filter catalog/schema?
+                return true;
+            }
+        }
+        return true;
+        // TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.RETRIEVE_ALL,
+        // element.getTaggedValue());
+        // if (taggedValue == null) {
+        // return true;
+        // }
+        // return Boolean.valueOf(taggedValue.getValue());
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "getOriginalConntextValue".
+     * 
+     * @param connection
+     * @param rawValue
+     * @return
+     */
+    public static String getOriginalConntextValue(Connection connection, String rawValue) {
+        String origValu = null;
+        if (connection != null && connection.isContextMode()) {
+            ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(connection);
+            origValu = ConnectionContextHelper.getOriginalValue(contextType, rawValue);
+        }
+        return origValu == null ? PluginConstant.EMPTY_STRING : origValu;
+    }
+
 }

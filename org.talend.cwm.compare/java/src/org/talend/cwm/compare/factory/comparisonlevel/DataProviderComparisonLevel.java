@@ -27,11 +27,13 @@ import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -52,15 +54,18 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     }
 
     protected boolean isValid() {
-        return ((IFile) selectedObj).getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV);
+        return selectedObj instanceof Connection || ((IFile) selectedObj).getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV);
     }
 
     @Override
     protected Connection findDataProvider() {
+        // MOD qiongli 2011-9-5 feature TDQ-3317.
         Connection provider = null;
         if (selectedObj instanceof RepositoryNode) {
             Item connItem = ((RepositoryNode) selectedObj).getObject().getProperty().getItem();
             provider = ((ConnectionItem) connItem).getConnection();
+        } else if (selectedObj instanceof Connection) {
+            provider = (Connection) selectedObj;
         } else {
             provider = PrvResourceFileHelper.getInstance().findProvider((IFile) selectedObj);
         }
@@ -69,9 +74,25 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected void saveReloadResult() {
-        // MOD klliu 2001-03-01 bug 17506
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(oldDataProvider);
-        Item item = recursiveFind.getObject().getProperty().getItem();
+
+        // MOD qiongli 2011-9-9,feature TDQ-3317
+        Item item = null;
+        if (selectedObj instanceof Connection) {
+            Property property = PropertyHelper.getProperty((Connection) selectedObj);
+            if (property != null) {
+                item = property.getItem();
+            }
+        } else {
+            // MOD klliu 2001-03-01 bug 17506
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(oldDataProvider);
+            if (recursiveFind != null) {
+                item = recursiveFind.getObject().getProperty().getItem();
+            }
+        }
+        if (item == null) {
+            return;
+        }// ~
+
         Project currentProject = ProjectManager.getInstance().getCurrentProject();
         // MOD mzhao bug 20523, only save the reloaded connection resource, the client dependency (analysis) should not
         // save here, it will be handled later.

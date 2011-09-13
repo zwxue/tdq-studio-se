@@ -39,6 +39,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public final class WorkspaceResourceHelper {
 
+    private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
+
     private WorkspaceResourceHelper() {
     }
 
@@ -139,4 +141,5 @@ public final class WorkspaceResourceHelper {
             resultMap.put(file, parentPath);
         }
     }
+
 }

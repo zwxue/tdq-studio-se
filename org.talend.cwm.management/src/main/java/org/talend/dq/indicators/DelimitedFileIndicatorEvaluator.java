@@ -31,6 +31,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
@@ -76,7 +77,11 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         if (delimitedFileconnection == null) {
             delimitedFileconnection = (DelimitedFileConnection) analysis.getContext().getConnection();
         }
+        boolean isContextMode = delimitedFileconnection.isContextMode();
         String path = delimitedFileconnection.getFilePath();
+        if (isContextMode) {
+            path = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, path);
+        }
         IPath iPath = new Path(path);
 
         CsvReader csvReader = null;
@@ -85,6 +90,10 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             File file = iPath.toFile();
             String separator = delimitedFileconnection.getFieldSeparatorValue();
             String encoding = delimitedFileconnection.getEncoding();
+            if (isContextMode) {
+                separator = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, separator);
+                encoding = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, encoding);
+            }
             if (!file.exists()) {
                 returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false); //$NON-NLS-1$
                 return returnCode;
@@ -146,6 +155,9 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
                 String rowSeparator = delimitedFileconnection.getRowSeparatorValue();
+                if (isContextMode) {
+                    rowSeparator = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, rowSeparator);
+                }
                 boolean isSpliteRecord = delimitedFileconnection.isSplitRecord();
                 boolean isSkipeEmptyRow = delimitedFileconnection.isRemoveEmptyRow();
                 String languageName = LanguageManager.getCurrentLanguage().getName();
@@ -212,6 +224,9 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
      */
     private void initializeCsvReader(CsvReader csvReader) {
         String rowSep = delimitedFileconnection.getRowSeparatorValue();
+        if (delimitedFileconnection.isContextMode()) {
+            rowSep = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, rowSep);
+        }
         if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
             csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
         }

@@ -12,12 +12,25 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -46,15 +59,23 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.objectmodel.core.Dependency;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -327,6 +348,11 @@ public final class WorkbenchUtils {
     public static void refreshCurrentAnalysisEditor() {
         // Refresh current opened editors.
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        // MOD qiongli 2011-9-8 TDQ-3317.when focucs on DI perspective,don't refresh the open editors
+        DQRespositoryView findView = (DQRespositoryView) activePage.findView(DQRespositoryView.ID);
+        if (findView == null) {
+            return;
+        }
         IEditorReference[] editors = activePage.getEditorReferences();
         if (editors != null) {
             for (IEditorReference editorRef : editors) {
@@ -411,5 +437,69 @@ public final class WorkbenchUtils {
         if (mdmNode != null) {
             CorePlugin.getDefault().refreshDQView(mdmNode);
         }
+    }
+
+    /**
+     * 
+     * DOC qiongli TDQ-3317:move this method from ReloadDatabaseAction. to this class .
+     * 
+     * @param oldDataProvider
+     * @throws PartInitException
+     */
+    public static void impactExistingAnalyses(DataProvider oldDataProvider) throws PartInitException {
+        EList<Dependency> clientDependencies = oldDataProvider.getSupplierDependency();
+        List<Analysis> unsynedAnalyses = new ArrayList<Analysis>();
+        for (Dependency dep : clientDependencies) {
+            StringBuffer impactedAnaStr = new StringBuffer();
+            for (ModelElement mod : dep.getClient()) {
+                // MOD mzhao 2009-08-24 The dependencies include "Property" and "Analysis"
+                if (!(mod instanceof Analysis)) {
+                    continue;
+                }
+                Analysis ana = (Analysis) mod;
+                unsynedAnalyses.add(ana);
+                impactedAnaStr.append(ana.getName());
+            }
+
+            for (Analysis analysis : unsynedAnalyses) {
+                // Reload.
+                Resource eResource = analysis.eResource();
+                if (eResource == null) {
+                    continue;
+                }
+
+                EMFSharedResources.getInstance().unloadResource(eResource.getURI().toString());
+
+                IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+                // MOD by zshen for bug 12316 to avoid null argument.
+                Path path = new Path(analysis.getFileName() == null ? eResource.getURI().toPlatformString(false)
+                        : analysis.getFileName());
+                IFile file = root.getFile(path);
+                analysis = (Analysis) AnaResourceFileHelper.getInstance().getModelElement(file);
+                // MOD qiongli 2010-8-17,bug 14977
+                if (analysis != null) {
+                    eResource = analysis.eResource();
+                    Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
+                    Iterator<EObject> it = referenceMaps.keySet().iterator();
+                    ModelElement eobj = null;
+                    while (it.hasNext()) {
+                        eobj = (ModelElement) it.next();
+                        Collection<Setting> settings = referenceMaps.get(eobj);
+                        for (Setting setting : settings) {
+                            if (setting.getEObject() instanceof AnalysisContext) {
+                                analysis.getContext().getAnalysedElements().remove(eobj);
+                            } else if (setting.getEObject() instanceof Indicator) {
+                                analysis.getResults().getIndicators().remove(setting.getEObject());
+                            }
+                        }
+
+                    }
+                    AnaResourceFileHelper.getInstance().save(analysis);
+                }
+            }
+        }
+
+        // Refresh current opened editors.
+        refreshCurrentAnalysisEditor();
     }
 }

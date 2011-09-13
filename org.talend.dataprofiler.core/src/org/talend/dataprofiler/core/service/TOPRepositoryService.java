@@ -18,29 +18,43 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.ITDQRepositoryService;
+import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.compare.factory.ComparisonLevelFactory;
+import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
@@ -49,6 +63,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -58,6 +73,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public class TOPRepositoryService implements ITDQRepositoryService {
+
+    private static Logger log = Logger.getLogger(TOPRepositoryService.class);
 
     public IViewPart getTDQRespositoryView() {
         return CorePlugin.getDefault().getRepositoryView();
@@ -200,5 +217,57 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             }
         }
         return ruleValues;
+    }
+
+    /*
+     * Added by qiongli TDQ-3317 when context is changed,should retrive the related database info(schema,catalog).
+     * 
+     * @see org.talend.core.ITDQRepositoryService#reloadDatabase(org.talend.core.model.properties.ConnectionItem)
+     */
+    public void reloadDatabase(ContextItem contextItem) {
+        IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+        try {
+            List<IRepositoryViewObject> dbConnList = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, true);
+            for (IRepositoryViewObject obj : dbConnList) {
+                Item item = obj.getProperty().getItem();
+                if (item instanceof ConnectionItem) {
+                    Connection conn = ((ConnectionItem) item).getConnection();
+                    if (conn.isContextMode()) {
+                        ContextItem cItem = ContextUtils.getContextItemById2(conn.getContextId());
+                        if (contextItem == null) {
+                            continue;
+                        }
+                        if (cItem == contextItem) {
+                            if (conn instanceof DatabaseConnection) {
+                                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(conn);
+                                    Connection oldConnection = creatComparisonLevel.reloadCurrentLevelElement();
+                                    List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
+                                    if (!(dependencyClients == null || dependencyClients.isEmpty())) {
+                                        MessageDialog.openWarning(null,
+                                                DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
+                                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage",
+                                                    oldConnection.getLabel()));
+                                    }
+                                WorkbenchUtils.impactExistingAnalyses(oldConnection);
+                            }
+                        }
+                    }
+                }
+            }
+            List<IRepositoryViewObject> fileConnList = factory.getAll(ERepositoryObjectType.METADATA_FILE_DELIMITED, true);
+            for (IRepositoryViewObject obj : fileConnList) {
+                Item item = obj.getProperty().getItem();
+                if (item instanceof ConnectionItem) {
+                    // TODO reload struct for DelimitedFile connection
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        } catch (ReloadCompareException e) {
+            log.error(e, e);
+        } catch (PartInitException e) {
+            log.error(e);
+        }
+
     }
 }

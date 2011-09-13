@@ -68,7 +68,7 @@ public final class SoftwareSystemManager {
                 if (trc.isOk()) {
                     connection = trc.getObject();
                     softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
-                    if (softwareSystem != null) { // store it
+                    if (softwareSystem != null && softwareSystem.eResource() != null) { // store it
                         if (ConnectionHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
                             saveSoftwareSystem(softwareSystem);
                         }
@@ -77,7 +77,9 @@ public final class SoftwareSystemManager {
             } catch (SQLException e) {
                 log.error(e, e);
             } finally {
-                ConnectionUtils.closeConnection(connection);
+                if (connection != null) {
+                    ConnectionUtils.closeConnection(connection);
+                }
             }
         } else if (log.isDebugEnabled()) { // only debug
             log.debug("The softwareSystem " + softwareSystem.getName() + " has been found for the given data provider "//$NON-NLS-1$//$NON-NLS-2$
