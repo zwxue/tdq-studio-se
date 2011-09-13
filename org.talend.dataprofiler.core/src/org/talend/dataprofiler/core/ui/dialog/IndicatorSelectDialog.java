@@ -534,19 +534,25 @@ public class IndicatorSelectDialog extends TrayDialog {
         }
 
         if (isUsePaging()) {
-            selectPagesAllIndicator();
+            selectPagesAllIndicator(selected);
         }
     }
 
-    private void selectPagesAllIndicator() {
-        IIndicatorNode[] branchNodes = IndicatorTreeModelBuilder.buildIndicatorCategory();
-        for (ModelElementIndicator modelEleIndi : getResult()) {
-            List<IndicatorEnum> tempIndicator = modelEleIndi.getTempIndicator();
-            if (null != tempIndicator) {
-                tempIndicator.clear();
+    private void selectPagesAllIndicator(boolean selected) {
+        if (selected) {
+            IIndicatorNode[] branchNodes = IndicatorTreeModelBuilder.buildIndicatorCategory();
+            for (ModelElementIndicator modelEleIndi : getResult()) {
+                List<IndicatorEnum> tempIndicator = modelEleIndi.getTempIndicator();
+                if (null != tempIndicator) {
+                    tempIndicator.clear();
+                }
+                for (IIndicatorNode iIndicatorNode : branchNodes) {
+                    addModelElementIndicator(modelEleIndi, iIndicatorNode);
+                }
             }
-            for (IIndicatorNode iIndicatorNode : branchNodes) {
-                addModelElementIndicator(modelEleIndi, iIndicatorNode);
+        } else {
+            for (ModelElementIndicator modelEleIndi : getResult()) {
+                modelEleIndi.getTempIndicator().clear();
             }
         }
     }
@@ -600,6 +606,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                 final TreeItemContainer treeItem;
                 if (parentItem == null) {
                     treeItem = new TreeItemContainer(tree, SWT.NONE, treeColumns.length);
+                    tree.setFocus();
                 } else {
                     treeItem = new TreeItemContainer(parentItem, SWT.NONE, treeColumns.length);
                 }
@@ -1027,7 +1034,8 @@ public class IndicatorSelectDialog extends TrayDialog {
             while (this.currentPage < toPage) {
                 this.currentPage++;
                 int from = (this.currentPage - 1) * this.pageSize;
-                int end = this.currentPage * this.pageSize;
+                int end = this.currentPage * this.pageSize < this.allColumnsCountSize ? this.currentPage * this.pageSize
+                        : this.allColumnsCountSize;
                 for (int i = from; i < end; i++) {
                     List<IndicatorEnum> tempIndicator = getResult()[i].getTempIndicator();
                     if (null != tempIndicator && tempIndicator.isEmpty()) {
@@ -1039,7 +1047,8 @@ public class IndicatorSelectDialog extends TrayDialog {
             while (this.currentPage > toPage) {
                 this.currentPage--;
                 int from = (this.currentPage - 1) * this.pageSize;
-                int end = this.currentPage * this.pageSize;
+                int end = this.currentPage * this.pageSize < this.allColumnsCountSize ? this.currentPage * this.pageSize
+                        : this.allColumnsCountSize;
                 for (int i = from; i > end; i--) {
                     List<IndicatorEnum> tempIndicator = getResult()[i].getTempIndicator();
                     if (null != tempIndicator && tempIndicator.isEmpty()) {
