@@ -113,17 +113,17 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
             tdTable = tdTableRepositoryObject.getTdTable();
             columns = tdTable.getColumns();
             filterCharater = ColumnHelper.getColumnFilter(tdTable);
+            // MOD klliu 2011-09-06 bug TDQ-3414
+            item = (ConnectionItem) tdTableRepositoryObject.getViewObject().getProperty().getItem();
         } else if (meataColumnSetObject instanceof TdViewRepositoryObject) {
             TdViewRepositoryObject tdViewRepositoryObject = (TdViewRepositoryObject) meataColumnSetObject;
             // object = tdViewRepositoryObject.getViewObject();
             tdView = tdViewRepositoryObject.getTdView();
             columns = tdView.getColumns();
             filterCharater = ColumnHelper.getColumnFilter(tdView);
+            // MOD klliu 2011-09-06 bug TDQ-3414
+            item = (ConnectionItem) tdViewRepositoryObject.getViewObject().getProperty().getItem();
         }
-        // MOD klliu 2011-09-06 bug TDQ-3414
-        TdTableRepositoryObject object = (TdTableRepositoryObject) this.getParent().getObject();
-        item = (ConnectionItem) object.getViewObject().getProperty().getItem();
-        // ~
         connection = item.getConnection();
         // MOD gdbu 2011-6-28 bug : 22204
         if (columns.size() <= 0 && !isOnFilterring()) {
