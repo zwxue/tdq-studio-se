@@ -30,6 +30,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -117,7 +118,14 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
             if (selectedObj instanceof DBTableFolderRepNode || selectedObj instanceof DBViewFolderRepNode) {
                 provider = ConnectionHelper.getTdDataProvider(getPackageFromObject(selectedObj));
             }
-            Item connItem = ((RepositoryNode) selectedObj).getObject().getProperty().getItem();
+            Item connItem = null;
+            IRepositoryViewObject object = ((RepositoryNode) selectedObj).getObject();
+            if (null != object) {
+                connItem = object.getProperty().getItem();
+            } else {
+                connItem = ((RepositoryNode) selectedObj).getParent().getObject().getProperty().getItem();
+            }
+
             provider = ((ConnectionItem) connItem).getConnection();
         } else if (selectedObj instanceof Package) {
             provider = ConnectionHelper.getTdDataProvider((Package) selectedObj);
