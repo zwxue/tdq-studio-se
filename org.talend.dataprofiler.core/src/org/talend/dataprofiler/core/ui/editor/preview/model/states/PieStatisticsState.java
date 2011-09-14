@@ -128,7 +128,7 @@ public class PieStatisticsState extends AbstractChartTypeStates {
         for (IndicatorUnit unit : units) {
             if (unit.isExcuted()) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
-                ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.TEXT_STATISTICS_COMPARATOR_ID);
+                ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
                 int numOfShown = frequencyExt.length;
                 for (int i = 0; i < numOfShown; i++) {
                     FrequencyExt freqExt = frequencyExt[i];
