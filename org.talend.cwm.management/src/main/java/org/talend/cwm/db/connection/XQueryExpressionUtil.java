@@ -47,8 +47,10 @@ public final class XQueryExpressionUtil {
         beginIndex = xqueryStr.indexOf("//") + 2;//$NON-NLS-1$
         endIndex = xqueryStr.indexOf(" let $_page_ := ", beginIndex);//$NON-NLS-1$
         tableNode = xqueryStr.substring(beginIndex, endIndex);
-        beginIndex = xqueryStr.indexOf(PluginConstant.DOT_STRING, endIndex) + 1;
-        endIndex = xqueryStr.indexOf(PluginConstant.DOT_STRING, beginIndex);
+        // MOD klliu bug TDQ-3542 revert some code
+        beginIndex = xqueryStr.indexOf(PluginConstant.COMMA_STRING, endIndex) + 1;
+        endIndex = xqueryStr.indexOf(PluginConstant.COMMA_STRING, beginIndex);
+        // ~
         startNum = Integer.parseInt(xqueryStr.substring(beginIndex, endIndex));
         beginIndex = xqueryStr.indexOf(")", endIndex) + 1; //$NON-NLS-1$
         endIndex = xqueryStr.indexOf("return", beginIndex); //$NON-NLS-1$
@@ -75,7 +77,7 @@ public final class XQueryExpressionUtil {
         expression.append(tableNode);
         expression.append(" in subsequence($_leres0_,");//$NON-NLS-1$
         expression.append(startNum);
-        expression.append(PluginConstant.DOT_STRING);
+        expression.append(PluginConstant.COMMA_STRING);
         expression.append(ROWS_PER_PAGE);
         expression.append(") return <result>{if ($");//$NON-NLS-1$
         expression.append(tableNode);
