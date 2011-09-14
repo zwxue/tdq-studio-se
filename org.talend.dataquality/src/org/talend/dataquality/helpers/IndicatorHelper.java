@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
+import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -707,11 +708,13 @@ public final class IndicatorHelper {
                     .getWellFormNationalPhoneCountIndicator();
             ValidPhoneCountIndicator validPhoneIndi = phoneIndicator.getValidPhoneCountIndicator();
             PossiblePhoneCountIndicator possiblePhoneIndi = phoneIndicator.getPossiblePhoneCountIndicator();
+            FormatFreqPieIndicator formatFreqPieIndicator = phoneIndicator.getFormatFreqPieIndicator();
             setCountryCodeParameter(wellFormE164Indi, countryCode);
             setCountryCodeParameter(wellFormInteIndi, countryCode);
             setCountryCodeParameter(wellFormNatiIndi, countryCode);
             setCountryCodeParameter(validPhoneIndi, countryCode);
             setCountryCodeParameter(possiblePhoneIndi, countryCode);
+            setCountryCodeParameter(formatFreqPieIndicator, countryCode);
         }
         setCountryCodeParameter(indicator, countryCode);
     }
