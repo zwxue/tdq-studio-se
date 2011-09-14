@@ -86,6 +86,7 @@ import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ui.utils.ConnectionContextHelper;
+import org.talend.repository.ui.utils.DBConnectionContextUtils;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -1461,7 +1462,7 @@ public final class ConnectionUtils {
 
     /**
      * 
-     * DOC qiongli Comment method "getOriginalConntextValue".
+     * Get the original value for context mode.
      * 
      * @param connection
      * @param rawValue
@@ -1474,6 +1475,25 @@ public final class ConnectionUtils {
             origValu = ConnectionContextHelper.getOriginalValue(contextType, rawValue);
         }
         return origValu == null ? PluginConstant.EMPTY_STRING : origValu;
+    }
+
+    /**
+     * 
+     * Get the original Database for context mode.
+     * 
+     * @param connection
+     * @return
+     */
+    public static Connection getOriginalDatabaseConnection(Connection connection, boolean defaultContext, String selectedContext) {
+        if (connection == null) {
+            return null;
+        }
+        if (connection.isContextMode() && connection instanceof DatabaseConnection) {
+            return DBConnectionContextUtils.cloneOriginalValueConnection((DatabaseConnection) connection, defaultContext,
+                    selectedContext);
+        } else {
+            return connection;
+        }
     }
 
 }

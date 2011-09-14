@@ -17,20 +17,24 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.database.conn.DatabaseConnStrUtil;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
@@ -40,6 +44,7 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -78,10 +83,31 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         // MOD qiongli 2011-9-9,feature TDQ-3317
         Item item = null;
         if (selectedObj instanceof Connection) {
-            Property property = PropertyHelper.getProperty((Connection) selectedObj);
+            Connection con = (Connection) selectedObj;
+            Property property = PropertyHelper.getProperty(con);
             if (property != null) {
                 item = property.getItem();
+                // reSet the neweast url value for context mode,this url in item is used by tdq
+                if (con.isContextMode()) {
+                    if (item != null && con instanceof DatabaseConnection) {
+                        DatabaseConnection dbConn = (DatabaseConnection) ConnectionUtils.getOriginalDatabaseConnection(con, true,
+                                null);
+                        String urlStr = DatabaseConnStrUtil.getURLString(dbConn);
+                        if (urlStr != null) {
+                            ((DatabaseConnection) con).setURL(urlStr);
+                            EList<TaggedValue> taggedValues = con.getTaggedValue();
+                            for (TaggedValue tagValue : taggedValues) {
+                                if (tagValue.getTag().equals("Using URL")) {
+                                    tagValue.setValue(urlStr);
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+                }
             }
+
         } else {
             // MOD klliu 2001-03-01 bug 17506
             RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(oldDataProvider);
