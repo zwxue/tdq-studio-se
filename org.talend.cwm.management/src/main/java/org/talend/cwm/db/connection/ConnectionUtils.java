@@ -1289,7 +1289,8 @@ public final class ConnectionUtils {
                 if (isOracle(connectionParam)) {
                     dbName = getDbName(connectionParam);
                 }
-                if (dbName != null) {
+                // MOD qiongli 2011-9-14 TDQ-3317,avoid empty string
+                if (dbName != null && !dbName.equals(PluginConstant.EMPTY_STRING)) {
                     packageFilter.add(dbName);
                 }
             }
