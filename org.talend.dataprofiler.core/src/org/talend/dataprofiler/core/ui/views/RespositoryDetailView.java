@@ -89,6 +89,7 @@ import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -273,12 +274,21 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 is = false;
             } else if (fe instanceof DBTableRepNode) {
                 DBTableRepNode tableNode = (DBTableRepNode) fe;
+                // MOD gdbu 2011-9-14 TDQ-3243
+                if (!DQRepositoryNode.isOnFilterring()) {
+                    tableNode.getChildren().get(0).getChildren();
+                }
+                // ~TDQ-3243
                 TdTable tdTable = tableNode.getTdTable();
                 createTableDetail(tdTable);
                 is = false;
-
             } else if (fe instanceof DBViewRepNode) {
                 DBViewRepNode viewNode = (DBViewRepNode) fe;
+                // MOD gdbu 2011-9-14 TDQ-3243
+                if (!DQRepositoryNode.isOnFilterring()) {
+                    viewNode.getChildren().get(0).getChildren();
+                }
+                // ~TDQ-3243
                 createNameCommentDetail(viewNode.getTdView());
                 is = false;
             } else if (fe instanceof DBColumnRepNode) {
