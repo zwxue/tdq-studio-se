@@ -196,6 +196,10 @@ public class IndicatorSelectDialog extends TrayDialog {
             }
         }
         // ~
+
+        for (ModelElementIndicator modelElementIndicator : getResult()) {
+            modelElementIndicator.copyOldIndicatorEnum();
+        }
     }
 
     /*
@@ -645,7 +649,9 @@ public class IndicatorSelectDialog extends TrayDialog {
                         checkButton = new Button(tree, SWT.CHECK);
                         checkButton.setData(indicatorNode);
 
-                        ModelElementIndicator pageIndicator = (ModelElementIndicator) treeColumns[j].getData();
+                        int currentModelElement = this.pageSize * (this.currentPage - 1) + j-2;
+                        
+                        ModelElementIndicator pageIndicator = getResult()[currentModelElement];
 
                         boolean isMatch = isMatchCurrentIndicator(pageIndicator, indicatorNode);
                         if (null != pageIndicator && pageIndicator.tempContains(indicatorEnum)) {
@@ -744,7 +750,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                 treeColumn[i + 2].setText(getResult()[i].getElementName());
                 treeColumn[i + 2].setData(getResult()[i]);
                 treeColumn[i + 2].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.analyzeColumn")); //$NON-NLS-1$
-                getResult()[i].copyOldIndicatorEnum();
+                // getResult()[i].copyOldIndicatorEnum();
             }
         } else if (this.allColumnsCountSize > 1 && isUsePaging()) {
             int treeColumnSize = 0;
@@ -770,9 +776,9 @@ public class IndicatorSelectDialog extends TrayDialog {
                 treeColumn[i + 2].setToolTipText(DefaultMessagesImpl.getString("IndicatorSelectDialog.analyzeColumn")); //$NON-NLS-1$
                 ModelElementIndicator modelElementIndicator = getResult()[(this.currentPage - 1) * this.pageSize + i];
                 List<IndicatorEnum> tempIndicator = modelElementIndicator.getTempIndicator();
-                if (null != tempIndicator && tempIndicator.isEmpty()) {
-                    modelElementIndicator.copyOldIndicatorEnum();
-                }
+               // if (null != tempIndicator && tempIndicator.isEmpty()) {
+                    // modelElementIndicator.copyOldIndicatorEnum();
+                //}
             }
         } else {
             treeColumn = new TreeColumn[allColumnsCountSize + 1];
@@ -784,7 +790,7 @@ public class IndicatorSelectDialog extends TrayDialog {
                 treeColumn[i + 1].setWidth(COLI_WIDTH);
                 treeColumn[i + 1].setText(getResult()[i].getElementName());
                 treeColumn[i + 1].setData(getResult()[i]);
-                getResult()[i].copyOldIndicatorEnum();
+                // getResult()[i].copyOldIndicatorEnum();
             }
         }
         return treeColumn;
@@ -822,7 +828,6 @@ public class IndicatorSelectDialog extends TrayDialog {
             @Override
             public void mouseUp(MouseEvent e) {
                 if (currentPage != 1) {
-                    loadPageTempIndicator(1);
                     currentPage = 1;
                     tree.dispose();
                     buttomComp.dispose();
@@ -893,7 +898,6 @@ public class IndicatorSelectDialog extends TrayDialog {
             @Override
             public void mouseUp(MouseEvent e) {
                 if (currentPage != totalPages) {
-                    loadPageTempIndicator(totalPages);
                     currentPage = totalPages;
                     tree.dispose();
                     buttomComp.dispose();
@@ -921,7 +925,6 @@ public class IndicatorSelectDialog extends TrayDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 int toPage = pageGoTo.getSelectionIndex() + 1;
-                loadPageTempIndicator(toPage);
                 currentPage = toPage;
                 tree.dispose();
                 buttomComp.dispose();
@@ -1018,46 +1021,6 @@ public class IndicatorSelectDialog extends TrayDialog {
             return true;
         } else {
             return false;
-        }
-    }
-
-    /**
-     * when user paging from page1 to page10 ,if we turn to the last page ,the page2-page9 have not been loaded ,and
-     * this method is used to load temp indicators on those(2-9) pages.
-     * 
-     * DOC gdbu Comment method "loadPageTempIndicator".
-     * 
-     * @param toPage
-     */
-    private void loadPageTempIndicator(int toPage) {
-        if (this.currentPage < toPage) {
-            while (this.currentPage < toPage) {
-                this.currentPage++;
-                int from = (this.currentPage - 1) * this.pageSize;
-                int end = this.currentPage * this.pageSize < this.allColumnsCountSize ? this.currentPage * this.pageSize
-                        : this.allColumnsCountSize;
-                for (int i = from; i < end; i++) {
-                    List<IndicatorEnum> tempIndicator = getResult()[i].getTempIndicator();
-                    if (null != tempIndicator && tempIndicator.isEmpty()) {
-                        getResult()[i].copyOldIndicatorEnum();
-                    }
-                }
-            }
-        } else if (this.currentPage > toPage) {
-            while (this.currentPage > toPage) {
-                this.currentPage--;
-                int from = (this.currentPage - 1) * this.pageSize;
-                int end = this.currentPage * this.pageSize < this.allColumnsCountSize ? this.currentPage * this.pageSize
-                        : this.allColumnsCountSize;
-                for (int i = from; i > end; i--) {
-                    List<IndicatorEnum> tempIndicator = getResult()[i].getTempIndicator();
-                    if (null != tempIndicator && tempIndicator.isEmpty()) {
-                        getResult()[i].copyOldIndicatorEnum();
-                    }
-                }
-            }
-        } else {
-            return;
         }
     }
 
