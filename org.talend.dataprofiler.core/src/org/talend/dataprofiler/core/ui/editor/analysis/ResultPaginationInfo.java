@@ -254,7 +254,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
                     if (currentDataEntity != null) {
                         // MOD gdbu 2011-7-12 bug : 22524
-                        if (0 == analysis.getResults().getIndicToRowMap().size()) {
+                        if (ExecutionLanguage.JAVA == currentEngine && 0 == analysis.getResults().getIndicToRowMap().size()) {
                             return;
                         }
                         // ~22524
