@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.utils.pagination;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -36,6 +37,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.editor.analysis.MasterPaginationInfo;
 
 /**
  * DOC mzhao 2009-04-20,UI pagination.
@@ -64,17 +67,29 @@ public class UIPagination {
 
     private Composite composite;
 
+    private Composite chartComposite;
+
     private Label pageInfoLabel;
 
     private Composite pageNavComp;
 
     private Viewer bandingViewer;
 
+
     public UIPagination(FormToolkit toolkit, Composite composite) {
         this.toolkit = toolkit;
         this.composite = composite;
         currentPage = 0;
         totalPages = 0;
+    }
+
+    public UIPagination(FormToolkit toolkit, Composite composite, Composite chartComposite) {
+        this(toolkit, composite);
+        this.chartComposite = chartComposite;
+    }
+
+    public UIPagination(FormToolkit toolkit) {
+        this(toolkit, null);
     }
 
     public void init() {
@@ -97,8 +112,8 @@ public class UIPagination {
         initPageNav();
         notifyPageNavigator();
         // First show zero-indexed contents.
-        if (pageCache.size() > 0) {
-            pageCache.get(0).renderContents();
+        if (pageCache.size() > currentPage && pageCache.size() > 0) {
+            pageCache.get(currentPage).renderContents();
         }
     }
 
@@ -117,11 +132,17 @@ public class UIPagination {
         return composite;
     }
 
+    public Composite getChartComposite() {
+        return chartComposite;
+    }
     public void updatePageInfoLabel() {
         pageInfoLabel.setText(currentPage + 1 + "/" + totalPages); //$NON-NLS-1$
     }
 
     private void createNavComposite(Composite searchMainComp) {
+        if (pageNavComp != null) {
+            pageNavComp.dispose();
+        }
         pageNavComp = toolkit.createComposite(searchMainComp, SWT.NONE);
         final GridData pageNavCompGD = new GridData(SWT.FILL, SWT.CENTER, true, false);
         pageNavCompGD.heightHint = 25;
@@ -331,6 +352,19 @@ public class UIPagination {
 
     }
 
+    /**
+     * 
+     * DOC zshen Comment method "synNagivatorState".
+     * 
+     * @param modelElementIndicator synchornized data between pagination nagivator bar and tree.
+     */
+    public void synNagivatorState(ModelElementIndicator[] modelElementIndicator) {
+        if (this.pageCache.size() > this.currentPage) {
+            ((MasterPaginationInfo) this.pageCache.get(this.currentPage)).setModelElementIndicators(Arrays
+                    .asList(modelElementIndicator));
+        }
+    }
+
     public void notifyPageNavigator() {
         if (totalPages == 0) {
             setNavImgState(pageFirstImgHypLnk, IMG_LNK_NAV_FIRST, false);
@@ -356,6 +390,7 @@ public class UIPagination {
         }
         goImgHypLnk.setEnabled(true);
     }
+
 
     private void setNavImgState(ImageHyperlink imgHypLnk, Image img, Boolean isEnabled) {
         imgHypLnk.setEnabled(isEnabled);
@@ -401,4 +436,23 @@ public class UIPagination {
         pageGoText.setText(String.valueOf(pageNumber));
         go();
     }
+
+    public void setComposite(Composite composite) {
+        this.composite = composite;
+    }
+
+    public void setChartComposite(Composite chartComposite) {
+        this.chartComposite = chartComposite;
+    }
+
+    public ModelElementIndicator[] getAllTheModelElementIndicator() {
+        List<ModelElementIndicator> modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
+        for (IPagination pagination : this.pageCache) {
+            if (pagination instanceof MasterPaginationInfo) {
+                modelElementIndicatorList.addAll(((MasterPaginationInfo) pagination).getModelElementIndicators());
+            }
+        }
+        return modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList.size()]);
+    }
+
 }

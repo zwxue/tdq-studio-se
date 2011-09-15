@@ -381,11 +381,17 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     public void setElements(ModelElementIndicator[] elements) {
+        setElements(elements, true);
+    }
+    public void setElements(ModelElementIndicator[] elements, boolean isNavigator) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
         tree.setData(VIEWER_KEY, this);
         this.modelElementIndicators = elements;
         addItemElements((ModelElementIndicator[]) elements);
+        if (isNavigator) {
+            this.setDirty(true);
+        }
         initializedConnection((ModelElementIndicator[]) elements);
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
@@ -411,6 +417,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         this.modelElementIndicators = newsArray;
         this.addItemElements(elements);
+        this.setDirty(true);
         initializedConnection(elements);
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
@@ -517,6 +524,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         setElements(modelElementIndicators);
                     } else {
                         removeItemBranch(treeItem);
+
                     }
                     // MOD mzhao 2005-05-05 bug 6587.
                     // MOD mzhao 2009-06-8, bug 5887.
@@ -535,7 +543,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
             treeItem.setExpanded(true);
         }
-        this.setDirty(true);
+
+        // this.setDirty(true);
+
     }
 
     /**
@@ -656,9 +666,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         this.modelElementIndicators = remainIndicators;
     }
 
-    public void openIndicatorSelectDialog(Shell shell) {
+    public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell,
-                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), modelElementIndicators); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators()); //$NON-NLS-1$
         dialog.create();
 
         if (!DQPreferenceManager.isBlockWeb()) {
@@ -680,13 +690,13 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
 
             this.setElements(result);
-            return;
+            return result;
         } else {
             ModelElementIndicator[] result = dialog.getResult();
             for (ModelElementIndicator modelElementIndicator : result) {
                 modelElementIndicator.getTempIndicator().clear();
             }
-            return;
+            return new ModelElementIndicator[0];
         }
     }
 
@@ -946,6 +956,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             return;
         }
         super.setInput(objs);
+    }
+
+    public ColumnMasterDetailsPage getMasterPage() {
+        return masterPage;
     }
 
     /**

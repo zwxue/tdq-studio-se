@@ -91,4 +91,13 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
         }
         return PAGE_SIZE;
     }
+
+    public void setModelElementIndicators(List<? extends ModelElementIndicator> modelElementIndicators) {
+        this.modelElementIndicators = modelElementIndicators;
+    }
+
+    public List<? extends ModelElementIndicator> getModelElementIndicators() {
+        return modelElementIndicators;
+    }
+
 }

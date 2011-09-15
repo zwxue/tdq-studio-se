@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
+import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
@@ -45,18 +46,43 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
 
     private List<ExpandableComposite> previewChartList;
 
+    private AnalysisColumnTreeViewer treeViewer;
+
     public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
             List<? extends ModelElementIndicator> modelElementIndicators, UIPagination uiPagination) {
+        this(form, previewChartList, modelElementIndicators, uiPagination, null);
+
+    }
+
+    public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
+            List<? extends ModelElementIndicator> modelElementIndicators,
+            UIPagination uiPagination, AnalysisColumnTreeViewer treeViewer) {
         super(form, modelElementIndicators, uiPagination);
         this.previewChartList = previewChartList;
+        if (treeViewer != null) {
+            this.treeViewer = treeViewer;
+            // treeViewer.setElements(modelElementIndicators.toArray(new
+            // ModelElementIndicator[modelElementIndicators.size()]),
+            // false);
+        }
     }
 
     @Override
     protected void render() {
+        // refresh analysis tree
+        if (treeViewer != null) {
+            treeViewer.setElements(modelElementIndicators.toArray(new ModelElementIndicator[modelElementIndicators.size()]),
+                    false);
+        }
+        //chart composite don't display So need't consider it.
+        if (previewChartList == null || uiPagination.getChartComposite() == null) {
+            return;
+        }
         previewChartList.clear();
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
-            ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getComposite(),
+            ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getChartComposite(),
                     ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
+
             needDispostWidgets.add(exComp);
             exComp.setText(DefaultMessagesImpl
                     .getString("ColumnMasterDetailsPage.column", modelElementIndicator.getElementName())); //$NON-NLS-1$
@@ -89,7 +115,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
 
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
-                    uiPagination.getComposite().layout();
+                    uiPagination.getChartComposite().layout();
                     form.reflow(true);
                 }
 
