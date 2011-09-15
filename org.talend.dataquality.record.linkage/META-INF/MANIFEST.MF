@@ -3,12 +3,14 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Linkage Plug-in
 Bundle-SymbolicName: org.talend.dataquality.record.linkage
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.talend.libraries.apache;bundle-version="1.0.0",
+Require-Bundle: org.talend.libraries.apache,
  org.talend.utils,
- org.junit4
+ org.junit4,
+ org.apache.log4j
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: .Talend SA.
 Export-Package: org.talend.dataquality.record.linkage.attribute,
  org.talend.dataquality.record.linkage.constant,
+ org.talend.dataquality.record.linkage.group,
  org.talend.dataquality.record.linkage.record
