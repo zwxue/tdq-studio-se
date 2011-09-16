@@ -29,6 +29,8 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
@@ -388,5 +390,17 @@ public final class MetadataHelper {
             return "true";
         }
         return tv.getValue();
+    }
+
+    /**
+     * DOC klliu Comment method "getAnType".
+     * 
+     * @param analysis
+     * @return
+     */
+    public static String getAnType(Analysis analysis) {
+        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+
+        return analysisType.getName();
     }
 }
