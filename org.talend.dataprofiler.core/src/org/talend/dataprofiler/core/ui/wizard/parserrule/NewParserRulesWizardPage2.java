@@ -50,6 +50,7 @@ public class NewParserRulesWizardPage2 extends AbstractWizardPage {
             nameLab.setText("Rule Name :"); //$NON-NLS-1$
             nameText = new Text(container, SWT.BORDER);
             nameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            nameText.setText("\"\"");//$NON-NLS-1$
             Label typeLab = new Label(container, SWT.NONE);
             typeLab.setText("Rule Type :"); //$NON-NLS-1$
             String[] types = ParserRuleLanguageEnum.getAllTypes();
@@ -63,6 +64,7 @@ public class NewParserRulesWizardPage2 extends AbstractWizardPage {
             valueLab.setText("Rule Value :"); //$NON-NLS-1$
             valueText = new Text(container, SWT.BORDER);
             valueText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            valueText.setText("\"\"");//$NON-NLS-1$
             setControl(container);
             addListeners();
 
