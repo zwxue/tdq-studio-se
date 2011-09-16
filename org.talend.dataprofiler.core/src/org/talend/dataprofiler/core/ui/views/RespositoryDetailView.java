@@ -53,14 +53,11 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
@@ -610,26 +607,24 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             String connectionString = JavaSqlFactory.getURL(dataProvider);
             newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
         }
-        TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(dataProvider);
-        if (softwareSystem == null) {
-            softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
-        }
 
-        // MOD qiongli 2011-2-12.bug 16164.
+        // MOD gdbu 2011-9-16 TDQ-3337
         String subtype = PluginConstant.EMPTY_STRING;
         String version = PluginConstant.EMPTY_STRING;
-        if (softwareSystem == null) {
+        if (dataProvider instanceof DatabaseConnection) {
+            subtype = ((DatabaseConnection) dataProvider).getDatabaseType();
+            version = ((DatabaseConnection) dataProvider).getVersion();
+        } else {
             boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
             subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage()
                     : PluginConstant.EMPTY_STRING;
-            version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
-        } else {
-            subtype = softwareSystem.getSubtype();
-            version = softwareSystem.getVersion();
+            if (!DQRepositoryNode.isOnFilterring()) {
+                version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
+            }
         }
+        // ~TDQ-3337
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
         newLabelAndText(gContainer, "Version: ", version); //$NON-NLS-1$
-
     }
 
     private void createDescription(ModelElement dataProvider) {
