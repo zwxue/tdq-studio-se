@@ -292,8 +292,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             public void linkActivated(HyperlinkEvent e) {
                 ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(null);
+                if (result.length > 0) {
                 currentModelElementIndicators = result;
                 computePagination();
+                }
             }
 
         });
