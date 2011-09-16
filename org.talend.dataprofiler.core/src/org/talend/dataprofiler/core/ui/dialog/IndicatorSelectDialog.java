@@ -649,9 +649,15 @@ public class IndicatorSelectDialog extends TrayDialog {
                         checkButton = new Button(tree, SWT.CHECK);
                         checkButton.setData(indicatorNode);
 
-                        int currentModelElement = this.pageSize * (this.currentPage - 1) + j-2;
+                        ModelElementIndicator pageIndicator = null;
+
+                        if (isUsePaging()) {
+                            int currentModelElement = this.pageSize * (this.currentPage - 1) + j - 2;
+                            pageIndicator = getResult()[currentModelElement];
+                        } else {
+                            pageIndicator = (ModelElementIndicator) treeColumns[j].getData();
+                        }
                         
-                        ModelElementIndicator pageIndicator = getResult()[currentModelElement];
 
                         boolean isMatch = isMatchCurrentIndicator(pageIndicator, indicatorNode);
                         if (null != pageIndicator && pageIndicator.tempContains(indicatorEnum)) {
