@@ -389,6 +389,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         tree.setData(VIEWER_KEY, this);
         this.modelElementIndicators = elements;
         addItemElements((ModelElementIndicator[]) elements);
+        masterPage.synNagivatorStat();
         if (isNavigator) {
             this.setDirty(true);
         }
@@ -689,7 +690,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 modelElementIndicator.storeTempIndicator();
             }
 
-            this.setElements(result);
+            // this.setElements(result);
             return result;
         } else {
             ModelElementIndicator[] result = dialog.getResult();
@@ -856,7 +857,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     Object meobj = item.getData(MODELELEMENT_INDICATOR_KEY);
                     if (meobj != null && indicatorobj == null) {
                         // open indicator selector
-                        openIndicatorSelectDialog(null);
+                        ModelElementIndicator[] modelElementIndicator=openIndicatorSelectDialog(null);
+                        if(modelElementIndicator.length>0){
+                            setElements(modelElementIndicator);
+                        }
                     } else if (meobj != null && indicatorobj != null) {
                         // open indicator option wizard
                         openIndicatorOptionDialog(null, item);

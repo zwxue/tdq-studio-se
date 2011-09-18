@@ -469,7 +469,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     public abstract void addElements(final ModelElementIndicator[] elements);
 
-    public void setInput(Object[] objs) {
+    public ModelElementIndicator[] filterInputData(Object[] objs) {
         List<IRepositoryNode> reposList = new ArrayList<IRepositoryNode>();
         for (Object obj : objs) {
             // MOD klliu 2011-02-16 feature 15387
@@ -495,7 +495,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             }
         }
         if (reposList.size() == 0) {
-            return;
+            return null;
         }
         boolean isMdm = false;
         // MOD qiongli 2011-1-7 feature 16796.
@@ -505,7 +505,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             isMdm = objs[0] instanceof MetadataXmlElementTypeRepositoryObject || objs[0] instanceof MDMXmlElementRepNode;
             isDelimitedFile = objs[0] instanceof DFTableRepNode || objs[0] instanceof DFColumnRepNode;
             if (!(reposList.get(0) instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
-                return;
+                return null;
             }
         }
 
@@ -525,6 +525,17 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList
                 .size()]);
+        return this.modelElementIndicators;
+    }
+
+    public ModelElementIndicator[] filterInputData(ModelElementIndicator[] objs) {
+        if (objs != null && objs.length > 0) {
+            this.modelElementIndicators = objs;
+        }
+        return this.modelElementIndicators;
+    }
+    public void setInput(Object[] objs) {
+        this.modelElementIndicators = filterInputData(objs);
         this.setElements(modelElementIndicators);
     }
 

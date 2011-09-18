@@ -93,7 +93,6 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
             Composite comp = uiPagination.getToolkit().createComposite(exComp);
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
-
             Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
                     .getIndicatorComposite(modelElementIndicator);
             for (EIndicatorChartType chartType : indicatorComposite.keySet()) {
@@ -110,7 +109,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
                     }
                 }
             }
-
+//
             exComp.addExpansionListener(new ExpansionAdapter() {
 
                 @Override
@@ -122,6 +121,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
             });
             exComp.setExpanded(true);
             exComp.setClient(comp);
+            uiPagination.getChartComposite().layout();
         }
 
     }

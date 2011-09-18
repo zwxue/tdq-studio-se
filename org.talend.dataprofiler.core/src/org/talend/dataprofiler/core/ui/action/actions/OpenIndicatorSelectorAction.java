@@ -16,6 +16,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
@@ -49,7 +50,10 @@ public class OpenIndicatorSelectorAction extends Action implements ICheatSheetAc
         AbstractColumnDropTree treeViewer = page.getTreeViewer();
         if (treeViewer instanceof AnalysisColumnTreeViewer) {
             AnalysisColumnTreeViewer columnTreeViewer = (AnalysisColumnTreeViewer) treeViewer;
-            columnTreeViewer.openIndicatorSelectDialog(null);
+            ModelElementIndicator[] modelElementIndicator = columnTreeViewer.openIndicatorSelectDialog(null);
+            if (modelElementIndicator.length > 0) {
+                columnTreeViewer.setElements(modelElementIndicator);
+            }
         }
     }
 

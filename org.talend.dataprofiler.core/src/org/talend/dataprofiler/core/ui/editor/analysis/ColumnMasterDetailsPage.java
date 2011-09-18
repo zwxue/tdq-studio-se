@@ -293,8 +293,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             public void linkActivated(HyperlinkEvent e) {
                 ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(null);
                 if (result.length > 0) {
-                currentModelElementIndicators = result;
-                computePagination();
+                    refreshTheTree(result);
+                    setDirty(true);
                 }
             }
 
@@ -377,7 +377,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // previewChartList = new ArrayList<ExpandableComposite>();
         // }
         final ModelElementIndicator[] modelElementIndicatorArrary = this.getCurrentModelElementIndicators();
-
         int pageSize = IndicatorPaginationInfo.getPageSize();
         int totalPages = modelElementIndicatorArrary.length / pageSize;
         List<ModelElementIndicator> modelElementIndicatorList = null;
@@ -456,12 +455,21 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                         .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] modelElements = dialog.getResult();
-            treeViewer.setInput(modelElements);
-            this.currentModelElementIndicators = treeViewer.getModelElementIndicator();
-            this.computePagination();
-            return;
+            ModelElementIndicator[] filterInputData = treeViewer.filterInputData(modelElements);
+            if (filterInputData == null) {
+                return;
+            }
+            refreshTheTree(treeViewer.getModelElementIndicator());
+            this.setDirty(true);
         }
     }
+
+    public void refreshTheTree(ModelElementIndicator[] modelElements) {
+
+        this.currentModelElementIndicators = modelElements;
+        this.computePagination();
+    }
+
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
@@ -977,6 +985,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
             currentEditor.setRefreshResultPage(true);
+            synNagivatorStat();
             this.uiPagination.synNagivatorState(this.treeViewer.getModelElementIndicator());
             this.currentModelElementIndicators = this.uiPagination.getAllTheModelElementIndicator();
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
@@ -986,6 +995,16 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             ModelElementIndicator indicator = (ModelElementIndicator) ((Widget) evt.getNewValue())
                     .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
             expandChart(indicator);
+        }
+    }
+
+    /**
+     * DOC zshen Comment method "synNagivatorStat".
+     */
+    public void synNagivatorStat() {
+        if (this.uiPagination != null) {
+        this.uiPagination.synNagivatorState(this.treeViewer.getModelElementIndicator());
+        this.currentModelElementIndicators = this.uiPagination.getAllTheModelElementIndicator();
         }
     }
 

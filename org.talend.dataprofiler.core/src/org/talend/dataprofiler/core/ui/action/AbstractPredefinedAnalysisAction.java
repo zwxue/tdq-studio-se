@@ -256,8 +256,13 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
 
                 ModelElementIndicator[] predefinedColumnIndicator = getPredefinedColumnIndicator();
                 if (predefinedColumnIndicator != null) {
-                    getMasterPage().getTreeViewer().addElements(predefinedColumnIndicator);
+                    // getMasterPage().getTreeViewer().addElements(predefinedColumnIndicator);
+
+                    getMasterPage().refreshTheTree(predefinedColumnIndicator);
                     getMasterPage().doSave(null);
+                    // treeViewer.setInput(modelElements);
+                    // this.currentModelElementIndicators = treeViewer.getModelElementIndicator();
+                    // this.computePagination();
                 }
             }
         }
