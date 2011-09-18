@@ -1003,4 +1003,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
 
     }
+
+    @Override
+    protected ModelElementIndicator[] getAllTheElementIndicator() {
+        return masterPage.getCurrentModelElementIndicators();
+    }
+
 }

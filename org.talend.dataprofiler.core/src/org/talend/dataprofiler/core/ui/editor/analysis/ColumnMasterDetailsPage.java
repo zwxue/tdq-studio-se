@@ -986,8 +986,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
             currentEditor.setRefreshResultPage(true);
             synNagivatorStat();
-            this.uiPagination.synNagivatorState(this.treeViewer.getModelElementIndicator());
-            this.currentModelElementIndicators = this.uiPagination.getAllTheModelElementIndicator();
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.analysisHandler.setStringDataFilter((String) evt.getNewValue());
         } else if (PluginConstant.EXPAND_TREE.equals(evt.getPropertyName())) {

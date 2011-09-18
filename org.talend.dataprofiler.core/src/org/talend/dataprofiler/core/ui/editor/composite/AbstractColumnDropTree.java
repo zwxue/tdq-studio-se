@@ -510,7 +510,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
 
         List<ModelElementIndicator> modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
-        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+        for (ModelElementIndicator modelElementIndicator : getAllTheElementIndicator()) {
             if (reposList.contains(modelElementIndicator.getModelElementRepositoryNode())) {
                 modelElementIndicatorList.add(modelElementIndicator);
                 reposList.remove(modelElementIndicator.getModelElementRepositoryNode());
@@ -596,5 +596,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             return false;
         }
         return true;
+    }
+
+    protected ModelElementIndicator[] getAllTheElementIndicator() {
+        return this.getModelElementIndicator();
     }
 }
