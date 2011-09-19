@@ -12,12 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.properties.ContextItem;
+import org.talend.core.ui.context.ContextManagerHelper;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.SwitchContextAction;
@@ -79,9 +81,7 @@ public class SwitchContextProvider extends AbstractCommonActionProvider {
                 // of values (more than one name).
                 if (contextId != null && !"".equals(contextId.trim())) { //$NON-NLS-1$
                     ContextItem objContextItem = ContextUtils.getContextItemById2(contextId);
-                    @SuppressWarnings("unchecked")
-                    EList<ContextParameterType> params = ((org.talend.designer.core.model.utils.emf.talendfile.impl.ContextTypeImpl) (objContextItem
-                            .getContext().get(0))).getContextParameter();
+                    List<ContextParameterType> params = ContextManagerHelper.getContextParameterType(objContextItem);
                     if (params != null && params.size() != 0) {
                         return true;
                     }
