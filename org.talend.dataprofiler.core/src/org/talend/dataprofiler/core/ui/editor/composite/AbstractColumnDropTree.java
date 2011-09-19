@@ -535,7 +535,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         return this.modelElementIndicators;
     }
     public void setInput(Object[] objs) {
-        this.modelElementIndicators = filterInputData(objs);
+        if (filterInputData(objs) != null) {
+            this.modelElementIndicators = filterInputData(objs);
+        }
         this.setElements(modelElementIndicators);
     }
 
