@@ -695,9 +695,9 @@ public final class ImportFactory {
                     prParameters.description = reader.get(ParserRuleToExcelEnum.Description.getLiteral());
                     prParameters.purpose = reader.get(ParserRuleToExcelEnum.Purpose.getLiteral());
                     ParserRuleTdExpresstion prExpresstion = new ImportFactory().new ParserRuleTdExpresstion();
-                    prExpresstion.name = reader.get(ParserRuleToExcelEnum.Name.getLiteral());
-                    prExpresstion.body = reader.get(ParserRuleToExcelEnum.Body.getLiteral());
-                    prExpresstion.language = reader.get(ParserRuleToExcelEnum.Language.getLiteral());
+                    prExpresstion.name = addQual(reader.get(ParserRuleToExcelEnum.Name.getLiteral()));
+                    prExpresstion.body = addQual(reader.get(ParserRuleToExcelEnum.Body.getLiteral()));
+                    prExpresstion.language = addQual(reader.get(ParserRuleToExcelEnum.Language.getLiteral()));
                     prParameters.prExpresstions.add(prExpresstion);
                 }
                 if (isNeedToCreate) {
@@ -716,6 +716,17 @@ public final class ImportFactory {
             }
         }
         return information;
+    }
+
+    /**
+     * DOC klliu Comment method "addQual".
+     * 
+     * @param string
+     * @return
+     */
+    private static String addQual(String sourceString) {
+        String replace = sourceString.replace(sourceString, "\"" + sourceString + "\"");//$NON-NLS-1$ //$NON-NLS-2$
+        return replace;
     }
 
     /**

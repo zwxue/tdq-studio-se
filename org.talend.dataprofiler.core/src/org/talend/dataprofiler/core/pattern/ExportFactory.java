@@ -238,13 +238,20 @@ public final class ExportFactory {
             idMap.put(ParserRuleToExcelEnum.Description, relpaceTempHasEscapeCharactor(MetadataHelper.getDescription(parserRule)));
             idMap.put(ParserRuleToExcelEnum.Author, relpaceTempHasEscapeCharactor(MetadataHelper.getAuthor(parserRule)));
             idMap.put(ParserRuleToExcelEnum.RelativePath, relativeURI.toString());
-            idMap.put(ParserRuleToExcelEnum.Name, tde.getName());
-            idMap.put(ParserRuleToExcelEnum.Body, tde.getBody());
-            idMap.put(ParserRuleToExcelEnum.Language, tde.getLanguage());
+            idMap.put(ParserRuleToExcelEnum.Name, replaceQual(tde.getName()));
+            idMap.put(ParserRuleToExcelEnum.Body, replaceQual(tde.getBody()));
+            idMap.put(ParserRuleToExcelEnum.Language, replaceQual(tde.getLanguage()));
 
         }
 
         return idMap;
+    }
+
+    private static String replaceQual(String sourceString) {
+        String replace = sourceString.replace("\"", "");//$NON-NLS-1$ //$NON-NLS-2$
+
+        return replace;
+
     }
 
     private static Map<PatternToExcelEnum, String> getRelatedValueFromIndicatorDefinition(
