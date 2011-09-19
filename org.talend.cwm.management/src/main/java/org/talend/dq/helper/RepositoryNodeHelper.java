@@ -2673,10 +2673,10 @@ public final class RepositoryNodeHelper {
         DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
 
         List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
-        list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
-        list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
+         list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+         list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
         list.add(getRootNode(ERepositoryObjectType.METADATA, true));
-        list.add(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
+         list.add(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
         for (IRepositoryNode iRepositoryNode : list) {
             allFilteredNodeList.addAll(getTreeList(iRepositoryNode));
             monitor.worked(2);
@@ -2709,6 +2709,10 @@ public final class RepositoryNodeHelper {
 
     public static void setFilteredNode(IRepositoryNode fNode) {
         filteredNode = fNode;
+    }
+
+    public static List<IRepositoryNode> getAllFilteredNodeList() {
+        return allFilteredNodeList;
     }
 
 }

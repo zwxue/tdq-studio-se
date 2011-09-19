@@ -79,6 +79,19 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     @Override
     public Object[] getChildren(Object element) {
+
+        if (DQRepositoryNode.isOnDisplayNextOrPreviousNode() && element instanceof IRepositoryNode) {
+            List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
+            IRepositoryNode node = (IRepositoryNode) element;
+            List<IRepositoryNode> allFilteredNodeList = RepositoryNodeHelper.getAllFilteredNodeList();
+            for (IRepositoryNode iRepositoryNode : allFilteredNodeList) {
+                if (null != iRepositoryNode.getParent() && iRepositoryNode.getParent().equals(node)) {
+                    children.add(iRepositoryNode);
+                }
+            }
+            return sortRepositoryNode(children.toArray());
+        }
+
         RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         FolderHelper folderHelper = instance.getFolderHelper();
         try {
@@ -149,7 +162,8 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                 List<IRepositoryNode> children = node.getChildren();
                 DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
 
-                if (node instanceof DBTableFolderRepNode || node instanceof DBViewFolderRepNode) {
+                if ((node instanceof DBTableFolderRepNode || node instanceof DBViewFolderRepNode)
+                        && !DQRepositoryNode.isOnFilterring()) {
                     if (0 < children.size()) {
                         try {
 

@@ -43,6 +43,12 @@ public class DQRepositoryNode extends RepositoryNode {
     private static boolean isReturnAllNodesWhenFiltering = true;
 
     /**
+     * after filter the tree , when we push next or previous button , this variable will be true , after display the
+     * next or previous match node , this variable will be false again.
+     */
+    private static boolean isOnDisplayNextOrPreviousNode = false;
+
+    /**
      * this will be only used in the "table select dialog", when do the schema filter.
      */
     private static boolean untilSchema = false;
@@ -291,6 +297,14 @@ public class DQRepositoryNode extends RepositoryNode {
      */
     public static void setIsReturnAllNodesWhenFiltering(boolean isExpandNodeWhenFiltering) {
         DQRepositoryNode.isReturnAllNodesWhenFiltering = isExpandNodeWhenFiltering;
+    }
+
+    public static boolean isOnDisplayNextOrPreviousNode() {
+        return isOnDisplayNextOrPreviousNode;
+    }
+
+    public static void setOnDisplayNextOrPreviousNode(boolean isOnDisplayNextOrPreviousNode) {
+        DQRepositoryNode.isOnDisplayNextOrPreviousNode = isOnDisplayNextOrPreviousNode;
     }
 
 }

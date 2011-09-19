@@ -118,20 +118,16 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
                 tables = PackageHelper.getTables(catalog);
                 filterCharacter = RepositoryNodeHelper.getTableFilter(catalog, schema);
-                // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
-                if (tables.isEmpty()) {
-                    if (isOnFilterring()) {
-                        tables = DqRepositoryViewService.getTables(connection, catalog, null, false);
-                    } else {
-                        tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
-                    }
-                    if (tables.size() > 0) {
-                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
-                    }
-                } else {
-                    ConnectionUtils.retrieveColumn(tables);
-                }
 
+                if (!isOnFilterring()) {
+                    // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
+                    if (tables.isEmpty()) {
+                        tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
+                        if (tables.size() > 0) {
+                            ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                        }
+                    }
+                }
             } else {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
                 item = (ConnectionItem) viewObject.getProperty().getItem();
@@ -145,33 +141,28 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
                     filterCharacter = RepositoryNodeHelper.getTableFilter(
                             ((MetadataCatalogRepositoryObject) object).getCatalog(), null);
                 }
-                // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
-                if (tables.isEmpty()) {
-                    if (isOnFilterring()) {
-                        tables = DqRepositoryViewService.getTables(connection, schema, null, false);
-                    } else {
+
+                if (!isOnFilterring()) {
+                    // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
+                    if (tables.isEmpty()) {
                         tables = DqRepositoryViewService.getTables(connection, schema, null, true);
-                    }
-                    if (tables.size() > 0) {
-                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                        if (tables.size() > 0) {
+                            ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                        }
                     }
                 }
-
-                // -------------delete this code
-                else {
-                    ConnectionUtils.retrieveColumn(tables);
-                }
-                // -------------
-
             }
 
             if (tables.size() > 0) {
                 // MOD qiongli 2011-6-28 bug 22019,only need to save connection in this place.
-                Project currentProject = ProjectManager.getInstance().getCurrentProject();
-                ProxyRepositoryFactory.getInstance().save(currentProject, item);
+                if (!DQRepositoryNode.isOnFilterring()) {
+                    Project currentProject = ProjectManager.getInstance().getCurrentProject();
+                    ProxyRepositoryFactory.getInstance().save(currentProject, item);
+                }
             } else {
                 ConnectionUtils.retrieveColumn(tables);
             }
+
             if (filterCharacter != null && !filterCharacter.equals("")) {
                 tables = RepositoryNodeHelper.filterTables(tables, filterCharacter);
             }
@@ -230,8 +221,12 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
     public boolean hasChildren() {
         // MOD gdbu 2011-9-1 TDQ-3457
         if (!hasChildrenInFile()) {
-            if (!hasChildrenInDataBase()) {
+            if (isOnFilterring()) {
                 return false;
+            } else {
+                if (!hasChildrenInDataBase()) {
+                    return false;
+                }
             }
         }
         return true;

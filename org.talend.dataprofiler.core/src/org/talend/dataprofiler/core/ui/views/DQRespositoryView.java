@@ -658,7 +658,11 @@ public class DQRespositoryView extends CommonNavigator {
                         IRepositoryNode previousFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(repoNode);
                         if (null != previousFilteredNode) {
                             RepositoryNodeHelper.setFilteredNode(previousFilteredNode);
-                            showSelectedElements((RepositoryNode) previousFilteredNode);
+                            // showSelectedElements((RepositoryNode) previousFilteredNode);
+                            DQRepositoryNode.setOnDisplayNextOrPreviousNode(true);
+                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) previousFilteredNode);
+                            getCommonViewer().setSelection(structSel);
+                            DQRepositoryNode.setOnDisplayNextOrPreviousNode(false);
                         }
                     }
                 }
@@ -689,7 +693,11 @@ public class DQRespositoryView extends CommonNavigator {
                         IRepositoryNode nextFilteredNode = RepositoryNodeHelper.getNextFilteredNode(repoNode);
                         if (null != nextFilteredNode) {
                             RepositoryNodeHelper.setFilteredNode(nextFilteredNode);
-                            showSelectedElements((RepositoryNode) nextFilteredNode);
+                            // showSelectedElements((RepositoryNode) nextFilteredNode);
+                            DQRepositoryNode.setOnDisplayNextOrPreviousNode(true);
+                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) nextFilteredNode);
+                            getCommonViewer().setSelection(structSel);
+                            DQRepositoryNode.setOnDisplayNextOrPreviousNode(false);
                         }
                     }
                 }

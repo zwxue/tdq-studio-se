@@ -224,8 +224,12 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
     public boolean hasChildren() {
         // MOD gdbu 2011-9-1 TDQ-3457
         if (!hasChildrenInFile()) {
-            if (!hasChildrenInDataBase()) {
+            if (isOnFilterring()) {
                 return false;
+            } else {
+                if (!hasChildrenInDataBase()) {
+                    return false;
+                }
             }
         }
         return true;
