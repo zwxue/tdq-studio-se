@@ -426,18 +426,24 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private boolean isFunction(String defValue, String table) {
         boolean ok = false;
         Connection conenction = null;
+        Statement stat = null;
         try {
             String queryStmt = "select " + defValue + " from " + table;//$NON-NLS-1$//$NON-NLS-2$
             TypedReturnCode<Connection> conn = getConnection(cachedAnalysis);
             conenction = conn.getObject();
 
-            Statement stat = conenction.createStatement();
+            stat = conenction.createStatement();
             ok = stat.execute(queryStmt);
-            // MOD qiongli 2011-5-20,don't print error in error log view and use finnaly to close Statement.
-            stat.close();
+
         } catch (Exception e) {
             ok = false;
         } finally {
+            // MOD qiongli 2011-5-20,don't print error in error log view and use finnaly to close Statement.
+            try {
+                stat.close();
+            } catch (SQLException e) {
+                log.error(e, e);
+            }
             ConnectionUtils.closeConnection(conenction);
         }
         return ok;
