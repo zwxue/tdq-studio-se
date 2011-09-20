@@ -80,7 +80,7 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
                 }
 
                 DBConnectionRepNode repNode = new DBConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
-                repNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CONNECTIONS);
+                repNode.setProperties(EProperties.LABEL, viewObject.getLabel());
                 repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
                 viewObject.setRepositoryNode(repNode);
                 children.add(repNode);
