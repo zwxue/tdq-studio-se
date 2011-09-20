@@ -170,6 +170,10 @@ public class PhoneNumberForm extends AbstractIndicatorForm {
         }
 
         String defaultCountry = Locale.getDefault().getDisplayCountry();
+        // give a value of "United States" to defaultCountry when it is empty string.
+        if (defaultCountry.equals(PluginConstant.EMPTY_STRING)) {
+            defaultCountry = "United States";
+        }
 
         int i = 0;
 
