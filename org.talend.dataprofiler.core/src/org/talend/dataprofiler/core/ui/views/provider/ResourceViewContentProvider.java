@@ -89,6 +89,14 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     children.add(iRepositoryNode);
                 }
             }
+            if (children.isEmpty()) {
+                for (IRepositoryNode iRepositoryNode : allFilteredNodeList) {
+                    if (null != iRepositoryNode.getParent() && null != iRepositoryNode.getParent().getParent()
+                            && iRepositoryNode.getParent().getParent().equals(node)) {
+                        children.add(iRepositoryNode);
+                    }
+                }
+            }
             return sortRepositoryNode(children.toArray());
         }
 

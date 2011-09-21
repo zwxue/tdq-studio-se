@@ -695,6 +695,7 @@ public class DQRespositoryView extends CommonNavigator {
                             RepositoryNodeHelper.setFilteredNode(nextFilteredNode);
                             // showSelectedElements((RepositoryNode) nextFilteredNode);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(true);
+                            getCommonViewer().expandToLevel(nextFilteredNode, 1);
                             StructuredSelection structSel = new StructuredSelection((RepositoryNode) nextFilteredNode);
                             getCommonViewer().setSelection(structSel);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(false);
