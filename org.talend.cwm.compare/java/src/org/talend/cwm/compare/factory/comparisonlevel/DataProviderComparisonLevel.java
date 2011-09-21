@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.ecore.EObject;
@@ -44,7 +43,6 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -90,18 +88,12 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                 // reSet the neweast url value for context mode,this url in item is used by tdq
                 if (con.isContextMode()) {
                     if (item != null && con instanceof DatabaseConnection) {
-                        DatabaseConnection dbConn = (DatabaseConnection) ConnectionUtils.getOriginalDatabaseConnection(con, true,
-                                null);
+                        DatabaseConnection dbConn = (DatabaseConnection) ConnectionUtils
+                                .getOriginalDatabaseConnection((DatabaseConnection) con);
                         String urlStr = DatabaseConnStrUtil.getURLString(dbConn);
                         if (urlStr != null) {
                             ((DatabaseConnection) con).setURL(urlStr);
-                            EList<TaggedValue> taggedValues = con.getTaggedValue();
-                            for (TaggedValue tagValue : taggedValues) {
-                                if (tagValue.getTag().equals("Using URL")) {
-                                    tagValue.setValue(urlStr);
-                                    break;
-                                }
-                            }
+                            ConnectionHelper.setUsingURL(con, urlStr);
                         }
 
                     }

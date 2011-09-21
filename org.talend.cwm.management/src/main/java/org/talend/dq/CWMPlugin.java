@@ -19,6 +19,7 @@ import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Path;
@@ -150,6 +151,42 @@ public class CWMPlugin extends Plugin {
             log.error(e, e);
         }
         aliasManager.modelChanged();
+    }
+
+
+    /**
+     * 
+     * DOC qiongli Comment method "updateConnetionAliasByName".
+     * 
+     * @param connection
+     * @param aliasName
+     */
+    public void updateConnetionAliasByName(Connection connection, String aliasName) {
+        if (connection == null || aliasName == null) {
+            return;
+        }
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        // if the ctabItem is open,close it.
+        DatabaseStructureView view = sqlPlugin.getDatabaseStructureView();
+        if (view != null) {
+            view.closeCurrentCabItem(aliasName);
+        }
+
+        AliasManager aliasManager = sqlPlugin.getAliasManager();
+        Alias alias = aliasManager.getAlias(aliasName);
+        if (alias != null) {
+            try {
+                aliasManager.removeAlias(aliasName);
+                aliasManager.saveAliases();
+                aliasManager.modelChanged();
+                addConnetionAliasToSQLPlugin(connection);
+
+            } catch (Exception e) {
+                log.error(e, e);
+            }
+
+        }
+
     }
 
     private void addJars(Connection connection, ManagedDriver manDr) {

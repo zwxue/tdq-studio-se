@@ -87,6 +87,7 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ui.utils.ConnectionContextHelper;
 import org.talend.repository.ui.utils.DBConnectionContextUtils;
+import org.talend.repository.ui.utils.FileConnectionContextUtils;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -1471,7 +1472,14 @@ public final class ConnectionUtils {
     public static String getOriginalConntextValue(Connection connection, String rawValue) {
         String origValu = null;
         if (connection != null && connection.isContextMode()) {
-            ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(connection);
+            String groupName = connection.getContextGroupName();
+            ContextType contextType = null;
+            if (groupName == null) {
+                contextType = ConnectionContextHelper.getContextTypeForContextMode(connection, true);
+            } else {
+                contextType = ConnectionContextHelper.getContextTypeForContextMode(null, connection, groupName, false);
+            }
+
             origValu = ConnectionContextHelper.getOriginalValue(contextType, rawValue);
         }
         return origValu == null ? PluginConstant.EMPTY_STRING : origValu;
@@ -1479,21 +1487,50 @@ public final class ConnectionUtils {
 
     /**
      * 
-     * Get the original Database for context mode.
+     * Get the original DatabaseConnection for context mode.
      * 
      * @param connection
      * @return
      */
-    public static Connection getOriginalDatabaseConnection(Connection connection, boolean defaultContext, String selectedContext) {
+    public static DatabaseConnection getOriginalDatabaseConnection(DatabaseConnection connection) {
         if (connection == null) {
             return null;
         }
-        if (connection.isContextMode() && connection instanceof DatabaseConnection) {
-            return DBConnectionContextUtils.cloneOriginalValueConnection((DatabaseConnection) connection, defaultContext,
-                    selectedContext);
-        } else {
-            return connection;
+        if (connection.isContextMode()) {
+            String contextGroupName = connection.getContextGroupName();
+            if (contextGroupName == null) {
+                return DBConnectionContextUtils.cloneOriginalValueConnection(connection, true, null);
+            }
+            return DBConnectionContextUtils
+                    .cloneOriginalValueConnection((DatabaseConnection) connection, false,
+                    contextGroupName);
         }
+        return connection;
+    }
+    
+    /**
+     * 
+     * Get the original FileConnection for context mode.
+     * 
+     * @param fileConn
+     * @return
+     */
+    public static FileConnection getOriginalFileConnection(FileConnection fileConn) {
+        if (fileConn == null) {
+            return null;
+        }
+        if (fileConn.isContextMode()) {
+            String contextGroupName = fileConn.getContextGroupName();
+            if (contextGroupName == null) {
+                return FileConnectionContextUtils.cloneOriginalValueConnection(null, fileConn, true);
+            } else {
+                ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(null, fileConn, contextGroupName,
+                        false);
+                return FileConnectionContextUtils.cloneOriginalValueConnection(fileConn, contextType);
+            }
+
+        }
+        return fileConn;
     }
 
 }

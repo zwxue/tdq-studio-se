@@ -38,6 +38,7 @@ import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -60,6 +61,7 @@ import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -220,7 +222,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     }
 
     /*
-     * Added by qiongli TDQ-3317 when context is changed,should retrive the related database info(schema,catalog).
+     * Add qiongli TDQ-3317 when context is changed,should retrive the related database info(schema,catalog) and sql
+     * exploer.
      * 
      * @see org.talend.core.ITDQRepositoryService#reloadDatabase(org.talend.core.model.properties.ConnectionItem)
      */
@@ -240,15 +243,27 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                         if (cItem == contextItem) {
                             if (conn instanceof DatabaseConnection) {
                                 final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(conn);
-                                    Connection oldConnection = creatComparisonLevel.reloadCurrentLevelElement();
-                                    List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
-                                    if (!(dependencyClients == null || dependencyClients.isEmpty())) {
-                                        MessageDialog.openWarning(null,
-                                                DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
-                                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage",
-                                                    oldConnection.getLabel()));
+                                Connection newConnection = creatComparisonLevel.reloadCurrentLevelElement();
+                                // update the sql explore.
+                                Property property = PropertyHelper.getProperty(newConnection);
+                                if (property != null) {
+                                    Item newItem = property.getItem();
+                                    if (newItem != null) {
+                                        CWMPlugin.getDefault()
+                                                .updateConnetionAliasByName(newConnection, newConnection.getLabel());
+                                        // notifySQLExplorer(newItem);
                                     }
-                                WorkbenchUtils.impactExistingAnalyses(oldConnection);
+                                }
+                                // update the related analyses.
+                                List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
+                                if (!(dependencyClients == null || dependencyClients.isEmpty())) {
+                                    MessageDialog.openWarning(
+                                            null,
+                                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
+                                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage",
+                                                    newConnection.getLabel()));
+                                }
+                                WorkbenchUtils.impactExistingAnalyses(newConnection);
                             }
                         }
                     }

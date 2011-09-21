@@ -94,8 +94,6 @@ import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.ui.utils.DBConnectionContextUtils;
-import org.talend.repository.ui.utils.FileConnectionContextUtils;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -586,15 +584,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private void createDataProviderDetail(Connection dataProvider) {
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataProvider);
-        // MOD qiongli 2011-1
+        // MOD qiongli 2011-9-21 TDQ-3317
         Connection origValueConn = null;
         if (dataProvider.isContextMode()) {
             if (dataProvider instanceof DatabaseConnection) {
-                origValueConn = (Connection) DBConnectionContextUtils
-                        .cloneOriginalValueConnection((DatabaseConnection) dataProvider);
+                origValueConn = ConnectionUtils.getOriginalDatabaseConnection((DatabaseConnection) dataProvider);
+
             } else if (dataProvider instanceof FileConnection) {
-                origValueConn = (Connection) FileConnectionContextUtils
-                        .cloneOriginalValueConnection((FileConnection) dataProvider);
+                origValueConn = ConnectionUtils.getOriginalFileConnection((FileConnection) dataProvider);
             }
         }
         if (!isDelimitedFile) {
