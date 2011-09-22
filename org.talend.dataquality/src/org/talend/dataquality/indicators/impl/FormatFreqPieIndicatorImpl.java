@@ -6,12 +6,11 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.Locale;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -397,10 +396,7 @@ public class FormatFreqPieIndicatorImpl extends FrequencyIndicatorImpl implement
                 PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
                 IndicatorParameters indParameters = this.getParameters();
                 TextParameters textParameters = indParameters == null ? null : indParameters.getTextParameter();
-                String country = Locale.getDefault().getCountry();
-                if (textParameters != null) {
-                    country = textParameters.getCountryCode();
-                }
+                String country = IndicatorHelper.getCountryCodeByParameter(textParameters);
                 PhoneNumber phoneNumeber = phoneUtil.parse(data.toString(), country);
                 String nationalSignificantNumber = PhoneNumberUtil.getNationalSignificantNumber(phoneNumeber);
                 int countryCode = phoneNumeber.getCountryCode();

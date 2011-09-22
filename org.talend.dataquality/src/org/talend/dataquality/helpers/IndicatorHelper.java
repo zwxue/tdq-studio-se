@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
@@ -738,6 +739,27 @@ public final class IndicatorHelper {
         }
         textParameter.setCountryCode(countryCode);
         parameters.setTextParameter(textParameter);
+    }
+
+    /**
+     * 
+     * get coutry code by TextParameters,if textParameters is null,get it by Locale.getDefault().
+     * 
+     * @param textParameters
+     * @return
+     */
+    public static String getCountryCodeByParameter(TextParameters textParameters) {
+        String country = PluginConstant.EMPTY_STRING;
+        if (textParameters != null) {
+            country = textParameters.getCountryCode();
+        } else {
+            country = Locale.getDefault().getCountry();
+        }
+        // if it is still an empty string,give a default value "US".
+        if (country.equals(PluginConstant.EMPTY_STRING)) {
+            country = "US";
+        }
+        return country;
     }
 
 }

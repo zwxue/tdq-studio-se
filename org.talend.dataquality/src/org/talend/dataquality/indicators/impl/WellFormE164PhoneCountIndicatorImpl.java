@@ -6,12 +6,12 @@
  */
 package org.talend.dataquality.indicators.impl;
 
-import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.TextParameters;
@@ -194,10 +194,7 @@ public class WellFormE164PhoneCountIndicatorImpl extends IndicatorImpl implement
             PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
             IndicatorParameters indParameters = this.getParameters();
             TextParameters textParameters = indParameters == null ? null : indParameters.getTextParameter();
-            String country = Locale.getDefault().getCountry();
-            if (textParameters != null) {
-                country = textParameters.getCountryCode();
-            }
+            String country = IndicatorHelper.getCountryCodeByParameter(textParameters);
             PhoneNumber phoneNumeber = phoneUtil.parse(data.toString(), country);
             // countryCode and nationalSignificantNumber are a String removed the '0' from original data
             String nationalSignificantNumber = PhoneNumberUtil.getNationalSignificantNumber(phoneNumeber);
