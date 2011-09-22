@@ -618,6 +618,11 @@ public final class IndicatorHelper {
             // use NumberFormt instead of formatter.
             String indicatorValue = getIndicatorValue(indicator);
             if (indicatorValue != null) { // MOD scorreia fixing NPE in bug 12250
+                if (IndicatorsPackage.eINSTANCE.getModeIndicator().equals(indicator.eClass())) {
+                    // MOD scorreia 2011: avoid parsing mode indicator (this has no meaning).
+                    // do not parse mode indicator
+                    return null;
+                }
                 double userCount = NumberFormat.getInstance().parse(indicatorValue).doubleValue();
                 double count = Double.valueOf(indicator.getCount());
                 return computePercent(userCount, count);
