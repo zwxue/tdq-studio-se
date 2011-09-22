@@ -1,24 +1,15 @@
-//============================================================================
+// ============================================================================
 //
-// Talend Community Edition
+// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
 //
-// Copyright (C) 2006-2011 Talend – www.talend.com
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
 //
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
 //
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-//
-//============================================================================
+// ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.List;
@@ -64,14 +55,18 @@ public class PieStatisticsState extends AbstractChartTypeStates {
         this.title = title;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChart()
      */
     public JFreeChart getChart() {
         return TopChartFactory.createPieChart(getTitle(), getPieDataset(), true, true, false);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getExampleChart()
      */
     public JFreeChart getExampleChart() {
@@ -79,14 +74,18 @@ public class PieStatisticsState extends AbstractChartTypeStates {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getDataExplorer()
      */
     public DataExplorer getDataExplorer() {
         return new PieStatisticsExplorer();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getReferenceLink()
      */
     public String getReferenceLink() {
@@ -94,7 +93,9 @@ public class PieStatisticsState extends AbstractChartTypeStates {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getTableStructure()
      */
     @Override
@@ -106,7 +107,9 @@ public class PieStatisticsState extends AbstractChartTypeStates {
         return entity;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getLabelProvider()
      */
     @Override
@@ -114,7 +117,9 @@ public class PieStatisticsState extends AbstractChartTypeStates {
         return new FrequencyLabelProvider();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getContentProvider()
      */
     @Override
