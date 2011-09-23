@@ -77,10 +77,6 @@ public class TOPBrandingService implements IBrandingService {
         return false;
     }
 
-    public String getFullProductName() {
-        return "Talend Open Profiler"; //$NON-NLS-1$
-    }
-
     public URL getLicenseFile() throws IOException {
         final Bundle b = Platform.getBundle(Activator.PLUGIN_ID);
         final URL url = FileLocator.toFileURL(FileLocator.find(b, new Path("resources/license.txt"), null)); //$NON-NLS-1$
@@ -107,5 +103,17 @@ public class TOPBrandingService implements IBrandingService {
 
     public String getAcronym() {
         return "top";//$NON-NLS-1$
+    }
+
+    public String getProductName() {
+        return "Talend Open Studio"; //$NON-NLS-1$
+    }
+
+    public String getOptionName() {
+        return "for Data Quality"; //$NON-NLS-1$
+    }
+
+    public String getFullProductName() {
+        return getProductName() + " " + getOptionName(); //$NON-NLS-1$
     }
 }
