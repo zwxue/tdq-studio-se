@@ -1363,7 +1363,7 @@ public class DbmsLanguage {
 
     public String trimIfBlank(String colName) {
         // just trim for blank data
-        return " CASE WHEN  CHAR_LENGTH(" + trim(colName) + ")=0  THEN '' ELSE  " + colName + " END"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return " CASE WHEN  " + charLength(trim(colName)) + "=0  THEN '' ELSE  " + colName + " END"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**

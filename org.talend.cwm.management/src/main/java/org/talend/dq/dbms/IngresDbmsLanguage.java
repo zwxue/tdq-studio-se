@@ -98,4 +98,14 @@ public class IngresDbmsLanguage extends DbmsLanguage {
                 + ") BETWEEN f AND c";
         return sql;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
+     */
+    @Override
+    public String charLength(String columnName) {
+        return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

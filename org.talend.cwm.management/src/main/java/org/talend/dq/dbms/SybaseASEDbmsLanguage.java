@@ -68,4 +68,36 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
     public String trim(String colName) {
         return " LTRIM(RTRIM(" + colName + ")) "; //$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithBlankRows() {
+        String whereExpression = "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL ";
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE " + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " BETWEEN (SELECT FLOOR(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + ") / COUNT(*)) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " ) / COUNT(* )) FROM <%=__TABLE_NAME__%> " + whereExpression + ")"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithNullBlankRows() {
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE " + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " BETWEEN (SELECT FLOOR(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + ") / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " ) / COUNT(* )) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
+     */
+    @Override
+    public String getAverageLengthWithNullRows() {
+        String whereExpression = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")";
+        return "SELECT * FROM <%=__TABLE_NAME__%> " + whereExpression + "AND " + charLength("<%=__COLUMN_NAMES__%>") + " BETWEEN (SELECT FLOOR(SUM(" + charLength("<%=__COLUMN_NAMES__%>") + ") / COUNT( * )) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(" + charLength("<%=__COLUMN_NAMES__%>") + ") / COUNT(*)) FROM <%=__TABLE_NAME__%>  " + whereExpression + ")"; //$NON-NLS-1$
+    }
 }
