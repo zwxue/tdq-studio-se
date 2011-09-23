@@ -697,7 +697,7 @@ public final class ImportFactory {
                     ParserRuleTdExpresstion prExpresstion = new ImportFactory().new ParserRuleTdExpresstion();
                     prExpresstion.name = addQual(reader.get(ParserRuleToExcelEnum.Name.getLiteral()));
                     prExpresstion.body = addQual(reader.get(ParserRuleToExcelEnum.Body.getLiteral()));
-                    prExpresstion.language = addQual(reader.get(ParserRuleToExcelEnum.Language.getLiteral()));
+                    prExpresstion.language = reader.get(ParserRuleToExcelEnum.Language.getLiteral());
                     prParameters.prExpresstions.add(prExpresstion);
                 }
                 if (isNeedToCreate) {

@@ -32,6 +32,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleToExcelEnum;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -216,6 +217,9 @@ public final class ExportFactory {
      * @param temp
      */
     private static String relpaceTempHasEscapeCharactor(String temps) {
+        if (temps == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
         boolean contains = temps.contains("\r");
         if (contains) {
             return temps.replace("\r", "");
