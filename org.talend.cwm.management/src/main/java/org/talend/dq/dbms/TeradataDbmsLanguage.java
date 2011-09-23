@@ -57,13 +57,10 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getAverageLengthWithBlankRows() {
-        // String whereExpression = "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL ";
-        //        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE CHAR_LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(CHAR_LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%> " + whereExpression + ")"; //$NON-NLS-1$
         String sql = "SELECT t.* FROM(SELECT CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>"))
                 + ") / (COUNT(<%=__COLUMN_NAMES__%> )*1.00)+0.99 as int) c," + "CAST(SUM("
                 + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + ") / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f "
-                + "FROM <%=__TABLE_NAME__%> WHERE(<%=__COLUMN_NAMES__%> IS NOT NULL)) e, <%=__TABLE_NAME__%> t "
- + "WHERE "
+                + "FROM <%=__TABLE_NAME__%> WHERE(<%=__COLUMN_NAMES__%> IS NOT NULL)) e, <%=__TABLE_NAME__%> t " + "WHERE "
                 + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " BETWEEN f AND c";
         return sql;
     }
@@ -75,7 +72,6 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getAverageLengthWithNullBlankRows() {
-        //        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE CHAR_LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(CHAR_LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
         String sql = "SELECT t.* FROM(SELECT CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>"))
                 + ") / (COUNT(*)*1.00)+0.99 as int) c," + "CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>"))
                 + ") / (COUNT(*)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> ) e, <%=__TABLE_NAME__%> t " + "WHERE "
