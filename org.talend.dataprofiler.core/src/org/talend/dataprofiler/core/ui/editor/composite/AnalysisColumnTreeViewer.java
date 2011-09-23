@@ -134,7 +134,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         parentComp = parent;
         this.tree = createTree(parent);
         this.masterPage = masterPage;
-        this.setElements(masterPage.getCurrentModelElementIndicators());
+        // this.setElements(masterPage.getCurrentModelElementIndicators());
         this.createUpDownButtons(parent);
         this.setDirty(false);
     }
@@ -389,7 +389,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         tree.setData(VIEWER_KEY, this);
         this.modelElementIndicators = elements;
         addItemElements((ModelElementIndicator[]) elements);
-        masterPage.synNagivatorStat();
+
         if (isNavigator) {
             this.setDirty(true);
         }
@@ -407,7 +407,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     public void updateModelViewer() {
         masterPage.recomputeIndicators();
         modelElementIndicators = masterPage.getCurrentModelElementIndicators();
-        setElements(modelElementIndicators);
+        masterPage.refreshTheTree(modelElementIndicators);
+        // setElements(modelElementIndicators);
     }
 
     public void addElements(final ModelElementIndicator[] elements) {
@@ -422,6 +423,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         initializedConnection(elements);
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
+        masterPage.synNagivatorStat();
+        modelElementIndicators = masterPage.getCurrentModelElementIndicators();
+        masterPage.refreshTheTree(modelElementIndicators);
     }
 
     /**
@@ -525,7 +529,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         setElements(modelElementIndicators);
                     } else {
                         removeItemBranch(treeItem);
-
+                        masterPage.synNagivatorStat();
                     }
                     // MOD mzhao 2005-05-05 bug 6587.
                     // MOD mzhao 2009-06-8, bug 5887.
@@ -931,7 +935,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             return false;
         }
         List<ModelElement> existModelElements = new ArrayList<ModelElement>();
-        for (ModelElementIndicator modelElementIndicator : this.getModelElementIndicator()) {
+        for (ModelElementIndicator modelElementIndicator : this.getAllTheElementIndicator()) {
             ModelElement me = RepositoryNodeHelper.getModelElementFromRepositoryNode(modelElementIndicator
                     .getModelElementRepositoryNode());
             existModelElements.add(me);

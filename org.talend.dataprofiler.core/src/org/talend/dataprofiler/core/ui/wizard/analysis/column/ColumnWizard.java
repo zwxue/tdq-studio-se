@@ -20,6 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataquality.analysis.Analysis;
@@ -136,7 +137,18 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                                 .getModelElementFromRepositoryNode(repNode));
                         nodeList.add(repNode);
                     }
-
+                    // AbstractColumnDropTree treeViewer = masterPage.getTreeViewer();
+                    // ModelElementIndicator[] filterInputData = treeViewer.filterInputData(nodeList
+                    // .toArray(new RepositoryNode[nodeList.size()]));
+                    // if (filterInputData == null) {
+                    // return;
+                    // }
+                    if (masterPage instanceof ColumnMasterDetailsPage) {
+                        ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodeList
+                            .toArray(new RepositoryNode[nodeList.size()]));
+                        return;
+                        // ((ColumnMasterDetailsPage) masterPage).refreshTheTree(treeViewer.getModelElementIndicator());
+                    }
                     masterPage.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
                 }
             }

@@ -392,8 +392,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
 
         }
+
          int left = modelElementIndicatorArrary.length % pageSize;
-         if (left != 0) {
+        if (left != 0 || totalPages == 0) {
          modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
          for (int leftIdx = 0; leftIdx < left; leftIdx++) {
          modelElementIndicatorList.add(modelElementIndicatorArrary[totalPages * pageSize + leftIdx]);
@@ -455,13 +456,23 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                         .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] modelElements = dialog.getResult();
-            ModelElementIndicator[] filterInputData = treeViewer.filterInputData(modelElements);
-            if (filterInputData == null) {
-                return;
-            }
-            refreshTheTree(treeViewer.getModelElementIndicator());
-            this.setDirty(true);
+            setTreeViewInput(modelElements);
+            // ModelElementIndicator[] filterInputData = treeViewer.filterInputData(modelElements);
+            // if (filterInputData == null) {
+            // return;
+            // }
+            // refreshTheTree(treeViewer.getModelElementIndicator());
+            // this.setDirty(true);
         }
+    }
+
+    public void setTreeViewInput(Object[] modelElements) {
+        ModelElementIndicator[] filterInputData = treeViewer.filterInputData(modelElements);
+        if (filterInputData == null) {
+            return;
+        }
+        refreshTheTree(treeViewer.getModelElementIndicator());
+        this.setDirty(true);
     }
 
     public void refreshTheTree(ModelElementIndicator[] modelElements) {
@@ -985,7 +996,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
             currentEditor.setRefreshResultPage(true);
-            synNagivatorStat();
+            // synNagivatorStat();
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.analysisHandler.setStringDataFilter((String) evt.getNewValue());
         } else if (PluginConstant.EXPAND_TREE.equals(evt.getPropertyName())) {

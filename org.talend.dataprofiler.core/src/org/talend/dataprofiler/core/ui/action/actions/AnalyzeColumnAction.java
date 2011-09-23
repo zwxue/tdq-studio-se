@@ -73,6 +73,11 @@ public class AnalyzeColumnAction extends Action {
                             nodeList.add((RepositoryNode) obj);
                         }
                     }
+                    if (page instanceof ColumnMasterDetailsPage) {
+                        ((ColumnMasterDetailsPage) page).setTreeViewInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
+                        return;
+                        // ((ColumnMasterDetailsPage) masterPage).refreshTheTree(treeViewer.getModelElementIndicator());
+                    }
                     page.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
                 }
             }
