@@ -296,7 +296,11 @@ public final class DQStructureComparer {
         connectionParameters.setRetrieveAllMetadata(ConnectionHelper.getRetrieveAllMetadata(prevDataProvider));
         if (prevDataProvider instanceof DatabaseConnection) {
             DatabaseConnection dbConn = (DatabaseConnection) prevDataProvider;
-            connectionParameters.setFilterSchema(dbConn.getUiSchema());
+            String uiSchema = dbConn.getUiSchema();
+            if (dbConn.isContextMode() && uiSchema != null) {
+                uiSchema = ConnectionUtils.getOriginalConntextValue(dbConn, uiSchema);
+            }
+            connectionParameters.setFilterSchema(uiSchema);
         }
         // ~11412
         // MOD xqliu 2010-03-29 bug 11951 have mod by zshen 2010/11/29
