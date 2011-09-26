@@ -405,6 +405,8 @@ public class IndicatorSqlPackageImpl extends EPackageImpl implements IndicatorSq
 
         op = addEOperation(javaUserDefIndicatorEClass, null, "setExecuteEngine", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, theAnalysisPackage.getExecutionLanguage(), "executionLanguage", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        addEOperation(javaUserDefIndicatorEClass, this.getUserDefIndicator(), "getJavaUserDefObject", 0, 1, IS_UNIQUE, IS_ORDERED);
     }
 
 } //IndicatorSqlPackageImpl

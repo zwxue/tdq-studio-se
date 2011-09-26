@@ -36,4 +36,12 @@ public interface JavaUserDefIndicator extends UserDefIndicator {
      */
     void setExecuteEngine(ExecutionLanguage executionLanguage);
 
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @model kind="operation"
+     * @generated
+     */
+    UserDefIndicator getJavaUserDefObject();
+
 } // JavaUserDefIndicator

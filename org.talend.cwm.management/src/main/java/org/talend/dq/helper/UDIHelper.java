@@ -297,7 +297,8 @@ public final class UDIHelper {
                     if (clazz != null) {
                         UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
                         judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                        if (indicator instanceof JavaUserDefIndicator) {
+                    if (indicator instanceof JavaUserDefIndicator
+                            && ((JavaUserDefIndicator) indicator).getJavaUserDefObject() == null) {
                             ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
                         } else {
                             JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();

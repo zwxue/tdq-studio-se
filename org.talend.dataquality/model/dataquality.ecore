@@ -986,6 +986,7 @@
         <eOperations name="setExecuteEngine">
           <eParameters name="executionLanguage" eType="#//analysis/ExecutionLanguage"/>
         </eOperations>
+        <eOperations name="getJavaUserDefObject" eType="#//indicators/sql/UserDefIndicator"/>
       </eClassifiers>
     </eSubpackages>
     <eSubpackages name="columnset" nsURI="http://dataquality.indicators.columnset"
