@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public interface IRecordGrouping {
 
-
     /**
      * Key for retrieving the matching type.
      */
@@ -101,4 +100,15 @@ public interface IRecordGrouping {
      * @param isOutputDistDetails
      */
     public void setIsOutputDistDetails(boolean isOutputDistDetails);
+
+    /**
+     * 
+     * compare the two records to see if they are match or not.
+     * 
+     * @param record1
+     * @param record2
+     * @return true if match given the matching key and matching algorithm.
+     */
+    public boolean doMatch(String[] record1, String[] record2);
+
 }

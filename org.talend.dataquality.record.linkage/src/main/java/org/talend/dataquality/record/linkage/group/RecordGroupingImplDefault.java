@@ -61,9 +61,6 @@ public class RecordGroupingImplDefault implements IRecordGrouping {
     }
 
     public void doGroup(String[] inputRow) {
-        if (inputRow[0].equals("27634762525")) {
-            System.out.print("");
-        }
         // temporary array to store attributes to match
         String[] lookupDataArray = new String[matchingColumns.size()];
 
@@ -192,4 +189,17 @@ public class RecordGroupingImplDefault implements IRecordGrouping {
         return duplicatedRecords;
     }
 
+    public boolean doMatch(String[] record1, String[] record2) {
+        String[] masterMatchRecord = new String[matchingColumns.size()];
+        String[] lookupDataArray = new String[matchingColumns.size()];
+        for (int idx = 0; idx < lookupDataArray.length; idx++) {
+            masterMatchRecord[idx] = record1[Integer.parseInt(matchingColumns.get(idx).get(IRecordGrouping.COLUMN_IDX))];
+            lookupDataArray[idx] = record2[Integer.parseInt(matchingColumns.get(idx).get(IRecordGrouping.COLUMN_IDX))];
+        }
+        double matchingProba = recordMatcher.getMatchingWeight(masterMatchRecord, lookupDataArray);
+        if (matchingProba >= acceptableThreshold) {
+            return true;
+        }
+        return false;
+    }
 }
