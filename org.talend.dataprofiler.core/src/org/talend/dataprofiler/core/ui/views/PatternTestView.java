@@ -40,7 +40,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
@@ -67,7 +69,6 @@ import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
-import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -131,34 +132,50 @@ public class PatternTestView extends ViewPart {
 
     private boolean isJavaEngine = false;
 
+    private Composite imgCom;
+
     @Override
     public void createPartControl(final Composite parent) {
-        ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL);
+
+        createPatternTestCom(parent);
+
+    }
+
+    protected void createPatternTestCom(final Composite parent) {
+        ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.H_SCROLL);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
-        Composite mainComposite = new Composite(scrolledComposite, SWT.NONE);
+        final Composite mainComposite = new Composite(scrolledComposite, SWT.NULL);
         scrolledComposite.setContent(mainComposite);
-        BorderLayout blay = new BorderLayout();
+        GridLayout blay = new GridLayout();
         mainComposite.setLayout(blay);
-        final Composite composite = new Composite(mainComposite, SWT.NONE);
-        composite.setLayoutData(BorderLayout.NORTH);
+
+        // create coboCom line
+        final Composite coboCom = new Composite(mainComposite, SWT.NULL);
+        imgCom = new Composite(mainComposite, SWT.NULL);
+        final Composite textCom = new Composite(mainComposite, SWT.NULL);
+        final Composite buttonsCom = new Composite(mainComposite, SWT.FILL | SWT.NULL);
+        mainComposite.addListener(SWT.Resize, new Listener() {
+
+            public void handleEvent(Event event) {
+                GridData formData = new GridData(GridData.FILL_HORIZONTAL);
+                formData.heightHint = 105;
+                textCom.setLayoutData(formData);
+                buttonsCom.setLayoutData(formData);
+            }
+
+        });
+        // ~
+        // set cobo com layout
         GridLayout layout = new GridLayout();
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
-        // layout.numColumns = 1;
-        composite.setLayout(layout);
-        Composite coboCom = new Composite(composite, SWT.NONE);
-        layout = new GridLayout();
         layout.numColumns = 5;
         coboCom.setLayout(layout);
-        GridData data = new GridData();
-        data.horizontalAlignment = GridData.CENTER;
-        coboCom.setLayoutData(data);
+        GridData data = new GridData(GridData.FILL_BOTH);
         // MOD qiongli feature 16799: Add java in Pattern Test View
         buttonJava = new Button(coboCom, SWT.RADIO);
         buttonJava.setText(ExecutionLanguage.JAVA.getLiteral());
-        data = new GridData();
-        // data.widthHint = 50;
+        data = new GridData(GridData.FILL_HORIZONTAL);
+        data.widthHint = 20;
         buttonJava.setLayoutData(data);
         buttonJava.addSelectionListener(new SelectionAdapter() {
 
@@ -172,6 +189,8 @@ public class PatternTestView extends ViewPart {
 
         });
         buttonSql = new Button(coboCom, SWT.RADIO);
+        data = new GridData(GridData.FILL_HORIZONTAL);
+        data.widthHint = 90;
         buttonSql.setText(DefaultMessagesImpl.getString("PatternTestView.Connections")); //$NON-NLS-1$
         buttonSql.addSelectionListener(new SelectionAdapter() {
 
@@ -186,12 +205,11 @@ public class PatternTestView extends ViewPart {
         });//$NON-NLS-1$
         buttonSql.setSelection(true);
         buttonSql.setEnabled(!isJavaEngine);
-
+        buttonSql.setLayoutData(data);
         dbCombo = new CCombo(coboCom, SWT.DROP_DOWN | SWT.BORDER);
         dbCombo.setEditable(false);
-        data = new GridData();
-        data.widthHint = 90;
-        // data.heightHint = 100;
+        data = new GridData(GridData.FILL_HORIZONTAL);
+        data.widthHint = 60;
         dbCombo.setLayoutData(data);
 
         // MOD gdbu 2011-5-31 bug : 19119
@@ -200,24 +218,24 @@ public class PatternTestView extends ViewPart {
         functionNameText = new Text(coboCom, SWT.BORDER);
         functionNameText.setText(PluginConstant.EMPTY_STRING);
 
-        GridData functionNameTextGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-        functionNameTextGD.widthHint = 100;
+        GridData functionNameTextGD = new GridData(SWT.LEFT, SWT.DEFAULT, false, false, 1, 1);
+        functionNameTextGD.widthHint = 0;
         functionNameText.setLayoutData(functionNameTextGD);
-
+        functionLabel.setLayoutData(functionNameTextGD);
         functionNameText.setVisible(false);
         functionLabel.setVisible(false);
         // ~19119
+        GridData comData = new GridData(GridData.FILL_HORIZONTAL);
+        comData.heightHint = 37;
+        coboCom.setLayoutData(comData);
 
-        Composite imgCom = new Composite(composite, SWT.NONE);
+        // create image com
         layout = new GridLayout();
         layout.numColumns = 2;
         imgCom.setLayout(layout);
-        data = new GridData();
-        data.horizontalAlignment = GridData.BEGINNING;
-        imgCom.setLayoutData(data);
 
         emoticonLabel = new Label(imgCom, SWT.NONE);
-        GridData gd = new GridData();
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.heightHint = 18;
         gd.widthHint = 18;
         emoticonLabel.setLayoutData(gd);
@@ -225,13 +243,26 @@ public class PatternTestView extends ViewPart {
         gd = new GridData();
         gd.heightHint = 18;
         gd.widthHint = 65;
+        gd.horizontalAlignment = GridData.BEGINNING;
         resultLabel = new Label(imgCom, SWT.NONE);
         resultLabel.setLayoutData(gd);
 
+        GridData imgData = new GridData(GridData.FILL_HORIZONTAL);
+        imgData.heightHint = 0;
+        imgData.horizontalAlignment = GridData.BEGINNING;
+        imgCom.setLayoutData(imgData);
+        // ~
+
+        // create text com
+        layout = new GridLayout();
+        layout.numColumns = 2;
+        textCom.setLayout(layout);
+        data = new GridData(GridData.FILL_HORIZONTAL);
+        data.horizontalAlignment = GridData.BEGINNING;
         // MOD gdbu 2011-5-31 bug : 19119
-        textAreaLabel = new Label(composite, SWT.NONE);
+        textAreaLabel = new Label(textCom, SWT.NONE);
         textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$
-        testText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        testText = new Text(textCom, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 40;
         testText.setLayoutData(data);
@@ -241,15 +272,15 @@ public class PatternTestView extends ViewPart {
         // textAreaLabelGD.widthHint = 180;
         textAreaLabel.setLayoutData(textAreaLabelGD);
 
-        regularLabel = new Label(composite, SWT.NONE);
+        regularLabel = new Label(textCom, SWT.NULL);
         regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
         regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpression"));//$NON-NLS-1$ 
         GridData regularLabelGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-        regularLabelGD.widthHint = 160;
+        // regularLabelGD.widthHint = 260;
         regularLabel.setLayoutData(regularLabelGD);
         // ~19119
 
-        this.regularText = new Text(composite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        this.regularText = new Text(textCom, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
         this.regularText.setLayoutData(data);
         regularText.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.enterHereAgainst")); //$NON-NLS-1$
         regularText.addModifyListener(new ModifyListener() {
@@ -264,26 +295,18 @@ public class PatternTestView extends ViewPart {
             }
 
         });
-
-        BorderLayout blayout = new BorderLayout();
-        Composite bottom = new Composite(mainComposite, SWT.NONE);
-        bottom.setLayout(blayout);
-        bottom.setLayoutData(BorderLayout.CENTER);
-        Composite centerPane = new Composite(bottom, SWT.NONE);
-        centerPane.setLayoutData(BorderLayout.CENTER);
-        final Composite rightPane = new Composite(bottom, SWT.NONE);
-        rightPane.setLayoutData(BorderLayout.EAST);
+        GridData textData = new GridData(GridData.FILL_BOTH);
+        textData.heightHint = 400;
+        textCom.setLayoutData(textData);
+        // ~~~~~~
 
         GridLayout llayout = new GridLayout();
-        llayout.numColumns = 3;
-        centerPane.setLayout(llayout);
-        GridLayout rlayout = new GridLayout();
-        rlayout.numColumns = 1;
-        rightPane.setLayout(rlayout);
-        data = new GridData();
+        llayout.numColumns = 4;
+        buttonsCom.setLayout(llayout);
+        data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 25;
         data.widthHint = 92;
-        sqlButton = new Button(centerPane, SWT.PUSH);
+        sqlButton = new Button(buttonsCom, SWT.PUSH);
         sqlButton.setText(DefaultMessagesImpl.getString("PatternTestView.SQL")); //$NON-NLS-1$
         sqlButton.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.generatedSQLStatement")); //$NON-NLS-1$
         sqlButton.setLayoutData(data);
@@ -293,10 +316,10 @@ public class PatternTestView extends ViewPart {
                 openSQLEditor();
             }
         });
-        createPatternButton = new Button(centerPane, SWT.PUSH);
+        createPatternButton = new Button(buttonsCom, SWT.PUSH);
         createPatternButton.setText(DefaultMessagesImpl.getString("PatternTestView.createPattern")); //$NON-NLS-1$
         createPatternButton.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.CreateNewPattern")); //$NON-NLS-1$
-        data = new GridData();
+        data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 25;
         data.widthHint = 92;
         createPatternButton.setLayoutData(data);
@@ -322,11 +345,11 @@ public class PatternTestView extends ViewPart {
             }
         });
         createPatternButton.setEnabled(false);
-        saveButton = new Button(centerPane, SWT.PUSH);
+        saveButton = new Button(buttonsCom, SWT.PUSH);
         saveButton.setText(DefaultMessagesImpl.getString("PatternTestView.Save")); //$NON-NLS-1$
         saveButton.setEnabled(false);
         saveButton.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.SaveRegularExpression")); //$NON-NLS-1$
-        data = new GridData();
+        data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 25;
         data.widthHint = 92;
         saveButton.setLayoutData(data);
@@ -336,7 +359,9 @@ public class PatternTestView extends ViewPart {
                 savePattern();
             }
         });
-        testButton = new Button(rightPane, SWT.PUSH);
+        testButton = new Button(buttonsCom, SWT.PUSH);
+        data = new GridData(GridData.FILL_HORIZONTAL);
+        testButton.setLayoutData(data);
         testButton.setText(DefaultMessagesImpl.getString("PatternTestView.test")); //$NON-NLS-1$
         testButton.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.ValidateEnteredString")); //$NON-NLS-1$
         testButton.setLayoutData(data);
@@ -344,10 +369,12 @@ public class PatternTestView extends ViewPart {
 
             public void widgetSelected(SelectionEvent e) {
                 testRegularText();
+                expandImageComposite(true);
             }
 
         });
-
+        data = new GridData(GridData.FILL_HORIZONTAL);
+        buttonsCom.setLayoutData(data);
         scrolledComposite.setMinSize(mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         mainComposite.layout();
         activateContext();
@@ -355,6 +382,23 @@ public class PatternTestView extends ViewPart {
         // MOD gdbu 2011-5-31 bug : 19119
         fillComboData();
         // ~19119
+    }
+
+    /**
+     * DOC klliu Comment method "expandImageComposite".
+     * 
+     * @param expand
+     */
+    protected void expandImageComposite(boolean expand) {
+        GridData formData = new GridData(GridData.FILL_HORIZONTAL);
+        if (expand) {
+            formData.heightHint = 30;
+        } else {
+            formData.heightHint = 0;
+        }
+        formData.horizontalAlignment = GridData.BEGINNING;
+        imgCom.setLayoutData(formData);
+        imgCom.getParent().layout();
     }
 
     /**
@@ -712,6 +756,12 @@ public class PatternTestView extends ViewPart {
             regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
             regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpression"));//$NON-NLS-1$
         }
+        GridData formData = new GridData(GridData.FILL_HORIZONTAL);
+        formData.widthHint = 60;
+        formData.widthHint = 37;
+        functionLabel.setLayoutData(formData);
+        functionNameText.setLayoutData(formData);
+        functionNameText.getParent().layout();
     }
 
     /**
