@@ -532,7 +532,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         CorePlugin.getDefault().refreshDQView(sourceParent);
         CorePlugin.getDefault().refreshDQView(targetParent);
         FolderItem emfFolder = folderHelper.getFolder(completeNewPath);
-        computeDependcy(emfFolder);
+        // computeDependcy(emfFolder);
     }
 
     private void computeDependcy(FolderItem emfFolder) {
@@ -545,43 +545,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                         FolderItem children = (FolderItem) childrens[i];
                         computeDependcy(children);
                     } else {
-                        if (childrens[i] instanceof TDQAnalysisItem) {
-                            this.updateAnalysisDependency((TDQAnalysisItem) childrens[i]);
-                            // List<TdReport> tdRports = this.getTdRports((TDQAnalysisItem) childrens[i]);
-                            // List<ModelElement> elements = this.getModelElement((TDQAnalysisItem) childrens[i]);
-                            // this.modifyRepDependency(tdRports);
-                            // this.modifyConnAndIndicatorDependency(elements);
-                        } else if (childrens[i] instanceof TDQReportItem) {
-                            this.updateReportDependency((TDQReportItem) childrens[i]);
-                            // TDQReportItem repItem = (TDQReportItem) childrens[i];
-                            // TdReport report = (TdReport) repItem.getReport();
-                            // List<Analysis> analysises = this.getAnalysises(report);
-                            // this.modifyAnaDependency(analysises, report);
-                        } else if (childrens[i] instanceof TDQIndicatorDefinitionItem) {
-                            this.updateIndicatorDefinitionDependency((TDQIndicatorDefinitionItem) childrens[i]);
-                            // TDQIndicatorDefinitionItem defItem = (TDQIndicatorDefinitionItem) childrens[i];
-                            // IndicatorDefinition indicatorDefinition = defItem.getIndicatorDefinition();
-                            // List<Analysis> analysisList = getAnalysises(indicatorDefinition);
-                            // this.modifyAnaDependency(analysisList, indicatorDefinition);
-                        } else if (childrens[i] instanceof TDQBusinessRuleItem) {
-                            this.updateBusinessRuleDependency((TDQBusinessRuleItem) childrens[i]);
-                            // TDQBusinessRuleItem ruleItem = (TDQBusinessRuleItem) childrens[i];
-                            // DQRule dqrule = ruleItem.getDqrule();
-                            // List<Analysis> analysisList = getAnalysises(dqrule);
-                            // this.modifyAnaDependency(analysisList, dqrule);
-                        } else if (childrens[i] instanceof TDQPatternItem) {
-                            this.updatePatternDependency((TDQPatternItem) childrens[i]);
-                            // TDQPatternItem patternItem = (TDQPatternItem) childrens[i];
-                            // Pattern pattern = patternItem.getPattern();
-                            // List<Analysis> analysisList = getAnalysises(pattern);
-                            // this.modifyAnaDependency(analysisList, pattern);
-                        } else if (childrens[i] instanceof ConnectionItem) {
-                            this.updateConnectionDependency((ConnectionItem) childrens[i]);
-                            // ConnectionItem connItem = (ConnectionItem) childrens[i];
-                            // Connection connection = connItem.getConnection();
-                            // List<Analysis> analysisList = getAnalysises(connection);
-                            // this.modifyAnaDependency(analysisList, connection);
-                        }
+                        updateDependcyByItem(childrens[i]);
                     }
                 }
             }
@@ -590,6 +554,23 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
     }
 
+    
+    public void updateDependcyByItem(Item item) throws PersistenceException {
+        if (item instanceof TDQAnalysisItem) {
+            this.updateAnalysisDependency((TDQAnalysisItem) item);
+        } else if (item instanceof TDQReportItem) {
+            this.updateReportDependency((TDQReportItem) item);
+        } else if (item instanceof TDQIndicatorDefinitionItem) {
+            this.updateIndicatorDefinitionDependency((TDQIndicatorDefinitionItem) item);
+        } else if (item instanceof TDQBusinessRuleItem) {
+            this.updateBusinessRuleDependency((TDQBusinessRuleItem) item);
+        } else if (item instanceof TDQPatternItem) {
+            this.updatePatternDependency((TDQPatternItem) item);
+        } else if (item instanceof ConnectionItem) {
+            this.updateConnectionDependency((ConnectionItem) item);
+        }
+    }
+    
     /**
      * update the dependencies of Connection.
      * 

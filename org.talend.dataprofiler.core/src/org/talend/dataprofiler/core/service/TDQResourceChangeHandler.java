@@ -41,6 +41,7 @@ import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -130,7 +131,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 public void run() {
                     DeleteModelElementConfirmDialog.showDialog(null,
                             PropertyHelper.getItemFile(PropertyHelper.getProperty(modelElementFinal)), dependencyElements,
-                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.ConnectionNotBeSave"), false); //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.OperationIsRejected"), false); //$NON-NLS-1$
                 }
             });
 
@@ -324,5 +325,16 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         IFile ifile = WorkspaceUtils.fileToIFile(file);
         URI uri = URI.createPlatformResourceURI(ifile.getFullPath().toString(), false);
         EMFSharedResources.getInstance().reloadResource(uri);
+    }
+
+    /*
+     * 
+     * @see org.talend.core.repository.utils.AbstractResourceChangesService#updateDependeciesWhenMoveFolder()
+     */
+    @Override
+    public void updateDependeciesWhenMoveFolder(Item item) throws PersistenceException {
+        // ADD gdbu 2011-9-29 TDQ-3546
+        RepositoryNodeDorpAdapterAssistant repositoryNodeDorpAdapterAssistant = new RepositoryNodeDorpAdapterAssistant();
+        repositoryNodeDorpAdapterAssistant.updateDependcyByItem(item);
     }
 }
