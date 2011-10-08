@@ -106,6 +106,7 @@ public class ImportRemotePatternAction extends Action {
 
                 List<File> files = new ArrayList<File>();
                 extractFiles(file, files);
+                String name = componet.getCategry().getName();
 
                 // MOD yyi 8746: strange behaviour for imported patterns!
                 ExpressionType type = ExpressionType.REGEXP;
@@ -126,13 +127,19 @@ public class ImportRemotePatternAction extends Action {
                 }
 
                 for (File oneFile : files) {
-                    if (type == null) {
-                        IFolder udiFolder = ResourceManager.getUDIFolder();
-                        information.addAll(ImportFactory.importIndicatorToStucture(oneFile, udiFolder, true, true));
+                    // MOD klliu bug TDQ-3712 Cannot import parser rule from Talend Exchange
+                    if (!name.contentEquals("ParserRule")) {//$NON-NLS-1$
+                        if (type == null) {
+                            IFolder udiFolder = ResourceManager.getUDIFolder();
+                            information.addAll(ImportFactory.importIndicatorToStucture(oneFile, udiFolder, true, true));
+                        } else {
+                            information.addAll(ImportFactory.importToStucture(oneFile, folder, type, true, true));
+                        }
                     } else {
-                        information.addAll(ImportFactory.importToStucture(oneFile, folder, type, true, true));
+                        IFolder parserRuleFolder = ResourceManager.getRulesParserFolder();
+                        information.addAll(ImportFactory.importParserRuleToStucture(oneFile, parserRuleFolder, true, true));
                     }
-
+                    // ~
                 }
             }
 
@@ -140,10 +147,9 @@ public class ImportRemotePatternAction extends Action {
 
                 public void run() {
 
-                    ImportInfoDialog
-                            .openImportInformation(
-                                    null,
-                                    DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
+                    ImportInfoDialog.openImportInformation(
+                            null,
+                            DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
                 }
             });
 
