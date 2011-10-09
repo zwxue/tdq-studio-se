@@ -90,7 +90,7 @@ public enum EDriverName {
                        "-50",
                        "lib/terajdbc4.jar",
                        "lib/tdgssconfig.jar"),
-    SQLITE3DEFAULTURL("SQLite", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc_v037_nested.jar"),
+    SQLITE3DEFAULTURL("SQLite", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc-v056.jar"),
     AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar"),
     // MOD klliu bug 14791 add ingres database url and modify default_driver.xml
     INGRESDEFAULTURL("Ingres", "com.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar"),
@@ -112,14 +112,15 @@ public enum EDriverName {
         spDB.add("com.mysql.jdbc.Driver");//$NON-NLS-1$
         special_database.put("org.gjt.mm.mysql.Driver", spDB);//$NON-NLS-1$
 
-        //MOD gdbu 2011-6-9 bug : 21854
+        // MOD gdbu 2011-6-9 bug : 21854
         ArrayList oracleJDBCDB = new ArrayList();
         oracleJDBCDB.add("oracle.jdbc.driver.OracleDriver");//$NON-NLS-1$
         special_database.put("oracle.jdbc.OracleDriver", oracleJDBCDB);//$NON-NLS-1$
-        //~ 21854
-        
+        // ~ 21854
+
         // According to the above example we can continue to fill special driverclass name...
     }
+
     // ~18975
 
     EDriverName(String dbKey, String dbDriver, String sqlEid, String... jars) {
