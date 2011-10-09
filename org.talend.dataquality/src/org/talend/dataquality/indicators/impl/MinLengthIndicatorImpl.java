@@ -6,6 +6,7 @@
 package org.talend.dataquality.indicators.impl;
 
 import org.eclipse.emf.ecore.EClass;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MinLengthIndicator;
 
@@ -55,4 +56,15 @@ public class MinLengthIndicatorImpl extends LengthIndicatorImpl implements MinLe
         return ok;
     }
 
+    /* (non-Javadoc)
+     * @see org.talend.dataquality.indicators.impl.LengthIndicatorImpl#getParameters()
+     */
+    @Override
+    public IndicatorParameters getParameters() {
+        parameters = super.getParameters();
+        parameters.getTextParameter().setUseNulls(false);
+        parameters.getTextParameter().setUseBlank(false);
+        return parameters;
+    }
+    
 } // MinLengthIndicatorImpl

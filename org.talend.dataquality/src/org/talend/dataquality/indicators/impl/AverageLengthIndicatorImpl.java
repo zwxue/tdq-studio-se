@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
 /**
@@ -245,6 +246,17 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
         return super.reset();
     }
 
-    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.LengthIndicatorImpl#getParameters()
+     */
+    @Override
+    public IndicatorParameters getParameters() {
+        parameters = super.getParameters();
+        parameters.getTextParameter().setUseNulls(false);
+        parameters.getTextParameter().setUseBlank(false);
+        return parameters;
+    }
     
 } // AverageLengthIndicatorImpl

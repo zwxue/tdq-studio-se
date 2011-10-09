@@ -587,7 +587,12 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithNullIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getPhoneNumbStatisticsIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankNullIndicator())) {
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAvgLengthWithBlankNullIndicator())
+                // MOD gdbu 2011-10-9 TDQ-3549
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMinLengthIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMaxLengthIndicator())
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getAverageLengthIndicator())) {
+            // ~TDQ-3549
             return true;
         }
         return false;

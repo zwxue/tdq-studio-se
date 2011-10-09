@@ -133,8 +133,9 @@ public enum FormEnum {
         case MinLengthIndicatorEnum:
         case MaxLengthIndicatorEnum:
         case AverageLengthIndicatorEnum:
-            forms = new FormEnum[] { TextLengthForm, IndicatorThresholdsForm };
-
+            // MOD gdbu 2011-10-9 TDQ-3549
+            forms = new FormEnum[] { IndicatorThresholdsForm };
+            // ~TDQ-3549
             break;
         case MinLengthWithBlankIndicatorEnum:
         case MinLengthWithNullIndicatorEnum:
