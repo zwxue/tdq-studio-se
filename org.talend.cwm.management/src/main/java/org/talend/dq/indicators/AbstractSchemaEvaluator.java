@@ -242,7 +242,11 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         // TODO unicity of index could be a parameter
         if (idx != null) {
             while (idx.next()) {
-                idxCount += 1;
+                // MOD msjian 2011-10-9 TDQ-3566: incorrect index number result in overview analysis
+                if (idx.getString("INDEX_NAME") != null) { //$NON-NLS-1$
+                    idxCount += 1;
+                }
+                // TDQ-3566 ~
             }
             idx.close();
         }
