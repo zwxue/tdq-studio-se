@@ -27,7 +27,6 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -43,7 +42,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RefreshAction;
@@ -80,6 +78,7 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
@@ -317,41 +316,12 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
-     * get the viewPart and focus it. if the viewPart closed, it will be opened.
-     * 
-     * @param viewId the identifier of viewPart
-     * @return
-     */
-    private IViewPart findView(String viewId) {
-        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if (activeWorkbenchWindow == null) {
-            return null;
-        }
-        IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
-        if (page == null) {
-            return null;
-        }
-        IViewPart part = page.findView(viewId);
-        if (part == null) {
-            try {
-                part = page.showView(viewId);
-            } catch (Exception e) {
-                ExceptionHandler.process(e, Level.ERROR);
-            }
-        } else {
-            page.bringToTop(part);
-        }
-        return part;
-    }
-
-    /**
      * DOC bzhou Comment method "getRepositoryView".
      * 
      * @return
      */
     public DQRespositoryView getRepositoryView() {
-        IViewPart view = findView(DQRespositoryView.ID);
+        IViewPart view = WorkbenchUtils.getAndOpenView(DQRespositoryView.ID);
         return view != null ? (DQRespositoryView) view : null;
     }
 
@@ -361,7 +331,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return
      */
     public PatternTestView getPatternTestView() {
-        IViewPart view = findView(PatternTestView.ID);
+        IViewPart view = WorkbenchUtils.getAndOpenView(PatternTestView.ID);
         return view != null ? (PatternTestView) view : null;
     }
 
@@ -392,7 +362,7 @@ public class CorePlugin extends AbstractUIPlugin {
         if (object == null) {
             refreshDQView();
         } else {
-        getRepositoryView().getCommonViewer().refresh(object);
+            getRepositoryView().getCommonViewer().refresh(object);
         }
     }
 
@@ -513,7 +483,6 @@ public class CorePlugin extends AbstractUIPlugin {
 
                 XmiResourceManager xmiResourceManager = new XmiResourceManager();
                 IProject rootProject = ResourceManager.getRootProject();
-
 
                 if (rootProject.getFile(FileConstants.LOCAL_PROJECT_FILENAME).exists()) {
                     // Initialize TDQ EMF model packages.

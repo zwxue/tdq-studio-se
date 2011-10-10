@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -55,6 +57,7 @@ import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
@@ -501,5 +504,34 @@ public final class WorkbenchUtils {
 
         // Refresh current opened editors.
         refreshCurrentAnalysisEditor();
+    }
+
+    /**
+     * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
+     * get the viewPart and focus it. if the viewPart closed, it will be opened.
+     * 
+     * @param viewId the identifier of viewPart
+     * @return
+     */
+    public static IViewPart getAndOpenView(String viewId) {
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow == null) {
+            return null;
+        }
+        IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
+        if (page == null) {
+            return null;
+        }
+        IViewPart part = page.findView(viewId);
+        if (part == null) {
+            try {
+                part = page.showView(viewId);
+            } catch (Exception e) {
+                ExceptionHandler.process(e, Level.ERROR);
+            }
+        } else {
+            page.bringToTop(part);
+        }
+        return part;
     }
 }
