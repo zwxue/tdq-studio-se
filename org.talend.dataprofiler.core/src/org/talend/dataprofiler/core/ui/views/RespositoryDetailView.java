@@ -40,6 +40,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
@@ -48,6 +49,7 @@ import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -574,6 +576,25 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.name"), element.getName()); //$NON-NLS-1$
     }
 
+    private void createContextDetail(Connection connection) {
+        if (connection == null) {
+            return;
+        }
+        String contextId = connection.getContextId();
+        if (contextId != null && !contextId.equals(PluginConstant.EMPTY_STRING)) {
+            ContextItem contextItem = ContextUtils.getContextItemById2(contextId);
+            if (contextItem != null) {
+                newLabelAndText(gContainer,
+                        DefaultMessagesImpl.getString("RespositoryDetailView.contextName"), contextItem.getProperty().getLabel()); //$NON-NLS-1$
+            }
+        }
+        String groupName = connection.getContextGroupName();
+        if (groupName != null) {
+            newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.contextGroupName"), groupName); //$NON-NLS-1$
+        }
+
+    }
+
     private void createTdSchemaDetail(Schema schema) {
         createName(schema);
     }
@@ -596,6 +617,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         }
         if (!isDelimitedFile) {
             createName(origValueConn == null ? dataProvider : origValueConn);
+        }
+        if (origValueConn != null) {
+            createContextDetail(dataProvider);
         }
         createPurpose(origValueConn == null ? dataProvider : origValueConn);
         createDescription(origValueConn == null ? dataProvider : origValueConn);

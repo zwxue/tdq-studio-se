@@ -12,20 +12,20 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.provider;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.context.Context;
 import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.properties.ContextItem;
-import org.talend.core.ui.context.ContextManagerHelper;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.SwitchContextAction;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.designer.core.model.utils.emf.talendfile.ContextParameterType;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -65,6 +65,7 @@ public class SwitchContextProvider extends AbstractCommonActionProvider {
      * @param node
      * @return
      */
+    @SuppressWarnings("unchecked")
     private boolean shouldShowReloadMenu(RepositoryNode node) {
         ENodeType type = node.getType();
         IFolder folder = WorkbenchUtils.getFolder(node);
@@ -74,17 +75,19 @@ public class SwitchContextProvider extends AbstractCommonActionProvider {
             if (ConnectionUtils.isMdmConnection(node.getObject())) {
                 return false;
             }
+            // MOD qiongli 2011-10-10
+            String contextId = null;
             if (node instanceof DBConnectionRepNode) {
-                String contextId = ((DBConnectionRepNode) node).getDatabaseConnection().getContextId();
-
-                // This menu will be available only when a context is defined AND the context has more than one set
-                // of values (more than one name).
-                if (contextId != null && !"".equals(contextId.trim())) { //$NON-NLS-1$
-                    ContextItem objContextItem = ContextUtils.getContextItemById2(contextId);
-                    List<ContextParameterType> params = ContextManagerHelper.getContextParameterType(objContextItem);
-                    if (params != null && params.size() != 0) {
-                        return true;
-                    }
+                contextId = ((DBConnectionRepNode) node).getDatabaseConnection().getContextId();
+            } else if (node instanceof DFConnectionRepNode) {
+                contextId = ((DFConnectionRepNode) node).getDfConnection().getContextId();
+            }
+            // This menu will be available only when a context is not null and has more than one group.
+            if (contextId != null && !PluginConstant.EMPTY_STRING.equals(contextId.trim())) {
+                ContextItem objContextItem = ContextUtils.getContextItemById2(contextId);
+                EList<Context> contexts = objContextItem.getContext();
+                if (contexts != null && contexts.size() > 1) {
+                    return true;
                 }
             }
         }
