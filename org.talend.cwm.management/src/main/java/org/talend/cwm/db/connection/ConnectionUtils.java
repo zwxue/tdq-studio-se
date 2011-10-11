@@ -1472,12 +1472,12 @@ public final class ConnectionUtils {
     public static String getOriginalConntextValue(Connection connection, String rawValue) {
         String origValu = null;
         if (connection != null && connection.isContextMode()) {
-            String groupName = connection.getContextGroupName();
+            String contextName = connection.getContextName();
             ContextType contextType = null;
-            if (groupName == null) {
+            if (contextName == null) {
                 contextType = ConnectionContextHelper.getContextTypeForContextMode(connection, true);
             } else {
-                contextType = ConnectionContextHelper.getContextTypeForContextMode(null, connection, groupName, false);
+                contextType = ConnectionContextHelper.getContextTypeForContextMode(null, connection, contextName, false);
             }
 
             origValu = ConnectionContextHelper.getOriginalValue(contextType, rawValue);
@@ -1497,13 +1497,13 @@ public final class ConnectionUtils {
             return null;
         }
         if (connection.isContextMode()) {
-            String contextGroupName = connection.getContextGroupName();
-            if (contextGroupName == null) {
+            String contextName = connection.getContextName();
+            if (contextName == null) {
                 return DBConnectionContextUtils.cloneOriginalValueConnection(connection, true, null);
             }
             return DBConnectionContextUtils
                     .cloneOriginalValueConnection((DatabaseConnection) connection, false,
-                    contextGroupName);
+                    contextName);
         }
         return connection;
     }
@@ -1520,11 +1520,11 @@ public final class ConnectionUtils {
             return null;
         }
         if (fileConn.isContextMode()) {
-            String contextGroupName = fileConn.getContextGroupName();
-            if (contextGroupName == null) {
+            String contextName = fileConn.getContextName();
+            if (contextName == null) {
                 return FileConnectionContextUtils.cloneOriginalValueConnection(null, fileConn, true);
             } else {
-                ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(null, fileConn, contextGroupName,
+                ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(null, fileConn, contextName,
                         false);
                 return FileConnectionContextUtils.cloneOriginalValueConnection(fileConn, contextType);
             }

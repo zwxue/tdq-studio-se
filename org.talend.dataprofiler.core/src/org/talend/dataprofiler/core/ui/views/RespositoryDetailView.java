@@ -588,9 +588,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                         DefaultMessagesImpl.getString("RespositoryDetailView.contextName"), contextItem.getProperty().getLabel()); //$NON-NLS-1$
             }
         }
-        String groupName = connection.getContextGroupName();
-        if (groupName != null) {
-            newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.contextGroupName"), groupName); //$NON-NLS-1$
+        String contextName = connection.getContextName();
+        if (contextName != null) {
+            newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.contextGroupName"), contextName); //$NON-NLS-1$
         }
 
     }
