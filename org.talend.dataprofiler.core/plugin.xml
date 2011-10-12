@@ -875,13 +875,6 @@
            parentCategory="org.talend.dataprofiler.core.category">
      </category>
      <cheatsheet
-           category="org.talend.dataprofiler.core.category"
-           composite="true"
-           contentFile="$nl$/cheatsheets/Getting_started.xml"
-           id="org.talend.dataprofiler.core.talenddataprofiler"
-           name="%Gettingstarted">
-     </cheatsheet>
-     <cheatsheet
            category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
            contentFile="$nl$/cheatsheets/ColumnAnalysis_cheat.xml"
            id="org.talend.dataprofiler.core.cheatsheet1"
