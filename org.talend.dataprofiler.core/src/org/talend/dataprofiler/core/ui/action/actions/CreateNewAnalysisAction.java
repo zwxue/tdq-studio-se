@@ -32,8 +32,8 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>

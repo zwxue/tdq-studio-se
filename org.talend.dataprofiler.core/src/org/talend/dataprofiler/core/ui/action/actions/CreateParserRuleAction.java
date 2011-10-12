@@ -24,8 +24,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.NewParserRulesWizard;
 import org.talend.dq.analysis.parameters.DQParserRulesParameter;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.resource.ResourceManager;
-import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC klliu class global comment. Detailled comment

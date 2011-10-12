@@ -26,10 +26,10 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -110,7 +110,7 @@ public class ReportWriter extends AElementPersistance {
 
     @Override
     protected void notifyResourceChanges() {
-        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+        ProxyRepositoryManager.getInstance().save();
 
     }
 

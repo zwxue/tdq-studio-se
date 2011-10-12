@@ -28,8 +28,8 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.resource.ResourceManager;
-import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment

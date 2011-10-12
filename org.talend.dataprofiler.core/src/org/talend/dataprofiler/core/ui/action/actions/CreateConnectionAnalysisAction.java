@@ -19,7 +19,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.dq.helper.ProxyRepositoryManager;
 
 /**
  * DOC zqin class global comment. Detailled comment

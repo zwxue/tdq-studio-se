@@ -30,9 +30,9 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.FileUtils;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.top.repository.ProxyRepositoryManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>

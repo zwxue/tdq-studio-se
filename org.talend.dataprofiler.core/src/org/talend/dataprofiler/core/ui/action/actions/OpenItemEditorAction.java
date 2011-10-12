@@ -34,6 +34,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -61,6 +62,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -105,6 +107,27 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     @Override
     public void run() {
+
+        // MOD qiongli 2011-7-14 bug 21707,unload all unlocked resources before opening an editor.move all code in this
+        // method to method doRun().
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open an DQ editor") {//$NON-NLS-1$
+
+            @Override
+            protected void run() {
+                try {
+                    duRun();
+                } catch (Exception e) {
+                    log.error(e, e);
+                }
+            }
+        };
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+        // duRun();
+
+    }
+
+    protected void duRun() {
+
         this.itemEditorInput = computeEditorInput();
         if (itemEditorInput != null) {
             // open ItemEditorInput

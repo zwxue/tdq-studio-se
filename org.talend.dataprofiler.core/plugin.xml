@@ -1464,5 +1464,11 @@
            class="org.talend.dataprofiler.core.ui.editor.PreferredPerspectivePartListener">
      </startup>
   </extension>
+  <extension
+        point="org.talend.dataprofiler.core.editorPartListener">
+     <org.talend.dataprofiler.core.partListener
+           class="org.talend.dataprofiler.core.ui.editor.CommonEditorPartListener">
+     </org.talend.dataprofiler.core.partListener>
+  </extension>
 
 </plugin>

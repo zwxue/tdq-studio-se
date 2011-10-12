@@ -15,24 +15,16 @@ package org.talend.dataprofiler.core.ui.editor;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.dq.writer.EMFSharedResources;
-import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
+import org.talend.dq.helper.PropertyHelper;
 
 /**
  * 
@@ -53,25 +45,26 @@ public class PartListener implements IPartListener {
                 return null;
             }
             IFileEditorInput fileInput = (IFileEditorInput) editor.getEditorInput();
-            URI uri = URI.createPlatformResourceURI(fileInput.getFile().getFullPath().toString(), false);
-            Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
-            if (resource != null) {
-                ModelElement modelElement = null;
-                EList<EObject> modelElements = resource.getContents();
-                for (EObject obj : modelElements) {
-                    if (obj instanceof ModelElement) {
-                        modelElement = (ModelElement) obj;
-                        TaggedValue taggedvalue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PROPERTY_FILE, modelElement
-                                .getTaggedValue());
-                        if (taggedvalue != null) {
-                            String propertyPath = taggedvalue.getValue();
-                            propertyFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
-                            break;
-                        }
-                    }
-
-                }
-            }
+            // URI uri = URI.createPlatformResourceURI(fileInput.getFile().getFullPath().toString(), false);
+            // Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
+            // if (resource != null) {
+            // ModelElement modelElement = null;
+            // EList<EObject> modelElements = resource.getContents();
+            // for (EObject obj : modelElements) {
+            // if (obj instanceof ModelElement) {
+            // modelElement = (ModelElement) obj;
+            // TaggedValue taggedvalue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PROPERTY_FILE, modelElement
+            // .getTaggedValue());
+            // if (taggedvalue != null) {
+            // String propertyPath = taggedvalue.getValue();
+            // propertyFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
+            // break;
+            // }
+            // }
+            //
+            // }
+            // }
+            propertyFile = PropertyHelper.getPropertyFile(fileInput.getFile());
         }
         return propertyFile;
     }

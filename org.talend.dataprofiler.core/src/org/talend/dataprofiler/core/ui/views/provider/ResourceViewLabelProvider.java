@@ -41,12 +41,12 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.resource.ResourceManager;
-import org.talend.top.repository.ImplementationHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -113,8 +113,8 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 Property property = PropertyHelper.getProperty(file);
                 if (property != null) {
                     Item item = property.getItem();
-                    Boolean lockByOthers = ImplementationHelper.getRepositoryManager().isLockByOthers(item);
-                    Boolean lockByUserOwn = ImplementationHelper.getRepositoryManager().isLockByUserOwn(item);
+                    Boolean lockByOthers = ProxyRepositoryManager.getInstance().isLockByOthers(item);
+                    Boolean lockByUserOwn = ProxyRepositoryManager.getInstance().isLockByUserOwn(item);
                     if (lockByOthers || lockByUserOwn) {
                         log.info(property.getLabel() + " is locked"); //$NON-NLS-1$
                         image = ImageLib.createLockedIcon(image);

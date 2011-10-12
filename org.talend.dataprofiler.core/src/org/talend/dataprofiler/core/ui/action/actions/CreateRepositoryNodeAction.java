@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
-import org.talend.top.repository.ProxyRepositoryManager;
+import org.talend.dq.helper.ProxyRepositoryManager;
 
 /**
  * DOC klliu class global comment. Detailled comment

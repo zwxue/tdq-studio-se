@@ -23,10 +23,10 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -79,7 +79,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
 
     @Override
     protected void notifyResourceChanges() {
-        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+        ProxyRepositoryManager.getInstance().save();
 
     }
 

@@ -89,6 +89,7 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -98,7 +99,6 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -1808,7 +1808,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // jarPathText.setText(path);
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
         validateJavaUDI(classNameText, jarPathText);
-        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+        ProxyRepositoryManager.getInstance().save();
         // }
 
         // FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);

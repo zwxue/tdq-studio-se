@@ -14,8 +14,8 @@ package org.talend.dq.writer.impl;
 
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Item;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
-import org.talend.top.repository.ProxyRepositoryManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -59,7 +59,7 @@ public class SoftwareSystemWriter extends AElementPersistance {
 
     @Override
     protected void notifyResourceChanges() {
-        ProxyRepositoryManager.getInstance().save(Boolean.TRUE);
+        ProxyRepositoryManager.getInstance().save();
 
     }
 
