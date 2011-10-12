@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="Create a new MDM connection">
+   <intro>
+      <description>
+         To open the MDM Connection wizard, right click <b>MDM Connections</b> on the DQ Repository Tree view and selct New Connection from the list. The wizard prompts you to define the connection metadata.
+      </description>
+   </intro>
+   <item
+         title="Set the connection metadata." dialog="true" skip="false">
+      <description>
+         Enter the connection metadata in the corresponding fields (name, purpose, description...), then enter the authentication information (Login, Password, Hostname...) and click Finish.
+      </description>
+       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateMDMConnectionAction" pluginId="org.talend.dataprofiler.core"   confirm="false" param1="1">
+      </action>
+   </item>
+</cheatsheet>

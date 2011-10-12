@@ -15,7 +15,19 @@
             serviceId="org.talend.core.ui.branding.IBrandingService">
       </Service>
    </extension>
-	
+	 <extension
+        point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+  
+     <cheatsheet
+           category="org.talend.dataprofiler.core.category"
+           composite="true"
+           contentFile="$nl$/cheatsheets/Getting_started.xml"
+           id="org.talend.dataprofiler.core.talenddataprofiler"
+           name="%Gettingstarted">
+     </cheatsheet>
+    
+  </extension>
+   
     
 
 </plugin>
