@@ -62,7 +62,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
@@ -484,7 +483,11 @@ public class PatternTestView extends ViewPart {
                         return;
                     } catch (Exception exception) {
                         log.error(exception, exception);
-                        MessageBoxExceptionHandler.process(exception, new Shell());
+                        // bug TDQ-2066-->TDQ-3594 for mysql
+                        String name = exception.getClass().getName();
+                        MessageDialog.openError(new Shell(), "Error", name + " : " + exception.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
+                        // MessageBoxExceptionHandler.process(exception, new Shell());
+                        // ~
                         emoticonLabel.setImage(null);
                         return;
                     } finally {
