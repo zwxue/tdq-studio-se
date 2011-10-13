@@ -21,7 +21,7 @@
      <cheatsheet
            category="org.talend.dataprofiler.core.category"
            composite="true"
-           contentFile="$nl$/cheatsheets/Getting_started.xml"
+           contentFile="cheatsheets/Getting_started.xml"
            id="org.talend.dataprofiler.core.talenddataprofiler"
            name="%Gettingstarted">
      </cheatsheet>
