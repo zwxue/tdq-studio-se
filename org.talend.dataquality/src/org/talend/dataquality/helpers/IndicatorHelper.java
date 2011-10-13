@@ -760,11 +760,26 @@ public final class IndicatorHelper {
         } else {
             country = Locale.getDefault().getCountry();
         }
-        // if it is still an empty string,give a default value "US".
+        // if it is still an empty string,give a default value from system and neglect osgi.nl.
         if (country.equals(PluginConstant.EMPTY_STRING)) {
-            country = "US";
+            country=getDefCountryCodeBySystem();
         }
         return country;
+    }
+
+    /**
+     * 
+     * Get default coutry from system properties.
+     * 
+     * @return
+     */
+    public static String getDefCountryCodeBySystem() {
+        String countryBySys = System.getProperties().getProperty("user.country");
+        if (countryBySys != null) {
+            return countryBySys;
+        }
+        // if it is null,make US as a defalut.
+        return "US";
     }
 
 }
