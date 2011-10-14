@@ -64,6 +64,7 @@ import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.ConnectionRepNode;
@@ -157,6 +158,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
+        // MOD gdbu TDQ-3546 unload resource after move item.
+        ProxyRepositoryManager.getInstance().refresh();
         CorePlugin.getDefault().refreshDQView();
         return Status.OK_STATUS;
     }
