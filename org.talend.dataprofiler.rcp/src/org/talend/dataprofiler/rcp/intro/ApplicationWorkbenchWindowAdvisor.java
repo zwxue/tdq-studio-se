@@ -17,6 +17,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.ui.branding.IBrandingService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
@@ -59,6 +60,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         this.getWindowConfigurer().getWindow().getShell().setMaximized(true);
         super.postWindowOpen();
         ChangePerspectiveAction.getAction().switchTitle();
+        ITDQRepositoryService tdqRepositoryService = (ITDQRepositoryService) org.talend.core.GlobalServiceRegister.getDefault()
+                .getService(ITDQRepositoryService.class);
+        if (tdqRepositoryService != null) {
+            tdqRepositoryService.addPartListener();
+        }
     }
 
 }

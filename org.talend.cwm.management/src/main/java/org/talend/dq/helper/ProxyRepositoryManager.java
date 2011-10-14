@@ -13,7 +13,6 @@
 package org.talend.dq.helper;
 
 import org.apache.log4j.Logger;
-import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.context.Context;
@@ -84,11 +83,6 @@ public class ProxyRepositoryManager {
             if (!item.eIsProxy()) {
                 try {
                     ProxyRepositoryFactory.getInstance().lock(item);
-                    CommonViewer commonViewer = RepositoryNodeHelper.getDQCommonViewer();
-                    if (commonViewer != null) {
-                        commonViewer.refresh();
-                    }
-
                 } catch (PersistenceException e) {
                     log.error(e, e);
                 } catch (LoginException e) {
@@ -109,10 +103,6 @@ public class ProxyRepositoryManager {
         if (!isReadOnly() & item != null) {
             try {
                 ProxyRepositoryFactory.getInstance().unlock(item);
-                CommonViewer commonViewer = RepositoryNodeHelper.getDQCommonViewer();
-                if (commonViewer != null) {
-                    commonViewer.refresh();
-                }
             } catch (PersistenceException e) {
                 log.error(e, e);
             } catch (LoginException e) {

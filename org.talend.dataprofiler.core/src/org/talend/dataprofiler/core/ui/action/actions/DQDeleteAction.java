@@ -106,7 +106,7 @@ public class DQDeleteAction extends DeleteAction {
                 boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
                 // logical delete
                 if (!isStateDeleted) {
-                    closeEditors(selection);
+                    // closeEditors(selection);
                     excuteSuperRun(null);
                     break;
 
