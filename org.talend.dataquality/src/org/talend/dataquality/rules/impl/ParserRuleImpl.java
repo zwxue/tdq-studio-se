@@ -56,7 +56,7 @@ public class ParserRuleImpl extends DQRuleImpl implements ParserRule {
         if (tdExpression == null) {
             tdExpression = RelationalFactory.eINSTANCE.createTdExpression();
         }
-        tdExpression.setBody(value);
+        tdExpression.setBody(value == null ? "" : value);
         tdExpression.setLanguage(type);
         tdExpression.setName(name);
         return this.getExpression().add(tdExpression);
