@@ -291,7 +291,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         // CorePlugin.getDefault().refreshDQView(sourceNode.getParent());
         CorePlugin.getDefault().refreshDQView(targetNode.getParent());
         // modifyAnaDependency(analysisList, connection);
-        this.updateConnectionDependency(item);
+        // this.updateConnectionDependency(item);
     }
 
     private void moveUDIRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
