@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -531,14 +532,14 @@ public final class RepositoryNodeHelper {
         if (rule == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(rule);
+        String uuid = getUUID(rule);
         if (uuid == null) {
             return null;
         }
         List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_PARSER), true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getRule()))) {
+                if (uuid.equals(getUUID(childNode.getRule()))) {
                     return childNode;
                 }
             }
@@ -718,7 +719,7 @@ public final class RepositoryNodeHelper {
         if (dbConn == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(dbConn);
+        String uuid = getUUID(dbConn);
         if (uuid == null) {
             return null;
         }
@@ -726,7 +727,7 @@ public final class RepositoryNodeHelper {
                 getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS), true, true);
         if (dbConnectionRepNodes.size() > 0) {
             for (DBConnectionRepNode childNode : dbConnectionRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getDatabaseConnection()))) {
+                if (uuid.equals(getUUID(childNode.getDatabaseConnection()))) {
                     return childNode;
                 }
             }
@@ -738,7 +739,7 @@ public final class RepositoryNodeHelper {
         if (mdmConn == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(mdmConn);
+        String uuid = getUUID(mdmConn);
         if (uuid == null) {
             return null;
         }
@@ -746,7 +747,7 @@ public final class RepositoryNodeHelper {
                 getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS), true, true);
         if (mdmConnectionRepNodes.size() > 0) {
             for (MDMConnectionRepNode childNode : mdmConnectionRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getMdmConnection()))) {
+                if (uuid.equals(getUUID(childNode.getMdmConnection()))) {
                     return childNode;
                 }
             }
@@ -758,7 +759,7 @@ public final class RepositoryNodeHelper {
         if (dfConn == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(dfConn);
+        String uuid = getUUID(dfConn);
         if (uuid == null) {
             return null;
         }
@@ -766,7 +767,7 @@ public final class RepositoryNodeHelper {
                 getMetadataFolderNode(EResourceConstant.FILEDELIMITED), true, true);
         if (dfConnectionRepNodes.size() > 0) {
             for (DFConnectionRepNode childNode : dfConnectionRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getDfConnection()))) {
+                if (uuid.equals(getUUID(childNode.getDfConnection()))) {
                     return childNode;
                 }
             }
@@ -778,7 +779,7 @@ public final class RepositoryNodeHelper {
         if (analysis == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(analysis);
+        String uuid = getUUID(analysis);
         if (uuid == null) {
             return null;
         }
@@ -787,7 +788,7 @@ public final class RepositoryNodeHelper {
                 true, true);
         if (analysisRepNodes.size() > 0) {
             for (AnalysisRepNode childNode : analysisRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getAnalysis()))) {
+                if (uuid.equals(getUUID(childNode.getAnalysis()))) {
                     return childNode;
                 }
             }
@@ -799,14 +800,14 @@ public final class RepositoryNodeHelper {
         if (report == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(report);
+        String uuid = getUUID(report);
         if (uuid == null) {
             return null;
         }
         List<ReportRepNode> reportRepNodes = getReportRepNodes(getDataProfilingFolderNode(EResourceConstant.REPORTS), true, true);
         if (reportRepNodes.size() > 0) {
             for (ReportRepNode childNode : reportRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getReport()))) {
+                if (uuid.equals(getUUID(childNode.getReport()))) {
                     return childNode;
                 }
             }
@@ -818,7 +819,7 @@ public final class RepositoryNodeHelper {
         if (indDef == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(indDef);
+        String uuid = getUUID(indDef);
         if (uuid == null) {
             return null;
         }
@@ -828,7 +829,7 @@ public final class RepositoryNodeHelper {
                 getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS), true, true));
         if (indicatorDefinitionRepNodes.size() > 0) {
             for (SysIndicatorDefinitionRepNode childNode : indicatorDefinitionRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getIndicatorDefinition()))) {
+                if (uuid.equals(getUUID(childNode.getIndicatorDefinition()))) {
                     return childNode;
                 }
             }
@@ -840,7 +841,7 @@ public final class RepositoryNodeHelper {
         if (pattern == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(pattern);
+        String uuid = getUUID(pattern);
         if (uuid == null) {
             return null;
         }
@@ -849,7 +850,7 @@ public final class RepositoryNodeHelper {
         patternRepNodes.addAll(getPatternRepNodes(getLibrariesFolderNode(EResourceConstant.PATTERN_SQL), true, true));
         if (patternRepNodes.size() > 0) {
             for (PatternRepNode childNode : patternRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getPattern()))) {
+                if (uuid.equals(getUUID(childNode.getPattern()))) {
                     return childNode;
                 }
             }
@@ -861,14 +862,14 @@ public final class RepositoryNodeHelper {
         if (rule == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(rule);
+        String uuid = getUUID(rule);
         if (uuid == null) {
             return null;
         }
         List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_SQL), true, true);
         if (ruleRepNodes.size() > 0) {
             for (RuleRepNode childNode : ruleRepNodes) {
-                if (uuid.equals(ResourceHelper.getUUID(childNode.getRule()))) {
+                if (uuid.equals(getUUID(childNode.getRule()))) {
                     return childNode;
                 }
             }
@@ -880,7 +881,7 @@ public final class RepositoryNodeHelper {
         if (catalog == null) {
             return null;
         }
-        String uuidCatalog = ResourceHelper.getUUID(catalog);
+        String uuidCatalog = getUUID(catalog);
         if (uuidCatalog == null) {
             return null;
         }
@@ -895,7 +896,7 @@ public final class RepositoryNodeHelper {
                 for (IRepositoryNode childNode : children) {
                     if (childNode != null && childNode instanceof DBCatalogRepNode) {
                         DBCatalogRepNode dbCatalogRepNode = (DBCatalogRepNode) childNode;
-                        if (uuidCatalog.equals(ResourceHelper.getUUID(dbCatalogRepNode.getCatalog()))) {
+                        if (uuidCatalog.equals(getUUID(dbCatalogRepNode.getCatalog()))) {
                             return dbCatalogRepNode;
                         }
                     }
@@ -905,11 +906,26 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+    /**
+     * 
+     * DOC gdbu Comment method "getUUID". Rewrite ResourceHelper.getUUID() method , the difference is that the new
+     * method includes the handling proxy situation. ADD for bug TDQ-3735.
+     * 
+     * @param object
+     * @return
+     */
+    public static String getUUID(EObject object) {
+        if (null != object && object.eIsProxy()) {
+            object = EObjectHelper.resolveObject(object);
+        }
+        return ResourceHelper.getUUID(object);
+    }
+
     public static DBSchemaRepNode recursiveFindSchema(Schema schema) {
         if (schema == null) {
             return null;
         }
-        String uuidSchema = ResourceHelper.getUUID(schema);
+        String uuidSchema = getUUID(schema);
         if (uuidSchema == null) {
             return null;
         }
@@ -924,7 +940,7 @@ public final class RepositoryNodeHelper {
                     for (IRepositoryNode childNode : children) {
                         if (childNode != null && childNode instanceof DBSchemaRepNode) {
                             DBSchemaRepNode dbSchemaRepNode = (DBSchemaRepNode) childNode;
-                            if (uuidSchema.equals(ResourceHelper.getUUID(dbSchemaRepNode.getSchema()))) {
+                            if (uuidSchema.equals(getUUID(dbSchemaRepNode.getSchema()))) {
                                 return dbSchemaRepNode;
                             }
                         }
@@ -942,7 +958,7 @@ public final class RepositoryNodeHelper {
                     for (IRepositoryNode childNode : children) {
                         if (childNode != null && childNode instanceof DBSchemaRepNode) {
                             DBSchemaRepNode dbSchemaRepNode = (DBSchemaRepNode) childNode;
-                            if (uuidSchema.equals(ResourceHelper.getUUID(dbSchemaRepNode.getSchema()))) {
+                            if (uuidSchema.equals(getUUID(dbSchemaRepNode.getSchema()))) {
                                 return dbSchemaRepNode;
                             }
                         }
@@ -957,7 +973,7 @@ public final class RepositoryNodeHelper {
         if (tdTable == null) {
             return null;
         }
-        String uuidTdTable = ResourceHelper.getUUID(tdTable);
+        String uuidTdTable = getUUID(tdTable);
         if (uuidTdTable == null) {
             return null;
         }
@@ -976,7 +992,7 @@ public final class RepositoryNodeHelper {
                 for (IRepositoryNode childNode : children) {
                     if (childNode != null && childNode instanceof DBTableRepNode) {
                         DBTableRepNode dbTableRepNode = (DBTableRepNode) childNode;
-                        if (uuidTdTable.equals(ResourceHelper.getUUID(dbTableRepNode.getTdTable()))) {
+                        if (uuidTdTable.equals(getUUID(dbTableRepNode.getTdTable()))) {
                             return dbTableRepNode;
                         }
                     }
@@ -990,7 +1006,7 @@ public final class RepositoryNodeHelper {
         if (tdView == null) {
             return null;
         }
-        String uuidTdView = ResourceHelper.getUUID(tdView);
+        String uuidTdView = getUUID(tdView);
         if (uuidTdView == null) {
             return null;
         }
@@ -1005,7 +1021,7 @@ public final class RepositoryNodeHelper {
                 for (IRepositoryNode childNode : children) {
                     if (childNode != null && childNode instanceof DBViewRepNode) {
                         DBViewRepNode dbViewRepNode = (DBViewRepNode) childNode;
-                        if (uuidTdView.equals(ResourceHelper.getUUID(dbViewRepNode.getTdView()))) {
+                        if (uuidTdView.equals(getUUID(dbViewRepNode.getTdView()))) {
                             return dbViewRepNode;
                         }
                     }
@@ -1019,7 +1035,8 @@ public final class RepositoryNodeHelper {
         if (tdColumn == null) {
             return null;
         }
-        String uuidTdColumn = ResourceHelper.getUUID(tdColumn);
+
+        String uuidTdColumn = getUUID(tdColumn);
         if (uuidTdColumn == null) {
             return null;
         }
@@ -1043,7 +1060,7 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode childNode : children) {
                 if (childNode != null && childNode instanceof DBColumnRepNode) {
                     DBColumnRepNode dbColumnRepNode = (DBColumnRepNode) childNode;
-                    if (uuidTdColumn.equals(ResourceHelper.getUUID(dbColumnRepNode.getTdColumn()))) {
+                    if (uuidTdColumn.equals(getUUID(dbColumnRepNode.getTdColumn()))) {
                         return dbColumnRepNode;
                     }
                 }
@@ -1056,7 +1073,7 @@ public final class RepositoryNodeHelper {
         if (tdXmlSchema == null) {
             return null;
         }
-        String uuidTdXmlSchema = ResourceHelper.getUUID(tdXmlSchema);
+        String uuidTdXmlSchema = getUUID(tdXmlSchema);
         if (uuidTdXmlSchema == null) {
             return null;
         }
@@ -1069,7 +1086,7 @@ public final class RepositoryNodeHelper {
                     for (IRepositoryNode childNode : children) {
                         if (childNode != null && childNode instanceof MDMSchemaRepNode) {
                             MDMSchemaRepNode mdmSchemaRepNode = (MDMSchemaRepNode) childNode;
-                            if (uuidTdXmlSchema.equals(ResourceHelper.getUUID(mdmSchemaRepNode.getTdXmlSchema()))) {
+                            if (uuidTdXmlSchema.equals(getUUID(mdmSchemaRepNode.getTdXmlSchema()))) {
                                 return mdmSchemaRepNode;
                             }
                         }
@@ -1098,7 +1115,7 @@ public final class RepositoryNodeHelper {
         if (metadataTable == null) {
             return null;
         }
-        String uuidMetadataTable = ResourceHelper.getUUID(metadataTable);
+        String uuidMetadataTable = getUUID(metadataTable);
         if (uuidMetadataTable == null) {
             return null;
         }
@@ -1109,7 +1126,7 @@ public final class RepositoryNodeHelper {
                 for (IRepositoryNode childNode : children) {
                     if (childNode != null && childNode instanceof DFTableRepNode) {
                         DFTableRepNode dfTableRepNode = (DFTableRepNode) childNode;
-                        if (uuidMetadataTable.equals(ResourceHelper.getUUID(dfTableRepNode.getMetadataTable()))) {
+                        if (uuidMetadataTable.equals(getUUID(dfTableRepNode.getMetadataTable()))) {
                             return dfTableRepNode;
                         }
                     }
@@ -1123,7 +1140,7 @@ public final class RepositoryNodeHelper {
         if (metadataColumn == null) {
             return null;
         }
-        String uuidMetadataColumn = ResourceHelper.getUUID(metadataColumn);
+        String uuidMetadataColumn = getUUID(metadataColumn);
         if (uuidMetadataColumn == null) {
             return null;
         }
@@ -1136,7 +1153,7 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode childNode : children) {
                 if (childNode != null && childNode instanceof DFColumnRepNode) {
                     DFColumnRepNode dfColumnRepNode = (DFColumnRepNode) childNode;
-                    if (uuidMetadataColumn.equals(ResourceHelper.getUUID(dfColumnRepNode.getMetadataColumn()))) {
+                    if (uuidMetadataColumn.equals(getUUID(dfColumnRepNode.getMetadataColumn()))) {
                         return dfColumnRepNode;
                     }
                 }
@@ -1156,7 +1173,7 @@ public final class RepositoryNodeHelper {
         if (modelElement == null) {
             return null;
         }
-        String uuid = ResourceHelper.getUUID(modelElement);
+        String uuid = getUUID(modelElement);
         RepositoryNode recyBinNode = getRecycleBinRootNode();
         if (uuid == null || recyBinNode == null) {
             return null;
@@ -1393,7 +1410,7 @@ public final class RepositoryNodeHelper {
             for (IRepositoryNode node : nodes) {
                 if (node instanceof MDMXmlElementRepNode) {
                     TdXmlElementType tdXmlElementTypeOnUi = ((MDMXmlElementRepNode) node).getTdXmlElementType();
-                    if (ResourceHelper.getUUID(xmlElementType).equals(ResourceHelper.getUUID(tdXmlElementTypeOnUi))) {
+                    if (getUUID(xmlElementType).equals(getUUID(tdXmlElementTypeOnUi))) {
                         return (MDMXmlElementRepNode) node;
                     } else {
                         MDMXmlElementRepNode recursiveFindXmlElementType = recursiveFindXmlElementType(node.getChildren(),
@@ -2073,7 +2090,7 @@ public final class RepositoryNodeHelper {
         if (uuid != null && nodes != null) {
             for (IRepositoryNode node : nodes) {
                 ModelElement modelElement = getModelElementFromRepositoryNode(node);
-                if (modelElement != null && uuid.equals(ResourceHelper.getUUID(modelElement))) {
+                if (modelElement != null && uuid.equals(getUUID(modelElement))) {
                     return (RepositoryNode) node;
                 } else {
                     if (needFindInChildren(node)) {
@@ -2298,7 +2315,7 @@ public final class RepositoryNodeHelper {
         for (IRepositoryNode node : nodes) {
             ModelElement metadataElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
             if (metadataElement != null) {
-                String uuid = ResourceHelper.getUUID(metadataElement);
+                String uuid = getUUID(metadataElement);
                 if (uuid != null) {
                     result.add(uuid);
                 }
@@ -2341,12 +2358,12 @@ public final class RepositoryNodeHelper {
         } else {
             ModelElement meNode = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
             if (meNode != null) {
-                String uuid = ResourceHelper.getUUID(meNode);
+                String uuid = getUUID(meNode);
                 if (uuid != null) {
                     for (IRepositoryNode repNode : nodeList) {
                         ModelElement meRepNode = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
                         if (meRepNode != null) {
-                            if (uuid.equals(ResourceHelper.getUUID(meRepNode))) {
+                            if (uuid.equals(getUUID(meRepNode))) {
                                 return true;
                             }
                         }
