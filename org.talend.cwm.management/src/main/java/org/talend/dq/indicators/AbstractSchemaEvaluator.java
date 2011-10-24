@@ -460,10 +460,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             try {
                 Package pacage = tdSchema == null ? tdCatalog : tdSchema;
                 // MOD gdbu 2011-9-22 TDQ-3607
-                MetadataFillFactory.getDBInstance().setLinked(false);
                 List<? extends NamedColumnSet> tables = DqRepositoryViewService
                         .getTables(getDataManager(), pacage, trimPat, true);
-                MetadataFillFactory.getDBInstance().setLinked(true);
                 // ~TDQ-3607
                 for (NamedColumnSet t : tables) {
                     tableCount++;
@@ -487,9 +485,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             try {
                 Package pacage = tdSchema == null ? tdCatalog : tdSchema;
                 // MOD gdbu 2011-9-22 TDQ-3607
-                MetadataFillFactory.getDBInstance().setLinked(false);
-                List<? extends NamedColumnSet> views = DqRepositoryViewService.getViews(getDataManager(), pacage, trimPat, false);
-                MetadataFillFactory.getDBInstance().setLinked(true);
+                List<? extends NamedColumnSet> views = DqRepositoryViewService.getViews(getDataManager(), pacage, trimPat, true);
                 // ~TDQ-3607
                 for (NamedColumnSet t : views) {
                     viewCount++;
