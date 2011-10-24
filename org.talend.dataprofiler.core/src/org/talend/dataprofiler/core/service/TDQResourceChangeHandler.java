@@ -337,4 +337,17 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         RepositoryNodeDorpAdapterAssistant repositoryNodeDorpAdapterAssistant = new RepositoryNodeDorpAdapterAssistant();
         repositoryNodeDorpAdapterAssistant.updateDependcyByItem(item);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.core.repository.utils.AbstractResourceChangesService#saveResourceByEMFShared(org.talend.core.model
+     * .properties.Item)
+     */
+    @Override
+    public void saveResourceByEMFShared(Resource toSave) {
+        // ADD gdbu 2011-10-24 TDQ-3546
+        EMFSharedResources.getInstance().saveResource(toSave);
+    }
 }
