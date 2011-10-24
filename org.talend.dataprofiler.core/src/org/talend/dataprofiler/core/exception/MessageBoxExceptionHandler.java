@@ -59,6 +59,42 @@ public final class MessageBoxExceptionHandler {
         }
     }
 
+    public static void process(Throwable ex, Shell shell, String exceptionType) {
+        ExceptionHandler.process(ex);
+
+        if (shell == null) {
+            try {
+                shell = new Shell();
+            } catch (Exception e) {
+            }
+        }
+
+        if (shell != null) {
+            showMessage(ex, shell, exceptionType);
+        }
+    }
+
+    private static void showMessage(Throwable ex, Shell shell, String exceptionType) {
+        if (ex.equals(lastShowedAction)) {
+            return;
+        }
+        lastShowedAction = ex;
+
+        String title = Messages.getString("MessageBoxExceptionHandler.common.error"); //$NON-NLS-1$
+        String msg = exceptionType + ":" + ex.getMessage(); //$NON-NLS-1$
+        Priority priority = Level.ERROR;
+
+        if (priority == Level.FATAL || priority == Level.ERROR) {
+            MessageDialog.openError(shell, title, msg);
+        } else if (priority == Level.WARN) {
+            MessageDialog.openWarning(shell, title, msg);
+        } else if (priority == Level.INFO) {
+            MessageDialog.openInformation(shell, title, msg);
+        } else {
+            MessageDialog.openInformation(shell, title, msg);
+        }
+    }
+
     /**
      * Open a message box showing a generic message and exception message.
      * 
