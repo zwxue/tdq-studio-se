@@ -16,6 +16,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
@@ -84,11 +85,16 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
                 }
             } else if (result[0] instanceof IEcosCategory) {
                 for (Object obj : result) {
-                    ExchangeCategoryRepNode exchangeCategoryRepNode = new ExchangeCategoryRepNode((IEcosCategory) obj,
-                            this, ENodeType.REPOSITORY_ELEMENT);
+                    // MOD klliu bug TDQ-3754: Hide the parser rules when in TOP 2011-10-24
+                    IEcosCategory category = (IEcosCategory) obj;
+                    String name = category.getName();
+                    ExchangeCategoryRepNode exchangeCategoryRepNode = new ExchangeCategoryRepNode(category, this,
+                            ENodeType.REPOSITORY_ELEMENT);
                     exchangeCategoryRepNode.setFlag(true);
                     exchangeCategoryRepNode.setMsg("");//$NON-NLS-1$ 
-                    list.add(exchangeCategoryRepNode);
+                    if (!(name.equals("ParserRule") && PluginChecker.isOnlyTopLoaded())) {//$NON-NLS-1$ 
+                        list.add(exchangeCategoryRepNode);
+                    }
                 }
             }
         }
