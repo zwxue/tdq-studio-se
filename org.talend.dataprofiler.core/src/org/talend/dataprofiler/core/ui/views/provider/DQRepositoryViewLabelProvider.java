@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -223,7 +224,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     }
 
     public String getText(Object element) {
-        if (element instanceof IRepositoryNode) {
+        if (element != null && element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
             if (node instanceof RecycleBinRepNode || node instanceof ExchangeCategoryRepNode
                     || node instanceof ExchangeComponentRepNode) {
@@ -270,7 +271,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             } else if (node instanceof MDMXmlElementRepNode) {
                 MDMXmlElementRepNode mdmColumnRepNode = (MDMXmlElementRepNode) node;
                 String nodeDataType = mdmColumnRepNode.getNodeDataType();
-                if (!"".equals(nodeDataType)) { //$NON-NLS-1$
+                if (!PluginConstant.EMPTY_STRING.equals(nodeDataType)) { //$NON-NLS-1$
                     return mdmColumnRepNode.getTdXmlElementType().getName() + LEFT + nodeDataType + RIGHT;
                 }
                 return mdmColumnRepNode.getTdXmlElementType().getName();
@@ -325,10 +326,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 label = label.substring(0, 1).toUpperCase() + label.substring(1);
                 return label;
             }
-            return node.getObject().getLabel();
+            return node.getObject() == null ? PluginConstant.EMPTY_STRING : node.getObject().getLabel();
         }
         String text = super.getText(element);
-        return "".equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ //$NON-NLS-2$
+        return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
