@@ -391,7 +391,8 @@ public class ItemRecord {
      * @return
      */
     private boolean isValidDirectory(File file) {
-        if (!file.getName().startsWith(".")) {
+        // filter the bin folder
+        if (!file.getName().startsWith(".") && !file.getName().equals("bin")) {
             IPath filePath = new Path(file.getAbsolutePath());
             String pathStr = filePath.toPortableString();
 
