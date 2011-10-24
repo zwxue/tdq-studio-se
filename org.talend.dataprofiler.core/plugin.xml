@@ -741,6 +741,15 @@
              </or>
           </enablement>
        </actionProvider>
+       <actionProvider
+             class="org.talend.dataprofiler.core.ui.action.provider.EditDFTabledActionProvider"
+             id="org.talend.dataprofiler.core.ui.action.provider.EditDFTabledActionProvider">
+          <enablement>
+             <instanceof
+                   value="org.talend.dq.nodes.DFTableRepNode">
+             </instanceof>
+          </enablement>
+       </actionProvider>
   </extension>
     
       

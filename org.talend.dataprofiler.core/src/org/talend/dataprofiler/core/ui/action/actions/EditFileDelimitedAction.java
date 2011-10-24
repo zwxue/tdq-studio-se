@@ -38,7 +38,7 @@ public class EditFileDelimitedAction extends Action {
         this.node = node;
         // MOD gdbu 2011-4-1 bug:20051
         setText(DefaultMessagesImpl.getString("EditFileDelimitedAction.EditFileDelimited"));//$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.FILE_DELIMITED));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.TABLE));
         // ~20051
     }
 

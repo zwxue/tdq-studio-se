@@ -285,4 +285,23 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
 
     }
+
+    public void updateImpactOnAnalysis(ConnectionItem connectionItem) {
+        try {
+            if (connectionItem == null) {
+                return;
+            }
+            Connection connection = connectionItem.getConnection();
+            List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
+            if (clientDependencys != null && clientDependencys.size() > 0) {
+                MessageDialog.openInformation(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
+                        DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", connectionItem.getProperty()
+                                        .getLabel()));
+                WorkbenchUtils.impactExistingAnalyses(connection);
+            }
+
+        } catch (PartInitException e) {
+            e.printStackTrace();
+        }
+    }
 }

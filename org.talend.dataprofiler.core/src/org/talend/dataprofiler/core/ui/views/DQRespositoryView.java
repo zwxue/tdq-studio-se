@@ -116,6 +116,7 @@ import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
 import org.talend.dataprofiler.core.ui.ResoureceChangedListener;
+import org.talend.dataprofiler.core.ui.action.actions.EditDFTableAction;
 import org.talend.dataprofiler.core.ui.action.actions.EditFileDelimitedAction;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
@@ -136,6 +137,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
@@ -452,13 +454,11 @@ public class DQRespositoryView extends CommonNavigator {
                             } catch (Throwable e1) {
                                 log.error(e1, e1);
                             }
-                        }
-                        // MOD gdbu 2011-4-1 bug 20051
-                        else if (obj instanceof DFConnectionRepNode) {
+                        } else if (obj instanceof DFConnectionRepNode) { // MOD gdbu 2011-4-1 bug 20051
                             new EditFileDelimitedAction((IRepositoryNode) obj).run();
-                        }
-                        // ~20051
-                        else {
+                        } else if (obj instanceof DFTableRepNode) {// MOD qiongli 2011-10-21 bug TDQ-3797
+                            new EditDFTableAction((IRepositoryNode) obj).run();
+                        } else {
                             DQRepositoryNode repoNode = (DQRepositoryNode) obj;
                             if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
                                 OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
