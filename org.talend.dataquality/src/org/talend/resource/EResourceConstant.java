@@ -111,7 +111,7 @@ public enum EResourceConstant {
                                       "TDQ_Libraries/Indicators/System Indicators/Text Statistics",//$NON-NLS-1$
                                       ResourceConstant.READONLY),
     SYSTEM_INDICATORS_PHONENUMBER_STATISTICS(
-                                            "PhoneNumber Statistics",
+                                             "Phone Number Statistics",
                                             "TDQ_Libraries/Indicators/System Indicators/Phone Number Statistics",
                                             ResourceConstant.READONLY),
     JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
