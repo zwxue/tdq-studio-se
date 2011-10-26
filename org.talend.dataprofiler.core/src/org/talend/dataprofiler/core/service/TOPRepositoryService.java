@@ -62,6 +62,7 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -298,6 +299,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                         DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", connectionItem.getProperty()
                                         .getLabel()));
                 WorkbenchUtils.impactExistingAnalyses(connection);
+                IRepositoryNode node = RepositoryNodeHelper.recursiveFind(connection);
+                if (node != null) {
+                    CorePlugin.getDefault().refreshDQView(node);
+                }
             }
 
         } catch (PartInitException e) {
