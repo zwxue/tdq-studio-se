@@ -23,8 +23,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.ui.PartInitException;
-import org.jfree.util.Log;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -71,6 +69,11 @@ import org.talend.resource.ResourceManager;
  */
 public final class ChartTableFactory {
 
+    /**
+     * 
+     */
+    private static final String DRILL_DOWN_EDITOR = "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"; //$NON-NLS-1$
+
     private ChartTableFactory() {
     }
 
@@ -102,8 +105,10 @@ public final class ChartTableFactory {
                     if (indicator != null && dataEntity != null) {
                         Menu menu = new Menu(table.getShell(), SWT.POP_UP);
                         table.setMenu(menu);
+
+                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
+
                         if (!isJAVALanguage) {
-                            MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
                             for (final MenuItemEntity itemEntity : itemEntities) {
                                 MenuItem item = new MenuItem(menu, SWT.PUSH);
                                 item.setText(itemEntity.getLabel());
@@ -136,67 +141,55 @@ public final class ChartTableFactory {
                                 }
                             }
                         } else {
-                            try {
-                                AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
-                                if (analysis.getParameters().isStoreData()) {
-                                    // MOD gdbu 2011-7-12 bug : 22524
-                                    if (!(analyDataSet != null && (analyDataSet.getData() != null
-                                            && analyDataSet.getData().size() > 0 || analyDataSet.getFrequencyData() != null
-                                            && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
-                                            && analyDataSet.getPatternData().size() > 0))) {
-                                        return;
-                                    }
-                                    // ~22524
-                                        MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis,
-                                                dataEntity);
-                                        for (final MenuItemEntity itemEntity : itemEntities) {
-                                            MenuItem item = new MenuItem(menu, SWT.PUSH);
-                                            item.setText(itemEntity.getLabel());
-                                            item.setImage(itemEntity.getIcon());
-                                            item.addSelectionListener(new SelectionAdapter() {
+                            AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
+                            if (analysis.getParameters().isStoreData()) {
 
-                                                @Override
-                                                public void widgetSelected(SelectionEvent e) {
-                                                    try {
-                                                        CorePlugin
-                                                                .getDefault()
-                                                                .getWorkbench()
-                                                                .getActiveWorkbenchWindow()
-                                                                .getActivePage()
-                                                                .openEditor(
-                                                                        new DrillDownEditorInput(analysis, dataEntity, itemEntity),
-                                                                        "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
-                                                    } catch (PartInitException e1) {
-                                                        e1.printStackTrace();
-                                                    }
-                                                }
+                                boolean isNoData = !(analyDataSet != null && (analyDataSet.getData() != null
+                                        && analyDataSet.getData().size() > 0 || analyDataSet.getFrequencyData() != null
+                                        && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
+                                        && analyDataSet.getPatternData().size() > 0));
 
-                                            });
-                                            if (isPatternFrequencyIndicator(indicator)) {
-                                                if (itemEntity.getQuery() == null) {
-                                                    itemEntity.setQuery(dataEntity.getKey().toString());
+                                if (!isNoData) {
+                                    for (final MenuItemEntity itemEntity : itemEntities) {
+                                        MenuItem item = new MenuItem(menu, SWT.PUSH);
+                                        item.setText(itemEntity.getLabel());
+                                        item.setImage(itemEntity.getIcon());
+                                        item.addSelectionListener(new SelectionAdapter() {
 
-                                                }
-                                                MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
-                                                itemCreatePatt.setText(DefaultMessagesImpl
-                                                        .getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
-                                                itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
-                                                itemCreatePatt.addSelectionListener(new SelectionAdapter() {
-
-                                                    @Override
-                                                    public void widgetSelected(SelectionEvent e) {
-                                                        DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
-                                                        PatternTransformer pattTransformer = new PatternTransformer(language);
-                                                        createPattern(analysis, itemEntity, pattTransformer);
-                                                    }
-                                                });
+                                            @Override
+                                            public void widgetSelected(SelectionEvent e) {
+                                                CorePlugin.getDefault().openEditor(
+                                                        new DrillDownEditorInput(analysis, dataEntity, itemEntity),
+                                                        ChartTableFactory.DRILL_DOWN_EDITOR);
                                             }
-                                        }
 
+                                        });
+                                    }
                                 }
-                            } catch (NullPointerException nullexception) {
 
-                                Log.error("drill down the data shuold run the analysis firstly." + nullexception);//$NON-NLS-1$
+                                if (isPatternFrequencyIndicator(indicator)) {
+                                    for (final MenuItemEntity itemEntity : itemEntities) {
+
+                                        if (itemEntity.getQuery() == null) {
+                                            itemEntity.setQuery(dataEntity.getKey().toString());
+
+                                        }
+                                        MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
+                                        itemCreatePatt.setText(DefaultMessagesImpl
+                                                .getString("ChartTableFactory.GenerateRegularPattern")); //$NON-NLS-1$
+                                        itemCreatePatt.setImage(ImageLib.getImage(ImageLib.PATTERN_REG));
+                                        itemCreatePatt.addSelectionListener(new SelectionAdapter() {
+
+                                            @Override
+                                            public void widgetSelected(SelectionEvent e) {
+                                                DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(analysis);
+                                                PatternTransformer pattTransformer = new PatternTransformer(language);
+                                                createPattern(analysis, itemEntity, pattTransformer);
+                                            }
+                                        });
+                                    }
+                                }
+
                             }
                             // MOD by zshen feature 11574:add menu "Generate regular pattern" to date pattern
                             if (isDatePatternFrequencyIndicator(indicator)) {
@@ -408,7 +401,7 @@ public final class ChartTableFactory {
 
         return iSwitch.doSwitch(indicator) != null;
     }
-    
+
     /**
      * DOC Administrator Comment method "isPhonseNumberIndicator".
      * 
@@ -417,7 +410,6 @@ public final class ChartTableFactory {
      */
     public static boolean isPhonseNumberIndicator(Indicator indicator) {
         IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
-
 
             @Override
             public Indicator casePossiblePhoneCountIndicator(PossiblePhoneCountIndicator object) {
@@ -430,7 +422,6 @@ public final class ChartTableFactory {
                 // TODO Auto-generated method stub
                 return object;
             }
-
 
             @Override
             public Indicator caseWellFormE164PhoneCountIndicator(WellFormE164PhoneCountIndicator object) {
