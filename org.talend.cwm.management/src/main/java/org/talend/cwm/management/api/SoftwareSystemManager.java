@@ -68,7 +68,7 @@ public final class SoftwareSystemManager {
                 if (trc.isOk()) {
                     connection = trc.getObject();
                     softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
-                    if (softwareSystem != null && softwareSystem.eResource() != null) { // store it
+                    if (softwareSystem != null /* && softwareSystem.eResource() != null */) { // store it
                         if (ConnectionHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
                             saveSoftwareSystem(softwareSystem);
                         }

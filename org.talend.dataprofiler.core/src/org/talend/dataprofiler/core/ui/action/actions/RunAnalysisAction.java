@@ -125,7 +125,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         if (editor == null) {
             analysis = this.node.getAnalysis();// AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
         } else {
-
             AnalysisEditor anaEditor = (AnalysisEditor) editor;
             if (editor.isDirty()) {
                 // MOD qiongli 2011-6-20 bug 21533,can save should before method doSave()
@@ -182,7 +181,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                     listener = (IRuningStatusListener) activePageInstance;
                                 }
                             }
-
                         }
                     } catch (PartInitException e) {
                         log.error(e, e);
