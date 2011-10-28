@@ -273,7 +273,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 continue;
             }
 
-            object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
+            object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position], mColumn.getPattern());
             List<Indicator> indicators = getIndicators(mColumn.getLabel());
             for (Indicator indicator : indicators) {
                 if (!continueRun()) {

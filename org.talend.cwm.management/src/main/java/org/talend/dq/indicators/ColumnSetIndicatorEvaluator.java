@@ -353,7 +353,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 }
                 continue;
             }
-            object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position]);
+            object = TalendTypeConvert.convertToObject(mColumn.getTalendType(), rowValues[position], mColumn.getPattern());
             objectLs.add(object);
 
         }
