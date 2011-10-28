@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -43,6 +44,8 @@ public class CreatePhoneNumIndicatorTask extends AbstractWorksapceUpdateTask {
 
     String endLine = "</dataquality.indicators.definition:IndicatorsDefinitions>"; //$NON-NLS-1$
 
+    private static Logger log = Logger.getLogger(CreatePhoneNumIndicatorTask.class);
+
     /* (non-Javadoc)
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
@@ -63,36 +66,39 @@ public class CreatePhoneNumIndicatorTask extends AbstractWorksapceUpdateTask {
     @Override
     protected boolean doExecute() throws Exception {
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
-        // boolean flag = false;
         if (-1 == talendDefinitionFileUpdate.indexOf("name=\"Phone Number Statistics\"")) {
             talendDefinitionFileUpdate.add(endLine, phoneNumStr + separator + endLine);
             talendDefinitionFileUpdate.replace(this.getClass().getName());
-            copyToPhoneNumFolder();
             IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(".Talend.definition");
             URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
             EMFSharedResources.getInstance().reloadResource(uri);
+            String name = "Phone Number Statistics";
+            IFolder folder = ResourceManager.getSystemIndicatorFolder().getFolder(name);
+            if (!folder.exists()) {
+                copyToPhoneNumFolder(folder);
+            }
             DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
         }
 
         return true;
     }
 
-    private void copyToPhoneNumFolder() {
+    /**
+     * 
+     * copy the definition files and create the realted property file into workspace.
+     * 
+     * @param folder
+     */
+    private void copyToPhoneNumFolder(IFolder folder) {
 
         try {
             DQStructureManager manager = DQStructureManager.getInstance();
-            IFolder folder;
-            String name = "Phone Number Statistics";
-            folder = ResourceManager.getSystemIndicatorFolder().getFolder(name);
-            if (!folder.exists()) {
                 folder.create(false, true, null);
-            }
             manager.copyFilesToFolder(CorePlugin.getDefault(), new Path("/indicators/Phone Number Statistics").toString(), false,
                     folder, null);
 
         } catch (Exception e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            log.error("do migration for Phone Number Indicator failed:", e1);
         }
     }
 
