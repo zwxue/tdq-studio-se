@@ -227,9 +227,10 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
         // MOD qiongli 2011-5-31 bug 21655,handle oracle date type.
         try {
             boolean isMatch = false;
-            if (isOracle && data instanceof Date) {
+            if (data instanceof Date) {
                 Date timeData = (Date) data;
-                if (timeData.compareTo(DateFormat.getDateInstance().parse(defValue)) == 0) {
+                Date defDate = DateFormat.getDateInstance().parse(defValue);
+                if (timeData.compareTo(defDate) == 0) {
                     isMatch = true;
                 }
             } else if (StringUtils.equals(str, defValue)) {
@@ -289,8 +290,9 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
             } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defValue.startsWith("to_date(")) {
                 String[] array = StringUtils.split(defValue, PluginConstant.SINGLE_QUOTE);
                 if (array.length > 3) {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(array[3]);
-                    defValue = simpleDateFormat.format(DateUtils.parse(array[3], array[1]));
+                    String pattern = array[3] != null ? array[3] : DateUtils.PATTERN_2;
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                    defValue = simpleDateFormat.format(simpleDateFormat.parse(array[1]));
                 }
             }
         } catch (Exception e) {
