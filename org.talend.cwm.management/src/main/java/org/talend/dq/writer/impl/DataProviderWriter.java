@@ -12,13 +12,19 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
@@ -28,6 +34,8 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.utils.AbstractResourceChangesService;
+import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
@@ -167,11 +175,33 @@ public class DataProviderWriter extends AElementPersistance {
             addDependencies(conn);
             addResourceContent(conn);
             connItem.setConnection(conn);
+
+            // MOD gdbu 2011-10-28 TDQ-3852 : The logic here similar with 'move folder' , didn't save the files
+            // associated with this connection.
+            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(conn.eResource());
+            List<Resource> needSaves = new ArrayList<Resource>();
+            for (EObject object : find.keySet()) {
+                Resource re = object.eResource();
+                if (re == null) {
+                    continue;
+                }
+                EcoreUtil.resolveAll(re);
+                needSaves.add(re);
+            }
+
             // MOD klliu 2011-02-15
             Project currentProject = ProjectManager.getInstance().getCurrentProject();
             ProxyRepositoryFactory.getInstance().save(currentProject, connItem);
 
-            updateDependencies(conn);
+            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
+                    AbstractResourceChangesService.class);
+            if (resChangeService != null) {
+                for (Resource toSave : needSaves) {
+                    resChangeService.saveResourceByEMFShared(toSave);
+                }
+            }
+            // updateDependencies(conn);
+            // ~TDQ-3852
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
