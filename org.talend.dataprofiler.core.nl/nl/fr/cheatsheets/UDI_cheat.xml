@@ -22,10 +22,10 @@
 		 Cliquez sur <b>Définition de l'indicateur</b> afin de développer l'éditeur. Cliquez sur le bouton <b>[+]</b> si vous souhaitez ajouter des indicateurs. Sous <b>Bases de données</b>, sélectionnez dans la liste le langage spécifique à la base de données, ou sélectionnez <b>ALL_DATABASE_TYPE</b> si la requête est assez générique pour fonctionner dans toutes les bases de données. Saisissez l'instruction de modèle SQL correspondant dans le champ <b>Modèle SQL</b>.	 
 		 
 Le Modèle SQL est une requête SQL comprenant les représentations suivantes de variables, par exemple :
-<i>&lt;%=__COLUMN_NAMES__%&gt;</i> remplace la (les) colonne(s),
-<i>&lt;%=__TABLE_NAME__%&gt;</i> remplace le nom de la table,
-<i>&lt;%=__WHERE_CLAUSE__%&gt;</i> remplace la clause WHERE fournie par le filtre sur les données,
-<i>&lt;%=__GROUP_BY_ALIAS__%&gt; remplace la clause entière &quot;group by&quot;</i>.
+<b>&lt;%=__COLUMN_NAMES__%&gt;</b> remplace la (les) colonne(s),
+<b>&lt;%=__TABLE_NAME__%&gt;</b> remplace le nom de la table,
+<b>&lt;%=__WHERE_CLAUSE__%&gt;</b> remplace la clause WHERE fournie par le filtre sur les données,
+<b>&lt;%=__GROUP_BY_ALIAS__%&gt;</b> remplace la clause entière &quot;group by&quot;.
 
 Par défaut, la catégorie du nouvel indicateur est définie comme <b>Compte personnalisé</b>. Sélectionnez la catégorie appropriée selon le type de sortie que l'indicateur est configuré pour retourner.
       </description>
