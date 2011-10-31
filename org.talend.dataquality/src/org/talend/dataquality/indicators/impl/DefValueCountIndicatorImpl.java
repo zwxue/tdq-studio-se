@@ -25,7 +25,6 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -229,7 +228,13 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
             boolean isMatch = false;
             if (data instanceof Date) {
                 Date timeData = (Date) data;
-                Date defDate = DateFormat.getDateInstance().parse(defValue);
+                // MOD qiongli 2011-10-31 consider the pattern if contain ":".
+                Date defDate = null;
+                if (StringUtils.contains(defValue, ":")) {
+                    defDate = DateFormat.getDateTimeInstance().parse(defValue);
+                } else {
+                    defDate = DateFormat.getDateInstance().parse(defValue);
+                }
                 if (timeData.compareTo(defDate) == 0) {
                     isMatch = true;
                 }
@@ -290,7 +295,7 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
             } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defValue.startsWith("to_date(")) {
                 String[] array = StringUtils.split(defValue, PluginConstant.SINGLE_QUOTE);
                 if (array.length > 3) {
-                    String pattern = array[3] != null ? array[3] : DateUtils.PATTERN_2;
+                    String pattern = array[3];
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                     defValue = simpleDateFormat.format(simpleDateFormat.parse(array[1]));
                 }

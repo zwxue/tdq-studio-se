@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
@@ -388,7 +389,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 }
                 // need to generate different SQL where clause for each type.
                 int javaType = tdColumn.getSqlDataType().getJavaDataType();
-                if (!Java2SqlType.isNumbericInSQL(javaType) && !isFunction(defValue, table)) {
+                // MOD qiongli 2011-10-31 add single quotation '' for mysql date type.
+                if (!Java2SqlType.isNumbericInSQL(javaType) && !isFunction(defValue, table)
+                        || (Java2SqlType.isDateInSQL(javaType) && SupportDBUrlType.MYSQLDEFAULTURL.getLanguage().equals(language))) {
                     defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 whereExpression.add(colName + dbms().equal() + defValue);
