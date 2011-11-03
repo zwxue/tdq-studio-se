@@ -12,24 +12,27 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.core.repository.utils.AbstractResourceChangesService;
+import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.ProxyRepositoryManager;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
-import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
-import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -73,8 +76,29 @@ public class DQRuleWriter extends AElementPersistance {
             TDQBusinessRuleItem ruleItem = (TDQBusinessRuleItem) item;
             DQRule rule = ruleItem.getDqrule();
             addDependencies(rule);
+
+            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(rule.eResource());
+            List<Resource> needSaves = new ArrayList<Resource>();
+            for (EObject object : find.keySet()) {
+                Resource re = object.eResource();
+                if (re == null) {
+                    continue;
+                }
+                EcoreUtil.resolveAll(re);
+                needSaves.add(re);
+            }
+
             ProxyRepositoryFactory.getInstance().save(ruleItem);
-            updateDependencies(rule);
+
+            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
+                    AbstractResourceChangesService.class);
+            if (resChangeService != null) {
+                for (Resource toSave : needSaves) {
+                    resChangeService.saveResourceByEMFShared(toSave);
+                }
+            }
+
+            // updateDependencies(rule);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
@@ -94,37 +118,37 @@ public class DQRuleWriter extends AElementPersistance {
      * 
      * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
-    @Override
-    protected void updateDependencies(ModelElement element) {
-        DQRule rule = (DQRule) element;
-        // update supplier dependency
-        EList<Dependency> supplierDependency = rule.getSupplierDependency();
-        try {
-            for (Dependency sDependency : supplierDependency) {
-                EList<ModelElement> client = sDependency.getClient();
-                for (ModelElement me : client) {
-                    if (me instanceof Analysis) {
-                        Analysis analysis = (Analysis) me;
-                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
-                                analysis, rule);
-                        if (dependencyReturn.isOk()) {
-                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(analysis);
-                            if (repositoryNode != null) {
-                                TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
-                                        .getItem();
-                                analysisItem.setAnalysis(analysis);
-                            }
-                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                    .saveResource(analysis.eResource());
-                        }
-                    }
-                }
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-        // update client dependency
-        // if DQRule have client depencency, add codes here
-    }
+    // @Override
+    // protected void updateDependencies(ModelElement element) {
+    // DQRule rule = (DQRule) element;
+    // // update supplier dependency
+    // EList<Dependency> supplierDependency = rule.getSupplierDependency();
+    // try {
+    // for (Dependency sDependency : supplierDependency) {
+    // EList<ModelElement> client = sDependency.getClient();
+    // for (ModelElement me : client) {
+    // if (me instanceof Analysis) {
+    // Analysis analysis = (Analysis) me;
+    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+    // analysis, rule);
+    // if (dependencyReturn.isOk()) {
+    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(analysis);
+    // if (repositoryNode != null) {
+    // TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
+    // .getItem();
+    // analysisItem.setAnalysis(analysis);
+    // }
+    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+    // .saveResource(analysis.eResource());
+    // }
+    // }
+    // }
+    // }
+    // } catch (PersistenceException e) {
+    // log.error(e, e);
+    // }
+    // // update client dependency
+    // // if DQRule have client depencency, add codes here
+    // }
 
 }

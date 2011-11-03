@@ -12,22 +12,27 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.utils.AbstractResourceChangesService;
+import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
@@ -39,15 +44,11 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
-import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.repository.ProjectManager;
-import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -193,11 +194,31 @@ public class AnalysisWriter extends AElementPersistance {
             addDependencies(analysis);
             addResourceContent(analysis.eResource(), analysis);
             anaItem.setAnalysis(analysis);
+
+            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(analysis.eResource());
+            List<Resource> needSaves = new ArrayList<Resource>();
+            for (EObject object : find.keySet()) {
+                Resource re = object.eResource();
+                if (re == null) {
+                    continue;
+                }
+                EcoreUtil.resolveAll(re);
+                needSaves.add(re);
+            }
+
             // MOD klliu 2011-02-15
             Project currentProject = ProjectManager.getInstance().getCurrentProject();
             ProxyRepositoryFactory.getInstance().save(currentProject, anaItem);
-            // super.save(anaItem);
-            updateDependencies(analysis);
+
+            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
+                    AbstractResourceChangesService.class);
+            if (resChangeService != null) {
+                for (Resource toSave : needSaves) {
+                    resChangeService.saveResourceByEMFShared(toSave);
+                }
+            }
+
+            // updateDependencies(analysis);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
@@ -218,90 +239,90 @@ public class AnalysisWriter extends AElementPersistance {
      * 
      * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
-    @Override
-    protected void updateDependencies(ModelElement element) {
-        Analysis analysis = (Analysis) element;
-        // update supplier dependency
-        EList<Dependency> supplierDependency = analysis.getSupplierDependency();
-        try {
-            for (Dependency sDependency : supplierDependency) {
-                EList<ModelElement> client = sDependency.getClient();
-                for (ModelElement me : client) {
-                    if (me instanceof TdReport) {
-                        TdReport report = (TdReport) me;
-                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report,
-                                analysis);
-                        if (dependencyReturn.isOk()) {
-                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(report);
-                            if (repositoryNode != null) {
-                                TDQReportItem reportItem = (TDQReportItem) repositoryNode.getObject().getProperty().getItem();
-                                reportItem.setReport(report);
-                            }
-                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                    .saveResource(report.eResource());
-                        }
-                    }
-                }
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-        // update client dependency
-        EList<Dependency> clientDependency = analysis.getClientDependency();
-        try {
-            for (Dependency cDependency : clientDependency) {
-                EList<ModelElement> supplier = cDependency.getSupplier();
-                for (ModelElement me : supplier) {
-                    if (me instanceof Connection) {
-                        Connection connection = (Connection) me;
-                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
-                                analysis, connection);
-                        if (dependencyReturn.isOk()) {
-                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
-                            if (repositoryNode != null) {
-                                ConnectionItem connectionItem = (ConnectionItem) repositoryNode.getObject().getProperty()
-                                        .getItem();
-                                connectionItem.setConnection(connection);
-                            }
-                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                    .saveResource(connection.eResource());
-                        }
-                    } else if (me instanceof IndicatorDefinition) {
-                        IndicatorDefinition udi = (IndicatorDefinition) me;
-                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
-                                analysis, udi);
-                        if (dependencyReturn.isOk()) {
-                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(udi);
-                            if (repositoryNode != null) {
-                                TDQItem udiItem = (TDQItem) repositoryNode.getObject().getProperty().getItem();
-                                if (udiItem instanceof TDQIndicatorDefinitionItem) {
-                                    ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
-                                } else if (udiItem instanceof TDQBusinessRuleItem) {
-                                    ((TDQBusinessRuleItem) udiItem).setDqrule((DQRule) udi);
-                                }
-                            }
-                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                    .saveResource(udi.eResource());
-                        }
-                    } else if (me instanceof Pattern) {
-                        Pattern pattern = (Pattern) me;
-                        TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
-                                analysis, pattern);
-                        if (dependencyReturn.isOk()) {
-                            RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(pattern);
-                            if (repositoryNode != null) {
-                                TDQPatternItem patternItem = (TDQPatternItem) repositoryNode.getObject().getProperty().getItem();
-                                patternItem.setPattern(pattern);
-                            }
-                            ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                                    .saveResource(pattern.eResource());
-                        }
-                    }
-                }
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-
-    }
+    // @Override
+    // protected void updateDependencies(ModelElement element) {
+    // Analysis analysis = (Analysis) element;
+    // // update supplier dependency
+    // EList<Dependency> supplierDependency = analysis.getSupplierDependency();
+    // try {
+    // for (Dependency sDependency : supplierDependency) {
+    // EList<ModelElement> client = sDependency.getClient();
+    // for (ModelElement me : client) {
+    // if (me instanceof TdReport) {
+    // TdReport report = (TdReport) me;
+    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report,
+    // analysis);
+    // if (dependencyReturn.isOk()) {
+    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(report);
+    // if (repositoryNode != null) {
+    // TDQReportItem reportItem = (TDQReportItem) repositoryNode.getObject().getProperty().getItem();
+    // reportItem.setReport(report);
+    // }
+    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+    // .saveResource(report.eResource());
+    // }
+    // }
+    // }
+    // }
+    // } catch (PersistenceException e) {
+    // log.error(e, e);
+    // }
+    // // update client dependency
+    // EList<Dependency> clientDependency = analysis.getClientDependency();
+    // try {
+    // for (Dependency cDependency : clientDependency) {
+    // EList<ModelElement> supplier = cDependency.getSupplier();
+    // for (ModelElement me : supplier) {
+    // if (me instanceof Connection) {
+    // Connection connection = (Connection) me;
+    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+    // analysis, connection);
+    // if (dependencyReturn.isOk()) {
+    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+    // if (repositoryNode != null) {
+    // ConnectionItem connectionItem = (ConnectionItem) repositoryNode.getObject().getProperty()
+    // .getItem();
+    // connectionItem.setConnection(connection);
+    // }
+    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+    // .saveResource(connection.eResource());
+    // }
+    // } else if (me instanceof IndicatorDefinition) {
+    // IndicatorDefinition udi = (IndicatorDefinition) me;
+    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+    // analysis, udi);
+    // if (dependencyReturn.isOk()) {
+    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(udi);
+    // if (repositoryNode != null) {
+    // TDQItem udiItem = (TDQItem) repositoryNode.getObject().getProperty().getItem();
+    // if (udiItem instanceof TDQIndicatorDefinitionItem) {
+    // ((TDQIndicatorDefinitionItem) udiItem).setIndicatorDefinition(udi);
+    // } else if (udiItem instanceof TDQBusinessRuleItem) {
+    // ((TDQBusinessRuleItem) udiItem).setDqrule((DQRule) udi);
+    // }
+    // }
+    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+    // .saveResource(udi.eResource());
+    // }
+    // } else if (me instanceof Pattern) {
+    // Pattern pattern = (Pattern) me;
+    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
+    // analysis, pattern);
+    // if (dependencyReturn.isOk()) {
+    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(pattern);
+    // if (repositoryNode != null) {
+    // TDQPatternItem patternItem = (TDQPatternItem) repositoryNode.getObject().getProperty().getItem();
+    // patternItem.setPattern(pattern);
+    // }
+    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+    // .saveResource(pattern.eResource());
+    // }
+    // }
+    // }
+    // }
+    // } catch (PersistenceException e) {
+    // log.error(e, e);
+    // }
+    //
+    // }
 }

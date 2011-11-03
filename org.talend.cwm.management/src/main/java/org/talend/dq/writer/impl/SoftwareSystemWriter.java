@@ -68,10 +68,10 @@ public class SoftwareSystemWriter extends AElementPersistance {
      * 
      * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
-    @Override
-    protected void updateDependencies(ModelElement element) {
-        // TODO Auto-generated method stub
-
-    }
+    // @Override
+    // protected void updateDependencies(ModelElement element) {
+    // // TODO Auto-generated method stub
+    //
+    // }
 
 }
