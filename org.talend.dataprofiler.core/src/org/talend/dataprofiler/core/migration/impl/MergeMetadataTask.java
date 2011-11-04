@@ -28,7 +28,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.IMigrateDIMetadataItemService;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.model.migration.TopMetadataMigrationFrom400to410usingGenericVM;
 import org.talend.resource.EResourceConstant;
 
@@ -267,8 +273,6 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
         return true;
     }
 
-
-
     /*
      * (non-Javadoc)
      * 
@@ -313,55 +317,25 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             fileMap.get(rawFile).renameTo(rawFile.getAbsoluteFile());
         }
 
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IMigrateDIMetadataItemService.class)) {
+            IMigrateDIMetadataItemService service = (IMigrateDIMetadataItemService) GlobalServiceRegister.getDefault()
+                    .getService(IMigrateDIMetadataItemService.class);
+
+            File parentFolder = getWorkspacePath().append("metadata").toFile();
+            if (parentFolder.exists()) {
+                for (File propFile : getPropertyFiles(parentFolder)) {
+                    Property property = PropertyHelper.getProperty(propFile);
+                    if (property != null) {
+                        Item item = property.getItem();
+                        if (item != null) {
+                            service.migrateDIItems(item);
+                        }
+                    }
+                }
+            }
+        }
+
         return result;
-        // boolean result = true;
-        // boolean rename = true;
-        //
-        // File rawFileMetadata = new File(ResourceManager.getMetadataFolder().getRawLocationURI());
-        // File migFileMetadata = new File(rawFileMetadata.getParentFile(), rawFileMetadata.getName() +
-        // MIGRATION_FOLDER_EXT);
-        //
-        // File rawFileDataProfiling = new File(ResourceManager.getDataProfilingFolder().getRawLocationURI());
-        // File migFileDataProfiling = new File(rawFileDataProfiling.getParentFile(), rawFileDataProfiling.getName()
-        // + MIGRATION_FOLDER_EXT);
-        //
-        // File rawFileLibraries = new File(ResourceManager.getLibrariesFolder().getRawLocationURI());
-        // File migFileLibraries = new File(rawFileLibraries.getParentFile(), rawFileLibraries.getName() +
-        // MIGRATION_FOLDER_EXT);
-        //
-        // try {
-        // result = rawFileMetadata.renameTo(migFileMetadata) && rawFileDataProfiling.renameTo(migFileDataProfiling)
-        // && rawFileLibraries.renameTo(migFileLibraries);
-        //
-        // if (result) {
-        // // migrate the folder "TDQ_Metadata" for ".prv" files and
-        // // "TDQ_Libraries" for ".softwaresystem.softwaredeployment" files
-        // String[] metadataFileExtentionNames = { ".prv", ".softwaresystem.softwaredeployment" };
-        // File[] migrateFolderList = { migFileMetadata, migFileLibraries };
-        // TopMetadataMigrationFrom400to410usingGenericVM metadata400to410 = new
-        // TopMetadataMigrationFrom400to410usingGenericVM();
-        // for (File migrateFile : migrateFolderList) {
-        // result = migrateFolder(result, rename, migrateFile, metadata400to410, metadataFileExtentionNames);
-        // }
-        // // migrate the folder "TDQ_Data Profiling" for ".ana" files and
-        // // "TDQ_Libraries" for ".rules" file
-        // String[] anaFileExtentionNames = { ".ana" };
-        // String[] rulesFileExtentionNames = { ".rules" };
-        // result = migrateFolder(result, migFileDataProfiling, anaFileExtentionNames, this.getReplaceStringMapAna())
-        // && migrateFolder(result, migFileLibraries, rulesFileExtentionNames, this.getReplaceStringMapRules());
-        // }
-        // } catch (Exception e) {
-        // result = false;
-        // log.error(e, e);
-        // } finally {
-        // try {
-        // result = migFileMetadata.renameTo(rawFileMetadata) && migFileDataProfiling.renameTo(rawFileDataProfiling)
-        // && migFileLibraries.renameTo(rawFileLibraries);
-        // } catch (Exception e) {
-        // log.error(e);
-        // }
-        // }
-        // return result;
     }
 
     /**
@@ -405,5 +379,20 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
         }
 
         return result;
+    }
+
+    private List<File> getPropertyFiles(File parentFoder) {
+        ArrayList<File> fileList = new ArrayList<File>();
+        getAllFilesFromFolder(parentFoder, fileList, new FilenameFilter() {
+
+            public boolean accept(File dir, String name) {
+                if (name.endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        return fileList;
     }
 }
