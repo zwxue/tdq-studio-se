@@ -6,11 +6,13 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -60,11 +62,11 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
      */
     protected Long defaultValCount = DEFAULT_VAL_COUNT_EDEFAULT;
 
-    protected String defValue = null;
+    protected Object defValue = null;
 
     protected boolean isOracle = false;
 
-    private String format_Oracle = null;
+    private static Logger log = Logger.getLogger(DefValueCountIndicatorImpl.class);
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -219,44 +221,26 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
     public boolean handle(Object data) {
         mustStoreRow = false;
         boolean ok = super.handle(data);
-        if (data == null) {
+        if (data == null || defValue == null) {
             return ok;
         }
 
         String str = data.toString();
         // MOD qiongli 2011-5-31 bug 21655,handle oracle date type.
         boolean isMatch = false;
-        if (data instanceof Date) {
-            Date timeData = (Date) data;
-            // MOD qiongli 2011-10-31 consider the pattern if contain ":".
-            Date defDate = null;
-            try {
-                if (this.format_Oracle != null) {
-                    // replace "mi" with "mm" for oralce pattren.
-                    format_Oracle = StringUtils.replace(format_Oracle, "mi", "mm");
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format_Oracle);
-                    defDate = simpleDateFormat.parse(defValue);
-                } else if (StringUtils.contains(defValue, ":")) {
-                    defDate = DateFormat.getDateTimeInstance().parse(defValue);
-                } else {
-                    defDate = DateFormat.getDateInstance().parse(defValue);
-                }
-                if (timeData.compareTo(defDate) == 0) {
-                    isMatch = true;
-                }
-            } catch (Exception ex) {
-                // when parse fail,use equals to comapre the two strings.considering that Timestamp toString() is end
-                // with ".0",if use equals to compare,we should remove the end string ".0".
-
-                if (str.endsWith(".0")) {
-                    str = StringUtils.removeEnd(str, ".0");
-                }
-                if (StringUtils.equals(str, defValue)) {
-                    isMatch = true;
-                }
+        if (data instanceof Date && defValue instanceof Date) {
+            if (((Date) data).compareTo((Date) defValue) == 0) {
+                isMatch = true;
             }
-        } else if (StringUtils.equals(str, defValue)) {
-            isMatch = true;
+        } else {
+            // considering that Timestamp parse fail then use toString() ,will be end with ".0",if use equals to
+            // compare,we should remove the end string ".0".
+            if (str.endsWith(".0")) {//$NON-NLS-1$
+                str = StringUtils.removeEnd(str, ".0");//$NON-NLS-1$
+            }
+            if (StringUtils.equals(str, defValue.toString())) {
+                isMatch = true;
+            }
         }
         if (isMatch) {
             mustStoreRow = true;
@@ -281,13 +265,29 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
         Connection connection = ConnectionHelper.getConnection(tdColumn);
         if (SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection) != null) {
             String databaseType = ((DatabaseConnection) connection).getDatabaseType();
-            if (databaseType != null && databaseType.contains("Oracle")) {
+            if (databaseType != null && databaseType.contains("Oracle")) { //$NON-NLS-1$
                 isOracle = true;
             }
         }
 
-        if (isOracle && defValue != null) {
-            getDefValueForOracle(tdColumn);
+        // MOD qiongli 2011-11-7 TDQ-1554.parse the default value to Date type when initialize this indicator.
+        if (defValue != null) {
+            if (isOracle) {
+                getDefValueForOracle(tdColumn);
+            } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
+                String defTmp = defValue.toString();
+                try {
+                    if (StringUtils.contains(defTmp, ":")) { //$NON-NLS-1$
+                        defValue = DateFormat.getDateTimeInstance().parse(defTmp);
+                    } else {
+                        defValue = DateFormat.getDateInstance().parse(defTmp);
+                    }
+                } catch (ParseException exc) {
+                    // if parse fail,reset defValue to String
+                    defValue = defTmp;
+                    log.warn("Parse default value failure!");
+                }
+            }
         }
         return super.prepare();
     }
@@ -301,20 +301,26 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
     protected void getDefValueForOracle(TdColumn tdColumn) {
         // MOD qiongli 2011-5-31 bug 21655,remove the redundant "\n" or "\'" and handle the date type for default value
         // on oracle db.
-        defValue = StringUtils.removeEnd(defValue, PluginConstant.ENTER_STRING);
+        String defTemp = defValue.toString();
+        defTemp = StringUtils.removeEnd(defTemp, PluginConstant.ENTER_STRING);
         try {
-            if (Java2SqlType.isTextInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defValue.length() > 1
-                    && (defValue.startsWith(PluginConstant.SINGLE_QUOTE) && defValue.endsWith(PluginConstant.SINGLE_QUOTE))) {
-                defValue = defValue.substring(1, defValue.length() - 1);
-            } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defValue.startsWith("to_date(")) {
-                String[] array = StringUtils.split(defValue, PluginConstant.SINGLE_QUOTE);
+            if (Java2SqlType.isTextInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defTemp.length() > 1
+                    && (defTemp.startsWith(PluginConstant.SINGLE_QUOTE) && defTemp.endsWith(PluginConstant.SINGLE_QUOTE))) {
+                defValue = defTemp.substring(1, defTemp.length() - 1);
+            } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defTemp.startsWith("to_date(")) {
+                String[] array = StringUtils.split(defTemp, PluginConstant.SINGLE_QUOTE);
                 if (array.length > 3) {
-                    format_Oracle = array[3];
-                    defValue = array[1];
+                    if (array[3] != null && !PluginConstant.EMPTY_STRING.equals(array[3].trim())) {
+                        String pattern = StringUtils.replace(array[3], "mi", "mm");
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);//$NON-NLS-1$ //$NON-NLS-2$
+                        defValue = simpleDateFormat.parse(array[1]);
+                    } else {
+                        defValue = array[1];
+                    }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 
