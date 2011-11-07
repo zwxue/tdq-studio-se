@@ -6,7 +6,6 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -64,6 +63,8 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
     protected String defValue = null;
 
     protected boolean isOracle = false;
+
+    private String format_Oracle = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -224,13 +225,18 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
 
         String str = data.toString();
         // MOD qiongli 2011-5-31 bug 21655,handle oracle date type.
-        try {
-            boolean isMatch = false;
-            if (data instanceof Date) {
-                Date timeData = (Date) data;
-                // MOD qiongli 2011-10-31 consider the pattern if contain ":".
-                Date defDate = null;
-                if (StringUtils.contains(defValue, ":")) {
+        boolean isMatch = false;
+        if (data instanceof Date) {
+            Date timeData = (Date) data;
+            // MOD qiongli 2011-10-31 consider the pattern if contain ":".
+            Date defDate = null;
+            try {
+                if (this.format_Oracle != null) {
+                    // replace "mi" with "mm" for oralce pattren.
+                    format_Oracle = StringUtils.replace(format_Oracle, "mi", "mm");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format_Oracle);
+                    defDate = simpleDateFormat.parse(defValue);
+                } else if (StringUtils.contains(defValue, ":")) {
                     defDate = DateFormat.getDateTimeInstance().parse(defValue);
                 } else {
                     defDate = DateFormat.getDateInstance().parse(defValue);
@@ -238,15 +244,23 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
                 if (timeData.compareTo(defDate) == 0) {
                     isMatch = true;
                 }
-            } else if (StringUtils.equals(str, defValue)) {
-                isMatch = true;
+            } catch (Exception ex) {
+                // when parse fail,use equals to comapre the two strings.considering that Timestamp toString() is end
+                // with ".0",if use equals to compare,we should remove the end string ".0".
+
+                if (str.endsWith(".0")) {
+                    str = StringUtils.removeEnd(str, ".0");
+                }
+                if (StringUtils.equals(str, defValue)) {
+                    isMatch = true;
+                }
             }
-            if (isMatch) {
-                mustStoreRow = true;
-                this.defaultValCount++;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } else if (StringUtils.equals(str, defValue)) {
+            isMatch = true;
+        }
+        if (isMatch) {
+            mustStoreRow = true;
+            this.defaultValCount++;
         }
 
         return ok;
@@ -295,9 +309,8 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
             } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defValue.startsWith("to_date(")) {
                 String[] array = StringUtils.split(defValue, PluginConstant.SINGLE_QUOTE);
                 if (array.length > 3) {
-                    String pattern = array[3];
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                    defValue = simpleDateFormat.format(simpleDateFormat.parse(array[1]));
+                    format_Oracle = array[3];
+                    defValue = array[1];
                 }
             }
         } catch (Exception e) {
