@@ -199,7 +199,8 @@ public abstract class AbstractPagePart {
             }
             masterPage.getConnCombo().select(index);
             // MOD qiongli 2011-5-16 bug 21453
-            if (prop.getItem().getState().isDeleted()) {
+            if (prop != null && prop.getItem() != null && prop.getItem().getState() != null
+                    && prop.getItem().getState().isDeleted()) {
                 masterPage.getLabelConnDeleted().setVisible(true);
                 masterPage.getLabelConnDeleted().setText(
                         DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", prop.getLabel()));//$NON-NLS-1$
