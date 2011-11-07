@@ -1121,4 +1121,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             execCombo.setEnabled(false);
         }
     }
+
+    @Override
+    public ExecutionLanguage getUIExecuteEngin() {
+        return ExecutionLanguage.get(execCombo.getText());
+    }
 }

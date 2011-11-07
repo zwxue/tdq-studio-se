@@ -817,6 +817,21 @@ public class DbmsLanguage {
         return null;
     }
 
+    public Expression getExpression(ModelElement element, boolean isJavaEngin){
+        if(element==null)return null;
+        Expression expression = null;
+        if(element instanceof Pattern){
+            expression = getRegexp(((Pattern) element), isJavaEngin);
+        } else if (element instanceof Indicator) {
+            if (isJavaEngin) {
+                return expression;
+            }
+            Indicator indicator = ((Indicator) element);
+            expression = this.getSqlExpression(indicator.getIndicatorDefinition());
+        }
+        return expression;
+    }
+
     public String getBackSlashForRegex() {
         return "\\"; //$NON-NLS-1$
     }

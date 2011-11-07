@@ -285,9 +285,15 @@ public final class DbmsLanguageFactory {
      * @param analysis
      * @return the dbms language associated to the connection of the given analysis or a default one.
      */
-    public static DbmsLanguage createDbmsLanguage(Analysis analysis) {
+    public static DbmsLanguage createDbmsLanguage(Analysis analysis, ExecutionLanguage... exeLanguage) {
         final AnalysisContext context = analysis.getContext();
-        if (analysis.getParameters().getExecutionLanguage() == ExecutionLanguage.JAVA) {
+        ExecutionLanguage theLanguage = null;
+        if (exeLanguage != null && exeLanguage.length > 0) {
+            theLanguage = exeLanguage[0];
+        } else {
+            theLanguage = analysis.getParameters().getExecutionLanguage();
+        }
+        if (theLanguage == ExecutionLanguage.JAVA) {
             return createDbmsLanguage(SupportDBUrlType.JAVADEFAULTURL);
         }
         if (context != null) {

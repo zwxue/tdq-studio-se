@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -296,5 +297,9 @@ public class AnalysisEditor extends CommonFormEditor {
         super.setFocus();
         // don't invoke this method here, invoke it in IPartListener.partBroughtToTop()
         // WorkbenchUtils.autoChange2DataProfilerPerspective();
+    }
+
+    public ExecutionLanguage getUIExecuteEngin() {
+        return this.getMasterPage().getUIExecuteEngin();
     }
 }

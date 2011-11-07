@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
@@ -31,6 +32,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
@@ -46,12 +48,15 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.dialog.JavaUdiJarSelectDialog;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.FolderObjFilter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -64,14 +69,18 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter
 import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
@@ -120,7 +129,36 @@ public final class UDIUtils {
             ((JavaUserDefIndicator) judi).setExecuteEngine(analysis.getParameters().getExecutionLanguage());
             udi = judi;
         }
+        IEditorPart activeEditor = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .getActiveEditor();
+        if (activeEditor == null || !(activeEditor instanceof AnalysisEditor)) {
+            return null;
+        }
+        ExecutionLanguage executionLanguage = ((AnalysisEditor) activeEditor).getUIExecuteEngin();
+        boolean isJavaEngin = ExecutionLanguage.JAVA.equals(executionLanguage);
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis, executionLanguage);
+        Expression returnExpression = dbmsLanguage.getExpression(udi, isJavaEngin);
+        String executeType = isJavaEngin ? executionLanguage.getName() : dbmsLanguage.getDbmsName();
+        if (isJavaEngin && judi != null) {
+            // need some message
+        } else if (returnExpression == null) {
+            // open the editor
+            boolean openUDI = MessageDialog
+                    .openQuestion(
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            DefaultMessagesImpl.getString("PatternUtilities.Warning"), DefaultMessagesImpl.getString("UDIUtils.NoExpression", executeType)); //$NON-NLS-1$ //$NON-NLS-2$
+            if (openUDI) {
 
+                // LocalRepositoryFactory.getInstance().getLastVersion(ProjectManager.getInstance().getCurrentProject(),
+                // EcoreUtil.getID(udi));
+                RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.recursiveFind(udid);
+                if (RepositoryNodeHelper.canOpenEditor(node)) {
+                    new OpenItemEditorAction(node).run();
+                }
+            }
+            return null;
+        }
+        // dbmsLanguage
         IndicatorParameters parameters = udi.getParameters();
         if (parameters == null) {
             parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();

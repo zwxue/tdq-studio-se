@@ -518,11 +518,19 @@ public class ColumnViewerDND {
 
         // @Override
         public void doDropValidation(DropTargetEvent event, CommonViewer commonViewer) {
+            Object treeData = ((DropTarget) event.widget).getControl().getData();
+            if (treeData == null || treeData instanceof AnalysisColumnSetTreeViewer) {
+                event.detail = DND.DROP_NONE;
+                return;
+            }
+
             if (event.detail != DND.DROP_NONE) {
                 lastValidOperation = event.detail;
             }
 
             boolean is = true;
+            
+
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
 
             if (firstElement instanceof SysIndicatorDefinitionRepNode) {
@@ -585,6 +593,7 @@ public class ColumnViewerDND {
                     TreeItem item = (TreeItem) event.item;
                     ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
                     viewer = (AnalysisColumnTreeViewer) item.getParent().getData(AnalysisColumnTreeViewer.VIEWER_KEY);
+
                     analysis = viewer.getAnalysis();
                     IndicatorUnit[] addIndicatorUnits = null;
                     try {

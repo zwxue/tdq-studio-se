@@ -49,6 +49,7 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -492,6 +493,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     public Label getLabelConnDeleted() {
         return this.labelConnDeleted;
+    }
+
+    public ExecutionLanguage getUIExecuteEngin() {
+        return ExecutionLanguage.SQL;
     }
 
 }

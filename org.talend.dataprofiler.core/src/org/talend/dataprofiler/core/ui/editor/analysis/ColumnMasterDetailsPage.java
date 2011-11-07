@@ -1269,4 +1269,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             dataFilterComp.getDataFilterText().setEnabled(false);
         }
     }
+
+    @Override
+    public ExecutionLanguage getUIExecuteEngin() {
+        return ExecutionLanguage.get(execCombo.getText());
+    }
+
 }
