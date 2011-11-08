@@ -48,6 +48,8 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
 
     private static final DecimalFormat F2_DIGIT = new DecimalFormat("00");
 
+    protected String datePattern = null;
+
     /**
      * The cached value of the '{@link #getUniqueValues() <em>Unique Values</em>}' attribute list.
      * <!-- begin-user-doc
@@ -444,6 +446,7 @@ public class FrequencyIndicatorImpl extends IndicatorImpl implements FrequencyIn
         this.uniqueValueCount = 0L;
         this.distinctValueCount = 0L;
         this.distinctComputed = false;
+        this.datePattern = null;
         this.getValueToFreq().clear();
         return super.reset();
     }

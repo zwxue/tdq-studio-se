@@ -54,6 +54,8 @@ import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
+import org.talend.dataquality.indicators.PatternFreqIndicator;
+import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
 import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
@@ -649,7 +651,10 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                     indicator.setParameters(parameters);
                 }
                 DateParameters dateParameters = parameters.getDateParameters();
-                if (dateParameters == null) {
+                // MOD qiongli 2011-11-8 TDQ-3864,set DateParameters outside of patternIndicator and
+                // PatternLowFreqIndicator.make this indicator running result same as Java engine.
+                if (dateParameters == null
+                        && !(indicator instanceof PatternFreqIndicator || indicator instanceof PatternLowFreqIndicator)) {
                     dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
                     parameters.setDateParameters(dateParameters);
                 }

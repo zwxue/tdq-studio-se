@@ -163,7 +163,8 @@ public enum FormEnum {
 
                 if (Java2SqlType.isDateInSQL(sqlType)) {
 
-                    forms = new FormEnum[] { FreqTimeSliceForm };
+                    // MOD qiongli 2011-11-8,TDQ-3864,remove TimeSlice from UI
+                    forms = new FormEnum[] { NumbericNominalForm };
                 }
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
 
