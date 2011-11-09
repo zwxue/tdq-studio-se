@@ -185,7 +185,7 @@ public final class DQStructureManager {
                 rulesParserFoler = instance.getObjectFolder(EResourceConstant.RULES_PARSER);
             }
             if (rulesParserFoler != null) {
-            rulesParserFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_RULES_PARSER.getFolder());
+                rulesParserFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_RULES_PARSER.getFolder());
             }
             if (!project.getFolder(EResourceConstant.EXCHANGE.getPath()).exists()) {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
@@ -471,11 +471,15 @@ public final class DQStructureManager {
      * @return true if need to create new resource structure.
      */
     public boolean isNeedCreateStructure() {
-        if (isSecludedVersion()) {
-            return !ResourceService.checkSecludedResource();
-        }
+        // MOD klliu bug TDQ-3897 2011-11-08
+        // if (isSecludedVersion()) {
+        // return !ResourceService.checkSecludedResource();
+        // }
+        //
+        // return !ResourceService.checkResource();
+        // we only check the dq structure is on workspace,otherwise it will be created.
+        return !ResourceService.checkSecludedResource() && !ResourceService.checkResource();
 
-        return !ResourceService.checkResource();
     }
 
     /**
