@@ -78,8 +78,16 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
                 if (!withDeleted && viewObject.isDeleted()) {
                     continue;
                 }
-
-                DBConnectionRepNode repNode = new DBConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                DBConnectionRepNode repNode = null;
+                try {
+                    repNode = new DBConnectionRepNode(viewObject, this, ENodeType.REPOSITORY_ELEMENT);
+                } catch (Exception e) {
+                    log.error(e, e);
+                    continue;
+                    // MOD zshen there maybe impact file Connection to decide whether had same name connection has been
+                    // created
+                    // before that.
+                }
                 repNode.setProperties(EProperties.LABEL, viewObject.getLabel());
                 repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
                 viewObject.setRepositoryNode(repNode);

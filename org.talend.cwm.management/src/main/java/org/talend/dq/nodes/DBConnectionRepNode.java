@@ -54,7 +54,10 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof DatabaseConnectionItem) {
-                this.databaseConnection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
+                Connection connection = ((DatabaseConnectionItem) item).getConnection();
+                if (connection != null) {
+                    this.databaseConnection = (DatabaseConnection) connection;
+                }
             }
         }
     }
