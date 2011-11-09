@@ -120,7 +120,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="org.talend.dataprofiler.core.ui.perspective.DataProfilingPerspective"
-            icon="icons/profiler_persp.png"
+            icon="icons/server_chart.png"
             id="org.talend.dataprofiler.DataProfilingPerspective"
             name="%page.name.DataProfiler">
       </perspective>
