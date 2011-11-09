@@ -68,6 +68,8 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
 
     private static Logger log = Logger.getLogger(DefValueCountIndicatorImpl.class);
 
+    private String pointZeroStr = ".0"; //$NON-NLS-1$
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
@@ -233,10 +235,10 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
                 isMatch = true;
             }
         } else {
-            // considering that Timestamp parse fail then use toString() ,will be end with ".0",if use equals to
-            // compare,we should remove the end string ".0".
-            if (str.endsWith(".0")) {//$NON-NLS-1$
-                str = StringUtils.removeEnd(str, ".0");//$NON-NLS-1$
+            // considering that Timestamp parse fail then defValue is a String and with equals,if data is end with
+            // ".0",we should remove the end string ".0".
+            if (str.endsWith(pointZeroStr)) {
+                str = StringUtils.removeEnd(str, pointZeroStr);
             }
             if (StringUtils.equals(str, defValue.toString())) {
                 isMatch = true;
@@ -270,7 +272,8 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
             }
         }
 
-        // MOD qiongli 2011-11-7 TDQ-1554.parse the default value to Date type when initialize this indicator.
+        // MOD qiongli 2011-11-7 TDQ-1554.if tdColumn is Date type,parse the default value to Date type when initialize
+        // this indicator.
         if (defValue != null) {
             if (isOracle) {
                 getDefValueForOracle(tdColumn);
@@ -307,17 +310,19 @@ public class DefValueCountIndicatorImpl extends IndicatorImpl implements DefValu
             if (Java2SqlType.isTextInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defTemp.length() > 1
                     && (defTemp.startsWith(PluginConstant.SINGLE_QUOTE) && defTemp.endsWith(PluginConstant.SINGLE_QUOTE))) {
                 defValue = defTemp.substring(1, defTemp.length() - 1);
-            } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defTemp.startsWith("to_date(")) {
+            } else if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType()) && defTemp.startsWith("to_date(")) {//$NON-NLS-1$
                 String[] array = StringUtils.split(defTemp, PluginConstant.SINGLE_QUOTE);
                 if (array.length > 3) {
                     if (array[3] != null && !PluginConstant.EMPTY_STRING.equals(array[3].trim())) {
-                        String pattern = StringUtils.replace(array[3], "mi", "mm");
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);//$NON-NLS-1$ //$NON-NLS-2$
+                        String pattern = StringUtils.replace(array[3], "mi", "mm"); //$NON-NLS-1$ //$NON-NLS-2$
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
                         defValue = simpleDateFormat.parse(array[1]);
                     } else {
-                        defValue = array[1];
+                        defValue = StringUtils.removeEnd(array[1], PluginConstant.ENTER_STRING);
                     }
                 }
+            } else {
+                defValue = defTemp;
             }
         } catch (Exception e) {
             log.error(e, e);
