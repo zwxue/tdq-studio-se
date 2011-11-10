@@ -11,6 +11,11 @@
 		<url>jdbc:db2//&lt;server&gt;[:port]/&lt;dbname&gt;</url>
 		<jars />
 	</driver>
+	<driver id="-42">
+		<name>IBM DB2 z/OS JDBC Driver</name>
+		<url>jdbc:db2//&lt;server&gt;[:port]/&lt;dbname&gt;</url>
+		<jars />
+	</driver>
 	<driver id="-21">
 		<name>SAPDB</name>
 		<url>jdbc:sapdb:[//host/]dbname[?name=value[&amp;name=value]*]</url>

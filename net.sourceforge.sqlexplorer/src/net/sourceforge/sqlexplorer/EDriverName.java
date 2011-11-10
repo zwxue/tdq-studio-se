@@ -64,6 +64,12 @@ public enum EDriverName {
                   "lib/db2jcc_license_cu.jar",
                   "lib/db2jcc_license_cisuz.jar",
                   "lib/db2jcc.jar"),
+    DB2ZOSDEFAULTURL("DB2", //$NON-NLS-1$
+                     "COM.ibm.db2os390.sqlj.jdbc.DB2SQLJDriver", //$NON-NLS-1$
+                     "-42",
+                     "lib/db2jcc_license_cu.jar",
+                     "lib/db2jcc_license_cisuz.jar",
+                     "lib/db2jcc.jar"),
     POSTGRESQLEFAULTURL("PostgreSQL", //$NON-NLS-1$
                         "org.postgresql.Driver", //$NON-NLS-1$
                         "-7",
@@ -162,6 +168,7 @@ public enum EDriverName {
         String plugins = "org.talend.libraries";
         switch (this) {
         case DB2DEFAULTURL:
+        case DB2ZOSDEFAULTURL:
             plugins = "org.talend.libraries.jdbc.db2";
             break;
         case MSSQLDEFAULTURL:
