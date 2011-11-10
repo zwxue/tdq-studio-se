@@ -78,7 +78,7 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
      */
     public DBViewFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        
+
     }
 
     @Override
@@ -123,9 +123,9 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
                         }
                         // ~23220
                     }
-                } else {
-                    ConnectionUtils.retrieveColumn(views);
                 }
+
+                ConnectionUtils.retrieveColumn(views);
                 // ~22204
             } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();

@@ -159,9 +159,9 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
                     Project currentProject = ProjectManager.getInstance().getCurrentProject();
                     ProxyRepositoryFactory.getInstance().save(currentProject, item);
                 }
-            } else {
-                ConnectionUtils.retrieveColumn(tables);
             }
+
+            ConnectionUtils.retrieveColumn(tables);
 
             if (filterCharacter != null && !filterCharacter.equals("")) {
                 tables = RepositoryNodeHelper.filterTables(tables, filterCharacter);

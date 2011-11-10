@@ -42,6 +42,7 @@ import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.ViewHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
@@ -130,6 +131,11 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         } else if (selectedObj instanceof Package) {
             provider = ConnectionHelper.getTdDataProvider((Package) selectedObj);
         }
+
+        if (provider.getName() == null) {
+            provider.setName(PropertyHelper.getProperty(provider).getLabel());
+        }
+
         return provider;
     }
 
