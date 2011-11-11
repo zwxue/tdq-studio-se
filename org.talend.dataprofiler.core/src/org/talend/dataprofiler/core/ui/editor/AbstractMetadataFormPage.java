@@ -49,6 +49,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -74,7 +75,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     // private static final String VERSION_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.version"); //$NON-NLS-1$
 
     private static final String STATUS_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.status"); //$NON-NLS-1$
-    
+
     private static final String WHITESPACE_CHECK_MSG = DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace"); //$NON-NLS-1$
 
     private static final String NAMECONNOTBEEMPTY = DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"); //$NON-NLS-1$
@@ -88,6 +89,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected Text authorText;
 
     protected boolean modify;
+
     // protected Text lockerText;
 
     // protected Text versionText;
@@ -232,7 +234,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         initMetaTextFied();
 
         nameText.addModifyListener(new ModifyListener() {
-
 
             public void modifyText(ModifyEvent e) {
                 // boolean dirty = isDirty();
@@ -418,7 +419,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             setOldDataproviderName(nameText.getText());
             purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
             descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
-            authorText.setText(author == null ? PluginConstant.EMPTY_STRING : author);
+            // ~ MOD klliu bug 3938 check the currentModelElement's AUTHOR whether is null,if not ,
+            // the content of authorText is currentModelElement's AUTHOR
+            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.AUTHOR, currentModelElement.getTaggedValue());
+            authorText.setText(author == null ? (tv == null ? PluginConstant.EMPTY_STRING
+                    : (tv.getValue() == null ? PluginConstant.EMPTY_STRING : tv.getValue())) : author);
+            // ~
             authorText.setEnabled(false);
             // lockerText.setText(lockerStr == null ? PluginConstant.EMPTY_STRING : lockerStr);
             // lockerText.setEnabled(false);
@@ -467,7 +473,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             // property.setVersion(versionText.getText());
         }
         // }
-        
+
         // ADD msjian 2011-7-18 23216: when there is no error for name, do set
         if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) {
             return false;
@@ -572,6 +578,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+     * 
      * @param fields
      */
     public void addWhitespaceValidate(Text... fields) {
@@ -588,7 +595,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private void validateWhithspace(Text field) {
         if (field.getText().length() > 0 && PluginConstant.EMPTY_STRING.equals(field.getText().trim())) {
-            getManagedForm().getMessageManager().addMessage(WHITESPACE_CHECK_MSG, WHITESPACE_CHECK_MSG, null, IMessageProvider.ERROR, field);
+            getManagedForm().getMessageManager().addMessage(WHITESPACE_CHECK_MSG, WHITESPACE_CHECK_MSG, null,
+                    IMessageProvider.ERROR, field);
             checkWhitespaceTextFields.add(field);
         } else {
             getManagedForm().getMessageManager().removeMessage(WHITESPACE_CHECK_MSG, field);
@@ -597,16 +605,16 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     /**
-     * @return true if any text fields with validates contains whitespace. 
+     * @return true if any text fields with validates contains whitespace.
      */
     public boolean checkWhithspace() {
         return 0 == getWhitespaceFields().size();
     }
-    
+
     /**
      * @return whitespace contained fields
      */
-    public Collection<Text> getWhitespaceFields(){
+    public Collection<Text> getWhitespaceFields() {
         return checkWhitespaceTextFields;
     }
 }
