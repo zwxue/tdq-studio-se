@@ -48,7 +48,7 @@ public final class ComparisonLevelFactory {
         } else if (selectedObject instanceof DBViewFolderRepNode) {
             if (null == ((DBViewFolderRepNode) selectedObject).getCatalog()) {
                 // MOD yyi 2011-07-14 21512:the selected obj is db connection in this case
-                IRepositoryViewObject resObject = ((DBViewFolderRepNode) selectedObject).getObject();
+                IRepositoryViewObject resObject = ((DBViewFolderRepNode) selectedObject).getParent().getObject();
                 comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
             } else {
                 DBViewFolderRepNode dbFolderNode = (DBViewFolderRepNode) selectedObject;
@@ -61,7 +61,7 @@ public final class ComparisonLevelFactory {
             // MOD qiongli 2011-9-5 feature TDQ-3317.
             comparisonLevel = new DataProviderComparisonLevel((Connection) selectedObject);
         }
-        
+
         // code clean by gdbu 2011-4-18 : selectedObject is RepositoryNode type , so the following code is invalid.
         // else if (selectedObject instanceof IFile) {
         // comparisonLevel = new DataProviderComparisonLevel(selectedObject);

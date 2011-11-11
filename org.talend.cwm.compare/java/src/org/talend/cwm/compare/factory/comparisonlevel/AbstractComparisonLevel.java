@@ -49,6 +49,7 @@ import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -277,6 +278,11 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected abstract Resource getRightResource() throws ReloadCompareException;
 
     protected void saveReloadResult() {
+
+        if (oldDataProvider.getName() == null) {
+            oldDataProvider.setName(PropertyHelper.getProperty(oldDataProvider).getLabel());
+        }
+
         // MOD klliu bug 15940 201-09-30
         // MOD msjian 2011-5-23 bug 20875: fix the issue2 error(because two times updateDependecy)
         ElementWriterFactory.getInstance().createDataProviderWriter().save(oldDataProvider, true);
