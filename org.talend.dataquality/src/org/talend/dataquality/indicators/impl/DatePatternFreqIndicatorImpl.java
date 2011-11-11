@@ -8,13 +8,18 @@ package org.talend.dataquality.indicators.impl;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClass;
 import org.osgi.framework.Bundle;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.matching.date.pattern.DatePatternRetriever;
@@ -79,6 +84,16 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     @Override
     public boolean handle(Object data) {
         if (data != null) {
+            // MOD qiongli 2011-11-11 TDQ-3864,format the date for file connection.
+            if (data instanceof Date) {
+                MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
+                String pattern = mdColumn.getPattern();
+                if (mdColumn != null && pattern != null) {
+                    pattern = StringUtils.replace(pattern, "\"", StringUtils.EMPTY);
+                    SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                    data = sdf.format((Date) data);
+                }
+            }
             dateRetriever.handle(String.valueOf(data));
         }
         boolean returnValue = super.handle(data);
