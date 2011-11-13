@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -345,7 +347,6 @@ public final class UDIHelper {
                 && definition.eResource().getURI().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
         return systemIndicator;
     }
-
     /**
      * 
      * zshen Comment method "getLibJarFileList".
@@ -355,6 +356,10 @@ public final class UDIHelper {
     public static List<IFile> getLibJarFileList() {
         List<IFile> fileList = new ArrayList<IFile>();
         try {
+            File newFile = ResourceManager.getUDIJarFolder().getLocation().toFile();
+            if (!newFile.exists()) {
+                newFile.mkdir();
+            }
             for (org.eclipse.core.resources.IResource fileResource : ResourceManager.getUDIJarFolder().members()) {
                 if (IResource.FILE == fileResource.getType()
                         && JAREXTENSIONG.equalsIgnoreCase(fileResource.getFullPath().getFileExtension())) {

@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,12 +84,16 @@ import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
+import common.Logger;
+
 /**
  * DOC xqliu class global comment. Detailled comment
  */
 public final class UDIUtils {
 
     public static final String JAREXTENSIONG = "jar"; //$NON-NLS-1$
+
+    static Logger log = Logger.getLogger(UDIUtils.class);
 
     private UDIUtils() {
     }
@@ -331,8 +336,11 @@ public final class UDIUtils {
      */
     public static List<IFile> getLibJarFileList() {
         List<IFile> fileList = new ArrayList<IFile>();
-
-        List<File> libJarFileList = getLibJarFileList(ResourceManager.getUDIJarFolder().getLocation().toFile());
+        File newFile = ResourceManager.getUDIJarFolder().getLocation().toFile();
+        if (!newFile.exists()) {
+            newFile.mkdir();
+        }
+        List<File> libJarFileList = getLibJarFileList(newFile);
 
         for (File jarFile : libJarFileList) {
             IFile ifile = WorkspaceUtils.fileToIFile(jarFile);

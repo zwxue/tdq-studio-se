@@ -1376,6 +1376,12 @@
            name="Create Phone Number Indicator"
            version="5.0.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateJUDITask"
+           id="org.talend.dataprofiler.core.UpdateJUDI"
+           name="Update Jave User Desinger Indicator"
+           version="4.2.0">
+     </workspacetask>
      
 
   </extension>
