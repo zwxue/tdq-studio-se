@@ -501,8 +501,7 @@ public final class RepositoryNodeHelper {
         } else if (modelElement instanceof IndicatorDefinition) {
             if (modelElement instanceof WhereRule) {
                 node = recursiveFindRuleSql((WhereRule) modelElement);
-            }
-            if (modelElement instanceof ParserRule) {
+            } else if (modelElement instanceof ParserRule) {
                 node = recursiveFindRuleParser((ParserRule) modelElement);
             } else {
                 node = recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
