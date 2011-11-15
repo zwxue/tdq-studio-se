@@ -18,7 +18,9 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClass;
 import org.osgi.framework.Bundle;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -36,6 +38,8 @@ import org.talend.dataquality.matching.date.pattern.ModelMatcher;
 public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements DatePatternFreqIndicator {
 
     private DatePatternRetriever dateRetriever;
+
+    private boolean isDelimtedFile = false;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -73,6 +77,16 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         File file = new File(filepath);
         dateRetriever.initModel2Regex(file);
 
+        // MOD qiongli 2011-11-15 TDQ-3864,judge if it is file connection.
+        MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
+        if (mdColumn != null) {
+            Connection Connection = ConnectionHelper.getTdDataProvider(mdColumn);
+            if (Connection != null && SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(Connection) != null) {
+                isDelimtedFile = true;
+            }
+
+        }
+
         return super.prepare();
     }
 
@@ -85,10 +99,10 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     public boolean handle(Object data) {
         if (data != null) {
             // MOD qiongli 2011-11-11 TDQ-3864,format the date for file connection.
-            if (data instanceof Date) {
+            if (data instanceof Date && isDelimtedFile) {
                 MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
                 String pattern = mdColumn.getPattern();
-                if (mdColumn != null && pattern != null) {
+                if (pattern != null) {
                     pattern = StringUtils.replace(pattern, "\"", StringUtils.EMPTY);
                     SimpleDateFormat sdf = new SimpleDateFormat(pattern);
                     data = sdf.format((Date) data);
