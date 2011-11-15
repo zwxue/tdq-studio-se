@@ -34,6 +34,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.FormatFreqPieIndicator;
@@ -333,8 +334,8 @@ public class IndicatorEvaluator extends Evaluator<String> {
         for (String col : columns) {
             int offsetCol = col.lastIndexOf('.') + 1;
             String colName = col.substring(offsetCol);
-
-            int location = sqlStatement.indexOf(colName);
+            DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis, ExecutionLanguage.SQL);
+            int location = sqlStatement.indexOf(createDbmsLanguage.quote(colName));
             offset.put(location, col);
         }
 
