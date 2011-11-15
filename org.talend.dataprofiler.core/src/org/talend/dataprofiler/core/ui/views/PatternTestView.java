@@ -473,7 +473,11 @@ public class PatternTestView extends ViewPart {
                         ResultSet resultSet = createStatement.executeQuery(selectRegexpTestString);
                         while (resultSet.next()) {
                             String okString = resultSet.getString(1);
-                            if ("1".equalsIgnoreCase(okString)) { //$NON-NLS-1$
+                            // MOD msjian 2011-11-15 TDQ-3967: in the postgres db, the match return value is "t"
+                            if ("1".equalsIgnoreCase(okString)
+                                    || (createDbmsLanguage.getDbmsName().equals(
+                                            SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage()) && "t".equalsIgnoreCase(okString))) { //$NON-NLS-1$ $NON-NLS-2$
+                                // TDQ-3967 ~
                                 emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
                                 resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
                                 return;
