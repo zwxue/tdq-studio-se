@@ -102,7 +102,6 @@ import com.informix.util.stringUtil;
 
 /**
  * @author rli
- * 
  */
 public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
@@ -356,11 +355,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         treeViewer = new AnalysisColumnTreeViewer(tree, this);
         treeViewer.setDirty(false);
         treeViewer.addPropertyChangeListener(this);
-        
+
         // pagination compoent
         computePagination();
         // ~
-
     }
 
     /**
@@ -390,27 +388,25 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                     uiPagination, treeViewer);
             uiPagination.addPage(pginfo);
 
-
         }
 
-         int left = modelElementIndicatorArrary.length % pageSize;
+        int left = modelElementIndicatorArrary.length % pageSize;
         if (left != 0 || totalPages == 0) {
-         modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
-         for (int leftIdx = 0; leftIdx < left; leftIdx++) {
-         modelElementIndicatorList.add(modelElementIndicatorArrary[totalPages * pageSize + leftIdx]);
-         }
-         IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList,
-         uiPagination, treeViewer);
-         uiPagination.addPage(pginfo);
-         // FIXME totalPages won't used anymore.
-         totalPages++;
-         }
+            modelElementIndicatorList = new ArrayList<ModelElementIndicator>();
+            for (int leftIdx = 0; leftIdx < left; leftIdx++) {
+                modelElementIndicatorList.add(modelElementIndicatorArrary[totalPages * pageSize + leftIdx]);
+            }
+            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList,
+                    uiPagination, treeViewer);
+            uiPagination.addPage(pginfo);
+            // FIXME totalPages won't used anymore.
+            totalPages++;
+        }
         uiPagination.init();
 
     }
 
     /**
-     * 
      * DOC mzhao Comment method "packOtherColumns".
      */
     private void packOtherColumns() {
@@ -480,7 +476,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         this.currentModelElementIndicators = modelElements;
         this.computePagination();
     }
-
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
 
@@ -782,7 +777,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
-     * 
      * add zshen feature 12919.
      */
     protected Composite createjavaEnginSection(Composite sectionClient) {
@@ -1012,8 +1006,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      */
     public void synNagivatorStat() {
         if (this.uiPagination != null) {
-        this.uiPagination.synNagivatorState(this.treeViewer.getModelElementIndicator());
-        this.currentModelElementIndicators = this.uiPagination.getAllTheModelElementIndicator();
+            this.uiPagination.synNagivatorState(this.treeViewer.getModelElementIndicator());
+            this.currentModelElementIndicators = this.uiPagination.getAllTheModelElementIndicator();
         }
     }
 
@@ -1034,14 +1028,14 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         //
         // uiPagination.setCurrentPage(pageIndex);
 
-            if (previewChartList != null && !previewChartList.isEmpty()) {
-                for (ExpandableComposite comp : previewChartList) {
-                    if (comp.getData() != indicator) {
-                        comp.setExpanded(false);
-                        comp.getParent().pack();
-                    }
+        if (previewChartList != null && !previewChartList.isEmpty()) {
+            for (ExpandableComposite comp : previewChartList) {
+                if (comp.getData() != indicator) {
+                    comp.setExpanded(false);
+                    comp.getParent().pack();
                 }
             }
+        }
         // }
     }
 
@@ -1203,7 +1197,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
-     * 
      * DOC zshen Comment method "getExecCombo".
      * 
      * @return the Combo for executeLanguage
@@ -1213,7 +1206,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
-     * 
      * DOC zshen Comment method "includeDatePatternFreqIndicator".
      * 
      * @return whether have a datePatternFreqIndicator in the "analyzed Columns"
@@ -1228,7 +1220,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
-     * 
      * DOC zshen Comment method "chageExecuteLanguageToJava". change ExecutionLanuage to Java.
      */
     public void changeExecuteLanguageToJava(boolean isDisabled) {
@@ -1251,7 +1242,30 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
+     * DOC xqliu Comment method "changeExecuteLanguageToSql".
      * 
+     * @param enabled
+     */
+    public void changeExecuteLanguageToSql(boolean enabled) {
+        if (this.execCombo == null) {
+            return;
+        }
+
+        if (!(ExecutionLanguage.SQL.getLiteral().equals(this.execLang))) {
+            int i = 0;
+            for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
+                if (language.compareTo(ExecutionLanguage.SQL) == 0) {
+                    this.execCombo.select(i);
+                } else {
+                    i++;
+                }
+            }
+        }
+
+        execCombo.setEnabled(enabled);
+    }
+
+    /**
      * DOC qiongli Comment method "getDataFilterComp".
      * 
      * @return
@@ -1261,7 +1275,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
-     * 
      * DOC qiongli Comment method "setWhereClauseDisabled".
      */
     public void setWhereClauseDisabled() {
@@ -1270,9 +1283,17 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
     }
 
+    /**
+     * DOC xqliu Comment method "setWhereClauseEnable".
+     */
+    public void setWhereClauseEnable() {
+        if (dataFilterComp != null) {
+            dataFilterComp.getDataFilterText().setEnabled(true);
+        }
+    }
+
     @Override
     public ExecutionLanguage getUIExecuteEngin() {
         return ExecutionLanguage.get(execCombo.getText());
     }
-
 }

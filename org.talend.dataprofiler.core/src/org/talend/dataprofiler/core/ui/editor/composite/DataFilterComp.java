@@ -29,7 +29,6 @@ import org.talend.dataprofiler.core.ui.views.DataFilterDND;
 
 /**
  * @author rli
- * 
  */
 public class DataFilterComp extends AbstractPagePart {
 
@@ -84,11 +83,9 @@ public class DataFilterComp extends AbstractPagePart {
     @Override
     public void updateModelViewer() {
         // TODO Auto-generated method stub
-
     }
 
     /**
-     * 
      * DOC qiongli Comment method "getDataFilterText".
      * 
      * @return

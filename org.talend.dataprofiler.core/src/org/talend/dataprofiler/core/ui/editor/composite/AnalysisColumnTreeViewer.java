@@ -385,6 +385,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     public void setElements(ModelElementIndicator[] elements) {
         setElements(elements, true);
     }
+
     public void setElements(ModelElementIndicator[] elements, boolean isNavigator) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
@@ -452,6 +453,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         DataManager connection = analysis.getContext().getConnection();
         Connection tdDataProvider = null;
 
+        boolean enableWhereClauseFlag = true;
+        boolean enableExecuteLanguageFlag = true;
+
         if (indicators != null && indicators.length > 0) {
             if (connection == null) {
                 tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
@@ -460,12 +464,24 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     if (ConnectionUtils.isDelimitedFileConnection(tdDataProvider)) {
                         masterPage.setWhereClauseDisabled();
                         masterPage.changeExecuteLanguageToJava(true);
+
+                        enableWhereClauseFlag = false;
+                        enableExecuteLanguageFlag = false;
                     } else if (ConnectionUtils.isMdmConnection(tdDataProvider)) {
                         masterPage.setWhereClauseDisabled();
+
+                        enableWhereClauseFlag = false;
                     }
                 }
             }
+        }
 
+        if (enableWhereClauseFlag) {
+            masterPage.setWhereClauseEnable();
+        }
+
+        if (enableExecuteLanguageFlag) {
+            masterPage.changeExecuteLanguageToSql(true);
         }
     }
 
@@ -682,10 +698,13 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
         }
         this.modelElementIndicators = remainIndicators;
+
+        initializedConnection(this.modelElementIndicators);
     }
 
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
-        final IndicatorSelectDialog dialog = new IndicatorSelectDialog(shell,
+        final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
+                shell,
                 DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators()); //$NON-NLS-1$
         dialog.create();
 
@@ -845,7 +864,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             @Override
             public void treeExpanded(TreeEvent e) {
 
-
                 ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
                 ScrolledForm form = masterPage.getForm();
                 Composite comp = masterPage.getChartComposite();
@@ -874,8 +892,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     Object meobj = item.getData(MODELELEMENT_INDICATOR_KEY);
                     if (meobj != null && indicatorobj == null) {
                         // open indicator selector
-                        ModelElementIndicator[] modelElementIndicator=openIndicatorSelectDialog(null);
-                        if(modelElementIndicator.length>0){
+                        ModelElementIndicator[] modelElementIndicator = openIndicatorSelectDialog(null);
+                        if (modelElementIndicator.length > 0) {
                             setElements(modelElementIndicator);
                         }
                     } else if (meobj != null && indicatorobj != null) {
