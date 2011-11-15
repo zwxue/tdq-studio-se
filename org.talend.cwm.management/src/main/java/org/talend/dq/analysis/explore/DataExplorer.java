@@ -315,7 +315,9 @@ public abstract class DataExplorer implements IDataExplorer {
         // MOD qiongli 2010-10-28.bug 16658 ,add it if has data filter.
         String queryStr = " SELECT * FROM " + table + dbmsLanguage.where() + columnName + dbmsLanguage.in() //$NON-NLS-1$
                 + inBrackets("SELECT " + columnName + fromClause); //$NON-NLS-1$
-        return fromClause.contains(dbmsLanguage.where()) ? queryStr + dbmsLanguage.and() + getDataFilterClause() : queryStr;
+        // MOD yyi 2011-11-15 3952:avoid adding AND when the where clause is empty.
+        return fromClause.contains(dbmsLanguage.where()) && !PluginConstant.EMPTY_STRING.equals(getDataFilterClause()) ? queryStr
+                + dbmsLanguage.and() + getDataFilterClause() : queryStr;
     }
 
     protected String getDistinctValuesStatement(String columnName) {
