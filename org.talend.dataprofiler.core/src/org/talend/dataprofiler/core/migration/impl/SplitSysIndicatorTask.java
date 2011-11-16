@@ -16,8 +16,10 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.talend.commons.emf.CwmResource;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -83,10 +85,15 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
                 ok = false;
             }
         }
+        // MOD qiongli 2011-11-16 TDQ-3694,should relaod definitions and all categories after changing the definition
+        // file.
         // Copy system indicator categories.
-        ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME).delete(true, new NullProgressMonitor());
+        IFile file = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);
+        file.delete(true, new NullProgressMonitor());
         DefinitionHandler.getInstance().copyDefinitionsIntoFolder(ResourceManager.getLibrariesFolder());
-
+        URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
+        EMFSharedResources.getInstance().reloadResource(uri);
+        DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
         return ok;
     }
 
