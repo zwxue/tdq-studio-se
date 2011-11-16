@@ -34,6 +34,7 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.ValueIndicator;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPoolMap;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -151,9 +152,13 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         String[] indiPercentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
         Object obj = IndicatorCommonUtil.getIndicatorValue(indicator);
         if (dataThreshold != null || indicatorThreshold != null || indiPercentThreshold != null) {
-            ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, PluginConstant.EMPTY_STRING,
-                    PluginConstant.EMPTY_STRING);
-            if (obj != null) {
+            // MOD qiongli 2011-11-15 TDQ-3690 avoid String "null",and get the value for ValueIndicator to transfer.
+            if (obj != null && !PluginConstant.EMPTY_STRING.equals(obj.toString()) && !"null".equalsIgnoreCase(obj.toString())) {
+                String value = PluginConstant.EMPTY_STRING;
+                if (indicator instanceof ValueIndicator) {
+                    value = ((ValueIndicator) indicator).getValue();
+                }
+                ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, PluginConstant.EMPTY_STRING, value);
                 if (obj instanceof PatternMatchingExt) {
                     obj = (((PatternMatchingExt) obj).getMatchingValueCount());
                 }

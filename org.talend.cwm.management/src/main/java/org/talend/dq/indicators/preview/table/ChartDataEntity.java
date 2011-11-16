@@ -222,7 +222,8 @@ public class ChartDataEntity {
             if (null != temp) {
                 int tempType = sqltype;
                 if (temp instanceof TdColumn) {
-                    sqltype = ((TdColumn) temp).getSqlDataType().getJavaDataType();
+                    // MOD qiongli 2011-11-15,TDQ-3690.it should be set value to 'tempType' not 'sqltype' at here.
+                    tempType = ((TdColumn) temp).getSqlDataType().getJavaDataType();
                 } else if (temp instanceof TdXmlElementType) {
                     tempType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) temp).getJavaType());
                 }
