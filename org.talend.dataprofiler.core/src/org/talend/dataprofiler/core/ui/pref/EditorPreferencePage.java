@@ -130,6 +130,15 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
         return CorePlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferencePage.HIDE_GRAPHICS_FOR_RESULT_PAGE);
     }
 
+    // MOD klliu bug TDQ-966-->TDQ-3970 2011-11-16
+    public static boolean isUnfoldingAnalyzedEelements() {
+        return ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_RESULT_PAGE_ANALYZED_ELEMENTS) == 0 ? true
+                : false;
+    }
+
+    public static boolean isUnfoldingIndicators() {
+        return ResourcesPlugin.getPlugin().getPluginPreferences().getInt(EDITOR_RESULT_PAGE_INDICATORS) == 0 ? true : false;
+    }
     @Override
     protected Control createContents(Composite parent) {
 

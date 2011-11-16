@@ -147,7 +147,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
             // MOD xqliu 2009-06-23 bug 7481
-            exComp.setExpanded(EditorPreferencePage.isCurrentAnalyzedElements());
+            exComp.setExpanded(EditorPreferencePage.isUnfoldingAnalyzedEelements());
             // ~
 
             final Composite comp = toolkit.createComposite(exComp);
@@ -203,7 +203,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
                                     subComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
                                     // MOD xqliu 2009-06-23 bug 7481
-                                    subComp.setExpanded(EditorPreferencePage.isCurrentIndicators());
+                                    subComp.setExpanded(EditorPreferencePage.isUnfoldingIndicators());
                                     // ~
 
                                     final Composite composite = toolkit.createComposite(subComp, SWT.NULL);
