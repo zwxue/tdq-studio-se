@@ -403,8 +403,6 @@ public class ItemRecord {
                         return lastSeg.equals(constant.getName()) || pathStr.contains(EResourceConstant.DB_CONNECTIONS.getPath())
                                 || pathStr.contains(EResourceConstant.MDM_CONNECTIONS.getPath())
                                 || pathStr.contains(EResourceConstant.FILEDELIMITED.getPath());
-                    } else if (constant == EResourceConstant.LIBRARIES) {
-                        return !lastSeg.equals(EResourceConstant.JRXML_TEMPLATE.getName());
                     }
 
                     return true;
