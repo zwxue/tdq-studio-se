@@ -1496,6 +1496,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         TdExpression expression = BooleanExpressionHelper.createTdExpression(combo.getText(), null);
         String oldLanguage = expression.getLanguage();
         expression.setModificationDate(getCurrentDateTime());
+        checkCComboIsDisposed();
         tempExpressionMap.put(combo, expression);
         if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
             updateLineForJava(combo);
@@ -1785,8 +1786,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private void openJarSelectDialog(Text jarPathText, Text classNameText) {
         String jarpathStr = jarPathText.getText();
         JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(definition,
-                ResourceManager.getUDIJarFolder(),
-                jarpathStr.split("\\|\\|"));//$NON-NLS-1$
+                ResourceManager.getUDIJarFolder(), jarpathStr.split("\\|\\|"));//$NON-NLS-1$
         selectDialog.setControl(jarPathText);
         selectDialog.open();
 
@@ -1880,8 +1880,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     children[0].dispose();
                 }
                 // ~
+                checkCComboIsDisposed();
                 definitionSection.setExpanded(false);
                 definitionSection.setExpanded(true);
+                setDirty(true);
             }
         });
 
@@ -1910,6 +1912,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 if (Dialog.OK == editDialog.open() && !patternText.getText().equals(editDialog.getResult())) {
                     patternText.setText(editDialog.getResult());
                 }
+                setDirty(true);
             }
         });
 
@@ -2339,7 +2342,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
-
+        
         Iterator<String> iterator = languageVersionCountMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
@@ -2351,6 +2354,24 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
         return rc;
+    }
+
+    /**
+     * 
+     * DOC klliu Comment method "checkCComboIsDisposed". if CCombo is disposed,remove it from tempExpressionMap.
+     */
+    private void checkCComboIsDisposed() {
+        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
+        List<CCombo> disposedKey = new ArrayList<CCombo>();
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            if (cb.isDisposed()) {
+                disposedKey.add(cb);
+            }
+        }
+        for (CCombo combo : disposedKey) {
+            tempExpressionMap.remove(combo);
+        }
     }
 
     /**
