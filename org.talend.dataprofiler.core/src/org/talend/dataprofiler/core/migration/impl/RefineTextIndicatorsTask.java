@@ -45,19 +45,28 @@ public class RefineTextIndicatorsTask extends AbstractWorksapceUpdateTask {
         try {
             Collection<Analysis> analyses = (Collection<Analysis>) AnaResourceFileHelper.getInstance().getAllElement();
             for (Analysis analysis : analyses) {
-                EList<Indicator> allIndics = analysis.getResults().getIndicators();
-                List<Indicator> textIndLeaves = null;
-                Indicator textIndCategory = null;
-                for (Indicator indicator : allIndics) {
-                    if (indicator instanceof TextIndicator) {
-                        textIndCategory = indicator;
-                        textIndLeaves = IndicatorHelper.getIndicatorLeaves(indicator);
-                        break;
+                // MOD yyi 2011-11-17 TDQ-3977: reset ALL the text indicators in the analysis by the hasTextIndicators
+                // flag, this bug could be reproduced by singal selection for the text indicators in more than one
+                // coulmns in 4.0.0.
+                boolean hasTextIndicators = true;
+                while (hasTextIndicators) {
+                    EList<Indicator> allIndics = analysis.getResults().getIndicators();
+                    List<Indicator> textIndLeaves = null;
+                    Indicator textIndCategory = null;
+                    for (Indicator indicator : allIndics) {
+                        if (indicator instanceof TextIndicator) {
+                            textIndCategory = indicator;
+                            textIndLeaves = IndicatorHelper.getIndicatorLeaves(indicator);
+                            hasTextIndicators = true;
+                            break;
+                        }
+                        // all the text indicators have been reset.
+                        hasTextIndicators = false;
                     }
-                }
-                if (textIndCategory != null && textIndLeaves != null) {
-                    analysis.getResults().getIndicators().remove(textIndCategory);
-                    analysis.getResults().getIndicators().addAll(textIndLeaves);
+                    if (textIndCategory != null && textIndLeaves != null) {
+                        analysis.getResults().getIndicators().remove(textIndCategory);
+                        analysis.getResults().getIndicators().addAll(textIndLeaves);
+                    }
                 }
                 EMFSharedResources.getInstance().saveResource(analysis.eResource());
             }
