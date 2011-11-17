@@ -40,6 +40,8 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
+import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
@@ -211,6 +213,10 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     } else if (modelElement instanceof MetadataColumn) {
                         MetadataColumn mColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(modelElement);
                         connection = ConnectionHelper.getTdDataProvider(mColumn);
+                    } else if (modelElement instanceof TdXmlElementType) {
+                        TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
+                        TdXmlSchema ownedDocument = tdXmlElement.getOwnedDocument();
+                        connection = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(ownedDocument.getDataManager().get(0));
                     }
                     connectionRepositoryNode = RepositoryNodeHelper.recursiveFind(connection);
                 }
