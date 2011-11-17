@@ -263,8 +263,6 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     public int open() {
         fIsEmpty = evaluateIfTreeEmpty(fInput);
         super.open();
-        // FIXME treeViewer is never used.
-        CheckboxTreeViewer treeViewer = this.getTreeViewer();
         return getReturnCode();
     }
 
@@ -272,14 +270,13 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         super.create();
     }
 
-   // DEL msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
-//    /**
-//     * Handles cancel button pressed event.
-//     */
-//    protected void cancelPressed() {
-//        setResult(null);
-//        super.cancelPressed();
-//    }
+    /**
+     * Handles cancel button pressed event.
+     */
+    protected void cancelPressed() {
+        setResult(null);
+        super.cancelPressed();
+    }
 
     /*
      * @see SelectionStatusDialog#computeResult()
@@ -450,19 +447,9 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     public void handleChecked() {
         computeResult();
         selectedJars.clear();
-        String path = "";//$NON-NLS-1$
         for (Object obj : getResult()) {
             selectedJars.put(obj, true);
-            if (obj instanceof File) {
-                IFile file = ResourceManager.getRoot().getFile(new org.eclipse.core.runtime.Path(((File) obj).getPath()));
-                if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
-                    path += "||";//$NON-NLS-1$
-                }
-                path += file.getName();
-                // setDirty(true);
-            }
         }
-        jarPathText.setText(path);
     }
 
     /**
@@ -510,7 +497,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
      * @param composite the parent composite
      * @return Composite the composite the buttons were created in.
      */
-    protected Composite createButtons(Composite composite, final boolean isSelect) {
+    protected Composite createButtons(final Composite composite, final boolean isSelect) {
         Composite buttonComposite = new Composite(composite, SWT.RIGHT);
         GridLayout layout = new GridLayout();
         layout.numColumns = 0;
@@ -654,6 +641,35 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
             };
             delButton.addSelectionListener(listenerDel);
+        } else {
+            // ADD msjian 2011-11-17 TDQ-3556 : add ok/cancel button to the selecter window
+            Button okButton = createButton(buttonComposite, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+            SelectionListener listenerOK = new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent e) {
+                    String path = "";//$NON-NLS-1$
+                    for (Object obj : getResult()) {
+                        if (obj instanceof File) {
+                            IFile file = ResourceManager.getRoot().getFile(
+                                    new org.eclipse.core.runtime.Path(((File) obj).getPath()));
+                            if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
+                                path += "||";//$NON-NLS-1$
+                            }
+                            path += file.getName();
+                        }
+                    }
+                    jarPathText.setText(path);
+                }
+            };
+            okButton.addSelectionListener(listenerOK);
+
+            Button cancelButton = createButton(buttonComposite, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+            SelectionListener listenerCancel = new SelectionAdapter() {
+                public void widgetSelected(SelectionEvent e) {
+                    cancelPressed();
+                }
+            };
+            cancelButton.addSelectionListener(listenerCancel);
+            // TDQ-3556 ~
         }
 
         return buttonComposite;
