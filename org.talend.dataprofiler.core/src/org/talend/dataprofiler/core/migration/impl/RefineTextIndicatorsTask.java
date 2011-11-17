@@ -51,6 +51,7 @@ public class RefineTextIndicatorsTask extends AbstractWorksapceUpdateTask {
                 boolean hasTextIndicators = true;
                 while (hasTextIndicators) {
                     EList<Indicator> allIndics = analysis.getResults().getIndicators();
+                    hasTextIndicators = allIndics.size() != 0;
                     List<Indicator> textIndLeaves = null;
                     Indicator textIndCategory = null;
                     for (Indicator indicator : allIndics) {
