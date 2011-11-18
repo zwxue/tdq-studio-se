@@ -381,6 +381,10 @@ public class ItemRecord {
         IPath path = new Path(file.getAbsolutePath());
         IPath propPath = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
+        if ("jasper".equals(path.getFileExtension())) {
+            return false;
+        }
+
         return FactoriesUtil.JAR.equals(path.getFileExtension()) || propPath.toFile().exists() && !propPath.equals(path);
     }
 
