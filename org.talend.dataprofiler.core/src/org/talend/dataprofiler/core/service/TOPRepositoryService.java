@@ -295,8 +295,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             Connection connection = connectionItem.getConnection();
             List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
             if (clientDependencys != null && clientDependencys.size() > 0) {
-                MessageDialog.openInformation(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
-                        DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", connectionItem.getProperty()
+                MessageDialog.openInformation(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"), //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", connectionItem.getProperty() //$NON-NLS-1$
                                         .getLabel()));
                 WorkbenchUtils.impactExistingAnalyses(connection);
                 IRepositoryNode node = RepositoryNodeHelper.recursiveFind(connection);
@@ -306,7 +306,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             }
 
         } catch (PartInitException e) {
-            e.printStackTrace();
+            log.error(e, e);
         }
     }
 }
