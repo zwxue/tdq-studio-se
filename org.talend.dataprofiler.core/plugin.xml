@@ -811,10 +811,10 @@
       point="org.talend.dataprofiler.core.dataprofilerperspectives">
         <DataprofilerPerspective
          refPerspectiveId="org.talend.dataprofiler.DataProfilingPerspective"
-         dataprofilerPerspectiveName="Data Profiler"/>
+         dataprofilerPerspectiveName="%DataProfiler.perspective"/>
         <DataprofilerPerspective
          refPerspectiveId="net.sourceforge.sqlexplorer.plugin.perspectives.SQLExplorerPluginPerspective"
-         dataprofilerPerspectiveName="Data Explorer"/>
+         dataprofilerPerspectiveName="%DataExplorer.perspective"/>
    </extension>
    <extension
          point="org.eclipse.ui.editors">

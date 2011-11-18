@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<compositeCheatsheet name="Talend Data Profiler">
-   <taskGroup kind="set" name="Talend Data Profiler" skip="false">
+<compositeCheatsheet name="Débuter">
+   <taskGroup kind="set" name="Commencer par" skip="false">
       <intro>
          Cette feuille d&apos;aide vous guide à travers la création d&apos;une analyse.
       </intro>
