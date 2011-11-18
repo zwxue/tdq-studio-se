@@ -105,9 +105,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         ArrayList<File> fileList = getNeedUpdateFiles();
 
         for (File file : fileList) {
-            if (file.getName().equals("ztK1xEFuYQ==20111110014111_0.1.ana")) {
-                System.out.println("");
-            }
+            // if (file.getName().equals("ztK1xEFuYQ==20111110014111_0.1.ana")) {
+            // System.out.println("");
+            // }
             createNewItemFile(file);
 
             deleteOldItemFile(file);
@@ -164,9 +164,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      */
     private void updateFile() throws Exception {
         for (File file : newFileList) {
-            if (file.getName().equals("我的Ana_0.1.ana")) {
-                System.out.println("");
-            }
+            // if (file.getName().equals("我的Ana_0.1.ana")) {
+            // System.out.println("");
+            // }
             updateFileByNewFileName(file);
 
             updateIndicatorItem(file);
