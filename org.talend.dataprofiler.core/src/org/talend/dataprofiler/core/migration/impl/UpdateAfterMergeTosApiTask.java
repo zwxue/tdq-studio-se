@@ -105,7 +105,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         ArrayList<File> fileList = getNeedUpdateFiles();
 
         for (File file : fileList) {
-
+            if (file.getName().equals("ztK1xEFuYQ==20111110014111_0.1.ana")) {
+                System.out.println("");
+            }
             createNewItemFile(file);
 
             deleteOldItemFile(file);
@@ -162,6 +164,9 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      */
     private void updateFile() throws Exception {
         for (File file : newFileList) {
+            if (file.getName().equals("我的Ana_0.1.ana")) {
+                System.out.println("");
+            }
             updateFileByNewFileName(file);
 
             updateIndicatorItem(file);
@@ -225,6 +230,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     private void updateIndicatorItem(File file) throws IOException, URISyntaxException {
         if (file.getName().endsWith(FactoriesUtil.ANA)) {
             Analysis analysis = (Analysis) getModelElement(file);
+            // log.info("file===============>" + file.toString());
+            // log.info("analysis===============>" + analysis.toString());
             Collection<Indicator> indicators = IndicatorHelper.getIndicators(analysis.getResults());
             for (Indicator indicator : indicators) {
                 String fragment = null;
@@ -270,6 +277,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             if (uri != null) {
                 replaceMap.put(file.getName(), uri.lastSegment());
 
+// log.info("modelElement======>" + modelElement);
+                // log.info("replaceMap======>(key:" + file.getName() + ",value:" + uri.lastSegment() + ")");
                 if (needUpdateFlag && uri.isPlatform()) {
                     IPath filePath = new Path(uri.toPlatformString(false));
                     IFile needUpdateFile = ResourceManager.getRoot().getFile(filePath);
@@ -312,9 +321,11 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         ModelElement result = null;
         try {
             IFile iFile = WorkspaceUtils.fileToIFile(parentFile);
+            // log.info("iFile============>" + iFile.toString());
             result = ModelElementFileFactory.getModelElement(iFile);
+            // log.info("result============>" + result.toString());
         } catch (Exception e) {
-            log.error(e, e);
+            log.info(e, e);
         }
         return result;
     }
