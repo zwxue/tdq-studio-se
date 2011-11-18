@@ -40,6 +40,7 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -94,7 +95,22 @@ public class DQDeleteAction extends DeleteAction {
     public void run() {
         ISelection selection = this.getSelection();
         // boolean onlyDeleteReportFile = true;
-        for (Object obj : ((IStructuredSelection) selection).toArray()) {
+        // MOD gdbu 2011-11-17 TDQ-3969 : when delete elements also need delete this element in filter-list, and move it
+        // to recycle bin node.
+        Object[] deleteElements = ((IStructuredSelection) selection).toArray();
+        if (DQRepositoryNode.isOnFilterring() && deleteElements.length != 0) {
+            if (deleteElements[0] instanceof RepositoryNode) {
+                setPreviousFilteredNode((RepositoryNode) deleteElements[0]);
+            }
+            for (Object obj : deleteElements) {
+                if (obj instanceof RepositoryNode) {
+                    RepositoryNode node = (RepositoryNode) obj;
+                    RepositoryNodeHelper.removeChildrenNodesWhenFiltering(node);
+                }
+            }
+        }
+
+        for (Object obj : deleteElements) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
                 // handle generating report file.bug 18805 .
@@ -138,10 +154,38 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
 
+        if (DQRepositoryNode.isOnFilterring() && 0 != deleteElements.length) {
+            RepositoryNodeHelper.regainRecycleBinFilteredNode();
+        }
+
         // the deleteReportFile() mothed have refresh the workspace and dqview
         CorePlugin.getDefault().refreshWorkSpace();
         CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
     }
+
+    /**
+     * DOC gdbu Comment method "setNextFilteredNode".
+     * 
+     * @param node
+     */
+    private void setPreviousFilteredNode(RepositoryNode node) {
+        if (DQRepositoryNode.isOnFilterring()) {
+
+            List<IRepositoryNode> allFilteredNodeList = RepositoryNodeHelper.getAllFilteredNodeList();
+            for (int i = 0; i < allFilteredNodeList.size(); i++) {
+                if (allFilteredNodeList.get(i).equals(node)) {
+
+                    if (i <= 1) {
+                        RepositoryNodeHelper.setFilteredNode(allFilteredNodeList.get(0));
+                    } else {
+                        RepositoryNodeHelper.setFilteredNode(allFilteredNodeList.get(i - 1));
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    
 
     private boolean handleDependencies(IRepositoryNode node) {
         boolean flag = false;

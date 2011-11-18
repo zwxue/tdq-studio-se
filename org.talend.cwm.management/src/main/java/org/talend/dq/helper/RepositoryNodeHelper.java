@@ -2680,7 +2680,9 @@ public final class RepositoryNodeHelper {
 
     /**
      * 
-     * DOC gdbu Comment method "getAllTreeList".
+     * DOC gdbu Comment method "fillTreeList". Filter's entry method.
+     * 
+     * @param monitor
      */
     public static void fillTreeList(IProgressMonitor monitor) {
 
@@ -2689,15 +2691,64 @@ public final class RepositoryNodeHelper {
         DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
 
         List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
-         list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
-         list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
+        list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+        list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
         list.add(getRootNode(ERepositoryObjectType.METADATA, true));
-         list.add(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
+        list.add(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
         for (IRepositoryNode iRepositoryNode : list) {
             allFilteredNodeList.addAll(getTreeList(iRepositoryNode));
-            monitor.worked(2);
+            if (null != monitor) {
+                monitor.worked(2);
+            }
         }
         DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
+    }
+
+    /**
+     * ADD gdbu 2011-11-15 TDQ-3969
+     * 
+     * DOC gdbu Comment method "regainRecycleBinFilteredNode". updates recycle bin node.
+     */
+    public static void regainRecycleBinFilteredNode() {
+        List<IRepositoryNode> recycleBinTreeList = getRecycleBinFilteredNodes();
+        // recycleBinTreeList contains some nodes the allFilteredNodeList haven't contain.
+        allFilteredNodeList.removeAll(recycleBinTreeList);
+        allFilteredNodeList.addAll(recycleBinTreeList);
+    }
+
+    /**
+     * ADD gdbu 2011-11-15 TDQ-3969
+     * 
+     * DOC gdbu Comment method "getRecycleBinFilteredNodes". This method could return a list contains recycle bin node
+     * and all of it's children.
+     * 
+     * @return
+     */
+    private static List<IRepositoryNode> getRecycleBinFilteredNodes() {
+        return getTreeList(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
+    }
+
+    /**
+     * ADD gdbu 2011-11-17 TDQ-3969
+     * 
+     * DOC gdbu Comment method "removeChildrenNodesWhenFiltering". When delete an element is the tree , also need delete
+     * this element in filter-list.
+     * 
+     * @param node
+     * @return
+     */
+    public static List<IRepositoryNode> removeChildrenNodesWhenFiltering(IRepositoryNode node) {
+
+        List<IRepositoryNode> removeNodes = new ArrayList<IRepositoryNode>();
+        removeNodes.add(node);
+        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
+        List<IRepositoryNode> children = node.getChildren();
+        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
+        for (IRepositoryNode iRepositoryNode : children) {
+            removeNodes.addAll(removeChildrenNodesWhenFiltering(iRepositoryNode));
+        }
+        getAllFilteredNodeList().remove(node);
+        return removeNodes;
     }
 
     /**

@@ -16,8 +16,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.ui.actions.RestoreAction;
 
 /**
@@ -46,6 +49,12 @@ public class DQRestoreAction extends RestoreAction {
 
         CorePlugin.getDefault().refreshWorkSpace();
 
+        // MOD gdbu 2011-11-17 TDQ-3969 : after restore items re-filter the tree , to create a new list .
+        if (DQRepositoryNode.isOnFilterring()) {
+            RepositoryNodeHelper.fillTreeList(null);
+            RepositoryNodeHelper
+                    .setFilteredNode(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+        }
     }
 
     @Override

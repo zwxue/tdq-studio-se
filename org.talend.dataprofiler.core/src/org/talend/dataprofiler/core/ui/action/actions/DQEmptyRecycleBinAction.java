@@ -24,6 +24,7 @@ import org.talend.commons.ui.runtime.exception.MessageBoxExceptionHandler;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -32,6 +33,7 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -89,6 +91,13 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
 
         CorePlugin.getDefault().refreshDQView();
         CorePlugin.getDefault().refreshWorkSpace();
+
+        // MOD gdbu 2011-11-18 TDQ-3969 : after empty recycle bin re-filter the tree , to create a new list .
+        if (DQRepositoryNode.isOnFilterring()) {
+            RepositoryNodeHelper.fillTreeList(null);
+            RepositoryNodeHelper
+                    .setFilteredNode(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+        }
     }
 
     @Override

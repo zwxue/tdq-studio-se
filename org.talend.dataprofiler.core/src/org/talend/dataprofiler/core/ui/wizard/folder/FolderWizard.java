@@ -29,6 +29,8 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -93,6 +95,12 @@ public class FolderWizard extends Wizard {
                 findView.getCommonViewer().setExpandedState(newFolder, true);
                 findView.getCommonViewer().refresh(currentSelectionNode);
 
+                // MOD gdbu 2011-11-18 TDQ-3969 : after create folder re-filter the tree , to create a new list .
+                if (DQRepositoryNode.isOnFilterring()) {
+                    RepositoryNodeHelper.fillTreeList(null);
+                    RepositoryNodeHelper.setFilteredNode(RepositoryNodeHelper.getRootNode(
+                            ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+                }
 
             } catch (CoreException e) {
                 MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("FolderWizard.error"), //$NON-NLS-1$

@@ -52,6 +52,7 @@ import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
@@ -129,6 +130,14 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                 selectedRepositoryNodes = getSelectedRepositoryNodes();
             }
             computeRepNodeType(selectedRepositoryNodes, targetNode);
+
+            // MOD gdbu 2011-11-17 TDQ-3969 : after move folder or items re-filter the tree , to create a new list .
+            if (DQRepositoryNode.isOnFilterring()) {
+                RepositoryNodeHelper.fillTreeList(null);
+                RepositoryNodeHelper.setFilteredNode(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING,
+                        true));
+            }
+
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
