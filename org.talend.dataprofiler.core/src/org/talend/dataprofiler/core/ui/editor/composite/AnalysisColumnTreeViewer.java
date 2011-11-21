@@ -455,7 +455,13 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         boolean enableWhereClauseFlag = true;
         boolean enableExecuteLanguageFlag = true;
-
+        // MOD klliu if default ExecutionLanguage is java,it is not changed to SQL.2011-11-21
+        CCombo execCombo = masterPage.getExecCombo();
+        String execLang = execCombo.getText();
+        if (ExecutionLanguage.JAVA.getLiteral().equals(execLang)) {
+            enableExecuteLanguageFlag = false;
+        }
+        // ~
         if (indicators != null && indicators.length > 0) {
             if (connection == null) {
                 tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
