@@ -79,7 +79,9 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        final ModelElementIndicator[] modelElementIndicatores = masterPage.getTreeViewer().getModelElementIndicator();
+        // final ModelElementIndicator[] modelElementIndicatores =
+        // masterPage.getTreeViewer().getModelElementIndicator();
+        final ModelElementIndicator[] modelElementIndicatores = masterPage.getCurrentModelElementIndicators();
 
         // ~ MOD mzhao 2009-04-20, Do pagination. Bug 6512.
         UIPagination uiPagination = new UIPagination(toolkit, sectionClient);
@@ -93,8 +95,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
             }
             IndicatorPaginationInfo pginfo = new ResultPaginationInfo(form, modelElementIndLs, masterPage, uiPagination);
             uiPagination.addPage(pginfo);
-
         }
+
         int left = modelElementIndicatores.length % pageSize;
         if (left != 0) {
             modelElementIndLs = new ArrayList<ModelElementIndicator>();
