@@ -1,3 +1,6 @@
+1.5.19 # sizhaoliu 2011/11/23
+- check folder before delete when "initialize" option is chosen in tSynonymOutput component.
+
 1.5.18 # sizhaoliu 2011/05/23
 - moved Explainer class to test project.
 - included missing Messages classes in the jar.

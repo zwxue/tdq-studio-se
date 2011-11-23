@@ -39,6 +39,9 @@ import org.talend.dataquality.standardization.i18n.Messages;
 /**
  * @author scorreia A class to create an index with synonyms.
  */
+/**
+ * DOC sizhaoliu class global comment. Detailled comment
+ */
 public class SynonymIndexBuilder {
 
     public static final String F_WORD = "word";//$NON-NLS-1$
@@ -59,7 +62,7 @@ public class SynonymIndexBuilder {
     private final Error error = new Error();
 
     /**
-     * instantiate an index builder.
+     * SynonymIndexBuilder constructor.
      */
     public SynonymIndexBuilder() {
     }
@@ -154,16 +157,12 @@ public class SynonymIndexBuilder {
         TopDocs docs = searchDocumentByWord(word);
         switch (docs.totalHits) {
         case 0:
-            // FIXME should be create an insertOrUpdate method?
-            // error.set(false, "The document <" + word + "> doesn't exist. Cannot update.");
             break;
         case 1:
             getWriter().updateDocument(new Term(F_WORD, word.trim()), generateDocument(word, synonyms));
             nbUpdatedDocuments = 1;
             break;
         default:
-            // FIXME maybe we need to avoid deleting several documents when we just want to update one document (to be
-            // tested)
             nbUpdatedDocuments = -1;// to avoid insertion by the component when nbUpdatedDocuments == 0
             error.set(false, Messages.getString("SynonymIndexBuilder.documents", docs.totalHits, word));//$NON-NLS-1$
             break;
@@ -327,37 +326,62 @@ public class SynonymIndexBuilder {
     public boolean deleteIndexFromFS(String path) {
         File folder = new File(path);
         if (!folder.exists()) {
-            // System.err.println("file not found");
+            // folder does not exist. can create an index without deleting.
             return true;
         }
-        boolean allDeleted = true;
+
         if (folder.isDirectory()) {
             File[] filelist = folder.listFiles();
-            for (File f : filelist) {
-                if (!deleteIndexFromFS(f.getAbsolutePath()) && allDeleted) {
-                    allDeleted = false;
+            if (filelist.length == 0) {// folder is empty
+                if (!folder.delete()) {
+                    error.set(false, Messages.getString("SynonymIndexBuilder.couldNotDelete", folder.getAbsolutePath()));//$NON-NLS-1$
+                    return false;
                 }
-
+            } else {
+                Status status = null;
+                FSDirectory directory = null;
+                try {
+                    directory = FSDirectory.open(folder);
+                    CheckIndex check = new CheckIndex(directory);
+                    status = check.checkIndex();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    directory.close();
+                }
+                boolean allDeleted = true;
+                if (status == null || status.missingSegments) {
+                    error.set(false, Messages.getString("SynonymIndexBuilder.notAnIndexFolder", folder.getAbsolutePath()));//$NON-NLS-1$
+                    return false;
+                } else {// an index already exists in folder
+                    for (File f : filelist) {
+                        if (!f.delete() && allDeleted) {
+                            allDeleted = false;
+                        }
+                    }
+                    if (!allDeleted) {
+                        error.set(false, Messages.getString("SynonymIndexBuilder.couldNotDelete", folder.getAbsolutePath()));//$NON-NLS-1$
+                        return false;
+                    }
+                }
             }
-        } // else folder is a file
-        allDeleted = folder.delete();
-        if (!allDeleted) {
-            error.set(false, Messages.getString("SynonymIndexBuilder.couldNotDelete", folder.getAbsolutePath()));//$NON-NLS-1$
+        } else {// folder is a file
+            error.set(false, Messages.getString("SynonymIndexBuilder.pathIsFile", folder.getAbsolutePath()));//$NON-NLS-1$
+            return false;
         }
-        return allDeleted;
+        return true;
     }
 
     /**
      * ADDED BY ytao 2011/02/11 If only need to initialize the index, do nothing after fold open, but just invoke this
      * method at the end, index will be reset.
      * 
-     * (Ensure that usingCreateMode is true) // TODO where is it ensured? who wrote this sentence?
+     * (Ensure that usingCreateMode is true) // where is it ensured? who wrote this sentence?
      * 
      * Not sure that the index is deleted and recreated, may be just delete all documents of index since the index files
      * are "_1a.cfs" and "segments.gen" and "segments_1e" currently, if these files are not exists, API will not work.
-     * something need to TODO
      * 
-     * TODO closing an index should not delete the documents!
+     * ADDED by sizhaoliu : usingCreateMode is not used any more. we now have a separated SynonymIndexSearcher.
      */
     public void closeIndex() {
         try {
@@ -413,12 +437,7 @@ public class SynonymIndexBuilder {
      */
     IndexWriter getWriter() throws IOException {
         if (writer == null) {
-            // FIXME remove this commented code
-            // if (bUseCreateMode) {
-            // writer = new IndexWriter(indexDir, this.getAnalyzer(), true, IndexWriter.MaxFieldLength.UNLIMITED);
-            // } else {
             writer = new IndexWriter(indexDir, this.getAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-            // }
         }
         return this.writer;
     }
