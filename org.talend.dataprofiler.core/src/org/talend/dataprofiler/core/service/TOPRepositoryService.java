@@ -295,9 +295,6 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             Connection connection = connectionItem.getConnection();
             List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
             if (clientDependencys != null && clientDependencys.size() > 0) {
-                MessageDialog.openInformation(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"), //$NON-NLS-1$
-                        DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", connectionItem.getProperty() //$NON-NLS-1$
-                                        .getLabel()));
                 WorkbenchUtils.impactExistingAnalyses(connection);
                 IRepositoryNode node = RepositoryNodeHelper.recursiveFind(connection);
                 if (node != null) {
@@ -308,5 +305,25 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         } catch (PartInitException e) {
             log.error(e, e);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#confirmUpdateAnalysis(org.talend.core.model.properties.ConnectionItem)
+     */
+    public boolean confirmUpdateAnalysis(ConnectionItem connectionItem) {
+        Connection connection = connectionItem.getConnection();
+        List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
+        if (clientDependencys != null && clientDependencys.size() > 0) {
+            if (!MessageDialog.openQuestion(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("TOPRepositoryService.propgateAnalyses", connectionItem.getProperty() //$NON-NLS-1$
+                            .getLabel()))) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 }
