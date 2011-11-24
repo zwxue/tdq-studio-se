@@ -23,7 +23,10 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.RepositoryWizard;
@@ -61,6 +64,12 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
             if (Window.OK == dialog.open()) {
                 CorePlugin.getDefault().refreshDQView();
+                // MOD gdbu 2011-11-24 TDQ-3969 : after create items re-filter the tree , to create a new list .
+                if (DQRepositoryNode.isOnFilterring()) {
+                    RepositoryNodeHelper.fillTreeList(null);
+                    RepositoryNodeHelper.setFilteredNode(RepositoryNodeHelper.getRootNode(
+                            ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+                }
             }
 
             if (wizard instanceof RepositoryWizard) {
