@@ -317,7 +317,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             fileMap.get(rawFile).renameTo(rawFile.getAbsoluteFile());
         }
 
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(IMigrateDIMetadataItemService.class)) {
+        if (!isWorksapcePath() && GlobalServiceRegister.getDefault().isServiceRegistered(IMigrateDIMetadataItemService.class)) {
             IMigrateDIMetadataItemService service = (IMigrateDIMetadataItemService) GlobalServiceRegister.getDefault()
                     .getService(IMigrateDIMetadataItemService.class);
 
