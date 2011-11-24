@@ -155,6 +155,9 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         }
         if (indicator instanceof CompositeIndicator) {
             for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
+                if (child.getAnalyzedElement() == null) {
+                    child.setAnalyzedElement(indicator.getAnalyzedElement());
+                }
                 initializeIndicator(child); // recurse
             }
         }
