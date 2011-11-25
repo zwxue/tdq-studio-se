@@ -197,13 +197,11 @@ public class ChartDataEntity {
 
     protected String[] getDefinedRange(String inString) {
         isPercent = inString.indexOf('%') > 0;
-        String[] threshold = IndicatorHelper.getDataThreshold(indicator);
-
+        // MOD qiongli 2011-11-25 TDQ-4033,don't need to get the DataThreshold.
+        String[] threshold = IndicatorHelper.getIndicatorThreshold(indicator);
         if (threshold == null) {
             if (isPercent) {
                 threshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
-            } else {
-                threshold = IndicatorHelper.getIndicatorThreshold(indicator);
             }
         }
 

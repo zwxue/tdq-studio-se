@@ -5,6 +5,8 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.util.Date;
+
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -20,6 +22,8 @@ import org.talend.dataquality.indicators.MinValueIndicator;
  */
 public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValueIndicator {
 
+
+    boolean isDateType = false;
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
@@ -59,6 +63,9 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
         boolean ok = super.handle(data);
         if (isLess(data) || null == this.value) {
             this.value = String.valueOf(data);
+            if (isDateType) {
+                objValue = data;
+            }
         }
         return ok;
     }
@@ -72,12 +79,41 @@ public class MinValueIndicatorImpl extends ValueIndicatorImpl implements MinValu
     private boolean isLess(Object data) {
         // MOD xqliu 2009-06-29 bug 7068
         try {
+            // MOD qiongli 2011-11-21 TDQ-4033.compare the date type.
+            if (isDateType) {
+                if (data == null) {
+                    return false;
+                }
+                if (objValue == null) {
+                    objValue = data;
+                    this.value = String.valueOf(data);
+                    return false;
+                }
+                Date thisDate = (Date) objValue;
+                Date dataDate = (Date) data;
+                if (dataDate.compareTo(thisDate) < 0) {
+                    return true;
+                }
+                return false;
+            }
+            // ~
             double thisValue = Double.valueOf(this.value);
             double dataValue = Double.valueOf(data.toString());
             return thisValue > dataValue;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.IndicatorImpl#prepare()
+     */
+    @Override
+    public boolean prepare() {
+        this.isDateType = isDateValue();
+        return super.prepare();
     }
 
 } // MinValueIndicatorImpl

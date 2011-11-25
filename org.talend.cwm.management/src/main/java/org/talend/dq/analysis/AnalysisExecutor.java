@@ -146,12 +146,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return
      */
     private boolean hasOutThreshold(Indicator indicator) {
-        IndicatorHelper.propagateDataThresholdsInChildren(indicator);
-        String[] dataThreshold = IndicatorHelper.getDataThreshold(indicator);
         String[] indicatorThreshold = IndicatorHelper.getIndicatorThreshold(indicator);
         String[] indiPercentThreshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
         Object obj = IndicatorCommonUtil.getIndicatorValue(indicator);
-        if (dataThreshold != null || indicatorThreshold != null || indiPercentThreshold != null) {
+        if (indicatorThreshold != null || indiPercentThreshold != null) {
             // MOD qiongli 2011-11-15 TDQ-3690 avoid String "null",and get the value for ValueIndicator to transfer.
             if (obj != null && !PluginConstant.EMPTY_STRING.equals(obj.toString()) && !"null".equalsIgnoreCase(obj.toString())) {
                 String value = PluginConstant.EMPTY_STRING;

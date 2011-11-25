@@ -438,12 +438,31 @@ public final class IndicatorHelper {
         if (rangeIndicator != null) {
             IndicatorHelper.setDataThreshold(rangeIndicator, dataThreshold[0], dataThreshold[1]);
             MinValueIndicator lowerValue = rangeIndicator.getLowerValue();
-            if (lowerValue != null) {
-                IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
-            }
-            MaxValueIndicator upperValue = rangeIndicator.getUpperValue();
-            if (upperValue != null) {
-                IndicatorHelper.setDataThreshold(upperValue, dataThreshold[0], dataThreshold[1]);
+            // MOD qiongli 2011-11-25,propgate the parameter to children ,convert the dataThreshold to
+            // IndicatorThreshold for MaxValueIndicator/MinValueIndicator.
+            IndicatorParameters parameters = rangeIndicator.getParameters();
+            if (parameters != null) {
+                if (lowerValue != null) {
+                     IndicatorParameters lowParameters = lowerValue.getParameters();
+                     if (lowParameters == null) {
+                     lowParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+                     lowerValue.setParameters(lowParameters);
+                     }
+                     IndicatorHelper.setIndicatorThreshold(lowParameters, dataThreshold[0], dataThreshold[1]);
+//                    IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
+                }
+
+                MaxValueIndicator upperValue = rangeIndicator.getUpperValue();
+                if (upperValue != null) {
+                    IndicatorParameters upperParameters = upperValue.getParameters();
+                    if (upperParameters == null) {
+                        upperParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+                        upperValue.setParameters(upperParameters);
+                    }
+                    IndicatorHelper.setIndicatorThreshold(upperParameters, dataThreshold[0], dataThreshold[1]);
+//                    IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
+
+                }
             }
         }
     }

@@ -77,6 +77,12 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
     protected int datatype = DATATYPE_EDEFAULT;
 
     /**
+     * ADD by qiongli 2011-11-21 TDQ-4033. Get the original Object,not toString,.eg. Date type will get the Date Object.
+     * then, it is better to direct compare for date type,don't need to parse from String.
+     */
+    protected Object objValue = null;
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -292,6 +298,7 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
         this.computed = COMPUTED_EDEFAULT; // tells that quartile should be recomputed.
         this.setValue(VALUE_EDEFAULT);
         this.setDatatype(DATATYPE_EDEFAULT);
+        this.objValue = null;
         return super.reset();
     }
 
@@ -305,4 +312,9 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
         this.setDatatype(this.getColumnType());
         return super.finalizeComputation();
     }
+
+    public Object getObjValue() {
+        return this.objValue;
+    }
+
 } // ValueIndicatorImpl

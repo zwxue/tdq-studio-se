@@ -230,13 +230,32 @@ public class RangeIndicatorImpl extends CompositeIndicatorImpl implements RangeI
                 Date upper = null;
                 Date lower = null;
                 try {
-                    upper = DateUtils.parse(DateUtils.PATTERN_3, upperValue.getValue());
-                    lower = DateUtils.parse(DateUtils.PATTERN_3, lowerValue.getValue());
+                    // MOD qiongli 2011-11-22,avoid to parse null.
+                    String upperStr = upperValue.getValue();
+                    if (upperStr != null && !upperStr.equals("null")) { //$NON-NLS-1$
+                        upper = DateUtils.parse(DateUtils.PATTERN_3, upperStr);
+                    }
+                    String lowerStr = lowerValue.getValue();
+                    if (lowerStr != null && !lowerStr.equals("null")) { //$NON-NLS-1$
+                        lower = DateUtils.parse(DateUtils.PATTERN_3, lowerStr);
+                    }
+
+                    if (upper != null && lower != null) {
+                        // MOD qiongli 2011-11-24 TDQ-4033,if the elapse days less than 1 day,display the value as
+                        // second.
+                        long elapseTime = ElapsedTime.getNbDays(lower, upper);
+                        if (elapseTime == 0) {
+                            upper = DateUtils.parse(DateUtils.PATTERN_2, upperStr);
+                            lower = DateUtils.parse(DateUtils.PATTERN_2, lowerStr);
+                            elapseTime = ElapsedTime.getNbSeconds(lower, upper);
+                            if (elapseTime > 1) {
+                                return elapseTime + " s"; //$NON-NLS-1$
+                            }
+                        }
+                        return String.valueOf(elapseTime);
+                    }
                 } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-                if (upper != null && lower != null) {
-                    return String.valueOf(ElapsedTime.getNbDays(lower, upper));
+                    log.error(e);
                 }
             }
 
