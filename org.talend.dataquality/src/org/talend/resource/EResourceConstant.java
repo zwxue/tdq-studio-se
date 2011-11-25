@@ -61,59 +61,48 @@ public enum EResourceConstant {
     REPORTS("Reports", "TDQ_Data Profiling/Reports", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     EXCHANGE("Exchange", "TDQ_Libraries/Exchange", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     INDICATORS("Indicators", "TDQ_Libraries/Indicators", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
-    USER_DEFINED_INDICATORS(
-"User Defined Indicators",//$NON-NLS-1$
+    USER_DEFINED_INDICATORS("User Defined Indicators",//$NON-NLS-1$
                             "TDQ_Libraries/Indicators/User Defined Indicators",//$NON-NLS-1$
                             ResourceConstant.READONLY),
     // MOD zhsne 18724: Java UDI enhancements add lib folder under UDI folder.
     USER_DEFINED_INDICATORS_LIB("lib", "TDQ_Libraries/Indicators/User Defined Indicators/lib", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     SYSTEM_INDICATORS("System Indicators", "TDQ_Libraries/Indicators/System Indicators", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
-    SYSTEM_INDICATORS_ADVANCED_STATISTICS(
-"Advanced Statistics",//$NON-NLS-1$
+    SYSTEM_INDICATORS_ADVANCED_STATISTICS("Advanced Statistics",//$NON-NLS-1$
                                           "TDQ_Libraries/Indicators/System Indicators/Advanced Statistics",//$NON-NLS-1$
                                           ResourceConstant.READONLY),
-    SYSTEM_INDICATORS_BUSINESS_RULES(
-"Business Rules",//$NON-NLS-1$
+    SYSTEM_INDICATORS_BUSINESS_RULES("Business Rules",//$NON-NLS-1$
                                      "TDQ_Libraries/Indicators/System Indicators/Business Rules",//$NON-NLS-1$
                                      ResourceConstant.READONLY),
-    SYSTEM_INDICATORS_CORRELATION(
-"Correlation",//$NON-NLS-1$
+    SYSTEM_INDICATORS_CORRELATION("Correlation",//$NON-NLS-1$
                                   "TDQ_Libraries/Indicators/System Indicators/Correlation",//$NON-NLS-1$
                                   ResourceConstant.READONLY),
-    SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY(
-"Functional Dependency",//$NON-NLS-1$
+    SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY("Functional Dependency",//$NON-NLS-1$
                                             "TDQ_Libraries/Indicators/System Indicators/Functional Dependency",//$NON-NLS-1$
                                             ResourceConstant.READONLY),
     SYSTEM_INDICATORS_OVERVIEW("Overview", "TDQ_Libraries/Indicators/System Indicators/Overview", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
-    SYSTEM_INDICATORS_PATTERN_FINDER(
-"Pattern Finder",//$NON-NLS-1$
+    SYSTEM_INDICATORS_PATTERN_FINDER("Pattern Finder",//$NON-NLS-1$
                                      "TDQ_Libraries/Indicators/System Indicators/Pattern Finder",//$NON-NLS-1$
                                      ResourceConstant.READONLY),
-    SYSTEM_INDICATORS_PATTERN_MATCHING(
-"Pattern Matching",//$NON-NLS-1$
+    SYSTEM_INDICATORS_PATTERN_MATCHING("Pattern Matching",//$NON-NLS-1$
                                        "TDQ_Libraries/Indicators/System Indicators/Pattern Matching",//$NON-NLS-1$
                                        ResourceConstant.READONLY),
-    SYSTEM_INDICATORS_ROW_COMPARISON(
-"Row Comparison",//$NON-NLS-1$
+    SYSTEM_INDICATORS_ROW_COMPARISON("Row Comparison",//$NON-NLS-1$
                                      "TDQ_Libraries/Indicators/System Indicators/Row Comparison",//$NON-NLS-1$
                                      ResourceConstant.READONLY),
-    SYSTEM_INDICATORS_SIMPLE_STATISTICS(
-"Simple Statistics",//$NON-NLS-1$
+    SYSTEM_INDICATORS_SIMPLE_STATISTICS("Simple Statistics",//$NON-NLS-1$
                                         "TDQ_Libraries/Indicators/System Indicators/Simple Statistics",//$NON-NLS-1$
                                         ResourceConstant.READONLY),
     SYSTEM_INDICATORS_SOUNDEX("Soundex", "TDQ_Libraries/Indicators/System Indicators/Soundex", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
-    SYSTEM_INDICATORS_SUMMARY_STATISTICS(
-"Summary Statistics",//$NON-NLS-1$
+    SYSTEM_INDICATORS_SUMMARY_STATISTICS("Summary Statistics",//$NON-NLS-1$
                                          "TDQ_Libraries/Indicators/System Indicators/Summary Statistics",//$NON-NLS-1$
                                          ResourceConstant.READONLY),
-    SYSTEM_INDICATORS_TEXT_STATISTICS(
-"Text Statistics",//$NON-NLS-1$
+    SYSTEM_INDICATORS_TEXT_STATISTICS("Text Statistics",//$NON-NLS-1$
                                       "TDQ_Libraries/Indicators/System Indicators/Text Statistics",//$NON-NLS-1$
                                       ResourceConstant.READONLY),
     SYSTEM_INDICATORS_PHONENUMBER_STATISTICS(
                                              "Phone Number Statistics",
-                                            "TDQ_Libraries/Indicators/System Indicators/Phone Number Statistics",
-                                            ResourceConstant.READONLY),
+                                             "TDQ_Libraries/Indicators/System Indicators/Phone Number Statistics",
+                                             ResourceConstant.READONLY),
     JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     PATTERNS("Patterns", "TDQ_Libraries/Patterns", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     PATTERN_REGEX("Regex", "TDQ_Libraries/Patterns/Regex", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
@@ -348,6 +337,32 @@ public enum EResourceConstant {
      */
     public static EResourceConstant[] getTopConstants() {
         return new EResourceConstant[] { DATA_PROFILING, LIBRARIES, METADATA };
+    }
+
+    /**
+     * DOC bZhou Comment method "getTopConstantIndexFromPath".
+     * 
+     * @param inputPath
+     * @return
+     */
+    public static int getTopConstantIndexFromPath(IPath inputPath) {
+        int constantIndex = 0;
+        for (int i = 0; i < inputPath.segmentCount(); i++) {
+            String segment = inputPath.segment(i);
+
+            for (EResourceConstant topConstant : EResourceConstant.getTopConstants()) {
+                if (topConstant.getPath().equals(segment)) {
+                    constantIndex = i;
+                    break;
+                }
+            }
+
+            if (constantIndex != 0) {
+                break;
+            }
+        }
+
+        return constantIndex;
     }
 
     /**

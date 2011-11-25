@@ -187,7 +187,12 @@ public class FileSystemImportWriter implements IImportWriter {
                 itemPath = PropertyHelper.getItemPath(property);
             } else {
                 String currentProjectName = ResourceManager.getRootProjectName();
-                itemPath = new Path(currentProjectName).append(record.getFullPath().removeFirstSegments(1));
+
+                IPath fullPath = record.getFullPath();
+
+                int constantIndex = EResourceConstant.getTopConstantIndexFromPath(fullPath);
+
+                itemPath = new Path(currentProjectName).append(fullPath.removeFirstSegments(constantIndex));
             }
             itemDesPath = ResourcesPlugin.getWorkspace().getRoot().getFile(itemPath).getLocation();
             IPath propDesPath = itemDesPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
