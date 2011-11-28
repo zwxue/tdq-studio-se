@@ -22,8 +22,8 @@ import java.util.ResourceBundle;
 
 import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.IConstants;
-import net.sourceforge.sqlexplorer.IConstants.Confirm;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
+import net.sourceforge.sqlexplorer.IConstants.Confirm;
 import net.sourceforge.sqlexplorer.connections.ConnectionsView;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
@@ -282,10 +282,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      * @return version number of SQL Explorer plugin
      */
     public String getVersion() {
-        String version = System.getProperty("talend.studio.version"); //$NON-NLS-1$
-        if (version == null || "".equals(version.trim())) { //$NON-NLS-1$
-            version = (String) plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
-        }
+        String version = (String) plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
         return version;
     }
 

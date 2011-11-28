@@ -233,7 +233,7 @@ public class FileSystemImportWriter implements IImportWriter {
             log.warn(desFile.getAbsoluteFile() + " is overwritten!");//$NON-NLS-1$ 
         }
 
-        FileUtils.copyFile(resFile, desFile);
+        FilesUtils.copyFile(resFile, desFile);
 
         update(desFile, isCovered);
 
@@ -253,27 +253,23 @@ public class FileSystemImportWriter implements IImportWriter {
     private void update(File desFile, boolean isCovered) throws IOException, CoreException {
 
         String curProjectLabel = ResourceManager.getRootProjectName();
+        if (!StringUtils.equals(projectName, curProjectLabel)) {
+            String content = FileUtils.readFileToString(desFile, "utf-8");//$NON-NLS-1$
+            content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+            FileUtils.writeStringToFile(desFile, content, "utf-8");//$NON-NLS-1$
+        }
 
         if (desFile.exists()) {
 
             IFile desIFile = ResourceService.file2IFile(desFile);
 
-            String fileExt = desIFile.getFileExtension();
-            if (FactoriesUtil.isEmfFile(fileExt)) {
-
-                if (!StringUtils.equals(projectName, curProjectLabel)) {
-                    String content = FileUtils.readFileToString(desFile, "utf-8");//$NON-NLS-1$
-                    content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-                    FileUtils.writeStringToFile(desFile, content, "utf-8");//$NON-NLS-1$
-                }
-
-                if (isCovered) {
-                    URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
-                    EMFSharedResources.getInstance().reloadResource(uri);
-                }
+            if (isCovered && FactoriesUtil.isEmfFile(desIFile.getFileExtension())) {
+                URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
+                EMFSharedResources.getInstance().reloadResource(uri);
             }
 
-            if (fileExt.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+            String fileExtension = desIFile.getFileExtension();
+            if (fileExtension.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
                 Property property = PropertyHelper.getProperty(desIFile);
 
                 if (property != null) {

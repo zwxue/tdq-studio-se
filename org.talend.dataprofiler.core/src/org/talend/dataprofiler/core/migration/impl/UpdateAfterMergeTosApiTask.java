@@ -264,8 +264,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
         if (modelElement != null) {
             boolean needUpdateFlag = !modelElement.eIsProxy();
-            // log.info("needUpdateFlag======>" + needUpdateFlag);
-            // log.info("modelElement======>" + modelElement);
+
             if (needUpdateFlag) {
                 IFile iFile = WorkspaceUtils.fileToIFile(file);
                 IFolder parentFolder = (IFolder) iFile.getParent();
@@ -278,7 +277,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             if (uri != null) {
                 replaceMap.put(file.getName(), uri.lastSegment());
 
-                // log.info("modelElement======>" + modelElement);
+// log.info("modelElement======>" + modelElement);
                 // log.info("replaceMap======>(key:" + file.getName() + ",value:" + uri.lastSegment() + ")");
                 if (needUpdateFlag && uri.isPlatform()) {
                     IPath filePath = new Path(uri.toPlatformString(false));
@@ -325,10 +324,8 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             // log.info("iFile============>" + iFile.toString());
             result = ModelElementFileFactory.getModelElement(iFile);
             // log.info("result============>" + result.toString());
-        } catch (NullPointerException e) {
-            log.info(e, e);
         } catch (Exception e) {
-            log.error(e, e);
+            log.info(e, e);
         }
         return result;
     }
