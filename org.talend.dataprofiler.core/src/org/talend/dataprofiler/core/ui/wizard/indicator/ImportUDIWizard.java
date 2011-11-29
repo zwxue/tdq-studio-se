@@ -56,6 +56,10 @@ public class ImportUDIWizard extends Wizard {
         File file = new File(page.getSourceFile());
         final List<ReturnCode> information = ImportFactory.importIndicatorToStucture(file, folder, page.getSkip(),
                 page.getRename());
+
+        if (information.isEmpty()) {
+            information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportRemotePatternAction.NothingImport"), false)); //$NON-NLS-1$
+        }
         Display.getDefault().asyncExec(new Runnable() {
 
             public void run() {

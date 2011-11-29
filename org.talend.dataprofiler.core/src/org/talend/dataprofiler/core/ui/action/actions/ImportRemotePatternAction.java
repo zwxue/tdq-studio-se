@@ -143,6 +143,10 @@ public class ImportRemotePatternAction extends Action {
                 }
             }
 
+            // MOD qiongli 2011-11-28 TDQ-4038,give the message when there is nothing to import.
+            if (information.isEmpty()) {
+                information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportRemotePatternAction.NothingImport"), false)); //$NON-NLS-1$
+            }
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {

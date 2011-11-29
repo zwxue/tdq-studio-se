@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleToExcelEnum;
@@ -53,12 +55,14 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.dqrule.DqRuleBuilder;
+import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.csvreader.CsvReader;
 
@@ -403,7 +407,7 @@ public final class ImportFactory {
         String fileExtName = getFileExtName(importFile);
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
-            String name = ""; //$NON-NLS-1$
+            String name = PluginConstant.EMPTY_STRING;
             try {
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
                 reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
@@ -461,6 +465,7 @@ public final class ImportFactory {
 
                     names.add(name);
 
+                    // add the suscess message to display.
                     information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
                             , name), true));
 
@@ -476,6 +481,7 @@ public final class ImportFactory {
 
         if ("xls".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
             Map<Integer, PatternLanguageType> expressionMap = new HashMap<Integer, PatternLanguageType>();
+            String contents = PluginConstant.EMPTY_STRING;
             try {
                 WorkbookSettings settings = new WorkbookSettings();
                 settings.setEncoding("UTF-8"); //$NON-NLS-1$
@@ -496,7 +502,7 @@ public final class ImportFactory {
                         Cell[] row = sheet.getRow(i);
                         Cell cell = row[0];
                         if (CellType.LABEL.equals(cell.getType())) {
-                            String contents = cell.getContents();
+                            contents = cell.getContents();
                             if (names.contains(contents)) {
                                 if (skip) {
                                     continue;
@@ -525,16 +531,60 @@ public final class ImportFactory {
                             createAndStoreUDI(udiParameters, selectionFolder);
 
                             names.add(contents);
+
+                            information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
+                                    , contents), true));
                         }
                     }
                 }
 
                 rwb.close();
-            } catch (BiffException e) {
+            } catch (Exception e) {
                 log.error(e, e);
-            } catch (IOException e) {
-                log.error(e, e);
+                information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed", contents), false)); //$NON-NLS-1$
             }
+        }
+
+        // MOD qiongli 2011-11-28 TDQ-4038.consider to import the definition file.
+        if (FactoriesUtil.DEFINITION.equalsIgnoreCase(fileExtName)) {
+            String propFilePath = importFile.getPath().replaceFirst(PluginConstant.DOT_STRING + fileExtName,
+                    PluginConstant.DOT_STRING + FactoriesUtil.PROPERTIES_EXTENSION);
+            File propFile = new File(propFilePath);
+            // just import the definition file which have the realted Property file.
+            if (!propFile.exists()) {
+                return information;
+            }
+            String name = importFile.getName();
+            try {
+                if (names.contains(name)) {
+                    if (skip) {
+                        information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.Imported", name), false)); //$NON-NLS-1$
+                        return information;
+                    }
+                    if (rename) {
+                        name = name + "(" + new Date() + Math.random() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+                    }
+                }
+
+                IFile elementFile = selectionFolder.getFile(name);
+                if (!elementFile.exists()) {
+                    elementFile.create(new FileInputStream(importFile), false, null);
+                    ModelElement modelElement = ModelElementFileFactory.getModelElement(elementFile);
+                    if (modelElement != null) {
+                        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter()
+                                .create(modelElement, selectionFolder);
+                        DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
+                        names.add(name);
+                        information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
+                                , name), true));
+                    }
+                }
+            } catch (Exception e) {
+                log.error(e);
+                information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed", name), false)); //$NON-NLS-1$
+            }
+
+
         }
 
         return information;
