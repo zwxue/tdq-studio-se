@@ -2731,7 +2731,7 @@ public final class RepositoryNodeHelper {
     /**
      * ADD gdbu 2011-11-17 TDQ-3969
      * 
-     * DOC gdbu Comment method "removeChildrenNodesWhenFiltering". When delete an element is the tree , also need delete
+     * DOC gdbu Comment method "removeChildrenNodesWhenFiltering". When delete an element in the tree , also need delete
      * this element in filter-list.
      * 
      * @param node
@@ -2743,7 +2743,7 @@ public final class RepositoryNodeHelper {
         removeNodes.add(node);
         DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
         List<IRepositoryNode> children = node.getChildren();
-        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
+        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
         for (IRepositoryNode iRepositoryNode : children) {
             removeNodes.addAll(removeChildrenNodesWhenFiltering(iRepositoryNode));
         }
