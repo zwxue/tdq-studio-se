@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -110,6 +112,20 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
 
+        // MOD gdbu 2011-11-30 TDQ-4090 : To get all Recycle Bin nodes.
+        List deleteNodes = null;
+        List<IRepositoryNode> shownNodes = null;
+        List<IRepositoryNode> findAllRecycleBinNodes = null;
+        if (DQRepositoryNode.isOnFilterring()) {
+            deleteNodes = new ArrayList();
+            Collections.addAll(deleteNodes, deleteElements);
+            shownNodes = RepositoryNodeHelper.findAllChildrenNodes(deleteNodes);
+            List<IRepositoryNode> recycleBinNodeFirstLevelChildren = ((RepositoryNode) RepositoryNodeHelper
+                    .getRecycleBinRepNode()).getChildren();
+            findAllRecycleBinNodes = RepositoryNodeHelper.findAllChildrenNodes(recycleBinNodeFirstLevelChildren);
+        }
+        // ~TDQ-4090
+
         for (Object obj : deleteElements) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
@@ -127,6 +143,22 @@ public class DQDeleteAction extends DeleteAction {
                     break;
 
                 }
+
+                // MOD gdbu 2011-11-30 TDQ-4090 : Determine whether there has some nodes not been shown when filtering.
+                if (DQRepositoryNode.isOnFilterring() && isStateDeleted) {
+                    for (IRepositoryNode iRepositoryNode : findAllRecycleBinNodes) {
+                        if (node.equals(iRepositoryNode)) {
+                            node = (RepositoryNode) iRepositoryNode;
+                            shownNodes = RepositoryNodeHelper.findAllChildrenNodes(deleteNodes);
+                            break;
+                        }
+                    }
+                    if (!RepositoryNodeHelper.isEmptyRecycleBin(findAllRecycleBinNodes, shownNodes)) {
+                        break;
+                    }
+                }
+                // ~TDQ-4090
+
                 // show dependency dialog and phisical delete dependencies just for phisical deleting.
                 boolean hasDependency = false;
                 if (node.getType() == ENodeType.SIMPLE_FOLDER || node.getType() == ENodeType.SYSTEM_FOLDER) {

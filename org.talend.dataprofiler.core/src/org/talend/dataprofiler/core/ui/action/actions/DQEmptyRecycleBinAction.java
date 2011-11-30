@@ -158,43 +158,6 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
     }
 
     /**
-     * DOC gdbu Comment method "isEmptyRecycleBin".
-     * 
-     * @param needToDeleteNodes
-     * @param shownNodes
-     * @return
-     */
-    private boolean isEmptyRecycleBin(List<IRepositoryNode> needToDeleteNodes, List<IRepositoryNode> shownNodes) {
-        if (needToDeleteNodes.size() != shownNodes.size()) {
-            // If some nodes is filtered out, ask the user whether to continue to empty the Recycle Bin.
-            boolean openQuestion = MessageDialog.openQuestion(null,
-                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.action.title"),//$NON-NLS-1$
-                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.ContainsFilteredNodes"));//$NON-NLS-1$
-            return openQuestion;
-        } else {
-            // Haven't filtered out nodes , continue to empty Recycle Bin .
-            return true;
-        }
-    }
-
-    /**
-     * ADD gdbu 2011-11-24 TDQ-4068 To get all children nodes.
-     * 
-     * DOC gdbu Comment method "findRecycleBinNodeWhenFiltering".
-     * 
-     * @param recycleBinNodes
-     * @return
-     */
-    private List<IRepositoryNode> findAllRecycleBinNode(List<IRepositoryNode> recycleBinNodes) {
-        List<IRepositoryNode> findAllRecycleBinNode = new ArrayList<IRepositoryNode>();
-        findAllRecycleBinNode.addAll(recycleBinNodes);
-        for (IRepositoryNode iRepositoryNode : recycleBinNodes) {
-            findAllRecycleBinNode.addAll(findAllRecycleBinNode(iRepositoryNode.getChildren()));
-        }
-        return findAllRecycleBinNode;
-    }
-
-    /**
      * ADD gdbu 2011-11-24 TDQ-4068 To get all the nodes those need to be deleted when empty Recycle Bin node.
      * 
      * DOC gdbu Comment method "findAllRecycleBinNodes".
@@ -228,14 +191,15 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
                 }
             }
 
-            findAllRecycleBinNode = findAllRecycleBinNode(needToEmptyNodesWhenFiltering);
+            findAllRecycleBinNode = RepositoryNodeHelper.findAllChildrenNodes(needToEmptyNodesWhenFiltering);
 
-            if (!isEmptyRecycleBin(findAllRecycleBinNode, findAllRecycleBinNode(shownNodesInRecycleBin))) {
+            if (!RepositoryNodeHelper.isEmptyRecycleBin(findAllRecycleBinNode,
+                    RepositoryNodeHelper.findAllChildrenNodes(shownNodesInRecycleBin))) {
                 return null;
             }
 
         } else {
-            findAllRecycleBinNode = findAllRecycleBinNode(shownNodesInRecycleBin);
+            findAllRecycleBinNode = RepositoryNodeHelper.findAllChildrenNodes(shownNodesInRecycleBin);
         }
 
         return findAllRecycleBinNode;

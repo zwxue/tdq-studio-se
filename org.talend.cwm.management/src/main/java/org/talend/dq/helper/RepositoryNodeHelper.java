@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -51,6 +52,7 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -2749,6 +2751,42 @@ public final class RepositoryNodeHelper {
         }
         getAllFilteredNodeList().remove(node);
         return removeNodes;
+    }
+
+    /**
+     * ADD gdbu 2011-11-24 TDQ-4068 To get all children nodes.
+     * 
+     * DOC gdbu Comment method "findRecycleBinNodeWhenFiltering".
+     * 
+     * @param recycleBinNodes
+     * @return
+     */
+    public static List<IRepositoryNode> findAllChildrenNodes(List<IRepositoryNode> recycleBinNodes) {
+        List<IRepositoryNode> findAllRecycleBinNode = new ArrayList<IRepositoryNode>();
+        findAllRecycleBinNode.addAll(recycleBinNodes);
+        for (IRepositoryNode iRepositoryNode : recycleBinNodes) {
+            findAllRecycleBinNode.addAll(findAllChildrenNodes(iRepositoryNode.getChildren()));
+        }
+        return findAllRecycleBinNode;
+    }
+
+    /**
+     * DOC gdbu Comment method "isEmptyRecycleBin".
+     * 
+     * @param needToDeleteNodes
+     * @param shownNodes
+     * @return
+     */
+    public static boolean isEmptyRecycleBin(List<IRepositoryNode> needToDeleteNodes, List<IRepositoryNode> shownNodes) {
+        if (needToDeleteNodes.size() != shownNodes.size()) {
+            // If some nodes is filtered out, ask the user whether to continue to empty the Recycle Bin.
+            boolean openQuestion = MessageDialog.openQuestion(null, Messages.getString("RepositoryNodeHelper.delete.title"),//$NON-NLS-1$
+                    Messages.getString("RepositoryNodeHelper.ContainsFilteredNodes"));//$NON-NLS-1$
+            return openQuestion;
+        } else {
+            // Haven't filtered out nodes , continue to empty Recycle Bin .
+            return true;
+        }
     }
 
     /**
