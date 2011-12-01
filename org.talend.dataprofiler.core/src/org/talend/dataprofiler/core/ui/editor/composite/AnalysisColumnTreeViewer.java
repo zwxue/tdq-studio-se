@@ -464,7 +464,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         if (indicators != null && indicators.length > 0) {
             if (connection == null) {
                 tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
-                connection = tdDataProvider;
+                analysis.getContext().setConnection(tdDataProvider);
                 if (tdDataProvider != null && masterPage.getExecCombo() != null) {
                     if (ConnectionUtils.isDelimitedFileConnection(tdDataProvider)) {
                         masterPage.setWhereClauseDisabled();
