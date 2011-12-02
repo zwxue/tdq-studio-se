@@ -100,6 +100,7 @@ import org.talend.resource.ResourceManager;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -451,34 +452,36 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     private void initializedConnection(ModelElementIndicator[] indicators) {
         Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
         DataManager connection = analysis.getContext().getConnection();
-        Connection tdDataProvider = null;
+        // Connection tdDataProvider = null;
 
         boolean enableWhereClauseFlag = true;
         boolean enableExecuteLanguageFlag = true;
-        // MOD klliu if default ExecutionLanguage is java,it is not changed to SQL.2011-11-21
-        String execLang = analysis.getParameters().getExecutionLanguage().getLiteral();
-        if (execLang != null && ExecutionLanguage.JAVA.getLiteral().equals(execLang)) {
-            enableExecuteLanguageFlag = false;
-        }
         // ~
         if (indicators != null && indicators.length > 0) {
             if (connection == null) {
-                tdDataProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
-                analysis.getContext().setConnection(tdDataProvider);
-                if (tdDataProvider != null && masterPage.getExecCombo() != null) {
-                    if (ConnectionUtils.isDelimitedFileConnection(tdDataProvider)) {
-                        masterPage.setWhereClauseDisabled();
-                        masterPage.changeExecuteLanguageToJava(true);
+                connection = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
+                analysis.getContext().setConnection(connection);
+            }
+            if (connection != null && masterPage.getExecCombo() != null) {
+                if (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection)) {
+                    masterPage.setWhereClauseDisabled();
+                    masterPage.changeExecuteLanguageToJava(true);
 
-                        enableWhereClauseFlag = false;
-                        enableExecuteLanguageFlag = false;
-                    } else if (ConnectionUtils.isMdmConnection(tdDataProvider)) {
-                        masterPage.setWhereClauseDisabled();
+                    enableWhereClauseFlag = false;
+                    enableExecuteLanguageFlag = false;
+                } else if (ConnectionUtils.isMdmConnection(connection)) {
+                    masterPage.setWhereClauseDisabled();
 
-                        enableWhereClauseFlag = false;
-                    }
+                    enableWhereClauseFlag = false;
                 }
             }
+        }
+        // MOD klliu if default ExecutionLanguage is java,it is not changed to SQL.2011-11-21
+        String execLang = analysis.getParameters().getExecutionLanguage().getLiteral();
+        if (execLang != null && ExecutionLanguage.JAVA.getLiteral().equals(execLang)
+                && (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection) || ConnectionUtils
+                        .isMdmConnection(connection))) {
+            enableExecuteLanguageFlag = false;
         }
 
         if (enableWhereClauseFlag) {
