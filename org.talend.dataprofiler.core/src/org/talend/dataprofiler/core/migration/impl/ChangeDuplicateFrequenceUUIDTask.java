@@ -83,8 +83,6 @@ public class ChangeDuplicateFrequenceUUIDTask extends AbstractWorksapceUpdateTas
                 "xmi:id=\"_OCCCEBl4EeGMPdtm417kpw\" name=\"Bin Frequency Table\"");
         replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Bin Low Frequency Table\"",
                 "xmi:id=\"_LAwpcBl4EeGMPdtm417kpw\" name=\"Bin Low Frequency Table\"");
-        replaceStringMap.put("xmi:id=\"_ccIR4RF2Ed2PKb6nEJEvhw\" name=\"Mode\"",
-                "xmi:id=\"_QTKXMBl4EeGMPdtm417kpw\" name=\"Mode\"");
         return replaceStringMap;
     }
 

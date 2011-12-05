@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_QTKXMBl4EeGMPdtm417kpw" name="Mode" label="Mode">
+<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_ccIR4RF2Ed2PKb6nEJEvhw" name="Mode" label="Mode">
   <taggedValue xmi:id="_-WEB4IqnEd-SocVM_rHvUg" tag="Description" value="computes the mode (most probable value). For numerical data or continuous data, bins can be set in the parameters of this indicator. It is different from the average and from the median. Generalization of it is an histogram. It is good for addressing categorical attributes"/>
   <taggedValue xmi:id="_-WEB4YqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the most frequent value"/>
   <categories href="../../../.Talend.definition#_ccKuIRF2Ed2PKb6nEJEvhw"/>

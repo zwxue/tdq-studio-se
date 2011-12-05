@@ -1386,7 +1386,7 @@
            class="org.talend.dataprofiler.core.migration.impl.ChangeDuplicateFrequenceUUIDTask"
            id="org.talend.dataprofiler.core.changeBinFrequanceUUID"
            name="update Bin frequence uuid between duplicates"
-           version="4.2.3">
+           version="4.2.4">
      </workspacetask>
      
 
