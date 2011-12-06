@@ -189,6 +189,14 @@ public class MigrationTaskManager {
                 if (o1.getOrder() == null || o2.getOrder() == null) {
                     return 0;
                 }
+                if (o1 instanceof IWorkspaceMigrationTask && o2 instanceof IWorkspaceMigrationTask) {
+                    int compareResult = ((IWorkspaceMigrationTask) o1).getVersion().compareToIgnoreCase(
+                            ((IWorkspaceMigrationTask) o2).getVersion());
+                    if (compareResult != 0) {
+                        return compareResult;
+                    }
+
+                }
 
                 return o1.getOrder().compareTo(o2.getOrder());
             }

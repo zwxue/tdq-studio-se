@@ -22,6 +22,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceService;
 
 
 /**
@@ -54,16 +55,16 @@ public class ChangeDuplicateFrequenceUUIDTask extends AbstractWorksapceUpdateTas
                 .append(EResourceConstant.SYSTEM_INDICATORS_ADVANCED_STATISTICS.getPath()).toFile();
         File anafileIndicator = getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
         try {
-            String[] indicatorFileExtentionNames = { FactoriesUtil.DEFINITION };
+            String[] indicatorFileExtentionNames = { FactoriesUtil.DEFINITION, FactoriesUtil.PROPERTIES_EXTENSION };
             String[] anaFileExtentionNames = { FactoriesUtil.ANA };
-
+            Map<String, String> indicatorStringMap=new HashMap<String,String>();
+            indicatorStringMap.putAll(initIndicatorReplaceMap());
+            indicatorStringMap.putAll(initAnaReplaceMap());
             result &= FilesUtils.migrateFolder(anafileIndicator, anaFileExtentionNames, initAnaReplaceMap(), log)
-                    && FilesUtils.migrateFolder(indicatorfileIndicator, indicatorFileExtentionNames, initIndicatorReplaceMap(),
+                    && FilesUtils.migrateFolder(indicatorfileIndicator, indicatorFileExtentionNames, indicatorStringMap,
                             log);
 
-            // AnaResourceFileHelper.getInstance().clear();
-            // AnaResourceFileHelper.getInstance().getAllAnalysis();
-            // ResourceService.refreshStructure();
+            ResourceService.refreshStructure();
         } catch (Exception e) {
             result = false;
             log.error(e, e);
@@ -83,6 +84,7 @@ public class ChangeDuplicateFrequenceUUIDTask extends AbstractWorksapceUpdateTas
                 "xmi:id=\"_OCCCEBl4EeGMPdtm417kpw\" name=\"Bin Frequency Table\"");
         replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Bin Low Frequency Table\"",
                 "xmi:id=\"_LAwpcBl4EeGMPdtm417kpw\" name=\"Bin Low Frequency Table\"");
+
         return replaceStringMap;
     }
 
