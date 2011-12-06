@@ -62,6 +62,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
@@ -261,6 +262,13 @@ public final class DQStructureManager {
             }
 
             WorkspaceVersionHelper.storeVersion();
+
+            // MOD qiongli 2011-12-6 TDQ-4095,make the definition file commit to svn with the DQ struct files.remove
+            // this code from DQRespositoryView.initWorkspace()
+            IFile defFile = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);
+            if (!defFile.exists()) {
+                DefinitionHandler.getInstance();
+            }
 
             ResourceService.refreshStructure();
 
