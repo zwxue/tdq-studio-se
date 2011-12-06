@@ -182,7 +182,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
         if (null != regex && !regex.equals("")) {//$NON-NLS-1$  
             functionNameSQL = functionNameSQL + "," + regex;//$NON-NLS-1$ 
         }
-        functionNameSQL = functionNameSQL + " ) as OK";//$NON-NLS-1$  
+        functionNameSQL = functionNameSQL + " )";//$NON-NLS-1$  
 
         return functionNameSQL;
     }
@@ -207,6 +207,16 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     @Override
     public String getAverageLengthWithBlankRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%> WHERE <%=__COLUMN_NAMES__%> IS NOT NULL) AND (SELECT CEILING(CAST(SUM(LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " ))*1.00 AS FLOAT) / COUNT(*)) FROM <%=__TABLE_NAME__%>  WHERE <%=__COLUMN_NAMES__%> IS NOT NULL)"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String regexNotLike(String element, String regex) {
+        return surroundWithSpaces("not " + this.getFunctionName() + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
     }
 
     /*
