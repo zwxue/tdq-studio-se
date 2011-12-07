@@ -13,12 +13,13 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
-import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.database.ColumnFilterWizard;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
@@ -51,13 +52,18 @@ public class ColumnFilterAction extends Action {
     public ColumnFilterAction(IRepositoryNode node) {
         this();
         this.node = node;
-        if (node.getObject() instanceof TdTableRepositoryObject) {
-            TdTableRepositoryObject tableObject = (TdTableRepositoryObject) node.getObject();
-            this.namedColumnSet = tableObject.getTdTable();
-        } else if (node.getObject() instanceof TdViewRepositoryObject) {
-            TdViewRepositoryObject viewObject = (TdViewRepositoryObject) node.getObject();
-            this.namedColumnSet = viewObject.getTdView();
+        if (node instanceof DBTableRepNode) {
+            this.namedColumnSet = ((DBTableRepNode) node).getTdTable();
+        } else if (node instanceof DBViewRepNode) {
+            this.namedColumnSet = ((DBViewRepNode) node).getTdView();
         }
+        // if (node.getObject() instanceof TdTableRepositoryObject) {
+        // TdTableRepositoryObject tableObject = (TdTableRepositoryObject) node.getObject();
+        // this.namedColumnSet = tableObject.getTdTable();
+        // } else if (node.getObject() instanceof TdViewRepositoryObject) {
+        // TdViewRepositoryObject viewObject = (TdViewRepositoryObject) node.getObject();
+        // this.namedColumnSet = viewObject.getTdView();
+        // }
     }
 
     @Override
@@ -65,8 +71,9 @@ public class ColumnFilterAction extends Action {
         ColumnFilterWizard wizard = new ColumnFilterWizard(this.namedColumnSet);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
-        dialog.open();
-        CorePlugin.getDefault().refreshDQView(node);
+        if (dialog.open() == Dialog.OK) {
+            CorePlugin.getDefault().refreshDQView(node);
+        }
     }
 
 }
