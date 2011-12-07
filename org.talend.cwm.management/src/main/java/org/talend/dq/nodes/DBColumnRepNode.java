@@ -39,8 +39,10 @@ public class DBColumnRepNode extends DQRepositoryNode {
      */
     public DBColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
-        tdColumn = (TdColumn) metadataColumnRepositoryObject.getTdColumn();
+        if (object instanceof MetadataColumnRepositoryObject) {
+            metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
+            tdColumn = (TdColumn) metadataColumnRepositoryObject.getTdColumn();
+        }
     }
 
     public MetadataColumnRepositoryObject getMetadataColumnRepositoryObject() {
