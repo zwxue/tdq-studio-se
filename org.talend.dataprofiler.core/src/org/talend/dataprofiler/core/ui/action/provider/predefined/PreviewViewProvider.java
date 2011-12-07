@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewViewAction;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.dq.nodes.DBViewRepNode;
 
@@ -45,7 +45,7 @@ public class PreviewViewProvider extends AbstractCommonActionProvider {
         Object firstElement = treeSelection.getFirstElement();
         // MOD msjian 2011-12-7 TDQ-4091: the tdView info is not correct
         if (firstElement instanceof DBViewRepNode) {
-            PreviewTableAction action = new PreviewTableAction(((DBViewRepNode) firstElement).getTdView());
+            PreviewViewAction action = new PreviewViewAction(((DBViewRepNode) firstElement).getTdView());
             menu.add(action);
         }
         // TDQ-4091 ~
