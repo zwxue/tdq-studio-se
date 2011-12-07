@@ -17,11 +17,10 @@ import java.util.List;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.dq.nodes.DBColumnRepNode;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -39,13 +38,11 @@ public class PreviewColumnProvider extends AbstractCommonActionProvider {
         List<TdColumn> list = new ArrayList<TdColumn>();
         Object[] selectedObjs = treeSelection.toArray();
         for (Object obj : selectedObjs) {
-            if (obj instanceof RepositoryNode) {
-                RepositoryNode node = (RepositoryNode) obj;
-                if (node.getObject() instanceof MetadataColumnRepositoryObject) {
-                    MetadataColumnRepositoryObject columnObject = (MetadataColumnRepositoryObject) node.getObject();
-                    list.add((TdColumn) columnObject.getTdColumn());
-                }
+            // MOD msjian 2011-12-7 TDQ-4091: the tdColumn info is not correct
+            if (obj instanceof DBColumnRepNode) {
+                list.add(((DBColumnRepNode) obj).getTdColumn());
             }
+            // TDQ-4091 ~
         }
 
         if (!list.isEmpty()) {

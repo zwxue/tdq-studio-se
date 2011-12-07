@@ -14,10 +14,9 @@ package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewViewAction;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.dq.nodes.DBViewRepNode;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -44,13 +43,11 @@ public class PreviewViewProvider extends AbstractCommonActionProvider {
         }
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
         Object firstElement = treeSelection.getFirstElement();
-        if (firstElement instanceof RepositoryNode) {
-            RepositoryNode node = (RepositoryNode) firstElement;
-            if (node.getObject() instanceof TdViewRepositoryObject) {
-                TdViewRepositoryObject viewObject = (TdViewRepositoryObject) node.getObject();
-                PreviewViewAction action = new PreviewViewAction(viewObject.getTdView());
-                menu.add(action);
-            }
+        // MOD msjian 2011-12-7 TDQ-4091: the tdView info is not correct
+        if (firstElement instanceof DBViewRepNode) {
+            PreviewTableAction action = new PreviewTableAction(((DBViewRepNode) firstElement).getTdView());
+            menu.add(action);
         }
+        // TDQ-4091 ~
     }
 }
