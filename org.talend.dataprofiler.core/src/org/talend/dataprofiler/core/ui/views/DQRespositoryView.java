@@ -257,10 +257,6 @@ public class DQRespositoryView extends CommonNavigator {
             log.error(e, e);
         }
 
-        IFile defFile = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);
-        if (!defFile.exists()) {
-            DefinitionHandler.getInstance();
-        }
         // MOD qiongli 2011-3-2 feature 17588.initilize all folder.
         initAllFolders();
     }

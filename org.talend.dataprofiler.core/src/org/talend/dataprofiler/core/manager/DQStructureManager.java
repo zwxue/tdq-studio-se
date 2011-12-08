@@ -263,7 +263,7 @@ public final class DQStructureManager {
 
             WorkspaceVersionHelper.storeVersion();
 
-            // MOD qiongli 2011-12-6 TDQ-4095,make the definition file commit to svn with the DQ struct files.remove
+            // MOD qiongli 2011-12-6 TDQ-4095,make the definition file commit to svn with the DQ struct files.move
             // this code from DQRespositoryView.initWorkspace()
             IFile defFile = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);
             if (!defFile.exists()) {
