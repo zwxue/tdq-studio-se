@@ -274,7 +274,7 @@ public final class IndicatorCommonUtil {
 
                 }
             } catch (Exception e) {
-                log.error(Messages.getString("Get value failed: ", e.getMessage())); //$NON-NLS-1$
+                log.error(Messages.getString("IndicatorCommonUtil.FailValue", e.getMessage()), e); //$NON-NLS-1$
             }
         }
 
