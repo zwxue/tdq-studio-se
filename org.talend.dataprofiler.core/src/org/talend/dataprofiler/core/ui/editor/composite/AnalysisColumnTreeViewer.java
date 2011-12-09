@@ -455,7 +455,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         // Connection tdDataProvider = null;
 
         boolean enableWhereClauseFlag = true;
-        boolean enableExecuteLanguageFlag = true;
+        boolean enableExecuteLanguageFlag = false;
         // ~
         if (indicators != null && indicators.length > 0) {
             if (connection == null) {
