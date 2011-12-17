@@ -1,0 +1,184 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dq.writer.impl;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.utils.AbstractResourceChangesService;
+import org.talend.core.repository.utils.TDQServiceRegister;
+import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.writer.AElementPersistance;
+import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Dependency;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwmx.analysis.informationreporting.Report;
+
+/**
+ * @author scorreia
+ * 
+ * This class saves the analysis.
+ */
+public class ReportWriter extends AElementPersistance {
+
+    static Logger log = Logger.getLogger(ReportWriter.class);
+
+    /**
+     * DOC bZhou ReportWriter constructor comment.
+     */
+    ReportWriter() {
+        super();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    public void addDependencies(ModelElement element) {
+        TdReport report = (TdReport) element;
+        for (Analysis ana : ReportHelper.getAnalyses(report)) {
+            TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
+            if (dependencyReturn.isOk()) {
+                try {
+                    Property property = PropertyHelper.getProperty(ana);
+                    if (property != null) {
+                        Item item = property.getItem();
+                        if (item instanceof TDQAnalysisItem) {
+                            TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
+                            anaItem.setAnalysis(ana);
+                        }
+                    }
+                    ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                            .saveResource(ana.eResource());
+                } catch (PersistenceException e) {
+                    log.error(e, e);
+                }
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#getFileExtension()
+     */
+    @Override
+    protected String getFileExtension() {
+        return FactoriesUtil.REP;
+    }
+
+    public ReturnCode save(Item item) {
+        ReturnCode rc = new ReturnCode();
+        try {
+            TDQReportItem repItem = (TDQReportItem) item;
+            Report report = repItem.getReport();
+            addDependencies(report);
+            addResourceContent(report.eResource(), report);
+
+            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(report.eResource());
+            List<Resource> needSaves = new ArrayList<Resource>();
+            for (EObject object : find.keySet()) {
+                Resource re = object.eResource();
+                if (re == null) {
+                    continue;
+                }
+                EcoreUtil.resolveAll(re);
+                needSaves.add(re);
+            }
+
+            ProxyRepositoryFactory.getInstance().save(repItem);
+
+            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
+                    AbstractResourceChangesService.class);
+            if (resChangeService != null) {
+                for (Resource toSave : needSaves) {
+                    resChangeService.saveResourceByEMFShared(toSave);
+                }
+            }
+
+            // updateDependencies(report);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
+    }
+
+    @Override
+    protected void notifyResourceChanges() {
+        ProxyRepositoryManager.getInstance().save();
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    // @Override
+    // protected void updateDependencies(ModelElement element) {
+    // TdReport report = (TdReport) element;
+    // // update supplier dependency
+    // // if report have supplier dependency, add codes here
+    // // update client dependency
+    // EList<Dependency> clientDependency = report.getClientDependency();
+    // try {
+    // for (Dependency cDependency : clientDependency) {
+    // EList<ModelElement> supplier = cDependency.getSupplier();
+    // for (ModelElement me : supplier) {
+    // if (me instanceof Analysis) {
+    // Analysis analysis = (Analysis) me;
+    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report,
+    // analysis);
+    // if (dependencyReturn.isOk()) {
+    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(analysis);
+    // if (repositoryNode != null) {
+    // TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
+    // .getItem();
+    // analysisItem.setAnalysis(analysis);
+    // }
+    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+    // .saveResource(analysis.eResource());
+    // }
+    // }
+    // }
+    // }
+    // } catch (PersistenceException e) {
+    // log.error(e, e);
+    // }
+    //
+    // }
+}

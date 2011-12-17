@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            class="org.talend.commons.emf.CwmResourceFactory"
+            type="comp">
+      </parser>
+   </extension>
+   <extension
+         point="org.eclipse.emf.compare.match.engine">
+      <matchengine
+            engineClass="org.talend.cwm.compare.ModelElementMatchEngine"
+            label="org.talend.cwm.compare.ModelElementMatchEngine"
+            priority="normal">
+      </matchengine>
+   </extension>
+
+</plugin>
