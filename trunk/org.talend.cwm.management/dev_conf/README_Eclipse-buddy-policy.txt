@@ -1,1 +1,0 @@
-Eclipse-RegisterBuddy: org.talend.utils has been added to the plugin so that ConnectionUtils from that plugin can find the correct JDBC Driver.

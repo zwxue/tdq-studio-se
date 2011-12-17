@@ -52,6 +52,7 @@ import org.osgi.framework.BundleContext;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.VersionUtils;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
@@ -372,8 +373,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return
      */
     public ProductVersion getProductVersion() {
-        Object obj = plugin.getBundle().getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
-        ProductVersion currentVersion = ProductVersion.fromString(obj.toString());
+        ProductVersion currentVersion = ProductVersion.fromString(VersionUtils.getVersion());
         return currentVersion;
     }
 

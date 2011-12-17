@@ -1,1 +1,0 @@
-Topcase 2.5.0 is used to generate Ecore file.

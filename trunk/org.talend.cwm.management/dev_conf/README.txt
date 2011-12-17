@@ -1,1 +1,0 @@
-properties files can be used for testing other databases.

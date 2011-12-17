@@ -49,6 +49,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.talend.commons.i18n.BabiliInfo;
 import org.talend.commons.i18n.BabiliUpdateUtil;
 import org.talend.commons.i18n.ImportBabiliCancelException;
+import org.talend.commons.utils.VersionUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -206,8 +207,8 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
-                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), DefaultMessagesImpl
-                            .getString("I18nPreferencePage.title"), //$NON-NLS-1$
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                            DefaultMessagesImpl.getString("I18nPreferencePage.title"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("I18nPreferencePage.completeInfo")); //$NON-NLS-1$
                 }
             });
@@ -286,8 +287,7 @@ public class I18nPreferencePage extends PreferencePage implements IWorkbenchPref
      * @return
      */
     public static String getCurrentVersion(boolean normalize) {
-        String version = (String) CorePlugin.getDefault().getBundle().getHeaders().get(
-                org.osgi.framework.Constants.BUNDLE_VERSION);
+        String version = VersionUtils.getVersion();
         if (normalize) {
             version = normalizeVersion(version);
         }
