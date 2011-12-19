@@ -65,7 +65,8 @@ public class FolderObjFilter extends AbstractViewerFilter {
                 }
                 // MOD zshen 2011-1-16 18724: Java UDI enhancements to hide lib folder.
                 else if (((IFolder) folder).getProjectRelativePath().toString()
-                        .startsWith(EResourceConstant.USER_DEFINED_INDICATORS.getPath())) {
+                        .startsWith(EResourceConstant.USER_DEFINED_INDICATORS.getPath())
+                        && (((IFolder) folder).getName().equals("lib"))) { //$NON-NLS-1$
                     return false;
                 }
                 // ~18724
