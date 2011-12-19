@@ -659,8 +659,11 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 
-        String urlString = analysis.eResource() != null ? analysis.eResource().getURI().toFileString()
+        // MOD msjian 2011-12-15 TDQ-4163: the exception message is incorrect
+        String urlString = analysis.eResource() != null ? (analysis.eResource().getURI().isFile() ? analysis.eResource().getURI()
+                .toFileString() : analysis.eResource().getURI().toString())
                 : PluginConstant.EMPTY_STRING;
+        // TDQ-4163 ~
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014

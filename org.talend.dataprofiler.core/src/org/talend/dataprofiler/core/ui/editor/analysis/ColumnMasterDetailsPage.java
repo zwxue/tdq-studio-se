@@ -931,8 +931,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // }
         // AnalysisWriter writer = new AnalysisWriter();
 
-        String urlString = analysis.eResource() != null ? analysis.eResource().getURI().toFileString()
+        // MOD msjian 2011-12-15 TDQ-4163: the exception message is incorrect
+        String urlString = analysis.eResource() != null ? (analysis.eResource().getURI().isFile() ? analysis.eResource().getURI()
+                .toFileString() : analysis.eResource().getURI().toString())
                 : PluginConstant.EMPTY_STRING;
+        // TDQ-4163 ~
         // try {
         // urlString = editorInput.getFile();
         // analysisHandler.getAnalysis().setUrl(urlString);
