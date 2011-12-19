@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.views;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -102,8 +103,6 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -136,6 +135,8 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
@@ -145,7 +146,6 @@ import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.foldernode.AbstractFolderNode;
-import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
@@ -268,7 +268,7 @@ public class DQRespositoryView extends CommonNavigator {
         IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
         toolBarManager.add(new RefreshDQReponsitoryViewAction());
 
-//        toolBarManager.add((IAction) new FilterDQReponsitoryTreeAction());
+        // toolBarManager.add((IAction) new FilterDQReponsitoryTreeAction());
     }
 
     private void addResourceChangedListener() {
@@ -503,9 +503,9 @@ public class DQRespositoryView extends CommonNavigator {
 
             public void selectionChanged(SelectionChangedEvent event) {
                 TreeSelection selection = (TreeSelection) event.getSelection();
-                if (selection.size() != 1) {
-                    return;
-                }
+                // if (selection.size() != 1) {
+                // return;
+                // }
                 // ADD xwang 2011-08-30
                 if (PluginChecker.isSVNProviderPluginLoaded()) {
                     RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open editor") {
@@ -518,19 +518,27 @@ public class DQRespositoryView extends CommonNavigator {
                     workUnit.setAvoidUnloadResources(true);
                     ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
                 }
-                Object selectedElement = selection.getFirstElement();
-                if (selectedElement instanceof TdTable || selectedElement instanceof TdView) {
-                    if (contentProvider == null) {
-                        contentProvider = (ITreeContentProvider) getCommonViewer().getContentProvider();
-                    }
-                    for (Object child : contentProvider.getChildren(selectedElement)) {
-                        if (child instanceof IFolderNode
-                                && ((IFolderNode) child).getFolderNodeType() == ColumnFolderNode.COLUMNFOLDER_NODE_TYPE) {
-                            ((IFolderNode) child).loadChildren();
-                            break;
-                        }
+                // MOD klliu 2011-12-19 TDQ-4197
+                Iterator<?> iterator = selection.iterator();
+                while (iterator.hasNext()) {
+                    Object selectedElement = iterator.next();
+                    if (selectedElement instanceof DBTableRepNode || selectedElement instanceof DBViewRepNode) {
+                        ((RepositoryNode) selectedElement).getChildren().get(0).getChildren();
                     }
                 }
+                // Object selectedElement = selection.getFirstElement();
+                // if (selectedElement instanceof TdTable || selectedElement instanceof TdView) {
+                // if (contentProvider == null) {
+                // contentProvider = (ITreeContentProvider) getCommonViewer().getContentProvider();
+                // }
+                // for (Object child : contentProvider.getChildren(selectedElement)) {
+                // if (child instanceof IFolderNode
+                // && ((IFolderNode) child).getFolderNodeType() == ColumnFolderNode.COLUMNFOLDER_NODE_TYPE) {
+                // ((IFolderNode) child).loadChildren();
+                // break;
+                // }
+                // }
+                // }
             }
 
         });
@@ -743,6 +751,7 @@ public class DQRespositoryView extends CommonNavigator {
                     if (e.keyCode == SWT.BS || e.keyCode == SWT.DEL) {
                         if (isFilterTextEmpty(filterText)) {
                             new UIJob(PluginConstant.EMPTY_STRING) {
+
                                 public IStatus runInUIThread(IProgressMonitor monitor) {
                                     if (isFilterTextEmpty(filterText)) {
                                         closeFilterStatus(filterText);
