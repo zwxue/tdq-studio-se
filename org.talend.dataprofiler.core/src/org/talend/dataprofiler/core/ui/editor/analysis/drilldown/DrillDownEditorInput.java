@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis.drilldown;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.sourceforge.sqlexplorer.dataset.DataSet;
 
@@ -35,6 +36,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
+import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
@@ -242,7 +244,16 @@ public class DrillDownEditorInput implements IEditorInput {
             if (currIndicator instanceof LengthIndicator) {
                 selectValue = ((LengthIndicator) currIndicator).getLength().toString();
             }
-            newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
+            // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
+            if (currIndicator instanceof DatePatternFreqIndicator) {
+                for (Object expression : analysisDataSet.getFrequencyData().keySet()) {
+                    if (Pattern.matches(((DatePatternFreqIndicator) currIndicator).getRegex(selectValue), expression.toString())) {
+                        newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(expression));
+                    }
+                }
+            } else {
+                newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
+            }
         } else if (analysisDataSet.getPatternData() != null && analysisDataSet.getPatternData().size() > 0) {
             if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_INVALID_TYPE)) {
                 newColumnElementList.addAll(getDesignatedData((List<Object[]>) analysisDataSet.getPatternData().get(

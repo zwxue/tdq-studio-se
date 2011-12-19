@@ -32,7 +32,7 @@ import org.talend.dataquality.matching.date.pattern.ModelMatcher;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements DatePatternFreqIndicator {
@@ -43,6 +43,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected DatePatternFreqIndicatorImpl() {
@@ -51,6 +52,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -111,7 +113,8 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
             dateRetriever.handle(String.valueOf(data));
         }
         boolean returnValue = super.handle(data);
-        this.mustStoreRow = false;
+        // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
+        this.mustStoreRow = true;
         return returnValue;
     }
 
