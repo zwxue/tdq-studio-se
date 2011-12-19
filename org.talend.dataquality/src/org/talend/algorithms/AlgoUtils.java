@@ -80,6 +80,10 @@ public final class AlgoUtils {
         Number searchedKey = null;
 
         for (Long curValue : counts) {
+            // MOD msjian 2011-12-16 TDQ-4164: there is something wrong about this compute
+            searchedKey = (Number) keyIterator.next(); // CAST here
+            sumCount += curValue;
+            // TDQ-4164 ~
             if (sumCount >= kthValue) {
                 // compute median
                 if (totalCount % qQuantile != 0) { // odd number of value, take the middle
@@ -94,8 +98,7 @@ public final class AlgoUtils {
                 break; // we got it.
             }
             // else loop
-            searchedKey = (Number) keyIterator.next(); // CAST here
-            sumCount += curValue;
+
         }
         return localMedian;
     }
