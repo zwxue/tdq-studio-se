@@ -14,12 +14,9 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,10 +25,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -41,21 +40,13 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.helpers.IndicatorHelper;
-import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
-import org.talend.utils.files.FileUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -64,13 +55,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
-    private static final String FILE_NAME_FLAG = "_0.1."; //$NON-NLS-1$
-
     private static Logger log = Logger.getLogger(UpdateAfterMergeTosApiTask.class);
-
-    private List<File> newFileList;
-
-    private Map<String, String> replaceMap;
 
     /*
      * (non-Jsdoc)
@@ -98,24 +83,16 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
     @Override
     protected boolean doExecute() throws Exception {
 
-        newFileList = new ArrayList<File>();
-
-        replaceMap = new HashMap<String, String>();
-
         ArrayList<File> fileList = getNeedUpdateFiles();
 
         for (File file : fileList) {
-            // if (file.getName().equals("ztK1xEFuYQ==20111110014111_0.1.ana")) {
-            // System.out.println("");
-            // }
+
             createNewItemFile(file);
 
             deleteOldItemFile(file);
         }
 
         updateConnectionFile();
-
-        updateFile();
 
         return true;
     }
@@ -156,54 +133,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             }
         }
 
-        newFileList.addAll(fileList);
-    }
-
-    /**
-     * DOC bZhou Comment method "updateFile".
-     */
-    private void updateFile() throws Exception {
-        for (File file : newFileList) {
-            // if (file.getName().equals("我的Ana_0.1.ana")) {
-            // System.out.println("");
-            // }
-            updateFileByNewFileName(file);
-
-            updateIndicatorItem(file);
-
-            try {
-                reloadFile(file);
-            } catch (Exception e) {
-                log.warn(e, e);
-                // continue if any exception.
-            }
-        }
-
-        ResourceService.refreshStructure();
-    }
-
-    /**
-     * DOC bZhou Comment method "reloadFile".
-     * 
-     * @param file
-     */
-    private void reloadFile(File file) {
-        IFile ifile = WorkspaceUtils.fileToIFile(file);
-        URI uri = URI.createPlatformResourceURI(ifile.getFullPath().toString(), false);
-        EMFSharedResources.getInstance().reloadResource(uri);
-    }
-
-    /**
-     * DOC bZhou Comment method "updateFileByNewFileName".
-     * 
-     * @param file
-     * @throws IOException
-     * @throws URISyntaxException
-     */
-    private void updateFileByNewFileName(File file) throws IOException, URISyntaxException {
-        for (String fragment : replaceMap.keySet()) {
-            FileUtils.replaceInFile(file.getAbsolutePath(), fragment, replaceMap.get(fragment));
-        }
     }
 
     /**
@@ -218,40 +147,6 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
         ArrayList<File> fileList = findRawFiles(dapRawFile);
         fileList.addAll(findRawFiles(libRawFile));
         return fileList;
-    }
-
-    /**
-     * DOC bZhou Comment method "updateIndicatorItem".
-     * 
-     * @param file
-     * @throws URISyntaxException
-     * @throws IOException
-     */
-    private void updateIndicatorItem(File file) throws IOException, URISyntaxException {
-        if (file.getName().endsWith(FactoriesUtil.ANA)) {
-            Analysis analysis = (Analysis) getModelElement(file);
-            // log.info("file===============>" + file.toString());
-            // log.info("analysis===============>" + analysis.toString());
-            Collection<Indicator> indicators = IndicatorHelper.getIndicators(analysis.getResults());
-            for (Indicator indicator : indicators) {
-                String fragment = null;
-                IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-                if (indicatorDefinition != null) {
-                    if (indicatorDefinition.eIsProxy()) {
-                        URI uri = ((InternalEObject) indicatorDefinition).eProxyURI();
-                        fragment = uri.lastSegment();
-                    } else {
-                        fragment = indicatorDefinition.eResource().getURI().lastSegment();
-                    }
-
-                    // Omit the .Talend.definiton as it has not version contorl.
-                    if (fragment != null && !fragment.contains(FILE_NAME_FLAG) && !DefinitionHandler.FILENAME.equals(fragment)) {
-                        String replace = fragment.replace(" ", "_").replace(".", FILE_NAME_FLAG); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                        FileUtils.replaceInFile(file.getAbsolutePath(), fragment, replace);
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -270,25 +165,46 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
                 IFile iFile = WorkspaceUtils.fileToIFile(file);
                 IFolder parentFolder = (IFolder) iFile.getParent();
 
+                Resource oldRes = modelElement.eResource();
+
+                List<Resource> needSaves = getReferenceResources(oldRes);
+
                 AElementPersistance writer = ElementWriterFactory.getInstance().create(modelElement);
                 writer.create(modelElement, parentFolder, true);
-            }
 
-            URI uri = EObjectHelper.getURI(modelElement);
-            if (uri != null) {
-                replaceMap.put(file.getName(), uri.lastSegment());
+                EMFUtil.changeUri(oldRes, EObjectHelper.getURI(modelElement));
 
-                // log.info("modelElement======>" + modelElement);
-                // log.info("replaceMap======>(key:" + file.getName() + ",value:" + uri.lastSegment() + ")");
-                if (needUpdateFlag && uri.isPlatform()) {
-                    IPath filePath = new Path(uri.toPlatformString(false));
-                    IFile needUpdateFile = ResourceManager.getRoot().getFile(filePath);
-                    newFileList.add(needUpdateFile.getLocation().toFile());
+                for (Resource toSave : needSaves) {
+                    EMFSharedResources.getInstance().saveResource(toSave);
                 }
             }
-
         }
 
+    }
+
+    /**
+     * DOC bZhou Comment method "getReferenceResources".
+     * 
+     * @param res
+     * @return
+     */
+    public List<Resource> getReferenceResources(Resource res) {
+        EcoreUtil.resolveAll(res);
+
+        Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(res);
+        List<Resource> needSaves = new ArrayList<Resource>();
+        for (EObject object : find.keySet()) {
+            Resource resource = object.eResource();
+            if (resource == null) {
+                continue;
+            }
+            EcoreUtil.resolveAll(resource);
+            needSaves.add(resource);
+        }
+
+        needSaves.add(res);
+
+        return needSaves;
     }
 
     /**
