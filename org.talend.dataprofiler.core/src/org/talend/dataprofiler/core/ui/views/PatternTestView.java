@@ -369,10 +369,12 @@ public class PatternTestView extends ViewPart {
 
             public void widgetSelected(SelectionEvent e) {
                 testRegularText();
-                expandImageComposite(true);
             }
 
         });
+        // MOD gdbu TDQ-4153 2011-12-19 Initialize the position error of composite.
+        expandImageComposite();
+        // ~TDQ-4153
         data = new GridData(GridData.FILL_HORIZONTAL);
         buttonsCom.setLayoutData(data);
         scrolledComposite.setMinSize(mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
@@ -389,13 +391,9 @@ public class PatternTestView extends ViewPart {
      * 
      * @param expand
      */
-    protected void expandImageComposite(boolean expand) {
+    protected void expandImageComposite() {
         GridData formData = new GridData(GridData.FILL_HORIZONTAL);
-        if (expand) {
-            formData.heightHint = 30;
-        } else {
-            formData.heightHint = 0;
-        }
+        formData.heightHint = 30;
         formData.horizontalAlignment = GridData.BEGINNING;
         imgCom.setLayoutData(formData);
         imgCom.getParent().layout();
