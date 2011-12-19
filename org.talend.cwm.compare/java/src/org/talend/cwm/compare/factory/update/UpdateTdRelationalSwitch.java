@@ -34,6 +34,14 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
         this.updateRelationalSwitch.setRightElement(rightElement);
     }
 
+    /**
+     * DOC xqliu Comment method "setLeftElement".
+     */
+    public void setLeftElement(EObject rightElement) {
+        this.updateRelationalSwitch.setLeftElement(rightElement);
+
+    }
+    
     @Override
     public Boolean caseDataType(DataType object) {
         // TODO Auto-generated method stub
