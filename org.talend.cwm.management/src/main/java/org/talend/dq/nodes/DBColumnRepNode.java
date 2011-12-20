@@ -19,6 +19,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -33,6 +34,7 @@ public class DBColumnRepNode extends DQRepositoryNode {
 
     /**
      * DOC klliu DBColumnRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
@@ -50,6 +52,10 @@ public class DBColumnRepNode extends DQRepositoryNode {
     }
 
     public TdColumn getTdColumn() {
+        // MOD qiongli 20111-12-19 TDQ-4206 resolve the TdColumn if it is proxy.avoid NPE of uuid.
+        if (tdColumn != null && tdColumn.eIsProxy()) {
+            tdColumn = (TdColumn) EObjectHelper.resolveObject(tdColumn);
+        }
         return this.tdColumn;
     }
 
