@@ -63,6 +63,7 @@ import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
@@ -103,7 +104,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getComposite(),
                     ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
             needDispostWidgets.add(exComp);
-            //MOD klliu add more information about the column belongs to which table/view.
+            // MOD klliu add more information about the column belongs to which table/view.
             IRepositoryNode modelElementRepositoryNode = modelElementIndicator.getModelElementRepositoryNode();
             IRepositoryNode parentNodeForColumnNode = RepositoryNodeHelper.getParentNodeForColumnNode(modelElementRepositoryNode);
             String label = parentNodeForColumnNode.getObject().getLabel();
@@ -112,9 +113,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             } else {
                 label = modelElementIndicator.getElementName();
             }
-            //~
-            exComp.setText(DefaultMessagesImpl.getString(
-                    "ColumnAnalysisResultPage.Column", label)); //$NON-NLS-1$
+            // ~
+            exComp.setText(DefaultMessagesImpl.getString("ColumnAnalysisResultPage.Column", label)); //$NON-NLS-1$
             exComp.setLayout(new GridLayout());
             exComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -267,6 +267,11 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                         final Indicator currentIndicator = currentDataEntity.getIndicator();
                         int createPatternFlag = 0;
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, currentDataEntity);
+                        // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
+                        if (currentIndicator instanceof DatePatternFreqIndicator
+                                && null == analysis.getResults().getIndicToRowMap().get(currentIndicator).getFrequencyData()) {
+                            return;
+                        }
                         for (final MenuItemEntity itemEntity : itemEntities) {
                             MenuItem item = new MenuItem(menu, SWT.PUSH);
                             item.setText(itemEntity.getLabel());
@@ -281,20 +286,20 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                                             DrillDownEditorInput input = new DrillDownEditorInput(analysis, currentDataEntity,
                                                     itemEntity);
 
-                                            if(input.computeColumnValueLength(input.filterAdaptDataList())){
-                                                 CorePlugin
-                                                    .getDefault()
-                                                    .getWorkbench()
-                                                    .getActiveWorkbenchWindow()
-                                                    .getActivePage()
-                                                    .openEditor(input,
-                                                            "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
-                                            }else{
+                                            if (input.computeColumnValueLength(input.filterAdaptDataList())) {
+                                                CorePlugin
+                                                        .getDefault()
+                                                        .getWorkbench()
+                                                        .getActiveWorkbenchWindow()
+                                                        .getActivePage()
+                                                        .openEditor(input,
+                                                                "org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor");//$NON-NLS-1$
+                                            } else {
                                                 MessageDialog.openWarning(null,
                                                         Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Title"),//$NON-NLS-1$
                                                         Messages.getString("DelimitedFileIndicatorEvaluator.badlyForm.Message"));//$NON-NLS-1$
                                             }
-                                           
+
                                         } catch (PartInitException e1) {
                                             e1.printStackTrace();
                                         }
