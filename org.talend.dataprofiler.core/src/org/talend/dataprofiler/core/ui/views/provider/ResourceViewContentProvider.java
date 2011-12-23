@@ -286,7 +286,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
             } else if (viewObject instanceof IMetadataXmlElementType) {
                 MetadataXmlElementTypeRepositoryObject metadataXmlElementType = (MetadataXmlElementTypeRepositoryObject) viewObject;
                 List<TdXmlElementType> xmlElements = org.talend.cwm.db.connection.ConnectionUtils
-                        .getXMLElements(metadataXmlElementType.getTdXmlElementType());
+                        .getXMLElementsWithOutSave(metadataXmlElementType.getTdXmlElementType());
                 return xmlElements.size() > 0;
             } else if (node instanceof ExchangeFolderRepNode) {
                 // ExchangeFolderRepNode always have children

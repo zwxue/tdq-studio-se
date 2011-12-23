@@ -90,7 +90,12 @@ public class MDMXmlElementRepNode extends DQRepositoryNode {
 
     @Override
     public boolean hasChildren() {
-        return getChildren().size() > 0;
+        IRepositoryViewObject object = this.getObject();
+        TdXmlElementType xmlElementType = ((MetadataXmlElementTypeRepositoryObject) object).getTdXmlElementType();
+        if (xmlElementType != null) {
+            return ConnectionUtils.getXMLElementsWithOutSave(xmlElementType).size() > 0;
+        }
+        return false;
     }
 
     @Override

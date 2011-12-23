@@ -84,6 +84,7 @@ import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ui.utils.ConnectionContextHelper;
 import org.talend.repository.ui.utils.DBConnectionContextUtils;
@@ -110,7 +111,7 @@ public final class ConnectionUtils {
     public static final int LOGIN_TEMEOUT_MILLISECOND = 20000;
 
     public static final int LOGIN_TIMEOUT_SECOND = 20;
-    
+
     private static boolean timeout = Platform.getPreferencesService().getBoolean(
             CWMPlugin.getDefault().getBundle().getSymbolicName(), PluginConstant.CONNECTION_TIMEOUT, false, null);
 
@@ -1333,27 +1334,67 @@ public final class ConnectionUtils {
         List<ModelElement> elements = document.getOwnedElement();
         // Load from dababase
         if (elements == null || elements.size() == 0) {
-            XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(document);
-            elements = xmlScheBuilder.getRootElements(document);
-            document.getOwnedElement().addAll(elements);
-            Connection conn = (Connection) document.getDataManager().get(0);
-            ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
+            if (!DQRepositoryNode.isOnFilterring()) {
+                XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(document);
+                elements = xmlScheBuilder.getRootElements(document);
+                document.getOwnedElement().addAll(elements);
+                Connection conn = (Connection) document.getDataManager().get(0);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
+            } else {
+                elements = elements == null ? new ArrayList<ModelElement>() : elements;
+            }
+        }
+        return elements;
+    }
+
+    /**
+     * 
+     * DOC gdbu Comment method "getXMLElementsWithOutSave".
+     * 
+     * @param document
+     * @return
+     */
+    public static List<ModelElement> getXMLElementsWithOutSave(TdXmlSchema document) {
+        List<ModelElement> elements = document.getOwnedElement();
+        // Load from dababase
+        if (elements == null || elements.size() == 0) {
+            if (!DQRepositoryNode.isOnFilterring()) {
+                XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(document);
+                elements = xmlScheBuilder.getRootElements(document);
+            } else {
+                elements = elements == null ? new ArrayList<ModelElement>() : elements;
+            }
+        }
+        return elements;
+    }
+
+    /**
+     * 
+     * DOC gdbu Comment method "getXMLElementsWithOutSave".
+     * 
+     * @param element
+     * @return
+     */
+    public static List<TdXmlElementType> getXMLElementsWithOutSave(TdXmlElementType element) {
+        TdXmlContent xmlContent = element.getXmlContent();
+        List<TdXmlElementType> elements = xmlContent == null ? new ArrayList<TdXmlElementType>() : xmlContent.getXmlElements();
+        // Load from dababase
+        if ((xmlContent == null || elements == null || elements.size() == 0) && !DQRepositoryNode.isOnFilterring()) {
+            XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
+            elements = xmlScheBuilder.getChildren(element);
         }
         return elements;
     }
 
     public static List<TdXmlElementType> getXMLElements(TdXmlElementType element) {
         TdXmlContent xmlContent = element.getXmlContent();
-        List<TdXmlElementType> elements = null;
+        List<TdXmlElementType> elements = xmlContent == null ? new ArrayList<TdXmlElementType>() : xmlContent.getXmlElements();
         // Load from dababase
-        if (xmlContent == null) {
+        if ((xmlContent == null || elements == null || elements.size() == 0) && !DQRepositoryNode.isOnFilterring()) {
             XMLSchemaBuilder xmlScheBuilder = XMLSchemaBuilder.getSchemaBuilder(element.getOwnedDocument());
             elements = xmlScheBuilder.getChildren(element);
             Connection conn = (Connection) element.getOwnedDocument().getDataManager().get(0);
             ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
-
-        } else {
-            elements = xmlContent.getXmlElements();
         }
         return elements;
     }
@@ -1501,13 +1542,11 @@ public final class ConnectionUtils {
             if (contextName == null) {
                 return DBConnectionContextUtils.cloneOriginalValueConnection(connection, true, null);
             }
-            return DBConnectionContextUtils
-                    .cloneOriginalValueConnection((DatabaseConnection) connection, false,
-                    contextName);
+            return DBConnectionContextUtils.cloneOriginalValueConnection((DatabaseConnection) connection, false, contextName);
         }
         return connection;
     }
-    
+
     /**
      * 
      * Get the original FileConnection for context mode.
@@ -1524,8 +1563,8 @@ public final class ConnectionUtils {
             if (contextName == null) {
                 return FileConnectionContextUtils.cloneOriginalValueConnection(null, fileConn, true);
             } else {
-                ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(null, fileConn, contextName,
-                        false);
+                ContextType contextType = ConnectionContextHelper
+                        .getContextTypeForContextMode(null, fileConn, contextName, false);
                 return FileConnectionContextUtils.cloneOriginalValueConnection(fileConn, contextType);
             }
 

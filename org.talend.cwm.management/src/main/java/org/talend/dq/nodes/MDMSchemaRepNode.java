@@ -87,7 +87,9 @@ public class MDMSchemaRepNode extends DQRepositoryNode {
 
     @Override
     public boolean hasChildren() {
-        return getChildren().size() > 0;
+        MetadataXmlSchemaRepositoryObject metadataXmlSchema = (MetadataXmlSchemaRepositoryObject) this.getObject();
+        TdXmlSchema xmlSchema = metadataXmlSchema.getTdXmlSchema();
+        return ConnectionUtils.getXMLElementsWithOutSave(xmlSchema).size() > 0;
     }
 
     @Override
