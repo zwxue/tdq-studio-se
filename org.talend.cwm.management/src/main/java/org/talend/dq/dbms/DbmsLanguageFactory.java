@@ -259,6 +259,17 @@ public final class DbmsLanguageFactory {
         if (lang1 == null || lang2 == null) {
             return false;
         }
+        // MOD xqliu 2011-12-20 TDQ-4232, FOR AS400
+        if (StringUtils.contains(lang1, DbmsLanguage.AS400) && StringUtils.contains(lang2, DbmsLanguage.AS400)) {
+            return true;
+        }
+        if (StringUtils.contains(lang1, DbmsLanguage.AS400) && !StringUtils.contains(lang2, DbmsLanguage.AS400)) {
+            return false;
+        }
+        if (!StringUtils.contains(lang1, DbmsLanguage.AS400) && StringUtils.contains(lang2, DbmsLanguage.AS400)) {
+            return false;
+        }
+        // ~ TDQ-4232
         // MOD mzhao 2010-08-02 bug 14464, for AS400
         if (StringUtils.contains(lang1, DbmsLanguage.AS400) && StringUtils.contains(StringUtils.upperCase(lang2), lang1)) {
             return true;
