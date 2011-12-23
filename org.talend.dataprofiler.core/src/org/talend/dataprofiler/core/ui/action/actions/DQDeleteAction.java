@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -126,6 +127,16 @@ public class DQDeleteAction extends DeleteAction {
         }
         // ~TDQ-4090
 
+        // MOD gdbu 2011-12-12 TDQ-4213 This is the legacy problem when refactoring the logic of deleted.
+        HashSet<RepositoryNode> deleteElementsParents = new HashSet<RepositoryNode>();
+        for (Object obj : deleteElements) {
+            if (obj instanceof RepositoryNode) {
+                RepositoryNode parent = ((RepositoryNode) obj).getParent();
+                deleteElementsParents.add(parent);
+            }
+        }
+        // ~TDQ-4213
+
         for (Object obj : deleteElements) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
@@ -186,6 +197,10 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
 
+        for (RepositoryNode repositoryNode : deleteElementsParents) {
+            CorePlugin.getDefault().refreshDQView(repositoryNode);
+        }
+
         if (DQRepositoryNode.isOnFilterring() && 0 != deleteElements.length) {
             RepositoryNodeHelper.regainRecycleBinFilteredNode();
         }
@@ -217,7 +232,6 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
     }
-    
 
     private boolean handleDependencies(IRepositoryNode node) {
         boolean flag = false;
@@ -333,9 +347,6 @@ public class DQDeleteAction extends DeleteAction {
                 parent.getChildren(true).remove(currentNode);
             }
         }
-        if (null != node) {
-            CorePlugin.getDefault().refreshDQView(node.getParent());
-        }
     }
 
     private void deleteConnectionForSQL(IRepositoryNode node) {
@@ -365,7 +376,7 @@ public class DQDeleteAction extends DeleteAction {
                 latestRepIFile.delete(true, null);
 
                 // refresh the wrokspace and dqview (Reports node and RecycleBin node)
-//                CorePlugin.getDefault().refreshWorkSpace();
+                // CorePlugin.getDefault().refreshWorkSpace();
                 IRepositoryNode reportsNode = RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS);
                 if (reportsNode != null) {
                     CorePlugin.getDefault().refreshDQView(repFileNode.getParent());
