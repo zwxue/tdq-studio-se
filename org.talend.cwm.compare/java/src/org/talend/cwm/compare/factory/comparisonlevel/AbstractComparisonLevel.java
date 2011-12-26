@@ -393,6 +393,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     protected void handleUpdateElement(UpdateAttribute updateAttribute) {
         EObject leftElement = updateAttribute.getLeftElement();
         EObject rightElement = updateAttribute.getRightElement();
+        this.updateRelationalStructSwitch.setLeftElement(leftElement);
         this.updateRelationalStructSwitch.setRightElement(rightElement);
         final Boolean updated = updateRelationalStructSwitch.doSwitch(leftElement);
         if (!Boolean.TRUE.equals(updated)) {

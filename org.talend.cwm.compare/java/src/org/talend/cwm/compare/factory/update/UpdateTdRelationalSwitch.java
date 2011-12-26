@@ -95,4 +95,11 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
         return false;
     }
 
+    /**
+     * DOC xqliu Comment method "setLeftElement".
+     */
+    public void setLeftElement(EObject rightElement) {
+        this.updateRelationalSwitch.setLeftElement(rightElement);
+
+    }
 }
