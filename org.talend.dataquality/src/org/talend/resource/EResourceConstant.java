@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
@@ -26,6 +27,7 @@ import org.talend.core.model.properties.DelimitedFileConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -315,6 +317,30 @@ public enum EResourceConstant {
             }.doSwitch(item);
         }
 
+        if (object == null && item instanceof TDQItem) {
+            final String filename = ((TDQItem) item).getFilename();
+
+            EResourceConstant constatnt = null;
+            if (filename != null) {
+                if (filename.endsWith(FactoriesUtil.ANA)) {
+                    constatnt = ANALYSIS;
+                } else if (filename.endsWith(FactoriesUtil.REP)) {
+                    constatnt = REPORTS;
+                } else if (filename.endsWith(FactoriesUtil.DQRULE)) {
+                    constatnt = RULES_SQL;
+                } else if (filename.endsWith(FactoriesUtil.DEFINITION)) {
+                    constatnt = INDICATORS;
+                } else if (filename.endsWith(FactoriesUtil.JRXML)) {
+                    constatnt = JRXML_TEMPLATE;
+                } else if (filename.endsWith(FactoriesUtil.PATTERN)) {
+                    constatnt = PATTERNS;
+                } else if (filename.endsWith(FactoriesUtil.SQL)) {
+                    constatnt = SOURCE_FILES;
+                }
+            }
+
+            object = constatnt;
+        }
         return object != null ? (EResourceConstant) object : null;
     }
 
