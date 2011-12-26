@@ -255,8 +255,9 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
             private void incrementCounts(final ConnectionIndicator connIndicator, SchemaIndicator childIndicator) {
                 connIndicator.setTableCount(connIndicator.getTableCount() + childIndicator.getTableCount());
                 connIndicator.setTableRowCount(connIndicator.getTableRowCount() + childIndicator.getTableRowCount());
+                // MOD klliu 2011-12-26 bug TDQ-4235
+                connIndicator.setViewCount(connIndicator.getViewCount() + childIndicator.getViewCount());
                 connIndicator.setViewRowCount(connIndicator.getViewRowCount() + childIndicator.getViewRowCount());
-                connIndicator.setTableRowCount(connIndicator.getTableRowCount() + childIndicator.getTableRowCount());
                 connIndicator.setKeyCount(connIndicator.getKeyCount() + childIndicator.getKeyCount());
                 connIndicator.setIndexCount(connIndicator.getIndexCount() + childIndicator.getIndexCount());
             }
