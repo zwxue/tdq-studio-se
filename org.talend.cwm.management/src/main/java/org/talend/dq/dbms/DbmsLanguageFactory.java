@@ -153,7 +153,7 @@ public final class DbmsLanguageFactory {
      * @param dbType
      * @return
      */
-    private static DbmsLanguage createDbmsLanguage(SupportDBUrlType dbType) {
+    public static DbmsLanguage createDbmsLanguage(SupportDBUrlType dbType) {
 
         DbmsLanguage result = null;
 

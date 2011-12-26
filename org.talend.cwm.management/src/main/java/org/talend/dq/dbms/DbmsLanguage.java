@@ -1262,7 +1262,7 @@ public class DbmsLanguage {
                 hasTableAliasB, this.equal());
     }
 
-    private String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
+    public String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
             String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
 
         builder.append(join());
@@ -1325,17 +1325,17 @@ public class DbmsLanguage {
         builder.append(')');
     }
 
-    private String getColumnName(ModelElement col) {
+    public String getColumnName(ModelElement col) {
         TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
         return column != null ? column.getName() : null;
     }
 
-    private String getTableName(ModelElement col) {
+    public String getTableName(ModelElement col) {
         TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
         return (column != null) ? ColumnHelper.getTableFullName(column) : null;
     }
 
-    private ModelElement getTable(ModelElement col) {
+    public ModelElement getTable(ModelElement col) {
         TdColumn column = col != null ? SwitchHelpers.COLUMN_SWITCH.doSwitch(col) : null;
         return (column != null) ? ColumnHelper.getColumnOwnerAsColumnSet(column) : null;
     }
