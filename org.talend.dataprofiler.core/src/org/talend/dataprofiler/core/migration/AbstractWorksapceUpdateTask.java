@@ -20,8 +20,15 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.migration.AWorkspaceTask;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
@@ -37,6 +44,8 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
     public static final String OLD_LIBRARIES_FOLDER_NAME = "TDQ_Libraries"; //$NON-NLS-1$
 
     public static final String OLD_PROFILING_FOLDER_NAME = "TDQ_Data Profiling"; //$NON-NLS-1$
+
+    private ResourceSet tempResourceSet = new ResourceSetImpl();
 
     private IPath workspacePath = ResourceManager.getRootProject().getLocation();
 
@@ -135,4 +144,32 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
         }
     }
 
+    /**
+     * DOC bZhou Comment method "getResourceSet".
+     * 
+     * If the target resource is in the current workspace, it will return the shared resource set, otherwise, it will
+     * return a new one.
+     * 
+     * @return
+     */
+    protected ResourceSet getResourceSet() {
+        return isWorksapcePath() ? EMFSharedResources.getInstance().getResourceSet() : tempResourceSet;
+    }
+
+    protected Resource getResource(File file) {
+        URI uri = createURI(file);
+
+        Resource resource = getResourceSet().getResource(uri, true);
+
+        return resource;
+    }
+
+    protected URI createURI(File file) {
+        IFile ifile = WorkspaceUtils.fileToIFile(file);
+        if (ifile != null && ifile.exists()) {
+            return URI.createPlatformResourceURI(ifile.getFullPath().toString(), false);
+        } else {
+            return URI.createFileURI(file.getAbsolutePath());
+        }
+    }
 }

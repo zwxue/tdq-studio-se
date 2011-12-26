@@ -1388,6 +1388,12 @@
            name="update Bin frequence uuid between duplicates"
            version="4.2.4">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateModeIndicatorDefinitionForAS400Task"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateModeIndicatorDefinitionForAS400Task"
+           name="Update Mode Indicator Definition For AS400 Task"
+           version="5.0.2">
+     </workspacetask>
      
 
   </extension>
