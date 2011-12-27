@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
@@ -70,6 +71,12 @@ public class ImportWizard extends Wizard {
      */
     @Override
     public boolean performFinish() {
+
+        // ADD xqliu TDQ-4284 2011-12-26
+        if (ProxyRepositoryFactory.getInstance().isUserReadOnlyOnCurrentProject()) {
+            return true;
+        }
+        // ~ TDQ-4284
 
         final ItemRecord[] records = importPage.getElements();
 
