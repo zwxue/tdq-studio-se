@@ -119,7 +119,7 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
                         connection = item.getConnection();
                         views = DqRepositoryViewService.getViews(connection, catalog, null, true);
                         if (views.size() > 0) {
-                            ProxyRepositoryFactory.getInstance().save(item);
+                            ProxyRepositoryFactory.getInstance().save(item, false);
                         }
                         // ~23220
                     }

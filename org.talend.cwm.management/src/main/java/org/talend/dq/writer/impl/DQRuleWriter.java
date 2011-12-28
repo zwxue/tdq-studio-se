@@ -70,7 +70,7 @@ public class DQRuleWriter extends AElementPersistance {
         return FactoriesUtil.DQRULE;
     }
 
-    public ReturnCode save(Item item) {
+    public ReturnCode save(Item item, boolean... careDependency) {
         ReturnCode rc = new ReturnCode();
         try {
             TDQBusinessRuleItem ruleItem = (TDQBusinessRuleItem) item;

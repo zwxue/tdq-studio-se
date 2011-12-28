@@ -25,6 +25,8 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -268,8 +270,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(supportTypes));
         // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
-        systemIndicator = definition != null && definition.eResource() != null
-                && definition.eResource().getURI().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
+        URI uri = null;
+        if (definition.eIsProxy()) {
+            uri = ((InternalEObject) definition).eProxyURI();
+
+        } else {
+            uri = definition.eResource().getURI();
+        }
+        systemIndicator = definition != null && uri.toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
         if (systemIndicator) {
             allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
 

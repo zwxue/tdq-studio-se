@@ -71,6 +71,7 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -401,7 +402,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD msjian 2011-6-14 21809 fixed: the sql of user defined indicator contains "<%=__GROUP_BY_ALIAS__%>"
             // should be considered
             String sqlBody = sqlGenericExpression.getBody();
-            if (sqlBody.indexOf("<%=__GROUP_BY_ALIAS__%>") != -1) {//$NON-NLS-1$
+            if (sqlBody.indexOf(GenericSQLHandler.GROUP_BY_ALIAS) != -1) {
                 completedSqlString = dbms().fillGenericQueryWithColumnTableAndAlias(sqlBody, colName, table, colName);
             } else {
                 completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(sqlBody, colName, table);

@@ -539,5 +539,5 @@ public abstract class AElementPersistance {
      */
     protected abstract String getFileExtension();
 
-    public abstract ReturnCode save(Item item);
+    public abstract ReturnCode save(Item item, boolean... careDependency);
 }

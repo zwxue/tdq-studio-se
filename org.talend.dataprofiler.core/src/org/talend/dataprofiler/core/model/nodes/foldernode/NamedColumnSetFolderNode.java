@@ -99,7 +99,7 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
         pack.getOwnedElement().addAll(columnSets);
         this.setChildren(columnSets.toArray());
         IRepositoryViewObject repositoryViewObject = RepositoryNodeHelper.recursiveFind(conn).getObject();
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(repositoryViewObject.getProperty().getItem());
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(repositoryViewObject.getProperty().getItem(), false);
     }
 
     /**

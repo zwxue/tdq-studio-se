@@ -134,7 +134,7 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
                     tdcolumns = DqRepositoryViewService.getColumns(connection, tdView, null, true);
                 }
                 if (tdcolumns.size() > 0) {
-                    ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                    ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
                 }
             } catch (Exception e) {
                 log.error(e, e);

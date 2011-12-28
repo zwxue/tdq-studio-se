@@ -99,7 +99,7 @@ public class ReportWriter extends AElementPersistance {
         return FactoriesUtil.REP;
     }
 
-    public ReturnCode save(Item item) {
+    public ReturnCode save(Item item, boolean... careDependency) {
         ReturnCode rc = new ReturnCode();
         try {
             TDQReportItem repItem = (TDQReportItem) item;

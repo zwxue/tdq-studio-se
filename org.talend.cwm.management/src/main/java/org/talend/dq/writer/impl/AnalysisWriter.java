@@ -186,7 +186,7 @@ public class AnalysisWriter extends AElementPersistance {
         return FactoriesUtil.ANA;
     }
 
-    public ReturnCode save(Item item) {
+    public ReturnCode save(Item item, boolean... careDependency) {
         ReturnCode rc = new ReturnCode();
         try {
             TDQAnalysisItem anaItem = (TDQAnalysisItem) item;

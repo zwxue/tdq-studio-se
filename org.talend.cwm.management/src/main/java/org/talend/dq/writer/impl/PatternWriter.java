@@ -109,7 +109,7 @@ public class PatternWriter extends AElementPersistance {
         return FactoriesUtil.PATTERN;
     }
 
-    public ReturnCode save(Item item) {
+    public ReturnCode save(Item item, boolean... careDependency) {
         ReturnCode rc = new ReturnCode();
         try {
             TDQPatternItem patternItem = (TDQPatternItem) item;

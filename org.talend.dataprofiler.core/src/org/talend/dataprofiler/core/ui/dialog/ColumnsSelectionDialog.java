@@ -32,7 +32,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
@@ -50,7 +49,6 @@ import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -368,8 +366,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + AnalysisTuningPreferencePage.getCheckedElementsLength());//$NON-NLS-1$
         } else {
             super.okPressed();
-            ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
-            ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
+            // ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
+            // ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
             this.modelElementCheckedMap = null;
         }
     }
