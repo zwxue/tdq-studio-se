@@ -76,10 +76,14 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
 
     @Override
     public Long getCount(Object dataValue) {
-        if (isJavaEngine()) {
-            return javaUDI.getCount(dataValue);
+    	if (isJavaEngine()) {
+            if (javaUDI != null) {
+            return javaUDI.getCount();
+            } else {
+                return 0l;
+            }
         }
-        return super.getCount(dataValue);
+        return super.getCount();
     }
 
     @Override
