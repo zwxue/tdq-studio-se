@@ -23,6 +23,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
@@ -68,6 +69,12 @@ public class CreateUDIAction extends Action implements ICheatSheetAction {
     }
 
     public void run(String[] params, ICheatSheetManager manager) {
+        // ADD xqliu TDQ-4285 2011-12-27
+        if (!CheatSheetActionHelper.canRun()) {
+            return;
+        }
+        // ~ TDQ-4285
+
         run();
     }
 }

@@ -17,6 +17,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
@@ -64,7 +65,11 @@ public class OpenIndicatorSelectorAction extends Action implements ICheatSheetAc
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
-        // TODO Auto-generated method stub
+        // ADD xqliu TDQ-4285 2011-12-27
+        if (!CheatSheetActionHelper.canRun()) {
+            return;
+        }
+        // ~ TDQ-4285
 
         run();
     }

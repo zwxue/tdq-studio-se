@@ -27,6 +27,7 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
@@ -110,6 +111,12 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
+        // ADD xqliu TDQ-4285 2011-12-27
+        if (!CheatSheetActionHelper.canRun()) {
+            return;
+        }
+        // ~ TDQ-4285
+
         // MOD mzhao 2009-02-03 open analysis creation wizard according to
         // passed parameter.
         if (params == null || params.length == 0) {

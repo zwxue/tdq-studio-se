@@ -17,6 +17,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnDependencyMasterDetailsPage;
@@ -54,6 +55,12 @@ public class OpenColumnSelectorAction extends Action implements ICheatSheetActio
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
+        // ADD xqliu TDQ-4285 2011-12-27
+        if (!CheatSheetActionHelper.canRun()) {
+            return;
+        }
+        // ~ TDQ-4285
+
         if (params == null || params.length == 0) {
             return;
         }
