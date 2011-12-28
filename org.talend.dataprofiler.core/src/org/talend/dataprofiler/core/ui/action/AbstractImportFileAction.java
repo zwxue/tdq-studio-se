@@ -120,6 +120,12 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
+        // ADD xqliu TDQ-4285 2011-12-27
+        if (!CheatSheetActionHelper.canRun()) {
+            return;
+        }
+        // ~ TDQ-4285
+
         run();
     }
 

@@ -42,6 +42,7 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedColumnSetsSynDialog;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedColumnsSynDialog;
 import org.talend.dataprofiler.core.ui.dialog.AnalyzedElementSynDialog;
@@ -114,6 +115,12 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
     }
 
     public void run(String[] params, ICheatSheetManager manager) {
+        // ADD xqliu TDQ-4285 2011-12-27
+        if (!CheatSheetActionHelper.canRun()) {
+            return;
+        }
+        // ~ TDQ-4285
+
         run();
     }
 
