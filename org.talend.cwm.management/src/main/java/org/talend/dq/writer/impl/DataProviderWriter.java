@@ -159,44 +159,46 @@ public class DataProviderWriter extends AElementPersistance {
         return fileExtension.equals(getFileExtension()) || fileExtension.equals("comp"); //$NON-NLS-1$
     }
 
-    public ReturnCode save(Item item) {
+    public ReturnCode save(Item item, boolean... careDependency) {
         ReturnCode rc = new ReturnCode();
         try {
-
-            ConnectionItem connItem = (ConnectionItem) item;
+        	ConnectionItem connItem = (ConnectionItem) item;
             Connection conn = connItem.getConnection();
-            addDependencies(conn);
-            addResourceContent(conn);
-            connItem.setConnection(conn);
-
-            // MOD gdbu 2011-10-28 TDQ-3852 : The logic here similar with 'move folder' , didn't save the files
-            // associated with this connection.
-            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(conn.eResource());
-            // MOD gdbu 2011-12-23 TDQ-4289 Previous logic will cause too many duplicate content , and cause a long time
-            // to save.
-            Set<Resource> needSaves = new HashSet<Resource>();
-            for (EObject object : find.keySet()) {
-                Resource re = object.eResource();
-                if (re == null) {
-                    continue;
-                }
-                EcoreUtil.resolveAll(re);
-                needSaves.add(re);
+            if (careDependency.length == 0 || careDependency[0] == true) {
+            	addDependencies(conn);
+            	addResourceContent(conn);
+            	connItem.setConnection(conn);
+            	
+            	// MOD gdbu 2011-10-28 TDQ-3852 : The logic here similar with 'move folder' , didn't save the files
+            	// associated with this connection.
+            	Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(conn.eResource());
+            	// MOD gdbu 2011-12-23 TDQ-4289 Previous logic will cause too many duplicate content , and cause a long time
+            	// to save.
+            	Set<Resource> needSaves = new HashSet<Resource>();
+            	for (EObject object : find.keySet()) {
+            		Resource re = object.eResource();
+            		if (re == null) {
+            			continue;
+            		}
+            		EcoreUtil.resolveAll(re);
+            		needSaves.add(re);
+            	}
+            	
+            	
+            	
+            	AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
+            			AbstractResourceChangesService.class);
+            	if (resChangeService != null) {
+            		for (Resource toSave : needSaves) {
+            			resChangeService.saveResourceByEMFShared(toSave);
+            		}
+            	}
+            	// updateDependencies(conn);
+            	// ~TDQ-3852
             }
-
-            // MOD klliu 2011-02-15
+         // MOD klliu 2011-02-15
             Project currentProject = ProjectManager.getInstance().getCurrentProject();
             ProxyRepositoryFactory.getInstance().save(currentProject, connItem);
-
-            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
-                    AbstractResourceChangesService.class);
-            if (resChangeService != null) {
-                for (Resource toSave : needSaves) {
-                    resChangeService.saveResourceByEMFShared(toSave);
-                }
-            }
-            // updateDependencies(conn);
-            // ~TDQ-3852
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);

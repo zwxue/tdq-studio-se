@@ -62,7 +62,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
         return FactoriesUtil.DEFINITION;
     }
 
-    public ReturnCode save(Item item) {
+    public ReturnCode save(Item item, boolean... careDependency) {
         ReturnCode rc = new ReturnCode();
         try {
             TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;

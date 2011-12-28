@@ -368,8 +368,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + AnalysisTuningPreferencePage.getCheckedElementsLength());//$NON-NLS-1$
         } else {
             super.okPressed();
-            ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
-            ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
+//            ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
+//            ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
             this.modelElementCheckedMap = null;
         }
     }
