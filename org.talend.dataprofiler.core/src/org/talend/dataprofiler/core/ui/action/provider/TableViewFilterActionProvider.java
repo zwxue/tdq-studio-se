@@ -18,6 +18,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.dataprofiler.core.ui.action.actions.TableViewFilterAction;
+import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 
@@ -40,6 +41,11 @@ public class TableViewFilterActionProvider extends AbstractCommonActionProvider 
         if (obj instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;
             if (ENodeType.TDQ_REPOSITORY_ELEMENT.equals(node.getType())) {
+                // MOD gdbu 2011-12-29 TDQ-4283 Remove the "Table/View filter" menu under AnalysisSubFolderRepNode.
+                if (node.getParent() instanceof AnalysisSubFolderRepNode) {
+                    return;
+                }
+                // ~TDQ-4283
                 IRepositoryViewObject viewObject = node.getObject();
                 if (viewObject instanceof MetadataSchemaRepositoryObject) {
                     MetadataSchemaRepositoryObject schemaObject = (MetadataSchemaRepositoryObject) viewObject;
