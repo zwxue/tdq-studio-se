@@ -27,7 +27,7 @@ import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -65,8 +65,8 @@ public class RenameTdqFolderAction extends Action {
             String value2 = dialog.getValue();
             try {
                 // close opend editors
-                List<SourceFileRepNode> sourceFileRepNodes = RepositoryNodeHelper.getSourceFileRepNodes(node, true);
-                RepNodeUtils.closeModelElementEditor(sourceFileRepNodes, true);
+                List<IRepositoryNode> openRepNode = RepositoryNodeHelper.getOpenRepNodeForReName(node, true);
+                RepNodeUtils.closeModelElementEditor(openRepNode, true);
 
                 RepositoryNodeDorpAdapterAssistant dndAsistant = new RepositoryNodeDorpAdapterAssistant();
                 dndAsistant.renameFolderRepNode(node, value2);

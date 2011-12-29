@@ -2820,4 +2820,28 @@ public final class RepositoryNodeHelper {
         return allFilteredNodeList;
     }
 
+    /**
+     * 
+     * DOC klliu Comment method "getOpenRepNodeForReName".
+     * 
+     * @param node
+     * @param b
+     * @return
+     */
+    public static List<IRepositoryNode> getOpenRepNodeForReName(IRepositoryNode parentNode, boolean recursive) {
+        List<IRepositoryNode> result = new ArrayList<IRepositoryNode>();
+        List<IRepositoryNode> children = parentNode.getChildren();
+
+        for (IRepositoryNode node : children) {
+            ENodeType type = node.getType();
+            if (type.equals(ENodeType.SIMPLE_FOLDER)) {
+                if (recursive) {
+                    result.addAll(getOpenRepNodeForReName(node, recursive));
+                }
+            } else {
+                result.add(node);
+            }
+        }
+        return result;
+    }
 }
