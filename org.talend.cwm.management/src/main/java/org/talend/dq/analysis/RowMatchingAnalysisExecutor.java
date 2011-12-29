@@ -58,7 +58,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     private boolean reversion = false;
 
-    private HashMap<Indicator, Boolean> indiReversion;
+    private HashMap<Indicator, Boolean> indiReversionMap;
 
     private void reset() {
         catalogOrSchema = null;
@@ -76,15 +76,15 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         // MOD qiongli 2011-12-22 TDQ-4240.revers the data filter just for the 2th Indicator(from right to left side).
-        if (indiReversion == null) {
-            indiReversion = new HashMap<Indicator, Boolean>();
+        if (indiReversionMap == null) {
+            indiReversionMap = new HashMap<Indicator, Boolean>();
         }
         for (int i = 0; i < indicators.size(); i++) {
             Indicator indicator = indicators.get(i);
             if (i == 1) {
-                indiReversion.put(indicator, Boolean.TRUE);
+                indiReversionMap.put(indicator, Boolean.TRUE);
             } else {
-                indiReversion.put(indicator, Boolean.FALSE);
+                indiReversionMap.put(indicator, Boolean.FALSE);
             }
             instantiateQuery(indicator);
         }
@@ -143,7 +143,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String dataFilterA = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
         String dataFilterB = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
         // MOD qiongli 2011-12-28 TDQ-4240.get the reversion value from a Map before generating sqlExpression.
-        reversion = indiReversion.get(indicator) == null ? false : indiReversion.get(indicator).booleanValue();
+        reversion = indiReversionMap != null && indiReversionMap.get(indicator) != null ? indiReversionMap.get(indicator)
+                .booleanValue() : false;
         if (reversion) {
             dataFilterA = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
             dataFilterB = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
@@ -401,7 +402,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
             // MOD xqliu 2009-06-16 bug 7334
             // set data filter here
-            reversion = indiReversion.get(indicator) == null ? false : indiReversion.get(indicator).booleanValue();
+            reversion = indiReversionMap != null && indiReversionMap.get(indicator) != null ? indiReversionMap.get(indicator)
+                    .booleanValue() : false;
             final String stringDataFilter = reversion ? AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
                     AnalysisHelper.DATA_FILTER_B) : AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
                     AnalysisHelper.DATA_FILTER_A);
