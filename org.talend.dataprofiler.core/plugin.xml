@@ -1394,6 +1394,12 @@
            name="Update Mode Indicator Definition For AS400 Task"
            version="5.0.2">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDemoDqruleTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDemoDqruleTask"
+           name="Update Demo Dqrule Task"
+           version="5.0.2">
+     </workspacetask>
      
 
   </extension>
