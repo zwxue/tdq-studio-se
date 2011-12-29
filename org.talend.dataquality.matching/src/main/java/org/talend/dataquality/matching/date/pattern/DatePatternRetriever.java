@@ -52,11 +52,11 @@ public class DatePatternRetriever {
 
     // initialization method of modelMatchers
     public void initModel2Regex(File patternFile) {
+        BufferedReader br = null;
         try {
             FileReader fr = new FileReader(patternFile);
-            BufferedReader br = new BufferedReader(fr);
+            br = new BufferedReader(fr);
             String line;
-            try {
                 while ((line = br.readLine()) != null) {
                     StringTokenizer string = new StringTokenizer(line, "=\n");//$NON-NLS-1$
                     while (string.hasMoreTokens()) {
@@ -66,13 +66,17 @@ public class DatePatternRetriever {
                         modelMatchers.add(new ModelMatcher(key, val));
                     }
                 }
-            } finally {
-                br.close();
-            }
         } catch (FileNotFoundException e) {
             logger.warn(Messages.getString("DatePatternRetriever.warn1"));//$NON-NLS-1$
         } catch (IOException e) {
             logger.warn(Messages.getString("DatePatternRetriever.warn2"));//$NON-NLS-1$
+        }
+        if (br != null) {
+            try {
+                br.close();
+            } catch (IOException e) {
+                logger.warn("Error closing buffered reader of file " + patternFile);//$NON-NLS-1$
+            }
         }
     }
 
@@ -82,7 +86,7 @@ public class DatePatternRetriever {
     public void handle(String expression) {
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.matches(expression)) {
-                // patternMatcher.increment();
+                patternMatcher.increment();
             }
         }
     }
@@ -101,18 +105,16 @@ public class DatePatternRetriever {
         }
     }
 
-    // method witch sort ModelMatchers according their scores
     /**
-     * sort pattern according to theirs score.
+     * sort pattern (ModelMatchers) according to their score.
      */
-    @SuppressWarnings("unchecked")
     public void getOrderedModelMatchers() {
         Collections.sort(this.modelMatchers);
     }
 
     /**
      * 
-     * DOC zshen Comment method "getRegex".
+     * method "getRegex".
      * 
      * @param model the model of matcher.
      * @return if can find corresponding to matcher return it's the Regex of matcher else return null;

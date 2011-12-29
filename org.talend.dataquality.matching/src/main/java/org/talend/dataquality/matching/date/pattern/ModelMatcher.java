@@ -19,21 +19,23 @@ import java.util.regex.Pattern;
  * @author Hallam Mohamed Amine
  * @date 11/08/2009
  */
-
-@SuppressWarnings("unchecked")
-public class ModelMatcher implements java.lang.Comparable {
+public class ModelMatcher implements java.lang.Comparable<ModelMatcher> {
 
     // model is the pattern like "MM DD YY"
     private String model;
 
     private int score;
 
-    private String regex;
+    private final String regex;
+
+    private final Pattern compiledPattern;
 
     public ModelMatcher(String model, String regex) {
         this.model = model;
         this.regex = regex;
         this.score = 0;
+
+        this.compiledPattern = Pattern.compile(regex);
     }
 
     public String getRegex() {
@@ -45,15 +47,11 @@ public class ModelMatcher implements java.lang.Comparable {
     }
 
     /**
-     * @param expression
-     * @return boolean true:match , false : don't match
+     * @param expression the string to be matched
+     * @return true:match , false : don't match
      */
     public boolean matches(String expression) {
-        // if the pattern match onetime , we increase his score
-        if (Pattern.matches(this.getRegex(), expression)) {
-            this.score++;
-        }
-        return Pattern.matches(this.getRegex(), expression);
+        return compiledPattern.matcher(expression).matches();
     }
 
     public int getScore() {
@@ -61,13 +59,20 @@ public class ModelMatcher implements java.lang.Comparable {
     }
 
     // comparison method used to sort modelMatchers
-    public int compareTo(Object other) {
-        if (this.getScore() > ((ModelMatcher) other).getScore())
+    public int compareTo(ModelMatcher other) {
+        if (this.getScore() > other.getScore())
             return -1;
-        else if (this.getScore() == ((ModelMatcher) other).getScore())
+        else if (this.getScore() == other.getScore())
             return 0;
         else {
             return 1;
         }
+    }
+
+    /**
+     * Method "increment" increases the score (number of matches).
+     */
+    public void increment() {
+        this.score++;
     }
 }
