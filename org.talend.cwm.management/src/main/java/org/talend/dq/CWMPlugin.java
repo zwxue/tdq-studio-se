@@ -217,6 +217,9 @@ public class CWMPlugin extends Plugin {
             try {
                 aliasManager.loadAliases();
                 String aliasName = dataProvider.getName();
+                if (null == aliasName) {
+                    continue;
+                }
                 Alias alias = aliasManager.getAlias(aliasName);
                 if (alias != null) {
                     aliasManager.removeAlias(aliasName);
