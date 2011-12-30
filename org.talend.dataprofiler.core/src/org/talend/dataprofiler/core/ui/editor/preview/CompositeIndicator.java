@@ -161,10 +161,14 @@ public final class CompositeIndicator {
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit unit : indicatorUnits) {
-            tempList.add(unit);
+            // MOD gdbu TDQ-4261 2011-12-21 : Here we should only add the indicator,needn't to add the indicator's
+            // classification.
             if (unit.getChildren() != null) {
                 initChildIndicatorUnits(tempList, unit.getChildren());
+            } else {
+                tempList.add(unit);
             }
+            // ~TDQ-4261
         }
 
         return tempList.toArray(new IndicatorUnit[tempList.size()]);
