@@ -1400,7 +1400,12 @@
            name="Update Demo Dqrule Task"
            version="5.0.2">
      </workspacetask>
-     
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateAdvancedFrequencyIndicatorsUUID"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateAdvancedFrequencyIndicatorsUUID"
+           name="Update Advanced Frequency Indicators UUID Between Repeats"
+           version="4.2.4">
+     </workspacetask>     
 
   </extension>
   <extension
