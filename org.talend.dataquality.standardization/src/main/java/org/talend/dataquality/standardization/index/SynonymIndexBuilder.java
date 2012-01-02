@@ -359,6 +359,9 @@ public class SynonymIndexBuilder {
                             allDeleted = false;
                         }
                     }
+                    if (allDeleted && !folder.delete()) {
+                        allDeleted = false;
+                    }
                     if (!allDeleted) {
                         error.set(false, Messages.getString("SynonymIndexBuilder.couldNotDelete", folder.getAbsolutePath()));//$NON-NLS-1$
                         return false;

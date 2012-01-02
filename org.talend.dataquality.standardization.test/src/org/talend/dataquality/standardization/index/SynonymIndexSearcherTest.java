@@ -75,6 +75,7 @@ public class SynonymIndexSearcherTest {
         SynonymIndexSearcher searcher = new SynonymIndexSearcher();
         String path = "data/tmp_indx";
         File idxFolder = new File(path);
+        idxFolder.delete();
         assertEquals(false, idxFolder.exists());
         assertEquals(true, idxFolder.mkdirs());
         try {
