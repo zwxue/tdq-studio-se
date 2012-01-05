@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -26,8 +27,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -65,7 +66,7 @@ public class RenameTdqFolderAction extends Action {
             String value2 = dialog.getValue();
             try {
                 // close opend editors
-                List<IRepositoryNode> openRepNodes = RepositoryNodeHelper.getOpenRepNodeForReName(node, true);
+                List<IRepositoryNode> openRepNodes = getOpenRepNodeForReName(node, true);
                 RepNodeUtils.closeModelElementEditor(openRepNodes, true);
 
                 RepositoryNodeDorpAdapterAssistant dndAsistant = new RepositoryNodeDorpAdapterAssistant();
@@ -81,4 +82,20 @@ public class RenameTdqFolderAction extends Action {
         }
     }
 
+    private List<IRepositoryNode> getOpenRepNodeForReName(IRepositoryNode parentNode, boolean recursive) {
+        List<IRepositoryNode> result = new ArrayList<IRepositoryNode>();
+        List<IRepositoryNode> children = parentNode.getChildren();
+
+        for (IRepositoryNode node : children) {
+            ENodeType type = node.getType();
+            if (type.equals(ENodeType.SIMPLE_FOLDER)) {
+                if (recursive) {
+                    result.addAll(getOpenRepNodeForReName(node, recursive));
+                }
+            } else {
+                result.add(node);
+            }
+        }
+        return result;
+    }
 }
