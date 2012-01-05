@@ -43,6 +43,7 @@ import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -167,7 +168,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
                 Resource oldRes = modelElement.eResource();
 
-                List<Resource> needSaves = getReferenceResources(oldRes);
+                List<Resource> needSaves = getReferenceResources(oldRes, modelElement);
 
                 AElementPersistance writer = ElementWriterFactory.getInstance().create(modelElement);
                 writer.create(modelElement, parentFolder, true);
@@ -186,9 +187,10 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
      * DOC bZhou Comment method "getReferenceResources".
      * 
      * @param res
+     * @param modelElement
      * @return
      */
-    public List<Resource> getReferenceResources(Resource res) {
+    public List<Resource> getReferenceResources(Resource res, ModelElement modelElement) {
         EcoreUtil.resolveAll(res);
 
         Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(res);
@@ -200,6 +202,16 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
             }
             EcoreUtil.resolveAll(resource);
             needSaves.add(resource);
+        }
+
+        if (res.getURI().toPlatformString(false).contains(EResourceConstant.LIBRARIES.getPath())) {
+            final List<? extends ModelElement> allElement = AnaResourceFileHelper.getInstance().getAllElement();
+            for (ModelElement element : allElement) {
+                Map<EObject, Collection<Setting>> allFind = EcoreUtil.ExternalCrossReferencer.find(element.eResource());
+                if (allFind.keySet().contains(modelElement)) {
+                    needSaves.add(element.eResource());
+                }
+            }
         }
 
         needSaves.add(res);
