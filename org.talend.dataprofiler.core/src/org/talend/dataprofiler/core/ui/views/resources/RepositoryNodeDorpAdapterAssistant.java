@@ -106,13 +106,16 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     private boolean allowDND(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
-        // if (isSameType(sourceNode, targetNode)) {
-        // if (sourceNode instanceof AnalysisSubFolderRepNode || sourceNode instanceof ReportSubFolderRepNode
-        // || sourceNode instanceof UserDefIndicatorSubFolderRepNode
-        // || sourceNode instanceof DBConnectionSubFolderRepNode) {
-        // return true;
-        // }
-        // }
+        // MOD klliu Bug TDQ-4330 if targetCount's lenth is 1,that means targetNode is the root and system node.
+        // so there is not any operations on it,then the operation of DND is not allowed.
+        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
+        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        int sourceCount = sourcePath.segmentCount();
+        int targetCount = targetPath.segmentCount();
+        if (sourceCount == 1 || targetCount == 1) {
+            return false;
+        }
+        // ~
         return true;
     }
 
@@ -367,7 +370,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         computePath(folderHelper, sourcePath, targetPath, makeRelativeTo, objectType, sourceNode, targetNode);
     }
 
-
     /**
      * rename the RepositoryNode's folder name (the RepositoryNode must be a folder).
      * 
@@ -406,9 +408,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                 .createFolder(folderNode.getContentType(), new Path(path), label);
         RepositoryNode targetNode = new RepositoryNode(targetFoler, folderNode.getParent(), ENodeType.SIMPLE_FOLDER);
         targetNode.setParent(folderNode.getParent());
-
-        // refresh the dq view (if the rename folder havs sub folders, must to refresh before move these sub folders)
-        CorePlugin.getDefault().refreshDQView(parentNode);
 
         // RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         // FolderHelper folderHelper = instance.getFolderHelper();
@@ -454,13 +453,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         } catch (CoreException e) {
             log.error(e, e);
         }
-
-        // refresh the dq view again(refresh before compute dependencies of TDQ Elements)
+        // refresh the dq view (if the rename folder havs sub folders, must to refresh before move these sub folders)
         CorePlugin.getDefault().refreshDQView(parentNode);
-
-        // update the dependencies
-        // FolderItem emfFolder = folderHelper.getFolder(completeNewPath);
-        // computeDependcy(emfFolder);
     }
 
     private boolean isSameType(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
@@ -519,7 +513,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         RepositoryNode targetParent = targetNode.getParent();
         CorePlugin.getDefault().refreshDQView(sourceParent);
         CorePlugin.getDefault().refreshDQView(targetParent);
-//        FolderItem emfFolder = folderHelper.getFolder(completeNewPath);
+        // FolderItem emfFolder = folderHelper.getFolder(completeNewPath);
         // computeDependcy(emfFolder);
     }
 
@@ -542,8 +536,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     // }
     // }
 
-    
-// public void updateDependcyByItem(Item item) throws PersistenceException {
+    // public void updateDependcyByItem(Item item) throws PersistenceException {
     // if (item instanceof TDQAnalysisItem) {
     // this.updateAnalysisDependency((TDQAnalysisItem) item);
     // } else if (item instanceof TDQReportItem) {
@@ -558,7 +551,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     // this.updateConnectionDependency((ConnectionItem) item);
     // }
     // }
-    
+
     /**
      * update the dependencies of Connection.
      * 
