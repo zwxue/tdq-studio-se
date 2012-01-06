@@ -52,6 +52,7 @@ import org.talend.core.PluginChecker;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
@@ -399,13 +400,16 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         String userName = loginText.getText();
         String password = passwordText.getText();
         String url = urlText.getText();
+
         if (connection.isContextMode()) {
             userName = ConnectionUtils.getOriginalConntextValue(connection, userName);
             password = ConnectionUtils.getOriginalConntextValue(connection, password);
             url = ConnectionUtils.getOriginalConntextValue(connection, url);
         }
+
         props.put(TaggedValueHelper.USER, userName);
         props.put(TaggedValueHelper.PASSWORD, password);
+
         // MOD xqliu 2009-12-17 bug 10238
         Connection tdDataProvider2;
         if (null == tmpParam) {
@@ -429,14 +433,23 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
             // ~ 13406
         }
+
         if (tdDataProvider2 instanceof MDMConnection) {
             props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) tdDataProvider2));
             props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) tdDataProvider2));
         }
+
+        if (ConnectionUtils.isTeradata(tdDataProvider2)) {
+            DatabaseConnection dbConn = (DatabaseConnection) tdDataProvider2;
+            props.put(TaggedValueHelper.DBTYPE, dbConn.getDatabaseType());
+            props.put(TaggedValueHelper.DBNAME, dbConn.getSID());
+        }
+
         ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(
                 JavaSqlFactory.getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(url,
                 JavaSqlFactory.getDriverClass(tdDataProvider2), props);
         // ~
+
         return returnCode;
     }
 
