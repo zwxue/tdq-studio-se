@@ -230,8 +230,9 @@ public class DeleteModelElementConfirmDialog {
             dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
-            dialog.open();
-            isChecked = dialog.isChecked();
+            // MOD qiongli 2012-1-6 if don't click OK button,should return false;
+            int result = dialog.open();
+            isChecked = dialog.isChecked() && (result == Window.OK);
 
         }
 
