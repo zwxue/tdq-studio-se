@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -38,7 +39,10 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.data.container.RootContainer;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.database.conn.DatabaseConnStrUtil;
+import org.talend.core.database.conn.template.EDatabaseConnTemplate;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -50,6 +54,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.repository.ProjectManager;
 import org.talend.resource.EResourceConstant;
@@ -153,8 +158,129 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
             log.error(e, e);
         }
 
+        // ADD xqliu 2011-12-31 TDQ-4331
+        fillConnectionNameLabel();
+        // ~ 4331
+
         return result;
 
+    }
+
+    /**
+     * fill connection's name or label if they are null.
+     */
+    private void fillConnectionNameLabel() {
+        File connectionFolder = getWorkspacePath().append("metadata").toFile();
+        ArrayList<File> fileList = new ArrayList<File>();
+        FilesUtils.getAllFilesFromFolder(connectionFolder, fileList, new FilenameFilter() {
+
+            public boolean accept(File dir, String name) {
+                if (name.endsWith("item")) {//$NON-NLS-1$
+                    return true;
+                }
+                return false;
+            }
+        });
+        for (File file : fileList) {
+
+            Connection connection = getConnectionFromFile(file);
+
+            if (connection == null) {
+                continue;
+            }
+
+            Property property = PropertyHelper.getProperty(connection);
+
+            if (connection.getName() == null && connection.getLabel() == null) {
+                if (property.getLabel() != null) {
+                    connection.setName(property.getLabel());
+                    connection.setLabel(property.getLabel());
+                }
+            } else {
+                if (connection.getName() != null && connection.getLabel() == null) {
+                    connection.setLabel(connection.getName());
+                } else if (connection.getName() == null && connection.getLabel() != null) {
+                    connection.setName(connection.getLabel());
+                }
+            }
+
+            if (connection instanceof DatabaseConnection) {
+                DatabaseConnection dbconn = (DatabaseConnection) connection;
+
+                String[] urlParamArray = DatabaseConnStrUtil.analyseURL(dbconn.getDatabaseType(), dbconn.getDbVersionString(),
+                        dbconn.getURL());
+
+                if (StringUtils.isEmpty(dbconn.getServerName()) || StringUtils.isEmpty(dbconn.getPort())
+                        || StringUtils.isEmpty(dbconn.getAdditionalParams())) {
+                    fillParametersFromURL(dbconn, urlParamArray);
+                }
+            }
+
+            EMFUtil.saveResource(connection.eResource());
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "fillParametersFromURL".
+     * 
+     * @param dbconn
+     * @param s
+     */
+    private void fillParametersFromURL(DatabaseConnection dbconn, String[] s) {
+        String selection = s[0];
+
+        int index = 1;
+        if (s[index] != "") {//$NON-NLS-1$
+            if (selection.equals(EDatabaseConnTemplate.GODBC.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.MSODBC.getDBDisplayName())) {
+                dbconn.setDatasourceName(s[index]);
+            } else if (selection.equals(EDatabaseConnTemplate.SQLITE.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.ACCESS.getDBDisplayName())) {
+                dbconn.setFileFieldName(s[index]);
+            } else if (selection.equals(EDatabaseConnTemplate.JAVADB_EMBEDED.getDBDisplayName())) {
+                dbconn.setSID(s[index]);
+            } else if (selection.equals(EDatabaseConnTemplate.HSQLDB_IN_PROGRESS.getDBDisplayName())) {
+                dbconn.setDBRootPath(s[index]);
+            } else {
+                dbconn.setServerName(s[index]);
+            }
+        }
+
+        index = 2;
+        if (s[index] != "") { //$NON-NLS-1$
+            if (selection.equals(EDatabaseConnTemplate.INTERBASE.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.TERADATA.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.AS400.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.HSQLDB_IN_PROGRESS.getDBDisplayName())) {
+                dbconn.setSID(s[index]);
+            } else if (selection.equals(EDatabaseConnTemplate.FIREBIRD.getDBDisplayName())) {
+                dbconn.setFileFieldName(s[index]);
+            } else {
+                dbconn.setPort(s[index]);
+            }
+        }
+
+        index = 3;
+        if (s[index] != "") { //$NON-NLS-1$
+            if (selection.equals(EDatabaseConnTemplate.AS400.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.MYSQL.getDBDisplayName())) {
+                dbconn.setSID(s[index]);
+            }
+        }
+
+        index = 4;
+        if (s[index] != "") { //$NON-NLS-1$
+            if (selection.equals(EDatabaseConnTemplate.INFORMIX.getDBDisplayName())) {
+                dbconn.setDatasourceName(s[index]);
+            } else {
+                dbconn.setAdditionalParams(s[index]);
+            }
+        }
+
+        index = 5;
+        if (s[index] != "") { //$NON-NLS-1$
+            dbconn.setAdditionalParams(s[index]);
+        }
     }
 
     private Map<File, File> initStructure() throws Exception {
@@ -384,25 +510,21 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
         if (item instanceof ConnectionItem) {
             ConnectionItem connectionItem = (ConnectionItem) item;
-            Resource itemResource = getResource(destItemFile.getAbsolutePath());
-            Connection conn = null;
-            for (EObject object : itemResource.getContents()) {
-                if (object instanceof Connection) {
-                    conn = (Connection) object;
-                    if (connName != null) {
-                        conn.setName(connName);
-                        conn.setLabel(connName);
-                    }
-                    String relationPropPath = ReponsitoryContextBridge.getRootProject().getFullPath()
-                            .append(new Path(destPropFile.getPath()).makeRelativeTo(this.getWorkspacePath())).toOSString();
-                    MetadataHelper.setPropertyPath(relationPropPath, conn);
-                    connectionItem.setConnection(conn);
+            Connection conn = getConnectionFromFile(destItemFile);
 
+            if (conn != null) {
+                if (connName != null) {
+                    conn.setName(connName);
+                    conn.setLabel(connName);
                 }
+                String relationPropPath = ReponsitoryContextBridge.getRootProject().getFullPath()
+                        .append(new Path(destPropFile.getPath()).makeRelativeTo(this.getWorkspacePath())).toOSString();
+                MetadataHelper.setPropertyPath(relationPropPath, conn);
+                connectionItem.setConnection(conn);
             }
-            EMFUtil.saveResource(itemResource);
+            EMFUtil.saveResource(conn.eResource());
 
-            Resource propResource = getResource(destPropFile.getAbsolutePath());
+            Resource propResource = getResource(destPropFile);
 
             Property newProperty = (Property) EcoreUtil.getObjectByType(propResource.getContents(),
                     PropertiesPackage.eINSTANCE.getProperty());
@@ -427,11 +549,14 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         return connNameAfter;
     }
 
-    private Resource getResource(String filePath) {
-        URI uri = URI.createFileURI(filePath);
+    private Connection getConnectionFromFile(File connectionFile) {
+        Resource itemResource = getResource(connectionFile);
+        for (EObject object : itemResource.getContents()) {
+            if (object instanceof Connection) {
+                return (Connection) object;
+            }
+        }
 
-        Resource resource = resourceSet.getResource(uri, true);
-
-        return resource;
+        return null;
     }
 }
