@@ -53,6 +53,7 @@ import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
@@ -205,6 +206,15 @@ public final class ConnectionUtils {
         try {
             connection = ConnectionUtils.createConnection(url, driverClassName, props);
             rc = (ConnectionUtils.isValid(connection));
+            // ADD xqliu 2012-01-05 TDQ-4162
+            String dbType = props.getProperty(TaggedValueHelper.DBTYPE);
+            String dbName = props.getProperty(TaggedValueHelper.DBNAME);
+            if (!StringUtils.isBlank(dbType) && !StringUtils.isBlank(dbName)) {
+                boolean checkSchemaOK = ExtractMetaDataFromDataBase.checkSchemaConnection(dbName, connection, true, dbType);
+                if (!checkSchemaOK) {
+                    rc.setReturnCode(Messages.getString("ConnectionUtils.SchemaNotFound"), false);
+                }
+            }
         } catch (SQLException e) {
             log.error(e, e);
             rc.setReturnCode(e.getMessage(), false);
@@ -439,6 +449,22 @@ public final class ConnectionUtils {
                 && connectionMetadata.getDatabaseProductName() != null
                 && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(DatabaseConstant.ODBC_PROGRESS_PRODUCT_NAME) > -1) {
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "isTeradata".
+     * 
+     * @param connection
+     * @return
+     */
+    public static boolean isTeradata(Connection connection) {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
+                    .getDatabaseType();
+            return EDriverName.TERADATADEFAULTURL.getDBKey().equalsIgnoreCase(databaseType);
         }
         return false;
     }
