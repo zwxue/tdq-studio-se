@@ -192,7 +192,7 @@ public class ImportWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                // textModified(basePath);
+                 textModified(basePath);
             }
         });
 
