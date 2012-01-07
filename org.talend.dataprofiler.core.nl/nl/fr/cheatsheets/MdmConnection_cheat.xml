@@ -11,6 +11,6 @@
       <description>
         Renseignez les métadonnées de connexion dans les champs correspondants (nom, objectif, description...), puis saisissez les informations d'authentification (utilisateur, mot de passe, Hôte...) et cliquez sur Terminer.
       </description>
-       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="1"/>
+       <action class="org.talend.dataprofiler.core.ui.action.actions.CreateMDMConnectionAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="1"/>
    </item>
 </cheatsheet>
