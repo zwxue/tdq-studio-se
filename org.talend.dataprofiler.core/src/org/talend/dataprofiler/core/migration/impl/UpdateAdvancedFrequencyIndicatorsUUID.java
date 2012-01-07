@@ -118,9 +118,9 @@ public class UpdateAdvancedFrequencyIndicatorsUUID extends AbstractWorksapceUpda
         replaceStringMap.put("Quarter_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA",
                 "Quarter_Low_Frequency_Table_0.1.definition#_hraImDE2EeGvsfvHpG2Eqg");
         replaceStringMap.put("Week_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA",
-                "Week_Low_Frequency_Table _0.1.definition#_hraImTE2EeGvsfvHpG2Eqg");
+                "Week_Low_Frequency_Table_0.1.definition#_hraImTE2EeGvsfvHpG2Eqg");
         replaceStringMap.put("Year_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA",
-                "Year_Low_Frequency_Table _0.1.definition#_hraImjE2EeGvsfvHpG2Eqg");
+                "Year_Low_Frequency_Table_0.1.definition#_hraImjE2EeGvsfvHpG2Eqg");
 
         replaceStringMap.put("Date_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw",
                 "Date_Frequency_Table_0.1.definition#_hraIkTE2EeGvsfvHpG2Eqg");
