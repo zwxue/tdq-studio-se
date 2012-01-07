@@ -11,7 +11,7 @@
 
 L'assistant vous demande de renseigner les métadonnées de connexion et les informations d'authentification, puis crée une connexion à votre SGBD (Système de gestion de Base de Données). A la suite de quoi, le contenu de la base de données est ajouté à la vue <b>Référentiel DQ</b>.
       </description>
-      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateConnectionAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      <action class="org.talend.dataprofiler.core.ui.action.actions.CreateDBConnectionAction" pluginId="org.talend.dataprofiler.core" confirm="false">
       </action>
    </item>
    <item title="Contenu de la base de données" dialog="true" skip="false" href="http://fr.wikipedia.org/wiki/Syst%C3%A8me_de_gestion_de_base_de_donn%C3%A9es">
