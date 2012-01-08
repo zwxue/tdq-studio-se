@@ -123,6 +123,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 }
             }
         };
+        workUnit.setAvoidUnloadResources(true);
         ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
         // duRun();
 

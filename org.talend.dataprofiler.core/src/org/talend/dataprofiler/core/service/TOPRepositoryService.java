@@ -229,62 +229,76 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * @see org.talend.core.ITDQRepositoryService#reloadDatabase(org.talend.core.model.properties.ConnectionItem)
      */
     public void reloadDatabase(ContextItem contextItem) {
+        if (contextItem == null) {
+            return;
+        }
         IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
         try {
             List<IRepositoryViewObject> dbConnList = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, true);
             for (IRepositoryViewObject obj : dbConnList) {
                 Item item = obj.getProperty().getItem();
                 if (item instanceof ConnectionItem) {
-                    Connection conn = ((ConnectionItem) item).getConnection();
+                    ConnectionItem connectionItem = ((ConnectionItem) item);
+                    Connection conn = connectionItem.getConnection();
                     if (conn.isContextMode()) {
                         ContextItem cItem = ContextUtils.getContextItemById2(conn.getContextId());
-                        if (contextItem == null) {
-                            continue;
-                        }
+
                         if (cItem == contextItem) {
-                            if (conn instanceof DatabaseConnection) {
-                                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(conn);
-                                Connection newConnection = creatComparisonLevel.reloadCurrentLevelElement();
-                                // update the sql explore.
-                                Property property = PropertyHelper.getProperty(newConnection);
-                                if (property != null) {
-                                    Item newItem = property.getItem();
-                                    if (newItem != null) {
-                                        CWMPlugin.getDefault()
-                                                .updateConnetionAliasByName(newConnection, newConnection.getLabel());
-                                        // notifySQLExplorer(newItem);
-                                    }
-                                }
-                                // update the related analyses.
-                                List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
-                                if (!(dependencyClients == null || dependencyClients.isEmpty())) {
-                                    MessageDialog.openWarning(
-                                            null,
-                                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
-                                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage",
-                                                    newConnection.getLabel()));
-                                }
-                                WorkbenchUtils.impactExistingAnalyses(newConnection);
-                            }
+                            reloadDatabase(connectionItem);
                         }
                     }
                 }
             }
-            List<IRepositoryViewObject> fileConnList = factory.getAll(ERepositoryObjectType.METADATA_FILE_DELIMITED, true);
-            for (IRepositoryViewObject obj : fileConnList) {
-                Item item = obj.getProperty().getItem();
-                if (item instanceof ConnectionItem) {
-                    // TODO reload struct for DelimitedFile connection
-                }
-            }
+            // List<IRepositoryViewObject> fileConnList = factory.getAll(ERepositoryObjectType.METADATA_FILE_DELIMITED,
+            // true);
+            // for (IRepositoryViewObject obj : fileConnList) {
+            // Item item = obj.getProperty().getItem();
+            // if (item instanceof ConnectionItem) {
+            // // TODO reload struct for DelimitedFile connection
+            // }
+            // }
         } catch (PersistenceException e) {
             log.error(e, e);
+        }
+
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "reloadDatabase".
+     * 
+     * @param connectionItem
+     * 
+     */
+    public void reloadDatabase(ConnectionItem connectionItem) {
+        Connection conn = connectionItem.getConnection();
+        try {
+            if (conn instanceof DatabaseConnection) {
+                final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(conn);
+                Connection newConnection = creatComparisonLevel.reloadCurrentLevelElement();
+
+                // update the sql explore.
+                Property property = PropertyHelper.getProperty(newConnection);
+                if (property != null) {
+                    Item newItem = property.getItem();
+                    if (newItem != null) {
+                        CWMPlugin.getDefault().updateConnetionAliasByName(newConnection, newConnection.getLabel());
+                        // notifySQLExplorer(newItem);
+                    }
+                }
+                // update the related analyses.
+                List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
+                if (!(dependencyClients == null || dependencyClients.isEmpty())) {
+                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
+                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", newConnection.getLabel()));
+                }
+                WorkbenchUtils.impactExistingAnalyses(newConnection);
+            }
         } catch (ReloadCompareException e) {
             log.error(e, e);
         } catch (PartInitException e) {
-            log.error(e);
+            log.error(e, e);
         }
-
     }
 
     public void updateImpactOnAnalysis(ConnectionItem connectionItem) {
