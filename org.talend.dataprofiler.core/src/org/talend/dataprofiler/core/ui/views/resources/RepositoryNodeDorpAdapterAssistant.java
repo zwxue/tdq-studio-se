@@ -115,6 +115,12 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         if (sourceCount == 1 || targetCount == 1) {
             return false;
         }
+        // MOD klliu Bug TDQ-4444 2012-01-09
+        // This need check the object type of soruce node is sub type of targetNode's
+        // if it is,that is not allowed to drop.
+        if (isSubObjectType(sourceNode, targetNode)) {
+            return false;
+        }
         // ~
         return true;
     }
@@ -472,6 +478,12 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         int targetCount = targetPath.segmentCount();
         String sourceString = sourcePath.removeLastSegments(sourceCount - 2).toOSString();
         String targetString = targetPath.removeLastSegments(targetCount - 2).toOSString();
+        // MOD klliu Bug TDQ-4444 2012-01-09
+        // if sourceNode and targetNode have a same root node, also need to check the node's object type is same.
+        if (!sourceNode.getContentType().equals(targetNode.getContentType())) {
+            return false;
+        }
+        // ~
         return sourceString.equals(targetString);
     }
 
@@ -974,5 +986,55 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean isSubObjectType(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
+        ERepositoryObjectType sourceObjectType = sourceNode.getContentType();
+        ERepositoryObjectType targetObjectType = targetNode.getContentType();
+        List<ERepositoryObjectType> childObjecetType = getChildObjecetType(targetObjectType);
+        boolean contains = childObjecetType.contains(sourceObjectType);
+        return contains;
+    }
+
+    private List<ERepositoryObjectType> getChildObjecetType(ERepositoryObjectType targetObjectType) {
+        List<ERepositoryObjectType> childObjectType = new ArrayList<ERepositoryObjectType>();
+        // get Target child object type
+        if (targetObjectType.equals(ERepositoryObjectType.TDQ_DATA_PROFILING)) {
+            childObjectType.add(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+            childObjectType.add(ERepositoryObjectType.TDQ_REPORT_ELEMENT);
+        } else if (targetObjectType.equals(ERepositoryObjectType.TDQ_LIBRARIES)) {
+            childObjectType.add(ERepositoryObjectType.TDQ_EXCHANGE);
+            childObjectType.add(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT);
+            childObjectType.add(ERepositoryObjectType.TDQ_JRAXML_ELEMENT);
+            childObjectType.add(ERepositoryObjectType.TDQ_PATTERN_ELEMENT);
+            childObjectType.add(ERepositoryObjectType.TDQ_RULES);
+            childObjectType.add(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+        } else if (targetObjectType.equals(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT)) {
+            childObjectType.add(ERepositoryObjectType.TDQ_SYSTEM_INDICATORS);
+            childObjectType.add(ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
+        } else if (targetObjectType.equals(ERepositoryObjectType.TDQ_SYSTEM_INDICATORS)) {
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_ADVANCED_STATISTICS);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_BUSINESS_RULES);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_CORRELATION);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_ROW_COMPARISON);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_SIMPLE_STATISTICS);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_SOUNDEX);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_SUMMARY_STATISTICS);
+            childObjectType.add(ERepositoryObjectType.SYSTEM_INDICATORS_TEXT_STATISTICS);
+        } else if (targetObjectType.equals(ERepositoryObjectType.TDQ_PATTERN_ELEMENT)) {
+            childObjectType.add(ERepositoryObjectType.TDQ_PATTERN_REGEX);
+            childObjectType.add(ERepositoryObjectType.TDQ_PATTERN_SQL);
+        } else if (targetObjectType.equals(ERepositoryObjectType.TDQ_RULES)) {
+            childObjectType.add(ERepositoryObjectType.TDQ_RULES_SQL);
+        } else if (targetObjectType.equals(ERepositoryObjectType.METADATA)) {
+            childObjectType.add(ERepositoryObjectType.METADATA_CONNECTIONS);
+            childObjectType.add(ERepositoryObjectType.METADATA_MDMCONNECTION);
+            childObjectType.add(ERepositoryObjectType.METADATA_FILE_DELIMITED);
+        }
+        return childObjectType;
     }
 }
