@@ -60,6 +60,7 @@ import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -81,6 +82,45 @@ public final class ImportFactory {
 
     private ImportFactory() {
 
+    }
+
+    /**
+     * DOC bZhou Comment method "doInport".
+     * 
+     * @param resourceType
+     * @param importFile
+     * @return
+     */
+    public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile) {
+        return doInport(resourceType, importFile, true, true);
+    }
+
+    /**
+     * DOC bZhou Comment method "doInport".
+     * 
+     * @param category
+     * @param importFile
+     * @return
+     */
+    public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename) {
+        assert resourceType != null;
+
+        IFolder restoreFolder = ResourceManager.getOneFolder(resourceType);
+
+        switch (resourceType) {
+        case PATTERN_REGEX:
+            return importToStucture(importFile, restoreFolder, ExpressionType.REGEXP, skip, rename);
+        case PATTERN_SQL:
+            return importToStucture(importFile, restoreFolder, ExpressionType.SQL_LIKE, skip, rename);
+
+        case USER_DEFINED_INDICATORS:
+            return importIndicatorToStucture(importFile, restoreFolder, skip, rename);
+        case RULES_PARSER:
+            return importParserRuleToStucture(importFile, restoreFolder, skip, rename);
+
+        default:
+            return null;
+        }
     }
 
     public static List<ReturnCode> importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
@@ -583,7 +623,6 @@ public final class ImportFactory {
                 log.error(e);
                 information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed", name), false)); //$NON-NLS-1$
             }
-
 
         }
 
