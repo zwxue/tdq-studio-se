@@ -12,24 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.utils.io.FilesUtils;
-import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
-import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceService;
 
 /**
  * @author yyi
- * 
  */
 public class UpdateAdvancedFrequencyIndicatorsUUID extends AbstractWorksapceUpdateTask {
 
@@ -46,28 +37,30 @@ public class UpdateAdvancedFrequencyIndicatorsUUID extends AbstractWorksapceUpda
     @Override
     protected boolean doExecute() throws Exception {
         boolean result = true;
-        File indicatorfileIndicator = getWorkspacePath()
-                .append(EResourceConstant.SYSTEM_INDICATORS_ADVANCED_STATISTICS.getPath()).toFile();
-        File anafileIndicator = getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
-        try {
-            String[] indicatorFileExtentionNames = { FactoriesUtil.DEFINITION, FactoriesUtil.PROPERTIES_EXTENSION };
-            String[] anaFileExtentionNames = { FactoriesUtil.ANA };
-            Map<String, String> indicatorStringMap = new HashMap<String, String>();
-            indicatorStringMap.putAll(initIndicatorReplaceMap());
-            indicatorStringMap.putAll(initAnaReplaceMap());
-            result &= FilesUtils.migrateFolder(anafileIndicator, anaFileExtentionNames, initAnaReplaceMap(), log)
-                    && FilesUtils.migrateFolder(indicatorfileIndicator, indicatorFileExtentionNames, indicatorStringMap, log);
-            if (isWorksapcePath()) {
-                for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
-                        ERepositoryObjectType.SYSTEM_INDICATORS_ADVANCED_STATISTICS)) {
-                    ProxyRepositoryFactory.getInstance().reload(viewObject.getProperty());
-                }
-            }
-            ResourceService.refreshStructure();
-        } catch (Exception e) {
-            result = false;
-            log.error(e, e);
-        }
+        // the function of this migration task has been replaced by ChangeDuplicateFrequenceUUIDTask, TDQ-4316 xqliu
+        // 2012-01-11
+        // File indicatorfileIndicator = getWorkspacePath()
+        // .append(EResourceConstant.SYSTEM_INDICATORS_ADVANCED_STATISTICS.getPath()).toFile();
+        // File anafileIndicator = getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
+        // try {
+        // String[] indicatorFileExtentionNames = { FactoriesUtil.DEFINITION, FactoriesUtil.PROPERTIES_EXTENSION };
+        // String[] anaFileExtentionNames = { FactoriesUtil.ANA };
+        // Map<String, String> indicatorStringMap = new HashMap<String, String>();
+        // indicatorStringMap.putAll(initIndicatorReplaceMap());
+        // indicatorStringMap.putAll(initAnaReplaceMap());
+        // result &= FilesUtils.migrateFolder(anafileIndicator, anaFileExtentionNames, initAnaReplaceMap(), log)
+        // && FilesUtils.migrateFolder(indicatorfileIndicator, indicatorFileExtentionNames, indicatorStringMap, log);
+        // if (isWorksapcePath()) {
+        // for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
+        // ERepositoryObjectType.SYSTEM_INDICATORS_ADVANCED_STATISTICS)) {
+        // ProxyRepositoryFactory.getInstance().reload(viewObject.getProperty());
+        // }
+        // }
+        // ResourceService.refreshStructure();
+        // } catch (Exception e) {
+        // result = false;
+        // log.error(e, e);
+        // }
         return result;
     }
 
