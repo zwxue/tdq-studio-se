@@ -13,12 +13,12 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,9 +28,11 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.helper.EEcosCategory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
 import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
@@ -40,7 +42,7 @@ import org.talend.dataprofiler.ecos.jobs.ComponentInstaller;
 import org.talend.dataprofiler.ecos.jobs.DownloadListener;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataprofiler.ecos.service.JobService;
-import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -100,46 +102,20 @@ public class ImportRemotePatternAction extends Action {
 
         setEnabled(true);
         if (fExtensionDownloaded > 0) {
-            // File componentFolder = EcosystemService.getComponentFolder();
             for (IEcosComponent componet : fInstalledComponents) {
-                File file = new File(componet.getInstalledLocation());
+                List<File> validFiles = extractFiles(componet, information);
 
-                List<File> files = new ArrayList<File>();
-                extractFiles(file, files);
-                String name = componet.getCategry().getName();
+                if (!validFiles.isEmpty()) {
+                    String categoryName = componet.getCategry().getName();
 
-                // MOD yyi 8746: strange behaviour for imported patterns!
-                ExpressionType type = ExpressionType.REGEXP;
-                IFolder folder = ResourceManager.getPatternFolder();
+                    EEcosCategory ecosCategory = EEcosCategory.getEcosCategory(categoryName);
 
-                if ("regex".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
-                    type = ExpressionType.REGEXP;
-                    folder = ResourceManager.getPatternRegexFolder();
-                } else if ("pattern".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
-                    type = ExpressionType.REGEXP;
-                    folder = ResourceManager.getPatternRegexFolder();
-                } else if ("SQL".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
-                    // MOD yyi 8960: Patterns imported from Exchange/SQL can not be put in "Patterns/SQL" folder
-                    type = ExpressionType.SQL_LIKE;
-                    folder = ResourceManager.getPatternSQLFolder();
-                } else if ("indicator".equalsIgnoreCase(componet.getCategry().getName())) { //$NON-NLS-1$
-                    type = null;
-                }
-
-                for (File oneFile : files) {
-                    // MOD klliu bug TDQ-3712 Cannot import parser rule from Talend Exchange
-                    if (!name.contentEquals("ParserRule")) {//$NON-NLS-1$
-                        if (type == null) {
-                            IFolder udiFolder = ResourceManager.getUDIFolder();
-                            information.addAll(ImportFactory.importIndicatorToStucture(oneFile, udiFolder, true, true));
-                        } else {
-                            information.addAll(ImportFactory.importToStucture(oneFile, folder, type, true, true));
+                    if (ecosCategory != null) {
+                        EResourceConstant resourceType = ecosCategory.getResource();
+                        for (File oneFile : validFiles) {
+                            information.addAll(ImportFactory.doInport(resourceType, oneFile));
                         }
-                    } else {
-                        IFolder parserRuleFolder = ResourceManager.getRulesParserFolder();
-                        information.addAll(ImportFactory.importParserRuleToStucture(oneFile, parserRuleFolder, true, true));
                     }
-                    // ~
                 }
             }
 
@@ -147,33 +123,46 @@ public class ImportRemotePatternAction extends Action {
             if (information.isEmpty()) {
                 information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportRemotePatternAction.NothingImport"), false)); //$NON-NLS-1$
             }
-            Display.getDefault().asyncExec(new Runnable() {
-
-                public void run() {
-
-                    ImportInfoDialog.openImportInformation(
+            ImportInfoDialog
+                    .openImportInformation(
                             null,
                             DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
-                }
-            });
 
             CorePlugin.getDefault().refreshDQView();
         }
     }
 
-    private void extractFiles(File parentFile, List<File> existedFiles) {
+    /**
+     * DOC bZhou Comment method "extractFiles".
+     * 
+     * @param componet
+     * @param information
+     * @return
+     */
+    private List<File> extractFiles(IEcosComponent componet, List<ReturnCode> information) {
+        List<File> files = new ArrayList<File>();
 
-        if (parentFile.isDirectory()) {
-            for (File file : parentFile.listFiles()) {
-                if (file.isDirectory()) {
-                    extractFiles(file, existedFiles);
+        try {
+            String categoryName = componet.getCategry().getName();
+            String targetFolder = ResourceManager.getExchangeFolder().getLocation().append(categoryName).toString();
+            File componentFileFolder = ComponentInstaller.unzip(componet.getInstalledLocation(), targetFolder);
+
+            FilesUtils.getAllFilesFromFolder(componentFileFolder, files, new FilenameFilter() {
+
+                public boolean accept(File dir, String name) {
+                    return !FilesUtils.isSVNFolder(dir) && name.endsWith("csv");
                 }
+            });
 
-                existedFiles.add(file);
+            if (files.isEmpty()) {
+                information.add(new ReturnCode("No valid exchange extension file(CSV) found in " + componet.getName(), false));
             }
-        } else {
-            existedFiles.add(parentFile);
+
+        } catch (Exception e) {
+            ExceptionHandler.process(e);
         }
+
+        return files;
     }
 
     /**
@@ -260,15 +249,13 @@ public class ImportRemotePatternAction extends Action {
 
                 // check if the job is cancelled
                 if (!monitor.isCanceled()) {
-                    File componentFile = ComponentInstaller.unzip(localZipFile.getAbsolutePath(), targetFolder);
                     // update extesion status
                     extension.setInstalledRevision(extension.getLatestRevision());
-                    extension.setInstalledLocation(componentFile.getAbsolutePath());
+                    extension.setInstalledLocation(localZipFile.getAbsolutePath());
                     monitor.done();
                     extensionDownloadCompleted(extension);
                 }
-                // the component zip file
-                // localZipFile.delete();
+
             } catch (Exception e) {
                 ExceptionHandler.process(e);
             }
