@@ -16,18 +16,18 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * DOC klliu class global comment. Detailled comment
+ * DOC gdbu class global comment. Detailled comment
  */
-public class RulesSubFolderRepNode extends RulesSQLFolderRepNode {
+public class RulesParserSubFolderRepNode extends RulesParserFolderRepNode {
 
     /**
-     * DOC klliu RulesSubFolderRepNode constructor comment.
+     * DOC gdbu RulesParserSubFolderRepNode constructor comment.
      * 
      * @param object
      * @param parent
      * @param type
      */
-    public RulesSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
+    public RulesParserSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
     }
 }

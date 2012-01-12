@@ -70,7 +70,8 @@ public class RulesParserFolderRepNode extends DQRepositoryNode {
                 if (!withDeleted && folder.isDeleted()) {
                     continue;
                 }
-                RulesSubFolderRepNode childNodeFolder = new RulesSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                RulesParserSubFolderRepNode childNodeFolder = new RulesParserSubFolderRepNode(folder, this,
+                        ENodeType.SIMPLE_FOLDER);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_PARSER);
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_PARSER);
                 super.getChildren().add(childNodeFolder);

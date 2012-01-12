@@ -70,7 +70,7 @@ public class RulesSQLFolderRepNode extends DQRepositoryNode {
                 if (!withDeleted && folder.isDeleted()) {
                     continue;
                 }
-                RulesSubFolderRepNode childNodeFolder = new RulesSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                RulesSQLSubFolderRepNode childNodeFolder = new RulesSQLSubFolderRepNode(folder, this, ENodeType.SIMPLE_FOLDER);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
                 super.getChildren().add(childNodeFolder);
