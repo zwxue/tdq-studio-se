@@ -2496,7 +2496,9 @@ public final class RepositoryNodeHelper {
             for (String pattern : patterns) {
                 String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
                 String name = t.getName().toLowerCase();
-                if (name.matches(regex)) {
+                // MOD gdbu 2011-1-13 TDQ-4129 Change the way of matching.
+                boolean matches = java.util.regex.Pattern.compile(regex).matcher(name).find();// name.matches(regex);
+                if (matches) {
                     resetColumns.add(t);
                     size++;
                     if (size > 2000) {
