@@ -111,8 +111,9 @@ import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.RulesParserFolderRepNode;
+import org.talend.dq.nodes.RulesParserSubFolderRepNode;
 import org.talend.dq.nodes.RulesSQLFolderRepNode;
-import org.talend.dq.nodes.RulesSubFolderRepNode;
+import org.talend.dq.nodes.RulesSQLSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -699,13 +700,15 @@ public final class RepositoryNodeHelper {
     public static List<RuleRepNode> getRuleRepNodes(IRepositoryNode parrentNode, boolean recursiveFind, boolean withDeleted) {
         List<RuleRepNode> result = new ArrayList<RuleRepNode>();
         if (parrentNode != null
-                && (parrentNode instanceof RulesSQLFolderRepNode || parrentNode instanceof RulesSubFolderRepNode || parrentNode instanceof RulesParserFolderRepNode)) {
+                && (parrentNode instanceof RulesSQLFolderRepNode || parrentNode instanceof RulesSQLSubFolderRepNode
+                        || parrentNode instanceof RulesParserSubFolderRepNode || parrentNode instanceof RulesParserFolderRepNode)) {
             List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof RuleRepNode) {
                         result.add((RuleRepNode) inode);
-                    } else if (inode instanceof RulesSQLFolderRepNode || inode instanceof RulesSubFolderRepNode) {
+                    } else if (inode instanceof RulesSQLFolderRepNode || inode instanceof RulesSQLSubFolderRepNode
+                            || inode instanceof RulesParserSubFolderRepNode) {
                         if (recursiveFind) {
                             result.addAll(getRuleRepNodes(inode, recursiveFind, withDeleted));
                         }

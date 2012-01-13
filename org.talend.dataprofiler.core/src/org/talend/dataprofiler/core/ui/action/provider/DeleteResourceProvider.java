@@ -45,7 +45,8 @@ import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
-import org.talend.dq.nodes.RulesSubFolderRepNode;
+import org.talend.dq.nodes.RulesParserSubFolderRepNode;
+import org.talend.dq.nodes.RulesSQLSubFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -90,9 +91,9 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
             ReportSubFolderRepNode repSubFolderNode = (ReportSubFolderRepNode) node;
             show = !repSubFolderNode.isVirtualFolder();
         } else if (node instanceof UserDefIndicatorSubFolderRepNode || node instanceof PatternRegexSubFolderRepNode
-                || node instanceof PatternSqlSubFolderRepNode || node instanceof RulesSubFolderRepNode
-                || node instanceof DBConnectionSubFolderRepNode || node instanceof MDMConnectionSubFolderRepNode
-                || node instanceof DFConnectionSubFolderRepNode) {
+                || node instanceof PatternSqlSubFolderRepNode || node instanceof RulesSQLSubFolderRepNode
+                || node instanceof RulesParserSubFolderRepNode || node instanceof DBConnectionSubFolderRepNode
+                || node instanceof MDMConnectionSubFolderRepNode || node instanceof DFConnectionSubFolderRepNode) {
             show = true;
         }
         return show;

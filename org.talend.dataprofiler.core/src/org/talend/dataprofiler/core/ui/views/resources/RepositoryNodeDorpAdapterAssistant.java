@@ -312,9 +312,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         IPath makeRelativeTo = fullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
         IPath removeLastSegments = makeRelativeTo.removeLastSegments(1);
         if (ERepositoryObjectType.TDQ_RULES_SQL.equals(targetObjectType)
-                || ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.equals(targetObjectType)
-                || ERepositoryObjectType.TDQ_REPORT_ELEMENT.equals(targetObjectType)
-                || ERepositoryObjectType.METADATA_CONNECTIONS.equals(targetObjectType)
+                || ERepositoryObjectType.TDQ_RULES_PARSER.equals(targetObjectType)
+                // || ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.equals(targetObjectType)
+                // || ERepositoryObjectType.TDQ_REPORT_ELEMENT.equals(targetObjectType)
+                // || ERepositoryObjectType.METADATA_CONNECTIONS.equals(targetObjectType)
                 || ERepositoryObjectType.METADATA_FILE_DELIMITED.equals(targetObjectType)
                 || ERepositoryObjectType.METADATA_MDMCONNECTION.equals(targetObjectType)) {
             removeLastSegments = makeRelativeTo;
@@ -511,6 +512,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             fullPath = ResourceManager.getFileDelimitedFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.METADATA_MDMCONNECTION) {
             fullPath = ResourceManager.getMDMConnectionFolder().getFullPath();
+        } else if (objectType == ERepositoryObjectType.TDQ_RULES_PARSER) {
+            fullPath = ResourceManager.getRulesParserFolder().getFullPath();
         }
         return fullPath;
     }
