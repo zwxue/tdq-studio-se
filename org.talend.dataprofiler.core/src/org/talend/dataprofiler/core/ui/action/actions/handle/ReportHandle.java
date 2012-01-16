@@ -12,12 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import java.util.List;
-
+import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -37,6 +36,7 @@ public class ReportHandle extends EMFResourceHandle {
     ReportHandle(IRepositoryNode node) {
         super(node);
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -51,11 +51,15 @@ public class ReportHandle extends EMFResourceHandle {
         // MOD klliu 2011-06-21 bug 21812 "duplicate report" have some issue
         TdReport report = (TdReport) newObject;
         report.getAnalysisMap().clear();
-        List<Analysis> anaLs = ReportHelper.getAnalyses((TdReport) oldObject);
-        for (Analysis analysis : anaLs) {
+
+        EList<AnalysisMap> analysisMap = ((TdReport) oldObject).getAnalysisMap();
+        for (AnalysisMap analysiM : analysisMap) {
+            Analysis analysis = analysiM.getAnalysis();
             DependenciesHandler.getInstance().setDependencyOn(report, analysis);
             ((TdReport) newObject).addAnalysis(analysis);
+            ((TdReport) newObject).setReportType(analysiM.getReportType(), analysiM.getJrxmlSource(), analysis);
         }
+
         // ~
 
         return newObject;
