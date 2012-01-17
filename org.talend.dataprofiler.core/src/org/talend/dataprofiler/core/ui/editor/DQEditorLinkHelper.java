@@ -21,6 +21,7 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
@@ -46,6 +47,9 @@ public class DQEditorLinkHelper implements ILinkHelper {
                 node = RepositoryNodeHelper.recursiveFind(((TDQPatternItem) item).getPattern());
             } else if (item instanceof TDQIndicatorDefinitionItem) {
                 node = RepositoryNodeHelper.recursiveFind(((TDQIndicatorDefinitionItem) item).getIndicatorDefinition());
+            } else if (item instanceof TDQBusinessRuleItem) {
+                // MOD klliu bug TDQ-4517 2012-01-16
+                node = RepositoryNodeHelper.recursiveFind(((TDQBusinessRuleItem) item).getDqrule());
             }
             if (node != null) {
                 return new StructuredSelection(node);
