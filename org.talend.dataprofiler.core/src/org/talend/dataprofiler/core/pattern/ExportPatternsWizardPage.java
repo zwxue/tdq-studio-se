@@ -38,6 +38,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.DQCheckedTreeViewer;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -229,11 +230,10 @@ public class ExportPatternsWizardPage extends WizardPage {
         SelectionListener listener = new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                try {
-                    selectedPatternsTree.setCheckedElements(folder.members());
-                } catch (CoreException e1) {
-                    log.error(e1, e1);
-                }
+                // MOD msjian 2012-1-17 TDQ-4066: set the checked elememts correctly
+                selectedPatternsTree.setCheckedElements(((ResourceViewContentProvider) selectedPatternsTree.getContentProvider())
+                        .getElements(node));
+                // TDQ-4066 ~
             }
         };
         selectButton.addSelectionListener(listener);
