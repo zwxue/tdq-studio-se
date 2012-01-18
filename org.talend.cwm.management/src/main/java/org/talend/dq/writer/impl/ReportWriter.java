@@ -68,7 +68,8 @@ public class ReportWriter extends AElementPersistance {
     @Override
     public void addDependencies(ModelElement element) {
         TdReport report = (TdReport) element;
-        for (Analysis ana : ReportHelper.getAnalyses(report)) {
+        List<Analysis> analyses = ReportHelper.getAnalyses(report);
+        for (Analysis ana : analyses) {
             TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
             if (dependencyReturn.isOk()) {
                 try {
