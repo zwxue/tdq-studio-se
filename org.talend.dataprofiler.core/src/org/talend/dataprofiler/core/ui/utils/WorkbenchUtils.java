@@ -221,8 +221,8 @@ public final class WorkbenchUtils {
         // FIXME itemType never used.
         ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
         IPath folderPath = WorkbenchUtils.getPath(node);
-        String name = node
-                .getObject()
+        String name = node.getObject()
+                .getProperty()
                 .getLabel()
                 .concat("_") //$NON-NLS-1$
                 .concat(node.getObject().getProperty().getVersion())

@@ -675,7 +675,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
             // ADD gdbu 2011-3-3 bug 19179
-            tdqAnalysisItem.getProperty().setLabel(analysisHandler.getName());
+            tdqAnalysisItem.getProperty().setDisplayName(analysisHandler.getName());
             this.nameText.setText(analysisHandler.getName());
             // ~
 

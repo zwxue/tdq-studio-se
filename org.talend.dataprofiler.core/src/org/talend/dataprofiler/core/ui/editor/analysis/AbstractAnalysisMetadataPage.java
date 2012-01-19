@@ -405,9 +405,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                     continue;
                 }
             }
-            connCombo.add(property.getLabel(), index);
+            connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
-            connCombo.setData(property.getLabel(), index);
+            connCombo.setData(property.getDisplayName(), index);
             connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;
         }

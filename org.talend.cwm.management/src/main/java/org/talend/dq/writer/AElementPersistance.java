@@ -284,7 +284,10 @@ public abstract class AElementPersistance {
         }
         // MOD qiongli 2011-1-7 delimitedfile connection dosen't use modelElement.getName().
         if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(modelElement) == null) {
+            if (property.getLabel() == null) {
             property.setLabel(WorkspaceUtils.normalize(modelElement.getName()));
+            }
+            property.setDisplayName(WorkspaceUtils.normalize(modelElement.getName()));
         }
         property.setPurpose(purpose);
         property.setDescription(description);

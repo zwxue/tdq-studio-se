@@ -898,7 +898,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
             // ADD gdbu 2011-3-2 bug 19179
-            tdqAnalysisItem.getProperty().setLabel(columnSetAnalysisHandler.getName());
+            tdqAnalysisItem.getProperty().setDisplayName(columnSetAnalysisHandler.getName());
             this.nameText.setText(columnSetAnalysisHandler.getName());
             // ~
 

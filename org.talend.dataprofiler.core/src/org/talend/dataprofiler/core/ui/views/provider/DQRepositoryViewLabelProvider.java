@@ -326,7 +326,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 label = label.substring(0, 1).toUpperCase() + label.substring(1);
                 return label;
             }
-            return node.getObject() == null ? PluginConstant.EMPTY_STRING : node.getObject().getLabel();
+            return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
         }
         String text = super.getText(element);
         return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ //$NON-NLS-2$

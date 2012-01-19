@@ -398,7 +398,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         Property property = getProperty();
 
         if (property != null) {
-            String name = property.getLabel();
+            String name = property.getDisplayName();
             String purpose = property.getPurpose();
             String description = property.getDescription();
             String author = property.getAuthor().getLogin();
@@ -465,7 +465,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // Property property = PropertyHelper.getProperty(currentModelElement);
         Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
         if (property != null) {
-            property.setLabel(nameText.getText());
+            property.setDisplayName(nameText.getText());
             property.setPurpose(purposeText.getText());
             property.setDescription(descriptionText.getText());
             property.setStatusCode(statusCombo.getText());
