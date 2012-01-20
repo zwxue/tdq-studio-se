@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_ccIR4hF2Ed2PKb6nEJEvhw" name="Date Frequency Table" label="Date Frequency Table">
+<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_hraIkTE2EeGvsfvHpG2Eqg" name="Date Frequency Table" label="Date Frequency Table">
   <taggedValue xmi:id="_-WccYYqnEd-SocVM_rHvUg" tag="Description" value="counts the number of records for each distinct record aggregates data according to day"/>
   <taggedValue xmi:id="_-WccYoqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the most frequent records"/>
   <categories href="../../../.Talend.definition#_ccKuIRF2Ed2PKb6nEJEvhw"/>
