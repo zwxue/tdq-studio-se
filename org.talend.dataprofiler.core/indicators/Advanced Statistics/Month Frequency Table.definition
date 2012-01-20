@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_ccIR4hF2Ed2PKb6nEJEvhw" name="Month Frequency Table" label="Month Frequency Table">
+<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_hraIkjE2EeGvsfvHpG2Eqg" name="Month Frequency Table" label="Month Frequency Table">
   <taggedValue xmi:id="_-WccYYqnEd-SocVM_rHvUg" tag="Description" value="counts the number of records for each distinct record according to month"/>
   <taggedValue xmi:id="_-WccYoqnEd-SocVM_rHvUg" tag="Purpose" value="evaluates the most frequent records"/>
   <categories href="../../../.Talend.definition#_ccKuIRF2Ed2PKb6nEJEvhw"/>
