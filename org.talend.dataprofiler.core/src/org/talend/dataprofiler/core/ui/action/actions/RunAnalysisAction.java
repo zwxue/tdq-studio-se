@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.text.DecimalFormat;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -35,9 +36,15 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
+import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.db.connection.MdmWebserviceConnection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -138,7 +145,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 // ~
                 anaEditor.doSave(null);
             }
-
             ReturnCode canRun = anaEditor.canRun();
             if (!canRun.isOk()) {
                 MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun//$NON-NLS-1$
@@ -204,7 +210,15 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         if (analysis == null) {
             return;
         }
-
+        // MOD klliu bug 4546 check connectiong is connected well.
+        Connection analysisDataProvider = this.getAnalysisDataProvider(analysis);
+        String dialogTitle = DefaultMessagesImpl.getString("RunAnalysisAction.urlChanged");//$NON-NLS-1$
+        String dialogMessage = DefaultMessagesImpl.getString("RunAnalysisAction.checkDBConnection");//$NON-NLS-1$
+        if (!checkConnIsUseful(analysisDataProvider)) {
+            MessageDialogWithToggle.openWarning(null, dialogTitle, dialogMessage);
+            return;
+        }
+        // ~
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
 
         if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
@@ -288,6 +302,28 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         job.setUser(true);
         job.schedule();
+    }
+
+    private boolean checkConnIsUseful(Connection analysisDataProvider) {
+        Properties props = new Properties();
+        String userName = JavaSqlFactory.getUsername(analysisDataProvider);
+        String password = JavaSqlFactory.getPassword(analysisDataProvider);
+        String url = JavaSqlFactory.getURL(analysisDataProvider);
+        if (analysisDataProvider.isContextMode()) {
+            userName = ConnectionUtils.getOriginalConntextValue(analysisDataProvider, userName);
+            password = ConnectionUtils.getOriginalConntextValue(analysisDataProvider, password);
+            url = ConnectionUtils.getOriginalConntextValue(analysisDataProvider, url);
+        }
+        props.put(TaggedValueHelper.USER, userName);
+        props.put(TaggedValueHelper.PASSWORD, password);
+        if (analysisDataProvider instanceof MDMConnection) {
+            props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) analysisDataProvider));
+            props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) analysisDataProvider));
+        }
+        ReturnCode returnCode = ConnectionUtils.isMdmConnection(analysisDataProvider) ? new MdmWebserviceConnection(
+                JavaSqlFactory.getURL(analysisDataProvider), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(
+                url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
+        return returnCode.isOk();
     }
 
     /**
