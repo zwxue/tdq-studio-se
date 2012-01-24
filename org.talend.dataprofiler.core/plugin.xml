@@ -328,7 +328,7 @@
                      type="org.talend.dq.nodes.RulesSQLFolderRepNode">
                </adapt>
                <instanceof
-                     value="org.talend.dq.nodes.RulesSubFolderRepNode">
+                     value="org.talend.dq.nodes.RulesParserSubFolderRepNode">
                </instanceof>
                <adapt
                      type="java.util.Collection">
