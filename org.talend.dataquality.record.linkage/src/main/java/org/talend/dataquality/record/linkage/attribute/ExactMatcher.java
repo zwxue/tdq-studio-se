@@ -19,12 +19,15 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 /**
  * DOC scorreia  class global comment. Detailled comment
  */
-public class ExactMatcher implements IAttributeMatcher {
-
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.matching.attribute.IAttributeMatcher#getMatchingProba(java.lang.String, java.lang.String)
+public class ExactMatcher extends AbstractAttributeMatcher {
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String str1, String str2) {
+    protected double getWeight(String str1, String str2) {
         return StringUtils.equals(str1, str2) ? 1.0 : 0.0;
     }
 

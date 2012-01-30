@@ -22,25 +22,29 @@ import org.talend.dataquality.record.linkage.utils.StringComparisonUtil;
  * Metaphone matcher. Uses Apache codec algorithm algorithms and computes a distance by comparing the number of
  * identical characters in the two algorithm codes.
  */
-public class MetaphoneMatcher implements IAttributeMatcher {
+public class MetaphoneMatcher extends AbstractAttributeMatcher {
 
     private final Metaphone algorithm = new Metaphone();
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
         return AttributeMatcherType.metaphone;
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String str1, String str2) {
-        return StringComparisonUtil.difference(algorithm.encode(str1), algorithm.encode(str2))
-                / (double) algorithm.getMaxCodeLen();
+    public double getWeight(String str1, String str2) {
+        String code1 = algorithm.encode(str1);
+        String code2 = algorithm.encode(str2);
+        algorithm.setMaxCodeLen(Math.max(code1.length(), code2.length()));
+        return StringComparisonUtil.difference(code1, code2) / (double) algorithm.getMaxCodeLen();
     }
-
-
 }

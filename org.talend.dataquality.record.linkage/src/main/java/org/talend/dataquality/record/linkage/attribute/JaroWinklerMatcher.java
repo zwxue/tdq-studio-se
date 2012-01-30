@@ -16,7 +16,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.StringComparisonUtil;
 
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 public class JaroWinklerMatcher extends JaroMatcher {
 
@@ -25,19 +25,22 @@ public class JaroWinklerMatcher extends JaroMatcher {
      */
     private static final double PREFIXADUSTMENTSCALE = 0.1;
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
         return AttributeMatcherType.jaroWinkler;
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.JaroMatcher#getWeight(java.lang.String, java.lang.String)
      */
-    public double getMatchingWeight(String str1, String str2) {
-        double dist = super.getMatchingWeight(str1, str2);
+    public double getWeight(String str1, String str2) {
+        double dist = super.getWeight(str1, str2);
         // This extension modifies the weights of poorly matching pairs string1, string2 which share a common prefix
         final int prefixLength = StringComparisonUtil.getPrefixLength(str1, str2);
         return dist + (prefixLength * PREFIXADUSTMENTSCALE * (1 - dist));

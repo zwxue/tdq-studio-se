@@ -15,23 +15,27 @@ package org.talend.dataquality.record.linkage.attribute;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.StringComparisonUtil;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
-public class JaroMatcher implements IAttributeMatcher {
+public class JaroMatcher extends AbstractAttributeMatcher {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
         return AttributeMatcherType.jaro;
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String string1, String string2) {
+    public double getWeight(String string1, String string2) {
 
         // get half the length of the string rounded up - (this is the distance used for acceptable transpositions)
         final int halflen = ((Math.min(string1.length(), string2.length())) / 2)

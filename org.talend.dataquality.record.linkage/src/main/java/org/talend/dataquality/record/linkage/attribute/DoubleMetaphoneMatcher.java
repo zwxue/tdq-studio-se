@@ -16,28 +16,33 @@ import org.apache.commons.codec.language.DoubleMetaphone;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.StringComparisonUtil;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
-public class DoubleMetaphoneMatcher implements IAttributeMatcher {
+public class DoubleMetaphoneMatcher extends AbstractAttributeMatcher {
 
     private final DoubleMetaphone algorithm = new DoubleMetaphone();
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
         return AttributeMatcherType.doubleMetaphone;
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String str1, String str2) {
-        return StringComparisonUtil.difference(algorithm.encode(str1), algorithm.encode(str2))
-                / (double) algorithm.getMaxCodeLen();
+    public double getWeight(String str1, String str2) {
+        String code1 = algorithm.encode(str1);
+        String code2 = algorithm.encode(str2);
+        algorithm.setMaxCodeLen(Math.max(code1.length(), code2.length()));
+        return StringComparisonUtil.difference(code1, code2) / (double) algorithm.getMaxCodeLen();
     }
 
 }

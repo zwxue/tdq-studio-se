@@ -13,7 +13,7 @@
 
 package org.talend.mydistance;
 
-import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 /**
@@ -21,9 +21,11 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
  * 
  * Example of Matching distance.
  */
-public class MyDistance implements IAttributeMatcher {
+public class MyDistance extends AbstractAttributeMatcher {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
@@ -31,10 +33,13 @@ public class MyDistance implements IAttributeMatcher {
         return AttributeMatcherType.custom;
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String arg0, String arg1) {
+    public double getWeight(String arg0, String arg1) {
         // Here goes the custom implementation of the matching distance between the two given strings.
         // the algorithm should return a value between 0 and 1.
 
