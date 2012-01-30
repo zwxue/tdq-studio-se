@@ -211,14 +211,15 @@ public class ChartTableProviderClassSet {
             case 0:
                 return entity.getLabel();
             case 1:
-                return entity.getPerMatch();
+            	// MOD msjian TDQ-4380 2012-1-29: set invalidate value to "N/A"
+                return entity.isOutOfValue(entity.getPerMatch()) ? "N/A" : entity.getPerMatch(); //$NON-NLS-1$
             case 2:
-                return entity.getPerNoMatch();
+                return entity.isOutOfValue(entity.getPerNoMatch()) ? "N/A" : entity.getPerNoMatch(); //$NON-NLS-1$
             case 3:
                 return entity.getNumMatch();
             case 4:
-                return entity.getNumNoMatch();
-
+                return entity.isOutOfValue(entity.getNumNoMatch()) ? "N/A" : entity.getNumNoMatch(); //$NON-NLS-1$
+                // TDQ-4380~
             default:
                 return ""; //$NON-NLS-1$
             }
@@ -230,8 +231,10 @@ public class ChartTableProviderClassSet {
 
             String currentText = getColumnText(element, columnIndex);
             // MOD mzhao bug 8838 2009-09-08
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
-            if (isCurrentCol && entity.isOutOfRange(currentText)) {
+            // MOD msjian TDQ-4380 2012-1-29: set warning image when the value is invalidated
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch()) || currentText.equals("N/A");//$NON-NLS-1$
+            if (isCurrentCol && (entity.isOutOfRange(currentText) || entity.isOutOfValue(currentText))) {
+        	// TDQ-4380~
                 return ImageLib.getImage(ImageLib.LEVEL_WARNING);
             }
 
@@ -243,9 +246,11 @@ public class ChartTableProviderClassSet {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;
 
             String currentText = getColumnText(element, columnIndex);
-         // MOD mzhao bug 8838 2009-09-08
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
-            if (isCurrentCol && entity.isOutOfRange(currentText)) {
+            // MOD mzhao bug 8838 2009-09-08
+         // MOD msjian TDQ-4380 2012-1-29: set font color when the value is invalidated
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch()) || currentText.equals("N/A");//$NON-NLS-1$
+            if (isCurrentCol && (entity.isOutOfRange(currentText) || entity.isOutOfValue(currentText))) {
+            	// TDQ-4380~
                 return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 
