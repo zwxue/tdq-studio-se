@@ -20,12 +20,15 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
  * This class always return 1 whatever the given strings are. This class can be used when we don't care about the some
  * attributes for matching.
  */
-public class DummyMatcher implements IAttributeMatcher {
+public class DummyMatcher extends AbstractAttributeMatcher {
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.matching.attribute.IAttributeMatcher#getMatchingProba(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String str1, String str2) {
+    protected double getWeight(String str1, String str2) {
         return 1;
     }
 

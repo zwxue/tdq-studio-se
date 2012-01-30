@@ -15,16 +15,18 @@ package org.talend.dataquality.record.linkage.attribute;
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
-public class LevenshteinMatcher implements IAttributeMatcher {
+public class LevenshteinMatcher extends AbstractAttributeMatcher {
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.matching.attribute.IAttributeMatcher#getMatchingProba(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String str1, String str2) {
+    public double getWeight(String str1, String str2) {
         // get the max possible levenstein distance score for string
         int maxLen = Math.max(str1.length(), str2.length());
 

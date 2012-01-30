@@ -15,7 +15,7 @@ package org.talend.dataquality.record.linkage.attribute;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 public interface IAttributeMatcher {
 
@@ -24,11 +24,11 @@ public interface IAttributeMatcher {
      * 
      * @param str1 a first string (must not be null)
      * @param str2 a second string (must not be null)
-     * @return the proba that the two strings match (should return a value between 0 and 1.
+     * @return the probability that the two strings match (should return a value between 0 and 1.
      */
     // Note: this is not a mathematical probability (the sum won't yield 1)
     double getMatchingWeight(String str1, String str2);
-    
+
     /**
      * Method "getMatchType".
      * 
@@ -36,5 +36,5 @@ public interface IAttributeMatcher {
      */
     AttributeMatcherType getMatchType();
     // TODO handle other types of data
-    
+
 }

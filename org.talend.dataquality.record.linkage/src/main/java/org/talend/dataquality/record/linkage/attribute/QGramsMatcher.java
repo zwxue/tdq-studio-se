@@ -25,7 +25,7 @@ import org.talend.dataquality.record.linkage.utils.QGramTokenizer;
  * this matcher computes the Q-grams distances. By default q=3.
  */
 // This code has been inspired by SimMetrics.
-public class QGramsMatcher implements IAttributeMatcher {
+public class QGramsMatcher extends AbstractAttributeMatcher {
 
     private QGramTokenizer tokenizer = new QGramTokenizer();
 
@@ -34,18 +34,22 @@ public class QGramsMatcher implements IAttributeMatcher {
      */
     private int q = 3;
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
         return AttributeMatcherType.qgrams;
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String string1, String string2) {
+    public double getWeight(String string1, String string2) {
         final List<String> str1Tokens = tokenizer.tokenizeToArrayList(string1, q);
         final List<String> str2Tokens = tokenizer.tokenizeToArrayList(string2, q);
 
@@ -103,5 +107,4 @@ public class QGramsMatcher implements IAttributeMatcher {
         this.q = q;
     }
 
-    
 }

@@ -16,12 +16,11 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.language.Soundex;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
-public class SoundexMatcher implements IAttributeMatcher {
-    
+public class SoundexMatcher extends AbstractAttributeMatcher {
+
     private final Soundex soundex = new Soundex();
 
     /**
@@ -29,12 +28,18 @@ public class SoundexMatcher implements IAttributeMatcher {
      */
     private static final double MAX = 4.0;
 
-    
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingProba(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String str1, String str2) {
+    public double getWeight(String str1, String str2) {
         try {
+            System.out.println(soundex.encode(str1));
+            System.out.println(soundex.soundex(str1));
+            System.out.println(soundex.encode(str2));
+            System.out.println(soundex.soundex(str2));
             int diff = soundex.difference(str1, str2);
             return diff / MAX;
         } catch (EncoderException e) {

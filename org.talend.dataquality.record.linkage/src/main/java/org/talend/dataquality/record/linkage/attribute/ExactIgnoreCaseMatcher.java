@@ -15,16 +15,18 @@ package org.talend.dataquality.record.linkage.attribute;
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
-public class ExactIgnoreCaseMatcher implements IAttributeMatcher {
+public class ExactIgnoreCaseMatcher extends AbstractAttributeMatcher {
 
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.matching.attribute.IAttributeMatcher#getMatchingProba(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
+     * java.lang.String)
      */
-    public double getMatchingWeight(String str1, String str2) {
+    protected double getWeight(String str1, String str2) {
         return StringUtils.equalsIgnoreCase(str1, str2) ? 1 : 0;
     }
 
