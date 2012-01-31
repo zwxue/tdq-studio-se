@@ -36,10 +36,6 @@ public class SoundexMatcher extends AbstractAttributeMatcher {
      */
     public double getWeight(String str1, String str2) {
         try {
-            System.out.println(soundex.encode(str1));
-            System.out.println(soundex.soundex(str1));
-            System.out.println(soundex.encode(str2));
-            System.out.println(soundex.soundex(str2));
             int diff = soundex.difference(str1, str2);
             return diff / MAX;
         } catch (EncoderException e) {
