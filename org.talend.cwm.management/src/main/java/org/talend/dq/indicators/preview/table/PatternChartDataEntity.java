@@ -14,6 +14,7 @@ package org.talend.dq.indicators.preview.table;
 
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.utils.format.StringFormatUtil;
 
 /**
@@ -67,14 +68,16 @@ public class PatternChartDataEntity extends ChartDataEntity {
         }
         
         // ADD msjian TDQ-4380 2012-1-29: set the hint message when the value is not validate
-        String sql = indicator.getInstantiatedExpressions().get(0).getBody();
-        String table = indicator.getAnalyzedElement().getName();
-        if (isOutOfValue(getNumMatch())) {
-        	msg.append(Messages.getString("PatternChartDataEntity.notAvailableData", sql, table)); //$NON-NLS-1$
-            msg.append("\n"); //$NON-NLS-1$
-        }
-        if (isOutOfValue(getPerMatch())) {
-        	msg.append(Messages.getString("PatternChartDataEntity.notAvailableData", sql, table)); //$NON-NLS-1$
+        if (indicator instanceof WhereRuleIndicator) {
+            String sql = indicator.getInstantiatedExpressions().get(0).getBody();
+            String table = indicator.getAnalyzedElement().getName();
+            if (isOutOfValue(getNumMatch())) {
+                msg.append(Messages.getString("PatternChartDataEntity.notAvailableData", sql, table)); //$NON-NLS-1$
+                msg.append("\n"); //$NON-NLS-1$
+            }
+            if (isOutOfValue(getPerMatch())) {
+                msg.append(Messages.getString("PatternChartDataEntity.notAvailableData", sql, table)); //$NON-NLS-1$
+            }
         }
         // TDQ-4380~
         
