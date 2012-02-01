@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
@@ -379,7 +380,10 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private void handlePropertiesFile(File propFile, Map<File, File> folderMap, File parentFolder) throws PersistenceException,
             IOException {
-        URI uri = URI.createFileURI(propFile.getAbsolutePath());
+        // MOD qiongli 2012-1-31 TDQ-4431.should use a relative path here.if it is absolute path,dependency client tag
+        // is also a absolute path in connection file.
+        IFile iFile = WorkspaceUtils.fileToIFile(propFile);
+        URI uri = URI.createPlatformResourceURI(iFile.getFullPath().toString(), false);
 
         Resource resource = resourceSet.getResource(uri, true);
 
