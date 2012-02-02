@@ -24,10 +24,8 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -382,13 +380,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
             IOException {
         // MOD qiongli 2012-1-31 TDQ-4431.should use a relative path here.if it is absolute path,dependency client tag
         // is also a absolute path in connection file.
-        IFile iFile = WorkspaceUtils.fileToIFile(propFile);
-        URI uri = URI.createPlatformResourceURI(iFile.getFullPath().toString(), false);
-
-        Resource resource = resourceSet.getResource(uri, true);
-
-        Property property = (Property) EcoreUtil.getObjectByType(resource.getContents(),
-                PropertiesPackage.eINSTANCE.getProperty());
+        Property property = PropertyHelper.getProperty(propFile, true);
 
         if (property != null) {
             File targetFolder = folderMap.get(parentFolder);
