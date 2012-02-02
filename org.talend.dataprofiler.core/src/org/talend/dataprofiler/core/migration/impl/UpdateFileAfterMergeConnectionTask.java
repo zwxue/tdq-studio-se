@@ -263,8 +263,10 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
         index = 3;
         if (s[index] != "") { //$NON-NLS-1$
-            if (selection.equals(EDatabaseConnTemplate.AS400.getDBDisplayName())
-                    || selection.equals(EDatabaseConnTemplate.MYSQL.getDBDisplayName())) {
+            if (selection.equals(EDatabaseConnTemplate.IBMDB2.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.INFORMIX.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.ORACLEFORSID.getDBDisplayName())
+                    || selection.equals(EDatabaseConnTemplate.INGRES.getDBDisplayName())) {
                 dbconn.setSID(s[index]);
             }
         }
