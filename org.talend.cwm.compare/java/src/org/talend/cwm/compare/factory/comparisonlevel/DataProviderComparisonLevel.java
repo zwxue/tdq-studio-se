@@ -30,10 +30,12 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.helper.PropertyHelper;
@@ -52,6 +54,7 @@ import orgomg.cwm.resource.relational.Schema;
 public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     private static Logger log = Logger.getLogger(DataProviderComparisonLevel.class);
+
     public DataProviderComparisonLevel(Object selectedObj) {
         super(selectedObj);
     }
@@ -99,6 +102,9 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                     }
                 }
             }
+
+        } else if (selectedObj instanceof IRepositoryViewObject) {
+            item = ((IRepositoryViewObject) selectedObj).getProperty().getItem();
 
         } else {
             // MOD klliu 2001-03-01 bug 17506
@@ -199,7 +205,19 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         } else {
             Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(rightElement);
             if (schema != null) {
-                ConnectionHelper.addSchema(schema, oldDataProvider);
+                // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and schema,should add schema into
+                // catalog.
+                if (schema.eContainer() != null) {
+                    Catalog schemaParent = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
+                    List<Schema> schemas = new ArrayList<Schema>();
+                    schemas.add(schema);
+                    Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
+                    CatalogHelper.addSchemas(schemas, oldCatalog);
+                    schemaParent.getOwnedElement().remove(schema);
+                } else {
+                    ConnectionHelper.addSchema(schema, oldDataProvider);
+                    this.tempReloadProvider.getDataPackage().remove(catalog);
+                }
             }
         }
         return;
@@ -213,6 +231,19 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
             return;
         }
         popRemoveElementConfirm();
+        // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and Schema,should remove schema from catalog.
+        Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removePackage);
+        if (schema != null && schema.eContainer() != null) {
+            Catalog schemaParent = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
+            Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
+            if (oldCatalog != null && oldCatalog.getName().equalsIgnoreCase(schemaParent.getName())) {
+                oldCatalog.getOwnedElement().remove(schema);
+                if (oldCatalog.eResource() != null) {
+                    oldCatalog.eResource().getContents().remove(schema);
+                }
+                return;
+            }
+        }
         oldDataProvider.getDataPackage().remove(removePackage);
         oldDataProvider.eResource().getContents().remove(removePackage);
 
