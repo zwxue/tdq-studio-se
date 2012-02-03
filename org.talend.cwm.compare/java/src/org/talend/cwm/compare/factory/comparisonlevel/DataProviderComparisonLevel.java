@@ -236,9 +236,8 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         popRemoveElementConfirm();
         // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and Schema,should remove schema from catalog.
         Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removePackage);
-        EObject eContainer = schema.eContainer();
-        if (schema != null && eContainer != null && eContainer instanceof Catalog) {
-            Catalog schemaParent = (Catalog) eContainer;
+        if (schema != null && schema.eContainer() != null && schema.eContainer() instanceof Catalog) {
+            Catalog schemaParent = (Catalog) schema.eContainer();
             Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
             if (oldCatalog != null && oldCatalog.getName().equalsIgnoreCase(schemaParent.getName())) {
                 oldCatalog.getOwnedElement().remove(schema);
