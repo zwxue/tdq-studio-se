@@ -207,13 +207,16 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
             if (schema != null) {
                 // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and schema,should add schema into
                 // catalog.
-                if (schema.eContainer() != null) {
-                    Catalog schemaParent = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
+                EObject eContainer = schema.eContainer();
+                if (eContainer != null && eContainer instanceof Catalog) {
+                    Catalog schemaParent = (Catalog) eContainer;
                     List<Schema> schemas = new ArrayList<Schema>();
                     schemas.add(schema);
                     Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
-                    CatalogHelper.addSchemas(schemas, oldCatalog);
-                    schemaParent.getOwnedElement().remove(schema);
+                    if (oldCatalog != null) {
+                        CatalogHelper.addSchemas(schemas, oldCatalog);
+                        schemaParent.getOwnedElement().remove(schema);
+                    }
                 } else {
                     ConnectionHelper.addSchema(schema, oldDataProvider);
                     this.tempReloadProvider.getDataPackage().remove(catalog);
@@ -233,16 +236,17 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         popRemoveElementConfirm();
         // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and Schema,should remove schema from catalog.
         Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removePackage);
-        if (schema != null && schema.eContainer() != null) {
-            Catalog schemaParent = SwitchHelpers.CATALOG_SWITCH.doSwitch(schema.eContainer());
+        EObject eContainer = schema.eContainer();
+        if (schema != null && eContainer != null && eContainer instanceof Catalog) {
+            Catalog schemaParent = (Catalog) eContainer;
             Catalog oldCatalog = CatalogHelper.getCatalog(oldDataProvider, schemaParent.getName());
             if (oldCatalog != null && oldCatalog.getName().equalsIgnoreCase(schemaParent.getName())) {
                 oldCatalog.getOwnedElement().remove(schema);
                 if (oldCatalog.eResource() != null) {
                     oldCatalog.eResource().getContents().remove(schema);
                 }
-                return;
             }
+            return;
         }
         oldDataProvider.getDataPackage().remove(removePackage);
         oldDataProvider.eResource().getContents().remove(removePackage);
