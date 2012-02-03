@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -92,6 +93,7 @@ import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempFolderRepNode;
+import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
@@ -116,6 +118,7 @@ import org.talend.dq.nodes.RulesSQLFolderRepNode;
 import org.talend.dq.nodes.RulesSQLSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
@@ -509,6 +512,10 @@ public final class RepositoryNodeHelper {
             } else {
                 node = recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
             }
+            // ADD msjian TDQ-4209 2012-02-03: find the *.jrxml and *.sql file
+        } else if (modelElement instanceof IFile) {
+            node = recursiveFindFile((IFile) modelElement);
+            // TDQ-4209 ~
         }
         return node;
         // !!!following codes are testing codes, please don't delete them, thanks!!!
@@ -522,6 +529,45 @@ public final class RepositoryNodeHelper {
         // + modelElement.getName() + "] NOT FOUND!!!");
         // }
         // return repNode;
+    }
+
+    /**
+     * DOC msjian Comment method "recursiveFindFile".
+     * 
+     * @param file
+     * @return
+     */
+    public static RepositoryNode recursiveFindFile(IFile file) {
+        if (file == null) {
+            return null;
+        }
+        String fileName = file.getName();
+
+        List<?> fileRepNodes = null;
+        if (fileName.toLowerCase().endsWith("jrxml")) { //$NON-NLS-1$
+            fileRepNodes = getJrxmlFileRepNodes(getLibrariesFolderNode(EResourceConstant.JRXML_TEMPLATE), true);
+
+        } else if (fileName.toLowerCase().endsWith("sql")) { //$NON-NLS-1$
+            fileRepNodes = getSourceFileRepNodes(getLibrariesFolderNode(EResourceConstant.SOURCE_FILES), true);
+        }
+
+        for (int i = 0; i < fileRepNodes.size(); i++) {
+            RepositoryNode childNode = (RepositoryNode) fileRepNodes.get(i);
+
+            String childNodeFileName = ""; //$NON-NLS-1$
+            if (childNode instanceof JrxmlTempleteRepNode) {
+                childNodeFileName = childNode.getLabel() + "_" + childNode.getObject().getVersion() + "."
+                        + ((JrxmlTempleteRepNode)childNode).getJrxmlItem().getExtension(); //$NON-NLS-1$ $NON-NLS-2$
+            } else if (childNode instanceof SourceFileRepNode) {
+                childNodeFileName = childNode.getLabel() + "_" + childNode.getObject().getVersion() + "."
+                + ((SourceFileRepNode)childNode).getSourceFileItem().getExtension(); //$NON-NLS-1$ $NON-NLS-2$
+            }
+            if (fileName.equals(childNodeFileName)) {
+                return childNode;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -2251,19 +2297,41 @@ public final class RepositoryNodeHelper {
     }
 
     /**
+     * get JrxmlTempleteRepNodes which under the parentNode.
+     * 
+     * @param parentNode
+     * @param recursive
+     * @return
+     */
+    public static List<JrxmlTempleteRepNode> getJrxmlFileRepNodes(IRepositoryNode parentNode, boolean recursive) {
+        List<JrxmlTempleteRepNode> result = new ArrayList<JrxmlTempleteRepNode>();
+        List<IRepositoryNode> children = parentNode.getChildren();
+        for (IRepositoryNode node : children) {
+            if (node instanceof JrxmlTempleteRepNode) {
+                result.add((JrxmlTempleteRepNode) node);
+            } else if (node instanceof JrxmlTempFolderRepNode || node instanceof JrxmlTempSubFolderNode) {
+                if (recursive) {
+                    result.addAll(getJrxmlFileRepNodes((JrxmlTempleteRepNode) node, recursive));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * get SourceFileRepNodes which under the parentNode.
      * 
      * @param parentNode
      * @param recursive
      * @return
      */
-    public static List<SourceFileRepNode> getSourceFileRepNodes(RepositoryNode parentNode, boolean recursive) {
+    public static List<SourceFileRepNode> getSourceFileRepNodes(IRepositoryNode parentNode, boolean recursive) {
         List<SourceFileRepNode> result = new ArrayList<SourceFileRepNode>();
         List<IRepositoryNode> children = parentNode.getChildren();
         for (IRepositoryNode node : children) {
             if (node instanceof SourceFileRepNode) {
                 result.add((SourceFileRepNode) node);
-            } else if (node instanceof SourceFileFolderRepNode) {
+            } else if (node instanceof SourceFileFolderRepNode || node instanceof SourceFileSubFolderNode) {
                 if (recursive) {
                     result.addAll(getSourceFileRepNodes((SourceFileFolderRepNode) node, recursive));
                 }
@@ -2824,5 +2892,4 @@ public final class RepositoryNodeHelper {
     public static List<IRepositoryNode> getAllFilteredNodeList() {
         return allFilteredNodeList;
     }
-
 }
