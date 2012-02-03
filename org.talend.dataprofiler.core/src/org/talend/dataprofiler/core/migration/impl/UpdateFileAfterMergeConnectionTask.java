@@ -380,9 +380,10 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
 
     private void handlePropertiesFile(File propFile, Map<File, File> folderMap, File parentFolder) throws PersistenceException,
             IOException {
-        // MOD qiongli 2012-1-31 TDQ-4431.should use a relative path here.if it is absolute path,dependency client tag
-        // is also a absolute path in connection file.
-        Property property = PropertyHelper.getProperty(propFile, true);
+        // MOD qiongli 2012-1-31 TDQ-4431.should use a relative path just when import from logon window(mechanism is
+        // different between logon window and button).if it is absolute path,dependency client tag is also a absolute
+        // path in connection file.
+        Property property = PropertyHelper.getProperty(propFile, isWorksapcePath());
 
         if (property != null) {
             File targetFolder = folderMap.get(parentFolder);
