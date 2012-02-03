@@ -12,10 +12,12 @@
 // ============================================================================
 package org.talend.dq.indicators.preview.table;
 
+import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.utils.format.StringFormatUtil;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -69,7 +71,13 @@ public class PatternChartDataEntity extends ChartDataEntity {
         
         // ADD msjian TDQ-4380 2012-1-29: set the hint message when the value is not validate
         if (indicator instanceof WhereRuleIndicator) {
-            String sql = indicator.getInstantiatedExpressions().get(0).getBody();
+        	// MOD msjian TDQ-4380: avoid the List size is 0
+            String sql = ""; //$NON-NLS-1$
+            EList<Expression> instantiatedExpressions = indicator.getInstantiatedExpressions();
+            if (instantiatedExpressions != null && !instantiatedExpressions.isEmpty()) {
+                sql = instantiatedExpressions.get(0).getBody();
+            }
+            // ~
             String table = indicator.getAnalyzedElement().getName();
             if (isOutOfValue(getNumMatch())) {
                 msg.append(Messages.getString("PatternChartDataEntity.notAvailableData", sql, table)); //$NON-NLS-1$
