@@ -1476,6 +1476,9 @@
               <instanceof
                     value="org.eclipse.ui.part.FileEditorInput">
               </instanceof>
+              <instanceof
+                    value="net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput">
+              </instanceof>
            </or></editorInputEnablement>
         <selectionEnablement>
            <instanceof
