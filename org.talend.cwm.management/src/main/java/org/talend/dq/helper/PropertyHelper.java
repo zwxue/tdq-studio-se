@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.emf.FactoriesUtil.EElementEName;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.DelimitedFileConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -151,21 +152,44 @@ public final class PropertyHelper {
      * @return
      */
     public static Property getProperty(File propertyFile) {
-        if (propertyFile.exists()) {
-            if (propertyFile.getName().endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                URI propURI = URI.createFileURI(propertyFile.getAbsolutePath());
-                Resource resource = new ResourceSetImpl().getResource(propURI, true);
+        // MOD qiongli 2012-2-2 TDQ-4431,move the detail code to method 'getProperty(File propertyFile,boolean
+        // useRelativePath)'.
+        return getProperty(propertyFile, false);
+    }
 
-                if (resource.getContents() != null) {
-                    Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
-                    if (object != null) {
-                        return (Property) object;
+    /**
+     * 
+     * Get property by property file resource.
+     * 
+     * @param propertyFile
+     * @param useRelativePath,if true,get EMF resource by relative path for URI.
+     * @return
+     */
+    public static Property getProperty(File propertyFile, boolean useRelativePath) {
+        if (propertyFile == null) {
+            return null;
+        }
+        Property property = null;
+        if (useRelativePath) {
+            IFile iFile = WorkspaceUtils.fileToIFile(propertyFile);
+            property = getProperty(iFile);
+        } else {
+            if (propertyFile.exists()) {
+                if (propertyFile.getName().endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                    URI propURI = URI.createFileURI(propertyFile.getAbsolutePath());
+                    Resource resource = new ResourceSetImpl().getResource(propURI, true);
+                    if (resource.getContents() != null) {
+                        Object object = EcoreUtil.getObjectByType(resource.getContents(),
+                                PropertiesPackage.eINSTANCE.getProperty());
+                        if (object != null) {
+                            property = (Property) object;
+                        }
                     }
                 }
             }
         }
 
-        return null;
+        return property;
     }
 
     /**
