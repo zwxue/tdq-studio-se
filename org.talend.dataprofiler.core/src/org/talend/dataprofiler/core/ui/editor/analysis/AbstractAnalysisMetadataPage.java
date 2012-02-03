@@ -145,9 +145,12 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         if (!rc.isOk()) {
             MessageDialogWithToggle.openError(null,
                     DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
-        } else if(!checkWhithspace()){
-            MessageDialogWithToggle.openError(null,DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
-        }else {
+        } else if (!checkWhithspace()) {
+            MessageDialogWithToggle
+                    .openError(
+                            null,
+                            DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+        } else {
             super.doSave(monitor);
             try {
                 saveAnalysis();
@@ -499,4 +502,33 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         return ExecutionLanguage.SQL;
     }
 
+    /**
+     * Log on debug enable.
+     * 
+     * @param logger
+     * @param level
+     * @param message
+     */
+    protected void doLog(Logger logger, Level level, String message) {
+        if (logger.isDebugEnabled()) {
+            logger.log(level, message);
+        }
+    }
+
+    /**
+     * log when analysis saved
+     * 
+     * @param saved
+     * @throws DataprofilerCoreException
+     */
+    protected void logSaved(ReturnCode saved) throws DataprofilerCoreException {
+        String urlString = analysis.eResource() != null ? (analysis.eResource().getURI().isFile() ? analysis.eResource().getURI()
+                .toFileString() : analysis.eResource().getURI().toString()) : PluginConstant.EMPTY_STRING;
+        if (saved.isOk()) {
+            doLog(log, Level.INFO, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.success", urlString)); //$NON-NLS-1$
+        } else {
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.problem", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$
+        }
+    }
 }

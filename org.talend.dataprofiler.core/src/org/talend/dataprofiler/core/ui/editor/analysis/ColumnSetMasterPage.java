@@ -882,11 +882,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
         }
 
-        // MOD msjian 2011-12-26 TDQ-4163: the exception message is incorrect
-        String urlString = analysis.eResource() != null ? (analysis.eResource().getURI().isFile() ? analysis.eResource().getURI()
-                .toFileString() : analysis.eResource().getURI().toString())
-                : PluginConstant.EMPTY_STRING;
-        // TDQ-4163 ~
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
@@ -904,21 +899,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
-        if (saved.isOk()) {
-            RepositoryNode node = RepositoryNodeHelper.recursiveFind(tdProvider);
-            if (node != null) {
-                // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(node.getObject().getProperty().getItem());
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + urlString + " successful");
-            }
-        } else {
-            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
-                    "ColumnMasterDetailsPage.problem", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
+        // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
+        // which is depended in the referred connection.
+        // Extract saving log function.
+        // @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#logSaved(ReturnCode)
+        logSaved(saved);
 
         treeViewer.setDirty(false);
         dataFilterComp.setDirty(false);
