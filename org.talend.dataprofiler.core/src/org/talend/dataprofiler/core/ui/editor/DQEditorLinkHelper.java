@@ -12,11 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.navigator.ILinkHelper;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
@@ -34,9 +37,9 @@ import org.talend.repository.model.RepositoryNode;
 public class DQEditorLinkHelper implements ILinkHelper {
 
     public IStructuredSelection findSelection(IEditorInput editorInput) {
+        RepositoryNode node = null;
         if (editorInput instanceof AbstractItemEditorInput) {
             Item item = ((AbstractItemEditorInput) editorInput).getItem();
-            RepositoryNode node = null;
             if (item instanceof TDQAnalysisItem) {
                 node = RepositoryNodeHelper.recursiveFind(((TDQAnalysisItem) item).getAnalysis());
             } else if (item instanceof TDQReportItem) {
@@ -54,6 +57,17 @@ public class DQEditorLinkHelper implements ILinkHelper {
             if (node != null) {
                 return new StructuredSelection(node);
             }
+            // ADD msjian TDQ-4209 2012-02-03: make the JRXML editor synchronized with the DQ repository view
+        } else if (editorInput instanceof FileEditorInput) {
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+            IFile file = ResourceUtil.getFile(fileEditorInput);
+            if (file != null) {
+                node = RepositoryNodeHelper.recursiveFindFile(file);
+                if (node != null) {
+                    return new StructuredSelection(node);
+                }
+            }
+            // TDQ-4209~
         }
         return StructuredSelection.EMPTY;
     }

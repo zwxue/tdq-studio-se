@@ -1469,27 +1469,18 @@
            class="org.talend.dataprofiler.core.ui.editor.DQEditorLinkHelper"
            id="org.talend.dataprofiler.core.ui.editor.DQEditorLinkHelper">
         <editorInputEnablement>
-           <instanceof
-                 value="org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput">
-           </instanceof></editorInputEnablement>
-        <selectionEnablement>
            <or>
               <instanceof
-                    value="org.talend.dq.nodes.AnalysisRepNode">
+                    value="org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput">
               </instanceof>
               <instanceof
-                    value="org.talend.dq.nodes.ReportRepNode">
+                    value="org.eclipse.ui.part.FileEditorInput">
               </instanceof>
-              <instanceof
-                    value="org.talend.dq.nodes.DBConnectionRepNode">
-              </instanceof>
-              <instanceof
-                    value="org.talend.dq.nodes.PatternRepNode">
-              </instanceof>
-              <instanceof
-                    value="org.talend.dq.nodes.SysIndicatorDefinitionRepNode">
-              </instanceof>
-           </or>
+           </or></editorInputEnablement>
+        <selectionEnablement>
+           <instanceof
+                 value="org.talend.dq.nodes.DQRepositoryNode">
+           </instanceof>
         </selectionEnablement>
      </linkHelper>
   </extension>
