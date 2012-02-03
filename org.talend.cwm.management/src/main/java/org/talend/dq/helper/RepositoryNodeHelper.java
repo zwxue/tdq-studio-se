@@ -556,11 +556,9 @@ public final class RepositoryNodeHelper {
 
             String childNodeFileName = ""; //$NON-NLS-1$
             if (childNode instanceof JrxmlTempleteRepNode) {
-                childNodeFileName = childNode.getLabel() + "_" + childNode.getObject().getVersion() + "."
-                        + ((JrxmlTempleteRepNode)childNode).getJrxmlItem().getExtension(); //$NON-NLS-1$ $NON-NLS-2$
+            	childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(".properties", ".jrxml"); //$NON-NLS-1$ $NON-NLS-2$
             } else if (childNode instanceof SourceFileRepNode) {
-                childNodeFileName = childNode.getLabel() + "_" + childNode.getObject().getVersion() + "."
-                + ((SourceFileRepNode)childNode).getSourceFileItem().getExtension(); //$NON-NLS-1$ $NON-NLS-2$
+            	childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(".properties", ".sql"); //$NON-NLS-1$ $NON-NLS-2$
             }
             if (fileName.equals(childNodeFileName)) {
                 return childNode;
@@ -2311,7 +2309,7 @@ public final class RepositoryNodeHelper {
                 result.add((JrxmlTempleteRepNode) node);
             } else if (node instanceof JrxmlTempFolderRepNode || node instanceof JrxmlTempSubFolderNode) {
                 if (recursive) {
-                    result.addAll(getJrxmlFileRepNodes((JrxmlTempleteRepNode) node, recursive));
+                    result.addAll(getJrxmlFileRepNodes((JrxmlTempFolderRepNode)node, recursive));
                 }
             }
         }
