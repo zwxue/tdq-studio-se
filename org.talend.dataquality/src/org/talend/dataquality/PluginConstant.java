@@ -36,6 +36,12 @@ public final class PluginConstant {
     public static final String SPACE_STRING = " ";//$NON-NLS-1$
 
     public static final String COMMA_STRING = ",";//$NON-NLS-1$
+       
+    public static final String JRXML_STRING = ".jrxml";//$NON-NLS-1$
+    
+    public static final String SQL_STRING = ".sql";//$NON-NLS-1$
+    
+    public static final String PROPERTIES_STRING = ".properties";//$NON-NLS-1$
 
     private PluginConstant() {
 

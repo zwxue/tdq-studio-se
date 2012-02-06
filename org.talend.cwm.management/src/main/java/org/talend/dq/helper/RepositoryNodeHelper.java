@@ -544,25 +544,27 @@ public final class RepositoryNodeHelper {
         String fileName = file.getName();
 
         List<?> fileRepNodes = null;
-        if (fileName.toLowerCase().endsWith("jrxml")) { //$NON-NLS-1$
+        if (fileName.toLowerCase().endsWith(PluginConstant.JRXML_STRING)) {
             fileRepNodes = getJrxmlFileRepNodes(getLibrariesFolderNode(EResourceConstant.JRXML_TEMPLATE), true);
 
-        } else if (fileName.toLowerCase().endsWith("sql")) { //$NON-NLS-1$
+        } else if (fileName.toLowerCase().endsWith(PluginConstant.SQL_STRING)) {
             fileRepNodes = getSourceFileRepNodes(getLibrariesFolderNode(EResourceConstant.SOURCE_FILES), true);
         }
 
-        for (int i = 0; i < fileRepNodes.size(); i++) {
-            RepositoryNode childNode = (RepositoryNode) fileRepNodes.get(i);
-
-            String childNodeFileName = ""; //$NON-NLS-1$
-            if (childNode instanceof JrxmlTempleteRepNode) {
-            	childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(".properties", ".jrxml"); //$NON-NLS-1$ $NON-NLS-2$
-            } else if (childNode instanceof SourceFileRepNode) {
-            	childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(".properties", ".sql"); //$NON-NLS-1$ $NON-NLS-2$
-            }
-            if (fileName.equals(childNodeFileName)) {
-                return childNode;
-            }
+        if (fileRepNodes != null) {
+        	for (int i = 0; i < fileRepNodes.size(); i++) {
+        		RepositoryNode childNode = (RepositoryNode) fileRepNodes.get(i);
+        		
+        		String childNodeFileName = PluginConstant.EMPTY_STRING;
+        		if (childNode instanceof JrxmlTempleteRepNode) {
+        			childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.JRXML_STRING);
+        		} else if (childNode instanceof SourceFileRepNode) {
+        			childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.SQL_STRING);
+        		}
+        		if (fileName.equals(childNodeFileName)) {
+        			return childNode;
+        		}
+        	}
         }
 
         return null;
