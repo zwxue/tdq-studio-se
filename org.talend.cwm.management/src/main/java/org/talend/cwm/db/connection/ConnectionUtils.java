@@ -241,6 +241,33 @@ public final class ConnectionUtils {
 
     /**
      * 
+     * This method is used to check conectiton is avalible for analysis or report ,when analysis or report runs.
+     * 
+     * @param analysisDataProvider
+     * @return
+     */
+
+    public static boolean isConnectionAvailable(Connection analysisDataProvider) {
+        Properties props = new Properties();
+        String userName = JavaSqlFactory.getUsername(analysisDataProvider);
+        String password = JavaSqlFactory.getPassword(analysisDataProvider);
+        String url = JavaSqlFactory.getURL(analysisDataProvider);
+        props.put(TaggedValueHelper.USER, userName);
+        props.put(TaggedValueHelper.PASSWORD, password);
+        if (analysisDataProvider instanceof MDMConnection) {
+            props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) analysisDataProvider));
+            props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) analysisDataProvider));
+            MdmWebserviceConnection mdmWebserviceConnection = new MdmWebserviceConnection(
+                    JavaSqlFactory.getURL(analysisDataProvider), props);
+            ReturnCode checkDatabaseConnection = mdmWebserviceConnection.checkDatabaseConnection();
+            return checkDatabaseConnection.isOk();
+        }
+        ReturnCode returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
+        return returnCode.isOk();
+    }
+
+    /**
+     * 
      * DOC xqliu Comment method "createConnectionWithTimeout".
      * 
      * @param driver
