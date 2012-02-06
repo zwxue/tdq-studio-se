@@ -382,7 +382,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
             IOException {
         // MOD qiongli 2012-1-31 TDQ-4431.should use a relative path here.if it is absolute path,dependency client tag
         // is also a absolute path in connection file.
-        Property property = PropertyHelper.getProperty(propFile, true);
+        Property property = PropertyHelper.getProperty(propFile, isWorksapcePath());
 
         if (property != null) {
             File targetFolder = folderMap.get(parentFolder);
