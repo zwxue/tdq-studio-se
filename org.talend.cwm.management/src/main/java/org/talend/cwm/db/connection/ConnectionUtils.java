@@ -112,7 +112,7 @@ public final class ConnectionUtils {
     public static final int LOGIN_TEMEOUT_MILLISECOND = 20000;
 
     public static final int LOGIN_TIMEOUT_SECOND = 20;
-    
+
     private static boolean timeout = Platform.getPreferencesService().getBoolean(
             CWMPlugin.getDefault().getBundle().getSymbolicName(), PluginConstant.CONNECTION_TIMEOUT, false, null);
 
@@ -237,6 +237,33 @@ public final class ConnectionUtils {
         }
 
         return rc;
+    }
+
+    /**
+     * 
+     * This method is used to check conectiton is avalible for analysis or report ,when analysis or report runs.
+     * 
+     * @param analysisDataProvider
+     * @return
+     */
+
+    public static boolean isConnectionAvailable(Connection analysisDataProvider) {
+        Properties props = new Properties();
+        String userName = JavaSqlFactory.getUsername(analysisDataProvider);
+        String password = JavaSqlFactory.getPassword(analysisDataProvider);
+        String url = JavaSqlFactory.getURL(analysisDataProvider);
+        props.put(TaggedValueHelper.USER, userName);
+        props.put(TaggedValueHelper.PASSWORD, password);
+        if (analysisDataProvider instanceof MDMConnection) {
+            props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) analysisDataProvider));
+            props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) analysisDataProvider));
+            MdmWebserviceConnection mdmWebserviceConnection = new MdmWebserviceConnection(
+                    JavaSqlFactory.getURL(analysisDataProvider), props);
+            ReturnCode checkDatabaseConnection = mdmWebserviceConnection.checkDatabaseConnection();
+            return checkDatabaseConnection.isOk();
+        }
+        ReturnCode returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
+        return returnCode.isOk();
     }
 
     /**
@@ -1568,13 +1595,11 @@ public final class ConnectionUtils {
             if (contextName == null) {
                 return DBConnectionContextUtils.cloneOriginalValueConnection(connection, true, null);
             }
-            return DBConnectionContextUtils
-                    .cloneOriginalValueConnection((DatabaseConnection) connection, false,
-                    contextName);
+            return DBConnectionContextUtils.cloneOriginalValueConnection((DatabaseConnection) connection, false, contextName);
         }
         return connection;
     }
-    
+
     /**
      * 
      * Get the original FileConnection for context mode.
@@ -1591,8 +1616,8 @@ public final class ConnectionUtils {
             if (contextName == null) {
                 return FileConnectionContextUtils.cloneOriginalValueConnection(null, fileConn, true);
             } else {
-                ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(null, fileConn, contextName,
-                        false);
+                ContextType contextType = ConnectionContextHelper
+                        .getContextTypeForContextMode(null, fileConn, contextName, false);
                 return FileConnectionContextUtils.cloneOriginalValueConnection(fileConn, contextType);
             }
 

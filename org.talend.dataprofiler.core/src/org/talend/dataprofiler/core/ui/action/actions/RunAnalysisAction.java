@@ -35,8 +35,10 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -204,7 +206,18 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         if (analysis == null) {
             return;
         }
-
+        // MOD klliu bug 4546 check connectiong is connected well.
+        Connection analysisDataProvider = this.getAnalysisDataProvider(analysis);
+        // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real running
+        // analysis.
+        if (!(analysisDataProvider instanceof DelimitedFileConnection)
+                && !ConnectionUtils.isConnectionAvailable(analysisDataProvider)) {
+            MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("RunAnalysisAction.urlChanged"),//$NON-NLS-1$
+                    DefaultMessagesImpl.getString("RunAnalysisAction.checkDBConnection"));//$NON-NLS-1$
+            return;
+        }
+        // ~
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
 
         if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
