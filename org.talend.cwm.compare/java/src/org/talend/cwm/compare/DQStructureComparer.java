@@ -325,8 +325,18 @@ public final class DQStructureComparer {
                 }
             }
             conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
-            MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
-            MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
+            // bug: 4622 incase of Ingres, informix and DB2, database parameters
+            // on conn wizard should not used as a filter.
+            try {
+                if (ConnectionUtils.isIngres(prevDataProvider) || ConnectionUtils.isInformix(prevDataProvider)
+                        || ConnectionUtils.isDB2(prevDataProvider)) {
+                    packageFilter = null;
+                }
+                MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
+                MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
+            } catch (SQLException e) {
+                log.error(e);
+            }
             // returnProvider = ConnectionService.createConnection(connectionParameters);
         }
         if (conn == null) {

@@ -513,6 +513,55 @@ public final class ConnectionUtils {
         }
         return false;
     }
+    
+    /**
+     * mzhao bug: TDQ-4622 Is the connection is an ingres connection?
+     * 
+     * @param connection
+     * @return true if connection is ingres, false otherwise
+     */
+    public static boolean isIngres(Connection connection) throws SQLException {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
+                    .getDatabaseType();
+            return EDriverName.INGRESDEFAULTURL.getDBKey().equalsIgnoreCase(databaseType);
+        }
+        return false;
+    }
+
+    /**
+     * mzhao bug: TDQ-4622 Is the connection is an informix connection?
+     * 
+     * @param connection
+     * @return true if connection is informix, false otherwise
+     */
+    public static boolean isInformix(Connection connection) throws SQLException {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
+                    .getDatabaseType();
+            return EDriverName.INFORMIXDEFAULTURL.getDBKey().equalsIgnoreCase(databaseType);
+        }
+        return false;
+    }
+
+    /**
+     * mzhao bug: TDQ-4622 Is the connection is an DB2 connection?
+     * 
+     * @param connection
+     * @return true if connection is DB2, false otherwise
+     */
+    public static boolean isDB2(Connection connection) throws SQLException {
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn != null) {
+            String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
+                    .getDatabaseType();
+            //databaseType: IBM DB2, but DBKey is DB2
+            return databaseType.contains(EDriverName.DB2DEFAULTURL.getDBKey());
+        }
+        return false;
+    }
 
     /**
      * DOC xqliu Comment method "isMssql".
