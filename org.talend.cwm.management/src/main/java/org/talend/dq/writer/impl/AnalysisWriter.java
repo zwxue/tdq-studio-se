@@ -12,27 +12,19 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.utils.AbstractResourceChangesService;
-import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
@@ -48,7 +40,6 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
-import org.talend.repository.ProjectManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -157,13 +148,14 @@ public class AnalysisWriter extends AElementPersistance {
         }
     }
 
-    public void addResourceContent(Resource resource, Analysis element) {
+    @Override
+    public void addResourceContent(Resource resource, ModelElement element) {
         super.addResourceContent(resource, element);
 
         if (resource != null) {
             EList<EObject> resourceContents = resource.getContents();
 
-            EList<Domain> dataFilter = AnalysisHelper.getDataFilter(element);
+            EList<Domain> dataFilter = AnalysisHelper.getDataFilter((Analysis) element);
             if (dataFilter != null) {
                 // scorreia save them in their own file? -> no, it's ok to save them
                 // in the analysis file.
@@ -186,51 +178,26 @@ public class AnalysisWriter extends AElementPersistance {
         return FactoriesUtil.ANA;
     }
 
-    public ReturnCode save(Item item, boolean... careDependency) {
-        ReturnCode rc = new ReturnCode();
-        try {
-            TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
-            Analysis analysis = anaItem.getAnalysis();
-            addDependencies(analysis);
-            addResourceContent(analysis.eResource(), analysis);
-            anaItem.setAnalysis(analysis);
-
-            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(analysis.eResource());
-            List<Resource> needSaves = new ArrayList<Resource>();
-            for (EObject object : find.keySet()) {
-                Resource re = object.eResource();
-                if (re == null) {
-                    continue;
-                }
-                EcoreUtil.resolveAll(re);
-                needSaves.add(re);
-            }
-
-            // MOD klliu 2011-02-15
-            Project currentProject = ProjectManager.getInstance().getCurrentProject();
-            ProxyRepositoryFactory.getInstance().save(currentProject, anaItem);
-
-            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
-                    AbstractResourceChangesService.class);
-            if (resChangeService != null) {
-                for (Resource toSave : needSaves) {
-                    resChangeService.saveResourceByEMFShared(toSave);
-                }
-            }
-
-            // updateDependencies(analysis);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
+    /**
+     * Save analysis item and update the dependencies(optional). <B>To update dependencies of the analysis the
+     * #careDependency must be set as TRUE.</B>
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean[])
+     */
+    public ReturnCode save(Item item, boolean careDependency) {
+        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
+        TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
+        Analysis analysis = anaItem.getAnalysis();
+        if (careDependency) {
+            return saveWithDependencies(anaItem, analysis);
+        } else {
+            return saveWithoutDependencies(anaItem, analysis);
         }
-
-        return rc;
     }
 
     @Override
     protected void notifyResourceChanges() {
-        ProxyRepositoryManager.getInstance().save(); 
+        ProxyRepositoryManager.getInstance().save();
 
     }
 

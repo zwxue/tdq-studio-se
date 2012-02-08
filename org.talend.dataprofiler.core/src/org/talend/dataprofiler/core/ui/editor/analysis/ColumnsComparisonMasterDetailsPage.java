@@ -54,7 +54,6 @@ import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
@@ -271,13 +270,11 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         Connection tdDataProvider = null;
         for (int i = 0; i < anaColumnCompareViewer.getColumnListA().size(); i++) {
             reposObject = anaColumnCompareViewer.getColumnListA().get(i).getObject();
-            analysedElements.add(((MetadataColumnRepositoryObject) reposObject)
-                    .getTdColumn());
+            analysedElements.add(((MetadataColumnRepositoryObject) reposObject).getTdColumn());
         }
         for (int i = 0; i < anaColumnCompareViewer.getColumnListB().size(); i++) {
             reposObject = anaColumnCompareViewer.getColumnListB().get(i).getObject();
-            analysedElements.add(((MetadataColumnRepositoryObject) reposObject)
-                    .getTdColumn());
+            analysedElements.add(((MetadataColumnRepositoryObject) reposObject).getTdColumn());
         }
         if (analysedElements.size() > 0) {
             tdDataProvider = ConnectionHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
@@ -291,9 +288,9 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         } else {
             tdDataProvider = (Connection) analysis.getContext().getConnection();
             if (tdDataProvider != null) {
-            tdDataProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-            analysis.getContext().setConnection(null);
-            analysis.getClientDependency().clear();
+                tdDataProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+                analysis.getContext().setConnection(null);
+                analysis.getClientDependency().clear();
             }
         }
         // rowCountIndicator.setAnalyzedElement(value)
@@ -321,18 +318,14 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             tdqAnalysisItem.getProperty().setDisplayName(analysis.getName());
             this.nameText.setText(analysis.getName());
             // ~
-
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
         }
-        if (saved.isOk()) {
-            // MOD qiongli bug 14437:Add dependency
-            RepositoryNode node = RepositoryNodeHelper.recursiveFind(tdDataProvider);
-            if (node != null) {
-                // ProxyRepositoryViewObject.fetchAllDBRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(node.getObject().getProperty().getItem());
-            }
-            log.info("Success to save connection analysis:" + analysis.getFileName()); //$NON-NLS-1$
-        }
+        // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
+        // which is depended in the referred connection.
+        // Extract saving log function.
+        // @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#logSaved(ReturnCode)
+        logSaved(saved);
 
     }
 
@@ -412,8 +405,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
         // return new ReturnCode(rowMatchingIndicatorA.getColumnSetA().size() != 0);
 
-        return 0 == rowMatchingIndicatorA.getColumnSetA().size() ? new ReturnCode(DefaultMessagesImpl
-                .getString("ColumnsComparisonMasterDetailsPage.columnsBlankRunMessage"), false) : new ReturnCode(true); //$NON-NLS-1$
+        return 0 == rowMatchingIndicatorA.getColumnSetA().size() ? new ReturnCode(
+                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsBlankRunMessage"), false) : new ReturnCode(true); //$NON-NLS-1$
 
     }
 

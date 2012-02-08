@@ -341,7 +341,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     @Override
     public void doSave(IProgressMonitor monitor) {
         // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        if(!checkWhithspace()){
+        if (!checkWhithspace()) {
             MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
             return;
         }
@@ -390,7 +390,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         // Item patternItem = ((PatternItemEditorInput) this.getEditor().getEditorInput()).getItem();
         // ((TDQPatternItem) patternItem).setPattern(this.pattern);
         this.patternItem.setPattern(this.pattern);
-        ElementWriterFactory.getInstance().createPatternWriter().save(this.patternItem);
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        ElementWriterFactory.getInstance().createPatternWriter().save(this.patternItem, true);
         // PatternResourceFileHelper.getInstance().save(pattern);
 
         return true;

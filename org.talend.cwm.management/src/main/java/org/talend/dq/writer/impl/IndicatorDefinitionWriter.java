@@ -12,22 +12,9 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.utils.AbstractResourceChangesService;
-import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -62,43 +49,15 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
         return FactoriesUtil.DEFINITION;
     }
 
-    public ReturnCode save(Item item, boolean... careDependency) {
-        ReturnCode rc = new ReturnCode();
-        try {
-            TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
-            IndicatorDefinition indiDefinition = indicatorItem.getIndicatorDefinition();
-            addDependencies(indiDefinition);
-            addResourceContent(indiDefinition.eResource(), indiDefinition);
-            indicatorItem.setIndicatorDefinition(indiDefinition);
-
-            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(indiDefinition.eResource());
-            List<Resource> needSaves = new ArrayList<Resource>();
-            for (EObject object : find.keySet()) {
-                Resource re = object.eResource();
-                if (re == null) {
-                    continue;
-                }
-                EcoreUtil.resolveAll(re);
-                needSaves.add(re);
-            }
-
-            ProxyRepositoryFactory.getInstance().save(indicatorItem);
-            
-            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
-                    AbstractResourceChangesService.class);
-            if (resChangeService != null) {
-                for (Resource toSave : needSaves) {
-                    resChangeService.saveResourceByEMFShared(toSave);
-                }
-            }
-
-            // updateDependencies(indiDefinition);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
+    public ReturnCode save(Item item, boolean careDependency) {
+        TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
+        IndicatorDefinition indiDefinition = indicatorItem.getIndicatorDefinition();
+        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies when careDependency is true.
+        if (careDependency) {
+            return saveWithDependencies(indicatorItem, indiDefinition);
+        } else {
+            return saveWithoutDependencies(indicatorItem, indiDefinition);
         }
-        return rc;
     }
 
     @Override

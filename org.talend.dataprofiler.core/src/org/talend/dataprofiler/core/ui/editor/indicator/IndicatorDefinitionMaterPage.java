@@ -2160,7 +2160,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             this.definitionItem.setIndicatorDefinition(definition);
         }
         // IndicatorResourceFileHelper.getInstance().save(definition);
-        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem);
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem, true);
         this.isDirty = false;
         if (!rc.isOk()) {
             this.isDirty = true;
@@ -2350,7 +2351,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
-        
+
         Iterator<String> iterator = languageVersionCountMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();

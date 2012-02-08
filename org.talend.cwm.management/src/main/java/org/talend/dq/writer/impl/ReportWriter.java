@@ -12,23 +12,14 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.utils.AbstractResourceChangesService;
-import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -100,42 +91,15 @@ public class ReportWriter extends AElementPersistance {
         return FactoriesUtil.REP;
     }
 
-    public ReturnCode save(Item item, boolean... careDependency) {
-        ReturnCode rc = new ReturnCode();
-        try {
-            TDQReportItem repItem = (TDQReportItem) item;
-            Report report = repItem.getReport();
-            addDependencies(report);
-            addResourceContent(report.eResource(), report);
-
-            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(report.eResource());
-            List<Resource> needSaves = new ArrayList<Resource>();
-            for (EObject object : find.keySet()) {
-                Resource re = object.eResource();
-                if (re == null) {
-                    continue;
-                }
-                EcoreUtil.resolveAll(re);
-                needSaves.add(re);
-            }
-
-            ProxyRepositoryFactory.getInstance().save(repItem);
-
-            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
-                    AbstractResourceChangesService.class);
-            if (resChangeService != null) {
-                for (Resource toSave : needSaves) {
-                    resChangeService.saveResourceByEMFShared(toSave);
-                }
-            }
-
-            // updateDependencies(report);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
+    public ReturnCode save(Item item, boolean careDependency) {
+        TDQReportItem repItem = (TDQReportItem) item;
+        Report report = repItem.getReport();
+        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
+        if (careDependency) {
+            return saveWithDependencies(repItem, report);
+        } else {
+            return saveWithoutDependencies(repItem, report);
         }
-        return rc;
     }
 
     @Override

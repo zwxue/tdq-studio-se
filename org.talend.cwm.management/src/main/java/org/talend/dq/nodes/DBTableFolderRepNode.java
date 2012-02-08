@@ -124,7 +124,7 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
                     if (tables.isEmpty()) {
                         tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
                         if (tables.size() > 0) {
-                            ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                            ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
                         }
                     }
                 }
@@ -147,7 +147,7 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
                     if (tables.isEmpty()) {
                         tables = DqRepositoryViewService.getTables(connection, schema, null, true);
                         if (tables.size() > 0) {
-                            ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
+                            ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
                         }
                     }
                 }

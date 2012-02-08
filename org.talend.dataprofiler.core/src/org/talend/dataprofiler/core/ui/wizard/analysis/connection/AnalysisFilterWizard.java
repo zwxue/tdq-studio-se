@@ -66,7 +66,8 @@ public class AnalysisFilterWizard extends AbstractAnalysisWizard {
         // MOD by hcheng for 7173:Broken dependency between analyses and connection
         if (saveCWMFile.isOk()) {
             // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(Boolean.TRUE, Boolean.TRUE);
-            ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
+            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+            ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem, true);
         }
 
         return saveCWMFile;

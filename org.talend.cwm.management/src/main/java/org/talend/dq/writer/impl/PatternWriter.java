@@ -12,28 +12,13 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.utils.AbstractResourceChangesService;
-import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
-import org.talend.repository.ProjectManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -109,45 +94,15 @@ public class PatternWriter extends AElementPersistance {
         return FactoriesUtil.PATTERN;
     }
 
-    public ReturnCode save(Item item, boolean... careDependency) {
-        ReturnCode rc = new ReturnCode();
-        try {
-            TDQPatternItem patternItem = (TDQPatternItem) item;
-            Pattern pattern = patternItem.getPattern();
-            addDependencies(pattern);
-            addResourceContent(pattern.eResource(), pattern);
-            patternItem.setPattern(pattern);
-
-            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(pattern.eResource());
-            List<Resource> needSaves = new ArrayList<Resource>();
-            for (EObject object : find.keySet()) {
-                Resource re = object.eResource();
-                if (re == null) {
-                    continue;
-                }
-                EcoreUtil.resolveAll(re);
-                needSaves.add(re);
-            }
-
-            // MOD klliu 2011-02-15
-            Project currentProject = ProjectManager.getInstance().getCurrentProject();
-            ProxyRepositoryFactory.getInstance().save(currentProject, patternItem);
-
-            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
-                    AbstractResourceChangesService.class);
-            if (resChangeService != null) {
-                for (Resource toSave : needSaves) {
-                    resChangeService.saveResourceByEMFShared(toSave);
-                }
-            }
-
-            // updateDependencies(pattern);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
+    public ReturnCode save(Item item, boolean careDependency) {
+        TDQPatternItem patternItem = (TDQPatternItem) item;
+        Pattern pattern = patternItem.getPattern();
+        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
+        if (careDependency) {
+            return saveWithDependencies(patternItem, pattern);
+        } else {
+            return saveWithoutDependencies(patternItem, pattern);
         }
-        return rc;
     }
 
     @Override

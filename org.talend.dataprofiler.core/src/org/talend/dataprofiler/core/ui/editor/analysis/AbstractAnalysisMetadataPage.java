@@ -499,4 +499,33 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         return ExecutionLanguage.SQL;
     }
 
+    /**
+     * Log on debug enable.
+     * 
+     * @param logger
+     * @param level
+     * @param message
+     */
+    protected void doLog(Logger logger, Level level, String message) {
+        logger.log(level, message);
+    }
+
+    /**
+     * log when analysis saved
+     * 
+     * @param saved
+     * @throws DataprofilerCoreException
+     */
+    protected void logSaved(ReturnCode saved) throws DataprofilerCoreException {
+        String urlString = analysis.eResource() != null ? (analysis.eResource().getURI().isFile() ? analysis.eResource().getURI()
+                .toFileString() : analysis.eResource().getURI().toString()) : PluginConstant.EMPTY_STRING;
+        if (!saved.isOk()) {
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString(
+                    "ColumnMasterDetailsPage.problem", analysis.getName(), urlString, saved.getMessage())); //$NON-NLS-1$
+
+        } else if (log.isDebugEnabled()) {
+            // MOD yyi 2012-02-06 TDQ-4581:avoid the instantiation of the strings to optimize the performances.
+            doLog(log, Level.INFO, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.success", urlString)); //$NON-NLS-1$
+        }
+    }
 }

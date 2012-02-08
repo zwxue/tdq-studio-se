@@ -52,7 +52,7 @@ public class SoftwareSystemWriter extends AElementPersistance {
         return FactoriesUtil.SOFTWARE_SYSTEM;
     }
 
-    public ReturnCode save(Item item, boolean... careDependency) {
+    public ReturnCode save(Item item, boolean careDependency) {
         // TODO Auto-generated method stub
         return null;
     }

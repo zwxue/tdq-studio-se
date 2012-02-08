@@ -13,35 +13,25 @@
 package org.talend.dq.writer.impl;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.utils.AbstractResourceChangesService;
-import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
-import org.talend.repository.ProjectManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -159,52 +149,21 @@ public class DataProviderWriter extends AElementPersistance {
         return fileExtension.equals(getFileExtension()) || fileExtension.equals("comp"); //$NON-NLS-1$
     }
 
-    public ReturnCode save(Item item, boolean... careDependency) {
-        ReturnCode rc = new ReturnCode();
-        try {
-            ConnectionItem connItem = (ConnectionItem) item;
-            Connection conn = connItem.getConnection();
-            if (careDependency.length == 0 || careDependency[0] == true) {
-
-                addDependencies(conn);
-                addResourceContent(conn);
-                connItem.setConnection(conn);
-
-                // MOD gdbu 2011-10-28 TDQ-3852 : The logic here similar with 'move folder' , didn't save the files
-                // associated with this connection.
-                Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(conn.eResource());
-                // MOD gdbu 2011-12-16 TDQ-4203 Previous logic will cause too many duplicate content , and cause a long
-                // time
-                // to save.
-                Set<Resource> needSaves = new HashSet<Resource>();
-                for (EObject object : find.keySet()) {
-                    Resource re = object.eResource();
-                    if (re == null) {
-                        continue;
-                    }
-                    EcoreUtil.resolveAll(re);
-                    needSaves.add(re);
-                }
-
-                AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
-                        AbstractResourceChangesService.class);
-                if (resChangeService != null) {
-                    for (Resource toSave : needSaves) {
-                        resChangeService.saveResourceByEMFShared(toSave);
-                    }
-                }
-            }
-            // MOD klliu 2011-02-15
-            Project currentProject = ProjectManager.getInstance().getCurrentProject();
-            ProxyRepositoryFactory.getInstance().save(currentProject, connItem);
-            // updateDependencies(conn);
-            // ~TDQ-3852
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
+    /**
+     * Save connection item and update the dependencies(optional). <B>To update dependencies of the connection the
+     * #careDependency must be set as TRUE.</B>
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean[])
+     */
+    public ReturnCode save(Item item, boolean careDependency) {
+        ConnectionItem connItem = (ConnectionItem) item;
+        Connection conn = connItem.getConnection();
+        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
+        if (careDependency) {
+            return saveWithDependencies(connItem, conn);
+        } else {
+            return saveWithoutDependencies(connItem, conn);
         }
-        return rc;
     }
 
     @Override
@@ -217,7 +176,8 @@ public class DataProviderWriter extends AElementPersistance {
         // MOD gdbu 2011-12-16 TDQ-4203 Previous logic will cause an infinite loop.
         Property anaEleProperty = PropertyHelper.getProperty(element);
         if (null != anaEleProperty) {
-            return save(anaEleProperty.getItem());
+            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+            return save(anaEleProperty.getItem(), true);
         }
         return super.save(element);
     }

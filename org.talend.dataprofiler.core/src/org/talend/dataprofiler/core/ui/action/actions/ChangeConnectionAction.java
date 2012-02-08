@@ -325,7 +325,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         tempList.add(oldDataProvider);
         DependenciesHandler.getInstance().removeDependenciesBetweenModels(synAnalysis, tempList);
         IRepositoryViewObject reposViewObject = RepositoryNodeHelper.recursiveFind(oldDataProvider).getObject();
-        ElementWriterFactory.getInstance().createDataProviderWriter().save(reposViewObject.getProperty().getItem());
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        ElementWriterFactory.getInstance().createDataProviderWriter().save(reposViewObject.getProperty().getItem(), true);
         // Synchronize analysis result.
         EList<Indicator> indcList = synAnalysis.getResults().getIndicators();
         Indicator[] copiedIndArray = new Indicator[indcList.size()];

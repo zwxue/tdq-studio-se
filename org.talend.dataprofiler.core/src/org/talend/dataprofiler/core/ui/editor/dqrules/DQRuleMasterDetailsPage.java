@@ -270,7 +270,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     @Override
     public void doSave(IProgressMonitor monitor) {
         // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        if(!checkWhithspace()){
+        if (!checkWhithspace()) {
             MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
             return;
         }
@@ -298,7 +298,8 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
             // ReturnCode rc = DQRuleResourceFileHelper.getInstance().save(whereRule);
             this.getWhereRuleItem().setDqrule(whereRule);
-            ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(this.getWhereRuleItem());
+            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+            ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(this.getWhereRuleItem(), true);
 
             ret = rc.isOk();
             this.joinConditionTableViewer.updateModelViewer();
