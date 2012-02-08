@@ -252,7 +252,11 @@ public class DrillDownEditorInput implements IEditorInput {
                     }
                 }
             } else {
-                newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
+                // MOD msjian TDQ-4617 2012-2-8: fixed a NPE
+                if (analysisDataSet.getFrequencyData().containsKey(selectValue)) {
+                    newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
+                }
+                // TDQ-4617 ~
             }
         } else if (analysisDataSet.getPatternData() != null && analysisDataSet.getPatternData().size() > 0) {
             if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_INVALID_TYPE)) {
