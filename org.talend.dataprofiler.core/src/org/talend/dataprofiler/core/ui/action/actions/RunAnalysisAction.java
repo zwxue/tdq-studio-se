@@ -35,7 +35,6 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -210,11 +209,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         Connection analysisDataProvider = this.getAnalysisDataProvider(analysis);
         // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real running
         // analysis.
-        if (!(analysisDataProvider instanceof DelimitedFileConnection)
-                && !ConnectionUtils.isConnectionAvailable(analysisDataProvider)) {
+        ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
+        if (!connectionAvailable.isOk()) {
             MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                     DefaultMessagesImpl.getString("RunAnalysisAction.urlChanged"),//$NON-NLS-1$
-                    DefaultMessagesImpl.getString("RunAnalysisAction.checkDBConnection"));//$NON-NLS-1$
+                    DefaultMessagesImpl.getString("RunAnalysisAction.checkDBConnection") + connectionAvailable.getMessage());//$NON-NLS-1$
             return;
         }
         // ~
