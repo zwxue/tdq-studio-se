@@ -64,7 +64,7 @@ public class DBTableRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         // MOD klliu TDQ-4332 only initlized sub node(column folder) once time 2012-02-07
-        if (children.isEmpty()) {
+        if (!children.isEmpty()) {
             return filterResultsIfAny(children);
         }
         // MOD gdbu 2011-7-1 bug : 22204
