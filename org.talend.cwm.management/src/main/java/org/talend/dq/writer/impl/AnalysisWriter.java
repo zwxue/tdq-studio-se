@@ -188,11 +188,7 @@ public class AnalysisWriter extends AElementPersistance {
         // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
         TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
         Analysis analysis = anaItem.getAnalysis();
-        if (careDependency) {
-            return saveWithDependencies(anaItem, analysis);
-        } else {
-            return saveWithoutDependencies(anaItem, analysis);
-        }
+        return careDependency ? saveWithDependencies(anaItem, analysis) : saveWithoutDependencies(anaItem, analysis);
     }
 
     @Override

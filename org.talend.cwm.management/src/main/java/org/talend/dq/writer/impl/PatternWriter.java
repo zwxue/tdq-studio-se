@@ -98,11 +98,7 @@ public class PatternWriter extends AElementPersistance {
         TDQPatternItem patternItem = (TDQPatternItem) item;
         Pattern pattern = patternItem.getPattern();
         // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
-        if (careDependency) {
-            return saveWithDependencies(patternItem, pattern);
-        } else {
-            return saveWithoutDependencies(patternItem, pattern);
-        }
+        return careDependency ? saveWithDependencies(patternItem, pattern) : saveWithoutDependencies(patternItem, pattern);
     }
 
     @Override

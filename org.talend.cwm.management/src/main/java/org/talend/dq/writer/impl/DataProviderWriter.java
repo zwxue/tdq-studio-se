@@ -159,11 +159,7 @@ public class DataProviderWriter extends AElementPersistance {
         ConnectionItem connItem = (ConnectionItem) item;
         Connection conn = connItem.getConnection();
         // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
-        if (careDependency) {
-            return saveWithDependencies(connItem, conn);
-        } else {
-            return saveWithoutDependencies(connItem, conn);
-        }
+        return careDependency ? saveWithDependencies(connItem, conn) : saveWithoutDependencies(connItem, conn);
     }
 
     @Override

@@ -95,11 +95,7 @@ public class ReportWriter extends AElementPersistance {
         TDQReportItem repItem = (TDQReportItem) item;
         Report report = repItem.getReport();
         // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
-        if (careDependency) {
-            return saveWithDependencies(repItem, report);
-        } else {
-            return saveWithoutDependencies(repItem, report);
-        }
+        return careDependency ? saveWithDependencies(repItem, report) : saveWithoutDependencies(repItem, report);
     }
 
     @Override

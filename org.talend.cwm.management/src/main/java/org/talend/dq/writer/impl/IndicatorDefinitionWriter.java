@@ -53,11 +53,8 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
         TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
         IndicatorDefinition indiDefinition = indicatorItem.getIndicatorDefinition();
         // MOD yyi 2012-02-07 TDQ-4621:Update dependencies when careDependency is true.
-        if (careDependency) {
-            return saveWithDependencies(indicatorItem, indiDefinition);
-        } else {
-            return saveWithoutDependencies(indicatorItem, indiDefinition);
-        }
+        return careDependency ? saveWithDependencies(indicatorItem, indiDefinition) : saveWithoutDependencies(indicatorItem,
+                indiDefinition);
     }
 
     @Override

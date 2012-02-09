@@ -61,11 +61,7 @@ public class DQRuleWriter extends AElementPersistance {
         TDQBusinessRuleItem ruleItem = (TDQBusinessRuleItem) item;
         DQRule rule = ruleItem.getDqrule();
         // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
-        if (careDependency) {
-            return saveWithDependencies(ruleItem, rule);
-        } else {
-            return saveWithoutDependencies(ruleItem, rule);
-        }
+        return careDependency ? saveWithDependencies(ruleItem, rule) : saveWithoutDependencies(ruleItem, rule);
     }
 
     @Override
