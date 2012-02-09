@@ -68,7 +68,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.utils.RepositoryManagerHelper;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -258,9 +257,7 @@ public final class ConnectionUtils {
             FileConnection fileConn = (FileConnection) analysisDataProvider;
             String filePath = fileConn.getFilePath();
             try {
-                int maximumRowsToPreview = RepositoryManagerHelper.getMaximumRowsToPreview();
-                BufferedReader filePathAvalible = FileConnectionContextUtils.isFilePathAvailable(filePath, new StringBuffer(""),
-                        fileConn, maximumRowsToPreview);
+                BufferedReader filePathAvalible = FileConnectionContextUtils.isFilePathAvailable(filePath, fileConn);
                 if (filePathAvalible != null) {
                     returnCode.setOk(true);
                     return returnCode;
@@ -545,7 +542,7 @@ public final class ConnectionUtils {
         }
         return false;
     }
-    
+
     /**
      * mzhao bug: TDQ-4622 Is the connection is an ingres connection?
      * 
@@ -589,7 +586,7 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
-            //databaseType: IBM DB2, but DBKey is DB2
+            // databaseType: IBM DB2, but DBKey is DB2
             return databaseType.contains(EDriverName.DB2DEFAULTURL.getDBKey());
         }
         return false;
