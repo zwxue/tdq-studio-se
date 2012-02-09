@@ -47,6 +47,7 @@ import org.talend.dataquality.indicators.definition.util.DefinitionSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
@@ -220,10 +221,51 @@ public final class DefinitionHandler {
         if (indicatorDefinitions == null || indicatorDefinitions.isEmpty()) {
             initializeDefinitions();
         }
+        if (needResolve(indicatorDefinitions)) {
+            indicatorDefinitions = resolve(indicatorDefinitions);
+        }
         if (indicatorDefinitions == null) {
             throw new RuntimeException(Messages.getString("DefinitionHandler.IndicatorsDefinition")); //$NON-NLS-1$
         }
         return indicatorDefinitions;
+    }
+
+    /**
+     * resolve the IndicatorDefinition if it is proxy.
+     * 
+     * @param definitions
+     * @return
+     */
+    private List<IndicatorDefinition> resolve(List<IndicatorDefinition> definitions) {
+        List<IndicatorDefinition> result = new ArrayList<IndicatorDefinition>();
+        if (definitions != null && !definitions.isEmpty()) {
+            for (IndicatorDefinition indDef : definitions) {
+                if (indDef.eIsProxy()) {
+                    indDef = (IndicatorDefinition) EObjectHelper.resolveObject(indDef);
+                }
+                result.add(indDef);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * judge the IndicatorDefinitions need resolve or not.
+     * 
+     * @param definitions
+     * @return
+     */
+    private boolean needResolve(List<IndicatorDefinition> definitions) {
+        boolean result = false;
+        if (definitions != null && !definitions.isEmpty()) {
+            for (IndicatorDefinition indDef : definitions) {
+                if (indDef.eIsProxy()) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -286,7 +328,7 @@ public final class DefinitionHandler {
      * @return
      */
     public IndicatorDefinition getIndicatorDefinition(String label) {
-        for (IndicatorDefinition indicatorDefinition : indicatorDefinitions) {
+        for (IndicatorDefinition indicatorDefinition : this.getIndicatorsDefinitions()) {
             if (indicatorDefinition != null && indicatorDefinition.getLabel() != null
                     && indicatorDefinition.getLabel().compareTo(label) == 0) {
                 return indicatorDefinition;
@@ -380,7 +422,7 @@ public final class DefinitionHandler {
      * @return
      */
     public IndicatorDefinition getDefinitionById(String definitionId) {
-        for (IndicatorDefinition indDef : indicatorDefinitions) {
+        for (IndicatorDefinition indDef : this.getIndicatorsDefinitions()) {
             CwmResource resource = (CwmResource) indDef.eResource();
             EObject object = resource.getEObject(definitionId);
             if (object != null && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(object.eClass())) {
