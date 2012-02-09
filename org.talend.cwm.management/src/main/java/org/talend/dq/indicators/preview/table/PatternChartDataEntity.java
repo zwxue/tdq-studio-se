@@ -12,8 +12,12 @@
 // ============================================================================
 package org.talend.dq.indicators.preview.table;
 
+import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.utils.format.StringFormatUtil;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -64,6 +68,25 @@ public class PatternChartDataEntity extends ChartDataEntity {
         if (isOutOfRange(getPerMatch())) {
             msg.append("This value is outside the expected indicator's thresholds in percent: " + range); //$NON-NLS-1$
         }
+        
+        // ADD msjian TDQ-4380(TDQ-4470) 2012-1-29: set the hint message when the value is not validate
+        if (indicator instanceof WhereRuleIndicator) {
+            String sql = ""; //$NON-NLS-1$
+            EList<Expression> instantiatedExpressions = indicator.getInstantiatedExpressions();
+            if (instantiatedExpressions != null && !instantiatedExpressions.isEmpty()) {
+                sql = instantiatedExpressions.get(0).getBody();
+            }
+            String table = indicator.getAnalyzedElement().getName();
+            if (isOutOfValue(getNumMatch())) {
+                msg.append(Messages.getString("PatternChartDataEntity.notAvailableData", sql, table)); //$NON-NLS-1$
+                msg.append("\n"); //$NON-NLS-1$
+            }
+            if (isOutOfValue(getPerMatch())) {
+                msg.append(Messages.getString("PatternChartDataEntity.notAvailableData", sql, table)); //$NON-NLS-1$
+            }
+        }
+        // TDQ-4380(TDQ-4470)~
+        
         // MOD xqliu 2010-03-10 feature 10834
         String result = null;
         String temp = getToolTip();

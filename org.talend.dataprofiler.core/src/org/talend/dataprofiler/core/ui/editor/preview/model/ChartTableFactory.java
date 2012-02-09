@@ -33,6 +33,7 @@ import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateSimpleAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
@@ -56,6 +57,7 @@ import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -123,6 +125,28 @@ public final class ChartTableFactory {
                                         CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                     }
                                 });
+
+                                // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join condition columns
+                                if (indicator instanceof WhereRuleIndicator) {
+                                    WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
+                                    if (ind.getCount().doubleValue() < ind.getUserCount().doubleValue()) {
+                                        MenuItem itemCreateWhereRule = new MenuItem(menu, SWT.PUSH);
+                                        itemCreateWhereRule.setText(DefaultMessagesImpl
+                                                .getString("ChartTableFactory.JoinConditionColumnsAnalysis")); //$NON-NLS-1$
+                                        itemCreateWhereRule.addSelectionListener(new SelectionAdapter() {
+
+                                            @Override
+                                            public void widgetSelected(SelectionEvent e) {
+                                                final StructuredSelection selectionOne = (StructuredSelection) tbViewer
+                                                        .getSelection();
+                                                CreateSimpleAnalysisAction action = new CreateSimpleAnalysisAction();
+                                                action.setSelection(selectionOne);
+                                                action.run();
+                                            }
+                                        });
+                                    }
+                                }
+                                // TDQ-4470~
 
                                 if (isPatternFrequencyIndicator(indicator)) {
                                     MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);

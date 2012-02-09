@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -211,13 +212,15 @@ public class ChartTableProviderClassSet {
             case 0:
                 return entity.getLabel();
             case 1:
-                return entity.getPerMatch();
+                // MOD msjian TDQ-4380(TDQ-4470) 2012-1-29: set invalidate value to "N/A"
+                return entity.isOutOfValue(entity.getPerMatch()) ? PluginConstant.NA_STRING : entity.getPerMatch();
             case 2:
-                return entity.getPerNoMatch();
+                return entity.isOutOfValue(entity.getPerNoMatch()) ? PluginConstant.NA_STRING : entity.getPerNoMatch();
             case 3:
                 return entity.getNumMatch();
             case 4:
-                return entity.getNumNoMatch();
+                return entity.isOutOfValue(entity.getNumNoMatch()) ? PluginConstant.NA_STRING : entity.getNumNoMatch();
+                // TDQ-4380(TDQ-4470)~
 
             default:
                 return ""; //$NON-NLS-1$
@@ -230,8 +233,11 @@ public class ChartTableProviderClassSet {
 
             String currentText = getColumnText(element, columnIndex);
             // MOD mzhao bug 8838 2009-09-08
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
-            if (isCurrentCol && entity.isOutOfRange(currentText)) {
+            // MOD msjian TDQ-4380(TDQ-4470) 2012-1-29: set warning image when the value is invalidated
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch())
+                    || currentText.equals(PluginConstant.NA_STRING);
+            if (isCurrentCol && (entity.isOutOfRange(currentText) || entity.isOutOfValue(currentText))) {
+                // TDQ-4380(TDQ-4470)~
                 return ImageLib.getImage(ImageLib.LEVEL_WARNING);
             }
 
@@ -243,9 +249,12 @@ public class ChartTableProviderClassSet {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;
 
             String currentText = getColumnText(element, columnIndex);
-         // MOD mzhao bug 8838 2009-09-08
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
-            if (isCurrentCol && entity.isOutOfRange(currentText)) {
+            // MOD mzhao bug 8838 2009-09-08
+            // MOD msjian TDQ-4380(TDQ-4470) 2012-1-29: set font color when the value is invalidated
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch())
+                    || currentText.equals(PluginConstant.NA_STRING);
+            if (isCurrentCol && (entity.isOutOfRange(currentText) || entity.isOutOfValue(currentText))) {
+                // TDQ-4380(TDQ-4470)~
                 return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 

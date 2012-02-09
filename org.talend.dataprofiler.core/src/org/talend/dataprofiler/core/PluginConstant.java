@@ -129,4 +129,6 @@ public final class PluginConstant {
     public static final String AUTO_CHANGE2DATA_PROFILER = "AUTO_CHANGE2DATA_PROFILER"; //$NON-NLS-1$
 
     public static final String EXPAND_TREE = "Tree_Expands"; //$NON-NLS-1$
+
+    public static final String NA_STRING = "N/A"; //$NON-NLS-1$
 }
