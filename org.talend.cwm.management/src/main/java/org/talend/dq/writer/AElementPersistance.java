@@ -594,7 +594,6 @@ public abstract class AElementPersistance {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
             rc.setMessage(e.getMessage());
-            e.printStackTrace();
         }
         return rc;
     }
@@ -616,7 +615,6 @@ public abstract class AElementPersistance {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
             rc.setMessage(e.getMessage());
-            e.printStackTrace();
         }
         return rc;
     }
