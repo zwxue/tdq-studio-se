@@ -92,7 +92,9 @@ public class PatternsSelectPage extends WizardPage {
 
         List<ModelElement> analysisColumns = this.selectPatternsWizard.getSsIndicator().getAnalyzedColumns();
         // add tableView
-        GridTableViewer tableView = new GridTableViewer(parent, SWT.NONE);
+        // MOD msjian TDQ-4631 2012-2-10: add horizontal scroll bar
+        GridTableViewer tableView = new GridTableViewer(parent, SWT.H_SCROLL);
+        // TDQ-4631~
 
         this.table = tableView.getGrid();
         this.table.setLayoutData(data);
