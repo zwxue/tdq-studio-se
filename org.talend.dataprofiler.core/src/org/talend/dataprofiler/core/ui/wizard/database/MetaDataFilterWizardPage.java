@@ -38,8 +38,6 @@ public class MetaDataFilterWizardPage extends AbstractWizardPage {
 
     private Text metaDataFilterText;
 
-    private boolean isPackageFiler;
-
     private FilterType filterType;
 
     public Text getMetadataFilterText() {
@@ -84,11 +82,6 @@ public class MetaDataFilterWizardPage extends AbstractWizardPage {
             break;
         }
         metaDataFilterText = new Text(comp, SWT.BORDER);
-        // if (!isPackageFiler()) {
-        // temp = this.parent.getOldColumnFilter();
-        // } else {
-        // temp = this.parent.getOldPackageFilter();
-        // }
         temp = temp == null ? "" : temp; //$NON-NLS-1$
         metaDataFilterText.setText(temp);
         metaDataFilterText.setLayoutData(gd);
@@ -129,8 +122,8 @@ public class MetaDataFilterWizardPage extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        String columnFilter = this.metaDataFilterText.getText();
-        if (columnFilter.indexOf("\\") > -1 || columnFilter.indexOf("/") > -1) { //$NON-NLS-1$ //$NON-NLS-2$
+        String metadataFilter = this.metaDataFilterText.getText();
+        if (metadataFilter.indexOf("\\") > -1 || metadataFilter.indexOf("/") > -1) { //$NON-NLS-1$ //$NON-NLS-2$
             return false;
         }
         return true;
