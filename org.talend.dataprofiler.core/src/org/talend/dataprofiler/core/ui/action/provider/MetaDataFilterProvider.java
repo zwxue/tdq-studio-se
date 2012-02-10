@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.dataprofiler.core.ui.action.actions.ColumnFilterAction;
+import org.talend.dataprofiler.core.ui.action.actions.PackageFilterAction;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -23,11 +25,11 @@ import org.talend.repository.model.IRepositoryNode;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class ColumnFilterProvider extends AbstractCommonActionProvider {
+public class MetaDataFilterProvider extends AbstractCommonActionProvider {
 
-    protected static Logger log = Logger.getLogger(ColumnFilterProvider.class);
+    protected static Logger log = Logger.getLogger(MetaDataFilterProvider.class);
 
-    public ColumnFilterProvider() {
+    public MetaDataFilterProvider() {
     }
 
     @Override
@@ -40,7 +42,10 @@ public class ColumnFilterProvider extends AbstractCommonActionProvider {
         Object firstElement = currentSelection.getFirstElement();
         if (firstElement instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) firstElement;
-            if (node instanceof DBTableRepNode || node instanceof DBViewRepNode) {
+            if (node instanceof DBConnectionRepNode) {
+                PackageFilterAction packageFilterAction = new PackageFilterAction(node);
+                menu.add(packageFilterAction);
+            } else if (node instanceof DBTableRepNode || node instanceof DBViewRepNode) {
                 ColumnFilterAction ecfAction = new ColumnFilterAction(node);
                 menu.add(ecfAction);
             }

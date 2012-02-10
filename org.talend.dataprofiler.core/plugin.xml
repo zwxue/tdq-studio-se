@@ -593,8 +593,8 @@
          </enablement>
       </actionProvider>
       <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.ColumnFilterProvider"
-            id="org.talend.dataprofiler.core.ui.action.provider.ColumnFilterProvider">
+            class="org.talend.dataprofiler.core.ui.action.provider.MetaDataFilterProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.MetaDataFilterProvider">
          <enablement>
             <or>
                <instanceof
@@ -602,6 +602,9 @@
                </instanceof>
                <instanceof
                      value="org.talend.dq.nodes.DBViewRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DBConnectionRepNode">
                </instanceof>
             </or>
          </enablement>
@@ -1405,6 +1408,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateAdvancedFrequencyIndicatorsUUID"
            name="Update Advanced Frequency Indicators UUID Between Repeats"
            version="4.2.4">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.AddPackageFilterForDBTask"
+           id="org.talend.dataprofiler.core.migration.impl.AddPackageFilterForDBTask"
+           name="add a TagetValue (package filter)for  low version of DB"
+           version="5.1.0">
      </workspacetask>
   </extension>
   <extension

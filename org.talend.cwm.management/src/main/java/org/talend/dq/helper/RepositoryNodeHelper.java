@@ -552,19 +552,21 @@ public final class RepositoryNodeHelper {
         }
 
         if (fileRepNodes != null) {
-        	for (int i = 0; i < fileRepNodes.size(); i++) {
-        		RepositoryNode childNode = (RepositoryNode) fileRepNodes.get(i);
-        		
-        		String childNodeFileName = PluginConstant.EMPTY_STRING;
-        		if (childNode instanceof JrxmlTempleteRepNode) {
-        			childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.JRXML_STRING);
-        		} else if (childNode instanceof SourceFileRepNode) {
-        			childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.SQL_STRING);
-        		}
-        		if (fileName.equals(childNodeFileName)) {
-        			return childNode;
-        		}
-        	}
+            for (int i = 0; i < fileRepNodes.size(); i++) {
+                RepositoryNode childNode = (RepositoryNode) fileRepNodes.get(i);
+
+                String childNodeFileName = PluginConstant.EMPTY_STRING;
+                if (childNode instanceof JrxmlTempleteRepNode) {
+                    childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment()
+                            .replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.JRXML_STRING);
+                } else if (childNode instanceof SourceFileRepNode) {
+                    childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment()
+                            .replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.SQL_STRING);
+                }
+                if (fileName.equals(childNodeFileName)) {
+                    return childNode;
+                }
+            }
         }
 
         return null;
@@ -2311,7 +2313,7 @@ public final class RepositoryNodeHelper {
                 result.add((JrxmlTempleteRepNode) node);
             } else if (node instanceof JrxmlTempFolderRepNode || node instanceof JrxmlTempSubFolderNode) {
                 if (recursive) {
-                    result.addAll(getJrxmlFileRepNodes((JrxmlTempFolderRepNode)node, recursive));
+                    result.addAll(getJrxmlFileRepNodes((JrxmlTempFolderRepNode) node, recursive));
                 }
             }
         }
@@ -2577,6 +2579,38 @@ public final class RepositoryNodeHelper {
             }
         }
         return resetColumns;
+    }
+
+    /**
+     * 
+     * This method is used for filtering packages by patterns.
+     * 
+     * @param dataPackage
+     * @param packageFilter
+     * @return
+     */
+    public static List<orgomg.cwm.objectmodel.core.Package> filterPackages(
+            EList<orgomg.cwm.objectmodel.core.Package> dataPackages, String packageFilter) {
+        int size = 0;
+        String[] patterns = cleanPatterns(packageFilter.split(",")); //$NON-NLS-1$
+        List<orgomg.cwm.objectmodel.core.Package> filterMatchingPackages = new ArrayList<orgomg.cwm.objectmodel.core.Package>();
+        for (orgomg.cwm.objectmodel.core.Package dbPackage : dataPackages) {
+            for (String pattern : patterns) {
+                String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
+                String name = dbPackage.getName().toLowerCase();
+                // MOD gdbu 2011-1-13 TDQ-4129 Change the way of matching.
+                boolean matches = java.util.regex.Pattern.compile(regex).matcher(name).find();// name.matches(regex);
+                if (matches) {
+                    filterMatchingPackages.add(dbPackage);
+                    size++;
+                    if (size > 2000) {
+                        return filterMatchingPackages;
+                    }
+                    break;
+                }
+            }
+        }
+        return filterMatchingPackages;
     }
 
     private static String[] cleanPatterns(String[] split) {

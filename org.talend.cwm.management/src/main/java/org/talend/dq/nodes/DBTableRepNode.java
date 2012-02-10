@@ -30,7 +30,7 @@ public class DBTableRepNode extends DQRepositoryNode {
 
     private TdTable tdTable;
 
-    private List<IRepositoryNode> children;
+    private List<IRepositoryNode> casheChildren;
 
     public TdTableRepositoryObject getTdTableRepositoryObject() {
         return this.tdTableRepositoryObject;
@@ -53,7 +53,7 @@ public class DBTableRepNode extends DQRepositoryNode {
             this.tdTableRepositoryObject = (TdTableRepositoryObject) object;
             this.tdTable = this.tdTableRepositoryObject.getTdTable();
         }
-        children = new ArrayList<IRepositoryNode>();
+        casheChildren = new ArrayList<IRepositoryNode>();
     }
 
     /*
@@ -64,14 +64,14 @@ public class DBTableRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         // MOD klliu TDQ-4332 only initlized sub node(column folder) once time 2012-02-07
-        if (!children.isEmpty()) {
-            return filterResultsIfAny(children);
+        if (!casheChildren.isEmpty()) {
+            return filterResultsIfAny(casheChildren);
         }
         // MOD gdbu 2011-7-1 bug : 22204
         // TdTableRepositoryObject viewObject = ((TdTableRepositoryObject) this.getObject());
         DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(null, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-        children.add(columnFolderNode);
-        return filterResultsIfAny(children);
+        casheChildren.add(columnFolderNode);
+        return filterResultsIfAny(casheChildren);
         // ~22204
     }
 
@@ -95,6 +95,10 @@ public class DBTableRepNode extends DQRepositoryNode {
     @Override
     public String getLabel() {
         return this.getTdTable().getName();
+    }
+
+    public List<IRepositoryNode> getCasheChildren() {
+        return this.casheChildren;
     }
 
 }

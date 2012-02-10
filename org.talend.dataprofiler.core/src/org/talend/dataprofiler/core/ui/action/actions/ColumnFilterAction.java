@@ -17,7 +17,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.wizard.database.ColumnFilterWizard;
+import org.talend.dataprofiler.core.ui.wizard.database.MetaDataFilterWizard;
+import org.talend.dataprofiler.core.ui.wizard.database.MetaDataFilterWizardPage.FilterType;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -35,6 +36,7 @@ public class ColumnFilterAction extends Action {
     private NamedColumnSet namedColumnSet;
 
     private IRepositoryNode node;
+
     public ColumnFilterAction() {
         super(DefaultMessagesImpl.getString("ColumnFilterAction.columnFilter")); //$NON-NLS-1$
     }
@@ -68,10 +70,14 @@ public class ColumnFilterAction extends Action {
 
     @Override
     public void run() {
-        ColumnFilterWizard wizard = new ColumnFilterWizard(this.namedColumnSet);
+        MetaDataFilterWizard wizard = new MetaDataFilterWizard(this.namedColumnSet, FilterType.COLUMN_FILTER);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         if (dialog.open() == Dialog.OK) {
+            // MOD klliu if set the column filter, need to clear the cashe children of Table node.
+            if (node instanceof DBTableRepNode) {
+                ((DBTableRepNode) node).getCasheChildren().clear();
+            }
             CorePlugin.getDefault().refreshDQView(node);
         }
     }
