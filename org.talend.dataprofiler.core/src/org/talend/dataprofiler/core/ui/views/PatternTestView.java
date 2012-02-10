@@ -335,6 +335,10 @@ public class PatternTestView extends ViewPart {
                     if (dbmsLanguage != null) {
                         dbmsLanguage.setFunctionName(getFunctionName());
                         language = dbmsLanguage.getDbmsName();
+                    } else {
+                        // ADD msjian 2012-2-10 TDQ-4600: fix set the default language is "Java"
+                        language = SupportDBUrlType.JAVADEFAULTURL.getDBKey();
+                        // TDQ-4600~
                     }
                     // ~19119
                 }
