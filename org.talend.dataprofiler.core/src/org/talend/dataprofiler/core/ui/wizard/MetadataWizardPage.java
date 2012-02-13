@@ -12,10 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -30,28 +29,22 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.jfree.util.Log;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
-import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import orgomg.cwm.objectmodel.core.CorePackage;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author zqin
@@ -76,6 +69,10 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     protected CCombo statusText;
 
     protected Text pathText;
+
+    protected List<IRepositoryViewObject> existNames;
+
+    protected static Logger log = Logger.getLogger(MetadataWizardPage.class);
 
     // private members
     // private Button versionMajorBtn;
@@ -313,19 +310,15 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
+        if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }
 
-        if (nameText.getText().contains(" ")) { //$NON-NLS-1$
-            updateStatus(IStatus.ERROR, MSG_INVALID);
+        // reopen this commented code for TDQ-4593.
+        if (!checkDuplicateModelName()) {
             return false;
         }
-
-        // if (!checkDuplicateModelName()) {
-        // return false;
-        // }
 
         updateStatus(IStatus.OK, MSG_OK);
         return super.checkFieldsValue();
@@ -346,52 +339,50 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      */
     public boolean checkDuplicateModelName() {
         String elementName = getParameter().getName();
-        IFolder folderResource = getParameter().getFolderProvider().getFolderResource();
-        if (elementName == null || folderResource == null) {
-            // updateStatus(IStatus.ERROR, MSG_EMPTY);
-            // return false; //$NON-NLS-1$
+        if (elementName == null) {
+            updateStatus(IStatus.ERROR, MSG_EMPTY);
+            return false;
         } else {
-            Collection<ModelElement> modelElements = new ArrayList<ModelElement>();
-
-            switch (getParameter().getParamType()) {
-            case ANALYSIS:
-                modelElements.addAll(AnaResourceFileHelper.getInstance().getAllElement(folderResource));
-                break;
-            case REPORT:
-                modelElements.addAll(RepResourceFileHelper.getInstance().getAllElement(folderResource));
-                break;
-            case PATTERN:
-                modelElements.addAll(PatternResourceFileHelper.getInstance().getAllElement(folderResource));
-                break;
-            case CONNECTION:
-                List<Connection> conns = new ArrayList<Connection>();
+            // MOD qionlgi 2012-2-13 TDQ-4593,check if exsit name in old items list when input a name.
+            if (existNames == null || existNames.isEmpty()) {
+                ERepositoryObjectType type = null;
+                switch (getParameter().getParamType()) {
+                case ANALYSIS:
+                    type = ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT;
+                    break;
+                case REPORT:
+                    type = ERepositoryObjectType.TDQ_REPORT_ELEMENT;
+                    break;
+                case PATTERN:
+                    type = ERepositoryObjectType.TDQ_PATTERN_ELEMENT;
+                    break;
+                case DQRULE:
+                    type = ERepositoryObjectType.TDQ_RULES;
+                    break;
+                case UDINDICATOR:
+                    type = ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
+                    break;
+                default:
+                    break;
+                }
                 try {
-                    for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
-                        conns.add(connItem.getConnection());
+                    if (type != null) {
+                        existNames = ProxyRepositoryFactory.getInstance().getAll(type, true, false);
                     }
                 } catch (PersistenceException e) {
-                    Log.error(e, e);
+                    log.error(e);
                 }
-                modelElements.addAll(conns);
-                break;
-            case DQRULE:
-                modelElements.addAll(DQRuleResourceFileHelper.getInstance().getAllElement(folderResource));
-                break;
-            case UDINDICATOR:
-                modelElements.addAll(IndicatorResourceFileHelper.getInstance().getAllElement(folderResource));
-                break;
-            default:
-                break;
             }
 
-            if (!modelElements.isEmpty()) {
-                for (ModelElement element : modelElements) {
-                    if (element.getName().equals(elementName)) {
-                        updateStatus(IStatus.ERROR, UIMessages.MSG_ANALYSIS_SAME_NAME);
+            if (existNames != null) {
+                for (IRepositoryViewObject object : existNames) {
+                    if (elementName.equalsIgnoreCase(object.getLabel())) {
+                        updateStatus(IStatus.ERROR, UIMessages.MSG_EXIST_SAME_NAME);
                         return false;
                     }
                 }
             }
+
         }
         return true;
     }
