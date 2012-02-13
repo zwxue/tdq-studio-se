@@ -344,7 +344,16 @@ public final class ConnectionUtils {
                 cc = null;
             }
         } else {
-            ret = driver.connect(url, props);
+            // MOD klliu TDQ-4659 sso could not check passed.2012-02-10
+            try {
+                ret = org.talend.utils.sql.ConnectionUtils.createConnection(url, driver, props);
+            } catch (InstantiationException e) {
+                log.error(e, e);
+            } catch (IllegalAccessException e) {
+                log.error(e, e);
+            } catch (ClassNotFoundException e) {
+                log.error(e, e);
+            }
         }
         return ret;
     }
