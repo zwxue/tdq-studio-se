@@ -253,8 +253,9 @@ public class DrillDownEditorInput implements IEditorInput {
                 }
             } else {
                 // MOD msjian TDQ-4617 2012-2-8: fixed a NPE
-                if (analysisDataSet.getFrequencyData().containsKey(selectValue)) {
-                    newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
+                List<Object[]> list = analysisDataSet.getFrequencyData().get(selectValue);
+                if (list != null && list.size() > 0) {
+                    newColumnElementList.addAll(list);
                 }
                 // TDQ-4617 ~
             }
