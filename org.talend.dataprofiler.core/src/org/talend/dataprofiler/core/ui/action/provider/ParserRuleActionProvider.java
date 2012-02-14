@@ -49,7 +49,9 @@ public class ParserRuleActionProvider extends AbstractCommonActionProvider {
                 if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
                     IFolder folder = WorkbenchUtils.getFolder((RepositoryNode) node);
                     menu.add(new CreateParserRuleAction(folder));
-                    menu.add(new ExportParserRuleAction(node));
+                    // Export to Exchange or local
+                    menu.add(new ExportParserRuleAction(node, true));
+                    menu.add(new ExportParserRuleAction(node, false));
                     menu.add(new ImportParserRuleAction(folder));
                 }
             }

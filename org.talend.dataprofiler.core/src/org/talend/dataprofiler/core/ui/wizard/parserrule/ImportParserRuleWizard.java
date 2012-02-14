@@ -56,16 +56,18 @@ public class ImportParserRuleWizard extends Wizard {
         File file = new File(page.getSourceFile());
         final List<ReturnCode> information = ImportFactory.importParserRuleToStucture(file, folder, page.getSkip(),
                 page.getRename());
-        Display.getDefault().asyncExec(new Runnable() {
+        if (0 < information.size()) {
+            Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
-                ImportInfoDialog.openImportInformation(
-                        null,
-                        DefaultMessagesImpl.getString("ImportInfoDialog.INFO_TSK"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
-            }
+                public void run() {
+                    ImportInfoDialog.openImportInformation(
+                            null,
+                            DefaultMessagesImpl.getString("ImportInfoDialog.INFO_TSK"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
+                }
 
-        });
-        CorePlugin.getDefault().refreshDQView();
+            });
+            CorePlugin.getDefault().refreshDQView();
+        }
         return true;
     }
 }

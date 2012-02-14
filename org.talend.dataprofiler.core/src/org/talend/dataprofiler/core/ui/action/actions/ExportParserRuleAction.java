@@ -34,6 +34,8 @@ public class ExportParserRuleAction extends Action {
 
     private IRepositoryNode parserRuleFolder;
 
+    private boolean isForExchange;
+
     /**
      * DOC Administrator ExportParserRuleAction constructor comment.
      * 
@@ -45,9 +47,21 @@ public class ExportParserRuleAction extends Action {
         parserRuleFolder = node;
     }
 
+    public ExportParserRuleAction(IRepositoryNode node, boolean isForExchange) {
+        if (isForExchange) {
+
+            setText(DefaultMessagesImpl.getString("ExportParserRuleAction.ExportExchange")); //$NON-NLS-1$
+        } else {
+            setText(DefaultMessagesImpl.getString("ExportParserRuleAction.ExportParserRule")); //$NON-NLS-1$
+        }
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPORT));
+        parserRuleFolder = node;
+        this.isForExchange = isForExchange;
+    }
+
     @Override
     public void run() {
-        ExportParserRuleWizard wizard = new ExportParserRuleWizard(parserRuleFolder);
+        ExportParserRuleWizard wizard = new ExportParserRuleWizard(parserRuleFolder, isForExchange);
         WizardDialog dialog = new WizardDialog(null, wizard);
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {

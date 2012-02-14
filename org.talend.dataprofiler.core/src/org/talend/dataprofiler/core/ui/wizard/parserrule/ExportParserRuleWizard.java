@@ -44,6 +44,8 @@ public class ExportParserRuleWizard extends Wizard {
 
     private ExportParserRuleWizardPage page;
 
+    private boolean isForExchange;
+
     /**
      * DOC klliu ExportParserRuleWizard constructor comment.
      * 
@@ -52,6 +54,12 @@ public class ExportParserRuleWizard extends Wizard {
     public ExportParserRuleWizard(IRepositoryNode parserRuleFolder) {
         this.folder = WorkbenchUtils.getFolder((RepositoryNode) parserRuleFolder);
         this.parserRuleFolder = parserRuleFolder;
+    }
+
+    public ExportParserRuleWizard(IRepositoryNode parserRuleFolder, boolean isForExchange) {
+        this.folder = WorkbenchUtils.getFolder((RepositoryNode) parserRuleFolder);
+        this.parserRuleFolder = parserRuleFolder;
+        this.isForExchange = isForExchange;
     }
 
     @Override
@@ -77,19 +85,25 @@ public class ExportParserRuleWizard extends Wizard {
             return false;
         } else {
             File resource = new File(targetFile);
-            for (Iterator<ParserRule> iterator = parserRules.iterator(); iterator.hasNext();) {
-                ParserRule parserRule = iterator.next();
-                ExportFactory.export(resource, folder, parserRule);
-                File parserRuleFile = new File(resource, ExportFactory.toLocalFileName(parserRule.getName() + ".csv")); //$NON-NLS-1$
-                if (parserRuleFile.isFile() && parserRuleFile.exists()) {
-                    try {
-                        FilesUtils.zip(parserRuleFile, parserRuleFile.getPath() + ".zip"); //$NON-NLS-1$
-                        parserRuleFile.delete();
+            if (isForExchange) {
+                // export for exchange
+                for (Iterator<ParserRule> iterator = parserRules.iterator(); iterator.hasNext();) {
+                    ParserRule parserRule = iterator.next();
+                    ExportFactory.export(resource, folder, parserRule);
+                    File parserRuleFile = new File(resource, ExportFactory.toLocalFileName(parserRule.getName() + ".csv")); //$NON-NLS-1$
+                    if (parserRuleFile.isFile() && parserRuleFile.exists()) {
+                        try {
+                            FilesUtils.zip(parserRuleFile, parserRuleFile.getPath() + ".zip"); //$NON-NLS-1$
+                            parserRuleFile.delete();
 
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
+                        } catch (Exception e) {
+                            log.error(e.getMessage(), e);
+                        }
                     }
                 }
+            } else {
+                // Export to local
+                ExportFactory.export(resource, folder, parserRules.toArray(new ParserRule[parserRules.size()]));
             }
 
             CorePlugin.getDefault().refreshDQView();
