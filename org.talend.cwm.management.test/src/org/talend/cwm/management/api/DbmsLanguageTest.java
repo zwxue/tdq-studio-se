@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.cwm.management.api;
 
-import static org.junit.Assert.fail;
-
 import org.junit.Test;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -26,7 +27,7 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testDbmsLanguage() {
-        fail("Not yet implemented");
+        // The constructor DbmsLanguage() is not visible
     }
 
     /**
@@ -34,7 +35,7 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testDbmsLanguageString() {
-        fail("Not yet implemented");
+        // The constructor DbmsLanguage(String) is not visible
     }
 
     /**
@@ -42,7 +43,7 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testDbmsLanguageStringIntInt() {
-        fail("Not yet implemented");
+        // The constructor DbmsLanguage(String, ProductVersion) is not visible
     }
 
     /**
@@ -50,7 +51,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testAnd() {
-        fail("Not yet implemented");
+        // get a default DbmsLanguage
+        DataManager dm = null;
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+        // test the medhod
+        dbmsLanguage.and();
     }
 
     /**
@@ -58,7 +63,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testOr() {
-        fail("Not yet implemented");
+        // get a default DbmsLanguage
+        DataManager dm = null;
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+        // test the medhod
+        dbmsLanguage.or();
     }
 
     /**
@@ -66,7 +75,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testBetween() {
-        fail("Not yet implemented");
+        // get a default DbmsLanguage
+        DataManager dm = null;
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+        // test the medhod
+        dbmsLanguage.between();
     }
 
     /**
@@ -74,7 +87,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testNotEqual() {
-        fail("Not yet implemented");
+        // get a default DbmsLanguage
+        DataManager dm = null;
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+        // test the medhod
+        dbmsLanguage.notEqual();
     }
 
     /**
@@ -82,7 +99,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testEos() {
-        fail("Not yet implemented");
+        // get a default DbmsLanguage
+        DataManager dm = null;
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+        // test the medhod
+        dbmsLanguage.eos();
     }
 
     /**
@@ -90,7 +111,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testGetDbmsName() {
-        fail("Not yet implemented");
+        // get a default DbmsLanguage
+        DataManager dm = null;
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+        // test the medhod
+        dbmsLanguage.getDbmsName();
     }
 
     /**
@@ -98,7 +123,11 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testGetDefaultLanguage() {
-        fail("Not yet implemented");
+        // get a default DbmsLanguage
+        DataManager dm = null;
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+        // test the medhod
+        dbmsLanguage.getDefaultLanguage();
     }
 
     /**
@@ -107,7 +136,14 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testToQualifiedName() {
-        fail("Not yet implemented");
+        // get a default DbmsLanguage
+        DataManager dm = null;
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
+        // test the medhod
+        String catalog = "catalog"; //$NON-NLS-1$
+        String schema = "schema"; //$NON-NLS-1$
+        String table = "table"; //$NON-NLS-1$
+        dbmsLanguage.toQualifiedName(catalog, schema, table);
     }
 
     static final String LIMIT = "LIMIT";
@@ -117,13 +153,7 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testParseQuery() {
-        // String mysql = "select * from toto " + LIMIT + " 10";
-        // DbmsLanguage dbms = new DbmsLanguage("MySQL");
-        // try {
-        // dbms.parseQuery(dbms.prepareQuery(mysql).getObject());
-        // } catch (ParseException e) {
-        // fail("Exception: " + e.getMessage());
-        // }
+        // don't find this method in DbmsLanguage
     }
 
     /**
@@ -131,7 +161,7 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testGetZqlParser() {
-        fail("Not yet implemented");
+        // don't find this method in DbmsLanguage
     }
 
 }
