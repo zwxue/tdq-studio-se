@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -40,6 +41,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
@@ -59,6 +61,7 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -161,6 +164,9 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
     public void doSave(IProgressMonitor monitor) {
         if (!checkWhithspace()) {
             MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+            return;
+        }
+        if (!canSave().isOk()) {
             return;
         }
         super.doSave(monitor);
@@ -363,6 +369,21 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     public ParserRuleTableViewer getParserRuleTableViewer() {
         return parserRuleTableViewer;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
+     */
+    @Override
+    public ReturnCode canSave() {
+        ReturnCode rc = canModifyName(ERepositoryObjectType.TDQ_RULES);
+        if (!rc.isOk()) {
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
+        }
+        return rc;
     }
 
 }

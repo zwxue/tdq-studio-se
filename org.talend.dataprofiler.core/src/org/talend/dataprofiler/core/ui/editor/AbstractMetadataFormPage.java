@@ -36,17 +36,23 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -616,5 +622,54 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      */
     public Collection<Text> getWhitespaceFields() {
         return checkWhitespaceTextFields;
+    }
+
+    public abstract ReturnCode canSave();
+
+    /**
+     * 
+     * check if the nameText is a dupilcate name.
+     * 
+     * @return
+     */
+    protected ReturnCode canModifyName(ERepositoryObjectType objectType) {
+
+        String elementName = this.nameText.getText();
+        Property oldProperty = null;
+        if (repositoryViewObject != null) {
+            oldProperty = this.repositoryViewObject.getProperty();
+        }
+        ReturnCode ret = new ReturnCode();
+        if (oldProperty == null||objectType==null) {
+            return ret;
+        }
+        if (PluginConstant.EMPTY_STRING.equals(elementName.trim())) {
+            this.nameText.setText(oldProperty.getDisplayName());
+            ret.setReturnCode(NAMECONNOTBEEMPTY, false);
+            return ret;
+        }
+        // MOD qiongli 2012-2-14 TDQ-4539.compare the name with all items of the specified type.
+        try {
+            List<IRepositoryViewObject> existAnaNames = ProxyRepositoryFactory.getInstance().getAll(objectType, true, false);
+                if (existAnaNames != null) {
+                    for (IRepositoryViewObject object : existAnaNames) {
+                        if (oldProperty != null && elementName.equals(oldProperty.getDisplayName())) {
+                            // if new name equals itself's old name ,return true
+                            break;
+                        }
+                    if (elementName.equalsIgnoreCase(object.getProperty().getDisplayName())) {
+                            // if new name equals one of tree-list's name,return false
+                            this.nameText.setText(oldProperty != null ? oldProperty.getDisplayName()
+                                    : PluginConstant.SPACE_STRING);
+                            ret.setReturnCode(UIMessages.MSG_EXIST_SAME_NAME, false);
+                            return ret;
+                        }
+                    }
+                }
+        } catch (PersistenceException e) {
+            ret.setReturnCode(e.getMessage(), false);
+        }
+
+        return ret;
     }
 }

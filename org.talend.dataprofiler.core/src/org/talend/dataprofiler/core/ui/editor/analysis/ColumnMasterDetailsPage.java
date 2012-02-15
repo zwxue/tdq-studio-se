@@ -1117,7 +1117,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     public ReturnCode canSave() {
 
         // MOD by gdbu 2011-3-21 bug 19179
-        ReturnCode canModRetCode = canModifyAnalysisName();
+        ReturnCode canModRetCode = super.canSave();
         if (!canModRetCode.isOk()) {
             return canModRetCode;
         }

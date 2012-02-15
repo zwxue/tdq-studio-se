@@ -42,6 +42,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -168,43 +169,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         return null;
     }
 
-    public abstract ReturnCode canSave();
-
-    /**
-     * Analysis of whether the name check can be modified
-     * 
-     * DOC gdbu Comment method "canModifyAnalysisName".
-     * 
-     * @return ReturnCodec
-     */
-    protected ReturnCode canModifyAnalysisName() {
-        // MOD by gdbu 2011-3-21 bug 19179
-        this.nameText.setText(this.nameText.getText().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
-        if (this.nameText.getText().length() == 0) {
-            // analysis can not without a name
-            this.nameText.setText(this.analysis.getName());
-            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);//$NON-NLS-1$
-        }
-        String elementName = this.nameText.getText();
-        List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
-        for (IRepositoryNode children : childrensname) {
-            if (elementName.equals(this.analysis.getName())) {
-                // if new name equals itself's old name ,return true
-                break;
-            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-2$
-                // if new name equals one of tree-list's name,return false
-                this.nameText.setText(this.analysis.getName());
-                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);//$NON-NLS-1$
-            }
-        }
-        // MOD klliu bug 19995 question2
-        // After checking nametext contain empty string,must setUp FormPage's dirty is false in saving
-        // process
-        // MOD qiongli 2011-6-20 bug 21533,don't setDirty(false) in this place.
-        // ~
-        return new ReturnCode(true);
-        // ~19179
-    }
 
     protected abstract ReturnCode canRun();
 
@@ -527,5 +491,20 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             // MOD yyi 2012-02-06 TDQ-4581:avoid the instantiation of the strings to optimize the performances.
             doLog(log, Level.INFO, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.success", urlString)); //$NON-NLS-1$
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
+     */
+    @Override
+    public ReturnCode canSave() {
+        ReturnCode rc = canModifyName(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
+        if (!rc.isOk()) {
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
+        }
+        return rc;
     }
 }

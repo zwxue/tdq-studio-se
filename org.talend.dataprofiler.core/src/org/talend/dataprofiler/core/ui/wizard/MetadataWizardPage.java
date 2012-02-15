@@ -310,13 +310,13 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) { //$NON-NLS-1$
+        if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }
 
         // reopen this commented code for TDQ-4593.
-        if (!checkDuplicateModelName()) {
+        if (!checkDuplicateName()) {
             return false;
         }
 
@@ -337,53 +337,52 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      * 
      * @return
      */
-    public boolean checkDuplicateModelName() {
+    public boolean checkDuplicateName() {
         String elementName = getParameter().getName();
         if (elementName == null) {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
-        } else {
-            // MOD qionlgi 2012-2-13 TDQ-4593,check if exsit name in old items list when input a name.
-            if (existNames == null || existNames.isEmpty()) {
-                ERepositoryObjectType type = null;
-                switch (getParameter().getParamType()) {
-                case ANALYSIS:
-                    type = ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT;
-                    break;
-                case REPORT:
-                    type = ERepositoryObjectType.TDQ_REPORT_ELEMENT;
-                    break;
-                case PATTERN:
-                    type = ERepositoryObjectType.TDQ_PATTERN_ELEMENT;
-                    break;
-                case DQRULE:
-                    type = ERepositoryObjectType.TDQ_RULES;
-                    break;
-                case UDINDICATOR:
-                    type = ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
-                    break;
-                default:
-                    break;
-                }
-                try {
-                    if (type != null) {
-                        existNames = ProxyRepositoryFactory.getInstance().getAll(type, true, false);
-                    }
-                } catch (PersistenceException e) {
-                    log.error(e);
-                }
-            }
-
-            if (existNames != null) {
-                for (IRepositoryViewObject object : existNames) {
-                    if (elementName.equalsIgnoreCase(object.getLabel())) {
-                        updateStatus(IStatus.ERROR, UIMessages.MSG_EXIST_SAME_NAME);
-                        return false;
-                    }
-                }
-            }
-
         }
+        // MOD qionlgi 2012-2-13 TDQ-4593,check if exsit name in old items list when input a name.
+        if (existNames == null || existNames.isEmpty()) {
+            ERepositoryObjectType type = null;
+            switch (getParameter().getParamType()) {
+            case ANALYSIS:
+                type = ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT;
+                break;
+            case REPORT:
+                type = ERepositoryObjectType.TDQ_REPORT_ELEMENT;
+                break;
+            case PATTERN:
+                type = ERepositoryObjectType.TDQ_PATTERN_ELEMENT;
+                break;
+            case DQRULE:
+                type = ERepositoryObjectType.TDQ_RULES;
+                break;
+            case UDINDICATOR:
+                type = ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
+                break;
+            default:
+                break;
+            }
+            try {
+                if (type != null) {
+                    existNames = ProxyRepositoryFactory.getInstance().getAll(type, true, false);
+                }
+            } catch (PersistenceException e) {
+                log.error(e);
+            }
+        }
+
+        if (existNames != null) {
+            for (IRepositoryViewObject object : existNames) {
+                if (elementName.equalsIgnoreCase(object.getLabel())) {
+                    updateStatus(IStatus.ERROR, UIMessages.MSG_EXIST_SAME_NAME);
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 }
