@@ -2598,7 +2598,6 @@ public final class RepositoryNodeHelper {
             for (String pattern : patterns) {
                 String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
                 String name = dbPackage.getName().toLowerCase();
-                // MOD gdbu 2011-1-13 TDQ-4129 Change the way of matching.
                 boolean matches = java.util.regex.Pattern.compile(regex).matcher(name).find();// name.matches(regex);
                 if (matches) {
                     filterMatchingPackages.add(dbPackage);
