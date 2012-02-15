@@ -19,7 +19,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -67,7 +66,8 @@ public final class SoftwareSystemManager {
                 TypedReturnCode<java.sql.Connection> trc = JavaSqlFactory.createConnection(dataProvider);
                 if (trc.isOk()) {
                     connection = trc.getObject();
-                    softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
+                    // softwareSystem = DatabaseContentRetriever.getSoftwareSystem(connection);
+                    softwareSystem = ConnectionHelper.getSoftwareSystem(connection);
                     if (softwareSystem != null /* && softwareSystem.eResource() != null */) { // store it
                         if (ConnectionHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
                             saveSoftwareSystem(softwareSystem);
