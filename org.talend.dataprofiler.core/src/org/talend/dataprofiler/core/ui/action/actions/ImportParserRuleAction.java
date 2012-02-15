@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.ImportParserRuleWizard;
@@ -43,7 +44,7 @@ public class ImportParserRuleAction extends Action {
     @Override
     public void run() {
         ImportParserRuleWizard wizard = new ImportParserRuleWizard(folder);
-        WizardDialog dialog = new WizardDialog(null, wizard);
+        WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
             try {

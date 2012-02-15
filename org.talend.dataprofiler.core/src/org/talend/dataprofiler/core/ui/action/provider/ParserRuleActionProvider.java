@@ -34,7 +34,6 @@ public class ParserRuleActionProvider extends AbstractCommonActionProvider {
     protected static Logger log = Logger.getLogger(DQRulesActionProvider.class);
 
     public static final String EXTENSION_DQRULE = FactoriesUtil.DQRULE;
-
     @Override
     public void fillContextMenu(IMenuManager menu) {
         if (!isShowMenu()) {
@@ -51,6 +50,7 @@ public class ParserRuleActionProvider extends AbstractCommonActionProvider {
                     menu.add(new CreateParserRuleAction(folder));
                     // Export to Exchange or local
                     menu.add(new ExportParserRuleAction(node, true));
+                    // Export to local
                     menu.add(new ExportParserRuleAction(node, false));
                     menu.add(new ImportParserRuleAction(folder));
                 }

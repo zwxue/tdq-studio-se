@@ -737,7 +737,7 @@ public final class ImportFactory {
 
     /**
      * 
-     * DOC klliu Comment method "importParserRuleToStucture".
+     * The method is used for importing a parser rule from file.
      * 
      * @param importFile
      * @param selectionFolder
@@ -791,7 +791,7 @@ public final class ImportFactory {
                 }
                 if (isNeedToCreate) {
                     //
-                    if (name.equals("")) {//$NON-NLS-1$
+                    if (name.trim().equals("")) {//$NON-NLS-1$
                         information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedEmptyParserRule" //$NON-NLS-1$
                                 ), true));
                     } else {
