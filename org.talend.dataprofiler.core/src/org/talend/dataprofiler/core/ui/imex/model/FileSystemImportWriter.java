@@ -37,17 +37,19 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.xml.TdXmlSchema;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.migration.IMigrationTask;
@@ -103,8 +105,9 @@ public class FileSystemImportWriter implements IImportWriter {
 
             checkDependency(record);
 
-            if (checkExisted) {
-                checkConflict(record);
+            checkConflict(record);
+            if (checkExisted && record.getConflictObject() != null) {
+                record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.hasConflictObject", record.getName()));//$NON-NLS-1$ 
             }
 
             if (!record.isValid()) {
@@ -125,17 +128,23 @@ public class FileSystemImportWriter implements IImportWriter {
         if (property != null) {
             try {
 
-                List<IRepositoryViewObject> allObjects = DqRepositoryViewService.getAllRepositoryResourceObjects(true);
-
+                ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(property.getItem());
+                List<IRepositoryViewObject> allObjects = ProxyRepositoryFactory.getInstance().getAll(itemType, true);
                 for (IRepositoryViewObject object : allObjects) {
                     if (isConflict(property, object.getProperty())) {
+                        List<IRepositoryViewObject> supplierDependency = DependenciesHandler.getInstance().getSupplierDependency(
+                                object);
+                        for (IRepositoryViewObject supplierViewObject : supplierDependency) {
+                            record.addError(DefaultMessagesImpl
+                                    .getString(
+                                            "FileSystemImproWriter.DependencyWarning", new Object[] { record.getName(), supplierViewObject.getProperty().getLabel(), object.getLabel() }));//$NON-NLS-1$
+                        }
+                        // If set this parameter will delete the object when finished the wizard.
                         record.setConflictObject(object);
-                        record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");//$NON-NLS-1$ //$NON-NLS-2$ 
-
-                        break;
+                        return;
                     }
                 }
-
+                record.setConflictObject(null);
             } catch (Exception e) {
                 record.addError("\"" + record.getName() + "\" check item conflict failed!");//$NON-NLS-1$ //$NON-NLS-2$ 
             }

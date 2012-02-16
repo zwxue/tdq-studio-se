@@ -12,11 +12,21 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.utils.sugars.ReturnCode;
@@ -69,35 +79,22 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
      * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
     // @Override
-    // protected void updateDependencies(ModelElement element) {
-    // IndicatorDefinition definition = (IndicatorDefinition) element;
-    // // update supplier dependency
-    // EList<Dependency> supplierDependency = definition.getSupplierDependency();
-    // try {
-    // for (Dependency sDependency : supplierDependency) {
-    // EList<ModelElement> client = sDependency.getClient();
-    // for (ModelElement me : client) {
-    // if (me instanceof Analysis) {
-    // Analysis analysis = (Analysis) me;
-    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
-    // analysis, definition);
-    // if (dependencyReturn.isOk()) {
-    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(analysis);
-    // if (repositoryNode != null) {
-    // TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
-    // .getItem();
-    // analysisItem.setAnalysis(analysis);
-    // }
-    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-    // .saveResource(analysis.eResource());
-    // }
-    // }
-    // }
-    // }
-    // } catch (PersistenceException e) {
-    // log.error(e, e);
-    // }
-    // // update client dependency
-    // // if IndicatorDefinition have client depencency, add codes here
-    // }
+    protected void updateDependencies(ModelElement element) {
+        // update client dependency
+        // if IndicatorDefinition have client depencency, add codes here
+        IndicatorDefinition definition = (IndicatorDefinition) element;
+        Property property = PropertyHelper.getProperty(definition);
+        List<IRepositoryViewObject> listIndicatorDependency = DependenciesHandler
+                .getIndicatorDependency(new RepositoryViewObject(property));
+        for (IRepositoryViewObject viewObject : listIndicatorDependency) {
+            Item item = viewObject.getProperty().getItem();
+            if (item instanceof TDQAnalysisItem) {
+                try {
+                    ProxyRepositoryFactory.getInstance().save(item);
+                } catch (PersistenceException e) {
+                    log.error(e, e);
+                }
+            }
+        }
+    }
 }

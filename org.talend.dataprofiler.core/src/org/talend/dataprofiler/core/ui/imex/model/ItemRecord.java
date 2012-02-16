@@ -349,7 +349,7 @@ public class ItemRecord {
      */
     public String getName() {
         if (property != null) {
-            return property.getLabel();
+            return property.getDisplayName();
         } else if (element != null) {
             return element.getName();
         } else {
