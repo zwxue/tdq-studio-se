@@ -17,12 +17,16 @@ import org.eclipse.jface.action.Action;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.context.ContextUtils;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.repository.ui.utils.SwitchContextGroupNameImpl;
 /**
  * DOC msjian class global comment. Detailled comment
@@ -46,15 +50,30 @@ public class SwitchContextAction extends Action {
      */
     @Override
     public void run() {
-
-        if (selectedObject instanceof DBConnectionRepNode) {
-            DBConnectionRepNode dbConnectionRepNode = (DBConnectionRepNode) selectedObject;
-            Item item = dbConnectionRepNode.getObject().getProperty().getItem();
+        // MOD msjian 2012-2-13 TDQ-4559: make it support file/mdm connection
+        if (selectedObject instanceof ConnectionRepNode) {
+            ConnectionRepNode conRepNode = (ConnectionRepNode) selectedObject;
+            Item item = conRepNode.getObject().getProperty().getItem();
             if (item instanceof ConnectionItem) {
                 ConnectionItem connItem = (ConnectionItem) item;
                 boolean isUpdated = SwitchContextGroupNameImpl.getInstance().updateContextGroup(connItem);
-                DatabaseConnection dbcon = dbConnectionRepNode.getDatabaseConnection();
-                String fileStr = dbcon.eResource().getURI().toFileString();
+
+                // get contextid and file name
+                String fileStr = PluginConstant.EMPTY_STRING;
+                String contextId = PluginConstant.EMPTY_STRING;
+                Connection dbcon = null;
+                if (conRepNode instanceof DBConnectionRepNode) {
+                    dbcon = ((DBConnectionRepNode) conRepNode).getDatabaseConnection();
+                } else if (conRepNode instanceof DFConnectionRepNode) {
+                    dbcon = ((DFConnectionRepNode) conRepNode).getDfConnection();
+                } else if (conRepNode instanceof MDMConnectionRepNode) {
+                    dbcon = ((MDMConnectionRepNode) conRepNode).getMdmConnection();
+                }
+                if (dbcon != null) {
+                    fileStr = dbcon.eResource().getURI().toFileString();
+                    contextId = dbcon.getContextId();
+                }
+                
                 if (isUpdated) {
                     if (log.isDebugEnabled()) {
                         log.debug(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", fileStr, "successful"));//$NON-NLS-1$ //$NON-NLS-2$
@@ -66,7 +85,6 @@ public class SwitchContextAction extends Action {
                                 ITDQRepositoryService.class);
                     }
                     if (tdqRepService != null) {
-                        String contextId = dbConnectionRepNode.getDatabaseConnection().getContextId();
                         tdqRepService.reloadDatabase(ContextUtils.getContextItemById2(contextId));
                     }
                 } else {
@@ -74,5 +92,6 @@ public class SwitchContextAction extends Action {
                 }
             }
         }
+     // TDQ-4559~
     }
 }

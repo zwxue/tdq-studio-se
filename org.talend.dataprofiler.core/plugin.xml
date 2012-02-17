@@ -739,7 +739,7 @@
           <enablement>
              <or>
                 <instanceof
-                      value="org.talend.dq.nodes.DBConnectionRepNode">
+                      value="org.talend.dq.nodes.ConnectionRepNode">
                 </instanceof>
              </or>
           </enablement>
