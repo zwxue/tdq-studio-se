@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -44,7 +45,6 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
@@ -59,8 +59,8 @@ import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisParameters;
-import org.talend.dataquality.analysis.AnalysisType;
+//import org.talend.dataquality.analysis.AnalysisParameters;
+//import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
@@ -83,7 +83,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     protected String editorID = null;
 
-    private AbstractItemEditorInput itemEditorInput = null;
+    private IEditorInput itemEditorInput = null;
 
     private IFile file = null;
 
@@ -131,7 +131,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     protected void duRun() {
 
-        this.itemEditorInput = computeEditorInput();
+        this.itemEditorInput = computeEditorInput(true);
         if (itemEditorInput != null) {
             // open ItemEditorInput
             CorePlugin.getDefault().openEditor(itemEditorInput, editorID);
@@ -168,10 +168,11 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
     /**
      * get the ItemEditorInput according to the reposViewObj, if there no ItemEditorInput return null.
      * 
+     * @param isOpenItemEditorAction
      * @return
      */
-    public AbstractItemEditorInput computeEditorInput() {
-        AbstractItemEditorInput result = null;
+    public IEditorInput computeEditorInput(boolean isOpenItemEditorAction) {
+    	IEditorInput result = null;
         if (repViewObj != null) {
             // Connection editor
             String key = repViewObj.getRepositoryObjectType().getKey();
@@ -183,8 +184,8 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
                 result = new AnalysisItemEditorInput(item);
                 Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
-                AnalysisParameters parameters = analysis.getParameters();
-                AnalysisType analysisType = parameters.getAnalysisType();
+//                AnalysisParameters parameters = analysis.getParameters();
+//                AnalysisType analysisType = parameters.getAnalysisType();
                 // boolean equals = analysisType.equals(AnalysisType.CONNECTION);
                 // if (equals) {
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
@@ -242,29 +243,41 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 result = new ReportItemEditorInput(item);
                 editorID = "org.talend.dataprofiler.core.tdq.ui.editor.report.ReportEditror"; //$NON-NLS-1$
             }
+            // ADD msjian TDQ-4209 2012-2-7 : return the editorInput of *.jrxml and *.sql files
+            if (!isOpenItemEditorAction) {
+            	if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.getKey().equals(key)
+            			|| ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
+            		
+            		// if there don't found the correct ItemEditorInput, try to open it as a File
+            		IPath append = WorkbenchUtils.getFilePath((RepositoryNode) repViewObj.getRepositoryNode());
+            		result = new FileEditorInput(ResourceManager.getRootProject().getFile(append));
+            		editorID = FileEditorInput.class.getName();
+            	}
+            }
+            // TDQ-4209~
         }
         return result;
     }
 
-    /**
-     * DOC klliu Comment method "retiveConnections".
-     * 
-     * @param modelElement
-     * @return
-     */
-    private Connection retiveConnections(ModelElement modelElement) {
-        Connection conn = SwitchHelpers.CONNECTION_SWITCH.doSwitch(modelElement);
-        if (conn == null) {
-            Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(modelElement);
-            Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(modelElement);
-            if (catalog != null) {
-                conn = ConnectionHelper.getConnection(catalog);
-            } else if (schema != null) {
-                conn = ConnectionHelper.getConnection(schema);
-            }
-        }
-        return conn;
-    }
+//    /**
+//     * DOC klliu Comment method "retiveConnections".
+//     * 
+//     * @param modelElement
+//     * @return
+//     */
+//    private Connection retiveConnections(ModelElement modelElement) {
+//        Connection conn = SwitchHelpers.CONNECTION_SWITCH.doSwitch(modelElement);
+//        if (conn == null) {
+//            Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(modelElement);
+//            Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(modelElement);
+//            if (catalog != null) {
+//                conn = ConnectionHelper.getConnection(catalog);
+//            } else if (schema != null) {
+//                conn = ConnectionHelper.getConnection(schema);
+//            }
+//        }
+//        return conn;
+//    }
 
     /*
      * (non-Jsdoc)
