@@ -157,7 +157,9 @@ public abstract class ResourceFileMap {
             for (IFile file : allIFiles) {
                 mod = getModelElement(file);
                 if (mod != null) {
-                    elementList.add(getModelElement(file));
+                    // MOD msjian TDQ-4672 2012-2-17: modify another issue
+                    elementList.add(mod);
+                    // TDQ-4672~
                 }
             }
         } catch (CoreException e) {

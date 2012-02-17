@@ -32,6 +32,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -50,12 +51,16 @@ import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
+import common.Logger;
+
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class DuplicateAction extends Action {
 
     private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
+
+    private static Logger log = Logger.getLogger(DuplicateAction.class);
 
     /**
      * DOC bZhou DuplicateAction constructor comment.
@@ -79,26 +84,28 @@ public class DuplicateAction extends Action {
     public void run() {
 
         Object duplicateObject = null;
-        for (IRepositoryNode node : nodeArray) {
+        for (final IRepositoryNode node : nodeArray) {
             if (node != null) {
 
                 final IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(node);
 
                 if (handle != null) {
-                    String initLabel = generateInitialLabel(handle);
+                    // MOD msjian TDQ-4672 2012-2-17: modified the check duplicate name method
+                    String initLabel = generateInitialLabel(node);
                     InputDialog dialog = new InputDialog(
                             null,
                             DefaultMessagesImpl.getString("DuplicateAction.InputDialog"), DefaultMessagesImpl.getString("DuplicateAction.InpurtDesc"), initLabel, //$NON-NLS-1$ //$NON-NLS-2$
                             new IInputValidator() {
 
                                 public String isValid(String newText) {
-                                    if (handle.isExistedLabel(newText)) {
+                                    if (PropertyHelper.existDuplicateName(newText, null, node.getContentType(), true)) {
                                         return DefaultMessagesImpl.getString("DuplicateAction.LabelExists"); //$NON-NLS-1$
                                     }
 
                                     return null;
                                 }
                             });
+                    // TDQ-4672~
 
                     if (dialog.open() == Window.OK) {
                         String newLabel = dialog.getValue();
@@ -137,6 +144,33 @@ public class DuplicateAction extends Action {
             char j = 'a';
             String temp = initNameValue;
             while (handle.isExistedLabel(temp)) {
+                if (j <= 'z') {
+                    temp = initNameValue + "_" + (j++) + ""; //$NON-NLS-1$ //$NON-NLS-2$
+                }
+
+            }
+            return temp;
+        }
+    }
+
+    /**
+     * DOC msjian Comment method "generateInitialLabel".
+     * 
+     * check the duplicate name by node.
+     * 
+     * @param node
+     * @return
+     */
+    private String generateInitialLabel(IRepositoryNode node) {
+        String initNameValue = "Copy_of_" + node.getLabel(); //$NON-NLS-1$
+        ERepositoryObjectType type = node.getContentType();
+        if (!PropertyHelper.existDuplicateName(initNameValue, null, type, true)) {
+            return initNameValue;
+        } else {
+            char j = 'a';
+            String temp = initNameValue;
+
+            while (PropertyHelper.existDuplicateName(temp, null, type, true)) {
                 if (j <= 'z') {
                     temp = initNameValue + "_" + (j++) + ""; //$NON-NLS-1$ //$NON-NLS-2$
                 }
