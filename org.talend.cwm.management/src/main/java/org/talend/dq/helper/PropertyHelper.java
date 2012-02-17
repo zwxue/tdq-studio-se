@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.emf.FactoriesUtil.EElementEName;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.DelimitedFileConnectionItem;
@@ -43,6 +45,9 @@ import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
@@ -57,6 +62,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public final class PropertyHelper {
+
+    private static Logger log = Logger.getLogger(PropertyHelper.class);
 
     private PropertyHelper() {
 
@@ -541,5 +548,43 @@ public final class PropertyHelper {
         }
 
         return element;
+    }
+
+    /**
+     * 
+     * check if exist duplicate name.
+     * 
+     * @param newName
+     * @param oldName,it is just used to moidify Item,if it is null/empety,indicate that it is a new Item.
+     * @param objectType
+     * @param onlyCompDisplayName,if it is true,just compare the name of UI.
+     * @return
+     */
+    public static boolean existDuplicateName(String newName, String oldName, ERepositoryObjectType objectType,
+            boolean onlyCompDisplayName) {
+
+        // if new name equals itself's old name ,return false
+        if (newName == null || objectType == null || oldName != null && newName.equals(oldName)) {
+            return false;
+        }
+        try {
+            List<IRepositoryViewObject> existObjects = ProxyRepositoryFactory.getInstance().getAll(objectType, true, false);
+            Property prop = null;
+            if (existObjects != null) {
+                for (IRepositoryViewObject object : existObjects) {
+                    if(object==null||object.getProperty()==null){
+                        continue;
+                    }
+                    prop=object.getProperty();
+                    if (onlyCompDisplayName && newName.equals(prop.getDisplayName()) || !onlyCompDisplayName
+                            && (newName.equals(prop.getDisplayName()) || newName.equals(prop.getLabel()))) {
+                        return true;
+                    }
+                }
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        return false;
     }
 }

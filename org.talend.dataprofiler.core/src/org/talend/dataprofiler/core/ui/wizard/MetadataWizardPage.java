@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -70,7 +71,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     protected Text pathText;
 
-    protected List<IRepositoryViewObject> existNames;
+    protected List<IRepositoryViewObject> existRepObjects;
 
     protected static Logger log = Logger.getLogger(MetadataWizardPage.class);
 
@@ -344,7 +345,7 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             return false;
         }
         // MOD qionlgi 2012-2-13 TDQ-4593,check if exsit name in old items list when input a name.
-        if (existNames == null || existNames.isEmpty()) {
+        if (existRepObjects == null || existRepObjects.isEmpty()) {
             ERepositoryObjectType type = null;
             switch (getParameter().getParamType()) {
             case ANALYSIS:
@@ -367,16 +368,20 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             }
             try {
                 if (type != null) {
-                    existNames = ProxyRepositoryFactory.getInstance().getAll(type, true, false);
+                    existRepObjects = ProxyRepositoryFactory.getInstance().getAll(type, true, false);
                 }
             } catch (PersistenceException e) {
                 log.error(e);
             }
         }
 
-        if (existNames != null) {
-            for (IRepositoryViewObject object : existNames) {
-                if (elementName.equalsIgnoreCase(object.getLabel())) {
+        if (existRepObjects != null) {
+            for (IRepositoryViewObject object : existRepObjects) {
+                Property prop = object.getProperty();
+                if (prop == null) {
+                    continue;
+                }
+                if (elementName.equalsIgnoreCase(prop.getLabel()) || elementName.equalsIgnoreCase(prop.getDisplayName())) {
                     updateStatus(IStatus.ERROR, UIMessages.MSG_EXIST_SAME_NAME);
                     return false;
                 }
