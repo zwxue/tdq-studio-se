@@ -38,6 +38,7 @@ import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -240,6 +241,9 @@ public class DrillDownEditorInput implements IEditorInput {
             newColumnElementList.addAll(getDesignatedData(dataList));
         } else if (analysisDataSet.getFrequencyData() != null && analysisDataSet.getFrequencyData().size() > 0) {
             String selectValue = this.getSelectValue();
+            if (currIndicator instanceof LengthIndicator) {
+                selectValue = ((LengthIndicator) currIndicator).getLength().toString();
+            }
             // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
             if (currIndicator instanceof DatePatternFreqIndicator) {
                 for (Object expression : analysisDataSet.getFrequencyData().keySet()) {
@@ -248,7 +252,12 @@ public class DrillDownEditorInput implements IEditorInput {
                     }
                 }
             } else {
-                newColumnElementList.addAll(analysisDataSet.getFrequencyData().get(selectValue));
+                // MOD msjian TDQ-4617 2012-2-20: fixed a NPE
+                List<Object[]> list = analysisDataSet.getFrequencyData().get(selectValue);
+                if (list != null && list.size() > 0) {
+                    newColumnElementList.addAll(list);
+                }
+                // TDQ-4617 ~
             }
         } else if (analysisDataSet.getPatternData() != null && analysisDataSet.getPatternData().size() > 0) {
             if (DrillDownEditorInput.judgeMenuType(getMenuType(), DrillDownEditorInput.MENU_INVALID_TYPE)) {
