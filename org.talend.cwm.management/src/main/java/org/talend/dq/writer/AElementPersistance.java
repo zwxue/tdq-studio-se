@@ -15,7 +15,6 @@ package org.talend.dq.writer;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -104,28 +103,6 @@ public abstract class AElementPersistance {
                 trc.setOk(Boolean.FALSE);
 
                 log.warn("Create item failed, try to create it by a logical name. ", e);
-
-                try {
-                    String fname = createLogicalFileName(element, getFileExtension());
-                    IFile file = folder.getFile(fname);
-
-                    if (file.exists()) {
-                        // MOD yyi 2009-10-15 Feature: 9524
-                        String oriName = element.getName();
-                        element.setName(element.getName() + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss")); //$NON-NLS-1$
-                        fname = createLogicalFileName(element, getFileExtension());
-                        file = folder.getFile(fname);
-
-                        element.setName(oriName);
-                        ReturnCode rc = create(element, file);
-                        trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
-                    } else {
-                        ReturnCode rc = create(element, file);
-                        trc.setReturnCode(rc.getMessage(), rc.isOk(), file);
-                    }
-                } catch (Exception e2) {
-                    log.error(e2, e2);
-                }
             }
         }
         return trc;
