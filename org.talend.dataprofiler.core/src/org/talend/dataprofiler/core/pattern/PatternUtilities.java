@@ -47,8 +47,8 @@ import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.connection.DatabaseContentRetriever;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -239,7 +239,7 @@ public final class PatternUtilities {
                     dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage((MDMConnection) dm);
                 } else {
                     try {
-                        SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
+                        SoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(conn);
                         dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
                     } catch (SQLException e) {
                         log.error(e, e);

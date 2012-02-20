@@ -20,12 +20,11 @@ import org.junit.runners.Suite;
 import org.talend.cwm.db.connection.DBConnectTest;
 import org.talend.cwm.management.api.DbmsLanguageTest;
 import org.talend.cwm.management.api.DqRepositoryViewServiceTest;
-import org.talend.cwm.management.connection.DatabaseContentRetrieverTest;
 import org.talend.cwm.management.i18n.MessagesTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { DBConnectTest.class, DbmsLanguageTest.class, DqRepositoryViewServiceTest.class,
-        DatabaseContentRetrieverTest.class, MessagesTest.class })
+ MessagesTest.class })
 /**
  * DOC yyi 2010-05-27 for 12747: Refactor Unit Test for automatic testing
  */
