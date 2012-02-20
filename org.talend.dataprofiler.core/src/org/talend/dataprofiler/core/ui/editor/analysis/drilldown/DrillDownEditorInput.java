@@ -241,9 +241,13 @@ public class DrillDownEditorInput implements IEditorInput {
             newColumnElementList.addAll(getDesignatedData(dataList));
         } else if (analysisDataSet.getFrequencyData() != null && analysisDataSet.getFrequencyData().size() > 0) {
             String selectValue = this.getSelectValue();
+
+            // ADD msjian TDQ-4617 2012-2-20: the selectValue is incorrect when the indicator is LengthIndicator
             if (currIndicator instanceof LengthIndicator) {
                 selectValue = ((LengthIndicator) currIndicator).getLength().toString();
             }
+            // TDQ-4617~
+
             // MOD yyi 2011-12-14 TDQ-4166:View rows for Date Pattern Frequency Indicator.
             if (currIndicator instanceof DatePatternFreqIndicator) {
                 for (Object expression : analysisDataSet.getFrequencyData().keySet()) {
