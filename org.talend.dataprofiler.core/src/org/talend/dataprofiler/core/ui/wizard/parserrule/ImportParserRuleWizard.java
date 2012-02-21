@@ -48,7 +48,7 @@ public class ImportParserRuleWizard extends Wizard {
     @Override
     public boolean performFinish() {
         if (IMessageProvider.WARNING == page.getMessageType()) {
-            if (!MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("ImportParserRuleWizard.Warning"), //$NON-NLS-1$
+            if (!MessageDialog.openConfirm(getShell(), DefaultMessagesImpl.getString("ImportParserRuleWizard.Warning"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("ImportParserRuleWizard.ConfirmImport"))) { //$NON-NLS-1$
                 return false;
             }
@@ -56,16 +56,19 @@ public class ImportParserRuleWizard extends Wizard {
         File file = new File(page.getSourceFile());
         final List<ReturnCode> information = ImportFactory.importParserRuleToStucture(file, folder, page.getSkip(),
                 page.getRename());
-        Display.getDefault().asyncExec(new Runnable() {
+        // shown the informations when imported parser rule
+        if (0 < information.size()) {
+            Display.getDefault().asyncExec(new Runnable() {
 
-            public void run() {
-                ImportInfoDialog.openImportInformation(
-                        null,
-                        DefaultMessagesImpl.getString("ImportInfoDialog.INFO_TSK"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
-            }
+                public void run() {
+                    ImportInfoDialog.openImportInformation(
+                            null,
+                            DefaultMessagesImpl.getString("ImportInfoDialog.INFO_TSK"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
+                }
 
-        });
-        CorePlugin.getDefault().refreshDQView();
+            });
+            CorePlugin.getDefault().refreshDQView();
+        }
         return true;
     }
 }

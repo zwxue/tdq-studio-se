@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -34,6 +35,8 @@ public class ExportParserRuleAction extends Action {
 
     private IRepositoryNode parserRuleFolder;
 
+    private boolean isForExchange;
+
     /**
      * DOC Administrator ExportParserRuleAction constructor comment.
      * 
@@ -45,10 +48,30 @@ public class ExportParserRuleAction extends Action {
         parserRuleFolder = node;
     }
 
+    /**
+     * 
+     * Parse the given parameter(isForExchage),then export parser rule,when parameter is true,it will export to exchange
+     * ,otherwise local.
+     * 
+     * @param node
+     * @param isForExchange
+     */
+    public ExportParserRuleAction(IRepositoryNode node, boolean isForExchange) {
+        if (isForExchange) {
+
+            setText(DefaultMessagesImpl.getString("ExportParserRuleAction.ExportExchange")); //$NON-NLS-1$
+        } else {
+            setText(DefaultMessagesImpl.getString("ExportParserRuleAction.ExportParserRule")); //$NON-NLS-1$
+        }
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPORT));
+        parserRuleFolder = node;
+        this.isForExchange = isForExchange;
+    }
+
     @Override
     public void run() {
-        ExportParserRuleWizard wizard = new ExportParserRuleWizard(parserRuleFolder);
-        WizardDialog dialog = new WizardDialog(null, wizard);
+        ExportParserRuleWizard wizard = new ExportParserRuleWizard(parserRuleFolder, isForExchange);
+        WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
             try {
