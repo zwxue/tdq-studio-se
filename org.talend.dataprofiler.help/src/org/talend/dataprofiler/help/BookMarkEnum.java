@@ -28,7 +28,9 @@ public enum BookMarkEnum {
     EclipseSQLExplorer("http://eclipsesql.sourceforge.net/index.php", "Eclipse SQL Explorer"), //$NON-NLS-1$ //$NON-NLS-2$
     TOSDownloadPage("http://www.talend.com/download.php", "Talend.com Download Page"), //$NON-NLS-1$ //$NON-NLS-2$
     TOSForum("http://www.talendforge.org/forum/index.php", "Talend.com Forum"), //$NON-NLS-1$ //$NON-NLS-2$
-    TOSBugtracker("http://www.talendforge.org/bugs/my_view_page.php", "Talend.com Bugtracker"); //$NON-NLS-1$ //$NON-NLS-2$
+    // MOD msjian 2012-2-22 TDQ-4594 :Change the link to the bugtracker in the bookmark list
+    TOSBugtracker("http://jira.talendforge.org", "Talend.com Bugtracker"); //$NON-NLS-1$ //$NON-NLS-2$
+    // TDQ-4594~
 
     private String href;
 
