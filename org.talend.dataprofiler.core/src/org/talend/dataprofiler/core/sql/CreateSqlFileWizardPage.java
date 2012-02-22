@@ -65,6 +65,8 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
 
     protected HashMap<String, String> metadata;
 
+    List<IRepositoryViewObject> existNames = null;
+
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
      * 
@@ -207,9 +209,12 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
             updateStatus(IStatus.ERROR, UIMessages.MSG_EMPTY_FIELD);
             return false;
         }
-        List<IRepositoryViewObject> existNames = null;
+
         try {
-            existNames = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT, true, false);
+            if (existNames == null || existNames.isEmpty()) {
+                existNames = ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT, true,
+                        false);
+            }
         } catch (PersistenceException e) {
             log.error(e);
         }
