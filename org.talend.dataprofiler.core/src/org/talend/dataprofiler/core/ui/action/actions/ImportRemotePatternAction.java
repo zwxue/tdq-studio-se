@@ -144,18 +144,21 @@ public class ImportRemotePatternAction extends Action {
 
         try {
             String categoryName = componet.getCategry().getName();
-            String targetFolder = ResourceManager.getExchangeFolder().getLocation().append(categoryName).toString();
+            // MOD msjian 2012-2-22 TDQ-4603: change the unzip folder to system temp folder, else there is no svn info files for the old targetFolder
+            // String targetFolder = ResourceManager.getExchangeFolder().getLocation().append(categoryName).toString();
+            String targetFolder = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
+            // TDQ-4603 ~
             File componentFileFolder = ComponentInstaller.unzip(componet.getInstalledLocation(), targetFolder);
 
             FilesUtils.getAllFilesFromFolder(componentFileFolder, files, new FilenameFilter() {
 
                 public boolean accept(File dir, String name) {
-                    return !FilesUtils.isSVNFolder(dir) && name.endsWith("csv");
+                    return !FilesUtils.isSVNFolder(dir) && name.endsWith("csv"); //$NON-NLS-1$
                 }
             });
 
             if (files.isEmpty()) {
-                information.add(new ReturnCode("No valid exchange extension file(CSV) found in " + componet.getName(), false));
+                information.add(new ReturnCode("No valid exchange extension file(CSV) found in " + componet.getName(), false)); //$NON-NLS-1$
             }
 
         } catch (Exception e) {
