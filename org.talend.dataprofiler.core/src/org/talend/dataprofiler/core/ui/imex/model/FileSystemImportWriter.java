@@ -154,19 +154,20 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private boolean isConflict(Property p1, Property p2) {
-    	 try{
-         	ModelElement modelElement1 = PropertyHelper.getModelElement(p1);
-         	ModelElement modelElement2 = PropertyHelper.getModelElement(p2);
-         	
-         	String id1 = modelElement1.eResource().getURIFragment(modelElement1);
-         	String id2 = modelElement2.eResource().getURIFragment(modelElement2);
-         	
-             return p1.getId().equals(p2.getId()) || p1.getLabel().equals(p2.getLabel())||id1.equals(id2);
+    	boolean returnCode=p1.getLabel().equals(p2.getLabel());
+        try{
+        	ModelElement modelElement1 = PropertyHelper.getModelElement(p1);
+        	ModelElement modelElement2 = PropertyHelper.getModelElement(p2);
+        	
+        	String id1 = modelElement1.eResource().getURIFragment(modelElement1);
+        	String id2 = modelElement2.eResource().getURIFragment(modelElement2);
+        	
+            return p1.getId().equals(p2.getId()) ||returnCode||id1.equals(id2);
 
-         }catch(Exception e){
-         	
-         }
-         return false;
+        }catch(Exception e){
+        	
+        }
+        return returnCode;
     }
 
     /**
