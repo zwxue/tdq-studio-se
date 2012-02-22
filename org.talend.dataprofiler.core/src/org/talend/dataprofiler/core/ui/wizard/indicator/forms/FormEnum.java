@@ -177,7 +177,7 @@ public enum FormEnum {
                 IEditorPart activeEditor = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
                         .getActiveEditor();
                 ExecutionLanguage exeLanguage = null;
-                if (activeEditor != null || (activeEditor instanceof AnalysisEditor)) {
+                if (activeEditor != null && (activeEditor instanceof AnalysisEditor)) {
                     exeLanguage = ((AnalysisEditor) activeEditor).getUIExecuteEngin();
                 }
                 if (exeLanguage != null
