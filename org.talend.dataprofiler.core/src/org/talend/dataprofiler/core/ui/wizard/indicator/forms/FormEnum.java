@@ -15,12 +15,16 @@ package org.talend.dataprofiler.core.ui.wizard.indicator.forms;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.ui.IEditorPart;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.help.HelpPlugin;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.helper.UDIHelper;
@@ -169,14 +173,20 @@ public enum FormEnum {
                     forms = new FormEnum[] { NumbericNominalForm };
                 }
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
-                // MOD qiongli 2012-2-7 TDQ-4627
-                if (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum
-                        || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum) {
+                // MOD qiongli 2012-2-7 TDQ-4627 javaOptionForm just for Java engine and Pattern Frequency.
+                IEditorPart activeEditor = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                        .getActiveEditor();
+                ExecutionLanguage exeLanguage = null;
+                if (activeEditor != null && (activeEditor instanceof AnalysisEditor)) {
+                    exeLanguage = ((AnalysisEditor) activeEditor).getUIExecuteEngin();
+                }
+                if (exeLanguage != null
+                        && ExecutionLanguage.JAVA.equals(exeLanguage)
+                        && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {
                     forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
                 } else {
                     forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm };
                 }
-
             } else if (dataminingType == DataminingType.NOMINAL) {
 
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
