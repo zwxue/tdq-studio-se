@@ -37,6 +37,8 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
+import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -186,8 +188,13 @@ public class ItemRecord {
         if (isJRXml()) {
             Collection<TdReport> allReports = (Collection<TdReport>) RepResourceFileHelper.getInstance().getAllElement();
             for (TdReport report : allReports) {
+                // MOD yyi 2012-02-20 TDQ-4545 TDQ-4701: Change to relative path comparing.
+                IPath pathRepFile = RepResourceFileHelper.findCorrespondingFile(report).getLocation();
+                IPath pathJrxmlFile = new Path(file.getPath());
+                String path = pathJrxmlFile.makeRelativeTo(pathRepFile).toString();
+
                 for (AnalysisMap anaMap : report.getAnalysisMap()) {
-                    if (StringUtils.equals(file.getAbsolutePath(), anaMap.getJrxmlSource())) {
+                    if (StringUtils.equals(path, anaMap.getJrxmlSource())) {
                         dependencyMap.put(file, report);
                     }
                 }
@@ -221,6 +228,20 @@ public class ItemRecord {
                 if (uri != null) {
                     File depFile = new File(uri.toFileString());
                     dependencyMap.put(depFile, depElement);
+                }
+            }
+            // MOD yyi 2012-02-20 TDQ-4545 TDQ-4701: Map user define jrxm templates with report.
+            if (element instanceof TdReport) {
+                TdReport rep = (TdReport) element;
+                for (AnalysisMap anaMap : rep.getAnalysisMap()) {
+                    ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
+                    boolean isUseMode = ReportHelper.ReportType.USER_MADE.equals(reportType);
+                    if (isUseMode) {
+                        URI uri = rep.eResource().getURI();
+                        IPath path = new Path(uri.toFileString());
+                        // Append the relative path of jrxmltemplate to file.
+                        dependencyMap.put(path.append(anaMap.getJrxmlSource()).toFile(), element);
+                    }
                 }
             }
         }
