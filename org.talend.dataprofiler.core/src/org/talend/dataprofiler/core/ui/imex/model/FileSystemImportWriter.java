@@ -47,7 +47,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
@@ -152,14 +151,20 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private boolean isConflict(Property p1, Property p2) {
-        if (p1 != null && p2 != null) {
+        boolean returnCode = p1.getLabel().equals(p2.getLabel());
+        try {
+            ModelElement modelElement1 = PropertyHelper.getModelElement(p1);
+            ModelElement modelElement2 = PropertyHelper.getModelElement(p2);
 
-            boolean isConflict = ResourceHelper.getUUID(p1).equals(ResourceHelper.getUUID(p2));
-            boolean isExisted = p1.getId().equals(p2.getId()) || p1.getLabel().equals(p2.getLabel());
-            return isConflict || isExisted;
+            String id1 = modelElement1.eResource().getURIFragment(modelElement1);
+            String id2 = modelElement2.eResource().getURIFragment(modelElement2);
+
+            return p1.getId().equals(p2.getId()) || returnCode || id1.equals(id2);
+
+        } catch (Exception e) {
+
         }
-
-        return false;
+        return returnCode;
     }
 
     /**

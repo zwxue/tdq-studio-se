@@ -36,6 +36,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.properties.impl.TDQIndicatorDefinitionItemImpl;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -401,6 +402,9 @@ public final class DependenciesHandler {
     public List<IRepositoryViewObject> getSupplierDependency(IRepositoryViewObject object) {
         List<IRepositoryViewObject> listViewObject = new ArrayList<IRepositoryViewObject>();
         ModelElement modelElement = PropertyHelper.getModelElement(object.getProperty());
+        if (object.getProperty().getItem() instanceof TDQSourceFileItem) {
+            return listViewObject;
+        }
         if (modelElement instanceof IndicatorDefinition) {
             listViewObject.addAll(getIndicatorDependency(object));
         } else {
