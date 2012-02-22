@@ -16,18 +16,31 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.dataquality.properties.impl.TDQIndicatorDefinitionItemImpl;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -60,6 +73,8 @@ public final class DependenciesHandler {
         }
         return instance;
     }
+    
+    private static Logger log = Logger.getLogger(DependenciesHandler.class);
 
     /**
      * Method "clearDependencies" is to be used before a file is deleted. The root element is given as argument and the
@@ -379,27 +394,64 @@ public final class DependenciesHandler {
         }
     }
 
-    // /**
-    // * Method "getDependencyBetween".
-    // *
-    // * @param clientElement
-    // * @param dataManager
-    // * @return the dependency between the given elements or null.
-    // */
-    // Dependency getDependencyBetween(Analysis clientElement, DataManager
-    // dataManager) {
-    // return getDependencyBetween(USAGE, clientElement, dataManager);
-    // }
-    //
-    // /**
-    // * Method "getDependencyBetween".
-    // *
-    // * @param report
-    // * @param analysis
-    // * @return the dependency between the given elements or null.
-    // */
-    // Dependency getDependencyBetween(TdReport report, Analysis analysis) {
-    // return getDependencyBetween(USAGE, report, analysis);
-    // }
+    /** 
+     *  		     
+     * @param object 
+     * @return SupplierDependency 
+     */ 
+    public List<IRepositoryViewObject> getSupplierDependency(IRepositoryViewObject object) { 
+    	List<IRepositoryViewObject> listViewObject = new ArrayList<IRepositoryViewObject>(); 
+    	ModelElement modelElement = PropertyHelper.getModelElement(object.getProperty()); 
+    	//MOD zshen if item is source sql don't need get Dependency. 
+    	if(object.getProperty().getItem() instanceof TDQSourceFileItem){
+    		return listViewObject;
+    	}
+    	if (modelElement instanceof IndicatorDefinition) { 
+    		listViewObject.addAll(getIndicatorDependency(object)); 
+    	} else { 
+    		EList<Dependency> supplierDependency = modelElement.getSupplierDependency(); 
+    		for (Dependency supplier : supplierDependency) { 
+    			for (ModelElement depencyModelElement : supplier.getClient()) { 
+    				Property property = PropertyHelper.getProperty(depencyModelElement); 
+    				IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property); 
+    				listViewObject.add(repositoryViewObject); 
+    			} 
+    		} 
+    	} 
+    	
+    	return listViewObject; 
+    } 
+    
+    /** 
+     * get Indicator Dependency 
+     *  
+     * @return get the list for analysis which use parameter to be a Indicator 
+     */ 
+    public static List<IRepositoryViewObject> getIndicatorDependency(IRepositoryViewObject viewObject) { 
+    	Item item = viewObject.getProperty().getItem(); 
+    	List<IRepositoryViewObject> listAnalysisViewObject = new ArrayList<IRepositoryViewObject>(); 
+    	if (item instanceof TDQIndicatorDefinitionItemImpl) { 
+    		TDQIndicatorDefinitionItemImpl tdqIndicatorItem = (TDQIndicatorDefinitionItemImpl) item; 
+    		IndicatorDefinition newIndicatorDefinition = tdqIndicatorItem.getIndicatorDefinition(); 
+    		List<IRepositoryViewObject> allAnaList = new ArrayList<IRepositoryViewObject>(); 
+    		try { 
+    			allAnaList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT, true)); 
+    		} catch (PersistenceException e) { 
+    			log.error(e, e); 
+    		} 
+    		for (IRepositoryViewObject theAna : allAnaList) { 
+    			List<Indicator> indicators = IndicatorHelper.getIndicators(((TDQAnalysisItem) theAna.getProperty().getItem()) 
+    					.getAnalysis().getResults()); 
+    			for (Indicator indicator : indicators) { 
+    				IndicatorDefinition oldIndicatorDefinition = indicator.getIndicatorDefinition(); 
+    				if (ModelElementHelper.compareUUID(oldIndicatorDefinition, newIndicatorDefinition)) { 
+    					listAnalysisViewObject.add(theAna); 
+    					break; 
+    				} 
+    			} 
+    		} 
+    	} 
+    	return listAnalysisViewObject; 
+    }
 
 }

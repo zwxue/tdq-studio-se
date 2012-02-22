@@ -43,11 +43,14 @@ import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.xml.TdXmlSchema;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.migration.IMigrationTask;
@@ -103,9 +106,10 @@ public class FileSystemImportWriter implements IImportWriter {
 
             checkDependency(record);
 
-            if (checkExisted) {
-                checkConflict(record);
-            }
+            checkConflict(record); 
+            if (checkExisted && record.getConflictObject() != null) { 
+            	record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.hasConflictObject", record.getName()));//$NON-NLS-1$  
+            } 
 
             if (!record.isValid()) {
                 inValidRecords.add(record);
@@ -125,17 +129,24 @@ public class FileSystemImportWriter implements IImportWriter {
         if (property != null) {
             try {
 
-                List<IRepositoryViewObject> allObjects = DqRepositoryViewService.getAllRepositoryResourceObjects(true);
+            	ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(property.getItem()); 
+             	List<IRepositoryViewObject> allObjects = ProxyRepositoryFactory.getInstance().getAll(itemType, true); 
 
                 for (IRepositoryViewObject object : allObjects) {
                     if (isConflict(property, object.getProperty())) {
-                        record.setConflictObject(object);
-                        record.addError("\"" + record.getName() + "\" conflict : the same item with different name exists! ");//$NON-NLS-1$ //$NON-NLS-2$ 
-
-                        break;
+                    	List<IRepositoryViewObject> supplierDependency = DependenciesHandler.getInstance().getSupplierDependency( 
+                    			object); 
+                    	for (IRepositoryViewObject supplierViewObject : supplierDependency) { 
+                    		record.addError(DefaultMessagesImpl 
+                    				.getString( 
+                    						"FileSystemImproWriter.DependencyWarning", new Object[] { record.getName(), supplierViewObject.getProperty().getLabel(), object.getLabel() }));//$NON-NLS-1$ 
+                    	} 
+                    	// If set this parameter will delete the object when finished the wizard. 
+                    	record.setConflictObject(object); 
+                    	return;
                     }
                 }
-
+                record.setConflictObject(null); 
             } catch (Exception e) {
                 record.addError("\"" + record.getName() + "\" check item conflict failed!");//$NON-NLS-1$ //$NON-NLS-2$ 
             }
@@ -143,14 +154,19 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private boolean isConflict(Property p1, Property p2) {
-        if (p1 != null && p2 != null) {
+    	 try{
+         	ModelElement modelElement1 = PropertyHelper.getModelElement(p1);
+         	ModelElement modelElement2 = PropertyHelper.getModelElement(p2);
+         	
+         	String id1 = modelElement1.eResource().getURIFragment(modelElement1);
+         	String id2 = modelElement2.eResource().getURIFragment(modelElement2);
+         	
+             return p1.getId().equals(p2.getId()) || p1.getLabel().equals(p2.getLabel())||id1.equals(id2);
 
-            boolean isConflict = ResourceHelper.getUUID(p1).equals(ResourceHelper.getUUID(p2));
-            boolean isExisted = p1.getId().equals(p2.getId()) || p1.getLabel().equals(p2.getLabel());
-            return isConflict || isExisted;
-        }
-
-        return false;
+         }catch(Exception e){
+         	
+         }
+         return false;
     }
 
     /**
