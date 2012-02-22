@@ -817,10 +817,11 @@ public class DbmsLanguage {
         return null;
     }
 
-    public Expression getExpression(ModelElement element, boolean isJavaEngin){
-        if(element==null)return null;
+    public Expression getExpression(ModelElement element, boolean isJavaEngin) {
+        if (element == null)
+            return null;
         Expression expression = null;
-        if(element instanceof Pattern){
+        if (element instanceof Pattern) {
             expression = getRegexp(((Pattern) element), isJavaEngin);
         } else if (element instanceof Indicator) {
             if (isJavaEngin) {
@@ -1095,7 +1096,6 @@ public class DbmsLanguage {
      */
     public String fillGenericQueryWithColumnTableAndAlias(String genericQuery, String columns, String table, String groupByAliases) {
         return new GenericSQLHandler(genericQuery).replaceColumnTableAlias(columns, table, groupByAliases).getSqlString();
-
     }
 
     public String fillGenericQueryWithColumnsAndTable(String genericQuery, String columns, String table) {

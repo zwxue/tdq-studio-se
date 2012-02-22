@@ -23,7 +23,7 @@ public class GenericSQLHandler {
 
     public static final String TABLE_NAME = "<%=__TABLE_NAME__%>"; //$NON-NLS-1$
 
-    private static final String TABLE_NAME2 = "<%=__TABLE_NAME_2__%>"; //$NON-NLS-1$
+    public static final String TABLE_NAME2 = "<%=__TABLE_NAME_2__%>"; //$NON-NLS-1$
 
     public static final String COLUMN_NAMES = "<%=__COLUMN_NAMES__%>"; //$NON-NLS-1$
 

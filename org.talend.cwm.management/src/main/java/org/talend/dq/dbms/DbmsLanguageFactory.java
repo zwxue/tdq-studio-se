@@ -97,7 +97,7 @@ public final class DbmsLanguageFactory {
      * @param dbmsSubtype
      * @return the appropriate DbmsLanguage
      */
-    private static DbmsLanguage createDbmsLanguage(String dbmsSubtype, String databaseVersion) {
+    public static DbmsLanguage createDbmsLanguage(String dbmsSubtype, String databaseVersion) {
         ProductVersion dbVersion = ProductVersion.fromString(databaseVersion, true);
         if (isMySQL(dbmsSubtype)) {
             return new MySQLDbmsLanguage(dbmsSubtype, dbVersion);

@@ -18,9 +18,9 @@ import junit.framework.TestSuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.talend.cwm.db.connection.DBConnectTest;
-import org.talend.cwm.management.api.DbmsLanguageTest;
 import org.talend.cwm.management.api.DqRepositoryViewServiceTest;
 import org.talend.cwm.management.i18n.MessagesTest;
+import org.talend.dq.dbms.DbmsLanguageTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( { DBConnectTest.class, DbmsLanguageTest.class, DqRepositoryViewServiceTest.class,
