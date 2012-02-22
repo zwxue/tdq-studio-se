@@ -24,6 +24,7 @@ import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
@@ -109,7 +110,8 @@ public enum FormEnum {
         }
         FormEnum[] forms = null;
 
-        switch (indicatorUnit.getType()) {
+        IndicatorEnum indicatorType = indicatorUnit.getType();
+        switch (indicatorType) {
 
         case RowCountIndicatorEnum:
         case NullCountIndicatorEnum:
@@ -167,8 +169,14 @@ public enum FormEnum {
                     forms = new FormEnum[] { NumbericNominalForm };
                 }
             } else if (Java2SqlType.isTextInSQL(sqlType)) {
+                // MOD qiongli 2012-2-7 TDQ-4627
+                if (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum
+                        || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum) {
+                    forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
+                } else {
+                    forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm };
+                }
 
-                forms = new FormEnum[] { FreqTextParametersForm, FreqTextLengthForm, JavaOptionsForm };
             } else if (dataminingType == DataminingType.NOMINAL) {
 
                 if (Java2SqlType.isNumbericInSQL(sqlType)) {
