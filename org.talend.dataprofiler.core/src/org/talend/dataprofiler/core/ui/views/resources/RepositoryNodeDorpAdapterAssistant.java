@@ -45,8 +45,13 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
+import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.helpers.ReportHelper.ReportType;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
@@ -224,8 +229,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     private void moveReportRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+        // MOD yyi 2012-02-22:TDQ-4545 Update user define jrxml template path.
+        relocateJrxmlTemplates(sourceNode, targetNode);
+
         IRepositoryViewObject objectToMove = sourceNode.getObject();
-        // TDQReportItem item = (TDQReportItem) objectToMove.getProperty().getItem();
         IPath fullPath = ResourceManager.getReportsFolder().getFullPath();
         if (targetNode.getType() == ENodeType.SIMPLE_FOLDER) {
             moveObject(objectToMove, sourceNode, targetNode,
@@ -234,10 +241,34 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             moveObject(objectToMove, sourceNode, targetNode, Path.EMPTY);
         }
         // refresh the dq repository tree view
-        // CorePlugin.getDefault().refreshDQView(sourceNode.getParent());
         CorePlugin.getDefault().refreshDQView(targetNode.getParent());
-        // modifyAnaDependency(analysisList, report);
-        // this.updateReportDependency(item);
+    }
+
+    /**
+     * Update user define jrxml template path.
+     * 
+     * @param sourceNode
+     * @param targetNode
+     * @link {@link #moveReportRepNode(IRepositoryNode, IRepositoryNode)}
+     */
+    private void relocateJrxmlTemplates(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
+        IFolder targetFolder = ResourceManager.getRootProject().getFolder(targetPath);
+
+        TdReport rep = (TdReport) RepositoryNodeHelper.getModelElementFromRepositoryNode(sourceNode);
+        IPath jrxmlPath = null;
+        IPath relativePath = null;
+        ReportType reportType = null;
+        for (AnalysisMap anaMap : rep.getAnalysisMap()) {
+            reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
+            // Relocate the jrxml template path for user define type.
+            if (ReportHelper.ReportType.USER_MADE.equals(reportType)) {
+                jrxmlPath = RepResourceFileHelper.findCorrespondingFile(rep).getParent().getLocation()
+                        .append(anaMap.getJrxmlSource());
+                relativePath = jrxmlPath.makeRelativeTo(targetFolder.getLocation().append("/")); //$NON-NLS-1$
+                anaMap.setJrxmlSource(relativePath.toString());
+            }
+        }
     }
 
     private void movePatternRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
