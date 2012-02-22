@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -50,6 +51,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
@@ -270,8 +272,11 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
     @Override
     public void doSave(IProgressMonitor monitor) {
         // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        if(!checkWhithspace()){
+        if (!checkWhithspace()) {
             MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+            return;
+        }
+        if (!canSave().isOk()) {
             return;
         }
 
@@ -635,6 +640,21 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
             return newJoinElement;
         }
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
+     */
+    @Override
+    public ReturnCode canSave() {
+        ReturnCode rc = canModifyName(ERepositoryObjectType.TDQ_RULES);
+        if (!rc.isOk()) {
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
+        }
+        return rc;
     }
 
     /**

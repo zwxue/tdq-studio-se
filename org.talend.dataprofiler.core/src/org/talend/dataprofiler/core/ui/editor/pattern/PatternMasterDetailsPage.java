@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -40,6 +41,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -62,6 +64,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -341,8 +344,11 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
     @Override
     public void doSave(IProgressMonitor monitor) {
         // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        if(!checkWhithspace()){
+        if (!checkWhithspace()) {
             MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+            return;
+        }
+        if (!canSave().isOk()) {
             return;
         }
         super.doSave(monitor);
@@ -395,5 +401,20 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
         return true;
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
+     */
+    @Override
+    public ReturnCode canSave() {
+        ReturnCode rc = canModifyName(ERepositoryObjectType.TDQ_PATTERN_ELEMENT);
+        if (!rc.isOk()) {
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
+        }
+        return rc;
     }
 }

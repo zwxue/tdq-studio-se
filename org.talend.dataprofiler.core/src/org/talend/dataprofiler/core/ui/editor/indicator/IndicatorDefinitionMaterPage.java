@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -73,6 +74,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
@@ -2023,8 +2025,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
+        ReturnCode rc = canSave();
+        if (!rc.isOk()) {
+            return;
+        }
         super.doSave(monitor);
-        ReturnCode rc = new ReturnCode();
         // ADD klliu 2010-06-01 bug 13451: Class name of Java User Define Indicator must be validated
         if (!checkJavaUDIBeforeSave()) {
             ((IndicatorEditor) this.getEditor()).setSaveActionButtonState(false);
@@ -2349,7 +2354,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
         }
-        
+
         Iterator<String> iterator = languageVersionCountMap.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
@@ -3078,5 +3083,20 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private String getCurrentDateTime() {
         return DateUtils.getCurrentDate(DateUtils.PATTERN_5);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
+     */
+    @Override
+    public ReturnCode canSave() {
+        ReturnCode rc = canModifyName(ERepositoryObjectType.TDQ_INDICATOR_ELEMENT);
+        if (!rc.isOk()) {
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
+        }
+        return rc;
     }
 }

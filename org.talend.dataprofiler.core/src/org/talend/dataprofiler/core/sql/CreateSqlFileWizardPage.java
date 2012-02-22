@@ -13,12 +13,13 @@
 package org.talend.dataprofiler.core.sql;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -31,10 +32,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
+import org.talend.dataprofiler.core.ui.utils.UIMessages;
+import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 import org.talend.dq.analysis.parameters.SqlFileParameter;
 import org.talend.resource.ResourceManager;
 
@@ -44,7 +51,7 @@ import org.talend.resource.ResourceManager;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
-public class CreateSqlFileWizardPage extends WizardPage {
+public class CreateSqlFileWizardPage extends AbstractWizardPage {
 
     static Logger log = Logger.getLogger(CreateSqlFileWizardPage.class);
 
@@ -58,13 +65,15 @@ public class CreateSqlFileWizardPage extends WizardPage {
 
     protected HashMap<String, String> metadata;
 
+    List<IRepositoryViewObject> existNamesViewObjects = null;
+
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
      * 
      * @param folder
      */
     public CreateSqlFileWizardPage(SqlFileParameter parameter) {
-        super(PluginConstant.EMPTY_STRING);
+        super();
 
         this.parameter = parameter;
         metadata = new HashMap<String, String>();
@@ -171,5 +180,54 @@ public class CreateSqlFileWizardPage extends WizardPage {
                 parameter.getFolderProvider().setFolderResource((IFolder) elem);
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage#checkFieldsValue()
+     */
+    @Override
+    public boolean checkFieldsValue() {
+        if (!checkDuplicateName()) {
+            return false;
+        }
+        updateStatus(IStatus.OK, MSG_OK);
+        return super.checkFieldsValue();
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "checkDuplicateModelName".
+     * 
+     * @return
+     */
+    private boolean checkDuplicateName() {
+        String elementName = this.nameText.getText();
+
+        if (elementName == null || elementName.trim().equals(PluginConstant.EMPTY_STRING)) {
+            updateStatus(IStatus.ERROR, UIMessages.MSG_EMPTY_FIELD);
+            return false;
+        }
+
+        try {
+            if (existNamesViewObjects == null || existNamesViewObjects.isEmpty()) {
+                existNamesViewObjects = ProxyRepositoryFactory.getInstance().getAll(
+                        ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT, true, false);
+            }
+        } catch (PersistenceException e) {
+            log.error(e);
+        }
+
+        if (existNamesViewObjects != null) {
+            for (IRepositoryViewObject object : existNamesViewObjects) {
+                if (elementName.equalsIgnoreCase(object.getLabel())) {
+                    updateStatus(IStatus.ERROR, UIMessages.MSG_EXIST_SAME_NAME);
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

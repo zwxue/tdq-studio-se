@@ -39,14 +39,18 @@ import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -616,5 +620,36 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      */
     public Collection<Text> getWhitespaceFields() {
         return checkWhitespaceTextFields;
+    }
+
+    public abstract ReturnCode canSave();
+
+    /**
+     * 
+     * check if the nameText is a dupilcate name.
+     * 
+     * @return
+     */
+    protected ReturnCode canModifyName(ERepositoryObjectType objectType) {
+
+        String elementName = this.nameText.getText();
+        ReturnCode ret = new ReturnCode();
+        if (objectType == null || repositoryViewObject == null) {
+            return ret;
+        }
+        if (PluginConstant.EMPTY_STRING.equals(elementName.trim())) {
+            this.nameText.setText(repositoryViewObject.getLabel());
+            ret.setReturnCode(NAMECONNOTBEEMPTY, false);
+            return ret;
+        }
+        // MOD qiongli 2012-2-14 TDQ-4539.compare the name with all items of the specified type.
+        boolean exist = PropertyHelper.existDuplicateName(elementName, repositoryViewObject.getLabel(), objectType);
+        if (exist) {
+            this.nameText.setText(repositoryViewObject.getLabel());
+            ret.setReturnCode(UIMessages.MSG_EXIST_SAME_NAME, false);
+            return ret;
+        }
+
+        return ret;
     }
 }

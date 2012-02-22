@@ -1096,34 +1096,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     @Override
-    public ReturnCode canSave() {
-
-        // ADD gdbu 2011-3-3 bug 19179
-
-        this.nameText.setText(this.nameText.getText().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
-        if (this.nameText.getText().length() == 0) {
-            this.nameText.setText(this.analysis.getName());
-            return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_NONE_NAME"), false);//$NON-NLS-1$
-        }
-        String elementName = this.nameText.getText();
-        List<IRepositoryNode> childrensname = this.analysisRepNode.getParent().getChildren();
-        for (IRepositoryNode children : childrensname) {
-            if (elementName.equals(this.analysis.getName())) {
-                // if new name equals itself's old name ,return true
-                return new ReturnCode(true);
-            } else if (elementName.equals((children.getLabel() + "").replace(" ", ""))) {//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-                // if new name equals one of tree-list's name,return false
-                this.nameText.setText(this.analysis.getName());
-                return new ReturnCode(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.MSG_ANALYSIS_SAME_NAME"), false);//$NON-NLS-1$
-            }
-        }
-
-        // ~
-
-        return new ReturnCode(true);
-    }
-
-    @Override
     public void refresh() {
         doSetInput();
         refreshSumSection();

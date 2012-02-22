@@ -52,4 +52,6 @@ public final class UIMessages {
     public static final String MSG_ANALYSIS_SAME_NAME = DefaultMessagesImpl.getString("UIMessages.WarnModelNameExist"); //$NON-NLS-1$
 
     public static final String MSG_DIFF_STRING_LENGTH = DefaultMessagesImpl.getString("UIMessages.diffStringLength"); //$NON-NLS-1$
+
+    public static final String MSG_EXIST_SAME_NAME = DefaultMessagesImpl.getString("UIMessages.ItemExistsError"); //$NON-NLS-1$
 }
