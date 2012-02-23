@@ -79,10 +79,7 @@ public final class TableUtils {
                 case SWT.Dispose:
                 case SWT.KeyDown:
                 case SWT.MouseMove:
-                    if (tip == null) {
-                        break;
-                    }
-                    tip.dispose();
+                	shell.dispose();
                     tip = null;
                     label = null;
                     break;
