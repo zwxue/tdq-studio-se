@@ -221,9 +221,8 @@ public final class DefinitionHandler {
         if (indicatorDefinitions == null || indicatorDefinitions.isEmpty()) {
             initializeDefinitions();
         }
-        if (needResolve(indicatorDefinitions)) {
-            indicatorDefinitions = resolve(indicatorDefinitions);
-        }
+        // resolve the IndicatorDefinition if need
+        indicatorDefinitions = resolve(indicatorDefinitions);
         if (indicatorDefinitions == null) {
             throw new RuntimeException(Messages.getString("DefinitionHandler.IndicatorsDefinition")); //$NON-NLS-1$
         }
@@ -244,25 +243,6 @@ public final class DefinitionHandler {
                     indDef = (IndicatorDefinition) EObjectHelper.resolveObject(indDef);
                 }
                 result.add(indDef);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * judge the IndicatorDefinitions need resolve or not.
-     * 
-     * @param definitions
-     * @return
-     */
-    private boolean needResolve(List<IndicatorDefinition> definitions) {
-        boolean result = false;
-        if (definitions != null && !definitions.isEmpty()) {
-            for (IndicatorDefinition indDef : definitions) {
-                if (indDef.eIsProxy()) {
-                    result = true;
-                    break;
-                }
             }
         }
         return result;
