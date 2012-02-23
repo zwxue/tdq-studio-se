@@ -558,7 +558,6 @@ public final class PropertyHelper {
      * @param newName
      * @param oldName,it is just used to moidify Item,if it is null/empety,indicate that it is a new Item.
      * @param objectType
-     * @param onlyCompDisplayName,if it is true,just compare the name of UI.
      * @return
      */
     public static boolean existDuplicateName(String newName, String oldName, ERepositoryObjectType objectType) {
