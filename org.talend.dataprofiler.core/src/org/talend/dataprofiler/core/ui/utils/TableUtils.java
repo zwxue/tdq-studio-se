@@ -77,9 +77,16 @@ public final class TableUtils {
             public void handleEvent(Event event) {
                 switch (event.type) {
                 case SWT.Dispose:
+                    shell.dispose();
+                    tip = null;
+                    label = null;
+                    break;
                 case SWT.KeyDown:
                 case SWT.MouseMove:
-                    shell.dispose();
+                    if (tip == null) {
+                        break;
+                    }
+                    tip.dispose();
                     tip = null;
                     label = null;
                     break;
