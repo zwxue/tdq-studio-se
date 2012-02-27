@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +132,7 @@ public final class ExportFactory {
                 out.setTextQualifier(TEXT_QUAL);
                 out.setForceQualifier(USE_TEXT_QUAL);
                 List<TdExpression> expressions = parserRules[0].getExpression();
-                ParserRuleToExcelEnum[] values = ParserRuleToExcelEnum.values();
+                ParserRuleToExcelEnum[] values = getParserRuleEnumValues();
                 String[] temp = new String[values.length];
 
                 for (int i = 0; i < expressions.toArray().length + 1; i++) {
@@ -159,6 +160,22 @@ public final class ExportFactory {
                 log.error(e.getMessage());
             }
         }
+    }
+
+    /**
+     * DOC klliu Comment method "getParserRuleEnumValues".
+     * 
+     * @return
+     */
+    private static ParserRuleToExcelEnum[] getParserRuleEnumValues() {
+        List<ParserRuleToExcelEnum> realValues = new ArrayList<ParserRuleToExcelEnum>();
+        ParserRuleToExcelEnum[] values = ParserRuleToExcelEnum.values();
+        for (ParserRuleToExcelEnum parserEnum : values) {
+            if (!(parserEnum.equals(ParserRuleToExcelEnum.Body) || parserEnum.equals(ParserRuleToExcelEnum.Language))) {
+                realValues.add(parserEnum);
+            }
+        }
+        return realValues.toArray(new ParserRuleToExcelEnum[realValues.size()]);
     }
 
     public static void export(File exportFile, IFolder folder, IndicatorDefinition... indicatorDefinitions) {
@@ -243,8 +260,8 @@ public final class ExportFactory {
             idMap.put(ParserRuleToExcelEnum.Author, relpaceTempHasEscapeCharactor(MetadataHelper.getAuthor(parserRule)));
             idMap.put(ParserRuleToExcelEnum.RelativePath, relativeURI.toString());
             idMap.put(ParserRuleToExcelEnum.Name, replaceQual(tde.getName()));
-            idMap.put(ParserRuleToExcelEnum.Body, replaceQual(tde.getBody()));
-            idMap.put(ParserRuleToExcelEnum.Language, replaceQual(tde.getLanguage()));
+            idMap.put(ParserRuleToExcelEnum.Type, replaceQual(tde.getLanguage()));
+            idMap.put(ParserRuleToExcelEnum.Value, replaceQual(tde.getBody()));
 
         }
 

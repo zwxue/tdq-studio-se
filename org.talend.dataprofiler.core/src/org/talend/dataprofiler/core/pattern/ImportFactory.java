@@ -785,8 +785,12 @@ public final class ImportFactory {
                     prParameters.purpose = reader.get(ParserRuleToExcelEnum.Purpose.getLiteral());
                     ParserRuleTdExpresstion prExpresstion = new ImportFactory().new ParserRuleTdExpresstion();
                     prExpresstion.name = addQual(reader.get(ParserRuleToExcelEnum.Name.getLiteral()));
-                    prExpresstion.body = addQual(reader.get(ParserRuleToExcelEnum.Body.getLiteral()));
-                    prExpresstion.language = reader.get(ParserRuleToExcelEnum.Language.getLiteral());
+                    String type = addQual(reader.get(ParserRuleToExcelEnum.Type.getLiteral()));
+                    prExpresstion.type = type.isEmpty() || type.equals("\"\"") || type == null ? addQual(reader//$NON-NLS-1$
+                            .get(ParserRuleToExcelEnum.Language.getLiteral())) : type;
+                    String value = reader.get(ParserRuleToExcelEnum.Value.getLiteral());
+                    prExpresstion.value = value.isEmpty() || value.equals("") || value == null ? addQual(reader//$NON-NLS-1$
+                            .get(ParserRuleToExcelEnum.Body.getLiteral())) : value;
                     prParameters.prExpresstions.add(prExpresstion);
                 }
                 if (isNeedToCreate) {
@@ -839,7 +843,7 @@ public final class ImportFactory {
             TaggedValueHelper.setValidStatus(true, parserRule);
             List<ParserRuleTdExpresstion> prExpresstions = prParameters.getPrExpresstions();
             for (ParserRuleTdExpresstion prtde : prExpresstions) {
-                parserRule.addExpression(prtde.name, prtde.language, prtde.body);
+                parserRule.addExpression(prtde.name, prtde.type, prtde.value);
             }
             IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
             if (ruleIndicatorCategory != null && !parserRule.getCategories().contains(ruleIndicatorCategory)) {
@@ -888,14 +892,14 @@ public final class ImportFactory {
 
         String name;
 
-        String body;
+        String type;
 
-        String language;
+        String value;
 
         public ParserRuleTdExpresstion() {
             name = ""; //$NON-NLS-1$
-            body = ""; //$NON-NLS-1$
-            language = ""; //$NON-NLS-1$
+            type = ""; //$NON-NLS-1$
+            value = ""; //$NON-NLS-1$
         }
     }
 
