@@ -443,13 +443,13 @@ public final class IndicatorHelper {
             IndicatorParameters parameters = rangeIndicator.getParameters();
             if (parameters != null) {
                 if (lowerValue != null) {
-                     IndicatorParameters lowParameters = lowerValue.getParameters();
-                     if (lowParameters == null) {
-                     lowParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-                     lowerValue.setParameters(lowParameters);
-                     }
-                     IndicatorHelper.setIndicatorThreshold(lowParameters, dataThreshold[0], dataThreshold[1]);
-//                    IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
+                    IndicatorParameters lowParameters = lowerValue.getParameters();
+                    if (lowParameters == null) {
+                        lowParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+                        lowerValue.setParameters(lowParameters);
+                    }
+                    IndicatorHelper.setIndicatorThreshold(lowParameters, dataThreshold[0], dataThreshold[1]);
+                    // IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
                 }
 
                 MaxValueIndicator upperValue = rangeIndicator.getUpperValue();
@@ -460,7 +460,7 @@ public final class IndicatorHelper {
                         upperValue.setParameters(upperParameters);
                     }
                     IndicatorHelper.setIndicatorThreshold(upperParameters, dataThreshold[0], dataThreshold[1]);
-//                    IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
+                    // IndicatorHelper.setDataThreshold(lowerValue, dataThreshold[0], dataThreshold[1]);
 
                 }
             }
@@ -729,8 +729,7 @@ public final class IndicatorHelper {
             PhoneNumbStatisticsIndicator phoneIndicator = (PhoneNumbStatisticsIndicator) indicator;
             WellFormE164PhoneCountIndicator wellFormE164Indi = phoneIndicator.getWellFormE164PhoneCountIndicator();
             WellFormIntePhoneCountIndicator wellFormInteIndi = phoneIndicator.getWellFormIntePhoneCountIndicator();
-            WellFormNationalPhoneCountIndicator wellFormNatiIndi = phoneIndicator
-                    .getWellFormNationalPhoneCountIndicator();
+            WellFormNationalPhoneCountIndicator wellFormNatiIndi = phoneIndicator.getWellFormNationalPhoneCountIndicator();
             ValidPhoneCountIndicator validPhoneIndi = phoneIndicator.getValidPhoneCountIndicator();
             PossiblePhoneCountIndicator possiblePhoneIndi = phoneIndicator.getPossiblePhoneCountIndicator();
             FormatFreqPieIndicator formatFreqPieIndicator = phoneIndicator.getFormatFreqPieIndicator();
@@ -781,7 +780,7 @@ public final class IndicatorHelper {
         }
         // if it is still an empty string,give a default value from system and neglect osgi.nl.
         if (country.equals(PluginConstant.EMPTY_STRING)) {
-            country=getDefCountryCodeBySystem();
+            country = getDefCountryCodeBySystem();
         }
         return country;
     }
@@ -801,4 +800,23 @@ public final class IndicatorHelper {
         return "US";
     }
 
+    /**
+     * Check value threshold value conatined in the indicator.
+     * 
+     * @param indicator
+     * @return
+     */
+    public static boolean hasValueThreshold(Indicator indicator) {
+        return getIndicatorThreshold(indicator) != null;
+    }
+
+    /**
+     * Check percent threshold value conatined in the indicator.
+     * 
+     * @param indicator
+     * @return
+     */
+    public static boolean hasPercentThreshold(Indicator indicator) {
+        return getIndicatorThresholdInPercent(indicator) != null;
+    }
 }

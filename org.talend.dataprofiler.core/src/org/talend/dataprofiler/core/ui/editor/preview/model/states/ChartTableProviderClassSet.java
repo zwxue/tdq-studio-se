@@ -25,6 +25,7 @@ import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -42,10 +43,17 @@ public class ChartTableProviderClassSet {
         public Image getColumnImage(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
 
+            // MOD yyi 2012-02-27 TDQ-4676:Display threshold warning separately.
+            boolean isPercentThreshold = IndicatorHelper.hasPercentThreshold(entity.getIndicator());
+            boolean isValueThreshold = IndicatorHelper.hasValueThreshold(entity.getIndicator());
             String currentText = getColumnText(element, columnIndex);
             boolean isCurrentCol = currentText.equals(entity.getValue()) || currentText.equals(entity.getPersent());
             if (isCurrentCol && entity.isOutOfRange(currentText)) {
-                return ImageLib.getImage(ImageLib.LEVEL_WARNING);
+                if (2 == columnIndex && isPercentThreshold) {
+                    return ImageLib.getImage(ImageLib.LEVEL_WARNING);
+                } else if (1 == columnIndex && isValueThreshold) {
+                    return ImageLib.getImage(ImageLib.LEVEL_WARNING);
+                }
             }
 
             return null;
@@ -78,10 +86,17 @@ public class ChartTableProviderClassSet {
         public Color getForeground(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
 
+            // MOD yyi 2012-02-27 TDQ-4676:Display threshold warning separately.
+            boolean isPercentThreshold = IndicatorHelper.hasPercentThreshold(entity.getIndicator());
+            boolean isValueThreshold = IndicatorHelper.hasValueThreshold(entity.getIndicator());
             String currentText = getColumnText(element, columnIndex);
             boolean isCurrentCol = currentText.equals(entity.getValue()) || currentText.equals(entity.getPersent());
             if (isCurrentCol && entity.isOutOfRange(currentText)) {
-                return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                if (2 == columnIndex && isPercentThreshold) {
+                    return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                } else if (1 == columnIndex && isValueThreshold) {
+                    return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                }
             }
 
             return null;
@@ -230,14 +245,22 @@ public class ChartTableProviderClassSet {
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;
+            // MOD yyi 2012-02-27 TDQ-4676:Display threshold warning separately.
+            boolean isPercentThreshold = IndicatorHelper.hasPercentThreshold(entity.getIndicator());
+            boolean isValueThreshold = IndicatorHelper.hasValueThreshold(entity.getIndicator());
 
             String currentText = getColumnText(element, columnIndex);
             // MOD mzhao bug 8838 2009-09-08
             // MOD msjian TDQ-4380(TDQ-4470) 2012-1-29: set warning image when the value is invalidated
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch())
-                    || currentText.equals(PluginConstant.NA_STRING);
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
             if (isCurrentCol && (entity.isOutOfRange(currentText) || entity.isOutOfValue(currentText))) {
                 // TDQ-4380(TDQ-4470)~
+                if (1 == columnIndex && isPercentThreshold) {
+                    return ImageLib.getImage(ImageLib.LEVEL_WARNING);
+                } else if (3 == columnIndex && isValueThreshold) {
+                    return ImageLib.getImage(ImageLib.LEVEL_WARNING);
+                }
+            } else if (currentText.equals(PluginConstant.NA_STRING)) {
                 return ImageLib.getImage(ImageLib.LEVEL_WARNING);
             }
 
@@ -247,14 +270,22 @@ public class ChartTableProviderClassSet {
         @Override
         public Color getForeground(Object element, int columnIndex) {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;
+            // MOD yyi 2012-02-27 TDQ-4676:Display threshold warning separately.
+            boolean isPercentThreshold = IndicatorHelper.hasPercentThreshold(entity.getIndicator());
+            boolean isValueThreshold = IndicatorHelper.hasValueThreshold(entity.getIndicator());
 
             String currentText = getColumnText(element, columnIndex);
             // MOD mzhao bug 8838 2009-09-08
             // MOD msjian TDQ-4380(TDQ-4470) 2012-1-29: set font color when the value is invalidated
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch())
-                    || currentText.equals(PluginConstant.NA_STRING);
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
             if (isCurrentCol && (entity.isOutOfRange(currentText) || entity.isOutOfValue(currentText))) {
                 // TDQ-4380(TDQ-4470)~
+                if (1 == columnIndex && isPercentThreshold) {
+                    return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                } else if (3 == columnIndex && isValueThreshold) {
+                    return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                }
+            } else if (currentText.equals(PluginConstant.NA_STRING)) {
                 return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 
