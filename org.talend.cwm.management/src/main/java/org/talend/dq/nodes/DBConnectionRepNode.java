@@ -26,7 +26,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -37,6 +36,8 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC klliu Database connection repository node displayed on repository view (UI).
  */
 public class DBConnectionRepNode extends ConnectionRepNode {
+
+    List<IRepositoryNode> afterGlobalFilter;
 
     private DatabaseConnection databaseConnection;
 
@@ -62,6 +63,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
                 }
             }
         }
+
     }
 
     /*
@@ -71,21 +73,56 @@ public class DBConnectionRepNode extends ConnectionRepNode {
      */
     @Override
     public List<IRepositoryNode> getChildren() {
+        afterGlobalFilter = new ArrayList<IRepositoryNode>();
         // Retrieve catalogs/schemes.
         Connection connection = ((ConnectionItem) getObject().getProperty().getItem()).getConnection();
         EList<Package> dataPackage = connection.getDataPackage();
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
+            String filterCharater = ConnectionHelper.getPackageFilter(databaseConnection);
+            List<IRepositoryNode> afterPackageFilter = null;
             if (pack instanceof Schema) {
                 // MOD gdbu 2011-6-29 bug : 22204
-                return filterResultsIfAny(createRepositoryNodeSchema(dataPackage));
+                afterGlobalFilter = filterResultsIfAny(createRepositoryNodeSchema(dataPackage));
+                afterPackageFilter = filterPackages(filterCharater, afterGlobalFilter);
+                return afterPackageFilter == null ? afterGlobalFilter : afterPackageFilter;
             } else if (pack instanceof Catalog) {
-                return filterResultsIfAny(createRepositoryNodeCatalog(dataPackage));
+                afterGlobalFilter = filterResultsIfAny(createRepositoryNodeCatalog(dataPackage));
+                afterPackageFilter = filterPackages(filterCharater, afterGlobalFilter);
+                return afterPackageFilter == null ? afterGlobalFilter : afterPackageFilter;
                 // ~22204
             }
         }
         return new ArrayList<IRepositoryNode>();
 
+    }
+
+    /**
+     * 
+     * Filter package node for connection.
+     * 
+     * @param filterCharater
+     * @param afterGlobalFilter
+     * @return
+     */
+    private List<IRepositoryNode> filterPackages(String filterCharater, List<IRepositoryNode> afterGlobalFilter) {
+
+        List<IRepositoryNode> afterPackageFilter = new ArrayList<IRepositoryNode>();
+
+        if (filterCharater == null || filterCharater.trim().equalsIgnoreCase("")) {//$NON-NLS-1$
+            return afterGlobalFilter;
+        }
+
+        if (isReturnAllNodesWhenFiltering()) {
+            return afterGlobalFilter;
+        }
+
+        for (IRepositoryNode packNode : afterGlobalFilter) {
+            if (packNode.getLabel().equalsIgnoreCase(filterCharater)) {
+                afterPackageFilter.add(packNode);
+            }
+        }
+        return afterPackageFilter;
     }
 
     /**
@@ -97,19 +134,8 @@ public class DBConnectionRepNode extends ConnectionRepNode {
      */
     private List<IRepositoryNode> createRepositoryNodeSchema(EList<Package> dataPackage) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-        List<Package> filterPackages = new ArrayList<Package>();
-        String filterCharater = ConnectionHelper.getPackageFilter(databaseConnection);
-        // EList<Package> dataPackage= ((ConnectionItem)
-        // getObject().getProperty().getItem()).getConnection().getDataPackage();
-        if (filterCharater != null && !filterCharater.equals("")) {//$NON-NLS-1$
-            filterPackages = RepositoryNodeHelper.filterPackages(dataPackage, filterCharater);
-            for (Package pack : filterPackages) {
-                initializedSchemaRepNode(nodes, pack);
-            }
-        } else {
-            for (Package pack : dataPackage) {
-                initializedSchemaRepNode(nodes, pack);
-            }
+        for (Package pack : dataPackage) {
+            initializedSchemaRepNode(nodes, pack);
         }
         return nodes;
     }
@@ -133,19 +159,8 @@ public class DBConnectionRepNode extends ConnectionRepNode {
      */
     private List<IRepositoryNode> createRepositoryNodeCatalog(EList<Package> dataPackage) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-        // EList<Package> dataPackage = ((ConnectionItem)
-        // getObject().getProperty().getItem()).getConnection().getDataPackage();
-        List<Package> filterPackages = new ArrayList<Package>();
-        String filterCharater = ConnectionHelper.getPackageFilter(databaseConnection);
-        if (filterCharater != null && !filterCharater.equals("")) {//$NON-NLS-1$
-            filterPackages = RepositoryNodeHelper.filterPackages(dataPackage, filterCharater);
-            for (Package pack : filterPackages) {
-                initializedCatalogRepNode(nodes, pack);
-            }
-        } else {
-            for (Package pack : dataPackage) {
-                initializedCatalogRepNode(nodes, pack);
-            }
+        for (Package pack : dataPackage) {
+            initializedCatalogRepNode(nodes, pack);
         }
         return nodes;
     }
@@ -173,5 +188,9 @@ public class DBConnectionRepNode extends ConnectionRepNode {
     @Override
     public boolean canExpandForDoubleClick() {
         return false;
+    }
+
+    public List<IRepositoryNode> getAfterGlobalFilter() {
+        return this.afterGlobalFilter;
     }
 }

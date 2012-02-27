@@ -22,6 +22,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.database.MetaDataFilterWizard;
 import org.talend.dataprofiler.core.ui.wizard.database.MetaDataFilterWizardPage.FilterType;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -61,7 +62,10 @@ public class PackageFilterAction extends Action {
         WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         if (dialog.open() == Dialog.OK) {
+            // MOD klliu use global filter
+            DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
             CorePlugin.getDefault().refreshDQView(node);
+            DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
         }
     }
 

@@ -83,4 +83,12 @@ public class DBSchemaRepNode extends DQRepositoryNode {
         return repsNodes;
     }
 
+
+    @Override
+    public String getLabel() {
+        if (getObject() == null) {
+            return this.getProperties(EProperties.LABEL).toString();
+        }
+        return this.getObject().getLabel();
+    }
 }
