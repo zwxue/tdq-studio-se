@@ -443,4 +443,30 @@ public class TestAnalysisCreation {
         dataProvider.setName("My data provider"); //$NON-NLS-1$
         return dataProvider;
     }
+
+    /**
+     * create a postgresql connection
+     * 
+     * @return
+     */
+    public Connection getDataManagerPostgresql() {
+        TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "postgresql.properties"); //$NON-NLS-1$
+        String driverClassName = connectionParams.getProperty("driver"); //$NON-NLS-1$
+        String dbUrl = connectionParams.getProperty("url"); //$NON-NLS-1$
+        String sqlTypeName = connectionParams.getProperty("sqlTypeName"); //$NON-NLS-1$
+
+        DBConnectionParameter params = new DBConnectionParameter();
+        params.setName("Postgresql connection"); //$NON-NLS-1$
+        params.setDriverClassName(driverClassName);
+        params.setJdbcUrl(dbUrl);
+        params.setSqlTypeName(sqlTypeName);
+        params.setParameters(connectionParams);
+
+        // create connection
+        ConnectionUtils.setTimeout(false);
+        Connection dataProvider = ConnectionService.createConnection(params).getObject();
+
+        dataProvider.setName("Postgresql data provider"); //$NON-NLS-1$
+        return dataProvider;
+    }
 }
