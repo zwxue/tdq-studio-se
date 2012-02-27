@@ -166,43 +166,43 @@ public class ChartDataEntity {
      * @return
      */
     public boolean isOutOfValue(String inString) {
-    	
-    	if (inString.equals("N/A")) { // $NON-NLS-1$
-    		return true;
-    	}
-    	
-    	boolean isOutOfValue = false;
-    	
-    	// the default value check
-    	isPercent = inString.indexOf('%') > 0; // $NON-NLS-1$
-    	if (isPercent) {
-    		NumberFormat nFromat = NumberFormat.getPercentInstance();
-    		try {
-    			Number number = nFromat.parse(inString);
-   			
-    			if (number instanceof Double) {
-    				Double doubleString = (Double)number;
-    				if (doubleString < 0 || doubleString > 1) {
-    					isOutOfValue = true;
-    				}
-    			} else if (number instanceof Long) {
-    				Long longString = (Long)number;
-    				if (longString < 0 || longString > 1) {
-    					isOutOfValue = true;
-    				}
-    			}
-			} catch (ParseException e) {
-				isOutOfValue = false;
-			}
-    	} else {
-    		Double douString = Double.valueOf(inString);
-    		if (douString < 0) {
-    			isOutOfValue = true;
-    		}
-    	}
-    	return isOutOfValue;
+
+        if (inString.equals("N/A")) { // $NON-NLS-1$
+            return true;
+        }
+
+        boolean isOutOfValue = false;
+
+        // the default value check
+        isPercent = inString.indexOf('%') > 0; // $NON-NLS-1$
+        if (isPercent) {
+            NumberFormat nFromat = NumberFormat.getPercentInstance();
+            try {
+                Number number = nFromat.parse(inString);
+
+                if (number instanceof Double) {
+                    Double doubleString = (Double) number;
+                    if (doubleString < 0 || doubleString > 1) {
+                        isOutOfValue = true;
+                    }
+                } else if (number instanceof Long) {
+                    Long longString = (Long) number;
+                    if (longString < 0 || longString > 1) {
+                        isOutOfValue = true;
+                    }
+                }
+            } catch (ParseException e) {
+                isOutOfValue = false;
+            }
+        } else {
+            Double douString = Double.valueOf(inString);
+            if (douString < 0) {
+                isOutOfValue = true;
+            }
+        }
+        return isOutOfValue;
     }
-    
+
     /**
      * DOC Zqin Comment method "isOutOfRange".
      * 
@@ -244,12 +244,8 @@ public class ChartDataEntity {
     protected String[] getDefinedRange(String inString) {
         isPercent = inString.indexOf('%') > 0;
         // MOD qiongli 2011-11-25 TDQ-4033,don't need to get the DataThreshold.
-        String[] threshold = IndicatorHelper.getIndicatorThreshold(indicator);
-        if (threshold == null) {
-            if (isPercent) {
-                threshold = IndicatorHelper.getIndicatorThresholdInPercent(indicator);
-            }
-        }
+        String[] threshold = isPercent ? IndicatorHelper.getIndicatorThresholdInPercent(indicator) : IndicatorHelper
+                .getIndicatorThreshold(indicator);
 
         return threshold;
     }
