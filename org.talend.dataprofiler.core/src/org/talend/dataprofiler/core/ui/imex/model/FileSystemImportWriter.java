@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
@@ -154,20 +155,20 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private boolean isConflict(Property p1, Property p2) {
-    	boolean returnCode=p1.getLabel().equals(p2.getLabel());
+    	if(p1.getLabel().equals(p2.getLabel())){
+    		return true;
+    	}else if(p1.getId().equals(p2.getId())){
+    		return true;
+    	}
         try{
-        	ModelElement modelElement1 = PropertyHelper.getModelElement(p1);
-        	ModelElement modelElement2 = PropertyHelper.getModelElement(p2);
-        	
-        	String id1 = modelElement1.eResource().getURIFragment(modelElement1);
-        	String id2 = modelElement2.eResource().getURIFragment(modelElement2);
-        	
-            return p1.getId().equals(p2.getId()) ||returnCode||id1.equals(id2);
+        	String uuid1 = FilesUtils.getUUID(PropertyHelper.getModelElementPath(p1));
+        	String uuid2 = FilesUtils.getUUID(PropertyHelper.getModelElementPath(p2));
+            return uuid1.equals(uuid2);
 
         }catch(Exception e){
         	
         }
-        return returnCode;
+        return false;
     }
 
     /**

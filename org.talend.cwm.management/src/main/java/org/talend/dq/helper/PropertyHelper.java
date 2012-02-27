@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -32,6 +33,7 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.DelimitedFileConnectionItem;
 import org.talend.core.model.properties.FolderItem;
@@ -582,5 +584,25 @@ public final class PropertyHelper {
             log.error(e, e);
         }
         return false;
+    }
+    /**
+     * 
+     * @param property
+     * @return get path of modelElement from property
+     */
+    public static String getModelElementPath(Property property){
+    	if(property!=null&&property.getItem()!=null){
+    		EElementEName elementEName = FactoriesUtil.EElementEName.getElementEName(property.getItem());
+    		if(elementEName!=null){
+    			URI appendFileExtension = property.eResource().getURI().trimFileExtension().appendFileExtension(elementEName.getFileExt());
+    			if(appendFileExtension.isFile()){
+    				return appendFileExtension.toFileString();
+    			}else if(appendFileExtension.isPlatform()){
+    				return Platform.getLocation().append(appendFileExtension.toPlatformString(true)).toOSString();
+    				}
+    		}
+    	}
+    	return PluginConstant.EMPTY_STRING;
+    	
     }
 }
