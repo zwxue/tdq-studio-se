@@ -75,6 +75,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     protected static Logger log = Logger.getLogger(MetadataWizardPage.class);
 
+    protected boolean isTextValueValid = true;
+
     // private members
     // private Button versionMajorBtn;
     // private Button versionMinorBtn;
@@ -313,16 +315,19 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     public boolean checkFieldsValue() {
         if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
+            isTextValueValid = false;
             return false;
         }
 
         // reopen this commented code for TDQ-4593.
         if (!checkDuplicateName()) {
+            isTextValueValid = false;
             return false;
         }
 
         updateStatus(IStatus.OK, MSG_OK);
-        return super.checkFieldsValue();
+        isTextValueValid = super.checkFieldsValue();
+        return isTextValueValid;
     }
 
     protected abstract void createExtendedControl(Composite container);
@@ -340,10 +345,12 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
      */
     public boolean checkDuplicateName() {
         String elementName = getParameter().getName();
+
         if (elementName == null) {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }
+        // elementName=elementName.replaceAll("/", "");
         // MOD qionlgi 2012-2-13 TDQ-4593,check if exsit name in old items list when input a name.
         if (existRepObjects == null || existRepObjects.isEmpty()) {
             ERepositoryObjectType type = null;

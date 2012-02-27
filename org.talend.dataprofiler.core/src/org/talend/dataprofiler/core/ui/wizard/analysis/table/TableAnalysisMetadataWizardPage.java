@@ -49,7 +49,7 @@ public class TableAnalysisMetadataWizardPage extends AnalysisMetadataWizardPage 
 
     @Override
     public boolean isPageComplete() {
-        return this.getParameter().getName().length() > 0;
+        return isTextValueValid && this.getParameter().getName().length() > 0;
     }
 
     public void resetParameter() {

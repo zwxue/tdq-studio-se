@@ -22,6 +22,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.resource.ResourceManager;
 
@@ -71,18 +72,28 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
 
             public void modifyText(ModifyEvent e) {
                 // MOD gdbu 2011-4-8 bug : 19976
-                if (checkName) {
+                String text = nameText.getText();
+                if (checkName && (text.indexOf(":") > 0 || text.indexOf("/") > 0)) {
                     checkName = false;
                     int x = nameText.getSelection().x;
-                    nameText.setText(WorkspaceUtils.normalize(nameText.getText()) + ""); //$NON-NLS-1$
+                    nameText.setText(WorkspaceUtils.normalize(text) + PluginConstant.EMPTY_STRING);
                     nameText.setSelection(x);
                     checkName = true;
                 }
                 // ~
                 getParameter().setName(nameText.getText());
-                String text = nameText.getText();
-                setPageComplete(text != null && !"".equals(text.trim()) && !text.contains(" ")); //$NON-NLS-1$ //$NON-NLS-1$
             }
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#fireEvent()
+     */
+    @Override
+    protected void fireEvent() {
+        // TODO Auto-generated method stub
+        super.fireEvent();
     }
 }
