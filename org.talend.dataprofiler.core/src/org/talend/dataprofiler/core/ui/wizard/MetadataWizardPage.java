@@ -39,6 +39,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.api.FolderProvider;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
@@ -73,6 +74,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
     protected List<IRepositoryViewObject> existRepObjects;
 
     protected static Logger log = Logger.getLogger(MetadataWizardPage.class);
+
+    protected boolean isValid = true;
 
     // private members
     // private Button versionMajorBtn;
@@ -310,17 +313,14 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
+        if (PluginConstant.EMPTY_STRING.equals(nameText.getText().trim())) {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
-            return false;
-        }
-
-        if (nameText.getText().contains(" ")) { //$NON-NLS-1$
-            updateStatus(IStatus.ERROR, MSG_INVALID);
+            isValid = false;
             return false;
         }
 
         if (!checkDuplicateModelName()) {
+            isValid = false;
             return false;
         }
 
