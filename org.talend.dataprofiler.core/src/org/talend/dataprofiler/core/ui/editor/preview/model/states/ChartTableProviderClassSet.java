@@ -250,8 +250,7 @@ public class ChartTableProviderClassSet {
             String currentText = getColumnText(element, columnIndex);
             // MOD mzhao bug 8838 2009-09-08
             // MOD msjian TDQ-4380 2012-1-29: set warning image when the value is invalidated
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch())
-                    || currentText.equals("N/A");//$NON-NLS-1$
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
             if (isCurrentCol && (entity.isOutOfRange(currentText) || entity.isOutOfValue(currentText))) {
                 // TDQ-4380~
                 if (1 == columnIndex && isPercentThreshold) {
@@ -259,6 +258,8 @@ public class ChartTableProviderClassSet {
                 } else if (3 == columnIndex && isValueThreshold) {
                     return ImageLib.getImage(ImageLib.LEVEL_WARNING);
                 }
+            } else if (currentText.equals("N/A")) {//$NON-NLS-1$
+                return ImageLib.getImage(ImageLib.LEVEL_WARNING);
             }
 
             return null;
@@ -273,8 +274,7 @@ public class ChartTableProviderClassSet {
             String currentText = getColumnText(element, columnIndex);
             // MOD mzhao bug 8838 2009-09-08
             // MOD msjian TDQ-4380 2012-1-29: set font color when the value is invalidated
-            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch())
-                    || currentText.equals("N/A");//$NON-NLS-1$
+            boolean isCurrentCol = currentText.equals(entity.getNumMatch()) || currentText.equals(entity.getPerMatch());
             if (isCurrentCol && (entity.isOutOfRange(currentText) || entity.isOutOfValue(currentText))) {
                 // TDQ-4380~
                 if (1 == columnIndex && isPercentThreshold) {
@@ -282,6 +282,8 @@ public class ChartTableProviderClassSet {
                 } else if (3 == columnIndex && isValueThreshold) {
                     return Display.getDefault().getSystemColor(SWT.COLOR_RED);
                 }
+            } else if (currentText.equals("N/A")) { //$NON-NLS-1$
+                return Display.getDefault().getSystemColor(SWT.COLOR_RED);
             }
 
             return null;
