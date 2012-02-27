@@ -12,12 +12,12 @@
 // ============================================================================
 package org.talend.dq.sql.converters;
 
-import static org.junit.Assert.fail;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 
 import Zql.ZExpression;
@@ -47,7 +47,7 @@ public class CwmZExpressionTest {
     @Test
     public void testGetOperator() {
 
-        Assert.assertTrue(operators.length == 17);
+        Assert.assertTrue(operators.length == 19);
         for (SqlPredicate equalOp : operators) {
             CwmZExpression<?> exp = new CwmZExpression<Integer>(equalOp);
             String operator = exp.getOperator();
@@ -62,7 +62,7 @@ public class CwmZExpressionTest {
     @Test
     public void testSetOperandsColumnT() {
         CwmZExpression<Integer> exp = new CwmZExpression<Integer>(SqlPredicate.EQUAL);
-        String name = "USER_ID";
+        String name = "USER_ID"; //$NON-NLS-1$
         TdColumn column = getColumn(name);
         Integer value = new Integer(5);
         exp.setOperands(column, value);
@@ -73,13 +73,27 @@ public class CwmZExpressionTest {
         return ColumnHelper.createColumn(name);
     }
 
+    private TdTable getTable(String name) {
+        TdTable tdTable = RelationalFactory.eINSTANCE.createTdTable();
+        tdTable.setName(name);
+        tdTable.setLabel(name);
+        return tdTable;
+    }
+
     /**
      * Test method for
      * {@link org.talend.dq.sql.converters.CwmZExpression#setOperands(orgomg.cwm.resource.relational.Column, orgomg.cwm.resource.relational.Column)}.
      */
     @Test
     public void testSetOperandsColumnColumn() {
-        fail("Not yet implemented");
+        CwmZExpression<Integer> exp = new CwmZExpression<Integer>(SqlPredicate.EQUAL);
+        String column1_Name = "USER_ID"; //$NON-NLS-1$
+        TdColumn column1 = getColumn(column1_Name);
+
+        String column2_Name = "USER_NAME"; //$NON-NLS-1$
+        TdColumn column2 = getColumn(column2_Name);
+        exp.setOperands(column1, column2);
+        Assert.assertNull(exp.getInstance());
     }
 
     /**
@@ -87,7 +101,14 @@ public class CwmZExpressionTest {
      */
     @Test
     public void testGetColumn1() {
-        fail("Not yet implemented");
+        CwmZExpression<Double> exp = new CwmZExpression<Double>(SqlPredicate.EQUAL);
+        String name = "USER_ID"; //$NON-NLS-1$
+        TdColumn column = getColumn(name);
+        TdTable table = getTable(tableName);
+        column.setOwner(table);
+        Double value = new Double(5.0);
+        exp.setOperands(column, value);
+        Assert.assertNotNull(exp.getColumn1());
     }
 
     /**
@@ -95,7 +116,14 @@ public class CwmZExpressionTest {
      */
     @Test
     public void testGetColumn2() {
-        fail("Not yet implemented");
+        CwmZExpression<Double> exp = new CwmZExpression<Double>(SqlPredicate.EQUAL);
+        String name = "USER_ID"; //$NON-NLS-1$
+        TdColumn column = getColumn(name);
+        TdTable table = getTable(tableName);
+        column.setOwner(table);
+        Double value = new Double(5.0);
+        exp.setOperands(column, value);
+        Assert.assertNull(exp.getColumn2());
     }
 
     /**
@@ -104,14 +132,18 @@ public class CwmZExpressionTest {
     @Test
     public void testGetInstance() {
         CwmZExpression<Double> exp = new CwmZExpression<Double>(SqlPredicate.EQUAL);
-        String name = "USER_ID";
+        String name = "USER_ID"; //$NON-NLS-1$
         TdColumn column = getColumn(name);
+        TdTable table = getTable(tableName);
+        column.setOwner(table);
         Double value = new Double(5.0);
         exp.setOperands(column, value);
         Assert.assertEquals(value.toString(), exp.getInstance().toString());
     }
 
-    String[] columnNames = { "USER_ID", "USER_NAME", "USER_PHONE" };
+    String[] columnNames = { "USER_ID", "USER_NAME", "USER_PHONE" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    String tableName = "test"; //$NON-NLS-1$
 
     Integer[] values = { 1, 2, 3 };
 
@@ -134,11 +166,11 @@ public class CwmZExpressionTest {
                 }
             }
         }
-        String list = "1,2,3,45,4,6";
-        generateExpression(SqlPredicate.IN, "USER_ID", list);
+        String list = "1,2,3,45,4,6"; //$NON-NLS-1$
+        generateExpression(SqlPredicate.IN, "USER_ID", list); //$NON-NLS-1$
 
         String exp = "Select id from lookup";
-        generateExpression(SqlPredicate.IN, "USER_ID", exp);
+        generateExpression(SqlPredicate.IN, "USER_ID", exp); //$NON-NLS-1$
     }
 
     /**
@@ -151,21 +183,27 @@ public class CwmZExpressionTest {
     private <T> void generateExpression(SqlPredicate operator, String name, T value) {
         CwmZExpression<T> exp = new CwmZExpression<T>(operator);
         TdColumn column = getColumn(name);
+        TdTable table = getTable(tableName);
+        column.setOwner(table);
         exp.setOperands(column, value);
 
         ZExpression zExpression = exp.generateZExpression();
         Assert.assertNotNull(zExpression);
 
-        Assert.assertEquals(simpleExpectedExpression(name, operator, value), zExpression.toString());
+        String nameStr = tableName + "." + column.getName(); //$NON-NLS-1$ 
+        Assert.assertEquals(simpleExpectedExpression(nameStr, operator, value), zExpression.toString());
         System.out.println(zExpression.toString());
     }
 
     private <T> String simpleExpectedExpression(String left, SqlPredicate operator, T right) {
         String rightStr = right.toString();
+        if (operator.equals(SqlPredicate.UNION) || operator.equals(SqlPredicate.ALL)) {
+            return left + " " + operator.getLiteral() + " " + rightStr; //$NON-NLS-1$ //$NON-NLS-2$
+        }
         if (operator.equals(SqlPredicate.IN) || operator.equals(SqlPredicate.NOT_IN)) {
             rightStr = parenthesis(rightStr);
         }
-        return parenthesis(left + " " + operator.getLiteral() + " " + rightStr);
+        return parenthesis(left + " " + operator.getLiteral() + " " + rightStr); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -175,7 +213,7 @@ public class CwmZExpressionTest {
      * @return
      */
     private String parenthesis(String rightStr) {
-        return "(" + rightStr + ")";
+        return "(" + rightStr + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -183,8 +221,17 @@ public class CwmZExpressionTest {
      */
     @Test
     public void testGenerateExpressions() {
+        CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
+        TdColumn column = getColumn("USER_ID"); //$NON-NLS-1$
+        TdTable table = getTable(tableName);
+        column.setOwner(table);
+        expre.setOperands(column, "\"sunny\""); //$NON-NLS-1$
+        Assert.assertNotNull(expre.generateExpressions());
 
-        fail("Not yet implemented");
+        String nameStr = tableName + "." + column.getName(); //$NON-NLS-1$
+        System.out.println(expre.generateExpressions().getExpression().getBody());
+        Assert.assertEquals(simpleExpectedExpression(nameStr, SqlPredicate.EQUAL, "\"sunny\""), expre.generateExpressions()
+                .getExpression().getBody()); //$NON-NLS-1$
     }
 
 }
