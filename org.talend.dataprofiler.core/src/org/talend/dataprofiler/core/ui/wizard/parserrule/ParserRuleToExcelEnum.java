@@ -24,7 +24,9 @@ public enum ParserRuleToExcelEnum {
     RelativePath(4, "Relative_Path"), //$NON-NLS-1$
     Name(5, "Name"), //$NON-NLS-1$
     Body(6, "Body"), //$NON-NLS-1$
-    Language(7, "Language"); //$NON-NLS-1$
+    Language(7, "Language"), //$NON-NLS-1$
+    Type(8, "Type"), //$NON-NLS-1$
+    Value(9, "Value"); //$NON-NLS-1$
 
     private String literal;
 
