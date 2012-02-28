@@ -21,7 +21,7 @@ public class FirstNameStandardizeTest extends TestCase {
 
 //    private String filename = "./data/TalendGivenNames.TXT";
 
-    private String indexfolder = "./data/TalendGivenNames_index";
+    private String indexfolder = "./data/TalendGivenNames_index"; // $NON-NLS-1$
 
     private IndexSearcher searcher = null;
 
@@ -31,10 +31,10 @@ public class FirstNameStandardizeTest extends TestCase {
         Directory dir = FSDirectory.open(new File(indexfolder));
         searcher = new IndexSearcher(dir);
         searchAnalyzer = new SimpleAnalyzer();
-        String inputName = "Philippe";
+        String inputName = "Philippe"; //$NON-NLS-1$
         Map<String, String> information2value = new HashMap<String, String>();
-        information2value.put("country", "mosikou");
-        information2value.put("gender", "0");
+        information2value.put("country", "mosikou"); //$NON-NLS-1$ //$NON-NLS-2$
+        information2value.put("gender", "0"); //$NON-NLS-1$ //$NON-NLS-2$
         getReplaceSearchResult(indexfolder, inputName, information2value, false);
         searcher.close();
     }
