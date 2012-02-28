@@ -12,9 +12,9 @@ import org.talend.dataquality.standardization.main.HandleLuceneImpl;
 
 public class HandLuceneImplTest extends TestCase {
 
-    private String filename = "./data/TalendGivenNames.TXT";
+    private String filename = "./data/TalendGivenNames.TXT"; // $NON-NLS-1$
 
-    private String indexfolder = "./data/TalendGivenNames_index";
+    private String indexfolder = "./data/TalendGivenNames_index"; // $NON-NLS-1$
 
     private HandleLucene hl;
 
@@ -23,19 +23,17 @@ public class HandLuceneImplTest extends TestCase {
     }
 
     public void testCreateIndex() {
-
         boolean back = hl.createIndex(filename, indexfolder);
-        assertTrue("Creating Index :", back);
-
+        assertTrue("Creating Index :", back); // $NON-NLS-1$
     }
 
     public void testGetSearchResultStringStringMapOfStringStringBoolean() {
         Map<String, String> information2value = new HashMap<String, String>();
-        information2value.put("gender", "0");
+        information2value.put("gender", "0"); // $NON-NLS-1$ // $NON-NLS-2$
         Map<String, String[]> hits = null;
         try {
-            hits = hl.getSearchResult(indexfolder, "Edou", information2value, false);
-            String[] soreDocs = hits.get("Edou");
+            hits = hl.getSearchResult(indexfolder, "Edou", information2value, false); // $NON-NLS-1$
+            String[] soreDocs = hits.get("Edou"); // $NON-NLS-1$
             assertNotNull(soreDocs);
             if (soreDocs != null) {
                 for (String doc : soreDocs) {
@@ -43,13 +41,10 @@ public class HandLuceneImplTest extends TestCase {
                 }
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
 }
