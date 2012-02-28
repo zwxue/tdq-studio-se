@@ -255,6 +255,11 @@ public final class ConnectionUtils {
         // MOD klliu check file connection is available
         if (analysisDataProvider instanceof FileConnection) {
             FileConnection fileConn = (FileConnection) analysisDataProvider;
+            // ADD msjian TDQ-4559 2012-2-28: when the fileconnection is context mode, getOriginalFileConnection.
+            if (fileConn.isContextMode()) {
+                fileConn = getOriginalFileConnection(fileConn);
+            }
+            // TDQ-4559 ~
             String filePath = fileConn.getFilePath();
             try {
                 BufferedReader filePathAvalible = FileConnectionContextUtils.isFilePathAvailable(filePath, fileConn);
