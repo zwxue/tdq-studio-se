@@ -1415,6 +1415,12 @@
            name="add a TagetValue (package filter)for  low version of DB"
            version="5.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateAggrDefinitionTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateAggrDefinitionTask"
+           name="Update Aggregated Definitions"
+           version="5.1.0">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

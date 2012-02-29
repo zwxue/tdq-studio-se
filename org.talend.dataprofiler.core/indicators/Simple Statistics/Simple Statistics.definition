@@ -7,4 +7,6 @@
   <aggregatedDefinitions href="Duplicate Count.definition#_ccHq0hF2Ed2PKb6nEJEvhw"/>
   <aggregatedDefinitions href="Unique Count.definition#_ccHq0RF2Ed2PKb6nEJEvhw"/>
   <aggregatedDefinitions href="Null Count.definition#_GrAeADh9Ed2XmO7pl5Yuyg"/>
+  <aggregatedDefinitions href="Row Count.definition#_ccFOkBF2Ed2PKb6nEJEvhw"/>
+  <aggregatedDefinitions href="Default Value Count.definition#__xnOs8O1MEd2L4a5zyMnylw"/>
 </dataquality.indicators.definition:IndicatorDefinition>
