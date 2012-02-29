@@ -144,10 +144,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public void doSave(IProgressMonitor monitor) {
         ReturnCode rc = canSave();
         if (!rc.isOk()) {
+            // MOD yyi 2012-02-29 TDQ-3605 Pop an error if rc is not ok.
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
             return;
-        } else if(!checkWhithspace()){
-            MessageDialogWithToggle.openError(null,DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
-        }else {
+        } else if (!checkWhithspace()) {
+            MessageDialogWithToggle
+                    .openError(
+                            null,
+                            DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+        } else {
             super.doSave(monitor);
             try {
                 saveAnalysis();
@@ -167,7 +173,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public ScrolledForm getScrolledForm() {
         return null;
     }
-
 
     protected abstract ReturnCode canRun();
 

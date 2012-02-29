@@ -463,10 +463,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     public void setTreeViewInput(Object[] modelElements) {
-        ModelElementIndicator[] filterInputData = treeViewer.filterInputData(modelElements);
-        if (filterInputData == null) {
-            return;
-        }
+        // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
+        treeViewer.filterInputData(modelElements);
         refreshTheTree(treeViewer.getModelElementIndicator());
         this.setDirty(true);
     }
