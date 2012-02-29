@@ -62,11 +62,8 @@ public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
                 menu.add(new AddSqlFileAction(WorkbenchUtils.getFolder(node)));
                 menu.add(new ImportSqlFileAction(node));
             } else if (node instanceof SourceFileRepNode) {
-                IPath append = WorkbenchUtils.getFilePath(node);
-                IFile file = ResourceManager.getRootProject().getFile(append);
-                if (file != null) {
-                    menu.add(new RenameSqlFileAction(file));
-                }
+                // MOD klliu bug TDQ-4797 2012-02-29
+                menu.add(new RenameSqlFileAction(node));
             }
             boolean isSelectFile = computeSelectedFiles(treeSelection, selectedFiles);
             if (isSelectFile && !selectedFiles.isEmpty()) {
