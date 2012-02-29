@@ -1406,6 +1406,12 @@
            name="Update Advanced Frequency Indicators UUID Between Repeats"
            version="4.2.4">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateAggrDefinitionTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateAggrDefinitionTask"
+           name="Update Aggregated Definitions"
+           version="5.0.3">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

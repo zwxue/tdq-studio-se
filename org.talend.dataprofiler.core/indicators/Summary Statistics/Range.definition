@@ -3,6 +3,6 @@
   <taggedValue xmi:id="_-W6WcYqnEd-SocVM_rHvUg" tag="Description" value="is the difference between the highest record and the lowest record"/>
   <taggedValue xmi:id="_-W6WcoqnEd-SocVM_rHvUg" tag="Purpose" value="measures the extent of the records"/>
   <categories href="../../../.Talend.definition#_ccKuIBF2Ed2PKb6nEJEvhw"/>
-  <aggregatedDefinitions href="../../../.Talend.definition#_ccJgABF2Ed2PKb6nEJEvhw"/>
-  <aggregatedDefinitions href="../../../.Talend.definition#_ccJgARF2Ed2PKb6nEJEvhw"/>
+  <aggregatedDefinitions href="Maximum.definition#_ccJgARF2Ed2PKb6nEJEvhw"/>
+  <aggregatedDefinitions href="Minimum.definition#_ccJgABF2Ed2PKb6nEJEvhw"/>
 </dataquality.indicators.definition:IndicatorDefinition>

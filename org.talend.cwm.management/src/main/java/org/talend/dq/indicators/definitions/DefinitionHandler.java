@@ -32,6 +32,7 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
@@ -532,5 +533,41 @@ public final class DefinitionHandler {
             }
         }
         return false;
+    }
+
+    /**
+     * 
+     * Update aggregates for some indicators(Simple Statistic Indicator/Text Statistic Indicator...).make the path/name
+     * of indicator definition in agregate right and is not a proxy).
+     */
+    public void updateAggregates() {
+        List<IndicatorDefinition> indicatorsDefinitions = getIndicatorsDefinitions();
+
+        String defFileExt = PluginConstant.DOT_STRING + FactoriesUtil.DEFINITION;
+        for (IndicatorDefinition indiDef : indicatorsDefinitions) {
+            EList<IndicatorDefinition> aggregatedDefinitions = indiDef.getAggregatedDefinitions();
+            List<IndicatorDefinition> updatedAggrDefinitions = new ArrayList<IndicatorDefinition>();
+            if (indiDef.eIsProxy() || aggregatedDefinitions == null || aggregatedDefinitions.isEmpty()) {
+                continue;
+            }
+            for (IndicatorDefinition aggrDef : aggregatedDefinitions) {
+                URI oldUri = EObjectHelper.getURI(aggrDef);
+                if (oldUri == null) {
+                    continue;
+                }
+                String oldLabel = (oldUri.lastSegment());
+                oldLabel = oldLabel.replace(defFileExt, PluginConstant.EMPTY_STRING);
+                if (oldLabel.equalsIgnoreCase("Inter Quartile Range")) {
+                    oldLabel = "IQR";
+                }
+                IndicatorDefinition find = getIndicatorDefinition(oldLabel);
+                if (find != null) {
+                    updatedAggrDefinitions.add(find);
+                }
+            }
+            indiDef.getAggregatedDefinitions().clear();
+            indiDef.getAggregatedDefinitions().addAll(updatedAggrDefinitions);
+            EMFSharedResources.getInstance().saveResource(indiDef.eResource());
+        }
     }
 }

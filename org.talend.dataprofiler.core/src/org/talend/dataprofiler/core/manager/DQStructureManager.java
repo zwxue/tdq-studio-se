@@ -267,7 +267,9 @@ public final class DQStructureManager {
             // this code from DQRespositoryView.initWorkspace()
             IFile defFile = ResourceManager.getLibrariesFolder().getFile(DefinitionHandler.FILENAME);
             if (!defFile.exists()) {
-                DefinitionHandler.getInstance();
+                DefinitionHandler handler = DefinitionHandler.getInstance();
+                // TDQ-4714 update the aggregateDefinitions tag for some indicator definition.
+                handler.updateAggregates();
             }
 
             ResourceService.refreshStructure();
