@@ -129,7 +129,7 @@ public class FileSystemExportWriter implements IExportWriter {
                 monitor.subTask("Exporting " + record.getName());//$NON-NLS-1$ 
 
                 if (record.isValid()) {
-                    log.info("Exporting " + record.getFile().getAbsolutePath());//$NON-NLS-1$ 
+//                    log.info("Exporting " + record.getFile().getAbsolutePath());//$NON-NLS-1$ 
 
                     for (IPath resPath : toImportMap.keySet()) {
                         IPath desPath = toImportMap.get(resPath);
