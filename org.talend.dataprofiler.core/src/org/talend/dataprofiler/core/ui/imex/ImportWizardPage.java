@@ -192,7 +192,11 @@ public class ImportWizardPage extends WizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                 textModified(basePath);
+                // MOD msjian 2012-2-29 TDQ-4701: fixed another issue, when the user checked the overwrite checkbox, do
+                // not do migration
+                populateElement();
+                checkforErrors();
+                // TDQ-4701 ~
             }
         });
 

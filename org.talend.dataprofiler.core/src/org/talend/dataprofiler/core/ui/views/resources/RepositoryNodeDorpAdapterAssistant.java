@@ -127,6 +127,17 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             return false;
         }
         // ~
+
+        // ADD msjian 2012-2-29 TDQ-4545: when the node editor is open, make it can not move.
+        IRepositoryViewObject object = sourceNode.getObject();
+        if (object != null) {
+            // when it is locked, can not move.
+            if (object.getProperty().getItem().getState().isLocked()) {
+                return false;
+            }
+        }
+        // TDQ-4545 ~
+
         return true;
     }
 
