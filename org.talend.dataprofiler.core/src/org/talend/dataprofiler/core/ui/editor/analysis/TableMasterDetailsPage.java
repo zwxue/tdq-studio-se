@@ -61,6 +61,7 @@ import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -624,7 +625,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // ADD gdbu 2011-3-3 bug 19179
         List<DQRule> oldDqRules = getDqRules(analysis);
         // remove the space from analysis name
-        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
+        //        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
         }
@@ -669,6 +670,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             // ADD gdbu 2011-3-3 bug 19179
             tdqAnalysisItem.getProperty().setDisplayName(analysisHandler.getName());
+            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysisHandler.getName()));
             this.nameText.setText(analysisHandler.getName());
             // ~
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.

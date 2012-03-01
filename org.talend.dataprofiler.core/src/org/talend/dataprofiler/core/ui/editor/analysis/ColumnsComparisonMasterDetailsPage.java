@@ -32,6 +32,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -254,7 +255,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         // ADD gdbu 2011-3-3 bug 19179
 
         // remove the space from analysis name
-        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$//$NON-NLS-2$
+        //        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$//$NON-NLS-2$
         // change 'ana' field's 'dataquality' tag content
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
@@ -316,6 +317,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
             // ADD gdbu 2011-3-3 bug 19179
             tdqAnalysisItem.getProperty().setDisplayName(analysis.getName());
+            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysis.getName()));
             this.nameText.setText(analysis.getName());
             // ~
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.

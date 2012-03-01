@@ -810,7 +810,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD gdbu 2011-3-3 bug 19179
         // remove the space from analysis name
-        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
+        //        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         // for (Domain domain : this.analysis.getParameters().getDataFilter()) {
         // domain.setName(this.analysis.getName());
         // }
@@ -843,6 +843,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
             // ADD gdbu 2011-3-3 bug 19179
             tdqAnalysisItem.getProperty().setDisplayName(analysis.getName());
+            tdqAnalysisItem.getProperty().setLabel(analysis.getName());
             this.nameText.setText(analysis.getName());
             // ~
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.

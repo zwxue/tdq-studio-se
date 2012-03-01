@@ -454,8 +454,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             nameText.setFocus();
         } else {
             // MOD gdbu 2011-4-8 bug : 19976
-            nameText.setText(WorkspaceUtils.normalize(nameText.getText()));
-            currentModelElement.setName(WorkspaceUtils.normalize(nameText.getText()));
+            // nameText.setText(WorkspaceUtils.normalize(nameText.getText()));
+            currentModelElement.setName(nameText.getText());
             // ~19976
         }
 
@@ -470,6 +470,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
         if (property != null) {
             property.setDisplayName(nameText.getText());
+            property.setLabel(WorkspaceUtils.normalize(nameText.getText()));
             property.setPurpose(purposeText.getText());
             property.setDescription(descriptionText.getText());
             property.setStatusCode(statusCombo.getText());

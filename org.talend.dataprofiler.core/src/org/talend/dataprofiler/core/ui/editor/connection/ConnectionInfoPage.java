@@ -610,7 +610,8 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (super.saveTextChange()) {
             ConnectionUtils.setName(connection, nameText.getText());
             // MOD zshen for bug 4314 I think there not need this set method for displayName
-            PropertyHelper.getProperty(connection).setDisplayName(nameText.getText());
+            // PropertyHelper.getProperty(connection).setDisplayName(nameText.getText());
+            // PropertyHelper.getProperty(connection).setLabel(nameText.getText());
         } else {
             return false;
         }

@@ -271,7 +271,7 @@ public abstract class AElementPersistance {
             if (property.getLabel() == null) {
                 property.setLabel(WorkspaceUtils.normalize(modelElement.getName()));
             }
-            property.setDisplayName(WorkspaceUtils.normalize(modelElement.getName()));
+            property.setDisplayName(modelElement.getName());
         }
         property.setPurpose(purpose);
         property.setDescription(description);

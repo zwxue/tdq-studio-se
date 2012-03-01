@@ -54,6 +54,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -870,7 +871,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // ADD gdbu 2011-3-3 bug 19179
 
         // remove the space from analysis name
-        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
+        //        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
 
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
@@ -934,6 +935,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             // ADD gdbu 2011-3-2 bug 19179
             tdqAnalysisItem.getProperty().setDisplayName(analysisHandler.getName());
+            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysisHandler.getName()));
             this.nameText.setText(analysisHandler.getName());
             // ~
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
