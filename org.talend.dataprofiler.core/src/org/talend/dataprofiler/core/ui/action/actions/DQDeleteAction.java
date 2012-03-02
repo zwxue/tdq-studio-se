@@ -44,13 +44,11 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
-import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteAction;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -364,6 +362,7 @@ public class DQDeleteAction extends DeleteAction {
      */
     private void deleteReportFile(ReportFileRepNode repFileNode) {
         try {
+            RepositoryNode reportNode = repFileNode.getParent().getParent(); // get the report node
             IPath location = Path.fromOSString(repFileNode.getResource().getProjectRelativePath().toOSString());
             IFile latestRepIFile = ResourceManager.getRootProject().getFile(location);
             if (showConfirmDialog(repFileNode.getLabel())) {
@@ -375,15 +374,9 @@ public class DQDeleteAction extends DeleteAction {
                 }
                 latestRepIFile.delete(true, null);
 
-                // refresh the wrokspace and dqview (Reports node and RecycleBin node)
-                // CorePlugin.getDefault().refreshWorkSpace();
-                IRepositoryNode reportsNode = RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS);
-                if (reportsNode != null) {
-                    CorePlugin.getDefault().refreshDQView(repFileNode.getParent());
-                }
-                RecycleBinRepNode recycleBinRepNode = RepositoryNodeHelper.getRecycleBinRepNode();
-                if (recycleBinRepNode != null) {
-                    CorePlugin.getDefault().refreshDQView(recycleBinRepNode);
+                // refresh the report node
+                if (reportNode != null) {
+                    CorePlugin.getDefault().refreshDQView(reportNode);
                 }
             }
         } catch (CoreException e) {
