@@ -100,7 +100,6 @@ public class TOPConfiguration implements IBrandingConfiguration {
         String runProcessViewId = "org.talend.designer.runprocess.ui.views.processview"; //$NON-NLS-1$
         String problemsViewId = "org.talend.designer.core.ui.views.ProblemsView"; //$NON-NLS-1$
         String modulesViewId = "org.talend.designer.codegen.perlmodule.ModulesView"; //$NON-NLS-1$
-        String exchangeViewId = "org.talend.designer.components.exchange.ui.views.ExchangeView"; //$NON-NLS-1$
         String schedulerViewId = "org.talend.scheduler.views.Scheduler"; //$NON-NLS-1$
         String contextsViewId = "org.talend.designer.core.ui.views.ContextsView"; //$NON-NLS-1$
         String gefPaletteViewId = "org.eclipse.gef.ui.palette_view"; //$NON-NLS-1$
@@ -134,7 +133,6 @@ public class TOPConfiguration implements IBrandingConfiguration {
         bottomLayout.addView(runProcessViewId);
         bottomLayout.addView(problemsViewId);
         bottomLayout.addView(modulesViewId);
-        bottomLayout.addView(exchangeViewId);
         bottomLayout.addView(schedulerViewId);
         bottomLayout.addView(jobHierarchyViewId);
         bottomLayout.addPlaceholder("*");//$NON-NLS-1$
