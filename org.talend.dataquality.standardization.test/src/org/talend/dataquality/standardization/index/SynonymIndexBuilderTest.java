@@ -243,7 +243,7 @@ public class SynonymIndexBuilderTest {
             String[] word_values = document.getValues(SynonymIndexSearcher.F_WORD);
             String[] syn_values = document.getValues(SynonymIndexSearcher.F_SYN);
             // expect to see "synonym" and "toto"
-            assertEquals(Arrays.asList(syn_values).toString(),3, syn_values.length);
+            assertEquals(Arrays.asList(syn_values).toString(), 2, syn_values.length);
 
             List<String> valueList = Arrays.asList(word_values);
             assertTrue(valueList.contains(word));
@@ -266,12 +266,13 @@ public class SynonymIndexBuilderTest {
             // assertEquals("the first synonym field should be the same as the word (after being analyzed)", toupdate,
             // syn);
 
+            String[] word_values = document.getValues(SynonymIndexSearcher.F_WORD);
             String[] values = document.getValues(SynonymIndexSearcher.F_SYN);
             // expect to see "salut" and "synonym" and "toto"
-            assertEquals("there should be 4 synonyms including the WORD", 4, values.length);
+            assertEquals("there should be 3 synonyms", 3, values.length);
 
             List<String> valueList = Arrays.asList(values);
-            assertTrue(valueList.contains(toupdate));
+            assertTrue(Arrays.asList(word_values).contains(toupdate));
             assertTrue(valueList.contains("a new list of 3 synonyms"));
             assertTrue(valueList.contains("test"));
             assertTrue(valueList.contains("ok"));
@@ -325,21 +326,23 @@ public class SynonymIndexBuilderTest {
         SynonymIndexSearcher searcher = getSearcher(builder);
         assertEquals(0, searcher.searchDocumentBySynonym("another").totalHits);
 
-        int synonymCount = searcher.getSynonymCount("ANPE");
-        builder.addSynonymToDocument("ANPE", "Another synonym of ANPE");
+        int originalSynonymCount = searcher.getSynonymCount("ANPE");
+        int addedSynonymToDocument = builder.addSynonymToDocument("ANPE", "Another synonym of ANPE");
         builder.commit();
         searcher.close();
+        assertEquals("1 new synonym should be appended to the list.", 1, addedSynonymToDocument);
 
         searcher = getSearcher(builder);
         assertEquals(1, searcher.searchDocumentBySynonym("another").totalHits);
+        assertEquals(++originalSynonymCount, searcher.getSynonymCount("ANPE"));
 
-        int addedSynonymToDocument = builder.addSynonymToDocument("ANPE", "Anpe");
+        addedSynonymToDocument = builder.addSynonymToDocument("ANPE", "Anpe");
         builder.commit();
         searcher.close();
         assertEquals("anpe already exists, no synonym should be appended to the list.", 0, addedSynonymToDocument);
 
         searcher = getSearcher(builder);
-        assertEquals(synonymCount + 1, searcher.getSynonymCount("ANPE"));
+        assertEquals(originalSynonymCount, searcher.getSynonymCount("ANPE"));
 
         builder.addSynonymToDocument("ANPEEEE", "A.N.P.E");
         builder.commit();
@@ -473,63 +476,5 @@ public class SynonymIndexBuilderTest {
         boolean deleted = synonymIndexBuilder.deleteIndexFromFS(indexPath);
         assertEquals(true, deleted);
     }
-    /**
-     * 
-     * @param str
-     */
-    // private void search(String str) {
-    // try {
-    // Directory index = useMemeryForIndex ? builder.getIndexDir() : FSDirectory.open(new File(path));
-    //
-    // searcher = new IndexSearcher(index);
-    //
-    // // Query query = new QueryParser(Version.LUCENE_30, "syn", synonymAnalyzer).parse("\"" + str + "\"");
-    // Query query = useQueryParser ? new QueryParser(Version.LUCENE_30, "syn", synonymAnalyzer).parse(str)
-    // : new PhraseQuery();
-    //
-    // if (!useQueryParser) {
-    // ((PhraseQuery) query).add(new Term("syn", str));
-    // }
-    //
-    // List<ScoreDoc> scoreDocs = new ArrayList<ScoreDoc>();
-    // if (useAllDocCollector) {
-    // AllDocCollector collector = new AllDocCollector();
-    // searcher.search(query, collector);
-    // scoreDocs = collector.getHits();
-    // } else {
-    // TopScoreDocCollector collector = TopScoreDocCollector.create(1, false);
-    // searcher.search(query, collector);
-    // scoreDocs = Arrays.asList(collector.topDocs().scoreDocs);
-    // }
-    // if (scoreDocs.isEmpty()) {
-    // fail("No doc found for " + str);
-    // } else {
-    // System.out.println("Got match for " + str);
-    // for (ScoreDoc hits : scoreDocs) {
-    // Document doc = searcher.doc(hits.doc);
-    // String[] entry = doc.getValues("word");
-    // for (String string : entry) {
-    // System.out.println("entry=" + string);
-    // }
-    // String[] values = doc.getValues("syn");
-    // for (String string : values) {
-    // System.out.println("syn=" + string);
-    // }
-    // System.out.println();
-    // }
-    //
-    // }
-    // searcher.close();
-    // index.close();
-    // } catch (CorruptIndexException e) {
-    // e.printStackTrace();
-    // } catch (IOException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // } catch (ParseException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // }
 
 }

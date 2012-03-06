@@ -14,6 +14,7 @@ package org.talend.dataquality.standardization.index;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -23,9 +24,10 @@ import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -40,9 +42,13 @@ public class SynonymIndexSearcher {
 
     public static final String F_SYN = "syn";//$NON-NLS-1$
 
+    public static final String F_WORDTERM = "wordterm";//$NON-NLS-1$
+
+    public static final String F_SYNTERM = "synterm";//$NON-NLS-1$
+
     private IndexSearcher searcher;
 
-    private int topDocLimit = 1;
+    private int topDocLimit = 3;
 
     private Analyzer analyzer;
 
@@ -132,7 +138,21 @@ public class SynonymIndexSearcher {
      * @throws IOException
      */
     public TopDocs searchDocumentBySynonym(String synonym) throws ParseException, IOException {
-        Query query = createQueryFor(synonym, F_SYN);
+        Query query = createCombinedQueryFor(synonym, false);
+        return this.searcher.search(query, topDocLimit);
+    }
+
+    /**
+     * search a document by one of the synonym (which may be the word) with possibility to activate fuzzy option.
+     * 
+     * @param stringToSearch
+     * @param fuzzy
+     * @return
+     * @throws ParseException
+     * @throws IOException
+     */
+    public TopDocs searchDocumentBySynonym(String stringToSearch, boolean fuzzy) throws ParseException, IOException {
+        Query query = createCombinedQueryFor(stringToSearch, fuzzy);
         return this.searcher.search(query, topDocLimit);
     }
 
@@ -144,13 +164,13 @@ public class SynonymIndexSearcher {
      */
     public int getSynonymCount(String word) {
         try {
-            Query query = createWordQueryFor(word.trim());
+            Query query = createWordQueryFor(word);
             TopDocs docs;
             docs = this.searcher.search(query, topDocLimit);
             if (docs.totalHits > 0) {
                 Document doc = this.searcher.doc(docs.scoreDocs[0].doc);
                 String[] synonyms = doc.getValues(F_SYN);
-                return synonyms.length - 1; // we don't count the word which is added as the first synonym.
+                return synonyms.length;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -258,25 +278,39 @@ public class SynonymIndexSearcher {
      */
     public Analyzer getAnalyzer() {
         if (analyzer == null) {
-            analyzer = new StandardAnalyzer(Version.LUCENE_30);
+            analyzer = new StandardAnalyzer(Version.LUCENE_30, new HashSet<Object>());
         }
         return this.analyzer;
     }
 
     private Query createWordQueryFor(String stringToSearch) throws ParseException {
-        PhraseQuery query = new PhraseQuery();
-        query.add(new Term(F_WORD, stringToSearch));
+        TermQuery query = new TermQuery(new Term(F_WORDTERM, stringToSearch.toLowerCase()));
         return query;
     }
 
-    private Query createQueryFor(String stringToSearch, String field) throws ParseException {
-        QueryParser parser = new QueryParser(Version.LUCENE_30, field, this.getAnalyzer());
-        parser.setPhraseSlop(slop);
-        return parser.parse(stringToSearch);
-
-        // old code
-        // return new TermQuery(new Term(field, stringToSearch.toLowerCase()));
-
+    /**
+     * create a combined query who searches for the input tokens of as well as the entire string.
+     * 
+     * @param input
+     * @param fuzzy
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    private Query createCombinedQueryFor(String input, boolean fuzzy) throws IOException, ParseException {
+        Query wordTermQuery, synTermQuery;
+        if (fuzzy) {
+            wordTermQuery = new FuzzyQuery(new Term(SynonymIndexBuilder.F_WORDTERM, input.toLowerCase()));
+            synTermQuery = new FuzzyQuery(new Term(SynonymIndexBuilder.F_SYNTERM, input.toLowerCase()));
+        } else {
+            wordTermQuery = new TermQuery(new Term(SynonymIndexBuilder.F_WORDTERM, input.toLowerCase()));
+            synTermQuery = new TermQuery(new Term(SynonymIndexBuilder.F_SYNTERM, input.toLowerCase()));
+        }
+        QueryParser parser = new QueryParser(Version.LUCENE_30, SynonymIndexBuilder.F_WORD, getAnalyzer());
+        Query wordQuery = parser.parse(input);
+        parser = new QueryParser(Version.LUCENE_30, SynonymIndexBuilder.F_SYN, getAnalyzer());
+        Query synQuery = parser.parse(input);
+        return wordTermQuery.combine(new Query[] { wordTermQuery, wordQuery, synTermQuery, synQuery });
     }
 
     public void close() {
@@ -285,6 +319,15 @@ public class SynonymIndexSearcher {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * DOC root Comment method "getIndexSearcher".
+     * 
+     * @return
+     */
+    public IndexSearcher getIndexSearcher() {
+        return searcher;
     }
 
 }

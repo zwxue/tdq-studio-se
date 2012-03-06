@@ -13,7 +13,6 @@
 package org.talend.dataquality.standardization.index;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -78,7 +77,7 @@ public class SimilarityTest {
         System.out.println("\n-----------Test searchDocumentBySynonym----------");
         SynonymIndexSearcher searcher = getSearcher();
         searcher.setAnalyzer(new StandardAnalyzer(Version.LUCENE_30));
-        TopDocs docs = searcher.searchDocumentBySynonym("Paris");
+        TopDocs docs = searcher.searchDocumentBySynonym("Paris", false);
         System.out.println(docs.totalHits + " documents found.");
 
         // assertEquals(3, docs.totalHits);
@@ -94,8 +93,7 @@ public class SimilarityTest {
         searcher.close();
 
         // TODO check that the best matching is the exact string.
-        assertEquals("the best matching should be the exact string", 2,docs.scoreDocs[0].doc);
-        
+        assertEquals("the best matching should be the exact string", 2, docs.scoreDocs[0].doc);
 
     }
 
