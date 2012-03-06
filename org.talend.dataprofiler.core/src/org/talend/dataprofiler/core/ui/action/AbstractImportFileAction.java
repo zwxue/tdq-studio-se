@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action;
 
 import java.io.File;
+import java.net.URI;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
@@ -27,12 +28,13 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.FileUtils;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
@@ -63,7 +65,18 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
                 if (resultMap != null) {
                     for (File file : resultMap.keySet()) {
-                        createItem(file, resultMap.get(file));
+                        // MOD msjian TDQ-4608 2012-3-6: when the file is *.jasper, copy it.
+                        IPath path = resultMap.get(file);
+                        if (file.getName().endsWith(PluginConstant.JASPER_STRING)) {
+                            IPath fullPath = ResourceManager.getJRXMLFolder().getFullPath();
+                            URI locationURI = ResourceManager.getRoot().findMember(fullPath).getLocationURI();
+                            File targetFile = new File(locationURI.getPath() + System.getProperty("file.separator") + path //$NON-NLS-1$
+                                    + System.getProperty("file.separator") + file.getName()); //$NON-NLS-1$
+                            org.apache.commons.io.FileUtils.copyFile(file, targetFile);
+                        } else {
+                            createItem(file, path);
+                        }
+                        // TDQ-4608~
                     }
                 }
 
