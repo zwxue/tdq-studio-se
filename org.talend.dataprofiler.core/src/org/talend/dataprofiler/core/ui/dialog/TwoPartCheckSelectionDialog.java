@@ -366,6 +366,8 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         // ADD msjian 2011-7-8 feature 22206: Add filters
         // create the filter composite
         Control filterComposite = createFilterTexts(composite);
+        // MOD klliu bug TDQ-4159 2012-03-07
+        GridDataFactory.fillDefaults().hint(0, 30).applyTo(filterComposite);
 
         Control buttonComposite = createSelectionButtons(composite);
         GridData data = new GridData(GridData.FILL_BOTH);
@@ -516,9 +518,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         applyDialogFont(fViewer.getTree());
 
         fViewer.setContentProvider(fContentProvider);
-        //mod gdbu 2011-7-25 bug 23220
+        // mod gdbu 2011-7-25 bug 23220
         ((ResourceViewContentProvider) fContentProvider).setTreeViewer(fViewer);
-        //~23220
+        // ~23220
         fViewer.setLabelProvider(fLabelProvider);
         fViewer.addCheckStateListener(new ICheckStateListener() {
 
@@ -647,9 +649,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         gd1.horizontalSpan = 1;
         gd1.grabExcessHorizontalSpace = false;
         leftFilterLabel.setLayoutData(gd1);
-        
+
         leftFilterText = new Text(filterTextsComposite, SWT.BORDER | SWT.SINGLE);
-        leftFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));//$NON-NSL-1$
+        leftFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));// $NON-NSL-1$
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         gd.grabExcessHorizontalSpace = true;
@@ -661,9 +663,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         } else {
             rightFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.ColumnFilter"));// $NON-NSL-1$
         }
-        
+
         rightFilterText = new Text(filterTextsComposite, SWT.BORDER | SWT.SINGLE);
-        rightFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));//$NON-NSL-1$
+        rightFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));// $NON-NSL-1$
         rightFilterText.setLayoutData(gd);
 
         addFilterTextsListener();
@@ -707,6 +709,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         @Override
         public IStatus runInUIThread(final IProgressMonitor monitor) {
             getDisplay().asyncExec(new Runnable() {
+
                 public void run() {
 
                     boolean save = DQRepositoryNode.isOnFilterring();
@@ -772,7 +775,6 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         }
     }
 
-
     /**
      * Add the listeners for (table, column)filter texts.
      * 
@@ -782,6 +784,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     protected void addFilterTextsListener() {
         final FilterJob job = new FilterJob("", leftFilterText.getText(), true);//$NON-NLS-1$
         ModifyListener listener1 = new ModifyListener() {
+
             public void modifyText(ModifyEvent e) {
                 job.cancel();
                 job.setFilter(leftFilterText.getText());
@@ -793,6 +796,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
         final FilterJob job2 = new FilterJob("", rightFilterText.getText(), false);//$NON-NLS-1$
         ModifyListener listener2 = new ModifyListener() {
+
             public void modifyText(ModifyEvent e) {
                 job2.cancel();
                 job2.setFilter(rightFilterText.getText());
