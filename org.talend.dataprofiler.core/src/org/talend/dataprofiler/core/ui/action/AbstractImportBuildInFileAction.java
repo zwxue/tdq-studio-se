@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
@@ -46,7 +47,7 @@ public abstract class AbstractImportBuildInFileAction extends AbstractImportFile
         Plugin plugin = getPlugin();
         String srcPath = getSrcPath();
         Folder destFolder = (Folder) node.getObject();
-        String suffix = getSuffix();
+        Set<String> suffix = getSuffix();
         boolean isResurse = isRecurse();
 
         Map<File, IPath> resultMap = new HashMap<File, IPath>();
@@ -60,7 +61,7 @@ public abstract class AbstractImportBuildInFileAction extends AbstractImportFile
         return true;
     }
 
-    protected String getSuffix() {
+    protected Set<String> getSuffix() {
         return null;
     }
 

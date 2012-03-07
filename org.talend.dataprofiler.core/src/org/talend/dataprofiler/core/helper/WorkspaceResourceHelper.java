@@ -16,6 +16,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -29,6 +30,7 @@ import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dq.helper.FileUtils;
 import org.talend.repository.ProjectManager;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -85,8 +87,8 @@ public final class WorkspaceResourceHelper {
      * @param resultMap
      * @throws Exception
      */
-    public static void computeFileFromPlugin(Plugin plugin, String srcPath, boolean recurse, Folder desFolder, String suffix,
-            ERepositoryObjectType type, Map<File, IPath> resultMap) throws Exception {
+    public static void computeFileFromPlugin(Plugin plugin, String srcPath, boolean recurse, Folder desFolder,
+            Set<String> suffix, ERepositoryObjectType type, Map<File, IPath> resultMap) throws Exception {
         if (plugin == null || srcPath == null) {
             return;
         }
@@ -103,13 +105,14 @@ public final class WorkspaceResourceHelper {
 
             fileURL = FileLocator.toFileURL(resourceURL);
             file = new File(fileURL.getFile());
+            String fileName = file.getName();
             if (file.isDirectory() && recurse) {
-                if (file.getName().startsWith(".")) { //$NON-NLS-1$
+                if (fileName.startsWith(".")) { //$NON-NLS-1$
                     continue;
                 }
                 Folder folder = null;
-                if (!project.getFolder(file.getName()).exists()) {
-                    folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
+                if (!project.getFolder(fileName).exists()) {
+                    folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, fileName);
                 } else {
                     IPath fullPath = new Path(file.getPath());
                     int count = fullPath.segmentCount();
@@ -117,7 +120,7 @@ public final class WorkspaceResourceHelper {
                             ProjectManager.getInstance().getCurrentProject(), type, fullPath.removeFirstSegments(count - 1));
 
                     if (folderItem == null) {
-                        folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
+                        folder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, fileName);
                     } else {
                         folder = new Folder(folderItem.getProperty(), type);
                     }
@@ -126,14 +129,14 @@ public final class WorkspaceResourceHelper {
                 continue;
             }
 
-            if (suffix != null && !file.getName().endsWith(suffix)) {
+            // MOD msjian TDQ-4608 2012-3-6: deal with the *.jasper file
+            if (suffix != null && !suffix.contains(FileUtils.getExtension(file))) { //$NON-NLS-1$
                 continue;
             }
 
             String folderName = null;
-            if (type.equals(ERepositoryObjectType.TDQ_JRAXML_ELEMENT)) {
-                folderName = ERepositoryObjectType.getFolderName(type) + "/" + desFolder.getLabel(); //$NON-NLS-1$
-            }
+            folderName = file.getParentFile().getName();
+            // TDQ-4608 ~
             IFolder folder = project.getFolder(folderName);
             int segmentCount = folder.getFullPath().segmentCount();
             IPath parentPath = folder.getFullPath().removeFirstSegments(segmentCount - 1);
