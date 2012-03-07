@@ -366,6 +366,8 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         // ADD msjian 2011-7-8 feature 22206: Add filters
         // create the filter composite
         Control filterComposite = createFilterTexts(composite);
+        // MOD klliu bug TDQ-4159 2012-03-07
+        GridDataFactory.fillDefaults().hint(0, 30).applyTo(filterComposite);
 
         Control buttonComposite = createSelectionButtons(composite);
         GridData data = new GridData(GridData.FILL_BOTH);
