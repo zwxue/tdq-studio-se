@@ -71,7 +71,7 @@ public class NewSourcePatternActionProvider extends AbstractCommonActionProvider
 
                         if (type != null) {
                             menu.add(new CreatePatternAction(folder, type));
-                            menu.add(new ImportPatternsAction(folder, type));
+                            menu.add(new ImportPatternsAction(node, type));
                             menu.add(new ExportPatternsAction(node, false));
                             menu.add(new ExportPatternsAction(node, true));
                         }
