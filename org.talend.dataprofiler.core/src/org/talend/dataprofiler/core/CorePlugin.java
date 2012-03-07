@@ -143,8 +143,8 @@ public class CorePlugin extends AbstractUIPlugin {
             log.error(e, e);
         }
 
-        repositoryInitialized = this.initProxyRepository().isOk();
-        SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
+//        repositoryInitialized = this.initProxyRepository().isOk();
+//        SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
     }
 
     /*
@@ -535,6 +535,9 @@ public class CorePlugin extends AbstractUIPlugin {
         ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
 
         ReponsitoryContextBridge.initialized(project.getEmfProject(), project.getAuthor());
+     // MOD zshen for bug tdq-4757 remove this init from corePlugin.start() to here because the initLocal command of
+        // commandLine
+        SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
     }
 
     /**
