@@ -481,6 +481,11 @@ public final class DQStructureManager {
      * @return true if need to create new resource structure.
      */
     public boolean isNeedCreateStructure() {
+        // MOD zshen when use commandLine application maybe there don't should have a project, so before there should create a new project firstly.
+        if (!ResourceManager.getRootProject().exists()) {
+            return false;
+        }
+        // ~zshen
         // MOD klliu bug TDQ-3897 2011-11-08
         // if (isSecludedVersion()) {
         // return !ResourceService.checkSecludedResource();
