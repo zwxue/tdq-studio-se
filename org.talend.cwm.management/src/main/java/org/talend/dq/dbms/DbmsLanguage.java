@@ -114,6 +114,12 @@ public class DbmsLanguage {
      */
     protected static final String EOS = ";"; //$NON-NLS-1$
 
+    protected static final String JOIN_LEFT = "LEFT"; //$NON-NLS-1$
+
+    protected static final String JOIN_RIGHT = "RIGHT"; //$NON-NLS-1$
+
+    protected static final String JOIN_FULL = "FULL"; //$NON-NLS-1$
+
     /**
      * in upper case.
      */
@@ -547,9 +553,24 @@ public class DbmsLanguage {
      * @return the SQL statement with the where clause
      */
     public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions) {
+        return addWhereToSqlStringStatement(completedSqlString, whereExpressions, true);
+    }
+
+    /**
+     * add the where clause to the sql statement.
+     * 
+     * @param completedSqlString a generic SQL expression in which the where clause variable will be replaced.
+     * @param whereExpressions the list of where expressions to concatenate (must not be null)
+     * @param valid if false add ! before where clause
+     * @return the SQL statement with the where clause
+     */
+    public String addWhereToSqlStringStatement(String completedSqlString, List<String> whereExpressions, boolean valid) {
         String query = completedSqlString;
         String where = this.buildWhereExpression(whereExpressions);
         if (where != null) {
+            if (!valid) {
+                where = '!' + this.surroundWith('(', where, ')');
+            }
             query = this.addWhereToStatement(query, where);
         }
         return query;
@@ -1169,6 +1190,63 @@ public class DbmsLanguage {
     // MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
     public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName,
             String schemaName) {
+        return createJoinConditionAsString(leftTable, joinElements, catalogName, schemaName, null);
+    }
+
+    /**
+     * create left join condiction string.
+     * 
+     * @param leftTable
+     * @param joinElements
+     * @param catalogName
+     * @param schemaName
+     * @return
+     */
+    public String createLeftJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName,
+            String schemaName) {
+        return createJoinConditionAsString(leftTable, joinElements, catalogName, schemaName, JOIN_LEFT);
+    }
+
+    /**
+     * create right join condiction string.
+     * 
+     * @param leftTable
+     * @param joinElements
+     * @param catalogName
+     * @param schemaName
+     * @return
+     */
+    public String createRightJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName,
+            String schemaName) {
+        return createJoinConditionAsString(leftTable, joinElements, catalogName, schemaName, JOIN_RIGHT);
+    }
+
+    /**
+     * create full join condiction string.
+     * 
+     * @param leftTable
+     * @param joinElements
+     * @param catalogName
+     * @param schemaName
+     * @return
+     */
+    public String createFullJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName,
+            String schemaName) {
+        return createJoinConditionAsString(leftTable, joinElements, catalogName, schemaName, JOIN_FULL);
+    }
+
+    /**
+     * create join condiction string.
+     * 
+     * @param leftTable
+     * @param joinElements
+     * @param catalogName
+     * @param schemaName
+     * @param joinType (null: JOIN) (left: LEFT JOIN) (right: RIGHT JOIN) (full: FULL JOIN)
+     * @return
+     */
+    public String createJoinConditionAsString(ModelElement leftTable, List<JoinElement> joinElements, String catalogName,
+            String schemaName, String joinType) {
         if (joinElements.isEmpty()) {
             return PluginConstant.EMPTY_STRING;
         }
@@ -1209,7 +1287,7 @@ public class DbmsLanguage {
                 tableA = toQualifiedName(catalogName, schemaName, tableA);
                 // ~
                 buildJoinClause(builder, tableB, tableAliasB, columnBName, hasTableAliasB, tableA, tableAliasA, columnAName,
-                        hasTableAliasA, operator);
+                        hasTableAliasA, operator, joinType);
             } else {
                 // MOD by zshen: change schemaName of sybase database to Table's owner.
                 if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
@@ -1222,14 +1300,15 @@ public class DbmsLanguage {
                 tableB = toQualifiedName(catalogName, schemaName, tableB);
                 // ~
                 buildJoinClause(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName,
-                        hasTableAliasB, operator);
+                        hasTableAliasB, operator, joinType);
             }
         }
         return builder.toString();
     }
 
     private void buildJoinClause(StringBuilder builder, String tableA, String tableAliasA, String columnAName,
-            boolean hasTableAliasA, String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
+            boolean hasTableAliasA, String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB,
+            String operator, String joinType) {
         boolean hasAlreadyOneJoin = builder.toString().contains(this.join());
         // begin of query is built ouside this method and should be:
         // SELECT count(*) FROM leftTableName
@@ -1239,7 +1318,7 @@ public class DbmsLanguage {
         }
         // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
         join(builder, quote(tableA), tableAliasA, quote(columnAName), hasTableAliasA, tableB, tableAliasB, quote(columnBName),
-                hasTableAliasB, operator);
+                hasTableAliasB, operator, joinType);
     }
 
     /**
@@ -1264,8 +1343,15 @@ public class DbmsLanguage {
 
     public String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
             String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator) {
+        return join(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName, hasTableAliasB,
+                operator, null);
+    }
 
-        builder.append(join());
+    public String join(StringBuilder builder, String tableA, String tableAliasA, String columnAName, boolean hasTableAliasA,
+            String tableB, String tableAliasB, String columnBName, boolean hasTableAliasB, String operator, String joinType) {
+
+        String join = joinType == null ? join() : " " + joinType + join(); //$NON-NLS-1$
+        builder.append(join);
 
         // tableB tableAliasB ON
         builder.append(surroundWithSpaces(tableB));

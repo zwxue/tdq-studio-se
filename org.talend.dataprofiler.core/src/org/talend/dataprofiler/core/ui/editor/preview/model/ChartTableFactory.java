@@ -111,6 +111,7 @@ public final class ChartTableFactory {
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
 
                         if (!isJAVALanguage) {
+                            boolean showExtraMenu = false;
                             for (final MenuItemEntity itemEntity : itemEntities) {
                                 MenuItem item = new MenuItem(menu, SWT.PUSH);
                                 item.setText(itemEntity.getLabel());
@@ -130,20 +131,7 @@ public final class ChartTableFactory {
                                 if (indicator instanceof WhereRuleIndicator) {
                                     WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
                                     if (ind.getCount().doubleValue() < ind.getUserCount().doubleValue()) {
-                                        MenuItem itemCreateWhereRule = new MenuItem(menu, SWT.PUSH);
-                                        itemCreateWhereRule.setText(DefaultMessagesImpl
-                                                .getString("ChartTableFactory.JoinConditionColumnsAnalysis")); //$NON-NLS-1$
-                                        itemCreateWhereRule.addSelectionListener(new SelectionAdapter() {
-
-                                            @Override
-                                            public void widgetSelected(SelectionEvent e) {
-                                                final StructuredSelection selectionOne = (StructuredSelection) tbViewer
-                                                        .getSelection();
-                                                CreateSimpleAnalysisAction action = new CreateSimpleAnalysisAction();
-                                                action.setSelection(selectionOne);
-                                                action.run();
-                                            }
-                                        });
+                                        showExtraMenu = true;
                                     }
                                 }
                                 // TDQ-4470~
@@ -163,6 +151,22 @@ public final class ChartTableFactory {
                                         }
                                     });
                                 }
+                            }
+                            // show extra menu to create simple analysis, help user to find the duplicated rows
+                            if (showExtraMenu) {
+                                MenuItem itemCreateWhereRule = new MenuItem(menu, SWT.PUSH);
+                                itemCreateWhereRule.setText(DefaultMessagesImpl
+                                        .getString("ChartTableFactory.JoinConditionColumnsAnalysis")); //$NON-NLS-1$
+                                itemCreateWhereRule.addSelectionListener(new SelectionAdapter() {
+
+                                    @Override
+                                    public void widgetSelected(SelectionEvent e) {
+                                        final StructuredSelection selectionOne = (StructuredSelection) tbViewer.getSelection();
+                                        CreateSimpleAnalysisAction action = new CreateSimpleAnalysisAction();
+                                        action.setSelection(selectionOne);
+                                        action.run();
+                                    }
+                                });
                             }
                         } else {
                             AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);

@@ -195,12 +195,12 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
-                schemaName) : PluginConstant.EMPTY_STRING;
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createLeftJoinConditionAsString(set, joinConditions,
+                catalogName, schemaName) : PluginConstant.EMPTY_STRING;
 
         completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
-        completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+        completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString, true);
 
         // completedSqlString is the final query
         String finalQuery = completedSqlString;
@@ -238,8 +238,18 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return this.dbmsLanguage;
     }
 
-    private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString) throws ParseException {
-        return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions);
+    /**
+     * add the where clause to the sql statement.
+     * 
+     * @param whereExpressions the list of where expressions to concatenate (must not be null)
+     * @param completedSqlString a generic SQL expression in which the where clause variable will be replaced.
+     * @param valid if false add ! before where clause
+     * @return the SQL statement with the where clause
+     * @throws ParseException
+     */
+    private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString, boolean valid)
+            throws ParseException {
+        return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions, valid);
     }
 
     @Override
@@ -409,9 +419,10 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
      * 
      * @param dataFilterAsString
      * @param indicator
+     * @param valid
      * @return
      */
-    public String getValidStatement(String dataFilterAsString, Indicator indicator) {
+    public String getValidStatement(String dataFilterAsString, Indicator indicator, boolean valid) {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
             traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
@@ -498,8 +509,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
-                schemaName) : PluginConstant.EMPTY_STRING;
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createLeftJoinConditionAsString(set, joinConditions,
+                catalogName, schemaName) : PluginConstant.EMPTY_STRING;
 
         String genericSql = sqlGenericExpression.getBody();
         setAliasA = PluginConstant.EMPTY_STRING.equals(setAliasA) ? "*" : setAliasA + ".*";//$NON-NLS-1$//$NON-NLS-2$
@@ -508,7 +519,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         completedSqlString = dbms().fillGenericQueryWithJoin(genericSql, setName, joinclause);
         // ~
         try {
-            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString, valid);
         } catch (ParseException e) {
             log.warn(e);
         }
