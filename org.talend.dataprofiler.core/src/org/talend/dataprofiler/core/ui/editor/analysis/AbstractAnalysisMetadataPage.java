@@ -144,6 +144,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public void doSave(IProgressMonitor monitor) {
         ReturnCode rc = canSave();
         if (!rc.isOk()) {
+            // ADD xqliu 2012-03-09 TDQ-4902 Pop an error if rc is not ok.
+            MessageDialogWithToggle.openError(null,
+                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
             return;
         } else if (!checkWhithspace()) {
             MessageDialogWithToggle
