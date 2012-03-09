@@ -62,7 +62,6 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
-import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -391,7 +390,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 // need to generate different SQL where clause for each type.
                 int javaType = tdColumn.getSqlDataType().getJavaDataType();
                 // MOD qiongli 2011-10-31 add single quotation '' for mysql date type.
-                if (!Java2SqlType.isNumbericInSQL(javaType) && !isFunction(defValue, table)
+                if (!Java2SqlType.isNumbericInSQL(javaType)
+                        && !isFunction(defValue, table)
                         || (Java2SqlType.isDateInSQL(javaType) && SupportDBUrlType.MYSQLDEFAULTURL.getLanguage().equals(language))) {
                     defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
@@ -1443,35 +1443,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // give result to indicator so that it handles the results
         boolean ret = false;
         try {
-
-            // MOD msjian 22946: Duplicate count indicator result is wrong for column analsis with OracleDB
-            // because the count(column name) not contained the null value
-            List<Object[]> myResultSet = new ArrayList<Object[]>();
-            if (indicator instanceof DistinctCountIndicator) {
-                // MOD msjian 2011-8-10 TDQ-1679: fixed when there is filter, the sql is error
-                String myRsSql = queryStmt;
-                int whereIndex = queryStmt.indexOf("WHERE");// $NON-NSL-1$
-                if (whereIndex != -1) {
-                    String sqlSelectPart = queryStmt.substring(0, whereIndex);
-                    String sqlWherePart = queryStmt.substring(whereIndex);
-                    sqlSelectPart = sqlSelectPart.replaceAll("COUNT\\(", " "); // $NON-NSL-1$ // $NON-NSL-2$
-                    sqlSelectPart = sqlSelectPart.replaceAll("\\)", ""); // $NON-NSL-1$ // $NON-NSL-2$
-                    myRsSql = sqlSelectPart + sqlWherePart;
-                } else {
-                    myRsSql = queryStmt.replaceAll("COUNT\\(", " "); // $NON-NSL-1$ // $NON-NSL-2$
-                    myRsSql = myRsSql.replaceAll("\\)", ""); // $NON-NSL-1$ // $NON-NSL-2$
-                }
-
-                List<Object[]> myRs = executeQuery(cat, connection, myRsSql);
-
-                Object[] result = new Object[1];
-                result[0] = myRs.size();
-                myResultSet.add(result);
-
-            } else {
-                myResultSet = executeQuery(cat, connection, queryStmt);
-            }
-
+            // MOD qiongli 2012-3-7 TDQ-4632 delete some redundancy code to DistinctIndicator here.modify directly the
+            // sql expression in definition file.
+            List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
             ret = indicator.storeSqlResults(myResultSet);
         } catch (Exception e) {
             log.warn(e, e);

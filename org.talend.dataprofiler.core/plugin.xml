@@ -1412,6 +1412,12 @@
            name="Update Aggregated Definitions"
            version="5.0.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDistinctCountIndicatorTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDistinctCountIndicatorTask"
+           name="Update Distinct Count Indicator"
+           version="5.0.3">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
