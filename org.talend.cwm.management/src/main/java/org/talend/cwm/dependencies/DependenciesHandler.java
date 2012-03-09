@@ -37,6 +37,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.dataquality.properties.impl.TDQAnalysisItemImpl;
 import org.talend.dataquality.properties.impl.TDQIndicatorDefinitionItemImpl;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -398,6 +399,8 @@ public final class DependenciesHandler {
      * 
      * @param object
      * @return SupplierDependency
+     * 
+     * getSupplierDependency
      */
     public List<IRepositoryViewObject> getSupplierDependency(IRepositoryViewObject object) {
         List<IRepositoryViewObject> listViewObject = new ArrayList<IRepositoryViewObject>();
@@ -419,6 +422,63 @@ public final class DependenciesHandler {
         }
 
         return listViewObject;
+    }
+
+    /**
+     * 
+     * @param property
+     * @return SupplierDependency
+     * 
+     * getClintDependency
+     */
+    public List<Property> getClintDependency(Property property) {
+        List<Property> listProperty = new ArrayList<Property>();
+        if (property == null) {
+            return listProperty;
+        }
+        ModelElement modelElement = PropertyHelper.getModelElement(property);
+        if (property.getItem() instanceof TDQSourceFileItem) {
+            return listProperty;
+        }
+        if (modelElement instanceof Analysis) {
+            listProperty.addAll(getAnaDependency(property));
+        }
+            EList<Dependency> clientDependency = modelElement.getClientDependency();
+            for (Dependency clienter : clientDependency) {
+            for (ModelElement depencyModelElement : clienter.getSupplier()) {
+                Property dependencyProperty = PropertyHelper.getProperty(depencyModelElement);
+                // IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
+                listProperty.add(dependencyProperty);
+                }
+            }
+
+
+        return listProperty;
+    }
+
+    /**
+     * 
+     * @param object
+     * @return SupplierDependency
+     * 
+     * getClintDependency
+     */
+    public List<Property> getClintDependency(ModelElement object) {
+        Property property = PropertyHelper.getProperty(object);
+        if (property != null) {
+            // IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
+            return iterateClientDependencies(property);
+        }
+        return null;
+    }
+
+    private List<Property> iterateClientDependencies(Property property) {
+        List<Property> returnList = new ArrayList<Property>();
+        for (Property theProperty : getClintDependency(property)) {
+            returnList.addAll(iterateClientDependencies(theProperty));
+            returnList.add(theProperty);
+        }
+        return returnList;
     }
 
     /**
@@ -451,6 +511,41 @@ public final class DependenciesHandler {
             }
         }
         return listAnalysisViewObject;
+    }
+
+    /**
+     * get Analysis Dependency (for indicator only)
+     * 
+     * @return get the list of indicator which in use by the analysis
+     */
+    public static List<Property> getAnaDependency(Property property) {
+        Item item = property.getItem();
+        List<Property> listProperty = new ArrayList<Property>();
+        if (item instanceof TDQAnalysisItemImpl) {
+            TDQAnalysisItemImpl tdqAnaItem = (TDQAnalysisItemImpl) item;
+            Analysis anaElement = tdqAnaItem.getAnalysis();
+            List<Indicator> indicators = IndicatorHelper.getIndicators(anaElement.getResults());
+            for (Indicator indicator : indicators) {
+                boolean isContain = false;
+                IndicatorDefinition newIndicatorDefinition = indicator.getIndicatorDefinition();
+                for (Property containViewObject : listProperty) {
+                    Item item2 = containViewObject.getItem();
+                    if (item2 instanceof TDQIndicatorDefinitionItemImpl) {
+                        IndicatorDefinition oldIndicatorDefinition = ((TDQIndicatorDefinitionItemImpl) item2)
+                                .getIndicatorDefinition();
+                        if (ModelElementHelper.compareUUID(oldIndicatorDefinition, newIndicatorDefinition)) {
+                            isContain = true;
+                            break;
+                        }
+                    }
+                }
+                if (!isContain) {
+                    Property iniProperty = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
+                    listProperty.add(iniProperty);
+                }
+            }
+        }
+        return listProperty;
     }
 
 }
