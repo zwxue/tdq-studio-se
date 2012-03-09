@@ -52,6 +52,25 @@ public final class WorkspaceUtils {
 
     /**
      * 
+     * Comment method "toFile".
+     * 
+     * @param object
+     * @return turn URI to File
+     */
+    public static String toFile(Object object) {
+        if (object instanceof URI) {
+            URI uri = ((URI) object);
+            if(uri.isFile()){
+                return uri.toFileString();
+            }else if(uri.isPlatform()){
+                return ResourceManager.getRootFolderLocation().append(uri.toPlatformString(true)).toOSString();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 
      * DOC mzhao convert emf resource to workspace resource.
      * 
      * @param me ,modelElement of EObject

@@ -195,9 +195,8 @@ public final class ResourceService {
      * @return
      */
     public static boolean checkResource() {
-
-        return ResourceManager.getRootProject().exists()
-                && ResourceManager.getDataProfilingFolder().exists()
+        // MOD remove the adjust about whether roorProject is exist.
+        return ResourceManager.getDataProfilingFolder().exists()
                 && ResourceManager.getLibrariesFolder().exists()
                 && (ResourceManager.getMetadataFolder().exists() || ResourceManager.getRootProject().getFolder("TDQ_Metadata")
                         .exists());//$NON-NLS-1$
