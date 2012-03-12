@@ -31,9 +31,11 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.emf.FactoriesUtil.EElementEName;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
@@ -217,17 +219,15 @@ public class ItemRecord {
                 }
             }
 
-            List<ModelElement> dependencyElements = new ArrayList<ModelElement>();
-
-            ModelElementHelper.iterateClientDependencies(element, dependencyElements);
-
-            for (ModelElement depElement : dependencyElements) {
-
-                URI uri = EObjectHelper.getURI(depElement);
+            List<Property> dependencyProperty = DependenciesHandler.getInstance().getClintDependency(element);
+            for (Property depElement : dependencyProperty) {
+                ModelElement modelElement = PropertyHelper.getModelElement(depElement);
+                URI uri = EObjectHelper.getURI(modelElement);
 
                 if (uri != null) {
-                    File depFile = new File(uri.toFileString());
-                    dependencyMap.put(depFile, depElement);
+                    String uriString = WorkspaceUtils.toFile(uri);
+                    File depFile = new File(uriString);
+                    dependencyMap.put(depFile, modelElement);
                 }
             }
             // MOD yyi 2012-02-20 TDQ-4545 TDQ-4701: Map user define jrxm templates with report.
