@@ -110,12 +110,21 @@ public class DuplicateAction extends Action {
                     if (dialog.open() == Window.OK) {
                         String newLabel = dialog.getValue();
 
-                        ReturnCode rc = handle.validDuplicated();
-                        if (rc.isOk()) {
+                        // TDQ-4179 MOD yyin 20120313: when duplicate a user defined indicator,
+                        // there are no rule for the user, only for sys, so no need to check the valid rule,just
+                        // duplicate
+                        if (ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS.equals(node
+                                .getProperties(IRepositoryNode.EProperties.LABEL))) {
                             duplicateObject = handle.duplicate(newLabel);
                         } else {
-                            MessageDialog.openError(null,
-                                    DefaultMessagesImpl.getString("DuplicateAction.InvalidDialog"), rc.getMessage()); //$NON-NLS-1$
+                            // ~TDQ-4719
+                            ReturnCode rc = handle.validDuplicated();
+                            if (rc.isOk()) {
+                                duplicateObject = handle.duplicate(newLabel);
+                            } else {
+                                MessageDialog.openError(null,
+                                        DefaultMessagesImpl.getString("DuplicateAction.InvalidDialog"), rc.getMessage()); //$NON-NLS-1$
+                            }
                         }
                     }
                 }
