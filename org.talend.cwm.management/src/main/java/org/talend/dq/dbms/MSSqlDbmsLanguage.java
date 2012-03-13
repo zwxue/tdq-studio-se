@@ -138,7 +138,8 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String charLength(String columnName) {
-        return " DATALENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
+        // MOD klliu bug TDQ-4724 2012-03-13
+        return " LEN(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
     
   
