@@ -50,6 +50,12 @@ public class SynonymIndexSearcher {
 
     private int topDocLimit = 3;
 
+    private static final float MINIMUM_SIMILARITY = 0.8F;
+
+    private static final float WORD_TERM_BOOST = 2F;
+
+    private static final float WORD_BOOST = 1.5F;
+
     private Analyzer analyzer;
 
     /**
@@ -300,16 +306,20 @@ public class SynonymIndexSearcher {
     private Query createCombinedQueryFor(String input, boolean fuzzy) throws IOException, ParseException {
         Query wordTermQuery, synTermQuery;
         if (fuzzy) {
-            wordTermQuery = new FuzzyQuery(new Term(SynonymIndexBuilder.F_WORDTERM, input.toLowerCase()));
-            synTermQuery = new FuzzyQuery(new Term(SynonymIndexBuilder.F_SYNTERM, input.toLowerCase()));
+            wordTermQuery = new FuzzyQuery(new Term(F_WORDTERM, input.toLowerCase()), MINIMUM_SIMILARITY);
+            synTermQuery = new FuzzyQuery(new Term(F_SYNTERM, input.toLowerCase()), MINIMUM_SIMILARITY);
         } else {
-            wordTermQuery = new TermQuery(new Term(SynonymIndexBuilder.F_WORDTERM, input.toLowerCase()));
-            synTermQuery = new TermQuery(new Term(SynonymIndexBuilder.F_SYNTERM, input.toLowerCase()));
+            wordTermQuery = new TermQuery(new Term(F_WORDTERM, input.toLowerCase()));
+            synTermQuery = new TermQuery(new Term(F_SYNTERM, input.toLowerCase()));
         }
-        QueryParser parser = new QueryParser(Version.LUCENE_30, SynonymIndexBuilder.F_WORD, getAnalyzer());
+        QueryParser parser = new QueryParser(Version.LUCENE_30, F_WORD, getAnalyzer());
         Query wordQuery = parser.parse(input);
-        parser = new QueryParser(Version.LUCENE_30, SynonymIndexBuilder.F_SYN, getAnalyzer());
+        parser = new QueryParser(Version.LUCENE_30, F_SYN, getAnalyzer());
         Query synQuery = parser.parse(input);
+
+        // increase importance of the reference word
+        wordTermQuery.setBoost(WORD_TERM_BOOST);
+        wordQuery.setBoost(WORD_BOOST);
         return wordTermQuery.combine(new Query[] { wordTermQuery, wordQuery, synTermQuery, synQuery });
     }
 

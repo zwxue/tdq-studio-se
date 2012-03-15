@@ -194,7 +194,6 @@ public class IndexMigrator {
         Field wordField = new Field(F_WORD, word, Field.Store.YES, Field.Index.ANALYZED_NO_NORMS, TermVector.NO);
         doc.add(wordField);
         Field wordTermField = new Field(F_WORDTERM, word.toLowerCase(), Field.Store.NO, Field.Index.NOT_ANALYZED, TermVector.NO);
-        wordTermField.setBoost(2F); // increase the importance of the reference word
         doc.add(wordTermField);
         for (String syn : synonyms) {
             if (syn != null) {
