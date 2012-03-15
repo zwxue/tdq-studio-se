@@ -574,7 +574,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private TableViewer schemaTableViewer;
 
     private void createStatisticalSection(Composite topComp) {
-        System.out.println("=======================================================" + new Date());
         statisticalSection = this.createSection(form, topComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.statisticalinformations"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
@@ -662,7 +661,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         statisticalSection.setClient(sectionClient);
 
         createContextMenuFor(catalogTableViewer);
-        System.out.println("------------------------------------" + new Date());
     }
 
     /**
@@ -1013,8 +1011,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     /**
-     * DOC klliu Comment method "wapperInput". MOD 20120315 klliu&yyin TDQ-2391, adjust the fors' sequential execute
-     * relations
+     * DOC klliu Comment method "wapperInput". relations
      * 
      * @param indicatorTableList
      * @param parentNode
@@ -1026,6 +1023,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         for (IRepositoryNode folderNode : children) {
             if (folderNode instanceof DBTableFolderRepNode) {
                 List<IRepositoryNode> tableNodes = folderNode.getChildren();
+                // MOD 20120315 klliu&yyin TDQ-2391, avoid getting many times for table nodes.
                 for (TableIndicator indicator : indicatorTableList) {
                     for (IRepositoryNode tableNode : tableNodes) {
                         MetadataTable table = ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
