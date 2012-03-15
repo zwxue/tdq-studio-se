@@ -47,7 +47,7 @@
    <extension
          point="org.eclipse.help.index">
       <index
-            file="html/wizard/indicator_select/advanced_statistics.html">
+            file="index.xml">
       </index>
    </extension>
    <extension
