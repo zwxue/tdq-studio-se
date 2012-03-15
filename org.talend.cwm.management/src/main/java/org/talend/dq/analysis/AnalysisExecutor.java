@@ -87,7 +87,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
         final long startime = System.currentTimeMillis();
         resultMetadata.setExecutionDate(new Date(startime));
-
+        // MOD qiongli 2012-3-14 TDQ-4433,if import from low vesion and not import SystemIdicator,should initionlize
+        // these indicator.
+        initializeIndicators(analysis.getResults().getIndicators());
         // --- create SQL statement
         String sql = createSqlStatement(analysis);
         if (sql == null) {
@@ -560,6 +562,18 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      */
     protected String quote(String input) {
         return dbms().quote(input);
+    }
+
+    /**
+     * 
+     * 2012-3-14 TDQ-4433,reset indicatorDefinition for indicator if needed(indicatorDefinition is null or proxy).
+     */
+    protected void initializeIndicators(List<Indicator> indicators) {
+
+        ModelElementAnalysisHandler modHandler = new ModelElementAnalysisHandler();
+        for (Indicator ind : indicators) {
+            modHandler.initializeIndicator(ind);
+        }
     }
 
 }
