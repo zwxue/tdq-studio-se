@@ -574,6 +574,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private TableViewer schemaTableViewer;
 
     private void createStatisticalSection(Composite topComp) {
+        System.out.println("=======================================================" + new Date());
         statisticalSection = this.createSection(form, topComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.statisticalinformations"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(statisticalSection);
@@ -661,6 +662,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         statisticalSection.setClient(sectionClient);
 
         createContextMenuFor(catalogTableViewer);
+        System.out.println("------------------------------------" + new Date());
     }
 
     /**
@@ -1011,7 +1013,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     /**
-     * DOC klliu Comment method "wapperInput".
+     * DOC klliu Comment method "wapperInput". MOD 20120315 klliu&yyin TDQ-2391, adjust the fors' sequential execute
+     * relations
      * 
      * @param indicatorTableList
      * @param parentNode
@@ -1020,10 +1023,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private List<OverviewIndUIElement> wapperInput(EList<TableIndicator> indicatorTableList, IRepositoryNode parentNode) {
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
         List<IRepositoryNode> children = parentNode.getChildren();
-        for (TableIndicator indicator : indicatorTableList) {
-            for (IRepositoryNode folderNode : children) {
-                if (folderNode instanceof DBTableFolderRepNode) {
-                    List<IRepositoryNode> tableNodes = folderNode.getChildren();
+        for (IRepositoryNode folderNode : children) {
+            if (folderNode instanceof DBTableFolderRepNode) {
+                List<IRepositoryNode> tableNodes = folderNode.getChildren();
+                for (TableIndicator indicator : indicatorTableList) {
                     for (IRepositoryNode tableNode : tableNodes) {
                         MetadataTable table = ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
                         String name = table.getName();
@@ -1097,7 +1100,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         return new ReturnCode(true);
     }
-
 
     @Override
     public void refresh() {
