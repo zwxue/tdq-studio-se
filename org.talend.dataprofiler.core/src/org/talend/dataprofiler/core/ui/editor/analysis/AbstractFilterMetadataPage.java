@@ -1017,10 +1017,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private List<OverviewIndUIElement> wapperInput(EList<TableIndicator> indicatorTableList, IRepositoryNode parentNode) {
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
         List<IRepositoryNode> children = parentNode.getChildren();
-        for (TableIndicator indicator : indicatorTableList) {
-            for (IRepositoryNode folderNode : children) {
-                if (folderNode instanceof DBTableFolderRepNode) {
-                    List<IRepositoryNode> tableNodes = folderNode.getChildren();
+        // MOD 20120315 klliu&yyin TDQ-2391, avoid getting many times for table nodes.
+        for (IRepositoryNode folderNode : children) {
+            if (folderNode instanceof DBTableFolderRepNode) {
+                List<IRepositoryNode> tableNodes = folderNode.getChildren();
+                for (TableIndicator indicator : indicatorTableList) {
                     for (IRepositoryNode tableNode : tableNodes) {
                         MetadataTable table = ((MetadataTableRepositoryObject) tableNode.getObject()).getTable();
                         String name = table.getName();
