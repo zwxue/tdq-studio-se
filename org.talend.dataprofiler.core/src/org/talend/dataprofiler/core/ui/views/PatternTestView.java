@@ -152,7 +152,7 @@ public class PatternTestView extends ViewPart {
 
         // create coboCom line
         final Composite coboCom = new Composite(mainComposite, SWT.NULL);
-        imgCom = new Composite(mainComposite, SWT.NULL);
+        imgCom = new Composite(mainComposite, SWT.NONE);
         final Composite textCom = new Composite(mainComposite, SWT.NULL);
         final Composite buttonsCom = new Composite(mainComposite, SWT.FILL | SWT.NULL);
         mainComposite.addListener(SWT.Resize, new Listener() {
@@ -235,21 +235,24 @@ public class PatternTestView extends ViewPart {
         imgCom.setLayout(layout);
 
         emoticonLabel = new Label(imgCom, SWT.NONE);
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        GridData gd = new GridData();
         gd.heightHint = 18;
         gd.widthHint = 18;
         emoticonLabel.setLayoutData(gd);
 
-        gd = new GridData();
+        gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.heightHint = 18;
-        gd.widthHint = 65;
-        gd.horizontalAlignment = GridData.BEGINNING;
+        // gd.widthHint = 65;
+        // MOD TDQ-4599,mzhao, don't truncate the label.
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalAlignment = GridData.FILL;
         resultLabel = new Label(imgCom, SWT.NONE);
         resultLabel.setLayoutData(gd);
 
         GridData imgData = new GridData(GridData.FILL_HORIZONTAL);
-        imgData.heightHint = 0;
-        imgData.horizontalAlignment = GridData.BEGINNING;
+        // imgData.heightHint = 0;
+        imgData.horizontalAlignment = GridData.FILL;
+        imgData.grabExcessHorizontalSpace = true;
         imgCom.setLayoutData(imgData);
         // ~
 
@@ -396,10 +399,6 @@ public class PatternTestView extends ViewPart {
      * @param expand
      */
     protected void expandImageComposite() {
-        GridData formData = new GridData(GridData.FILL_HORIZONTAL);
-        formData.heightHint = 30;
-        formData.horizontalAlignment = GridData.BEGINNING;
-        imgCom.setLayoutData(formData);
         imgCom.getParent().layout();
     }
 
