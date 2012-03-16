@@ -99,47 +99,42 @@ public final class DbmsLanguageFactory {
      */
     public static DbmsLanguage createDbmsLanguage(String dbmsSubtype, String databaseVersion) {
         ProductVersion dbVersion = ProductVersion.fromString(databaseVersion, true);
+        DbmsLanguage dbmsLanguage = null;
         if (isMySQL(dbmsSubtype)) {
-            return new MySQLDbmsLanguage(dbmsSubtype, dbVersion);
+            dbmsLanguage = new MySQLDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isOracle(dbmsSubtype)) {
+            dbmsLanguage = new OracleDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isDB2(dbmsSubtype)) {
+            dbmsLanguage = new DB2DbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isAS400(dbmsSubtype)) {
+            dbmsLanguage = new AS400DbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isMSSQL(dbmsSubtype)) {
+            dbmsLanguage = new MSSqlDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isPostgresql(dbmsSubtype)) {
+            dbmsLanguage = new PostgresqlDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isSybase(dbmsSubtype)) {
+            dbmsLanguage = new SybaseASEDbmsLanguage(dbVersion);
+        } else if (isSQLite(dbmsSubtype)) {
+            dbmsLanguage = new SQLiteDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isTeradata(dbmsSubtype)) {
+            dbmsLanguage = new TeradataDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isIngres(dbmsSubtype)) {
+            dbmsLanguage = new IngresDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isMdm(dbmsSubtype)) {
+            dbmsLanguage = new MdmDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isDelimitedFile(dbmsSubtype)) {
+            dbmsLanguage = new DelimitedFileLanguage(dbmsSubtype, dbVersion);
+        } else if (isInfomix(dbmsSubtype)) {
+            // MOD zshen fixed bug 11005: SQL syntax error for all analysis on Informix databases in Talend Open
+            // Profiler
+            dbmsLanguage = new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
+        } else {
+            dbmsLanguage = new DbmsLanguage(dbmsSubtype, dbVersion);
         }
-        if (isOracle(dbmsSubtype)) {
-            return new OracleDbmsLanguage(dbmsSubtype, dbVersion);
+        if (PluginConstant.EMPTY_STRING.equals(dbmsLanguage.getDbQuoteString())) {
+            dbmsLanguage.setDbQuoteString(dbmsLanguage.getHardCodedQuoteIdentifier());
         }
-        if (isDB2(dbmsSubtype)) {
-            return new DB2DbmsLanguage(dbmsSubtype, dbVersion);
-        }
-        if (isAS400(dbmsSubtype)) {
-            return new AS400DbmsLanguage(dbmsSubtype, dbVersion);
-        }
-        if (isMSSQL(dbmsSubtype)) {
-            return new MSSqlDbmsLanguage(dbmsSubtype, dbVersion);
-        }
-        if (isPostgresql(dbmsSubtype)) {
-            return new PostgresqlDbmsLanguage(dbmsSubtype, dbVersion);
-        }
-        if (isSybase(dbmsSubtype)) {
-            return new SybaseASEDbmsLanguage(dbVersion);
-        }
-        if (isSQLite(dbmsSubtype)) {
-            return new SQLiteDbmsLanguage(dbmsSubtype, dbVersion);
-        }
-        if (isTeradata(dbmsSubtype)) {
-            return new TeradataDbmsLanguage(dbmsSubtype, dbVersion);
-        }
-        if (isIngres(dbmsSubtype)) {
-            return new IngresDbmsLanguage(dbmsSubtype, dbVersion);
-        }
-        if (isMdm(dbmsSubtype)) {
-            return new MdmDbmsLanguage(dbmsSubtype, dbVersion);
-        }
-        if (isDelimitedFile(dbmsSubtype)) {
-            return new DelimitedFileLanguage(dbmsSubtype, dbVersion);
-        }
-        // MOD zshen fixed bug 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
-        if (isInfomix(dbmsSubtype)) {
-            return new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
-        }// ~11005
-        return new DbmsLanguage(dbmsSubtype, dbVersion);
+        return dbmsLanguage;
     }
 
     public static DbmsLanguage createDbmsLanguage(String dataType) {
@@ -160,8 +155,8 @@ public final class DbmsLanguageFactory {
         if (dbType == null) {
             return new DbmsLanguage();
         }
-        //MOD qiongli 2011-4-18 bug 16723,data cleansing
-        result=createDbmsLanguage(dbType.getLanguage(),PluginConstant.EMPTY_STRING);
+        // MOD qiongli 2011-4-18 bug 16723,data cleansing
+        result = createDbmsLanguage(dbType.getLanguage(), PluginConstant.EMPTY_STRING);
         return result;
     }
 
