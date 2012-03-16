@@ -43,16 +43,16 @@ public class FirstNameStandardizeTest {
 
     private static final String inputName = "Michel"; //$NON-NLS-1$
 
-    private static final String[][] expected = { { "Michel", "AUS", "MITCHEL", "MICHELE", "MITCHEL" },
+    private static final String[][] expected = { { "Michel", "AUS", "MICHEL", "MICHEL", "MICHEL" },
             { "Michel", "BEL", "MICHEL", "MICHEL", "MICHEL" }, { "Michel", "DEU", "MICHEL", "MICHEL", "MICHEL" },
-            { "Michel", "ESP", "MICHEL", "ADELAIDA", "MICHEL" }, { "Michel", "FRA", "MICHEL", "MICHELE", "MICHEL" },
-            { "Michel", "ITA", "MICHELA", "MICHELA", "MICHELE" }, { "Michel", "RUS", "MICHEL", "MICHEL", "MICHEL" },
-            { "Michel", "USA", "MICHEL", "MICHELL", "MICHEL" },
+            { "Michel", "ESP", "MICHEL", "MICHEL", "MICHEL" }, { "Michel", "FRA", "MICHEL", "MICHEL", "MICHEL" },
+            { "Michel", "ITA", "MICHELA", "MICHELA", "MICHELA" }, { "Michel", "RUS", "MICHEL", "MICHEL", "MICHEL" },
+            { "Michel", "USA", "MICHEL", "MICHEL", "MICHEL" },
 
             { "Adrian", "AUS", "ADRIAN", "ADRIAN", "ADRIAN" }, { "Adrian", "BEL", "ADRIAN", "ADRIAN", "ADRIAN" },
-            { "Adrian", "DEU", "MARIAN", "MARIAN", "MARIAN" }, { "Adrian", "ESP", "ADRIAN", "MIRIAN", "ADRIAN" },
-            { "Adrian", "FRA", "ADRIAN", "ADRIAN", "ADRIAN" }, { "Adrian", "ITA", "ADRIANO", "ADRIANA", "ADRIANO" },
-            { "Adrian", "RUS", "BRIAN", "LARISSA", "BRIAN" }, { "Adrian", "USA", "ADRIAN", "ADRIANE", "ADRIAN" }, };
+            { "Adrian", "DEU", "MARIAN", "MARIAN", "MARIAN" }, { "Adrian", "ESP", "ADRIAN", "ADRIAN", "ADRIAN" },
+            { "Adrian", "FRA", "ADRIAN", "ADRIAN", "ADRIAN" }, { "Adrian", "ITA", "ADRIANO", "ADRIANO", "ADRIANO" },
+            { "Adrian", "RUS", "BRIAN", "BRIAN", "BRIAN" }, { "Adrian", "USA", "ADRIAN", "ADRIAN", "ADRIAN" }, };
 
 
     /**
@@ -82,7 +82,7 @@ public class FirstNameStandardizeTest {
         try {
             String res = fnameStandardize.replaceName(inputName, true);
             System.out.println("testReplaceName:\n" + res);
-            assertEquals("MICHEL", res);
+            assertEquals("", res);
 
         } catch (IOException e) {
             e.printStackTrace();

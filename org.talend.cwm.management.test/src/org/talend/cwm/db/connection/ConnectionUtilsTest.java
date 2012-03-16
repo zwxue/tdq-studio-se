@@ -30,6 +30,9 @@ import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
+import org.talend.core.repository.model.IRepositoryFactory;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.utils.properties.PropertiesLoader;
@@ -75,10 +78,11 @@ public class ConnectionUtilsTest {
         }
 
         List<Catalog> catalogList=MetadataFillFactory.getDBInstance().fillCatalogs(dbconn, databaseMetaData, null);
-        List<TdTable> tableList = MetadataFillFactory.getDBInstance().fillTables(catalogList.get(13), databaseMetaData, null,
+        initProxyRepository();
+        List<TdTable> tableList = MetadataFillFactory.getDBInstance().fillTables(catalogList.get(1), databaseMetaData, null,
                 null,
                 new String[] { TableType.TABLE.toString() });
-        List<TdColumn> columnList = MetadataFillFactory.getDBInstance().fillColumns(tableList.get(2), databaseMetaData, null);
+        List<TdColumn> columnList = MetadataFillFactory.getDBInstance().fillColumns(tableList.get(0), databaseMetaData, null);
 
         if (tableList.size() <= 0) {
             fail("The table of db should have more than one."); //$NON-NLS-1$
@@ -88,7 +92,7 @@ public class ConnectionUtilsTest {
             sqlDataTypeList.add(tdColumn.getSqlDataType().getName());
             tdColumn.setSqlDataType(null);
         }
-        ConnectionUtils.retrieveColumn((MetadataTable) tableList.get(2));
+        ConnectionUtils.retrieveColumn((MetadataTable) tableList.get(0));
         int i = 0;
         for (TdColumn tdColumn : columnList) {
             assertNotNull(tdColumn.getSqlDataType());
@@ -98,6 +102,18 @@ public class ConnectionUtilsTest {
     }
 
     private static boolean showUnimplemented = false;
+
+    /**
+     * DOC msjian Comment method "initProxyRepository".
+     */
+    private void initProxyRepository() {
+        if (ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider() == null) {
+            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
+            if (repository != null) {
+                ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(repository);
+            }
+        }
+    }
 
     private void fail(String str) {
         if (showUnimplemented) {
