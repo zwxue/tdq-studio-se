@@ -149,7 +149,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
      * 
      * @param indicator
      */
-    private void initializeIndicator(Indicator indicator) {
+    public void initializeIndicator(Indicator indicator) {
         if (indicator.getIndicatorDefinition() == null || indicator.getIndicatorDefinition().eIsProxy()) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }

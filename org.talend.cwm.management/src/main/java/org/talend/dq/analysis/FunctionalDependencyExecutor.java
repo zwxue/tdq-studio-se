@@ -36,6 +36,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.CoreFactory;
@@ -163,6 +164,12 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             TdColumn columnB = rowMatchingIndicator.getColumnB();
 
             IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+            // MOD qiongli 2012-3-14 TDQ-4433 in this case(import by "button" from low veresion and no import
+            // SystemIndicator),the IndicatorDefinition maybe a proxy,should reset it.
+            if (indicatorDefinition == null || indicatorDefinition.eIsProxy()) {
+                indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition("Functional Dependency");
+                indicator.setIndicatorDefinition(indicatorDefinition);
+            }
             Expression sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
             Expression instantiatedSqlExpression = createInstantiatedSqlExpression(sqlGenericExpression, columnA, columnB,
