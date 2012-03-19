@@ -670,9 +670,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         @SuppressWarnings("unchecked")
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            // MOD qiongli the oldInput be used when open a editor
-            if (oldInput != null && newInput != null) {
-                if (!((List<?>) newInput).isEmpty()) {
+            // MOD yyi 2012-02-29 TDQ-3605 Dirty editor if selection changes.
+            if (newInput instanceof List && oldInput != null) {
+                if (!((List<?>) newInput).equals(oldInput)) {
                     masterPage.setDirty(true);
                 }
             }

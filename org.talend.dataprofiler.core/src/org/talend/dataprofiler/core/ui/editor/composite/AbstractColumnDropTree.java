@@ -35,6 +35,7 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -492,9 +493,14 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                     List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
                     reposList.addAll(children);
                 }
+            } else if (obj instanceof TdColumn) {
+                // MOD yyi 2012-02-29 TDQ-3605 For column set column list.
+                reposList.add(RepositoryNodeHelper.recursiveFind((TdColumn) obj));
             }
         }
         if (reposList.size() == 0) {
+            // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
+            this.modelElementIndicators = new ModelElementIndicator[0];
             return null;
         }
         boolean isMdm = false;
@@ -534,6 +540,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         return this.modelElementIndicators;
     }
+
     public void setInput(Object[] objs) {
         ModelElementIndicator[] filterInputData = filterInputData(objs);
         if (filterInputData != null) {
