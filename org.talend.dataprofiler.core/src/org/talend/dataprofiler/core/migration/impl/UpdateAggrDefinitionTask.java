@@ -59,7 +59,7 @@ public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
                 "Average Length With Blank", "Average Length With Blank and Null" };
         map.put("Text Statistics", textArray);
         String[] phoneNumArray = new String[] { "Invalid Region Code Count", "Possible Phone Number Count",
-                "Valid Phone Number Count", "Valid Region Code Number Count", "Well Formed E164 Phone Number Count",
+                "Valid Phone Number Count", "Valid Region Code Count", "Well Formed E164 Phone Number Count",
                 "Well Formed International Phone Number Count", "Well Formed National Phone Number Count", "Format Frequency Pie" };
         map.put("Phone Number Statistics", phoneNumArray);
         String[] sumaryArray = new String[] { "IQR", "Mean", "Median", "Range" };
