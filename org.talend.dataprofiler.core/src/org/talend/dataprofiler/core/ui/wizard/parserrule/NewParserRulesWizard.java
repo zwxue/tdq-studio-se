@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.parserrule;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -68,7 +70,7 @@ public class NewParserRulesWizard extends AbstractWizard {
 
         addPage(mPage);
         if (!isComeFromTestEditor()) {
-        addPage(mPage2);
+            addPage(mPage2);
         }
     }
 
@@ -85,7 +87,14 @@ public class NewParserRulesWizard extends AbstractWizard {
         ParserRule parserRule = (ParserRule) cwmElement;
         TaggedValueHelper.setValidStatus(true, parserRule);
         if (isComeFromTestEditor()) {
-            parserRule.getSqlGenericExpression().addAll(parameter.getParserRule().getSqlGenericExpression());
+            // MOD klliu bug TDQ-4772 2012-03-20
+            // copy the informations of old Expressions for the new parser rule,and it's used when an new rule is
+            // created in testing rule editor.
+            List<TdExpression> ruleExpressions = parameter.getParserRule().getExpression();
+            for (TdExpression expression : ruleExpressions) {
+                parserRule.addExpression(expression.getName(), expression.getLanguage(), expression.getBody());
+            }
+            // ~
         } else {
             parserRule
                     .addExpression(parameter.getParserRuleName(), parameter.getParserRuleType(), parameter.getParserRuleValue());
