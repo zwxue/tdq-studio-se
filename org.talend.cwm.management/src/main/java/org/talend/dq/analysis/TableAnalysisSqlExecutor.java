@@ -148,14 +148,15 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
 
         // --- get indicator parameters and convert them into sql expression
-        List<String> whereExpression = new ArrayList<String>();
+        List<String> whereExpressionAnalysis = new ArrayList<String>();
         if (StringUtils.isNotBlank(dataFilterAsString)) {
-            whereExpression.add(dataFilterAsString);
+            whereExpressionAnalysis.add(dataFilterAsString);
         }
+        List<String> whereExpressionDQRule = new ArrayList<String>();
         final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
-            whereExpression.add(wr.getWhereExpression());
+            whereExpressionDQRule.add(wr.getWhereExpression());
 
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
@@ -195,12 +196,13 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createLeftJoinConditionAsString(set, joinConditions,
-                catalogName, schemaName) : PluginConstant.EMPTY_STRING;
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
+                schemaName) : PluginConstant.EMPTY_STRING;
 
         completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
-        completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString, true);
+        completedSqlString = addWhereToSqlStringStatement(whereExpressionAnalysis, whereExpressionDQRule, completedSqlString,
+                true);
 
         // completedSqlString is the final query
         String finalQuery = completedSqlString;
@@ -241,15 +243,52 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     /**
      * add the where clause to the sql statement.
      * 
-     * @param whereExpressions the list of where expressions to concatenate (must not be null)
+     * @param whereExpressionsAnalysis the list of Analysis's where expressions to concatenate (must not be null)
+     * @param whereExpressionsDQRule the list of DQRule's where expressions to concatenate (must not be null)
      * @param completedSqlString a generic SQL expression in which the where clause variable will be replaced.
      * @param valid if false add ! before where clause
      * @return the SQL statement with the where clause
      * @throws ParseException
      */
-    private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString, boolean valid)
-            throws ParseException {
-        return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions, valid);
+    private String addWhereToSqlStringStatement(List<String> whereExpressionsAnalysis, List<String> whereExpressionsDQRule,
+            String completedSqlString, boolean valid) throws ParseException {
+        String query = completedSqlString;
+
+        // add Analysis's where expression
+        StringBuffer buf1 = new StringBuffer();
+        for (int i = 0; i < whereExpressionsAnalysis.size(); i++) {
+            String exp = whereExpressionsAnalysis.get(i);
+            buf1.append(this.surroundWith('(', exp, ')'));
+            if (i != whereExpressionsAnalysis.size() - 1 || whereExpressionsDQRule.size() > 0) {
+                buf1.append(dbms().and());
+            }
+        }
+        // add DQRule's where expression
+        StringBuffer buf2 = new StringBuffer();
+        String dqruleWhereClause = buf2.toString();
+        for (int i = 0; i < whereExpressionsDQRule.size(); i++) {
+            String exp = whereExpressionsDQRule.get(i);
+            buf2.append(this.surroundWith('(', exp, ')'));
+            if (i != whereExpressionsDQRule.size() - 1) {
+                buf2.append(dbms().and());
+            }
+        }
+        // only negate DQRule's where expression
+        if (valid) {
+            dqruleWhereClause = buf2.toString();
+        } else {
+            dqruleWhereClause = dbms().not() + "(" + buf2.toString() + ")";
+        }
+        String where = buf1.toString() + dqruleWhereClause;
+
+        if (where != null) {
+            query = dbms().addWhereToStatement(query, where);
+        }
+        return query;
+    }
+
+    private String surroundWith(char left, String toSurround, char right) {
+        return left + toSurround + right;
     }
 
     @Override
@@ -466,15 +505,16 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
 
         // --- get indicator parameters and convert them into sql expression
-        List<String> whereExpression = new ArrayList<String>();
+        List<String> whereExpressionAnalysis = new ArrayList<String>();
         if (StringUtils.isNotBlank(dataFilterAsString)) {
-            whereExpression.add(dataFilterAsString);
+            whereExpressionAnalysis.add(dataFilterAsString);
         }
+        List<String> whereExpressionDQRule = new ArrayList<String>();
         String setAliasA = PluginConstant.EMPTY_STRING;
         final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
-            whereExpression.add(wr.getWhereExpression());
+            whereExpressionDQRule.add(wr.getWhereExpression());
 
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
@@ -509,8 +549,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         // --- default case
         // allow join
-        String joinclause = (!joinConditions.isEmpty()) ? dbms().createLeftJoinConditionAsString(set, joinConditions,
-                catalogName, schemaName) : PluginConstant.EMPTY_STRING;
+        String joinclause = (!joinConditions.isEmpty()) ? dbms().createJoinConditionAsString(set, joinConditions, catalogName,
+                schemaName) : PluginConstant.EMPTY_STRING;
 
         String genericSql = sqlGenericExpression.getBody();
         setAliasA = PluginConstant.EMPTY_STRING.equals(setAliasA) ? "*" : setAliasA + ".*";//$NON-NLS-1$//$NON-NLS-2$
@@ -519,7 +559,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         completedSqlString = dbms().fillGenericQueryWithJoin(genericSql, setName, joinclause);
         // ~
         try {
-            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString, valid);
+            completedSqlString = addWhereToSqlStringStatement(whereExpressionAnalysis, whereExpressionDQRule, completedSqlString,
+                    valid);
         } catch (ParseException e) {
             log.warn(e);
         }
