@@ -504,11 +504,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     @Override
     public ReturnCode canSave() {
-        ReturnCode rc = canModifyName(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
-        if (!rc.isOk()) {
-            MessageDialogWithToggle.openError(null,
-                    DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
-        }
-        return rc;
+        return canModifyName(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT);
     }
 }
