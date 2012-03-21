@@ -31,8 +31,8 @@ public final class HandleLuceneTest {
         // choose here to test the replace methods
         boolean testReplace = false;
         // choose here the appropriate input file.
-        String filename = "./data/TalendGivenNames.TXT";//$NON-NLS-1$
-        String indexfolder = "./data/TalendGivenNames_index";//$NON-NLS-1$
+        String filename = "data/TalendGivenNames.TXT";//$NON-NLS-1$
+        String indexfolder = "data/TalendGivenNames_index";//$NON-NLS-1$
         HandleLucene hl = new HandleLuceneImpl();
         System.out.print(hl.createIndex(filename, indexfolder));
 

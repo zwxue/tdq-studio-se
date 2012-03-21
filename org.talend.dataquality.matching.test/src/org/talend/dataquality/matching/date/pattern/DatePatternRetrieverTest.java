@@ -50,7 +50,7 @@ public class DatePatternRetrieverTest {
     @Test
     public void testInitModel2Regex() {
     	DatePatternRetriever dtr = new  DatePatternRetriever(); 
-    	dtr.initModel2Regex(new File("PatternsNameAndRegularExpressions.txt"));
+    	dtr.initModel2Regex(new File("data/PatternsNameAndRegularExpressions.txt"));
     	assertNotNull(dtr.getModelMatchers());
     }
 
@@ -59,9 +59,18 @@ public class DatePatternRetrieverTest {
      */
     @Test
     public void testHandle() {
-    	 DatePatternRetriever dtr = new  DatePatternRetriever(); 
-    	 dtr.handle("21 11 1999");
-    	 dtr.getModelMatchers().add(new ModelMatcher("^[0-3][0-9](-|/| )([0-0][1-9]|10|11|12)(-|/| )(19|20)[0-9]{2}$", "11 novenmber 1999"));    	    	 
-    	 assertEquals(dtr.getModelMatchers(),1);
+        // string to match
+        String expr = "21 11 1999";
+
+        DatePatternRetriever dtr = new DatePatternRetriever();
+        dtr.handle(expr);
+        assertEquals(dtr.getModelMatchers().size(), 0);
+
+        ModelMatcher mm = new ModelMatcher("11 november 1999", "^[0-3][0-9](-|/| )([0-0][1-9]|10|11|12)(-|/| )(19|20)[0-9]{2}$");
+        assertEquals(0, mm.getScore());
+        dtr.getModelMatchers().add(mm);
+        assertEquals(dtr.getModelMatchers().size(), 1);
+        dtr.handle(expr);
+        assertEquals(1, mm.getScore());
     }
  }

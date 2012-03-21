@@ -12,9 +12,9 @@ import org.talend.dataquality.standardization.main.HandleLuceneImpl;
 
 public class HandLuceneImplTest extends TestCase {
 
-    private String filename = "./data/TalendGivenNames.TXT"; // $NON-NLS-1$
+    private String filename = "data/TalendGivenNames.TXT"; // $NON-NLS-1$
 
-    private String indexfolder = "./data/TalendGivenNames_index"; // $NON-NLS-1$
+    private String indexfolder = "data/TalendGivenNames_index"; // $NON-NLS-1$
 
     private HandleLucene hl;
 

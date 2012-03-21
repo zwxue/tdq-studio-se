@@ -21,7 +21,7 @@ public class FirstNameStandardizeTest extends TestCase {
 
 //    private String filename = "./data/TalendGivenNames.TXT";
 
-    private String indexfolder = "./data/TalendGivenNames_index"; // $NON-NLS-1$
+    private String indexfolder = "data/TalendGivenNames_index"; // $NON-NLS-1$
 
     private IndexSearcher searcher = null;
 
