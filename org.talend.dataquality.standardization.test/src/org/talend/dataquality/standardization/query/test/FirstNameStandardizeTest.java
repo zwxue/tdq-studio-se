@@ -33,7 +33,7 @@ import org.talend.dataquality.standardization.query.FirstNameStandardize;
  */
 public class FirstNameStandardizeTest {
 
-    private static final String indexfolder = "./data/TalendGivenNames_index"; // $NON-NLS-1$
+    private static final String indexfolder = "data/TalendGivenNames_index"; // $NON-NLS-1$
 
     private static IndexSearcher searcher = null;
 

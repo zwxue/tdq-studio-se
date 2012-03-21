@@ -33,22 +33,22 @@ import org.apache.lucene.store.FSDirectory;
 public class BooleanQueryTest extends TestCase {
 
     public void testAnd() throws Exception {
-        String indexfolder = "./data/TalendGivenNames_index";
+        String indexfolder = "data/TalendGivenNames_index"; // $NON-NLS-1$
         Directory dir = FSDirectory.open(new File(indexfolder));
-        Term searchingBooks = new Term("name", "Christian"); // #1
-        Term term = new Term("country", "french");
-        Term gender = new Term("gender", "");
-        BooleanQuery searchingBooks2004 = new BooleanQuery(); // #3
-        searchingBooks2004.add(new FuzzyQuery(searchingBooks), BooleanClause.Occur.MUST); // #3
-        searchingBooks2004.add(new FuzzyQuery(term), BooleanClause.Occur.MUST); // #3
-        searchingBooks2004.add(new FuzzyQuery(gender), BooleanClause.Occur.MUST); // #3
+        Term searchingBooks = new Term("name", "Christian"); // $NON-NLS-1$ // $NON-NLS-2$
+        Term term = new Term("country", "french"); // $NON-NLS-1$ // $NON-NLS-2$
+        Term gender = new Term("gender", ""); // $NON-NLS-1$ // $NON-NLS-2$
+        BooleanQuery searchingBooks2004 = new BooleanQuery();
+        searchingBooks2004.add(new FuzzyQuery(searchingBooks), BooleanClause.Occur.MUST);
+        searchingBooks2004.add(new FuzzyQuery(term), BooleanClause.Occur.MUST);
+        searchingBooks2004.add(new FuzzyQuery(gender), BooleanClause.Occur.MUST);
         IndexSearcher searcher = new IndexSearcher(dir);
         TopDocs matches = searcher.search(searchingBooks2004, 10);
 
         for (int i = 0; i < matches.totalHits; i++) {
             Document doc = searcher.doc(matches.scoreDocs[i].doc);
 
-            System.out.println("title '" + doc.get("gender") + "' found");
+            System.out.println("title '" + doc.get("gender") + "' found"); // $NON-NLS-1$ // $NON-NLS-2$
 
         }
         searcher.close();

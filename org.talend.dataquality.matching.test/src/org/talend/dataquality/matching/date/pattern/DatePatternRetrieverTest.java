@@ -51,7 +51,7 @@ public class DatePatternRetrieverTest {
     @Test
     public void testInitModel2Regex() {
         DatePatternRetriever dtr = new DatePatternRetriever();
-        dtr.initModel2Regex(new File("PatternsNameAndRegularExpressions.txt"));
+        dtr.initModel2Regex(new File("data/PatternsNameAndRegularExpressions.txt"));
         assertNotNull(dtr.getModelMatchers());
         assertEquals("Found " + dtr.getModelMatchers().size() + " modelMatchers. Was waiting for 32 patterns in file", true, dtr
                 .getModelMatchers().size() == 32);
