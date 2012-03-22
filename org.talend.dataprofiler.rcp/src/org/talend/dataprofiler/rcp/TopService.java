@@ -521,7 +521,6 @@ public class TopService implements ICoreService {
         return null;
     }
 
-    @Override
     public MenuManager[] getRepositoryContextualsActionGroups() {
         return null;
     }
