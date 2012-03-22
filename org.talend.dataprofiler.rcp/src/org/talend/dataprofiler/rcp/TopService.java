@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -517,6 +518,11 @@ public class TopService implements ICoreService {
      */
     public IMetadataTable convert(MetadataTable originalTable) {
         // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MenuManager[] getRepositoryContextualsActionGroups() {
         return null;
     }
 
