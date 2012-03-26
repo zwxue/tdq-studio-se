@@ -1,3 +1,12 @@
+2.0.1 # sizhaoliu 2012/03/15
+- Move boost changes from SynonymIndexBuilder to SynonymIndexSearcher, so that we can
+  change the boost values without regeneration of the indexes "out of the box".
+
+2.0.0 # sizhaoliu 2012/03/06
+- improvements for better scoring with combined query across multiple fields. (related to TDQ-3606)
+- do not filter English stop words any more during indexing. (related to TDQ-3330)
+- added IndexMigrator to regenerate out-of-the-box indexes.
+
 1.5.19 # sizhaoliu 2011/11/23
 - check folder before delete when "initialize" option is chosen in tSynonymOutput component.
 

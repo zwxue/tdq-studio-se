@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,8 +39,7 @@ public class SynonymIndexBuilderTest {
      * ATTENTION: Be careful when changing this list of synonyms, they are also use in SynonymIndexSearcherTest.
      */
     public static String[][] synonyms = { { "I.B.M.", "IBM|International Business Machines|Big Blue" },
-            { "IRTY", "IBM|International Business Machines" },
-            { "ISDF", "IBM|International Business Machines|Big Blue" },
+            { "IRTY", "IBM|International Business Machines" }, { "ISDF", "IBM|International Business Machines|Big Blue" },
             { "ANPE", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" },
             { "TEST", "A.N.P.E.|Agence Nationale Pour l'Emploi|Pôle Emploi" }, { "Sécurité Sociale", "Sécu|SS|CPAM" },
             { "IAIDQ", "International Association for Information & Data Quality|Int. Assoc. Info & DQ" }, };
@@ -51,7 +50,13 @@ public class SynonymIndexBuilderTest {
     public void setUp() throws Exception {
         SynonymIndexBuilder builder = new SynonymIndexBuilder();
         // clear any existing files
-        assertEquals(builder.getError().getMessage(), true, builder.deleteIndexFromFS(path));
+        File folder = new File(path);
+        if (folder.exists()) {
+            for (File f : folder.listFiles()) {
+                f.delete();
+            }
+            folder.delete();
+        }
 
         // builder = new SynonymIndexBuilder();
         //
@@ -69,6 +74,16 @@ public class SynonymIndexBuilderTest {
 
         // searcher = new SynonymIndexSearcher();
         // searcher.initIndexInFS(path);
+    }
+
+    private void removePhisically(String path) {
+        File folder = new File(path);
+        if (folder.exists()) {
+            for (File f : folder.listFiles()) {
+                f.delete();
+            }
+            folder.delete();
+        }
     }
 
     SynonymIndexSearcher getSearcher(SynonymIndexBuilder builder) {
@@ -123,8 +138,8 @@ public class SynonymIndexBuilderTest {
         searcher.close();
 
         searcher = getSearcher(builder);
-        assertEquals(synonyms.length + 1, searcher.getNumDocs());
         searcher.close();
+        assertEquals(synonyms.length + 1, searcher.getNumDocs());
 
         builder.insertDocumentIfNotExists("Irish Bar Managers", "IBM");
         builder.commit();
@@ -137,7 +152,7 @@ public class SynonymIndexBuilderTest {
 
     @Test
     public void testInsertDocuments() throws Exception {
-        System.out.println("---------------Test insertDocuments--------------");
+        System.out.println("\n---------------Test insertDocuments--------------");
 
         SynonymIndexBuilder builder = createNewIndexBuilder(path);
         insertDocuments(builder);
@@ -180,10 +195,11 @@ public class SynonymIndexBuilderTest {
 
     @Test
     public void testUpdateSynonymDocument2() throws Exception {
-
+        System.out.println("\n---------------Test updateDocument2---------------");
         // --- create a new index with several similar documents
         SynonymIndexBuilder synIdxBuild = new SynonymIndexBuilder();
         String idxPath = "data/test_update";
+        removePhisically(idxPath);
         synIdxBuild.deleteIndexFromFS(idxPath);
         synIdxBuild.initIndexInFS(idxPath);
         int maxDoc = 4;
@@ -191,7 +207,7 @@ public class SynonymIndexBuilderTest {
         for (int i = 0; i < maxDoc; i++) {
             synIdxBuild.insertDocument(word, "synonym|toto");
         }
-        String toupdate = "to update.";
+        String toupdate = "The document to update.";
         synIdxBuild.insertDocument(toupdate, "this document will be updated");
         int nbDocInIndex = maxDoc + 1;
         assertEquals(nbDocInIndex, synIdxBuild.getNumDocs());
@@ -205,6 +221,8 @@ public class SynonymIndexBuilderTest {
         assertEquals("no update should be done because several documents match the word " + word, -1, nbUpdatedDocuments);
 
         nbUpdatedDocuments = synIdxBuild.updateDocument(toupdate, "a new list of 3 synonyms|test|ok");
+        assertEquals("One document should be updated", 1, nbUpdatedDocuments);
+
         synIdxBuild.commit();
         synIdxBuild.closeIndex();
 
@@ -222,33 +240,39 @@ public class SynonymIndexBuilderTest {
             // String syn = document.get(SynonymIndexSearcher.F_SYN);
             // assertEquals("the first synonym field should be the same as the word (after being analyzed)", word, syn);
 
-            String[] values = document.getValues(SynonymIndexSearcher.F_SYN);
-            // expect to see "salut" and "synonym" and "toto"
-            assertEquals(3, values.length);
-            
-            List<String> valueList = Arrays.asList(values);
+            String[] word_values = document.getValues(SynonymIndexSearcher.F_WORD);
+            String[] syn_values = document.getValues(SynonymIndexSearcher.F_SYN);
+            // expect to see "synonym" and "toto"
+            assertEquals(Arrays.asList(syn_values).toString(), 2, syn_values.length);
+
+            List<String> valueList = Arrays.asList(word_values);
             assertTrue(valueList.contains(word));
+
+            valueList = Arrays.asList(syn_values);
             assertTrue(valueList.contains("synonym"));
             assertTrue(valueList.contains("toto"));
         }
 
         TopDocs updatedDocs = search.searchDocumentByWord(toupdate);
-        assertEquals(1, updatedDocs.totalHits);
+
+        assertEquals("there should be only 1 document after the update", 1, updatedDocs.totalHits);
         for (int i = 0; i < updatedDocs.scoreDocs.length; i++) {
             ScoreDoc scoreDoc = updatedDocs.scoreDocs[i];
             Document document = search.getDocument(scoreDoc.doc);
-            
+
             // [M]assertion removed: the order of synonyms is not important
             // -sizhaoliu 08 Sep 2011
             // String syn = document.get(SynonymIndexSearcher.F_SYN);
-            // assertEquals("the first synonym field should be the same as the word (after being analyzed)", toupdate, syn);
-            
+            // assertEquals("the first synonym field should be the same as the word (after being analyzed)", toupdate,
+            // syn);
+
+            String[] word_values = document.getValues(SynonymIndexSearcher.F_WORD);
             String[] values = document.getValues(SynonymIndexSearcher.F_SYN);
             // expect to see "salut" and "synonym" and "toto"
-            assertEquals("there should 3 synonyms + the reference word", 4, values.length);
+            assertEquals("there should be 3 synonyms", 3, values.length);
 
             List<String> valueList = Arrays.asList(values);
-            assertTrue(valueList.contains(toupdate));
+            assertTrue(Arrays.asList(word_values).contains(toupdate));
             assertTrue(valueList.contains("a new list of 3 synonyms"));
             assertTrue(valueList.contains("test"));
             assertTrue(valueList.contains("ok"));
@@ -265,32 +289,25 @@ public class SynonymIndexBuilderTest {
         int docCount = searcher.getNumDocs();
 
         assertEquals(1, searcher.searchDocumentByWord("IAIDQ").totalHits);
+        searcher.close();
 
         // the word to delete should be precise and case sensitive.
-        builder.deleteDocumentByWord("iaidq");
-        builder.commit();
-        // close previous searcher
-        searcher.close();
-
-        searcher = getSearcher(builder);
-        assertEquals(docCount, searcher.getNumDocs());
-        // close previous searcher
-        searcher.close();
+        // builder.deleteDocumentByWord("iaidq");
+        // builder.commit();
+        //
+        // searcher = getSearcher(builder);
+        // assertEquals(docCount, searcher.getNumDocs());
+        // searcher.close();
 
         builder.deleteDocumentByWord("IAIDQ");
-        searcher = getSearcher(builder);
-        assertEquals(docCount, searcher.getNumDocs());
-        // close previous searcher
-        searcher.close();
-
         builder.commit();
+
         searcher = getSearcher(builder);
         assertEquals(docCount - 1, searcher.getNumDocs());
+        searcher.close();
 
         builder.deleteDocumentByWord("random");
         builder.commit();
-        // close previous searcher
-        searcher.close();
 
         searcher = getSearcher(builder);
         assertEquals(docCount - 1, searcher.getNumDocs());
@@ -309,21 +326,23 @@ public class SynonymIndexBuilderTest {
         SynonymIndexSearcher searcher = getSearcher(builder);
         assertEquals(0, searcher.searchDocumentBySynonym("another").totalHits);
 
-        int synonymCount = searcher.getSynonymCount("ANPE");
-        builder.addSynonymToDocument("ANPE", "Another synonym of ANPE");
+        int originalSynonymCount = searcher.getSynonymCount("ANPE");
+        int addedSynonymToDocument = builder.addSynonymToDocument("ANPE", "Another synonym of ANPE");
         builder.commit();
         searcher.close();
+        assertEquals("1 new synonym should be appended to the list.", 1, addedSynonymToDocument);
 
         searcher = getSearcher(builder);
         assertEquals(1, searcher.searchDocumentBySynonym("another").totalHits);
+        assertEquals(++originalSynonymCount, searcher.getSynonymCount("ANPE"));
 
-        int addedSynonymToDocument = builder.addSynonymToDocument("ANPE", "Anpe");
-        assertEquals("anpe already exists as ANPE in the synonym list", 0, addedSynonymToDocument);
+        addedSynonymToDocument = builder.addSynonymToDocument("ANPE", "Anpe");
         builder.commit();
         searcher.close();
+        assertEquals("anpe already exists, no synonym should be appended to the list.", 0, addedSynonymToDocument);
 
         searcher = getSearcher(builder);
-        assertEquals(synonymCount + 1, searcher.getSynonymCount("ANPE"));
+        assertEquals(originalSynonymCount, searcher.getSynonymCount("ANPE"));
 
         builder.addSynonymToDocument("ANPEEEE", "A.N.P.E");
         builder.commit();
@@ -337,7 +356,7 @@ public class SynonymIndexBuilderTest {
 
     @Test
     public void testRemoveSynonymFromWord() throws IOException {
-        System.out.println("\n------------Test removeSynonymFromWord-----------");
+        System.out.println("\n---------------Test removeSynonymFromWord-----------");
         SynonymIndexBuilder builder = createNewIndexBuilder(path);
         insertDocuments(builder);
 
@@ -388,7 +407,7 @@ public class SynonymIndexBuilderTest {
 
     @Test
     public void testDeleteAllDocuments() throws IOException {
-        System.out.println("\n-----------Test deleteAllDocuments----------");
+        System.out.println("\n---------------Test deleteAllDocuments----------");
 
         SynonymIndexBuilder builder = createNewIndexBuilder(path);
         insertDocuments(builder);
@@ -414,7 +433,7 @@ public class SynonymIndexBuilderTest {
 
     @Test
     public void deleteIndexFromFS() throws IOException {
-        System.out.println("\n-----------Test deleteIndexFromFS----------");
+        System.out.println("\n---------------Test deleteIndexFromFS----------");
         String indexPath = "data/index2";
         SynonymIndexBuilder synonymIndexBuilder = new SynonymIndexBuilder();
         synonymIndexBuilder.initIndexInFS(indexPath);
@@ -457,63 +476,5 @@ public class SynonymIndexBuilderTest {
         boolean deleted = synonymIndexBuilder.deleteIndexFromFS(indexPath);
         assertEquals(true, deleted);
     }
-    /**
-     * 
-     * @param str
-     */
-    // private void search(String str) {
-    // try {
-    // Directory index = useMemeryForIndex ? builder.getIndexDir() : FSDirectory.open(new File(path));
-    //
-    // searcher = new IndexSearcher(index);
-    //
-    // // Query query = new QueryParser(Version.LUCENE_30, "syn", synonymAnalyzer).parse("\"" + str + "\"");
-    // Query query = useQueryParser ? new QueryParser(Version.LUCENE_30, "syn", synonymAnalyzer).parse(str)
-    // : new PhraseQuery();
-    //
-    // if (!useQueryParser) {
-    // ((PhraseQuery) query).add(new Term("syn", str));
-    // }
-    //
-    // List<ScoreDoc> scoreDocs = new ArrayList<ScoreDoc>();
-    // if (useAllDocCollector) {
-    // AllDocCollector collector = new AllDocCollector();
-    // searcher.search(query, collector);
-    // scoreDocs = collector.getHits();
-    // } else {
-    // TopScoreDocCollector collector = TopScoreDocCollector.create(1, false);
-    // searcher.search(query, collector);
-    // scoreDocs = Arrays.asList(collector.topDocs().scoreDocs);
-    // }
-    // if (scoreDocs.isEmpty()) {
-    // fail("No doc found for " + str);
-    // } else {
-    // System.out.println("Got match for " + str);
-    // for (ScoreDoc hits : scoreDocs) {
-    // Document doc = searcher.doc(hits.doc);
-    // String[] entry = doc.getValues("word");
-    // for (String string : entry) {
-    // System.out.println("entry=" + string);
-    // }
-    // String[] values = doc.getValues("syn");
-    // for (String string : values) {
-    // System.out.println("syn=" + string);
-    // }
-    // System.out.println();
-    // }
-    //
-    // }
-    // searcher.close();
-    // index.close();
-    // } catch (CorruptIndexException e) {
-    // e.printStackTrace();
-    // } catch (IOException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // } catch (ParseException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // }
 
 }

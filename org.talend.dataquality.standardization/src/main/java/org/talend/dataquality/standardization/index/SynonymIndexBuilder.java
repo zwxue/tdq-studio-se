@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -14,12 +14,12 @@ package org.talend.dataquality.standardization.index;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringTokenizer;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -37,16 +37,9 @@ import org.apache.lucene.util.Version;
 import org.talend.dataquality.standardization.i18n.Messages;
 
 /**
- * @author scorreia A class to create an index with synonyms.
- */
-/**
- * DOC sizhaoliu class global comment. Detailled comment
+ * @author scorreia, sizhaoliu A class to create an index with synonyms.
  */
 public class SynonymIndexBuilder {
-
-    public static final String F_WORD = "word";//$NON-NLS-1$
-
-    public static final String F_SYN = "syn";//$NON-NLS-1$
 
     private Directory indexDir;
 
@@ -118,9 +111,14 @@ public class SynonymIndexBuilder {
      * @param synonyms the list of synonyms separated by the separator (can be null)
      * @throws IOException
      */
-    public void insertDocument(String word, String synonyms) throws IOException {
+    public boolean insertDocument(String word, String synonyms) throws IOException {
+        if (word.length() == 0) {
+            error.set(false, Messages.getString("SynonymIndexBuilder.noRef"));//$NON-NLS-1$
+            return false;
+        }
         // insert document without duplication verification
         getWriter().addDocument(generateDocument(word, synonyms));
+        return true;
     }
 
     /**
@@ -136,7 +134,7 @@ public class SynonymIndexBuilder {
             getWriter().addDocument(generateDocument(word, synonyms));
             return true;
         } // else
-        error.set(false, Messages.getString("SynonymIndexBuilder.aDocument", word.trim()));//$NON-NLS-1$
+        error.set(false, Messages.getString("SynonymIndexBuilder.aDocument", word));//$NON-NLS-1$
         return false;
     }
 
@@ -159,7 +157,7 @@ public class SynonymIndexBuilder {
         case 0:
             break;
         case 1:
-            getWriter().updateDocument(new Term(F_WORD, word.trim()), generateDocument(word, synonyms));
+            getWriter().updateDocument(new Term(SynonymIndexSearcher.F_WORDTERM, word.trim().toLowerCase()), generateDocument(word, synonyms));
             nbUpdatedDocuments = 1;
             break;
         default:
@@ -184,7 +182,7 @@ public class SynonymIndexBuilder {
             error.set(false, Messages.getString("SynonymIndexBuilder.doesnotExsit", word));//$NON-NLS-1$
             return 0;
         case 1:
-            getWriter().deleteDocuments(new Term(F_WORD, word.trim()));
+            getWriter().deleteDocuments(new Term(SynonymIndexSearcher.F_WORDTERM, word.trim().toLowerCase()));
             // System.out.println("The document named <" + word + "> has been deleted.");
             return 1;
         default:
@@ -214,7 +212,6 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     public int addSynonymToDocument(String word, String newSynonym) throws IOException {
-        assert word != null;
         if (newSynonym == null) {
             return 0;
         }
@@ -229,33 +226,36 @@ public class SynonymIndexBuilder {
         TopDocs docs = idxSearcher.searchDocumentByWord(word);
 
         int nbDocs = 0;
-        if (docs.totalHits == 1) { // don't do anything if several documents match
+        switch (docs.totalHits) {
+        case 0:
+            error.set(false, Messages.getString("SynonymIndexBuilder.document", word));//$NON-NLS-1$
+            break;
+        case 1: // don't do anything if several documents match
             Document doc = idxSearcher.getDocument(docs.scoreDocs[0].doc);
+            String[] synonyms = doc.getValues(SynonymIndexSearcher.F_SYN);
+            Set<String> synonymList = new HashSet<String>();
 
-            // search if synonym exists
             boolean synExists = false;
-            String[] synonyms = doc.getValues(F_SYN);
+            if (newSynonym.toLowerCase().equals(word.toLowerCase())) {
+                synExists = true;
+            }
             for (String str : synonyms) {
                 if (str.toLowerCase().equals(newSynonym.toLowerCase())) {
-                    error.set(false, Messages.getString("SynonymIndexBuilder.synonym", newSynonym, str));//$NON-NLS-1$
-                    // FIXME should the synonym be rejected when an equivalent one already exists in the document?
                     synExists = true;
-                    break;
                 }
+                synonymList.add(str);
             }
             // create a new document and replace the original one if synonym does not exist
             if (!synExists) {
-                doc.add(createSynField(newSynonym));
-                getWriter().updateDocument(new Term(F_WORD, word), doc);
+                synonymList.add(newSynonym);
+                doc = generateDocument(doc.getValues(SynonymIndexSearcher.F_WORD)[0], synonymList);
+                getWriter().updateDocument(new Term(SynonymIndexSearcher.F_WORDTERM, word.trim().toLowerCase()), doc);
                 // System.out.println("The synonym <" + newSynonym + "> is added to word.");
                 nbDocs = 1;
             }
-        } else {
-            if (docs.totalHits == 0) {
-                error.set(false, Messages.getString("SynonymIndexBuilder.document", word));//$NON-NLS-1$
-            } else {
-                error.set(false, Messages.getString("SynonymIndexBuilder.documents", docs.totalHits, word));//$NON-NLS-1$
-            }
+            break;
+        default:
+            error.set(false, Messages.getString("SynonymIndexBuilder.documents", docs.totalHits, word));//$NON-NLS-1$
         }
         // FIXME avoid use of idxSearcher?
         idxSearcher.close();
@@ -270,11 +270,11 @@ public class SynonymIndexBuilder {
      * @throws IOException
      */
     public int removeSynonymFromDocument(String word, String synonymToDelete) throws IOException {
-        assert word != null;
         if (synonymToDelete == null) {
             error.set(false, Messages.getString("SynonymIndexBuilder.theSynonym", word));//$NON-NLS-1$
             return 0;
         }
+        synonymToDelete = synonymToDelete.trim();
         if (synonymToDelete.toLowerCase().equals(word.toLowerCase())) {
             error.set(false, Messages.getString("SynonymIndexBuilder.synonymToDelete", synonymToDelete, word));//$NON-NLS-1$
             return 0;
@@ -283,9 +283,15 @@ public class SynonymIndexBuilder {
 
         SynonymIndexSearcher newSynIdxSearcher = getNewSynIdxSearcher();
         TopDocs docs = newSynIdxSearcher.searchDocumentByWord(word);
-        if (docs.totalHits == 1) { // don't do anything if more than one document is found
+
+        switch (docs.totalHits) {
+        case 0:
+            error.set(false, Messages.getString("SynonymIndexBuilder.documentNotExsit", word));//$NON-NLS-1$
+            deleted = 0;
+            break;
+        case 1:
             Document doc = newSynIdxSearcher.getDocument(docs.scoreDocs[0].doc);
-            String[] synonyms = doc.getValues(F_SYN);
+            String[] synonyms = doc.getValues(SynonymIndexSearcher.F_SYN);
             Set<String> synonymList = new HashSet<String>();
 
             for (String str : synonyms) {
@@ -300,19 +306,18 @@ public class SynonymIndexBuilder {
                     synonymList.add(str);
                 }
             }
-
             // if the value of deleted is 0, we can know that the synonymToDelete doesn't exist
             if (deleted == 0) {
                 error.set(false, Messages.getString("SynonymIndexBuilder.synonymNotExsit", synonymToDelete));//$NON-NLS-1$
             } else {
-                Document newDoc = generateDocument(word, synonymList);
-                getWriter().updateDocument(new Term(F_WORD, word), newDoc);
+                doc = generateDocument(doc.getValues(SynonymIndexSearcher.F_WORD)[0], synonymList);
+                getWriter().updateDocument(new Term(SynonymIndexSearcher.F_WORDTERM, word.toLowerCase()), doc);
             }
-
-        } else {
-            error.set(false, Messages.getString("SynonymIndexBuilder.documentNotExsit", word));//$NON-NLS-1$
-            deleted = 0;
+            break;
+        default:// don't do anything if more than one document is found
+            error.set(false, Messages.getString("SynonymIndexBuilder.documents", docs.totalHits, word));//$NON-NLS-1$
         }
+
         newSynIdxSearcher.close();
         return deleted;
     }
@@ -358,6 +363,9 @@ public class SynonymIndexBuilder {
                         if (!f.delete() && allDeleted) {
                             allDeleted = false;
                         }
+                    }
+                    if (allDeleted && !folder.delete()) {
+                        allDeleted = false;
                     }
                     if (!allDeleted) {
                         error.set(false, Messages.getString("SynonymIndexBuilder.couldNotDelete", folder.getAbsolutePath()));//$NON-NLS-1$
@@ -418,10 +426,10 @@ public class SynonymIndexBuilder {
     public Analyzer getAnalyzer() throws IOException {
         if (analyzer == null) {
             // the entry and the synonyms are indexed as provided
-            // analyzer = new KeywordAnalyzer();
+            analyzer = new KeywordAnalyzer();
 
             // most used analyzer in lucene
-            analyzer = new StandardAnalyzer(Version.LUCENE_30);
+            analyzer = new StandardAnalyzer(Version.LUCENE_30, new HashSet<Object>());
 
             // analyzer = new SynonymAnalyzer();
         }
@@ -481,9 +489,11 @@ public class SynonymIndexBuilder {
 
     private Document generateDocument(String word, String synonyms) {
         // System.out.println("\t Generating doc for " + word + " and " + synonyms);
-        String[] split = synonyms == null ? new String[0] : StringUtils.split(synonyms, separator);
         Set<String> set = new HashSet<String>();
-        Collections.addAll(set, split);
+        StringTokenizer tokenizer = new StringTokenizer(synonyms, String.valueOf(separator));
+        while (tokenizer.hasMoreTokens()) {
+            set.add(tokenizer.nextToken());
+        }
         return generateDocument(word, set);
     }
 
@@ -495,36 +505,22 @@ public class SynonymIndexBuilder {
      * @return
      */
     private Document generateDocument(String word, Set<String> synonyms) {
-        Document doc = new Document();
         word = word.trim();
-        Field field = new Field(F_WORD, word, Field.Store.YES, Field.Index.NOT_ANALYZED, TermVector.NO);
-        field.setBoost(1.5F); // increase the importance of the reference word
-        doc.add(field);
-        // --- store entry also in synonym list so that we can search for it too
-        // without the need to search in the word field (will be tokenized given the analyzer)
-        boolean addWordInSyn = true;
-        if (synonyms != null) {
-            for (String syn : synonyms) {
-                if (syn != null) {
-                    syn = syn.trim();
-                    if (syn.length() > 0) {
-                        // add only non empty synonyms
-                        doc.add(createSynField(syn));
-                        if (syn.equals(word)) {
-                            addWordInSyn = false;
-                        }
-                    }
+        Document doc = new Document();
+        Field wordField = new Field(SynonymIndexSearcher.F_WORD, word, Field.Store.YES, Field.Index.ANALYZED_NO_NORMS, TermVector.NO);
+        doc.add(wordField);
+        Field wordTermField = new Field(SynonymIndexSearcher.F_WORDTERM, word.toLowerCase(), Field.Store.NO, Field.Index.NOT_ANALYZED, TermVector.NO);
+        doc.add(wordTermField);
+        for (String syn : synonyms) {
+            if (syn != null) {
+                syn = syn.trim();
+                if (syn.length() > 0 && !syn.equals(word)) {
+                    doc.add(new Field(SynonymIndexSearcher.F_SYN, syn, Field.Store.YES, Field.Index.ANALYZED_NO_NORMS, TermVector.NO));
+                    doc.add(new Field(SynonymIndexSearcher.F_SYNTERM, syn.toLowerCase(), Field.Store.NO, Field.Index.NOT_ANALYZED, TermVector.NO));
                 }
             }
         }
-        if (addWordInSyn) {
-            doc.add(createSynField(word));
-        }
         return doc;
-    }
-
-    private Field createSynField(String synonym) {
-        return new Field(F_SYN, synonym, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);
     }
 
     /**
@@ -542,5 +538,4 @@ public class SynonymIndexBuilder {
         newSynIdxSearcher.close();
         return docs;
     }
-
 }
