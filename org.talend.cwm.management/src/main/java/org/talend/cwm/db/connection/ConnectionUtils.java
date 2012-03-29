@@ -625,6 +625,24 @@ public final class ConnectionUtils {
     }
 
     /**
+     * DOC hwang Comment method "isMysql".
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isMysql(java.sql.Connection connection) throws SQLException {
+        DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
+        if (connectionMetadata.getDriverName() != null
+                && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.MYSQL_PRODUCT_NAME)
+                && connectionMetadata.getDatabaseProductName() != null
+                && connectionMetadata.getDatabaseProductName().toLowerCase().indexOf(DatabaseConstant.MYSQL_PRODUCT_NAME) > -1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * DOC xqliu Comment method "isAs400".
      * 
      * @param connection
