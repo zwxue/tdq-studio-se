@@ -16,12 +16,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dq.CWMPlugin;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -39,45 +36,25 @@ public final class DQDeleteHelper {
 
     }
 
-    public static DQDeleteHelper getInstance() {
-        if (instance == null) {
-            instance = new DQDeleteHelper();
-        }
-
-        return instance;
-    }
-
     /**
      * 
      * physical delete related.
      * 
      * @param item
      */
-    public void deleteRelations(Item item) {
+    public static void deleteRelations(Item item) {
         if (item == null || item.getProperty() == null) {
             return;
         }
 
         IFile itemFile = PropertyHelper.getItemFile(item.getProperty());
-        if (itemFile.exists()) {
+        // if file is null or this file is not physical deleted,do nothing.
+        if (itemFile == null || itemFile.exists()) {
             return;
         }
-        if (item instanceof DatabaseConnectionItem) {
-            deleteConnectionForSQL((DatabaseConnectionItem) item);
-        } else if (item instanceof TDQReportItem) {
+        if (item instanceof TDQReportItem) {
             deleteRepOutputFolder(itemFile);
         }
-    }
-
-    /**
-     * 
-     * remove sql explorer.
-     * 
-     * @param reportFile
-     */
-    private void deleteConnectionForSQL(DatabaseConnectionItem item) {
-        DatabaseConnection databaseConnection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
-        CWMPlugin.getDefault().removeAliasInSQLExplorer(databaseConnection);
     }
 
     /**
@@ -86,9 +63,9 @@ public final class DQDeleteHelper {
      * 
      * @param reportFile
      */
-    private void deleteRepOutputFolder(IFile reportFile) {
+    private static void deleteRepOutputFolder(IFile reportFile) {
         IFolder currentRportFolder = ReportHelper.getOutputFolder(reportFile);
-        if (currentRportFolder.exists()) {
+        if (currentRportFolder != null && currentRportFolder.exists()) {
             try {
                 currentRportFolder.delete(true, null);
             } catch (CoreException e) {

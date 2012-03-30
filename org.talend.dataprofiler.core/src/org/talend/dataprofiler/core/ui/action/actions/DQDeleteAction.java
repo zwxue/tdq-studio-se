@@ -314,7 +314,6 @@ public class DQDeleteAction extends DeleteAction {
     private void excuteSuperRun(RepositoryNode currentNode) {
         this.currentNode = currentNode;
         Item item = null;
-        // MOD klliu 2010-04-21 bug 20204 remove SQL Exploer node before phisical delete
         if (currentNode != null) {
             Property property = currentNode.getObject().getProperty();
             if (property != null) {
@@ -333,8 +332,8 @@ public class DQDeleteAction extends DeleteAction {
                             ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", PluginConstant.SPACE_STRING)))) {//$NON-NLS-1$
                 parent.getChildren(true).remove(currentNode);
             }
-            // delete related elements after physical delete itself.
-            DQDeleteHelper.getInstance().deleteRelations(item);
+            // delete related output folder after physical delete a report.
+            DQDeleteHelper.deleteRelations(item);
         }
     }
 

@@ -145,7 +145,7 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
                     item = property.getItem();
                 }
                 deleteElements(factory, (RepositoryNode) child);
-                DQDeleteHelper.getInstance().deleteRelations(item);
+                DQDeleteHelper.deleteRelations(item);
             } catch (Exception e) {
                 MessageBoxExceptionHandler.process(e);
             }
