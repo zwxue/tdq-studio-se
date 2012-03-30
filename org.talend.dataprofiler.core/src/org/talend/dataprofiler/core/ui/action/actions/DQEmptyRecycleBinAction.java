@@ -22,16 +22,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.ui.runtime.exception.MessageBoxExceptionHandler;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dq.CWMPlugin;
+import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
@@ -94,7 +93,7 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
         super.setAvoidUnloadResources(true);
         super.run();
 
-        CorePlugin.getDefault().refreshDQView();
+        CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
         CorePlugin.getDefault().refreshWorkSpace();
 
         // MOD gdbu 2011-11-18 TDQ-3969 : after empty recycle bin re-filter the tree , to create a new list .
@@ -139,13 +138,14 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
                     ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(child);
                     EObjectHelper.removeDependencys(modelEle);
                 }
-                // MOD klliu 2010-04-21 bug 20204 remove SQL Exploer node before phisical delete
-                Item item = child.getObject().getProperty().getItem();
-                if (item instanceof DatabaseConnectionItem) {
-                    DatabaseConnection databaseConnection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
-                    CWMPlugin.getDefault().removeAliasInSQLExplorer(databaseConnection);
+                // MOD qiongli 2012-3-29 delete related elements after physical delete itself.
+                Item item = null;
+                Property property = child.getObject().getProperty();
+                if (property != null) {
+                    item = property.getItem();
                 }
                 deleteElements(factory, (RepositoryNode) child);
+                DQDeleteHelper.deleteRelations(item);
             } catch (Exception e) {
                 MessageBoxExceptionHandler.process(e);
             }

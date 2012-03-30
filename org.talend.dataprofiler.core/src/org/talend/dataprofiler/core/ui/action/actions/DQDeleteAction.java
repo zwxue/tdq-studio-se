@@ -29,9 +29,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.actions.ActionFactory;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -39,7 +38,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.service.TDQResourceChangeHandler;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dq.CWMPlugin;
+import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -288,7 +287,7 @@ public class DQDeleteAction extends DeleteAction {
                         CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
                     }
                     excuteSuperRun(tempNode);
-                    CorePlugin.getDefault().refreshDQView();
+                    CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
                 }
                 // physical delete dependcy element.
                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
@@ -328,12 +327,15 @@ public class DQDeleteAction extends DeleteAction {
     private void excuteSuperRun(RepositoryNode currentNode) {
         this.currentNode = currentNode;
         // MOD klliu 2010-04-21 bug 20204 remove SQL Exploer node before phisical delete
+        Item item = null;
         if (currentNode != null) {
-            deleteConnectionForSQL(currentNode);
+            Property property = currentNode.getObject().getProperty();
+            if (property != null) {
+                item = property.getItem();
+            }
         }
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
         super.setAvoidUnloadResources(true);
-        IRepositoryNode node = getCurrentRepositoryNode();
         super.run();
         // because reuse tos codes.remove current node from its parent(simple folder) for phisical delete or logical
         // delete dependency.
@@ -344,14 +346,8 @@ public class DQDeleteAction extends DeleteAction {
                             ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", PluginConstant.SPACE_STRING)))) {//$NON-NLS-1$
                 parent.getChildren(true).remove(currentNode);
             }
-        }
-    }
-
-    private void deleteConnectionForSQL(IRepositoryNode node) {
-        Item item = node.getObject().getProperty().getItem();
-        if (item instanceof DatabaseConnectionItem) {
-            DatabaseConnection databaseConnection = (DatabaseConnection) ((DatabaseConnectionItem) item).getConnection();
-            CWMPlugin.getDefault().removeAliasInSQLExplorer(databaseConnection);
+            // delete related elements after physical delete itself.
+            DQDeleteHelper.deleteRelations(item);
         }
     }
 

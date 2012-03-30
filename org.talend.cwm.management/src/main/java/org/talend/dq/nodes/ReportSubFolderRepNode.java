@@ -133,15 +133,15 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
             }
             // ~TDQ-3301
 
-            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this,
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
+            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
             node.setReport(this.getReport());
             node.setAnalysis(analysis);
             node.setId(this.getReport().getName() + analysis.getName());
             nodes.add(node);
         }
+        // MOD qiongli TDQ-4773,should clear outside the "if" conditon.
+        this.getReportSubFolderChildren().clear();
         if (nodes.size() > 0) {
-            this.getReportSubFolderChildren().clear();
             this.getReportSubFolderChildren().addAll(nodes);
         }
         return this.getReportSubFolderChildren();
@@ -161,8 +161,9 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
             node.setId(res.getFullPath().toOSString());
             nodes.add(node);
         }
+        // MOD qiongli TDQ-4773,should clear outside the "if" conditon.
+        this.getReportSubFolderChildren().clear();
         if (nodes.size() > 0) {
-            this.getReportSubFolderChildren().clear();
             this.getReportSubFolderChildren().addAll(nodes);
         }
         return this.getReportSubFolderChildren();
@@ -194,7 +195,11 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
     }
 
     public String getCount() {
-        return "(" + this.getReportSubFolderChildren().size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        int count = getReportSubFolderChildren().size();
+        if (count == 0) {
+            count = getChildren().size();
+        }
+        return "(" + count + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override
