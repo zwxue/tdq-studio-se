@@ -32,14 +32,14 @@ public class GlobalServiceRegister {
 
     private static GlobalServiceRegister instance = new GlobalServiceRegister();;
 
-    private static IConfigurationElement[] configurationElements;
 
     private Map<Class, IService> services = new HashMap<Class, IService>();
     private static Logger log = Logger.getLogger(GlobalServiceRegister.class);
-    static {
-        IExtensionRegistry registry = Platform.getExtensionRegistry();
-        configurationElements = registry.getConfigurationElementsFor("net.sourceforge.sqlexplorer.saveAs"); //$NON-NLS-1$
-    }
+
+    private static IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    private static IConfigurationElement[] configurationElements = registry == null ? null : registry
+            .getConfigurationElementsFor("net.sourceforge.sqlexplorer.saveAs"); //$NON-NLS-1$
 
     public static GlobalServiceRegister getDefault() {
         return instance;
