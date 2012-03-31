@@ -53,7 +53,7 @@ public class GlobalServiceRegister {
      */
     public IService getService(Class klass) {
         IService service = services.get(klass);
-        if (service == null) {
+        if (service == null && configurationElements != null) {
             service = findService(klass);
             if (service == null){
                 throw new RuntimeException(Messages.getString("GlobalServiceRegister.ServiceNotRegistered", klass.getName())); //$NON-NLS-1$ //$NON-NLS-2$

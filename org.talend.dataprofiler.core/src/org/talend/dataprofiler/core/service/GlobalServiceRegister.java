@@ -50,9 +50,11 @@ public class GlobalServiceRegister {
 
     static {
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        configurationElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.service"); //$NON-NLS-1$
-        bandingConfigurationElements = registry.getConfigurationElementsFor("org.talend.core.runtime.service"); //$NON-NLS-1$
-        svnRepositoryElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.svnRepositoryService"); //$NON-NLS-1$
+        if (registry != null) {
+            configurationElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.service"); //$NON-NLS-1$
+            bandingConfigurationElements = registry.getConfigurationElementsFor("org.talend.core.runtime.service"); //$NON-NLS-1$
+            svnRepositoryElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.svnRepositoryService"); //$NON-NLS-1$
+        }
     }
 
     /**
@@ -63,7 +65,7 @@ public class GlobalServiceRegister {
      */
     public IService getService(Class<?> klass) {
         IService service = services.get(klass);
-        if (service == null) {
+        if (service == null && configurationElements != null) {
             service = findService(klass);
             if (service == null) {
                 throw new RuntimeException(DefaultMessagesImpl.getString(
@@ -100,7 +102,7 @@ public class GlobalServiceRegister {
      */
     public org.talend.core.ui.branding.IBrandingService getBrandingService(Class<?> klass) {
         org.talend.core.ui.branding.IBrandingService service = brandingServices.get(klass);
-        if (service == null) {
+        if (service == null && bandingConfigurationElements != null) {
             service = findBrandingService(klass);
             if (service == null) {
                 throw new RuntimeException(DefaultMessagesImpl.getString(
