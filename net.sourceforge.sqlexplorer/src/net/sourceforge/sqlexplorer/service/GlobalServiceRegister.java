@@ -23,8 +23,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 
-
-
 /**
  * DOC qiongli class global comment. A global service register provides the service registration and acquirement.
  */
@@ -35,10 +33,13 @@ public class GlobalServiceRegister {
     private static IConfigurationElement[] configurationElements;
 
     private Map<Class, IService> services = new HashMap<Class, IService>();
+
     private static Logger log = Logger.getLogger(GlobalServiceRegister.class);
     static {
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        configurationElements = registry.getConfigurationElementsFor("net.sourceforge.sqlexplorer.saveAs"); //$NON-NLS-1$
+        if (registry != null) {
+            configurationElements = registry.getConfigurationElementsFor("net.sourceforge.sqlexplorer.saveAs"); //$NON-NLS-1$
+        }
     }
 
     public static GlobalServiceRegister getDefault() {
@@ -53,9 +54,9 @@ public class GlobalServiceRegister {
      */
     public IService getService(Class klass) {
         IService service = services.get(klass);
-        if (service == null) {
+        if (service == null && configurationElements != null) {
             service = findService(klass);
-            if (service == null){
+            if (service == null) {
                 throw new RuntimeException(Messages.getString("GlobalServiceRegister.ServiceNotRegistered", klass.getName())); //$NON-NLS-1$ //$NON-NLS-2$
                 //                throw new RuntimeException("The service has not been registered."); //$NON-NLS-1$ //$NON-NLS-2$
             }
@@ -103,6 +104,5 @@ public class GlobalServiceRegister {
         }
         return null;
     }
-
 
 }

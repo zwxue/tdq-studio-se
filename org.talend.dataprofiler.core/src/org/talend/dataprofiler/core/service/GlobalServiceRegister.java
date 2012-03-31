@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+
 /**
  * A global service register provides the service registration and acquirement. <br/>
  * 
@@ -38,6 +39,7 @@ public class GlobalServiceRegister {
     private static IConfigurationElement[] bandingConfigurationElements;
 
     private static IConfigurationElement[] svnRepositoryElements;
+
     public static GlobalServiceRegister getDefault() {
         return instance;
     }
@@ -45,14 +47,18 @@ public class GlobalServiceRegister {
     private Map<Class<?>, IService> services = new HashMap<Class<?>, IService>();
 
     private Map<Class<?>, AbstractSvnRepositoryService> svnRepositoryServices = new HashMap<Class<?>, AbstractSvnRepositoryService>();
+
     private Map<Class<?>, org.talend.core.ui.branding.IBrandingService> brandingServices = new HashMap<Class<?>, org.talend.core.ui.branding.IBrandingService>();
+
     private Map<Class<?>, List<IService>> serviceGroups = new HashMap<Class<?>, List<IService>>();
 
     static {
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        configurationElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.service"); //$NON-NLS-1$
-        bandingConfigurationElements = registry.getConfigurationElementsFor("org.talend.core.runtime.service"); //$NON-NLS-1$
-        svnRepositoryElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.svnRepositoryService"); //$NON-NLS-1$
+        if (registry != null) {
+            configurationElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.service"); //$NON-NLS-1$
+            bandingConfigurationElements = registry.getConfigurationElementsFor("org.talend.core.runtime.service"); //$NON-NLS-1$
+            svnRepositoryElements = registry.getConfigurationElementsFor("org.talend.dataprofiler.core.svnRepositoryService"); //$NON-NLS-1$
+        }
     }
 
     /**
@@ -63,7 +69,7 @@ public class GlobalServiceRegister {
      */
     public IService getService(Class<?> klass) {
         IService service = services.get(klass);
-        if (service == null) {
+        if (service == null && configurationElements != null) {
             service = findService(klass);
             if (service == null) {
                 throw new RuntimeException(DefaultMessagesImpl.getString(
@@ -92,6 +98,7 @@ public class GlobalServiceRegister {
         }
         return true;
     }
+
     /**
      * Gets the specific IService.overide klliu 2010-09-15 bug 15520.
      * 
@@ -100,7 +107,7 @@ public class GlobalServiceRegister {
      */
     public org.talend.core.ui.branding.IBrandingService getBrandingService(Class<?> klass) {
         org.talend.core.ui.branding.IBrandingService service = brandingServices.get(klass);
-        if (service == null) {
+        if (service == null && bandingConfigurationElements != null) {
             service = findBrandingService(klass);
             if (service == null) {
                 throw new RuntimeException(DefaultMessagesImpl.getString(
@@ -147,6 +154,7 @@ public class GlobalServiceRegister {
         }
         return null;
     }
+
     /**
      * Gets the specific IService group.
      * 
@@ -212,6 +220,7 @@ public class GlobalServiceRegister {
         }
         return null;
     }
+
     /**
      * Finds the special service group from the list.
      * 
