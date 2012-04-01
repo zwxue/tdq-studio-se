@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -69,6 +70,7 @@ import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -496,6 +498,10 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             } else if (obj instanceof TdColumn) {
                 // MOD yyi 2012-02-29 TDQ-3605 For column set column list.
                 reposList.add(RepositoryNodeHelper.recursiveFind((TdColumn) obj));
+            } else if (obj instanceof MetadataColumn) {
+                // MOD yyin 2012-03-31 TDQ-4994 reopen column set analysis about fileDelimited file all items gone.
+                // because here did not check this kind of obj so it is not be added in the list
+                reposList.add(RepositoryNodeHelper.recursiveFind((MetadataColumn) obj));
             }
         }
         if (reposList.size() == 0) {
