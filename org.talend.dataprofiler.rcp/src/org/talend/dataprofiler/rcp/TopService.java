@@ -28,6 +28,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.SystemException;
+import org.talend.commons.ui.swt.actions.ITreeContextualAction;
 import org.talend.core.ICoreService;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.ColumnNameChanged;
@@ -522,6 +523,11 @@ public class TopService implements ICoreService {
     }
 
     public MenuManager[] getRepositoryContextualsActionGroups() {
+        return null;
+    }
+
+    @Override
+    public List<ITreeContextualAction> getRepositoryContextualsActions() {
         return null;
     }
 
