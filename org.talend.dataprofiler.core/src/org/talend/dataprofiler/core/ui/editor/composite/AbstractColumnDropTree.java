@@ -37,6 +37,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -502,6 +503,10 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 // MOD yyin 2012-03-31 TDQ-4994 reopen column set analysis about fileDelimited file all items gone.
                 // because here did not check this kind of obj so it is not be added in the list
                 reposList.add(RepositoryNodeHelper.recursiveFind((MetadataColumn) obj));
+            } else if (obj instanceof TdXmlElementType) {
+                // MOD yyin 2012-03-31 TDQ-4994 reopen column set analysis about fileDelimited file all items gone.
+                // because here did not check this kind of obj so it is not be added in the list
+                reposList.add(RepositoryNodeHelper.recursiveFind((TdXmlElementType) obj));
             }
         }
         if (reposList.size() == 0) {
