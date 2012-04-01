@@ -326,7 +326,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                         IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(
                                 IMDMProviderService.class);
                         if (service != null) {
-                            wizard = service.newMDMWizard(PlatformUI.getWorkbench(), false, node, null);
+                            wizard = service.newWizard(PlatformUI.getWorkbench(), false, node, null);
                         }
                     }
                 }

@@ -25,14 +25,14 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 
-
 /**
- * DOC bZhou  class global comment. Detailled comment
+ * DOC bZhou class global comment. Detailled comment
  */
 public class CreateMDMConnectionAction extends AbstractMetadataCreationAction {
 
     /**
      * DOC bZhou CreateMDMConnectionAction constructor comment.
+     * 
      * @param node
      */
     public CreateMDMConnectionAction(RepositoryNode node) {
@@ -45,7 +45,9 @@ public class CreateMDMConnectionAction extends AbstractMetadataCreationAction {
         super.node = node;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction#createWizard()
      */
     @Override
@@ -62,17 +64,21 @@ public class CreateMDMConnectionAction extends AbstractMetadataCreationAction {
         //
         // return new DatabaseConnectionWizard(connectionParam);
 
-        if (PluginChecker.isMDMPluginLoaded() && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
-            IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(IMDMProviderService.class);
+        if (PluginChecker.isMDMPluginLoaded()
+                && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
+            IMDMProviderService service = (IMDMProviderService) GlobalServiceRegister.getDefault().getService(
+                    IMDMProviderService.class);
             if (service != null) {
-                return service.newMDMWizard(PlatformUI.getWorkbench(), true, node, getExistingNames());
+                return service.newWizard(PlatformUI.getWorkbench(), true, node, getExistingNames());
             }
         }
 
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction#getActionImage()
      */
     @Override
@@ -80,7 +86,9 @@ public class CreateMDMConnectionAction extends AbstractMetadataCreationAction {
         return ImageLib.createAddedIcon(ImageLib.MDM_CONNECTION);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction#getActionLabel()
      */
     @Override
