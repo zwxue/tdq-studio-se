@@ -51,7 +51,9 @@ public class PatternExplorer extends DataExplorer {
         String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
-        return getRowsStatement(regexCmp + nullClause);
+        // mzhao TDQ-4967 add "(" and ")" for regex and null clause.
+        String pattCondStr = "(" + regexCmp + nullClause + ")";//$NON-NLS-1$//$NON-NLS-2$ 
+        return getRowsStatement(pattCondStr);
     }
 
     /*
@@ -118,7 +120,9 @@ public class PatternExplorer extends DataExplorer {
         String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
-        return getValuesStatement(columnName, regexCmp + nullClause);
+        // mzhao TDQ-4967 add "(" and ")" for regex and null clause.
+        String pattCondStr = "(" + regexCmp + nullClause + ")";//$NON-NLS-1$//$NON-NLS-2$ 
+        return getRowsStatement(pattCondStr);
     }
 
     /**
