@@ -270,4 +270,9 @@ public class TOPConfiguration implements IBrandingConfiguration {
     public boolean isOnlyRemoteConnection() {
         return false;
     }
+
+    @Override
+    public boolean isAllowChengeVersion() {
+        return true;
+    }
 }
