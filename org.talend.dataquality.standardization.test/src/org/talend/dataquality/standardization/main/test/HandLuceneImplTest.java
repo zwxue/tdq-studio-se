@@ -32,13 +32,20 @@ public class HandLuceneImplTest extends TestCase {
         information2value.put("gender", "0"); // $NON-NLS-1$ // $NON-NLS-2$
         Map<String, String[]> hits = null;
         try {
-            hits = hl.getSearchResult(indexfolder, "Edou", information2value, false); // $NON-NLS-1$
-            String[] soreDocs = hits.get("Edou"); // $NON-NLS-1$
+            final String inputName = "Edou";
+            hits = hl.getSearchResult(indexfolder, inputName, information2value, false); // $NON-NLS-1$
+            String[] soreDocs = hits.get(inputName); // $NON-NLS-1$
             assertNotNull(soreDocs);
             if (soreDocs != null) {
+                boolean found = false;
                 for (String doc : soreDocs) {
+                    if (inputName.equals(doc)) {
+                        found = true;
+                        break;
+                    }
                     System.out.println(doc);
                 }
+                assertEquals(inputName + " was not found", true, found);
             }
         } catch (IOException e) {
             e.printStackTrace();
