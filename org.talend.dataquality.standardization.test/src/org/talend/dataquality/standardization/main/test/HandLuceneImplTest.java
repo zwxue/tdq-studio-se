@@ -1,5 +1,6 @@
 package org.talend.dataquality.standardization.main.test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class HandLuceneImplTest extends TestCase {
 
     private String filename = "data/TalendGivenNames.TXT"; // $NON-NLS-1$
 
-    private String indexfolder = "data/TalendGivenNames_index"; // $NON-NLS-1$
+    private String indexfolder = "data/TalendGivenNames_index2"; // $NON-NLS-1$
 
     private HandleLucene hl;
 
@@ -22,10 +23,22 @@ public class HandLuceneImplTest extends TestCase {
         hl = new HandleLuceneImpl();
     }
 
-    public void testCreateIndex() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see junit.framework.TestCase#setUp()
+     */
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        File f = new File(indexfolder);
+        if (!f.exists()) {
+            f.mkdir();
+        }
         boolean back = hl.createIndex(filename, indexfolder);
-        assertTrue("Creating Index :", back); // $NON-NLS-1$
+        assertTrue("Index " + indexfolder + " not created.", back); // $NON-NLS-1$
     }
+
 
     public void testGetSearchResultStringStringMapOfStringStringBoolean() {
         Map<String, String> information2value = new HashMap<String, String>();
@@ -45,7 +58,7 @@ public class HandLuceneImplTest extends TestCase {
                     }
                     System.out.println(doc);
                 }
-                assertEquals(inputName + " was not found", true, found);
+                assertTrue(inputName + " was not found", found);
             }
         } catch (IOException e) {
             e.printStackTrace();
