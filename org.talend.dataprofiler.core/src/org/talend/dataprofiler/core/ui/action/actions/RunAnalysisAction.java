@@ -286,13 +286,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             listener.fireRuningItemChanged(true);
                         }
 
-                        CorePlugin.getDefault().refreshDQView();
+                        // CorePlugin.getDefault().refreshDQView();
                     }
 
                 });
 
                 displayResultStatus(executed);
-
                 return Status.OK_STATUS;
             }
 

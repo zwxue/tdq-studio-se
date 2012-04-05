@@ -26,9 +26,11 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ExportFactory;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.rules.ParserRule;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.io.FilesUtils;
 
 /**
@@ -106,7 +108,7 @@ public class ExportParserRuleWizard extends Wizard {
                 ExportFactory.export(resource, folder, parserRules.toArray(new ParserRule[parserRules.size()]));
             }
 
-            CorePlugin.getDefault().refreshDQView();
+            CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.RULES_PARSER));
             CorePlugin.getDefault().refreshWorkSpace();
 
             return true;

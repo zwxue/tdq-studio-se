@@ -143,10 +143,11 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
     @Override
     public IStatus handleDrop(CommonDropAdapter aDropAdapter, DropTargetEvent aDropTargetEvent, Object aTarget) {
+        IRepositoryNode targetNode = null;
         try {
             IRepositoryNode[] selectedRepositoryNodes = null;
 
-            IRepositoryNode targetNode = (IRepositoryNode) aTarget;
+            targetNode = (IRepositoryNode) aTarget;
             if (aDropAdapter.getCurrentTarget() == null || aDropTargetEvent.data == null) {
                 return Status.CANCEL_STATUS;
             }
@@ -168,7 +169,11 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
         // MOD gdbu TDQ-3546 unload resource after move item.
         ProxyRepositoryManager.getInstance().refresh();
-        CorePlugin.getDefault().refreshDQView();
+        if (targetNode != null) {
+            CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRootNode(targetNode.getObjectType()));
+        } else {
+            CorePlugin.getDefault().refreshDQView();
+        }
         return Status.OK_STATUS;
     }
 
