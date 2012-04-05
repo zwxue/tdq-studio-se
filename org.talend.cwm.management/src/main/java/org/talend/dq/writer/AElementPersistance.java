@@ -12,11 +12,12 @@
 // ============================================================================
 package org.talend.dq.writer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -547,13 +548,13 @@ public abstract class AElementPersistance {
         addResourceContent(element.eResource(), element);
 
         Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(element.eResource());
-        List<Resource> needSaves = new ArrayList<Resource>();
+        Set<Resource> needSaves = new HashSet<Resource>();
         for (EObject object : find.keySet()) {
             Resource re = object.eResource();
             if (re == null) {
                 continue;
             }
-            EcoreUtil.resolveAll(re);
+            // EcoreUtil.resolveAll(re);
             needSaves.add(re);
         }
 
@@ -561,6 +562,7 @@ public abstract class AElementPersistance {
                 AbstractResourceChangesService.class);
         if (resChangeService != null) {
             for (Resource toSave : needSaves) {
+                EcoreUtil.resolveAll(toSave);
                 resChangeService.saveResourceByEMFShared(toSave);
             }
         }
