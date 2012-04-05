@@ -246,7 +246,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         connCombo.setLayoutData(new GridData(125, SWT.DEFAULT));
 
         // tell the TableCombo that I want 2 blank columns auto sized.
-        connCombo.defineColumns(3);
+        connCombo.defineColumns(2);
 
         // set which column will be used for the selected item.
         connCombo.setDisplayColumnIndex(1);
@@ -416,7 +416,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
             TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
-            ti.setText(new String[] { (index + 1) + "", property.getLabel(),
+            ti.setText(new String[] { property.getLabel(),
                     RepositoryNodeHelper.getConnectionType(repNode) });
             // connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
@@ -426,8 +426,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
         if (index > 0) {
             connCombo.select(0);
+            connCombo.setVisibleItemCount(index * 2);
         }
-        // connCombo.setVisibleItemCount(index * 2);
     }
 
 
