@@ -12,13 +12,11 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.easymock.PowerMock.*;
 
 import java.util.Map;
 
@@ -37,7 +35,6 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -53,11 +50,11 @@ public class PatternExplorerTest {
 
     private static final String RES = "SELECT *  FROM `tbi`.`customer`  WHERE ((customer.lname = \"sunny\")) AND  `lname` REGEXP 'su.*'"; //$NON-NLS-1$
 
-    private static final String RES_NEG = "SELECT *  FROM `tbi`.`customer`  WHERE ((customer.lname = \"sunny\")) AND  `lname` NOT REGEXP 'su.*' OR `lname` IS NULL "; //$NON-NLS-1$
+    private static final String RES_NEG = "SELECT *  FROM `tbi`.`customer`  WHERE (((customer.lname = \"sunny\")) AND  `lname` NOT REGEXP 'su.*' OR `lname` IS NULL )"; //$NON-NLS-1$
 
     private static final String RES_VAL = "SELECT `lname` FROM `tbi`.`customer`  WHERE ((customer.lname = \"sunny\")) AND  `lname` REGEXP 'su.*' "; //$NON-NLS-1$
 
-    private static final String RES_VAL_NEG = "SELECT `lname` FROM `tbi`.`customer`  WHERE ((customer.lname = \"sunny\")) AND  `lname` NOT REGEXP 'su.*'  OR `lname` IS NULL "; //$NON-NLS-1$
+    private static final String RES_VAL_NEG = "SELECT `lname` FROM `tbi`.`customer`  WHERE (((customer.lname = \"sunny\")) AND  `lname` NOT REGEXP 'su.*'  OR `lname` IS NULL )"; //$NON-NLS-1$
 
     private PatternExplorer patternExplorer;
 
