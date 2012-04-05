@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.eclipse.nebula.widgets.tablecombo_1.0.0.201203301341.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar" sourcepath="lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar"/>
