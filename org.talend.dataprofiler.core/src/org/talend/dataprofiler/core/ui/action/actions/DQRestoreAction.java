@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -48,6 +50,8 @@ public class DQRestoreAction extends RestoreAction {
         CorePlugin.getDefault().refreshDQView();
 
         CorePlugin.getDefault().refreshWorkSpace();
+
+        SQLExplorerPlugin.getDefault().getConnectionsView().refresh();
 
         // MOD gdbu 2011-11-17 TDQ-3969 : after restore items re-filter the tree , to create a new list .
         if (DQRepositoryNode.isOnFilterring()) {

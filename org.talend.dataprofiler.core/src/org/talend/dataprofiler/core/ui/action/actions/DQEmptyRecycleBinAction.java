@@ -68,22 +68,14 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
 
     @Override
     public void run() {
-        // if these items in recycle bin are depended by others,show a warning dialog and return.
-        boolean hasDependencyItem = false;
 
         // MOD gdbu 2011-11-24 TDQ-4068
         List<IRepositoryNode> findAllRecycleBinNodes = needDeleteNodes();
         if (null == findAllRecycleBinNodes) {
             return;
         }
-        // ~TDQ-4068
-        for (IRepositoryNode obj : findAllRecycleBinNodes) {
-            if (RepositoryNodeHelper.hasDependencyClients(obj)) {
-                hasDependencyItem = true;
-                break;
-            }
-        }
-        if (hasDependencyItem) {
+        boolean canEmpty = DQDeleteHelper.canEmptyRecyBin(findAllRecycleBinNodes);
+        if (!canEmpty) {
             DeleteModelElementConfirmDialog.showDialog(null, findAllRecycleBinNodes,
                     DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));//$NON-NLS-1$
             return;

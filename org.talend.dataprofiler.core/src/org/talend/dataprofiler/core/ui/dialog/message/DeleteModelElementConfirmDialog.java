@@ -24,9 +24,19 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.reports.TdReport;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -443,6 +453,47 @@ public class DeleteModelElementConfirmDialog {
                         return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
                     }
                     return REQUIRES + PluginConstant.SPACE_STRING + "<<" + ((ModelElement) obj).getName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
+                }
+
+                @Override
+                public Image getImage(Object obj) {
+                    ModelElement modelElement = null;
+                    if (obj instanceof ModelElement) {
+                        modelElement = (ModelElement) obj;
+                    } else if (obj instanceof ImpactNode) {
+                        modelElement = ((ImpactNode) obj).getNodeElement();
+                    } else if (obj instanceof IFile) {
+                        modelElement = ModelElementFileFactory.getModelElement((IFile) obj);
+                    }
+                    if (modelElement == null) {
+                        return super.getImage(obj);
+                    }
+                    if (modelElement instanceof Analysis) {
+                        return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+                    }
+                    if (modelElement instanceof TdReport) {
+                        return ImageLib.getImage(ImageLib.REPORT_OBJECT);
+                    }
+                    if (modelElement instanceof DatabaseConnection) {
+                        return ImageLib.getImage(ImageLib.CONNECTION);
+                    }
+                    if (modelElement instanceof MDMConnection) {
+                        return ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                    }
+                    if (modelElement instanceof DelimitedFileConnection) {
+                        return ImageLib.getImage(ImageLib.FILE_DELIMITED);
+                    }
+                    if (modelElement instanceof Pattern) {
+                        return ImageLib.getImage(ImageLib.PATTERN_REG);
+                    }
+                    if (modelElement instanceof IndicatorDefinition) {
+                        return ImageLib.getImage(ImageLib.IND_DEFINITION);
+                    }
+                    if (modelElement instanceof DQRule) {
+                        return ImageLib.getImage(ImageLib.DQ_RULE);
+                    }
+
+                    return super.getImage(obj);
                 }
             };
         }
