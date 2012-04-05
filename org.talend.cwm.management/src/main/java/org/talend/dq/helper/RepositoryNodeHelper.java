@@ -2892,4 +2892,31 @@ public final class RepositoryNodeHelper {
     public static List<IRepositoryNode> getAllFilteredNodeList() {
         return allFilteredNodeList;
     }
+
+    // ADDED yyin 201204 TDQ-4977
+    public static String getConnectionType(IRepositoryNode node) {
+        if (node != null) {
+            if (node instanceof DBConnectionRepNode) {
+                return ((DBConnectionRepNode) node).getDatabaseConnection().getDatabaseType();
+            } else if (node instanceof MDMConnectionRepNode) {
+                return "MDM Connection";// ((MDMConnectionRepNode) node).get;
+            } else if (node instanceof DFConnectionRepNode) {
+                return "File Delimited Connection";// ((DFConnectionRepNode) node).getDfConnection().;
+            }
+        }
+        return "";
+    }
+
+    public static String getConnectionType(DataManager node) {
+        if (node != null) {
+            if (node instanceof DatabaseConnection) {
+                return ((DatabaseConnection) node).getDatabaseType();
+            } else if (node instanceof MDMConnection) {
+                return "MDM Connection";// ((MDMConnectionRepNode) node).get;
+            } else if (node instanceof DelimitedFileConnection) {
+                return "File Delimited Connection";// ((DFConnectionRepNode) node).getDfConnection().;
+            }
+        }
+        return "";
+    }
 }

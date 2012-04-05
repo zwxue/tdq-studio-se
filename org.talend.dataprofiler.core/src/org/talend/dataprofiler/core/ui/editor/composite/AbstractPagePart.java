@@ -42,6 +42,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -187,11 +188,15 @@ public abstract class AbstractPagePart {
             masterPage.reloadDataproviderAndFillConnCombo();
             // ~TDQ-3213
 
-            Object value = masterPage.getConnCombo().getData(dataManager.getName());
+            // MOD yyin 201204 TDQ-4977
+            Object value = masterPage.getConnCombo().getData(
+                    dataManager.getName() + RepositoryNodeHelper.getConnectionType(dataManager));
+
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
+
             Property prop = PropertyHelper.getProperty((Connection) dataManager);
             if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(dataManager) != null) {
-                value = masterPage.getConnCombo().getData(prop.getLabel());
+                value = masterPage.getConnCombo().getData(prop.getLabel() + RepositoryNodeHelper.getConnectionType(dataManager));
             }
             Integer index = 0;
             if (value != null && value instanceof Integer) {

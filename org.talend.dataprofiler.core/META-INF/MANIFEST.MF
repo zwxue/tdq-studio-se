@@ -51,8 +51,10 @@ Require-Bundle: org.eclipse.ui,
  org.talend.dataprofiler.migration
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.gridviewer,
+ org.eclipse.nebula.jface.tablecomboviewer,
  org.eclipse.nebula.widgets.grid,
  org.eclipse.nebula.widgets.grid.internal,
+ org.eclipse.nebula.widgets.tablecombo,
  org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
  org.talend.dataprofiler.core.helper,
@@ -113,4 +115,5 @@ Eclipse-RegisterBuddy: org.apache.log4j
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar,
- lib/org.eclipse.nebula.widgets.grid_1.0.0.jar
+ lib/org.eclipse.nebula.widgets.grid_1.0.0.jar,
+ lib/org.eclipse.nebula.widgets.tablecombo_1.0.0.201203301341.jar
