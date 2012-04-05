@@ -12,22 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.sql;
 
-import java.io.File;
 import java.util.List;
-
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -70,12 +65,9 @@ public class OpenSqlFileAction extends Action {
         // ~ 13729
         IWorkbenchWindow aww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IWorkbenchPage ap = aww.getActivePage();
-        IPath location = ResourcesPlugin.getWorkspace().getRoot().getLocation();
         for (IFile file : folder) {
-            String portableString = location.append(file.getFullPath()).toPortableString();
             try {
-                editorInput = new SQLEditorInput(new File(portableString));
-                ap.openEditor(editorInput, SQLEditor.EDITOR_ID);
+                IDE.openEditor(ap, file, true);
             } catch (PartInitException e) {
                 log.error(e, e);
             }
