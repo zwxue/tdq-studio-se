@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.sql;
 
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
-import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
@@ -26,6 +23,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
+import org.eclipse.ui.ide.IDE;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -91,7 +90,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
                 CorePlugin.getDefault().refreshWorkSpace();
                 CorePlugin.getDefault().refreshDQView();
 
-                ap.openEditor(new SQLEditorInput(fileWizard.getSqlFile()), SQLEditor.EDITOR_ID);
+                IDE.openEditor(ap, WorkspaceUtils.fileToIFile(fileWizard.getSqlFile()));
             } catch (PartInitException e) {
                 log.error(e, e);
             }
