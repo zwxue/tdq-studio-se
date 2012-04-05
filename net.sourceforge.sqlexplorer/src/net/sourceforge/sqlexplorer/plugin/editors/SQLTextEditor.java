@@ -74,6 +74,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Item;
 
 /**
@@ -162,7 +163,8 @@ public class SQLTextEditor extends TextEditor {
         }
 
         // PTODO qzhang fixed bug 3907
-        IProject rootProject = SQLExplorerPlugin.getDefault().getRootProject();
+        // MOD sizhaoliu 2012-04-05 TDQ-4958 NPE when save sql script
+        IProject rootProject = ReponsitoryContextBridge.getRootProject();
         final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
 
         ILabelProvider lp = new WorkbenchLabelProvider();
@@ -320,7 +322,7 @@ public class SQLTextEditor extends TextEditor {
      * @throws CoreException
      */
     private IFile createIFile(IFile file, String content) throws CoreException {
-        //MOD qiongli 2011-4-21.bug 20205 .should create sql file and property.use extension of service mechenism.
+        // MOD qiongli 2011-4-21.bug 20205 .should create sql file and property.use extension of service mechenism.
         try {
             if (GlobalServiceRegister.getDefault().isServiceRegistered(ISaveAsService.class)) {
                 ISaveAsService service = (ISaveAsService) GlobalServiceRegister.getDefault().getService(ISaveAsService.class);
@@ -331,7 +333,7 @@ public class SQLTextEditor extends TextEditor {
                         file.getProjectRelativePath().removeLastSegments(1).makeRelativeTo(rootPath), fName,
                         file.getFileExtension());
                 // get the correct path(contain version info) for newInput file in editor.
-                 IPath location = file.getLocation();
+                IPath location = file.getLocation();
                 if (item != null && item.getProperty() != null && location != null) {
 
                     location = location.removeLastSegments(1);
@@ -379,8 +381,8 @@ public class SQLTextEditor extends TextEditor {
 
         super.createPartControl(parent);
 
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(getSourceViewer().getTextWidget(),
-                SQLExplorerPlugin.PLUGIN_ID + ".SQLEditor");
+        PlatformUI.getWorkbench().getHelpSystem()
+                .setHelp(getSourceViewer().getTextWidget(), SQLExplorerPlugin.PLUGIN_ID + ".SQLEditor");
 
         Object adapter = getAdapter(org.eclipse.swt.widgets.Control.class);
         if (adapter instanceof StyledText) {

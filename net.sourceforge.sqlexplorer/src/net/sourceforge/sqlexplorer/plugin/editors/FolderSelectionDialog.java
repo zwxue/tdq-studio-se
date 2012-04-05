@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.talend.commons.bridge.ReponsitoryContextBridge;
 
 /**
  * 
@@ -63,7 +64,8 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
     public FolderSelectionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
         super(parent, labelProvider, contentProvider);
 
-        IProject rootProject = SQLExplorerPlugin.getDefault().getRootProject();
+        // MOD sizhaoliu 2012-04-05 TDQ-4958 NPE when save sql script
+        IProject rootProject = ReponsitoryContextBridge.getRootProject();
         final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
 
         setComparator(new ResourceComparator(ResourceComparator.NAME));
@@ -109,7 +111,9 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
             public void modifyText(ModifyEvent e) {
                 if (text.getText() == null || "".equals(text.getText().trim())) {
                     int status = IStatus.ERROR;
-                    IProject rootProject = SQLExplorerPlugin.getDefault().getRootProject();
+                    // MOD sizhaoliu 2012-04-05 TDQ-4958
+                    // The code here is not directly related to TDQ-4958, but may leads to other bugs.
+                    IProject rootProject = ReponsitoryContextBridge.getRootProject();
                     final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
                     if (selectedFolder != null
                             && ("Source Files".equals(selectedFolder.getName()) || defaultValidFolder.getFullPath().isPrefixOf(
