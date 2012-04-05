@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 
 import org.apache.log4j.Logger;
@@ -463,7 +464,8 @@ public final class DQStructureManager {
         sourceFileItem.setExtension(extension);
 
         ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
-        byteArray.setInnerContent(content.getBytes());
+        // MOD sizhaoliu 2012-04-02 for TDQ-5070 Encoding issue with saving generated sql query action
+        byteArray.setInnerContent(content.getBytes(Charset.forName("UTF-8")));
         sourceFileItem.setContent(byteArray);
         IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
         try {

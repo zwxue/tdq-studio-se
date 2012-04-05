@@ -16,8 +16,10 @@ package net.sourceforge.sqlexplorer.plugin.editors;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.Messages;
@@ -644,9 +646,13 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
 
         String content = textEditor.sqlTextViewer.getDocument().get();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        writer.write(content, 0, content.length());
-        writer.close();
+        // MOD sizhaoliu 2012-04-02 for TDQ-5070 Encoding issue with saving generated sql query action
+        // BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        // writer.write(content, 0, content.length());
+        // writer.close();
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(content.getBytes(Charset.forName("UTF-8")));
+        fos.close();
 
         // PTODO rli fixed feature 5186: synchronized the resource.
         IFile[] findFile = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(file.toURI());
