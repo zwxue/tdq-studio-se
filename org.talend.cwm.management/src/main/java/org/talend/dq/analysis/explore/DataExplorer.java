@@ -143,13 +143,13 @@ public abstract class DataExplorer implements IDataExplorer {
             //            sb.append("Showing: " + showing + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
             //            sb.append("*/\n"); //$NON-NLS-1$
 
-            sb.append("--Analysis: " + anaName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("--Type of Analysis: " + anaType + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("--Purpose: " + anaPurpose + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("--Description: " + anaDescription + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("--AnalyzedElement: " + aeName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("--Indicator: " + indName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
-            sb.append("--Showing: " + showing + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("-- " + Messages.getString("DataExplorer.AnalysisLabel") + " " + anaName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("-- " + Messages.getString("DataExplorer.TypeAnalysisLabel") + " " + anaType + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("-- " + Messages.getString("DataExplorer.PurposeLabel") + " " + anaPurpose + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("-- " + Messages.getString("DataExplorer.DescriptionLabel") + " " + anaDescription.replace("\n", "\n--     ") + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("-- " + Messages.getString("DataExplorer.AnalyzedElementLabel") + " " + aeName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("-- " + Messages.getString("DataExplorer.IndicatorLabel") + " " + indName + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
+            sb.append("-- " + Messages.getString("DataExplorer.ShowingLabel") + " " + showing + " ;\n"); //$NON-NLS-1$  //$NON-NLS-2$
 
         }
         return sb.toString();
