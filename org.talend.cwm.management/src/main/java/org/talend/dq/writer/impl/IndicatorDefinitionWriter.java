@@ -12,10 +12,11 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
@@ -78,27 +79,27 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
             indicatorItem.setIndicatorDefinition(indiDefinition);
 
             Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(indiDefinition.eResource());
-            List<Resource> needSaves = new ArrayList<Resource>();
+            Set<Resource> needSaves = new HashSet<Resource>();
             for (EObject object : find.keySet()) {
                 Resource re = object.eResource();
                 if (re == null) {
                     continue;
                 }
-                EcoreUtil.resolveAll(re);
                 needSaves.add(re);
             }
 
             ProxyRepositoryFactory.getInstance().save(indicatorItem);
-            
+
             AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
                     AbstractResourceChangesService.class);
             if (resChangeService != null) {
                 for (Resource toSave : needSaves) {
+                    EcoreUtil.resolveAll(toSave);
                     resChangeService.saveResourceByEMFShared(toSave);
                 }
             }
 
-             updateDependencies(indiDefinition);
+            updateDependencies(indiDefinition);
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
@@ -113,22 +114,22 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
 
     }
 
-    protected void updateDependencies(ModelElement element) { 
-     		        // update client dependency 
-     		        // if IndicatorDefinition have client depencency, add codes here 
-     		        IndicatorDefinition definition = (IndicatorDefinition) element; 
-     		        Property property = PropertyHelper.getProperty(definition); 
-     		        List<IRepositoryViewObject> listIndicatorDependency = DependenciesHandler 
-     		                .getIndicatorDependency(new RepositoryViewObject(property)); 
-     		        for (IRepositoryViewObject viewObject : listIndicatorDependency) { 
-     		            Item item = viewObject.getProperty().getItem(); 
-     		            if (item instanceof TDQAnalysisItem) { 
-     		                try { 
-     		                    ProxyRepositoryFactory.getInstance().save(item); 
-     		                } catch (PersistenceException e) { 
-     		                    log.error(e, e); 
-     		                } 
-     		            } 
-     		        } 
-     		    } 
+    protected void updateDependencies(ModelElement element) {
+        // update client dependency
+        // if IndicatorDefinition have client depencency, add codes here
+        IndicatorDefinition definition = (IndicatorDefinition) element;
+        Property property = PropertyHelper.getProperty(definition);
+        List<IRepositoryViewObject> listIndicatorDependency = DependenciesHandler
+                .getIndicatorDependency(new RepositoryViewObject(property));
+        for (IRepositoryViewObject viewObject : listIndicatorDependency) {
+            Item item = viewObject.getProperty().getItem();
+            if (item instanceof TDQAnalysisItem) {
+                try {
+                    ProxyRepositoryFactory.getInstance().save(item);
+                } catch (PersistenceException e) {
+                    log.error(e, e);
+                }
+            }
+        }
+    }
 }

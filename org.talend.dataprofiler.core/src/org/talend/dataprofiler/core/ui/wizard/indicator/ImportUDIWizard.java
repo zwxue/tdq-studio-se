@@ -24,6 +24,8 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
 import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -69,7 +71,8 @@ public class ImportUDIWizard extends Wizard {
             }
 
         });
-        CorePlugin.getDefault().refreshDQView();
+        CorePlugin.getDefault().refreshDQView(
+                RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS));
         return true;
     }
 }

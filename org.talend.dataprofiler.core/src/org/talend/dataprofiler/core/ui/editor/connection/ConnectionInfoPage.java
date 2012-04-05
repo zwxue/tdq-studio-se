@@ -118,6 +118,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     private Item connectionItem;
 
+    //MOD by zshen don't have any chance to get a value
     private DBConnectionParameter tmpParam;
 
     private Text loginText;
@@ -413,28 +414,29 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         props.put(TaggedValueHelper.PASSWORD, password);
 
         // MOD xqliu 2009-12-17 bug 10238
-        Connection tdDataProvider2;
-        if (null == tmpParam) {
-            tdDataProvider2 = connection;
-        } else {
-            // MOD xqliu 2010-08-04 bug 13406
-            if (ConnectionUtils.isMdmConnection(connection)) {
-                tdDataProvider2 = connection;
-                JavaSqlFactory.setURL(tdDataProvider2, url);
-            } else {
-
-                IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance().fillUIParams(
-                        ParameterUtil.toMap(tmpParam));
-                TypedReturnCode<?> typedRC = org.talend.core.model.metadata.builder.util.MetadataConnectionUtils
-                        .checkConnection(metadataConnection);
-                if (!typedRC.isOk()) {
-                    return typedRC;
-                } else {
-                    tdDataProvider2 = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
-                }
-            }
-            // ~ 13406
-        }
+        Connection tdDataProvider2=connection;
+        //MOD by zshen tmpParam alaways is null
+//        if (null == tmpParam) {
+//            tdDataProvider2 = connection;
+//        } else {
+//            // MOD xqliu 2010-08-04 bug 13406
+//            if (ConnectionUtils.isMdmConnection(connection)) {
+//                tdDataProvider2 = connection;
+//                JavaSqlFactory.setURL(tdDataProvider2, url);
+//            } else {
+//
+//                IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance().fillUIParams(
+//                        ParameterUtil.toMap(tmpParam));
+//                TypedReturnCode<?> typedRC = org.talend.core.model.metadata.builder.util.MetadataConnectionUtils
+//                        .checkConnection(metadataConnection);
+//                if (!typedRC.isOk()) {
+//                    return typedRC;
+//                } else {
+//                    tdDataProvider2 = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
+//                }
+//            }
+//            // ~ 13406
+//        }
 
         if (tdDataProvider2 instanceof MDMConnection) {
             props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) tdDataProvider2));
@@ -515,10 +517,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         // saveTextChange();
         super.doSave(monitor);
 
-        if (isUrlChanged) {
-            updateConnection(tmpParam);
-            storeDriveInfoToPerference(tmpParam);
-        }
+        //MOD by zshen the isUrlChanged will not be true because urlText can not be modify now
+//        if (isUrlChanged) {
+//            updateConnection(tmpParam);
+//            storeDriveInfoToPerference(tmpParam);
+//        }
 
         try {
             saveConnectionInfo();
@@ -603,9 +606,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         JavaSqlFactory.setPassword(connection, passwordText.getText());
         JavaSqlFactory.setURL(connection, urlText.getText());
         // MOD zshen for bug 12327:to save driverClassName.
-        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {//$NON-NLS-1$
-            ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());
-        }
+        //tmpParam alaways is null
+//        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {//$NON-NLS-1$
+//            ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());
+//        }
         // ~12327
         // MOD msjian 2011-7-18 23216: when there is no error for name, do set
         if (super.saveTextChange()) {

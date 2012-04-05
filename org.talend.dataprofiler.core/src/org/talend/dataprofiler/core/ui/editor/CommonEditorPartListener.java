@@ -31,6 +31,7 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
+
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
  * 
@@ -81,13 +82,7 @@ public class CommonEditorPartListener extends PartListener {
         // MOD qiongli 2011-7-14 bug 22276,just unlock and commit for editable itme.
         if (ProxyRepositoryManager.getInstance().isReadOnly() || ProxyRepositoryManager.getInstance().isEditable(item)) {
             ProxyRepositoryManager.getInstance().unLock(item);
-            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(item.getProperty());
-            CommonViewer dqCommonViewer = RepositoryNodeHelper.getDQCommonViewer();
-            if (dqCommonViewer != null && null != recursiveFind) {
-                dqCommonViewer.refresh(recursiveFind);
-            } else {
-                CorePlugin.getDefault().refreshDQView();
-            }
+            refreshItem(item);
         } else {
             ProxyRepositoryManager.getInstance().refresh();
             CorePlugin.getDefault().refreshDQView();
@@ -116,10 +111,15 @@ public class CommonEditorPartListener extends PartListener {
             // alert user that the item is not able to edit.
             // MOD yyi 2010-11-29 15686: Make the editor readonly when the login user has no sufficient previlege.
             lockCommonFormEditor(part);
-            CorePlugin.getDefault().refreshDQView();
+            refreshItem(item);
             return;
         }
         ProxyRepositoryManager.getInstance().lock(item);
+        refreshItem(item);
+        super.partOpened(part);
+    }
+
+    protected void refreshItem(Item item) {
         RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(item.getProperty());
         CommonViewer dqCommonViewer = RepositoryNodeHelper.getDQCommonViewer();
         if (dqCommonViewer != null && null != recursiveFind) {
@@ -127,7 +127,6 @@ public class CommonEditorPartListener extends PartListener {
         } else {
             CorePlugin.getDefault().refreshDQView();
         }
-        super.partOpened(part);
     }
 
 }

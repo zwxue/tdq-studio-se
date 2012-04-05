@@ -132,7 +132,6 @@ public class DuplicateAction extends Action {
         }
 
         CorePlugin.getDefault().refreshWorkSpace();
-        CorePlugin.getDefault().refreshDQView();
         if (duplicateObject != null) {
             selectAndReveal(duplicateObject);
         }
@@ -203,6 +202,9 @@ public class DuplicateAction extends Action {
         ModelElement modelElement = ModelElementFileFactory.getModelElement((IFile) duplicateObject);
         RepositoryNode recursiveFind = null;
         recursiveFind = getSelctionNode(duplicateObject, modelElement, recursiveFind);
+        if (recursiveFind != null) {
+            CorePlugin.getDefault().refreshDQView(recursiveFind.getParent());
+        }
         if (activePart instanceof ISetSelectionTarget) {
             ISelection selection = new StructuredSelection(recursiveFind);
             ((ISetSelectionTarget) activePart).selectReveal(selection);

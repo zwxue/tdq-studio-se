@@ -31,6 +31,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 /**
  * @author zshen
  *
+ *@deprecated don't should use this class to test please use MetadataFillFactory.getDBInstance().fillUIConnParams() instead of it.
  */
 public class ConnectionService {
 

@@ -12,10 +12,11 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
@@ -109,13 +110,12 @@ public class ReportWriter extends AElementPersistance {
             addResourceContent(report.eResource(), report);
 
             Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(report.eResource());
-            List<Resource> needSaves = new ArrayList<Resource>();
+            Set<Resource> needSaves = new HashSet<Resource>();
             for (EObject object : find.keySet()) {
                 Resource re = object.eResource();
                 if (re == null) {
                     continue;
                 }
-                EcoreUtil.resolveAll(re);
                 needSaves.add(re);
             }
 
@@ -125,6 +125,7 @@ public class ReportWriter extends AElementPersistance {
                     AbstractResourceChangesService.class);
             if (resChangeService != null) {
                 for (Resource toSave : needSaves) {
+                    EcoreUtil.resolveAll(toSave);
                     resChangeService.saveResourceByEMFShared(toSave);
                 }
             }

@@ -46,6 +46,7 @@ import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
@@ -1106,6 +1107,7 @@ public final class ConnectionUtils {
      * 
      * @param conns
      * @return
+     * @deprecated Is Replaced By DBConnectionFiller.fillUIConnParams
      */
     public static List<Connection> fillConnectionInformation(List<Connection> conns) {
         List<Connection> results = new ArrayList<Connection>();
@@ -1137,6 +1139,8 @@ public final class ConnectionUtils {
     /**
      * DOC xqliu Comment method "fillDbConnectionInformation".
      * 
+     * @deprecated Is Replaced By DBConnectionFiller.fillUIConnParams
+     * 
      * @param dbConn
      * @return
      */
@@ -1160,13 +1164,18 @@ public final class ConnectionUtils {
             try {
                 if (noStructureExists) { // do no override existing catalogs or
                                          // schemas
-                    Map<String, String> paramMap = ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
-                    IMetadataConnection metaConnection = MetadataFillFactory.getDBInstance().fillUIParams(paramMap);
+//                    Map<String, String> paramMap = ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
+                    IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
                     dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
                     sqlConn = (java.sql.Connection) MetadataConnectionUtils.checkConnection(metaConnection).getObject();
 
                     if (sqlConn != null) {
-                        DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, metaConnection.getDbType());
+//                    	String databaseType = metaConnection.getDbType();
+//                    	EDatabaseTypeName dbType = EDatabaseTypeName.getTypeFromDbType(databaseType);
+//                    	if (dbType == EDatabaseTypeName.TERADATA) {
+//                                ExtractMetaDataUtils.metadataCon = metaConnection;
+//                            }
+                        DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, dbConn,false);
                         MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, dm,
                                 MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
                         MetadataFillFactory.getDBInstance().fillSchemas(dbConn, dm,

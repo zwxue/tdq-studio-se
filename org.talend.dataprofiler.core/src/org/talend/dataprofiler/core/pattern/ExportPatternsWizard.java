@@ -26,8 +26,10 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.io.FilesUtils;
 
 /**
@@ -124,7 +126,7 @@ public class ExportPatternsWizard extends Wizard {
                 ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
             }
 
-            CorePlugin.getDefault().refreshDQView();
+            CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERNS));
             CorePlugin.getDefault().refreshWorkSpace();
 
             return true;

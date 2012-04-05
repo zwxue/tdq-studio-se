@@ -286,13 +286,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             listener.fireRuningItemChanged(true);
                         }
 
-                        CorePlugin.getDefault().refreshDQView();
                     }
 
                 });
 
                 displayResultStatus(executed);
-
                 return Status.OK_STATUS;
             }
 
@@ -301,6 +299,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         job.setUser(true);
         job.schedule();
     }
+
     /**
      * close the connection pool which belong to the analysis(whether use pooled connection to execute the analysis or
      * not, can call this method safely).
