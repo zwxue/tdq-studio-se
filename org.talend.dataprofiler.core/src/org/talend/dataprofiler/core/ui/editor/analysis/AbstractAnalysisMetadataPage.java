@@ -248,12 +248,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
         // set which column will be used for the selected item.
         connCombo.setDisplayColumnIndex(1);
-
-        // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
-        // SWT.DEFAULT });
-
-        // turn on the table header.
-        // connCombo.setShowTableHeader(true);
+        connCombo.setSize(30, 100);
 
         // add listener
         // connCombo = new TableCombo(labelButtonClient, SWT.BORDER);
@@ -396,7 +391,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
         int index = 0;
         connCombo.getTable().removeAll();
-        connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
+        // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
         // MOD qiongli 2011-5-16,filter the logical delete connection except the analysis dependen on.
         Property property = null;
         DataManager connection = analysis.getContext().getConnection();
@@ -421,6 +416,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
         if (index > 0) {
             connCombo.select(0);
+            connCombo.setVisibleItemCount(index);
         }
     }
 
