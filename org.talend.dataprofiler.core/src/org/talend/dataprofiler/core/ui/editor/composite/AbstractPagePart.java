@@ -42,13 +42,15 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 import common.Logger;
+
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -187,17 +189,24 @@ public abstract class AbstractPagePart {
             masterPage.reloadDataproviderAndFillConnCombo();
             // ~TDQ-3213
 
-            Object value = masterPage.getConnCombo().getData(dataManager.getName());
-            // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
+             // MOD yyin 201204 TDQ-4977
+             Object value = masterPage.getConnCombo().getData(
+             dataManager.getName() + RepositoryNodeHelper.getConnectionType(dataManager));
+            
+             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
+            
             Property prop = PropertyHelper.getProperty((Connection) dataManager);
-            if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(dataManager) != null) {
-                value = masterPage.getConnCombo().getData(prop.getLabel());
-            }
-            Integer index = 0;
-            if (value != null && value instanceof Integer) {
-                index = (Integer) value;
-            }
-            masterPage.getConnCombo().select(index);
+             if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(dataManager) != null) {
+             value = masterPage.getConnCombo().getData(prop.getLabel() +
+             RepositoryNodeHelper.getConnectionType(dataManager));
+             }
+             Integer index = 0;
+             if (value != null && value instanceof Integer) {
+             index = (Integer) value;
+             }
+             masterPage.getConnCombo().select(index);
+             masterPage.getConnCombo().setDisplayColumnIndex(index);
+
             // MOD qiongli 2011-5-16 bug 21453
             if (prop != null && prop.getItem() != null && prop.getItem().getState() != null
                     && prop.getItem().getState().isDeleted()) {

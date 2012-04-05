@@ -23,14 +23,17 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.nebula.widgets.tablecombo.TableCombo;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -65,6 +68,7 @@ import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -93,13 +97,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected AnalysisEditor currentEditor = null;
 
-    protected CCombo connCombo;
+    // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
+    protected TableCombo connCombo;
 
     protected Text textConnVersion;
 
     protected Label labelConnDeleted;
 
-    public CCombo getConnCombo() {
+    public TableCombo getConnCombo() {
         return connCombo;
     }
 
@@ -222,7 +227,36 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         labelButtonClient.setLayout(labelButtonClientLayout);
 
         toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.connBind")); //$NON-NLS-1$
-        connCombo = new CCombo(labelButtonClient, SWT.BORDER);
+
+        // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
+        // create group
+        Group group = new Group(labelButtonClient, SWT.NONE);
+        group.setLayout(new GridLayout(2, false));
+        group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+        group.setText(" ");
+
+        // create label
+//        Label label = new Label(group, SWT.NONE);
+//        label.setText("Metadata Name & Type:");
+
+        // create TableCombo
+        connCombo = new TableCombo(group, SWT.BORDER | SWT.READ_ONLY);
+        connCombo.setLayoutData(new GridData(125, SWT.DEFAULT));
+
+        // tell the TableCombo that I want 2 blank columns auto sized.
+        connCombo.defineColumns(3);
+
+        // set which column will be used for the selected item.
+        connCombo.setDisplayColumnIndex(1);
+
+        // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
+        // SWT.DEFAULT });
+
+        // turn on the table header.
+        // connCombo.setShowTableHeader(true);
+
+        // add listener
+        // connCombo = new TableCombo(labelButtonClient, SWT.BORDER);
         connCombo.setEditable(false);
         connCombo.addSelectionListener(new SelectionListener() {
 
@@ -361,7 +395,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // ~ 14549
 
         int index = 0;
-        connCombo.removeAll();
+        connCombo.getTable().removeAll();
+        connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
         // MOD qiongli 2011-5-16,filter the logical delete connection except the analysis dependen on.
         Property property = null;
         DataManager connection = analysis.getContext().getConnection();
@@ -373,9 +408,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                     continue;
                 }
             }
-            connCombo.add(property.getDisplayName(), index);
+
+            // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
+            TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
+            ti.setText(new String[] { (index + 1) + "", property.getDisplayName(),
+                    RepositoryNodeHelper.getConnectionType(repNode) });
+            // connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
-            connCombo.setData(property.getDisplayName(), index);
+            connCombo.setData(property.getDisplayName() + RepositoryNodeHelper.getConnectionType(repNode), index);
             connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;
         }
