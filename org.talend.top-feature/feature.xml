@@ -95,7 +95,6 @@
       <import plugin="org.eclipse.text" version="3.5.0" match="compatible"/>
       <import plugin="org.apache.commons.lang"/>
       <import plugin="org.talend.libraries.apache.axis2"/>
-      <import plugin="org.eclipse.datatools.enablement.oda.xml"/>
    </requires>
 
    <plugin
@@ -479,6 +478,13 @@
 
    <plugin
          id="org.talend.repository.metadata"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.datatools.xml"
          download-size="0"
          install-size="0"
          version="0.0.0"
