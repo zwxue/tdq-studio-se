@@ -50,6 +50,7 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportFieldImpl;
  */
 public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapter {
 
+    protected ModelElement modelElement = null;
     @Override
     public boolean performFinish() {
         ReturnCode checkResult = checkMetadata();
@@ -58,7 +59,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
 
         if (checkResult.isOk()) {
             // MOD mzhao feature 15750 Use repository object represent ModelElement.
-            ModelElement modelElement = initCWMResourceBuilder();
+            modelElement = initCWMResourceBuilder();
             if (modelElement != null) {
                 fillMetadataToCWMResource(modelElement);
                 // Save the repository objects.

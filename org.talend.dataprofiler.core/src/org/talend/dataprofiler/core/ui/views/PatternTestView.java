@@ -21,6 +21,7 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
@@ -53,6 +54,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.impl.DatabaseConnectionImpl;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -347,7 +349,15 @@ public class PatternTestView extends ViewPart {
                 }
                 // MOD mzhao 2009-03-13 Feature 6066 Move all folders into one
                 // project.
-                new CreatePatternAction(ResourceManager.getPatternFolder(), ExpressionType.REGEXP, regularText.getText(),
+                // MOD mzhao TDQ-4734 set relative customer pattern folder, same level to the pattern to be replicated.
+                IFolder customizedPattFolder = null;
+                if (pattern != null && pattern.eResource() != null) {
+                    IContainer oriPattContainer = WorkspaceUtils.getModelElementResource(pattern).getParent();
+                    if (oriPattContainer instanceof IFolder) {
+                        customizedPattFolder = (IFolder) oriPattContainer;
+                    }
+                }
+                new CreatePatternAction(customizedPattFolder, ExpressionType.REGEXP, regularText.getText(),
                         language).run();
             }
         });

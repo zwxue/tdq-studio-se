@@ -27,9 +27,11 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.analysis.parameters.PatternParameter;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.pattern.PatternBuilder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -42,6 +44,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class CreatePatternWizard extends AbstractWizard {
 
     static Logger log = Logger.getLogger(CreatePatternWizard.class);
+
     private CreatePatternWizardPage1 mPage;
 
     private CreatePatternWizardPage2 mPage2;
@@ -172,6 +175,19 @@ public class CreatePatternWizard extends AbstractWizard {
 
     public PatternBuilder getPatternBuilder() {
         return patternBuilder;
+    }
+
+    /**
+     * mzhao TDQ-4734 refresh the parent node of newly created pattern.
+     */
+    @Override
+    public boolean performFinish() {
+        Boolean ret = super.performFinish();
+        if (modelElement instanceof Pattern) {
+            RepositoryNode patternNode = RepositoryNodeHelper.recursiveFindPattern((Pattern) modelElement);
+            CorePlugin.getDefault().refreshDQView(patternNode.getParent());
+        }
+        return ret;
     }
 
     @Override
