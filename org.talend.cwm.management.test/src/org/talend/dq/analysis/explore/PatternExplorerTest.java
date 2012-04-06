@@ -12,13 +12,13 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.easymock.PowerMock.*;
-
-import java.util.Map;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.easymock.PowerMock.mockStatic;
+import static org.powermock.api.easymock.PowerMock.replayAll;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,15 +26,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.talend.cwm.exception.TalendException;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
-import org.talend.dq.analysis.TestAnalysisCreation;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -209,69 +208,51 @@ public class PatternExplorerTest {
     /**
      * Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#getQueryMap()}.
      */
-    @Test
-    public void testGetQueryMap() {
-        TestAnalysisCreation creator = new TestAnalysisCreation();
-
-        Analysis analysis;
-        try {
-            analysis = creator.createAndRunAnalysis();
-            PatternExplorer patternExplorer = new PatternExplorer();
-            Assert.assertTrue(patternExplorer.setAnalysis(analysis));
-            ChartDataEntity cdEntity = new ChartDataEntity(analysis.getResults().getIndicators().iterator().next(), EMPTY_STRING,
-                    EMPTY_STRING);
-            patternExplorer.setEnitty(cdEntity);
-            Map<String, String> queryMap = patternExplorer.getQueryMap();
-            Assert.assertNotNull(queryMap);
-            Assert.assertTrue(queryMap.size() == 4);
-        } catch (TalendException e) {
-            fail(e.getMessage());
-        }
-    }
+    // @Test
+    // public void testGetQueryMap() {
+    // TestAnalysisCreation creator = new TestAnalysisCreation();
+    //
+    // Analysis analysis;
+    // try {
+    // analysis = creator.createAndRunAnalysis();
+    // PatternExplorer patternExplorer = new PatternExplorer();
+    // Assert.assertTrue(patternExplorer.setAnalysis(analysis));
+    // ChartDataEntity cdEntity = new ChartDataEntity(analysis.getResults().getIndicators().iterator().next(),
+    // EMPTY_STRING,
+    // EMPTY_STRING);
+    // patternExplorer.setEnitty(cdEntity);
+    // Map<String, String> queryMap = patternExplorer.getQueryMap();
+    // Assert.assertNotNull(queryMap);
+    // Assert.assertTrue(queryMap.size() == 4);
+    // } catch (TalendException e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#getInvalidValuesStatement()}.
+     * 
+     * @Test public void testGetInvalidValuesStatement() { TestAnalysisCreation creator = new TestAnalysisCreation();
+     * 
+     * Analysis analysis; try { analysis = creator.createAndRunAnalysis(); PatternExplorer patternExplorer = new
+     * PatternExplorer(); Assert.assertTrue(patternExplorer.setAnalysis(analysis)); ChartDataEntity cdEntity = new
+     * ChartDataEntity(analysis.getResults().getIndicators().iterator().next(), EMPTY_STRING, EMPTY_STRING);
+     * patternExplorer.setEnitty(cdEntity); String strStatement = patternExplorer.getInvalidValuesStatement();
+     * System.out.println(strStatement); Assert.assertEquals(RES_VAL_NEG, strStatement); } catch (TalendException e) {
+     * fail(e.getMessage()); } }
      */
-    @Test
-    public void testGetInvalidValuesStatement() {
-        TestAnalysisCreation creator = new TestAnalysisCreation();
-
-        Analysis analysis;
-        try {
-            analysis = creator.createAndRunAnalysis();
-            PatternExplorer patternExplorer = new PatternExplorer();
-            Assert.assertTrue(patternExplorer.setAnalysis(analysis));
-            ChartDataEntity cdEntity = new ChartDataEntity(analysis.getResults().getIndicators().iterator().next(), EMPTY_STRING,
-                    EMPTY_STRING);
-            patternExplorer.setEnitty(cdEntity);
-            String strStatement = patternExplorer.getInvalidValuesStatement();
-            System.out.println(strStatement);
-            Assert.assertEquals(RES_VAL_NEG, strStatement);
-        } catch (TalendException e) {
-            fail(e.getMessage());
-        }
-    }
 
     /**
      * Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#getValidValuesStatement()}.
+     * 
+     * @Test public void testGetValidValuesStatement() { TestAnalysisCreation creator = new TestAnalysisCreation();
+     * 
+     * Analysis analysis; try { analysis = creator.createAndRunAnalysis(); PatternExplorer patternExplorer = new
+     * PatternExplorer(); Assert.assertTrue(patternExplorer.setAnalysis(analysis)); ChartDataEntity cdEntity = new
+     * ChartDataEntity(analysis.getResults().getIndicators().iterator().next(), EMPTY_STRING, EMPTY_STRING);
+     * patternExplorer.setEnitty(cdEntity); String strStatement = patternExplorer.getValidValuesStatement();
+     * System.out.println(strStatement); Assert.assertEquals(RES_VAL, strStatement); } catch (TalendException e) {
+     * fail(e.getMessage()); } }
      */
-    @Test
-    public void testGetValidValuesStatement() {
-        TestAnalysisCreation creator = new TestAnalysisCreation();
 
-        Analysis analysis;
-        try {
-            analysis = creator.createAndRunAnalysis();
-            PatternExplorer patternExplorer = new PatternExplorer();
-            Assert.assertTrue(patternExplorer.setAnalysis(analysis));
-            ChartDataEntity cdEntity = new ChartDataEntity(analysis.getResults().getIndicators().iterator().next(), EMPTY_STRING,
-                    EMPTY_STRING);
-            patternExplorer.setEnitty(cdEntity);
-            String strStatement = patternExplorer.getValidValuesStatement();
-            System.out.println(strStatement);
-            Assert.assertEquals(RES_VAL, strStatement);
-        } catch (TalendException e) {
-            fail(e.getMessage());
-        }
-    }
 }
