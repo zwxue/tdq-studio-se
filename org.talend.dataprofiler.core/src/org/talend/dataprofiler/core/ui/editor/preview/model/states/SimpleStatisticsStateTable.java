@@ -42,7 +42,7 @@ public class SimpleStatisticsStateTable extends AbstractChartTypeStatesTable {
     public JFreeChart getChart() {
         JFreeChart chart = TopChartFactory.createBarChart(DefaultMessagesImpl
                 .getString("SimpleStatisticsStateTable.SimpleStatistics"), getDataset(), true); //$NON-NLS-1$
-        ChartDecorator.decorate(chart);
+        ChartDecorator.decorate(chart, null);
         return chart;
     }
 

@@ -175,7 +175,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
         for (CategoryDataset dataset : optimizeShowDataset) {
             JFreeChart stackChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
                     .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), dataset, true); //$NON-NLS-1$
-            ChartDecorator.decorate(stackChart);
+            ChartDecorator.decorate(stackChart, null);
             ret.add(stackChart); //$NON-NLS-1$
         }
         // if (false) { // show line chart only in TDQ!!!

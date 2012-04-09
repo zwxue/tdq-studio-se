@@ -203,7 +203,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
 
         if (!EditorPreferencePage.isHideGraphics()) {
             JFreeChart chart = chartTypeState.getChart();
-            ChartDecorator.decorate(chart);
+            ChartDecorator.decorate(chart, null);
             if (chart != null) {
                 ChartComposite cc = new ChartComposite(sectionClient, SWT.NONE, chart, true);
 
@@ -262,7 +262,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         if (!EditorPreferencePage.isHideGraphics()) {
 
             JFreeChart chart = chartTypeState.getChart();
-            ChartDecorator.decorate(chart);
+            ChartDecorator.decorate(chart, null);
             if (chart != null) {
                 ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
