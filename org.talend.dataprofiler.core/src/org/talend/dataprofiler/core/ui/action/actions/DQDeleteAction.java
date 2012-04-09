@@ -141,6 +141,9 @@ public class DQDeleteAction extends DeleteAction {
         // ~TDQ-4090
 
         for (int i = selectedNodes.size() - 1; i >= 0; i--) {
+            if (selectedNodes.size() == 0) {
+                break;
+            }
             RepositoryNode node = selectedNodes.get(i);
             RepositoryNode parent = node.getParent();
             // handle generating report file.bug 18805 .
@@ -382,5 +385,13 @@ public class DQDeleteAction extends DeleteAction {
     private boolean showConfirmDialog(String reportFileName) {
         return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteForeverTitle"), reportFileName//$NON-NLS-1$
                 + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("DQDeleteAction.areYouDeleteForever"));//$NON-NLS-1$
+    }
+
+    public RepositoryNode getCurrentNode() {
+        return this.currentNode;
+    }
+
+    public void setCurrentNode(RepositoryNode currentNode) {
+        this.currentNode = currentNode;
     }
 }

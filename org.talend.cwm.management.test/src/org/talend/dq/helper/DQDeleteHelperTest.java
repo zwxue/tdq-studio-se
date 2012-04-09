@@ -12,19 +12,27 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.easymock.PowerMock.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
+
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -33,7 +41,7 @@ import org.talend.dataquality.properties.TDQReportItem;
  * 
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportHelper.class })
+@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportHelper.class, EObjectHelper.class })
 public class DQDeleteHelperTest {
 
     /**
@@ -48,12 +56,72 @@ public class DQDeleteHelperTest {
         when(folder.exists()).thenReturn(true);
         Property prop=mock(Property.class);
         when(item.getProperty()).thenReturn(prop);
-        mockStatic(PropertyHelper.class);
-        expect(PropertyHelper.getItemFile(prop)).andReturn(file);
-        mockStatic(ReportHelper.class);
-        expect(ReportHelper.getOutputFolder(file)).andReturn(folder);
-        replayAll();
+        PowerMockito.mockStatic(PropertyHelper.class);
+        when(PropertyHelper.getItemFile(prop)).thenReturn(file);
+        PowerMockito.mockStatic(ReportHelper.class);
+        when(ReportHelper.getOutputFolder(file)).thenReturn(folder);
         DQDeleteHelper.deleteRelations(item);
+
+    }
+
+    @Test
+    /**
+     * have a dependence not in recyclebin
+     */
+    public void testcanEmptyRecyBin_1() {
+        List<IRepositoryNode> recybinLs = new ArrayList<IRepositoryNode>();
+        ModelElement mod = mock(ModelElement.class);
+        List<ModelElement> dependceLs = new ArrayList<ModelElement>();
+        dependceLs.add(mod);
+        IRepositoryNode nodeAna = mock(IRepositoryNode.class);
+        IRepositoryNode nodeRep = mock(IRepositoryNode.class);
+        recybinLs.add(nodeAna);
+        recybinLs.add(nodeRep);
+        PowerMockito.mockStatic(EObjectHelper.class);
+        when(EObjectHelper.getDependencyClients(nodeAna)).thenReturn(dependceLs);
+        when(EObjectHelper.getDependencyClients(nodeRep)).thenReturn(null);
+        Item item = mock(Item.class);
+        ItemState state = mock(ItemState.class);
+        when(item.getState()).thenReturn(state);
+        when(state.isDeleted()).thenReturn(false);
+        Property prop = mock(Property.class);
+        when(prop.getItem()).thenReturn(item);
+        PowerMockito.mockStatic(PropertyHelper.class);
+        when(PropertyHelper.getProperty(mod)).thenReturn(prop);
+        // replayAll();
+        boolean canEmptyRecyBin = DQDeleteHelper.canEmptyRecyBin(recybinLs);
+        assertFalse(canEmptyRecyBin);
+
+    }
+
+    @Test
+    /**
+     * dosen't have dependences or all dependences are in recyclebin.
+     */
+    public void testcanEmptyRecyBin_2() {
+        List<IRepositoryNode> recybinLs = new ArrayList<IRepositoryNode>();
+        boolean canEmptyRecyBin = DQDeleteHelper.canEmptyRecyBin(recybinLs);
+        assertTrue(canEmptyRecyBin);
+        ModelElement mod = mock(ModelElement.class);
+        List<ModelElement> dependceLs = new ArrayList<ModelElement>();
+        dependceLs.add(mod);
+        IRepositoryNode nodeAna = mock(IRepositoryNode.class);
+        IRepositoryNode nodeRep = mock(IRepositoryNode.class);
+        recybinLs.add(nodeAna);
+        recybinLs.add(nodeRep);
+        PowerMockito.mockStatic(EObjectHelper.class);
+        when(EObjectHelper.getDependencyClients(nodeAna)).thenReturn(dependceLs);
+        when(EObjectHelper.getDependencyClients(nodeRep)).thenReturn(null);
+        Item item = mock(Item.class);
+        ItemState state = mock(ItemState.class);
+        when(item.getState()).thenReturn(state);
+        when(state.isDeleted()).thenReturn(true);
+        Property prop = mock(Property.class);
+        when(prop.getItem()).thenReturn(item);
+        PowerMockito.mockStatic(PropertyHelper.class);
+        when(PropertyHelper.getProperty(mod)).thenReturn(prop);
+        canEmptyRecyBin = DQDeleteHelper.canEmptyRecyBin(recybinLs);
+        assertTrue(canEmptyRecyBin);
 
     }
 
