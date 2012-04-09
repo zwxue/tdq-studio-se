@@ -38,7 +38,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.designer.core.model.utils.emf.talendfile.NodeType;
-import org.talend.repository.model.IRepositoryNode;
 
 /**
  * 
@@ -244,16 +243,6 @@ public class TopService implements ICoreService {
      * org.talend.core.model.metadata.IMetadataTable)
      */
     public List<ColumnNameChanged> getRemoveMetadataColumns(IMetadataTable oldTable, IMetadataTable newTable) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.core.ICoreService#getRoot()
-     */
-    public IRepositoryNode getRoot() {
         // TODO Auto-generated method stub
         return null;
     }

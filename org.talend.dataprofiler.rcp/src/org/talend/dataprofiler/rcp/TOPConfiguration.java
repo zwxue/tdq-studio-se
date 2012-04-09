@@ -29,6 +29,7 @@ import org.talend.core.service.ICorePerlService;
 import org.talend.core.ui.branding.IActionBarHelper;
 import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.ui.views.IRepositoryView;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -95,7 +96,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
         String navigatorId = "org.eclipse.ui.views.ResourceNavigator"; //$NON-NLS-1$
         String outlineId = "org.eclipse.ui.views.ContentOutline"; //$NON-NLS-1$
         String codeId = "org.talend.designer.core.codeView"; //$NON-NLS-1$
-        String repositoryId = "org.talend.repository.views.repository"; //$NON-NLS-1$
+        String repositoryId = IRepositoryView.VIEW_ID;
 
         String runProcessViewId = "org.talend.designer.runprocess.ui.views.processview"; //$NON-NLS-1$
         String problemsViewId = "org.talend.designer.core.ui.views.ProblemsView"; //$NON-NLS-1$
