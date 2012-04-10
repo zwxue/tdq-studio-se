@@ -54,7 +54,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
     private ProgressBar progressBar;
 
-    private CheckboxTreeViewer selectedPatternsTree;
+    private DQCheckedTreeViewer selectedPatternsTree;
 
     private boolean isForExchange;
 
@@ -173,6 +173,7 @@ public class ExportPatternsWizardPage extends WizardPage {
         selectedPatternsTree = new DQCheckedTreeViewer(group);
         selectedPatternsTree.addFilter(new DQFolderFliter(true));
         selectedPatternsTree.setInput(this.node);
+        selectedPatternsTree.setWizardPage(this);
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedPatternsTree.getTree());
 
@@ -242,6 +243,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
             public void widgetSelected(SelectionEvent e) {
                 selectedPatternsTree.setCheckedElements(new Object[0]);
+                selectedPatternsTree.updateWizardStatus();
             }
         };
         deselectButton.addSelectionListener(listener);
