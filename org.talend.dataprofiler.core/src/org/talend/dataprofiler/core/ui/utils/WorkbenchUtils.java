@@ -51,10 +51,12 @@ import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -70,12 +72,14 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -497,7 +501,17 @@ public final class WorkbenchUtils {
                         }
 
                     }
+                    // MOD yyin 20120410, bug 4753
+                    List<ModelElement> tempList = new ArrayList<ModelElement>();
+                    tempList.add(oldDataProvider);
+                    DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
+                    DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(analysis, tempList);
                     AnaResourceFileHelper.getInstance().save(analysis);
+                    IRepositoryViewObject reposViewObject = RepositoryNodeHelper.recursiveFind(oldDataProvider).getObject();
+                    ElementWriterFactory.getInstance().createDataProviderWriter()
+                            .save(reposViewObject.getProperty().getItem(), true);
+                    // ~
+
                 }
             }
         }
