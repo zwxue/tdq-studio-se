@@ -70,7 +70,9 @@ public class FirstNameStandardizeTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        searcher.close();
+        if (searcher != null) {
+            searcher.close();
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.lucene.queryParser.ParseException;
+import org.junit.Test;
 import org.talend.dataquality.standardization.main.HandleLucene;
 import org.talend.dataquality.standardization.main.HandleLuceneImpl;
 
@@ -39,7 +40,7 @@ public class HandLuceneImplTest extends TestCase {
         assertTrue("Index " + indexfolder + " not created.", back); // $NON-NLS-1$
     }
 
-
+    @Test
     public void testGetSearchResultStringStringMapOfStringStringBoolean() {
         Map<String, String> information2value = new HashMap<String, String>();
         information2value.put("gender", "0"); // $NON-NLS-1$ // $NON-NLS-2$
