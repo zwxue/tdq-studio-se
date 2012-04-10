@@ -54,7 +54,7 @@ public class ExportUDIWizardPage extends WizardPage {
 
     private ProgressBar progressBar;
 
-    private CheckboxTreeViewer selectedTree;
+    private DQCheckedTreeViewer selectedTree;
 
     private boolean isForExchange;
 
@@ -136,7 +136,8 @@ public class ExportUDIWizardPage extends WizardPage {
 
         selectedTree = new DQCheckedTreeViewer(group);
         selectedTree.setInput(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.USER_DEFINED_INDICATORS));
-
+        selectedTree.setWizardPage(this);
+        
         GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedTree.getTree());
 
         selectedTree.setCheckedElements(udiFolder.getChildren().toArray());
@@ -188,6 +189,7 @@ public class ExportUDIWizardPage extends WizardPage {
 
             public void widgetSelected(SelectionEvent e) {
                 selectedTree.setCheckedElements(new Object[0]);
+                selectedTree.updateWizardStatus();
             }
         };
         deselectButton.addSelectionListener(listener);

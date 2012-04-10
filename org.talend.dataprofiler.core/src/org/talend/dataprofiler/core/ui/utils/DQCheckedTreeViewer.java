@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
@@ -24,16 +25,56 @@ import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvide
  */
 public class DQCheckedTreeViewer extends ContainerCheckedTreeViewer {
 
-    /**
-     * DOC bZhou DQCheckedTreeViewer constructor comment.
-     * 
-     * @param parent
-     */
-    public DQCheckedTreeViewer(Composite parent) {
-        super(parent);
-        setLabelProvider(new DQRepositoryViewLabelProvider());
-        setContentProvider(new ResourceViewContentProvider());
-        addFilter(new DQFolderFliter(true));
-        addFilter(new FolderObjFilter());
-    }
+	  private WizardPage wizardPage = null;
+	    /**
+	     * DOC bZhou DQCheckedTreeViewer constructor comment.
+	     * 
+	     * @param parent
+	     */
+	    public DQCheckedTreeViewer(Composite parent) {
+	        super(parent);
+	        setLabelProvider(new DQRepositoryViewLabelProvider());
+	        setContentProvider(new ResourceViewContentProvider());
+	        addFilter(new DQFolderFliter(true));
+	        addFilter(new FolderObjFilter());
+	    }
+
+	    /*
+	     * (non-Javadoc)
+	     * 
+	     * @see org.eclipse.ui.dialogs.ContainerCheckedTreeViewer#doCheckStateChanged(java.lang.Object)
+	     */
+	    @Override
+	    protected void doCheckStateChanged(Object element) {
+	        super.doCheckStateChanged(element);
+	        updateWizardStatus();
+	    }
+
+	    /**
+	     * DOC zshen Comment method "updateWizardStatus".
+	     * 
+	     * If nothing be checked then the status of wizard don't should can get into complete status
+	     */
+	    public void updateWizardStatus() {
+	        Object[] checkedElements = this.getCheckedElements();
+	        wizardPage.setPageComplete(checkedElements.length > 0);
+	    }
+
+	    /**
+	     * Sets the wizardPage.
+	     * 
+	     * @param wizardPage the wizardPage to set
+	     */
+	    public void setWizardPage(WizardPage wizardPage) {
+	        this.wizardPage = wizardPage;
+	    }
+
+	    /**
+	     * Getter for wizardPage.
+	     * 
+	     * @return the wizardPage
+	     */
+	    public WizardPage getWizardPage() {
+	        return wizardPage;
+	    }
 }

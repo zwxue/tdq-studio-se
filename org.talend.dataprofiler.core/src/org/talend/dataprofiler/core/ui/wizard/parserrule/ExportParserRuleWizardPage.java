@@ -46,7 +46,7 @@ public class ExportParserRuleWizardPage extends WizardPage {
 
     private Text fileText;
 
-    private CheckboxTreeViewer selectedTree;
+    private DQCheckedTreeViewer selectedTree;
 
     private IFolder folder;
 
@@ -106,6 +106,7 @@ public class ExportParserRuleWizardPage extends WizardPage {
 
         selectedTree = new DQCheckedTreeViewer(group);
         selectedTree.setInput(parserRuleFolder);
+        selectedTree.setWizardPage(this);
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(selectedTree.getTree());
 
