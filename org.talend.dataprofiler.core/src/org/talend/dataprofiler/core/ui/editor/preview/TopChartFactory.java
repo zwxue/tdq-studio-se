@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
@@ -346,6 +347,9 @@ public final class TopChartFactory {
      */
     public static JFreeChart createBarChart(String titile, CategoryDataset dataset, boolean showLegend) {
         // MOD hcheng for 6965,Use 2D bar charts instead of 3D bar charts
+        // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        // TDQ-5112~
         JFreeChart chart = ChartFactory.createBarChart(null, titile,
                 DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
                 true, false);
@@ -385,7 +389,9 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createBarChart(String titile, CategoryDataset dataset) {
-
+        // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        // TDQ-5112~
         JFreeChart createBarChart = ChartFactory.createBarChart(null, titile, DefaultMessagesImpl
                 .getString("TopChartFactory.Value"), dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
 
