@@ -31,7 +31,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
@@ -230,25 +229,25 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
         // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
         // create group
-        Group group = new Group(labelButtonClient, SWT.NONE);
-        group.setLayout(new GridLayout(2, false));
-        group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-        group.setText(" ");
+        // Group group = new Group(labelButtonClient, SWT.NONE);
+        // group.setLayout(new GridLayout(2, false));
+        // group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+        // group.setText(" ");
 
         // create label
 //        Label label = new Label(group, SWT.NONE);
 //        label.setText("Metadata Name & Type:");
 
         // create TableCombo
-        connCombo = new TableCombo(group, SWT.BORDER | SWT.READ_ONLY);
-        connCombo.setLayoutData(new GridData(125, SWT.DEFAULT));
+        connCombo = new TableCombo(labelButtonClient, SWT.BORDER | SWT.READ_ONLY);
+        connCombo.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT));
 
         // tell the TableCombo that I want 2 blank columns auto sized.
         connCombo.defineColumns(2);
 
         // set which column will be used for the selected item.
         connCombo.setDisplayColumnIndex(0);
-        connCombo.setSize(40, 120);
+        connCombo.setSize(SWT.DEFAULT, SWT.DEFAULT);
 
         // add listener
         // connCombo = new TableCombo(labelButtonClient, SWT.BORDER);

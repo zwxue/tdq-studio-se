@@ -205,7 +205,8 @@ public abstract class AbstractPagePart {
              index = (Integer) value;
              }
              masterPage.getConnCombo().select(index);
-             masterPage.getConnCombo().setDisplayColumnIndex(index);
+            // MOD yyin 20120409 TDQ4977
+            // masterPage.getConnCombo().setDisplayColumnIndex(index);
 
             // MOD qiongli 2011-5-16 bug 21453
             if (prop != null && prop.getItem() != null && prop.getItem().getState() != null
