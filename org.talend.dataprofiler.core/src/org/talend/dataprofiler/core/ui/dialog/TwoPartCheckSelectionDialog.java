@@ -56,6 +56,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.progress.UIJob;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
@@ -64,6 +65,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -469,8 +471,10 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                     DBConnectionRepNode node = (DBConnectionRepNode) element;
                     Integer selectIndex = metadataFormPage.getConnCombo().getSelectionIndex();
                     Integer connectionIndex = null;
-                    ModelElement modelelement = PropertyHelper.getModelElement((node.getObject()).getProperty());
-                    Object value = metadataFormPage.getConnCombo().getData(modelelement == null ? "" : modelelement.getName());
+                    Property property = (node.getObject()).getProperty();
+                    ModelElement modelelement = PropertyHelper.getModelElement(property);
+                    String dataKey = property.getDisplayName() + RepositoryNodeHelper.getConnectionType(node);
+                    Object value = metadataFormPage.getConnCombo().getData(modelelement == null ? "" : dataKey);
                     if (value != null && value instanceof Integer) {
                         connectionIndex = (Integer) value;
                     }
