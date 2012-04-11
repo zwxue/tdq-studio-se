@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -33,6 +34,7 @@ import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -66,7 +68,7 @@ public class CWMPlugin extends Plugin {
         IEclipsePreferences prefs = new DefaultScope().getNode(cwm.getBundle().getSymbolicName());
         prefs.putBoolean(PluginConstant.CONNECTION_TIMEOUT, false);
         prefs.putBoolean(PluginConstant.FILTER_TABLE_VIEW_COLUMN, true);
-
+        PlatformUI.getPreferenceStore().setDefault(AnalysisThreadMemoryChangeNotifier.ANALYSIS_AUTOMATIC_MEMORY_CONTROL, false);
     }
 
     /**
@@ -152,7 +154,6 @@ public class CWMPlugin extends Plugin {
         }
         aliasManager.modelChanged();
     }
-
 
     /**
      * 

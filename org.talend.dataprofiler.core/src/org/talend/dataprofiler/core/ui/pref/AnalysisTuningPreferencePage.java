@@ -12,34 +12,58 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.pref;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryType;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.preference.ScaleFieldEditor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.HeapStatus;
+import org.talend.commons.ui.swt.preferences.CheckBoxFieldEditor;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 
 /**
  * DOC gdbu class global comment. Detailled comment
  */
 public class AnalysisTuningPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-    
+
     private static final int ELEMENTS_DEFAUL_TLENGTH = 200;
 
     public static final String CHECKED_ELEMENTS_LENGTH = "CHECKED_ELEMENTS_LENGTH";//$NON-NLS-1$
 
     private Text textAnalyzedColumnsLimit;
+
+    private ScaleFieldEditor memoryScaleField;
+
+    private CheckBoxFieldEditor autoComboField;
+
+    private int memFree;
+
+    private int memDefault;
+
+    private int memMax;
+
+    private int memTotal;
 
     /*
      * (non-Javadoc)
@@ -47,6 +71,13 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
      * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
     public void init(IWorkbench workbench) {
+
+        busyGC();
+        Runtime runtime = Runtime.getRuntime();
+        memTotal = convertToMeg(runtime.totalMemory());
+        memMax = convertToMeg(runtime.maxMemory());
+        memFree = convertToMeg(runtime.freeMemory());
+        memDefault = memMax - 5;
     }
 
     /*
@@ -56,12 +87,24 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
      */
     @Override
     protected Control createContents(Composite parent) {
-        Composite composite = new Composite(parent, SWT.FILL);
+
+        Composite mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(new GridLayout());
+        mainComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Group group1 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
+        group1.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.LimitGroup")); //$NON-NLS-1$
+        GridLayout gridLayout1 = new GridLayout();
+        group1.setLayout(gridLayout1);
+        GridData gridData1 = new GridData(GridData.FILL_HORIZONTAL);
+        group1.setLayoutData(gridData1);
+
+        Composite composite = new Composite(group1, SWT.FILL);
         composite.setLayout(new GridLayout(2, false));
 
         Label label = new Label(composite, SWT.NONE);
         label.setAlignment(SWT.CENTER);
-        label.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.AnalyzedColumnsLimit")); //$NON-NLS-1$
+        label.setText("Analyzed columns limit:"); //$NON-NLS-1$
         textAnalyzedColumnsLimit = new Text(composite, SWT.BORDER);
         GridData gdText = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
         gdText.widthHint = 50;
@@ -76,7 +119,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
             public void verifyText(VerifyEvent e) {
                 String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9.]");
+                Pattern pattern = Pattern.compile("^[0-9.]"); //$NON-NLS-1$
                 char[] charArray = inputValue.toCharArray();
                 for (char c : charArray) {
                     if (!pattern.matcher(String.valueOf(c)).matches()) {
@@ -85,7 +128,74 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
                 }
             }
         });
-        return composite;
+
+        Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
+        group2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.MemoryGroup")); //$NON-NLS-1$
+        gridLayout1 = new GridLayout(2, false);
+        group2.setLayout(gridLayout1);
+        gridData1 = new GridData(GridData.FILL_HORIZONTAL);
+        group2.setLayoutData(gridData1);
+
+        Composite composite2 = new Composite(group2, SWT.NONE);
+
+        autoComboField = new CheckBoxFieldEditor(AnalysisThreadMemoryChangeNotifier.ANALYSIS_AUTOMATIC_MEMORY_CONTROL,
+                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.EnableThreadControl"), composite2); //$NON-NLS-1$
+
+        final Composite composite4 = new Composite(composite2, SWT.NONE);
+        composite4.setLayout(new GridLayout(4, false));
+        composite4.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        autoComboField.setPropertyChangeListener(new IPropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent event) {
+                memoryScaleField.getScaleControl().setEnabled(Boolean.valueOf(event.getNewValue().toString()));
+            }
+
+        });
+
+        autoComboField.setPreferenceStore(PlatformUI.getPreferenceStore());
+        autoComboField.setPage(this);
+        autoComboField.load();
+
+        memoryScaleField = new ScaleFieldEditor(
+                AnalysisThreadMemoryChangeNotifier.ANALYSIS_MEMORY_THRESHOLD,
+                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.ForceToStop", "    "), composite4, memTotal - memFree, memMax, 1, 8); //$NON-NLS-1$ //$NON-NLS-2$
+
+        memoryScaleField.setPropertyChangeListener(new IPropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent event) {
+                memoryScaleField.setLabelText(DefaultMessagesImpl.getString(
+                        "AnalysisTuningPreferencePage.ForceToStop", event.getNewValue())); //$NON-NLS-1$ 
+            }
+
+        });
+
+        memoryScaleField.setPreferenceStore(PlatformUI.getPreferenceStore());
+        memoryScaleField.setPage(this);
+        memoryScaleField.load();
+
+        if (autoComboField.getBooleanValue()) {
+            memoryScaleField.setLabelText(DefaultMessagesImpl.getString(
+                    "AnalysisTuningPreferencePage.ForceToStop", memoryScaleField.getScaleControl().getSelection())); //$NON-NLS-1$
+        } else {
+            memoryScaleField.getScaleControl().setEnabled(false);
+        }
+
+        Composite composite3 = new Composite(composite2, SWT.NONE);
+        composite3.setLayout(gridLayout1);
+        composite3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        Label label3 = new Label(composite3, SWT.NONE);
+        label3.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.HeapStatus")); //$NON-NLS-1$
+        HeapStatus heap = new HeapStatus(composite3, PlatformUI.getPreferenceStore());
+        heap.setEnabled(false);
+        heap.setMenu(null);
+
+        CLabel label2 = new CLabel(composite2, SWT.WRAP);
+        label2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.JvmWarning")); //$NON-NLS-1$
+        label2.setImage(ImageLib.getImage(ImageLib.EXCLAMATION));
+
+        return mainComposite;
     }
 
     /**
@@ -113,6 +223,10 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     protected void performDefaults() {
         textAnalyzedColumnsLimit.setText(ELEMENTS_DEFAUL_TLENGTH + PluginConstant.EMPTY_STRING);
         PlatformUI.getPreferenceStore().setValue(CHECKED_ELEMENTS_LENGTH, textAnalyzedColumnsLimit.getText());
+
+        memoryScaleField.loadDefault();
+        autoComboField.loadDefault();
+
         super.performDefaults();
     }
 
@@ -124,6 +238,8 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     @Override
     public boolean performOk() {
         getNewAnalyzedColumnsLimit();
+        memoryScaleField.store();
+        autoComboField.store();
         return super.performOk();
     }
 
@@ -135,6 +251,8 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     @Override
     protected void performApply() {
         getNewAnalyzedColumnsLimit();
+        memoryScaleField.store();
+        autoComboField.store();
         super.performApply();
     }
 
@@ -151,4 +269,32 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         }
     }
 
+    private MemoryPoolMXBean findTenuredGenPool() {
+        for (MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
+            if (pool.getType() == MemoryType.HEAP && pool.isUsageThresholdSupported()) {
+                return pool;
+            }
+        }
+        return null;
+    }
+
+    private void busyGC() {
+        for (int i = 0; i < 2; ++i) {
+            System.gc();
+            System.runFinalization();
+        }
+    }
+
+    /**
+     * Converts the given number of bytes to the corresponding number of megabytes (rounded up).
+     */
+    private int convertToMeg(long numBytes) {
+        return Integer.parseInt(String.valueOf((numBytes + (512 * 1024)) / (1024 * 1024)));
+    }
+
+    // Get top or d defulat method.
+    private int getDefaultThreshold() {
+        return AnalysisThreadMemoryChangeNotifier.getDefaultThresholdValue();
+
+    }
 }

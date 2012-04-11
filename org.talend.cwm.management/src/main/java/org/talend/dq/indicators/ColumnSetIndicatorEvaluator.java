@@ -179,6 +179,10 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
             indicToRowMap.clear();
             while (resultSet.next()) {
+                // MOD yyi 2012-04-11 TDQ-4916:Add memory control for java analysis.
+                if (!continueRun()) {
+                    break;
+                }
                 EList<Object> objectLs = new BasicEList<Object>();
                 Iterator<String> it = columnNames.iterator();
                 while (it.hasNext()) {

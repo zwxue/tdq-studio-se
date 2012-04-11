@@ -28,6 +28,8 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
+import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
+import org.talend.dq.analysis.memory.IMemoryChangeListener;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -37,9 +39,11 @@ import org.talend.utils.sugars.ReturnCode;
  * Abstract class for computing indicators.
  * @param <T> the type of the object identifying the analyzed element (usually a string).
  */
-public abstract class Evaluator<T> {
+public abstract class Evaluator<T> implements IMemoryChangeListener {
 
     private static Logger log = Logger.getLogger(Evaluator.class);
+
+    private boolean isLowMemory = false;
 
     protected Connection connection;
 
@@ -111,12 +115,21 @@ public abstract class Evaluator<T> {
                 rc.setReturnCode(Messages.getString("Evaluator.Problem") + javaPatternMessage, false); //$NON-NLS-1$
                 return rc;
             }
+
+            AnalysisThreadMemoryChangeNotifier.getInstance().addListener(this);
+
             rc = executeSqlQuery(sqlStatement);
+
+            AnalysisThreadMemoryChangeNotifier.getInstance().removeListener(this);
+
             if (!rc.isOk()) {
                 return rc;
             }
             if (!finalizeIndicators()) {
                 rc.setReturnCode(Messages.getString("Evaluator.ProblemFinalizeIndicators"), false); //$NON-NLS-1$
+            }
+            if (isLowMemory) {
+                rc.setReturnCode(Messages.getString("Evaluator.OutOfMomory", freeMemory), false); //$NON-NLS-1$
             }
             return rc;
         } catch (SQLException e) {
@@ -251,6 +264,8 @@ public abstract class Evaluator<T> {
 
     private IProgressMonitor monitor;
 
+    private long freeMemory;
+
     public IProgressMonitor getMonitor() {
         return monitor;
     }
@@ -263,7 +278,19 @@ public abstract class Evaluator<T> {
         boolean ret = true;
         if (getMonitor() != null && getMonitor().isCanceled()) {
             ret = false;
+        } else if (isLowMemory) {
+            ret = false;
         }
         return ret;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.memory.IMemoryChangeListener#onLowMemory(long)
+     */
+    public void onMemoryChange(long freeMemory) {
+        this.freeMemory = (freeMemory + (512 * 1024)) / (1024 * 1024);
+        this.isLowMemory = true;
     }
 }
