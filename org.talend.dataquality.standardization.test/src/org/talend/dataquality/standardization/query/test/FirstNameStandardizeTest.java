@@ -16,6 +16,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.SimpleAnalyzer;
@@ -23,6 +25,7 @@ import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.eclipse.core.runtime.URIUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,7 +36,7 @@ import org.talend.dataquality.standardization.query.FirstNameStandardize;
  */
 public class FirstNameStandardizeTest {
 
-    private static final String indexfolder = "data/TalendGivenNames_index"; // $NON-NLS-1$
+    private static final String indexfolder = "/TalendGivenNames_index/"; // $NON-NLS-1$
 
     private static IndexSearcher searcher = null;
 
@@ -62,7 +65,11 @@ public class FirstNameStandardizeTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        Directory dir = FSDirectory.open(new File(indexfolder));
+        URL url = FirstNameStandardizeTest.class.getResource(indexfolder);
+        URI escapedURI = new URI(url.getProtocol(), url.getPath(), url.getQuery());
+        File folder = URIUtil.toFile(escapedURI);
+
+        Directory dir = FSDirectory.open(folder);
         searcher = new IndexSearcher(dir);
         searchAnalyzer = new SimpleAnalyzer();
         fnameStandardize = new FirstNameStandardize(searcher, searchAnalyzer, 10);
