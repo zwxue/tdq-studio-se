@@ -82,10 +82,15 @@ public abstract class AbstractMemoryChangeNotifier implements IMemoryChangeNotif
 
     // if threshold is greater than the maximum amount of memory for this memory pool if defined.
     protected void setUsageThreshold(long threshold) {
-        long usedMemory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();
-        long maxMemory = tenuredGenPoll.getUsage().getMax();
-        // the threshold shoudle less than max memory
-        tenuredGenPoll.setUsageThreshold(Math.min(Math.max(threshold, usedMemory), maxMemory));
+        // MOD yyi 2012-04-12 TDQ-4916:The usage threshold crossing checking is disabled if it is set to zero.
+        if (threshold <= 0) {
+            tenuredGenPoll.setUsageThreshold(0);
+        } else {
+            long usedMemory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();
+            long maxMemory = tenuredGenPoll.getUsage().getMax();
+            // the threshold shoudle less than max memory
+            tenuredGenPoll.setUsageThreshold(Math.min(Math.max(threshold, usedMemory), maxMemory));
+        }
     }
 
 }
