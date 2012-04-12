@@ -326,6 +326,9 @@ public final class TopChartFactory {
             createGannttDatasets.get(next).addSeriesToGanttDataset(ganttDataset, next);
         }
         String chartAxies = DefaultMessagesImpl.getString("TopChartFactory.chartAxies", dateColumn.getName()); //$NON-NLS-1$
+        // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        // TDQ-5112~
         JFreeChart chart = ChartFactory.createGanttChart("", // chart title //$NON-NLS-1$
                 DefaultMessagesImpl.getString("TopChartFactory.Categories"), // domain axis label //$NON-NLS-1$
                 chartAxies, // range axis label
@@ -411,7 +414,9 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createBoxAndWhiskerChart(String title, BoxAndWhiskerCategoryDataset dataset) {
-
+        // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        // TDQ-5112~
         JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, title, DefaultMessagesImpl
                 .getString("TopChartFactory.Value"), dataset, false); //$NON-NLS-1$
         CategoryPlot plot = chart.getCategoryPlot();
@@ -483,6 +488,9 @@ public final class TopChartFactory {
      */
     public static JFreeChart createStackedBarChart(String title, String domainAxisLabel, String rangeAxisLabel,
             CategoryDataset dataset, PlotOrientation orientation, boolean legend, boolean tooltips, boolean urls) {
+        // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        // TDQ-5112~
         final JFreeChart chart = ChartFactory.createStackedBarChart(title, domainAxisLabel, rangeAxisLabel, dataset, orientation,
                 legend, tooltips, urls);
 
@@ -515,6 +523,9 @@ public final class TopChartFactory {
      * @return
      */
     public static JFreeChart createLineChart(String title, XYDataset dataset, boolean showLegend) {
+        // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        // TDQ-5112~
         final JFreeChart chart = ChartFactory.createXYLineChart(null, title, DefaultMessagesImpl
                 .getString("TopChartFactory.Percent"), dataset, PlotOrientation.VERTICAL, //$NON-NLS-1$
                 showLegend, false, false);
@@ -545,6 +556,9 @@ public final class TopChartFactory {
      */
     public static JFreeChart createPieChart(String title, PieDataset dataset, boolean showLegend, boolean toolTips,
             boolean urls) {
+        // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        // TDQ-5112~
         return ChartFactory.createPieChart(title, dataset, showLegend, toolTips, urls);
     }
 }
