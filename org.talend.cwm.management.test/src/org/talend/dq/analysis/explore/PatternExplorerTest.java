@@ -12,20 +12,19 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
@@ -41,9 +40,11 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({ DbmsLanguageFactory.class, IndicatorEnum.class })
 public class PatternExplorerTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
@@ -90,9 +91,8 @@ public class PatternExplorerTest {
         when(dbmsLanguage.from()).thenReturn(" FROM ");
 
         // MOCKING STATIC METHODS
-        mockStatic(DbmsLanguageFactory.class);
-        expect(DbmsLanguageFactory.createDbmsLanguage(dataManager)).andReturn(dbmsLanguage);
-        replayAll();
+        PowerMockito.mockStatic(DbmsLanguageFactory.class);
+        when(DbmsLanguageFactory.createDbmsLanguage(dataManager)).thenReturn(dbmsLanguage);
 
         Assert.assertTrue(patternExplorer.setAnalysis(analysis));
 
@@ -101,8 +101,10 @@ public class PatternExplorerTest {
 
         // when(patternExplorer.getAnalyzedElementName(indicator)).thenReturn( "mocked_column");
 
-        mockStatic(IndicatorEnum.class);
-        expect(IndicatorEnum.findIndicatorEnum(indicator.eClass())).andReturn(IndicatorEnum.RowCountIndicatorEnum);
+        PowerMockito.mockStatic(IndicatorEnum.class);
+        when(IndicatorEnum.findIndicatorEnum(indicator.eClass())).thenReturn(IndicatorEnum.RowCountIndicatorEnum);
+
+        verifyStatic();
 
         patternExplorer.setEnitty(cdEntity);
 
