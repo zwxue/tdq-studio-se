@@ -12,3 +12,11 @@ Require-Bundle: org.junit4,
  org.hamcrest;bundle-version="1.1.0",
  org.talend.dataquality.test,
  org.mockito
+Bundle-ClassPath: .,
+ lib/powermock-classloading-xstream-1.4.11.jar,
+ lib/powermock-easymock-1.4.11-full.jar,
+ lib/powermock-mockito-1.4.11-full.jar,
+ lib/powermock-module-junit4-rule-1.4.11.jar,
+ lib/powermock-module-junit4-rule-agent-1.4.11.jar,
+ lib/powermock-classloading-base-1.4.11.jar,
+ lib/powermock-classloading-objenesis-1.4.11.jar

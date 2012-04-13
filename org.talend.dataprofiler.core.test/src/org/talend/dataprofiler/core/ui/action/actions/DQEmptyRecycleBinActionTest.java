@@ -24,11 +24,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -47,10 +47,13 @@ import org.talend.repository.model.IRepositoryNode;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-@RunWith(PowerMockRunner.class)
+// @RunWith(PowerMockRunner.class)
 @PrepareForTest({ CorePlugin.class, DQDeleteHelper.class, IProxyRepositoryFactory.class, PropertyHelper.class,
         MessageDialog.class, ProxyRepositoryFactory.class, RepositoryNodeHelper.class, CoreRuntimePlugin.class })
 public class DQEmptyRecycleBinActionTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private DQEmptyRecycleBinAction dqEmptyAction_real;
 

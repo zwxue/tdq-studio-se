@@ -25,11 +25,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
@@ -56,10 +56,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-@RunWith(PowerMockRunner.class)
+// @RunWith(PowerMockRunner.class)
 @PrepareForTest({ CorePlugin.class, RepositoryNodeHelper.class, CoreRuntimePlugin.class, IProxyRepositoryFactory.class,
         PropertyHelper.class, DeleteModelElementConfirmDialog.class, EObjectHelper.class })
 public class DQDeleteActionTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private DQDeleteAction dqDeleteAction_real;
 
