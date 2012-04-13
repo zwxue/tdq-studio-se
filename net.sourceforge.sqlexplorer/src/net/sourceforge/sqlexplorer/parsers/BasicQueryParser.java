@@ -258,6 +258,16 @@ public class BasicQueryParser extends AbstractQueryParser {
             return null;
         }
         
+        // MOD sizhaoliu 2012-04-13 TDQ-5042 avoid empty result because of the script description
+        if (_sQuerys.startsWith("--")) {
+            int nlIndex = _sQuerys.indexOf("\n");
+            if (nlIndex > 0) {
+                String sNextQuery = _sQuerys.substring(0, nlIndex);
+                _sQuerys = _sQuerys.substring(nlIndex + 1).trim();
+                return sNextQuery;
+            }
+        }
+        
         String separator = _querySeparator;
                 
         int indexSep = findFirstSeparator();
