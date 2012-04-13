@@ -21,7 +21,7 @@
 //============================================================================
 package org.talend.dq.nodes;
 
-import static org.easymock.EasyMock.*;
+// import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.easymock.PowerMock.*;
@@ -38,10 +38,11 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
@@ -58,10 +59,13 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-@RunWith(PowerMockRunner.class)
+// @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ReportUtils.class, ResourceFileMap.class, GlobalServiceRegister.class, IExtensionRegistry.class,
         IConfigurationElement.class, ProjectManager.class, CoreRuntimePlugin.class })
 public class ReportSubFolderRepNodeTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private ReportSubFolderRepNode reportSubRepNode;
 
@@ -209,19 +213,19 @@ public class ReportSubFolderRepNodeTest {
             when(fe.getFullPath()).thenReturn(new Path(""));
             res[i] = fe;
         }
-        mockStatic(ReportUtils.class);
+        PowerMockito.mockStatic(ReportUtils.class);
         IFile repFile = mock(IFile.class);
-        expect(ReportUtils.getReportListFiles(repFile)).andReturn(res);
-        mockStatic(ResourceFileMap.class);
-        expect(ResourceFileMap.findCorrespondingFile(report)).andReturn(repFile);
+        when(ReportUtils.getReportListFiles(repFile)).thenReturn(res);
+        PowerMockito.mockStatic(ResourceFileMap.class);
+        when(ResourceFileMap.findCorrespondingFile(report)).thenReturn(repFile);
 
-        mockStatic(ProjectManager.class);
+        PowerMockito.mockStatic(ProjectManager.class);
         ProjectManager projManager = mock(ProjectManager.class);
         when(projManager.getProjectNode("")).thenReturn(null);
-        mockStatic(CoreRuntimePlugin.class);
+        PowerMockito.mockStatic(CoreRuntimePlugin.class);
         CoreRuntimePlugin coreRunPlugin = mock(CoreRuntimePlugin.class);
-        expect(CoreRuntimePlugin.getInstance()).andReturn(coreRunPlugin).andReturn(coreRunPlugin).andReturn(coreRunPlugin);
-        expect(ProjectManager.getInstance()).andReturn(projManager).andReturn(projManager).andReturn(projManager);
+        when(CoreRuntimePlugin.getInstance()).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin);
+        when(ProjectManager.getInstance()).thenReturn(projManager).thenReturn(projManager).thenReturn(projManager);
         replayAll();
     }
 
