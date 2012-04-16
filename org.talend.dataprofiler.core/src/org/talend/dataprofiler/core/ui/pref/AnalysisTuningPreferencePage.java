@@ -157,15 +157,24 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         autoComboField.setPage(this);
         autoComboField.load();
 
-        memoryScaleField = new ScaleFieldEditor(
-                AnalysisThreadMemoryChangeNotifier.ANALYSIS_MEMORY_THRESHOLD,
-                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.ForceToStop", "    "), composite4, memTotal - memFree, memMax, 1, 8); //$NON-NLS-1$ //$NON-NLS-2$
+        Label labelScale1 = new Label(composite4, SWT.NONE);
+        labelScale1.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.ForceToStop")); //$NON-NLS-1$
+
+        final Label labelScale2 = new Label(composite4, SWT.RIGHT);
+
+        Label labelScale3 = new Label(composite4, SWT.NONE);
+        labelScale3.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.Mb")); //$NON-NLS-1$
+
+        Composite compositeScale = new Composite(composite4, SWT.NONE);
+        compositeScale.setLayout(new GridLayout());
+
+        memoryScaleField = new ScaleFieldEditor(AnalysisThreadMemoryChangeNotifier.ANALYSIS_MEMORY_THRESHOLD,
+                "", compositeScale, memTotal - memFree, memMax, 1, 8); //$NON-NLS-1$
 
         memoryScaleField.setPropertyChangeListener(new IPropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent event) {
-                memoryScaleField.setLabelText(DefaultMessagesImpl.getString(
-                        "AnalysisTuningPreferencePage.ForceToStop", event.getNewValue())); //$NON-NLS-1$ 
+                labelScale2.setText(event.getNewValue().toString());
             }
 
         });
@@ -174,9 +183,9 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         memoryScaleField.setPage(this);
         memoryScaleField.load();
 
+        labelScale2.setText(String.valueOf(memoryScaleField.getMaximum()));
         if (autoComboField.getBooleanValue()) {
-            memoryScaleField.setLabelText(DefaultMessagesImpl.getString(
-                    "AnalysisTuningPreferencePage.ForceToStop", memoryScaleField.getScaleControl().getSelection())); //$NON-NLS-1$
+            labelScale2.setText(String.valueOf(memoryScaleField.getScaleControl().getSelection()));
         } else {
             memoryScaleField.getScaleControl().setEnabled(false);
         }
