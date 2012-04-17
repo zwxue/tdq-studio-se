@@ -484,6 +484,7 @@ public final class WorkbenchUtils {
                 analysis = (Analysis) AnaResourceFileHelper.getInstance().getModelElement(file);
                 // MOD qiongli 2010-8-17,bug 14977
                 if (analysis != null) {
+                    boolean isConNeedModify = false;
                     eResource = analysis.eResource();
                     Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
                     Iterator<EObject> it = referenceMaps.keySet().iterator();
@@ -493,6 +494,7 @@ public final class WorkbenchUtils {
                         Collection<Setting> settings = referenceMaps.get(eobj);
                         for (Setting setting : settings) {
                             if (setting.getEObject() instanceof AnalysisContext) {
+                                isConNeedModify = true;
                                 analysis.getContext().getAnalysedElements().remove(eobj);
                             } else if (setting.getEObject() instanceof Indicator) {
                                 analysis.getResults().getIndicators().remove(setting.getEObject());
@@ -501,15 +503,18 @@ public final class WorkbenchUtils {
 
                     }
                     // MOD yyin 20120410, bug 4753
+                    if (isConNeedModify) {
                     List<ModelElement> tempList = new ArrayList<ModelElement>();
                     tempList.add(oldDataProvider);
                     DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
                     DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(analysis, tempList);
-                    AnaResourceFileHelper.getInstance().save(analysis);
+
                     IRepositoryViewObject reposViewObject = RepositoryNodeHelper.recursiveFind(oldDataProvider).getObject();
                     ElementWriterFactory.getInstance().createDataProviderWriter()
                             .save(reposViewObject.getProperty().getItem(), true);
+                    }
                     // ~
+                    AnaResourceFileHelper.getInstance().save(analysis);
                 }
             }
         }
