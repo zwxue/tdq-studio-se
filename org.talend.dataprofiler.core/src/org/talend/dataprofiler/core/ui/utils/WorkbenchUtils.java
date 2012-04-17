@@ -489,11 +489,13 @@ public final class WorkbenchUtils {
                     Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
                     Iterator<EObject> it = referenceMaps.keySet().iterator();
                     ModelElement eobj = null;
+                    boolean containsAnaTables = false;
                     while (it.hasNext()) {
                         eobj = (ModelElement) it.next();
                         Collection<Setting> settings = referenceMaps.get(eobj);
                         for (Setting setting : settings) {
                             if (setting.getEObject() instanceof AnalysisContext) {
+                                containsAnaTables = true;
                                 analysis.getContext().getAnalysedElements().remove(eobj);
                             } else if (setting.getEObject() instanceof Indicator) {
                                 analysis.getResults().getIndicators().remove(setting.getEObject());
@@ -502,15 +504,17 @@ public final class WorkbenchUtils {
 
                     }
                     // MOD yyin 20120410, bug 4753
+                    if (containsAnaTables) {
                     List<ModelElement> tempList = new ArrayList<ModelElement>();
                     tempList.add(oldDataProvider);
                     DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
                     DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(analysis, tempList);
-                    AnaResourceFileHelper.getInstance().save(analysis);
                     IRepositoryViewObject reposViewObject = RepositoryNodeHelper.recursiveFind(oldDataProvider).getObject();
                     ElementWriterFactory.getInstance().createDataProviderWriter()
                             .save(reposViewObject.getProperty().getItem(), true);
+                    }
                     // ~
+                    AnaResourceFileHelper.getInstance().save(analysis);
 
                 }
             }
