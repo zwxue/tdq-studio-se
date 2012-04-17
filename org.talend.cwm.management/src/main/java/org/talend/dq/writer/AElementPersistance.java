@@ -71,6 +71,7 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -558,6 +559,14 @@ public abstract class AElementPersistance {
             needSaves.add(re);
         }
 
+        try {
+            ProxyRepositoryFactory.getInstance().save(item);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+
         AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
                 AbstractResourceChangesService.class);
         if (resChangeService != null) {
@@ -567,13 +576,6 @@ public abstract class AElementPersistance {
             }
         }
 
-        try {
-            ProxyRepositoryFactory.getInstance().save(item);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
-        }
         return rc;
     }
 
