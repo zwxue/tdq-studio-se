@@ -430,7 +430,8 @@ public class DataSet {
 	            return resultSet.getTime(columnIndex);
 	            
 	        default:
-	            return resultSet.getString(columnIndex);
+	            //MOD yyi 2012-04-17 TDQ-5176 : Change get string to get bytes for mess decode.
+	            return null == resultSet.getBytes(columnIndex) ? null : new String(resultSet.getBytes(columnIndex));
 	    }
     }
     
