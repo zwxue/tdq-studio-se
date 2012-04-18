@@ -167,6 +167,8 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
         Composite compositeScale = new Composite(composite4, SWT.NONE);
         compositeScale.setLayout(new GridLayout());
+        // MOD yyi 2012-04-18 TDQ-4916 scale layout fixed.
+        compositeScale.setLayoutData(gridData1);
 
         memoryScaleField = new ScaleFieldEditor(AnalysisThreadMemoryChangeNotifier.ANALYSIS_MEMORY_THRESHOLD,
                 "", compositeScale, memTotal - memFree, memMax, 1, 8); //$NON-NLS-1$
