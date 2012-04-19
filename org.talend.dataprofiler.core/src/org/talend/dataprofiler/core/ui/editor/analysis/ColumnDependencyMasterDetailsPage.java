@@ -304,7 +304,9 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         // Extract saving log function.
         // @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#logSaved(ReturnCode)
         logSaved(saved);
-
+        // ADD xqliu 2012-04-19 TDQ-5005
+        anaColumnCompareViewer.setDirty(false);
+        dataFilterComp.setDirty(false);
     }
 
     /*
@@ -390,5 +392,19 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      */
     public void openColumnsSetBSelectionDialog() {
         anaColumnCompareViewer.openColumnsSetBSelectionDialog();
+    }
+
+    /**
+     * ADD xqliu 2012-04-19 TDQ-5005.
+     */
+    @Override
+    public boolean isDirty() {
+        if (anaColumnCompareViewer == null ? false : anaColumnCompareViewer.isDirty()) {
+            this.setDirty(anaColumnCompareViewer.isDirty());
+        }
+        if (dataFilterComp == null ? false : dataFilterComp.isDirty()) {
+            this.setDirty(dataFilterComp.isDirty());
+        }
+        return super.isDirty();
     }
 }

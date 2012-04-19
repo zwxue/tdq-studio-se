@@ -148,18 +148,16 @@ public abstract class AbstractPagePart {
     }
 
     /**
-     * 
      * ADD mzhao 2009-05-05 bug:6587.
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, List<TableViewer> tableViewerPosStack) {
         boolean isEmpty1 = tableViewerPosStack.get(0) == null || tableViewerPosStack.get(0).getInput() == null
-                || ((List<TdColumn>) tableViewerPosStack.get(0).getInput()).size() == 0;
+                || ((List) tableViewerPosStack.get(0).getInput()).size() == 0;
         boolean isEmpty2 = tableViewerPosStack.get(1) == null || tableViewerPosStack.get(1).getInput() == null
-                || ((List<TdColumn>) tableViewerPosStack.get(1).getInput()).size() == 0;
+                || ((List) tableViewerPosStack.get(1).getInput()).size() == 0;
         if (isEmpty1 && isEmpty2) {
             return;
         } else {
-
             TableViewer columnsElementViewer = null;
             if (!isEmpty1) {
                 columnsElementViewer = tableViewerPosStack.get(0);
