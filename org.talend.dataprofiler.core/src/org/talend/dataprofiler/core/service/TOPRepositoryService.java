@@ -327,17 +327,25 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * @see org.talend.core.ITDQRepositoryService#confirmUpdateAnalysis(org.talend.core.model.properties.ConnectionItem)
      */
     public boolean confirmUpdateAnalysis(ConnectionItem connectionItem) {
-        Connection connection = connectionItem.getConnection();
-        List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
-        if (clientDependencys != null && clientDependencys.size() > 0) {
-            if (!MessageDialog.openQuestion(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"), //$NON-NLS-1$
+        // optimize code, just open an dialog,don't need to judge if has dependce in here.
+        if (MessageDialog.openQuestion(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("TOPRepositoryService.propgateAnalyses", connectionItem.getProperty() //$NON-NLS-1$
-                            .getLabel()))) {
-                return false;
-            }
-        } else {
-            return false;
+                        .getLabel()))) {
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    public boolean hasClientDependences(ConnectionItem connItem) {
+        if (connItem != null) {
+            Connection connection = connItem.getConnection();
+            if (connection != null) {
+                List<ModelElement> clientDependences = EObjectHelper.getDependencyClients(connection);
+                if (clientDependences != null && !clientDependences.isEmpty()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
