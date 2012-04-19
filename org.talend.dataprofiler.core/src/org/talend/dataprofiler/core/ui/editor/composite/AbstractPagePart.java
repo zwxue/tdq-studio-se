@@ -47,10 +47,9 @@ import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 import common.Logger;
-
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -149,18 +148,16 @@ public abstract class AbstractPagePart {
     }
 
     /**
-     * 
      * ADD mzhao 2009-05-05 bug:6587.
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, List<TableViewer> tableViewerPosStack) {
         boolean isEmpty1 = tableViewerPosStack.get(0) == null || tableViewerPosStack.get(0).getInput() == null
-                || ((List<TdColumn>) tableViewerPosStack.get(0).getInput()).size() == 0;
+                || ((List) tableViewerPosStack.get(0).getInput()).size() == 0;
         boolean isEmpty2 = tableViewerPosStack.get(1) == null || tableViewerPosStack.get(1).getInput() == null
-                || ((List<TdColumn>) tableViewerPosStack.get(1).getInput()).size() == 0;
+                || ((List) tableViewerPosStack.get(1).getInput()).size() == 0;
         if (isEmpty1 && isEmpty2) {
             return;
         } else {
-
             TableViewer columnsElementViewer = null;
             if (!isEmpty1) {
                 columnsElementViewer = tableViewerPosStack.get(0);
@@ -189,22 +186,21 @@ public abstract class AbstractPagePart {
             masterPage.reloadDataproviderAndFillConnCombo();
             // ~TDQ-3213
 
-             // MOD yyin 201204 TDQ-4977
-             Object value = masterPage.getConnCombo().getData(
-             dataManager.getName() + RepositoryNodeHelper.getConnectionType(dataManager));
-            
-             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
-            
+            // MOD yyin 201204 TDQ-4977
+            Object value = masterPage.getConnCombo().getData(
+                    dataManager.getName() + RepositoryNodeHelper.getConnectionType(dataManager));
+
+            // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
+
             Property prop = PropertyHelper.getProperty((Connection) dataManager);
-             if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(dataManager) != null) {
-             value = masterPage.getConnCombo().getData(prop.getLabel() +
-             RepositoryNodeHelper.getConnectionType(dataManager));
-             }
-             Integer index = 0;
-             if (value != null && value instanceof Integer) {
-             index = (Integer) value;
-             }
-             masterPage.getConnCombo().select(index);
+            if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(dataManager) != null) {
+                value = masterPage.getConnCombo().getData(prop.getLabel() + RepositoryNodeHelper.getConnectionType(dataManager));
+            }
+            Integer index = 0;
+            if (value != null && value instanceof Integer) {
+                index = (Integer) value;
+            }
+            masterPage.getConnCombo().select(index);
             // MOD yyin 20120409 TDQ4977
             // masterPage.getConnCombo().setDisplayColumnIndex(index);
 

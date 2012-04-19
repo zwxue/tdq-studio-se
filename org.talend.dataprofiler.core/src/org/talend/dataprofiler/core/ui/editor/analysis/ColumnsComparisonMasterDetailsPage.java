@@ -328,7 +328,10 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         // Extract saving log function.
         // @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#logSaved(ReturnCode)
         logSaved(saved);
-
+        // ADD xqliu 2012-04-19 TDQ-5005
+        anaColumnCompareViewer.setDirty(false);
+        dataFilterCompA.setDirty(false);
+        dataFilterCompB.setDirty(false);
     }
 
     public void fireRuningItemChanged(boolean status) {
@@ -423,5 +426,22 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.setDirty(true);
         }
+    }
+
+    /**
+     * ADD xqliu 2012-04-19 TDQ-5005.
+     */
+    @Override
+    public boolean isDirty() {
+        if (anaColumnCompareViewer == null ? false : anaColumnCompareViewer.isDirty()) {
+            this.setDirty(anaColumnCompareViewer.isDirty());
+        }
+        if (dataFilterCompA == null ? false : dataFilterCompA.isDirty()) {
+            this.setDirty(dataFilterCompA.isDirty());
+        }
+        if (dataFilterCompB == null ? false : dataFilterCompB.isDirty()) {
+            this.setDirty(dataFilterCompB.isDirty());
+        }
+        return super.isDirty();
     }
 }
