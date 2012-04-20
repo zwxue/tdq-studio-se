@@ -43,6 +43,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -51,7 +52,6 @@ import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
@@ -72,7 +72,6 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -505,13 +504,26 @@ public final class WorkbenchUtils {
                     }
                     // MOD yyin 20120410, bug 4753
                     if (containsAnaTables) {
-                    List<ModelElement> tempList = new ArrayList<ModelElement>();
-                    tempList.add(oldDataProvider);
-                    DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
-                    DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(analysis, tempList);
-                    IRepositoryViewObject reposViewObject = RepositoryNodeHelper.recursiveFind(oldDataProvider).getObject();
-                    ElementWriterFactory.getInstance().createDataProviderWriter()
-                            .save(reposViewObject.getProperty().getItem(), true);
+                        List<ModelElement> tempList = new ArrayList<ModelElement>();
+                        tempList.add(oldDataProvider);
+                        // remove the cliend dependency in the analysis
+                        List<Resource> modified = DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
+                                tempList);
+                        for (Resource me : modified) {
+                            EMFUtil.saveSingleResource(me);
+                        }
+                        // remove the supplier dependency in the dataprovider
+                        tempList.clear();
+                        tempList.add(analysis);
+                        modified = DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(oldDataProvider,
+                                tempList);
+                        for (Resource me : modified) {
+                            EMFUtil.saveSingleResource(me);
+                        }
+                        // IRepositoryViewObject reposViewObject =
+                        // RepositoryNodeHelper.recursiveFind(oldDataProvider).getObject();
+                        // ElementWriterFactory.getInstance().createDataProviderWriter()
+                        // .save(reposViewObject.getProperty().getItem(), true);
                     }
                     // ~
                     AnaResourceFileHelper.getInstance().save(analysis);
