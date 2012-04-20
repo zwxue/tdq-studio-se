@@ -133,13 +133,7 @@ public class ImportWizardPage extends WizardPage {
         ModifyListener populateListener = new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                if (isDirState()) {
-                    basePath = dirTxt.getText();
-                } else {
-                    basePath = archTxt.getText();
-                }
-
-                textModified(basePath);
+                updateBasePath();
             }
         };
 
@@ -223,6 +217,16 @@ public class ImportWizardPage extends WizardPage {
                 checkforErrors();
             }
         });
+    }
+
+    public void updateBasePath() {
+        if (isDirState()) {
+            basePath = dirTxt.getText();
+        } else {
+            basePath = archTxt.getText();
+        }
+
+        textModified(basePath);
     }
 
     /**
@@ -454,6 +458,7 @@ public class ImportWizardPage extends WizardPage {
 
         if (state) {
             writer = ImportWriterFactory.create(EImexType.FILE);
+            updateBasePath();
         }
     }
 
@@ -477,6 +482,7 @@ public class ImportWizardPage extends WizardPage {
 
         if (state) {
             writer = ImportWriterFactory.create(EImexType.ZIP_FILE);
+            updateBasePath();
         }
     }
 
