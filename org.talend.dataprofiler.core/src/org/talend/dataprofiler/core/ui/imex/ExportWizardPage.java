@@ -121,7 +121,21 @@ public class ExportWizardPage extends WizardPage {
 
         if (state) {
             writer = ExportWriterFactory.create(EImexType.FILE);
+            updateBasePath();
         }
+    }
+    /**
+     * DOC zshen Comment method "updateBasePath".
+     */
+    public String updateBasePath() {
+        String basePath;
+        if (isDirState()) {
+            basePath = getTextContent(dirTxt);
+        } else {
+            basePath = getTextContent(archTxt);
+        }
+        textModified(basePath);
+        return basePath;
     }
 
     /**
@@ -131,6 +145,18 @@ public class ExportWizardPage extends WizardPage {
      */
     public boolean isDirState() {
         return dirBTN.getSelection();
+    }
+    /**
+     * DOC zshen Comment method "getTextContent".
+     * 
+     * @param archTxt2
+     * @return
+     */
+    protected String getTextContent(Text archTxt2) {
+        if (archTxt2 == null) {
+            return "";
+        }
+        return archTxt2.getText();
     }
 
     /**
@@ -144,6 +170,7 @@ public class ExportWizardPage extends WizardPage {
 
         if (state) {
             writer = ExportWriterFactory.create(EImexType.ZIP_FILE);
+            updateBasePath();
         }
     }
 
@@ -177,14 +204,7 @@ public class ExportWizardPage extends WizardPage {
         ModifyListener populateListener = new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String basePath;
-                if (isDirState()) {
-                    basePath = dirTxt.getText();
-                } else {
-                    basePath = archTxt.getText();
-                }
-
-                textModified(basePath);
+            	updateBasePath();
             }
         };
 
@@ -328,7 +348,7 @@ public class ExportWizardPage extends WizardPage {
      * 
      * @param top
      */
-    private void createRepositoryTree(Composite top) {
+    protected void createRepositoryTree(Composite top) {
         Composite treeComposite = new Composite(top, SWT.NONE);
         treeComposite.setLayout(new GridLayout(2, false));
         treeComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -473,7 +493,7 @@ public class ExportWizardPage extends WizardPage {
      * 
      * @param top
      */
-    private void createSelectComposite(Composite top) {
+    protected void createSelectComposite(Composite top) {
         Composite selectComp = new Composite(top, SWT.NONE);
         selectComp.setLayout(new GridLayout(3, false));
         selectComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

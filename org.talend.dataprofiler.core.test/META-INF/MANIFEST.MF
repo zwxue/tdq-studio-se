@@ -7,7 +7,16 @@ Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.dataprofiler.core;bundle-version="4.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4,
+ org.mockito,
  org.eclipse.swtbot.junit4_x;bundle-version="2.0.0",
  org.eclipse.swtbot.eclipse.finder;bundle-version="2.0.0",
  org.hamcrest;bundle-version="1.1.0",
  org.talend.dataquality.test
+Bundle-ClassPath: lib/powermock-classloading-base-1.4.11.jar,
+ lib/powermock-classloading-objenesis-1.4.11.jar,
+ lib/powermock-classloading-xstream-1.4.11.jar,
+ lib/powermock-easymock-1.4.11-full.jar,
+ lib/powermock-mockito-1.4.11-full.jar,
+ lib/powermock-module-junit4-rule-1.4.11.jar,
+ lib/powermock-module-junit4-rule-agent-1.4.11.jar,
+ .
