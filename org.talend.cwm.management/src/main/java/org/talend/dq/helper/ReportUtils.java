@@ -18,7 +18,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -46,6 +48,8 @@ public final class ReportUtils {
     public static final char TEXT_QUAL = '"';//$NON-NLS-1$
 
     public static final int ESCAPE_MODE_BACKSLASH = CsvReader.ESCAPE_MODE_BACKSLASH;
+
+    private static Map<String, List<String>> mainSubRepMap;
 
     /**
      * get report files list and rebuild the .report.list file.
@@ -272,4 +276,47 @@ public final class ReportUtils {
             createTime = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
         }
     }
+
+    /**
+     * 
+     * set the relationship of main-sub report.
+     * 
+     * @return
+     */
+    public static Map<String, List<String>> getMainSubRepMap() {
+        // for this map:key is main report name without vesion;value is a List about sub reports.
+        if (mainSubRepMap == null || mainSubRepMap.isEmpty()) {
+            mainSubRepMap = new HashMap<String, List<String>>();
+            String s01ColumnSub = "s01_column_subreport";
+            String b01ColumnSetBasicSubreport1 = "b01_column_set_basic_subreport1";
+            String s02MatchSubSummary = "s02_match_sub_summary";
+            String s03SubOverview = "s03_sub_overview";
+
+            List<String> cloumnSubLs = new ArrayList<String>();
+            cloumnSubLs.add(s01ColumnSub);
+            mainSubRepMap.put("b01_column_basic", cloumnSubLs);
+            mainSubRepMap.put("b02_column_evolution", cloumnSubLs);
+
+            List<String> columnSetSubLs = new ArrayList<String>();
+            columnSetSubLs.add(b01ColumnSetBasicSubreport1);
+            mainSubRepMap.put("b01_column_set_basic", columnSetSubLs);
+            mainSubRepMap.put("b02_column_set_evolution", columnSetSubLs);
+            mainSubRepMap.put("b03_column_basic_dq_rules", columnSetSubLs);
+            mainSubRepMap.put("b04_column_dq_rules_evolution", columnSetSubLs);
+            mainSubRepMap.put("functionalDependencyBasic", columnSetSubLs);
+            mainSubRepMap.put("functionalDependencyEvolution", columnSetSubLs);
+
+            List<String> overviewSubLs = new ArrayList<String>();
+            overviewSubLs.add(s03SubOverview);
+            mainSubRepMap.put("b03_overview_basic", overviewSubLs);
+            mainSubRepMap.put("b04_overview_evolution", overviewSubLs);
+
+            List<String> matchSubLs = new ArrayList<String>();
+            matchSubLs.add(s02MatchSubSummary);
+            mainSubRepMap.put("b05_match_basic", matchSubLs);
+            mainSubRepMap.put("b06_match_evolution", matchSubLs);
+        }
+        return mainSubRepMap;
+    }
+
 }
