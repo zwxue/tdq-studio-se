@@ -53,14 +53,19 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.dq.nodes.JrxmlTempSubFolderNode;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.dq.nodes.PatternRepNode;
+import org.talend.dq.nodes.ReportAnalysisRepNode;
+import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -118,6 +123,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         int sourceCount = sourcePath.segmentCount();
         int targetCount = targetPath.segmentCount();
         if (sourceCount == 1 || targetCount == 1) {
+            return false;
+        }
+        // MOD qiongli 2012-4-24 TDQ-5127
+        if (isForbidNode(sourceNode)) {
             return false;
         }
         // MOD klliu Bug TDQ-4444 2012-01-09
@@ -200,6 +209,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             throws PersistenceException {
         if (selectedRepositoryNodes != null) {
             for (IRepositoryNode sourceNode : selectedRepositoryNodes) {
+                if (targetNode == sourceNode.getParent()) {
+                    return;
+                }
                 if (isSameType(sourceNode, targetNode)) {
                     if (sourceNode.getType() == ENodeType.REPOSITORY_ELEMENT) {
                         if (sourceNode instanceof AnalysisRepNode) {
@@ -521,7 +533,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         String targetString = targetPath.removeLastSegments(targetCount - 2).toOSString();
         // MOD klliu Bug TDQ-4444 2012-01-09
         // if sourceNode and targetNode have a same root node, also need to check the node's object type is same.
-        if (!sourceNode.getContentType().equals(targetNode.getContentType())) {
+        // MOD qiongli TDQ-5127 avoid NPE
+        ERepositoryObjectType sourceType = sourceNode.getContentType();
+        ERepositoryObjectType targetentType = targetNode.getContentType();
+        if (sourceType == null || targetentType == null || !sourceType.equals(targetentType)) {
             return false;
         }
         // ~
@@ -1079,5 +1094,28 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             childObjectType.add(ERepositoryObjectType.METADATA_FILE_DELIMITED);
         }
         return childObjectType;
+    }
+
+    /**
+     * 
+     * forbid some nodes to drag.
+     * 
+     * @param sourceNode
+     * @return
+     */
+    private boolean isForbidNode(IRepositoryNode sourceNode) {
+        ENodeType type = sourceNode.getType();
+        boolean flag = (type != null && type == ENodeType.SYSTEM_FOLDER) || sourceNode instanceof ReportFileRepNode
+                || sourceNode instanceof ReportAnalysisRepNode || sourceNode instanceof JrxmlTempleteRepNode
+                || sourceNode instanceof JrxmlTempSubFolderNode;
+        if (!flag) {
+            RepositoryNode parent = sourceNode.getParent();
+            if (parent != null) {
+                flag = parent instanceof AnalysisRepNode
+                        || parent instanceof ReportRepNode
+                        || (parent instanceof AnalysisSubFolderRepNode && ((AnalysisSubFolderRepNode) parent).getObject() == null);
+            }
+        }
+        return flag;
     }
 }
