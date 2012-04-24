@@ -178,11 +178,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
         // MOD gdbu TDQ-3546 unload resource after move item.
         ProxyRepositoryManager.getInstance().refresh();
-        if (targetNode != null) {
-            CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRootNode(targetNode.getObjectType()));
-        } else {
-            CorePlugin.getDefault().refreshDQView();
-        }
         return Status.OK_STATUS;
     }
 
@@ -210,7 +205,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         if (selectedRepositoryNodes != null) {
             for (IRepositoryNode sourceNode : selectedRepositoryNodes) {
                 if (targetNode == sourceNode.getParent()) {
-                    return;
+                    continue;
                 }
                 if (isSameType(sourceNode, targetNode)) {
                     if (sourceNode.getType() == ENodeType.REPOSITORY_ELEMENT) {
@@ -234,6 +229,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                         moveFolderRepNode(sourceNode, targetNode);
                     }
                     closeEditorIfOpened(sourceNode);
+                    // MOD qiongli 2012-4-23,only refresh the parent of source node at here.
+                    CorePlugin.getDefault().refreshDQView(sourceNode.getParent());
                 }
             }
         }
