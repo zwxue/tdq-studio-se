@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.ModeStatistic
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.PhoneNumbStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.PieStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleStatisticsStateTable;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SimpleTextStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.TextStatisticsState;
@@ -148,6 +149,8 @@ public final class ChartTypeStatesOperator {
         switch (type) {
         case WHERERULE_INDICATOR:
             return new WhereRuleStatisticsStateTable(units, tableIndicator);
+        case SIMPLE_STATISTICS:
+            return new SimpleStatisticsStateTable(units);
 
         default:
             return null;

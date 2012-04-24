@@ -19,6 +19,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
@@ -55,6 +56,33 @@ public final class DQRuleUtilities {
 
         IndicatorEnum type = IndicatorEnum.findIndicatorEnum(wrIndicator.eClass());
         TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, wrIndicator);
+        DependenciesHandler.getInstance().setUsageDependencyOn(analysis, whereRule);
+        return addIndicatorUnit;
+    }
+
+    /**
+     * DOC xqliu Comment method "createIndicatorAideUnit".
+     * 
+     * @param fe
+     * @param tableIndicator
+     * @param analysis
+     * @return
+     */
+    public static TableIndicatorUnit createIndicatorAideUnit(IFile fe, TableIndicator tableIndicator, Analysis analysis) {
+        WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
+
+        for (Indicator indicator : tableIndicator.getIndicators()) {
+            if (indicator instanceof WhereRuleAideIndicator && whereRule.getName().equals(indicator.getName())) {
+                return null;
+            }
+        }
+
+        WhereRuleAideIndicator wraIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleAideIndicator();
+        wraIndicator.setAnalyzedElement(tableIndicator.getColumnSet());
+        wraIndicator.setIndicatorDefinition(whereRule);
+
+        IndicatorEnum type = IndicatorEnum.findIndicatorEnum(wraIndicator.eClass());
+        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, wraIndicator);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, whereRule);
         return addIndicatorUnit;
     }

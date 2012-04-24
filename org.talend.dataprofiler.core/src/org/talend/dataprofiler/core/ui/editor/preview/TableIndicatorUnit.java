@@ -115,4 +115,17 @@ public class TableIndicatorUnit {
     public boolean isExcuted() {
         return !indicator.getInstantiatedExpressions().isEmpty();
     }
+
+    /**
+     * DOC xqliu Comment method "geIndicatorCount".
+     * 
+     * @return
+     */
+    public long geIndicatorCount() {
+        long count = 0;
+        if (IndicatorEnum.WhereRuleIndicatorEnum.equals(this.getType())) {
+            count = this.getIndicator().getCount();
+        }
+        return count;
+    }
 }

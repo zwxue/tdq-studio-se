@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -50,6 +51,7 @@ import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
@@ -65,6 +67,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -109,6 +112,7 @@ public final class ChartTableFactory {
                         table.setMenu(menu);
 
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
+                        Long rowCount = getRowCount(analysis, dataEntity.getIndicator().getAnalyzedElement());
 
                         if (!isJAVALanguage) {
                             boolean showExtraMenu = false;
@@ -127,10 +131,11 @@ public final class ChartTableFactory {
                                     }
                                 });
 
-                                // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join condition columns
+                                // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join
+                                // condition columns
                                 if (indicator instanceof WhereRuleIndicator) {
                                     WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
-                                    if (ind.getCount().doubleValue() < ind.getUserCount().doubleValue()) {
+                                    if (rowCount.doubleValue() < ind.getUserCount().doubleValue()) {
                                         showExtraMenu = true;
                                     }
                                 }
@@ -275,6 +280,24 @@ public final class ChartTableFactory {
                         menu.setVisible(true);
                     }
                 }
+            }
+
+            /**
+             * DOC xqliu Comment method "getRowCount".
+             * 
+             * @param analysis
+             * @param analyzedElement
+             * @return
+             */
+            private Long getRowCount(Analysis analysis, ModelElement analyzedElement) {
+                Long rowCount = 0L;
+                EList<Indicator> indicators = analysis.getResults().getIndicators();
+                for (Indicator ind : indicators) {
+                    if (ind instanceof RowCountIndicator && ind.getAnalyzedElement().equals(analyzedElement)) {
+                        rowCount = ind.getCount();
+                    }
+                }
+                return rowCount;
             }
 
             private SelectionAdapter getAdapter(final IDatabaseJobService service) {

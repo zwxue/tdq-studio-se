@@ -263,6 +263,11 @@ public enum IndicatorEnum {
                            IndicatorSqlPackage.Literals.WHERE_RULE_INDICATOR,
                            "where rule", //$NON-NLS-1$
                            null),
+    WhereRuleAideIndicatorEnum(
+                               IndicatorSqlPackage.WHERE_RULE_AIDE_INDICATOR,
+                               IndicatorSqlPackage.Literals.WHERE_RULE_AIDE_INDICATOR,
+                               "where rule aide", //$NON-NLS-1$
+                               null),
     UserDefinedIndicatorEnum(
                              IndicatorSqlPackage.USER_DEF_INDICATOR,
                              IndicatorSqlPackage.Literals.USER_DEF_INDICATOR,
@@ -319,17 +324,17 @@ public enum IndicatorEnum {
     WellFormIntePhoneCountIndicatorEnum(
                                         IndicatorsPackage.WELL_FORM_INTE_PHONE_COUNT_INDICATOR,
                                         IndicatorsPackage.Literals.WELL_FORM_INTE_PHONE_COUNT_INDICATOR,
-                                           "Well Formed International Phone Count", //$NON-NLS-1$
-                                           null),
+                                        "Well Formed International Phone Count", //$NON-NLS-1$
+                                        null),
     WellFormNationalPhoneCountIndicatorEnum(
                                             IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR,
                                             IndicatorsPackage.Literals.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR,
-                                              "Well Formed national Phone Count", //$NON-NLS-1$
-                                          null),
+                                            "Well Formed national Phone Count", //$NON-NLS-1$
+                                            null),
     WellFormE164PhoneCountIndicatorEnum(
-                                          IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR,
-                                          IndicatorsPackage.Literals.WELL_FORM_E164_PHONE_COUNT_INDICATOR,
-                                          "Well Formed E164 Phone Count", //$NON-NLS-1$
+                                        IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR,
+                                        IndicatorsPackage.Literals.WELL_FORM_E164_PHONE_COUNT_INDICATOR,
+                                        "Well Formed E164 Phone Count", //$NON-NLS-1$
                                         null),
     FormatFreqPieIndictorEnum(
                               IndicatorsPackage.FORMAT_FREQ_PIE_INDICATOR,
@@ -337,12 +342,12 @@ public enum IndicatorEnum {
                               "Format Phone Number Frequency",
                               null),
     PhoneNumbStatisticsIndicatorEnum(
-                            IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR,
-                            IndicatorsPackage.Literals.PHONE_NUMB_STATISTICS_INDICATOR,
+                                     IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR,
+                                     IndicatorsPackage.Literals.PHONE_NUMB_STATISTICS_INDICATOR,
                                      "Phone Number Statistics", //$NON-NLS-1$
-                            new IndicatorEnum[] { ValidPhoneCountIndicatorEnum, ValidRegCodeCountIndicatorEnum,
-                                    InvalidRegCodeCountIndicatorEnum, PossiblePhoneCountIndicatorEnum,
-                                    WellFormIntePhoneCountIndicatorEnum, WellFormNationalPhoneCountIndicatorEnum,
+                                     new IndicatorEnum[] { ValidPhoneCountIndicatorEnum, ValidRegCodeCountIndicatorEnum,
+                                             InvalidRegCodeCountIndicatorEnum, PossiblePhoneCountIndicatorEnum,
+                                             WellFormIntePhoneCountIndicatorEnum, WellFormNationalPhoneCountIndicatorEnum,
                                              WellFormE164PhoneCountIndicatorEnum, FormatFreqPieIndictorEnum });
 
     private EClass indicatorType;
@@ -535,6 +540,8 @@ public enum IndicatorEnum {
             returnEnum = SqlPatternMatchingIndicatorEnum;
         } else if (indicatorType == WhereRuleIndicatorEnum.getIndicatorType()) {
             returnEnum = WhereRuleIndicatorEnum;
+        } else if (indicatorType == WhereRuleAideIndicatorEnum.getIndicatorType()) {
+            returnEnum = WhereRuleAideIndicatorEnum;
         } else if (indicatorType == DefValueCountIndicatorEnum.getIndicatorType()) {
             returnEnum = DefValueCountIndicatorEnum;
         } else if (indicatorType == UserDefinedIndicatorEnum.getIndicatorType()) {
@@ -571,8 +578,8 @@ public enum IndicatorEnum {
 
     public static boolean isPlainIndicatorEnum(IndicatorEnum indicatorEnumn) {
         return indicatorEnumn != RegexpMatchingIndicatorEnum && indicatorEnumn != SqlPatternMatchingIndicatorEnum
-                && indicatorEnumn != WhereRuleIndicatorEnum && indicatorEnumn != UserDefinedIndicatorEnum
-                && indicatorEnumn != JavaUserDefinedIndicatorEnum;
+                && indicatorEnumn != WhereRuleIndicatorEnum && indicatorEnumn != WhereRuleAideIndicatorEnum
+                && indicatorEnumn != UserDefinedIndicatorEnum && indicatorEnumn != JavaUserDefinedIndicatorEnum;
     }
 
     public boolean isAChildOf(IndicatorEnum parent) {

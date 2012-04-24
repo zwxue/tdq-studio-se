@@ -88,6 +88,10 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
                 return createJavaUserDefIndicatorAdapter();
             }
             @Override
+            public Adapter caseWhereRuleAideIndicator(WhereRuleAideIndicator object) {
+                return createWhereRuleAideIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -158,6 +162,20 @@ public class IndicatorSqlAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createJavaUserDefIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.sql.WhereRuleAideIndicator <em>Where Rule Aide Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.sql.WhereRuleAideIndicator
+     * @generated
+     */
+    public Adapter createWhereRuleAideIndicatorAdapter() {
         return null;
     }
 

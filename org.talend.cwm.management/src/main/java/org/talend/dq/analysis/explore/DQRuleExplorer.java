@@ -31,6 +31,9 @@ public class DQRuleExplorer extends DataExplorer {
             map.put(MENU_VIEW_VALID_ROWS, getComment(MENU_VIEW_VALID_ROWS) + getRowsStatement(true));
             map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getRowsStatement(false));
             break;
+        case RowCountIndicatorEnum:
+            map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getRowsStatement());
+            break;
         default:
         }
 

@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -47,6 +48,8 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.WhereRule;
@@ -201,6 +204,11 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
+        // ADD xqliu 2012-04-23 TDQ-5057
+        if (indicator instanceof WhereRuleAideIndicator) {
+            whereExpressionDQRule = new ArrayList<String>();
+        }
+        // ~ TDQ-5057
         completedSqlString = addWhereToSqlStringStatement(whereExpressionAnalysis, whereExpressionDQRule, completedSqlString,
                 true);
 
@@ -360,9 +368,10 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 }
             }
 
-            // --- finalize indicators by setting the row count and null when they exist.
-            ColumnAnalysisSqlExecutor finalization = new ColumnAnalysisSqlExecutor();
-            finalization.setRowCountAndNullCount(elementToIndicator);
+            // ADD xqliu 2012-04-23 TDQ-5057
+            // set the aide count for the DQRule indicator
+            setDQRuleAideCount(elementToIndicator);
+            // ~ TDQ-5057
         } catch (Exception e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
@@ -372,6 +381,45 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         // ConnectionUtils.closeConnection(connection);
         // }
         return ok;
+    }
+
+    /**
+     * DOC xqliu Comment method "setDQRuleAideCount".
+     * 
+     * @param elementToIndicator
+     */
+    protected void setDQRuleAideCount(Map<ModelElement, List<Indicator>> elementToIndicator) {
+        Set<ModelElement> analyzedElements = elementToIndicator.keySet();
+        for (ModelElement modelElement : analyzedElements) {
+            List<Indicator> list = elementToIndicator.get(modelElement);
+            for (Indicator ind : list) {
+                if (ind instanceof WhereRuleIndicator) {
+                    Indicator aideInd = getAideIndicator(list, ind);
+                    if (aideInd != null) {
+                        ind.setCount(((WhereRuleAideIndicator) aideInd).getUserCount());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getAideIndicator".
+     * 
+     * @param list
+     * @param ind
+     * @return
+     */
+    private Indicator getAideIndicator(List<Indicator> list, Indicator indicator) {
+        Indicator aideInd = null;
+        String indName = indicator.getName();
+        for (Indicator ind : list) {
+            if (ind instanceof WhereRuleAideIndicator && indName.equals(ind.getName())) {
+                aideInd = ind;
+                break;
+            }
+        }
+        return aideInd;
     }
 
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
