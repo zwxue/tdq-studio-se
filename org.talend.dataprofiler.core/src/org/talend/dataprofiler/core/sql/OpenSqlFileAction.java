@@ -74,7 +74,4 @@ public class OpenSqlFileAction extends Action {
         }
     }
 
-    public IEditorInput getEditorInput() {
-        return editorInput;
-    }
 }

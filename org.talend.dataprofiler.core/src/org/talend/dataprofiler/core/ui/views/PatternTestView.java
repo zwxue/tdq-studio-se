@@ -22,7 +22,6 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
@@ -46,9 +45,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -62,13 +58,13 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
-import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.CheckValueUtils;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -83,7 +79,6 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -357,8 +352,7 @@ public class PatternTestView extends ViewPart {
                         customizedPattFolder = (IFolder) oriPattContainer;
                     }
                 }
-                new CreatePatternAction(customizedPattFolder, ExpressionType.REGEXP, regularText.getText(),
-                        language).run();
+                new CreatePatternAction(customizedPattFolder, ExpressionType.REGEXP, regularText.getText(), language).run();
             }
         });
         createPatternButton.setEnabled(false);
@@ -559,21 +553,6 @@ public class PatternTestView extends ViewPart {
      * DOC rli Comment method "openSQLEditor".
      */
     private void openSQLEditor() {
-        IFolder sourceFolder = ResourceManager.getSourceFileFolder();
-        IFile sqlFile = sourceFolder.getFile("SQL Editor.sql"); //$NON-NLS-1$
-        int i = 0;
-        while (sqlFile.exists()) {
-            sqlFile = sourceFolder.getFile("SQL Editor (" + i + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$
-            i++;
-        }
-        List<IFile> arrayList = new ArrayList<IFile>(2);
-        arrayList.add(sqlFile);
-        OpenSqlFileAction openSqlFileAction = new OpenSqlFileAction(arrayList);
-        openSqlFileAction.run();
-        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
-        IEditorPart findEditor = page.findEditor(openSqlFileAction.getEditorInput());
-
         DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
         if (dbmsLanguage != null) {
             // MOD gdbu 2011-6-13 bug : 19119
@@ -581,7 +560,9 @@ public class PatternTestView extends ViewPart {
             // ~19119
             String selectRegexpTestString = dbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText.getText());
 
-            ((SQLEditor) findEditor).setText(selectRegexpTestString);
+            // MOD sizhaoliu TDQ-5237 changed the way to open SQL Explorer for Pattern Test View
+            CorePlugin.getDefault().openInSqlEditor(getDBConnectionFromDBName(dbCombo.getText()), selectRegexpTestString,
+                    SQLEditor.EDITOR_ID);
         } else {
             MessageDialog.openWarning(new Shell(), "", NO_DATABASE_SELECTEDED); //$NON-NLS-1$
         }
