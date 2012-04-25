@@ -334,6 +334,11 @@ public final class PatternUtilities {
         return list;
     }
 
+    /**
+     * @param clmIndicator
+     * @return
+     * @deprecated since repository nodes are used instead of IFiles
+     */
     public static IFile[] getPatternFileByIndicator(ColumnIndicator clmIndicator) {
         Indicator[] patternIndicators = clmIndicator.getPatternIndicators();
         List<IFile> existedPatternFiles = new ArrayList<IFile>();
@@ -354,6 +359,27 @@ public final class PatternUtilities {
         }
 
         return existedPatternFiles.toArray(new IFile[existedPatternFiles.size()]);
+    }
+
+    /**
+     * get the repository nodes corresponding to the indicator.
+     * 
+     * @param meIndicator
+     * @return
+     */
+    public static Object[] getPatternRepNodesByIndicator(ModelElementIndicator meIndicator) {
+        List<IRepositoryNode> patternRepNodes = RepositoryNodeHelper.getPatternsRepositoryNodes(false);
+        ArrayList<Object> ret = new ArrayList<Object>();
+        for (Indicator indicator : meIndicator.getPatternIndicators()) {
+            PatternMatchingIndicator patternIndicator = (PatternMatchingIndicator) indicator;
+            for (IRepositoryNode patternRepNode : patternRepNodes) {
+                Pattern pattern = ((PatternRepNode) patternRepNode).getPattern();
+                if (patternIndicator.getName().equals(pattern.getName())) {
+                    ret.add(patternRepNode);
+                }
+            }
+        }
+        return ret.toArray();
     }
 
     private static Set<IFile> getNestedPatternFiles(Set<IFile> list, IFolder folder) {

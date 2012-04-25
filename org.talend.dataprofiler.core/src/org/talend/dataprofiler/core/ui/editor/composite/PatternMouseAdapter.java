@@ -22,6 +22,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
@@ -100,10 +101,17 @@ public class PatternMouseAdapter extends MouseAdapter {
 
         // ~TDQ-2169
 
-        // IFile[] selectedFiles =
-        // PatternUtilities.getPatternFileByIndicator(clmIndicator);
-        // dialog.setInitialSelections(selectedFiles);
+        Object[] selectedRepNodes = PatternUtilities.getPatternRepNodesByIndicator(meIndicator);
+        dialog.setInitialSelections(selectedRepNodes);
+        dialog.create();
+
         if (dialog.open() == Window.OK) {
+
+            for (IndicatorUnit indicatorUnit : meIndicator.getIndicatorUnits()) {
+                meIndicator.removeIndicatorUnit(indicatorUnit);
+            }
+            treeItem.removeAll();
+
             for (Object obj : dialog.getResult()) {
                 if (obj instanceof PatternRepNode) {
                     PatternRepNode patternNode = (PatternRepNode) obj;
@@ -116,9 +124,15 @@ public class PatternMouseAdapter extends MouseAdapter {
                         // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
                         // MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
                         // + pattern.getName());
-                        MessageUI.openError(trc.getMessage());
+                        // MessageUI.openError(trc.getMessage());
                     }
                 }
+            }
+
+            treeItem.setExpanded(true);
+            if (masterPage instanceof ColumnMasterDetailsPage) {
+                ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) masterPage;
+                page.refreshTheTree(page.getCurrentModelElementIndicators());
             }
         }
     }
