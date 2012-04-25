@@ -78,7 +78,7 @@ public class JavaUserDefIndicatorImpl extends UserDefIndicatorImpl implements Ja
     public Long getCount(Object dataValue) {
     	if (isJavaEngine()) {
             if (javaUDI != null) {
-            return javaUDI.getCount();
+                return javaUDI.getCount(dataValue);
             } else {
                 return 0l;
             }
