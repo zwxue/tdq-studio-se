@@ -13,6 +13,13 @@
 package org.talend.dq.writer.impl;
 
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.writer.AElementPersistance;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -151,6 +158,25 @@ public final class ElementWriterFactory {
             return createIndicatorDefinitionWriter();
         } else if (ModelElementIdentifier.isSoftware(element)) {
             return createSoftwareSystemWriter();
+        }
+        return null;
+    }
+/**
+ * create a Writer by the type of Item
+ */
+    public AElementPersistance create(Item currItem) {
+        if (currItem instanceof TDQAnalysisItem) {
+            return createAnalysisWrite();
+        } else if (currItem instanceof TDQReportItem) {
+            return createReportWriter();
+        } else if (currItem instanceof ConnectionItem) {
+            return createDataProviderWriter();
+        } else if (currItem instanceof TDQPatternItem) {
+            return createPatternWriter();
+        } else if (currItem instanceof TDQIndicatorDefinitionItem) {
+            return createIndicatorDefinitionWriter();
+        } else if (currItem instanceof TDQBusinessRuleItem) {
+            return createdRuleWriter();
         }
         return null;
     }
