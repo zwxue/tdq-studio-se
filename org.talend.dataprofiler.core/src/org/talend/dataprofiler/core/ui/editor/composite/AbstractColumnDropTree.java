@@ -71,7 +71,6 @@ import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -261,6 +260,21 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         meIndicator.removeIndicatorUnit(inidicatorUnit);
         // remove dependency
         removeDependency(absMasterPage.getAnalysis(), inidicatorUnit);
+    }
+
+    /**
+     * 
+     * DOC zshen Comment method "deleteIndicatorItems".
+     * 
+     * @param meIndicator
+     * @param inidicatorUnit remove all the indicatorUnit which in the ModelElementIndicator.
+     */
+    protected void deleteIndicatorItems(ModelElementIndicator meIndicator) {
+        for (IndicatorUnit indiUnit : meIndicator.getIndicatorUnits()) {
+            meIndicator.removeIndicatorUnit(indiUnit);
+            // remove dependency
+            removeDependency(absMasterPage.getAnalysis(), indiUnit);
+        }
     }
 
     /**

@@ -12,11 +12,19 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.composite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl;
 import org.talend.repository.model.IRepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
@@ -70,5 +78,23 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
     protected void setElements(ModelElementIndicator[] modelElementIndicator) {
         // TODO Auto-generated method stub
 
+    }
+
+    /**
+     * DOC zshen Comment method "removeDependency".
+     * 
+     * @param analysis
+     * @param unit
+     */
+    protected void removeDependency(Analysis analysis, TableIndicatorUnit unit) {
+        List<ModelElement> reomveElements = new ArrayList<ModelElement>();
+        Indicator indicator = unit.getIndicator();
+        if (indicator instanceof WhereRuleIndicatorImpl) {
+            reomveElements.add(indicator.getIndicatorDefinition());
+        }
+        DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, reomveElements);
+        for (ModelElement me : reomveElements) {
+            EMFUtil.saveSingleResource(me.eResource());
+        }
     }
 }

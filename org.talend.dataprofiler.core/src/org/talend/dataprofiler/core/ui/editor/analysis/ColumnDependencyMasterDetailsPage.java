@@ -276,12 +276,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
                 log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
             }
         } else {
-            tdDataProvider = (Connection) analysis.getContext().getConnection();
-            if (tdDataProvider != null && tdDataProvider.getSupplierDependency().size() > 0) {
-                tdDataProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-                analysis.getContext().setConnection(null);
-                analysis.getClientDependency().clear();
-            }
+            deleteConnectionDependency(analysis);
         }
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();

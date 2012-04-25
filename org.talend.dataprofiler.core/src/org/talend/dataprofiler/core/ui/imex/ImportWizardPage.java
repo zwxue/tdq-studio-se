@@ -227,6 +227,10 @@ public class ImportWizardPage extends WizardPage {
         });
     }
 
+    /**
+     * 
+     * Comment method "updateBasePath".
+     */
     public void updateBasePath() {
         if (isDirState()) {
             basePath = dirTxt.getText();

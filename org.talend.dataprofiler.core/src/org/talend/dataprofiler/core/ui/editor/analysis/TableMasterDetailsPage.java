@@ -63,6 +63,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -90,6 +91,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.analysis.TableAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -655,6 +657,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 // analysis.getClientDependency().get(0)
                 analysis.getContext().setConnection(null);
                 analysis.getClientDependency().clear();
+                Property anaEleProperty = PropertyHelper.getProperty(tdProvider);
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(anaEleProperty.getItem(), false);
             }
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());

@@ -910,14 +910,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 analysisHandler.setDatamingType(type.getLiteral(), modelEle);
             }
         } else {
-            tdProvider = (Connection) analysis.getContext().getConnection();
-            if (tdProvider != null && tdProvider.getSupplierDependency().size() > 0) {
-                if (tdProvider.getSupplierDependency().size() > 0) {
-                    tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-                }
-                analysis.getContext().setConnection(null);
-                analysis.getClientDependency().clear();
-            }
+            deleteConnectionDependency(analysis);
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
         // ADD xqliu 2010-07-19 bug 14014

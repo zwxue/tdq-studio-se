@@ -287,12 +287,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
             }
         } else {
-            tdDataProvider = (Connection) analysis.getContext().getConnection();
-            if (tdDataProvider != null) {
-                tdDataProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-                analysis.getContext().setConnection(null);
-                analysis.getClientDependency().clear();
-            }
+            deleteConnectionDependency(analysis);
         }
         // rowCountIndicator.setAnalyzedElement(value)
         // rowMatchingIndicatorA

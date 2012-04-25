@@ -565,6 +565,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
                         setElements(modelElementIndicators);
                     } else {
+                        deleteIndicatorItems(meIndicator);
                         removeItemBranch(treeItem);
                         masterPage.synNagivatorStat();
                     }
