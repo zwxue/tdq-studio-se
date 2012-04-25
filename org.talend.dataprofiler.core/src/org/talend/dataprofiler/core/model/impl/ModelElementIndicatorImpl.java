@@ -88,6 +88,8 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
 
     private final List<IndicatorEnum> boxEnumChildren = Arrays.asList(IndicatorEnum.BoxIIndicatorEnum.getChildren());
 
+    private final List<IndicatorEnum> textEnumChildren = Arrays.asList(IndicatorEnum.TextIndicatorEnum.getChildren());
+
     // private TdColumn tdColumn;
 
     private List<IndicatorEnum> tempIndicatorEnums = new ArrayList<IndicatorEnum>();
@@ -444,6 +446,8 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         Iterator<IndicatorEnum> iterator = flatIndicatorEnumList.iterator();
         List<IndicatorEnum> currentCountsChildren = new ArrayList<IndicatorEnum>();
         List<IndicatorEnum> currentBOXChildren = new ArrayList<IndicatorEnum>();
+        // MOD qiongli 2012-4-25 TDQ-2699 consider TextIndicatorEnum.
+        List<IndicatorEnum> currentTextChildren = new ArrayList<IndicatorEnum>();
         while (iterator.hasNext()) {
             IndicatorEnum indEnum = iterator.next();
             if (countsEnumChildren.contains(indEnum)) {
@@ -453,8 +457,11 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
             if (boxEnumChildren.contains(indEnum)) {
                 currentBOXChildren.add(indEnum);
             }
+            if (textEnumChildren.contains(indEnum)) {
+                currentTextChildren.add(indEnum);
+            }
             if (null != indEnum && (indEnum != IndicatorEnum.CountsIndicatorEnum) && (indEnum != IndicatorEnum.BoxIIndicatorEnum)
-                    && indEnum.hasChildren()) {
+                    && indEnum != IndicatorEnum.TextIndicatorEnum && indEnum.hasChildren()) {
                 for (IndicatorEnum childrenEnum : indEnum.getChildren()) {
                     categoryEnumList.remove(childrenEnum);
                 }
@@ -472,6 +479,12 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
             categoryEnumList.removeAll(currentBOXChildren);
         } else {
             categoryEnumList.remove(IndicatorEnum.BoxIIndicatorEnum);
+        }
+        if (currentTextChildren.size() == textEnumChildren.size()
+                && flatIndicatorEnumList.contains(IndicatorEnum.TextIndicatorEnum)) {
+            categoryEnumList.removeAll(currentTextChildren);
+        } else {
+            categoryEnumList.remove(IndicatorEnum.TextIndicatorEnum);
         }
         plainIndicatorUnits = createCategoryIndicatorUnits(categoryEnumList.toArray(new IndicatorEnum[categoryEnumList.size()]));
     }
