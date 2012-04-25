@@ -71,6 +71,7 @@ import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -222,8 +223,10 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                         DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
             }
             if (judi != null) {
-                ((JavaUserDefIndicator) judi)
-                        .setExecuteEngine(absMasterPage.getAnalysis().getParameters().getExecutionLanguage());
+                ((JavaUserDefIndicator) indicatorUnit.getIndicator()).setExecuteEngine(absMasterPage.getAnalysis()
+                        .getParameters().getExecutionLanguage());
+                // ((JavaUserDefIndicator) judi)
+                // .setExecuteEngine(absMasterPage.getAnalysis().getParameters().getExecutionLanguage());
             }
         }
     }
