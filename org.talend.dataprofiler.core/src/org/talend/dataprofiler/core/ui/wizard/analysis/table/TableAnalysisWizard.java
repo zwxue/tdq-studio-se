@@ -28,6 +28,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -157,6 +158,11 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
                         wrIndicator.setAnalyzedElement(ncs);
                         wrIndicator.setIndicatorDefinition(whereRule);
                         indicatorList.add(wrIndicator);
+                        // create WhereRuleAideIndicator according to WhereRuleIndicator
+                        WhereRuleAideIndicator wraIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleAideIndicator();
+                        wraIndicator.setAnalyzedElement(wrIndicator.getAnalyzedElement());
+                        wraIndicator.setIndicatorDefinition(wrIndicator.getIndicatorDefinition());
+                        indicatorList.add(wraIndicator);
                     }
                 }
             }
