@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dataquality.indicators.definition:IndicatorDefinition xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.indicators.definition="http://dataquality.indicators.definition" xmi:id="_UUIyoCOMEd1YB28jaCfKaA" name="DQ Rule Aide" label="DQ Rule Aide">
-  <taggedValue xmi:id="_-apm9YqnEd-SocVM_rHvUg" tag="Description" value="Computes the number of assemblage matching the DQ Rule join condition"/>
-  <taggedValue xmi:id="_-apm9oqnEd-SocVM_rHvUg" tag="Purpose" value="estimates the number of assemblage matching the rule join condition"/>
-  <categories href="../../../.Talend.definition#_dXMWkJU7Ed-bydhkMeCarg"/>
-  <sqlGenericExpression xmi:id="_-apm79qnEd-SocVM_rHvUg" body="SELECT COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__JOIN_CLAUSE__%> &lt;%=__WHERE_CLAUSE__%>" language="SQL"/>
-</dataquality.indicators.definition:IndicatorDefinition>
