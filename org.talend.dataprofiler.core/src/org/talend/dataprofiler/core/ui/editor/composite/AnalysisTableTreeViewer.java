@@ -768,6 +768,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     protected void removeItemBranch(TreeItem item) {
+        if (item == null) {
+            return;
+        }
         TreeEditor[] editors = (TreeEditor[]) item.getData(ITEM_EDITOR_KEY);
         if (editors != null) {
             for (int j = 0; j < editors.length; j++) {
