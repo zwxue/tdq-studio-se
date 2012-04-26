@@ -648,13 +648,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 analysisHandler.addIndicator(tableIndicator.getColumnSet(), tableIndicator.getIndicators());
             }
         } else {
-            tdProvider = (Connection) analysis.getContext().getConnection();
-            if (tdProvider != null && tdProvider.getSupplierDependency().size() > 0) {
-                tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-                // analysis.getClientDependency().get(0)
-                analysis.getContext().setConnection(null);
-                analysis.getClientDependency().clear();
-            }
+        	deleteConnectionDependency(analysis);
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 

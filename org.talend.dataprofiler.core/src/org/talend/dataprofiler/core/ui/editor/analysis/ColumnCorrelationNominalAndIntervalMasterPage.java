@@ -663,12 +663,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             correlationAnalysisHandler.addIndicator(columnLst, columnSetMultiIndicator);
         } else {
 
-            tdProvider = (Connection) analysis.getContext().getConnection();
-            if (tdProvider != null && tdProvider.getSupplierDependency().size() > 0) {
-                tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-                analysis.getContext().setConnection(null);
-                analysis.getResults().getIndicators().clear();
-            }
+           
             // MOD by zshen for bug 12042.
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             ColumnSetMultiValueIndicator columnSetMultiValueIndicator = null;
@@ -687,7 +682,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             fillSimpleIndicators(columnSetMultiValueIndicator);
             analysis.getResults().getIndicators().add(columnSetMultiValueIndicator);
             // ~12042
-            analysis.getClientDependency().clear();
         }
 
         // ADD xqliu 2010-07-19 bug 14014

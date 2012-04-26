@@ -448,6 +448,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 @Override
                 public void mouseDown(MouseEvent e) {
                     deleteColumnItems(meIndicator.getModelElementRepositoryNode());
+                    deleteIndicatorItems(meIndicator);
                     removeItemBranch(treeItem);
                     enabledButtons(false);
                     // MOD mzhao 2005-05-05 bug 6587.

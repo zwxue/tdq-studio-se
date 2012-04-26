@@ -261,6 +261,21 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         // remove dependency
         removeDependency(absMasterPage.getAnalysis(), inidicatorUnit);
     }
+    
+    /**
+     * 
+     * DOC zshen Comment method "deleteIndicatorItems".
+     * 
+     * @param meIndicator
+     * @param inidicatorUnit remove all the indicatorUnit which in the ModelElementIndicator.
+     */
+    protected void deleteIndicatorItems(ModelElementIndicator meIndicator) {
+        for (IndicatorUnit indiUnit : meIndicator.getIndicatorUnits()) {
+            meIndicator.removeIndicatorUnit(indiUnit);
+            // remove dependency
+            removeDependency(absMasterPage.getAnalysis(), indiUnit);
+        }
+    }
 
     /**
      * DOC xqliu Comment method "removeDependency".

@@ -377,6 +377,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
                         setElements(tableIndicators);
                     } else {
+                    	deleteIndicatorItems(tableIndicator);
                         removeItemBranch(treeItem);
                         indicatorTreeItemMap.remove(tableIndicator);
                     }
@@ -1033,7 +1034,20 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     private void deleteIndicatorItems(TableIndicator tableIndicator, TableIndicatorUnit inidicatorUnit) {
         tableIndicator.removeIndicatorUnit(inidicatorUnit);
         this.indicatorTreeItemMap.remove(inidicatorUnit);
+     // remove dependency
+        removeDependency(masterPage.getAnalysis(), inidicatorUnit);
     }
+    /**
+     * delete all TableIndicatorUnit which contain in the tableIndicator.
+     */
+        private void deleteIndicatorItems(TableIndicator tableIndicator) {
+            for (TableIndicatorUnit indiUnit : tableIndicator.getIndicatorUnits()) {
+                tableIndicator.removeIndicatorUnit(indiUnit);
+                this.indicatorTreeItemMap.remove(indiUnit);
+                // remove dependency
+                removeDependency(masterPage.getAnalysis(), indiUnit);
+            }
+        }
 
     private void removeSelectedElements(Tree newTree) {
         TreeItem[] selection = newTree.getSelection();

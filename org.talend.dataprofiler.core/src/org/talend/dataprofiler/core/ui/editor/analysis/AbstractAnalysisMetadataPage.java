@@ -43,6 +43,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -64,6 +65,8 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.writer.AElementPersistance;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -540,5 +543,29 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             // MOD yyi 2012-02-06 TDQ-4581:avoid the instantiation of the strings to optimize the performances.
             doLog(log, Level.INFO, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.success", urlString)); //$NON-NLS-1$
         }
+    }
+    /**
+     * 
+     * DOC zshen Comment method "deleteConnectionDependency".
+     * 
+     * @param analysis
+     * @return whether it has been deleted
+     * 
+     * delete the dependency between analysis and connection
+     */
+    public boolean deleteConnectionDependency(Analysis analysis) {
+        Connection tdProvider = (Connection) analysis.getContext().getConnection();
+        if (tdProvider != null && tdProvider.getSupplierDependency().size() > 0) {
+            List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(analysis);
+            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
+            analysis.getContext().setConnection(null);
+            analysis.getClientDependency().clear();
+            for (Property clintProperty : clintDependency) {
+                Item item = clintProperty.getItem();
+                AElementPersistance create = ElementWriterFactory.getInstance().create(item);
+                create.save(item, false);
+            }
+        }
+        return true;
     }
 }
