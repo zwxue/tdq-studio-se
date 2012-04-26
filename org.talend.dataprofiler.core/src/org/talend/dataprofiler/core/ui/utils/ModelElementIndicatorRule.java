@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import java.sql.Types;
+
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
@@ -69,6 +71,10 @@ public final class ModelElementIndicatorRule {
         DataminingType dataminingType = MetadataHelper.getDataminingType(me);
         if (dataminingType == null || isDeliFileColumn) {
             dataminingType = MetadataHelper.getDefaultDataminingType(javaType);
+        }
+        // MOD qiongli 2012-4-25 TDQ-2699
+        if (javaType == Types.LONGVARCHAR && ExecutionLanguage.SQL.equals(language)) {
+            return enableLongVarchar(indicatorType, dataminingType, me);
         }
 
         switch (indicatorType) {
@@ -215,6 +221,43 @@ public final class ModelElementIndicatorRule {
             return false;
         }
 
+        return false;
+    }
+
+    /**
+     * 
+     * just several indicator support longvarchar.because longvarchar dosn't support some sql query,.eg.,distinct,group
+     * by,function...
+     * 
+     * @param indicatorType
+     * @param dataminingType
+     * @return
+     */
+    private static boolean enableLongVarchar(IndicatorEnum indicatorType, DataminingType dataminingType, ModelElement mod) {
+        switch (indicatorType) {
+        case CountsIndicatorEnum:
+        case RowCountIndicatorEnum:
+            return true;
+        case TextIndicatorEnum:
+        case MinLengthWithBlankIndicatorEnum:
+        case MinLengthWithBlankNullIndicatorEnum:
+        case MaxLengthWithBlankIndicatorEnum:
+        case MaxLengthWithBlankNullIndicatorEnum:
+        case AverageLengthWithBlankIndicatorEnum:
+        case AverageLengthWithNullBlankIndicatorEnum:
+            if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.UNSTRUCTURED_TEXT) {
+                return true;
+            }
+            break;
+        case PatternFreqIndicatorEnum:
+        case PatternLowFreqIndicatorEnum:
+            if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL) {
+                return true;
+            }
+            break;
+        default:
+            return false;
+        }
         return false;
     }
 }
