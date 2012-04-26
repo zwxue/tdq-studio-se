@@ -377,7 +377,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     if (treeItem.getParentItem() != null && treeItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
                         setElements(tableIndicators);
                     } else {
-                    	deleteIndicatorItems(tableIndicator);
+                        deleteIndicatorItems(tableIndicator);
                         removeItemBranch(treeItem);
                         indicatorTreeItemMap.remove(tableIndicator);
                     }
@@ -572,6 +572,11 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     private void createIndicatorItems(TreeItem treeItem, TableIndicatorUnit[] indicatorUnits) {
         for (TableIndicatorUnit indicatorUnit : indicatorUnits) {
+            // ADD xqliu 2012-04-23 TDQ-5057
+            if (IndicatorEnum.WhereRuleAideIndicatorEnum.equals(indicatorUnit.getType())) {
+                continue;
+            }
+            // ~ TDQ-5057
             createOneUnit(treeItem, indicatorUnit);
         }
     }
@@ -845,7 +850,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         List<RepositoryNode> setList = new ArrayList<RepositoryNode>();
         Connection tdProvider = null;
 
-        
         for (DBTableRepNode tableNode : tableNodeList) {
             if (tdProvider == null)
                 tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(tableNode.getTdTable()));
@@ -1032,22 +1036,51 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     private void deleteIndicatorItems(TableIndicator tableIndicator, TableIndicatorUnit inidicatorUnit) {
+        deleteIndicatorAideItems(tableIndicator, inidicatorUnit);
         tableIndicator.removeIndicatorUnit(inidicatorUnit);
         this.indicatorTreeItemMap.remove(inidicatorUnit);
-     // remove dependency
+        // remove dependency
         removeDependency(masterPage.getAnalysis(), inidicatorUnit);
     }
+
+    /**
+     * DOC xqliu Comment method "deleteIndicatorAideItems".
+     * 
+     * @param tableIndicator
+     * @param inidicatorUnit
+     */
+    private void deleteIndicatorAideItems(TableIndicator tableIndicator, TableIndicatorUnit inidicatorUnit) {
+        if (IndicatorEnum.WhereRuleIndicatorEnum.equals(inidicatorUnit.getType())) {
+            TableIndicatorUnit indicatorAideUnit = null;
+
+            String name = inidicatorUnit.getIndicatorName();
+            TableIndicatorUnit[] indicatorUnits = tableIndicator.getIndicatorUnits();
+
+            for (TableIndicatorUnit tiu : indicatorUnits) {
+                if (IndicatorEnum.WhereRuleAideIndicatorEnum.equals(tiu.getType()) && name.equals(tiu.getIndicatorName())) {
+                    indicatorAideUnit = tiu;
+                    break;
+                }
+            }
+
+            if (indicatorAideUnit != null) {
+                tableIndicator.removeIndicatorUnit(indicatorAideUnit);
+                // this.indicatorTreeItemMap.remove(indicatorAideUnit);
+            }
+        }
+    }
+
     /**
      * delete all TableIndicatorUnit which contain in the tableIndicator.
      */
-        private void deleteIndicatorItems(TableIndicator tableIndicator) {
-            for (TableIndicatorUnit indiUnit : tableIndicator.getIndicatorUnits()) {
-                tableIndicator.removeIndicatorUnit(indiUnit);
-                this.indicatorTreeItemMap.remove(indiUnit);
-                // remove dependency
-                removeDependency(masterPage.getAnalysis(), indiUnit);
-            }
+    private void deleteIndicatorItems(TableIndicator tableIndicator) {
+        for (TableIndicatorUnit indiUnit : tableIndicator.getIndicatorUnits()) {
+            tableIndicator.removeIndicatorUnit(indiUnit);
+            this.indicatorTreeItemMap.remove(indiUnit);
+            // remove dependency
+            removeDependency(masterPage.getAnalysis(), indiUnit);
         }
+    }
 
     private void removeSelectedElements(Tree newTree) {
         TreeItem[] selection = newTree.getSelection();

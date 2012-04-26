@@ -16,10 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.TableAnalysisSqlExecutor;
-import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -31,10 +28,11 @@ public class DQRuleExplorer extends DataExplorer {
 
         switch (this.indicatorEnum) {
         case WhereRuleIndicatorEnum:
-            if (!includeJoinCondition(this.indicator)) {
-                map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getRowsStatement(false));
-            }
             map.put(MENU_VIEW_VALID_ROWS, getComment(MENU_VIEW_VALID_ROWS) + getRowsStatement(true));
+            map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getRowsStatement(false));
+            break;
+        case RowCountIndicatorEnum:
+            map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getRowsStatement());
             break;
         default:
         }
@@ -56,28 +54,6 @@ public class DQRuleExplorer extends DataExplorer {
         TableAnalysisSqlExecutor tasExecutor = new TableAnalysisSqlExecutor();
         tasExecutor.setCachedAnalysis(this.analysis);
 
-        if (valid) {
-            return tasExecutor.getValidStatement(dataFilterClause, indicator2);
-        } else {
-            // MOD zshen 2010-01-13 bug 10913
-            NamedColumnSet set = (NamedColumnSet) indicator2.getAnalyzedElement();
-            String whereClause = ((WhereRule) indicator2.getIndicatorDefinition()).getWhereExpression();
-            return "SELECT * FROM " + getFullyQualifiedTableName(set) + dbmsLanguage.where() + dbmsLanguage.not() + "("//$NON-NLS-1$//$NON-NLS-2$
-                    + whereClause + ")" + andDataFilterClause();//$NON-NLS-1$
-            // ~10913
-        }
-        // ~
-    }
-
-    /**
-     * DOC xqliu Comment method "includeJoinCondition". 2009-10-30 bug 9702
-     * 
-     * @param indicator
-     * @return
-     */
-    private boolean includeJoinCondition(Indicator indicator) {
-        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-        WhereRule wr = (WhereRule) indicatorDefinition;
-        return !wr.getJoins().isEmpty();
+        return tasExecutor.getValidStatement(dataFilterClause, indicator2, valid);
     }
 }

@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -47,6 +48,8 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.WhereRule;
@@ -148,14 +151,15 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
 
         // --- get indicator parameters and convert them into sql expression
-        List<String> whereExpression = new ArrayList<String>();
+        List<String> whereExpressionAnalysis = new ArrayList<String>();
         if (StringUtils.isNotBlank(dataFilterAsString)) {
-            whereExpression.add(dataFilterAsString);
+            whereExpressionAnalysis.add(dataFilterAsString);
         }
+        List<String> whereExpressionDQRule = new ArrayList<String>();
         final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
-            whereExpression.add(wr.getWhereExpression());
+            whereExpressionDQRule.add(wr.getWhereExpression());
 
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
@@ -200,7 +204,13 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         completedSqlString = dbms().fillGenericQueryWithJoin(sqlGenericExpression.getBody(), setName, joinclause);
         // ~
-        completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+        // ADD xqliu 2012-04-23 TDQ-5057
+        if (indicator instanceof WhereRuleAideIndicator) {
+            whereExpressionDQRule = new ArrayList<String>();
+        }
+        // ~ TDQ-5057
+        completedSqlString = addWhereToSqlStringStatement(whereExpressionAnalysis, whereExpressionDQRule, completedSqlString,
+                true);
 
         // completedSqlString is the final query
         String finalQuery = completedSqlString;
@@ -238,8 +248,55 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return this.dbmsLanguage;
     }
 
-    private String addWhereToSqlStringStatement(List<String> whereExpressions, String completedSqlString) throws ParseException {
-        return dbms().addWhereToSqlStringStatement(completedSqlString, whereExpressions);
+    /**
+     * add the where clause to the sql statement.
+     * 
+     * @param whereExpressionsAnalysis the list of Analysis's where expressions to concatenate (must not be null)
+     * @param whereExpressionsDQRule the list of DQRule's where expressions to concatenate (must not be null)
+     * @param completedSqlString a generic SQL expression in which the where clause variable will be replaced.
+     * @param valid if false add ! before where clause
+     * @return the SQL statement with the where clause
+     * @throws ParseException
+     */
+    private String addWhereToSqlStringStatement(List<String> whereExpressionsAnalysis, List<String> whereExpressionsDQRule,
+            String completedSqlString, boolean valid) throws ParseException {
+        String query = completedSqlString;
+
+        // add Analysis's where expression
+        StringBuffer buf1 = new StringBuffer();
+        for (int i = 0; i < whereExpressionsAnalysis.size(); i++) {
+            String exp = whereExpressionsAnalysis.get(i);
+            buf1.append(this.surroundWith('(', exp, ')'));
+            if (i != whereExpressionsAnalysis.size() - 1 || whereExpressionsDQRule.size() > 0) {
+                buf1.append(dbms().and());
+            }
+        }
+        // add DQRule's where expression
+        StringBuffer buf2 = new StringBuffer();
+        String dqruleWhereClause = buf2.toString();
+        for (int i = 0; i < whereExpressionsDQRule.size(); i++) {
+            String exp = whereExpressionsDQRule.get(i);
+            buf2.append(this.surroundWith('(', exp, ')'));
+            if (i != whereExpressionsDQRule.size() - 1) {
+                buf2.append(dbms().and());
+            }
+        }
+        // only negate DQRule's where expression
+        if (valid) {
+            dqruleWhereClause = buf2.toString();
+        } else {
+            dqruleWhereClause = dbms().not() + "(" + buf2.toString() + ")";
+        }
+        String where = buf1.toString() + dqruleWhereClause;
+
+        if (where != null) {
+            query = dbms().addWhereToStatement(query, where);
+        }
+        return query;
+    }
+
+    private String surroundWith(char left, String toSurround, char right) {
+        return left + toSurround + right;
     }
 
     @Override
@@ -311,9 +368,10 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 }
             }
 
-            // --- finalize indicators by setting the row count and null when they exist.
-            ColumnAnalysisSqlExecutor finalization = new ColumnAnalysisSqlExecutor();
-            finalization.setRowCountAndNullCount(elementToIndicator);
+            // ADD xqliu 2012-04-23 TDQ-5057
+            // set the aide count for the DQRule indicator
+            setDQRuleAideCount(elementToIndicator);
+            // ~ TDQ-5057
         } catch (Exception e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
@@ -323,6 +381,45 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         // ConnectionUtils.closeConnection(connection);
         // }
         return ok;
+    }
+
+    /**
+     * DOC xqliu Comment method "setDQRuleAideCount".
+     * 
+     * @param elementToIndicator
+     */
+    protected void setDQRuleAideCount(Map<ModelElement, List<Indicator>> elementToIndicator) {
+        Set<ModelElement> analyzedElements = elementToIndicator.keySet();
+        for (ModelElement modelElement : analyzedElements) {
+            List<Indicator> list = elementToIndicator.get(modelElement);
+            for (Indicator ind : list) {
+                if (ind instanceof WhereRuleIndicator) {
+                    Indicator aideInd = getAideIndicator(list, ind);
+                    if (aideInd != null) {
+                        ind.setCount(((WhereRuleAideIndicator) aideInd).getUserCount());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getAideIndicator".
+     * 
+     * @param list
+     * @param ind
+     * @return
+     */
+    private Indicator getAideIndicator(List<Indicator> list, Indicator indicator) {
+        Indicator aideInd = null;
+        String indName = indicator.getName();
+        for (Indicator ind : list) {
+            if (ind instanceof WhereRuleAideIndicator && indName.equals(ind.getName())) {
+                aideInd = ind;
+                break;
+            }
+        }
+        return aideInd;
     }
 
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
@@ -409,9 +506,10 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
      * 
      * @param dataFilterAsString
      * @param indicator
+     * @param valid
      * @return
      */
-    public String getValidStatement(String dataFilterAsString, Indicator indicator) {
+    public String getValidStatement(String dataFilterAsString, Indicator indicator, boolean valid) {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
             traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
@@ -455,15 +553,16 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         }
 
         // --- get indicator parameters and convert them into sql expression
-        List<String> whereExpression = new ArrayList<String>();
+        List<String> whereExpressionAnalysis = new ArrayList<String>();
         if (StringUtils.isNotBlank(dataFilterAsString)) {
-            whereExpression.add(dataFilterAsString);
+            whereExpressionAnalysis.add(dataFilterAsString);
         }
+        List<String> whereExpressionDQRule = new ArrayList<String>();
         String setAliasA = PluginConstant.EMPTY_STRING;
         final EList<JoinElement> joinConditions = indicator.getJoinConditions();
         if (RulesPackage.eINSTANCE.getWhereRule().equals(indicatorDefinition.eClass())) {
             WhereRule wr = (WhereRule) indicatorDefinition;
-            whereExpression.add(wr.getWhereExpression());
+            whereExpressionDQRule.add(wr.getWhereExpression());
 
             // MOD scorreia 2009-03-13 copy joins conditions into the indicator
             joinConditions.clear();
@@ -508,7 +607,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         completedSqlString = dbms().fillGenericQueryWithJoin(genericSql, setName, joinclause);
         // ~
         try {
-            completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
+            completedSqlString = addWhereToSqlStringStatement(whereExpressionAnalysis, whereExpressionDQRule, completedSqlString,
+                    valid);
         } catch (ParseException e) {
             log.warn(e);
         }

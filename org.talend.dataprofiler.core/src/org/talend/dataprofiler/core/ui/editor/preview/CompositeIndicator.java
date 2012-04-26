@@ -362,6 +362,7 @@ public final class CompositeIndicator {
         for (TableIndicatorUnit one : tableIndicatorUnits) {
             switch (one.getType()) {
             case WhereRuleIndicatorEnum:
+            case RowCountIndicatorEnum:
                 tableWhereRuleList.add(one);
                 break;
             default:

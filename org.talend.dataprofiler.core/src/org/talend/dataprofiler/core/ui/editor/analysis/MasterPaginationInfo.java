@@ -136,7 +136,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
     private void createChart(Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
         final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
         JFreeChart chart = chartTypeState.getChart();
-        ChartDecorator.decorate(chart);
+        ChartDecorator.decorate(chart, null);
 
         if (chart != null) {
             final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);

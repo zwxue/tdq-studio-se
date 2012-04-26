@@ -988,6 +988,7 @@
         </eOperations>
         <eOperations name="getJavaUserDefObject" eType="#//indicators/sql/UserDefIndicator"/>
       </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="WhereRuleAideIndicator" eSuperTypes="#//indicators/sql/WhereRuleIndicator"/>
     </eSubpackages>
     <eSubpackages name="columnset" nsURI="http://dataquality.indicators.columnset"
         nsPrefix="dataquality.indicators.columnset">

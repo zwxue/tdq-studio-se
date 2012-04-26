@@ -19,10 +19,12 @@ import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -49,13 +51,34 @@ public final class DQRuleUtilities {
             }
         }
 
-        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
-        wrIndicator.setAnalyzedElement(tableIndicator.getColumnSet());
-        wrIndicator.setIndicatorDefinition(whereRule);
-
-        IndicatorEnum type = IndicatorEnum.findIndicatorEnum(wrIndicator.eClass());
-        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, wrIndicator);
+        WhereRuleIndicator[] compositeWhereRuleIndicator = createCompositeWhereRuleIndicator(tableIndicator.getColumnSet(),
+                whereRule);
+        IndicatorEnum type = IndicatorEnum.findIndicatorEnum(compositeWhereRuleIndicator[0].eClass());
+        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, compositeWhereRuleIndicator[0]);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, whereRule);
+
+        // The where rule aid indicator won't be shown on UI, so just create a indicator unit.
+        IndicatorEnum whereRuleAidType = IndicatorEnum.findIndicatorEnum(compositeWhereRuleIndicator[1].eClass());
+        tableIndicator.addSpecialIndicator(fe, whereRuleAidType, compositeWhereRuleIndicator[1]);
+
         return addIndicatorUnit;
     }
+
+
+
+    /**
+     * @return 0 based index is WhereRuleIndicator, 1 based index is WhereRuleAideIndicator
+     */
+    public static WhereRuleIndicator[] createCompositeWhereRuleIndicator(ModelElement anaElement, WhereRule whereRuleDef) {
+        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
+        wrIndicator.setAnalyzedElement(anaElement);
+        wrIndicator.setIndicatorDefinition(whereRuleDef);
+
+        WhereRuleAideIndicator wraIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleAideIndicator();
+        wraIndicator.setAnalyzedElement(anaElement);
+        wraIndicator.setIndicatorDefinition(whereRuleDef);
+        return new WhereRuleIndicator[] { wrIndicator, wraIndicator };
+
+    }
+
 }

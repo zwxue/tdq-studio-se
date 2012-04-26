@@ -1418,6 +1418,12 @@
            name="Update Distinct Count Indicator"
            version="5.0.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateDQRuleAnalysisTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateDQRuleAnalysisTask"
+           name="Update DQRule Analysis Task"
+           version="5.0.3">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

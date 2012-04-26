@@ -63,6 +63,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -192,6 +193,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
                                 if (!units.isEmpty()) {
                                     IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartStateTable(chartType,
                                             units, tableIndicator);
+
                                     ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(),
                                             chartTypeState.getDataEntity());
 
@@ -210,10 +212,27 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
                                     composite.setLayout(new GridLayout(2, false));
                                     composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+                                    Composite tableTopComp = toolkit.createComposite(composite, SWT.NULL);
+                                    tableTopComp.setLayout(new GridLayout(1, false));
+                                    tableTopComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
                                     Analysis analysis = masterPage.getAnalysisHandler().getAnalysis();
 
-                                    // create table
-                                    TableViewer tableviewer = chartTypeState.getTableForm(composite);
+                                    // create table for RownCountIndicator
+                                    if (chartTypeState instanceof WhereRuleStatisticsStateTable) {
+                                        WhereRuleStatisticsStateTable chartTypeStateWhereRule = (WhereRuleStatisticsStateTable) chartTypeState;
+                                        ChartWithData chartDataRowCount = new ChartWithData(chartType, chartTypeStateWhereRule
+                                                .getChart(), chartTypeStateWhereRule.getDataEntityRowCount());
+
+                                        TableViewer tableviewerRowCount = chartTypeStateWhereRule
+                                                .getTableFormRowCount(tableTopComp);
+                                        tableviewerRowCount.setInput(chartDataRowCount);
+                                        DataExplorer dataExplorerRownCount = chartTypeState.getDataExplorer();
+                                        ChartTableFactory.addMenuAndTip(tableviewerRowCount, dataExplorerRownCount, analysis);
+                                    }
+
+                                    // create table for WhereRuleIndicator
+                                    TableViewer tableviewer = chartTypeState.getTableForm(tableTopComp);
                                     tableviewer.setInput(chartData);
                                     DataExplorer dataExplorer = chartTypeState.getDataExplorer();
                                     ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);

@@ -29,6 +29,7 @@ import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.Plot;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
@@ -42,7 +43,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  */
 public final class ChartDecorator {
 
-    private static final int BASE_ITEM_LABEL_SIZE = 12;
+    private static final int BASE_ITEM_LABEL_SIZE = 10;
 
     private static final int BASE_LABEL_SIZE = 12;
 
@@ -63,11 +64,11 @@ public final class ChartDecorator {
      * 
      * @param chart
      */
-    public static void decorate(JFreeChart chart) {
+    public static void decorate(JFreeChart chart, PlotOrientation orientation) {
         if (chart != null) {
             Plot plot = chart.getPlot();
             if (plot instanceof CategoryPlot) {
-                decorateCategoryPlot(chart);
+                decorateCategoryPlot(chart, orientation);
 
                 int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
 
@@ -123,7 +124,7 @@ public final class ChartDecorator {
      * @param chart
      */
     public static void decorateColumnDependency(JFreeChart chart) {
-        decorate(chart);
+        decorate(chart, PlotOrientation.HORIZONTAL);
         CategoryItemRenderer renderer = ((CategoryPlot) chart.getPlot()).getRenderer();
         renderer.setSeriesPaint(0, colorList.get(1));
         renderer.setSeriesPaint(1, colorList.get(0));
@@ -135,12 +136,17 @@ public final class ChartDecorator {
      * 
      * @param chart
      */
-    public static void decorateCategoryPlot(JFreeChart chart) {
+    public static void decorateCategoryPlot(JFreeChart chart, PlotOrientation orientation) {
 
         CategoryPlot plot = chart.getCategoryPlot();
         CategoryItemRenderer render = plot.getRenderer();
         CategoryAxis domainAxis = plot.getDomainAxis();
-        domainAxis.setCategoryMargin(0.01);
+        // ADD msjian TDQ-5111 2012-4-9: set something look it well
+        domainAxis.setCategoryMargin(0.1);
+        domainAxis.setUpperMargin(0.05);
+        domainAxis.setLowerMargin(0.05);
+        // TDQ-5111~
+
         ValueAxis valueAxis = plot.getRangeAxis();
 
         Font font = new Font("Tahoma", Font.BOLD, BASE_ITEM_LABEL_SIZE);//$NON-NLS-1$
@@ -180,6 +186,13 @@ public final class ChartDecorator {
             // MOD klliu bug 14570: Label size too long in Text statistics graph 2010-08-09
             domainAxis.setMaximumCategoryLabelLines(10);
             ((BarRenderer) render).setItemMargin(-0.40 * rowCount);
+
+            // ADD msjian TDQ-5111 2012-4-9: set Bar Width and let it look well
+            // not do this when the bar is horizontal Orientation
+            if (orientation == null) {
+                ((BarRenderer) render).setMaximumBarWidth(0.2);
+            }
+            // TDQ-5111~
         }
         // ~10998
     }

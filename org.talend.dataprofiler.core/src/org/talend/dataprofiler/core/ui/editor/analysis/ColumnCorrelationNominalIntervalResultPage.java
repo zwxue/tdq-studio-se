@@ -406,7 +406,7 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         // create chart
         if (!EditorPreferencePage.isHideGraphics()) {
             JFreeChart chart = chartTypeState.getChart();
-            ChartDecorator.decorate(chart);
+            ChartDecorator.decorate(chart, null);
             if (chart != null) {
                 ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 

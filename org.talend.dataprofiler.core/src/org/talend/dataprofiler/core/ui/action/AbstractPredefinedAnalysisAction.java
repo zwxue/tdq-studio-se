@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -43,8 +43,10 @@ import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.rules.JoinElement;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
@@ -56,7 +58,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public abstract class AbstractPredefinedAnalysisAction extends Action {
 
-    private TreeSelection selection;
+    private StructuredSelection selection;
 
     private final ImageDescriptor defaultImage = ImageLib.getImageDescriptor(ImageLib.ACTION_NEW_ANALYSIS);
 
@@ -69,11 +71,11 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
         }
     }
 
-    public TreeSelection getSelection() {
+    public StructuredSelection getSelection() {
         return selection;
     }
 
-    public void setSelection(TreeSelection selection) {
+    public void setSelection(StructuredSelection selection) {
         this.selection = selection;
     }
 
@@ -108,6 +110,16 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 list.add(recursiveFind);
             }
             return list.toArray(new IRepositoryNode[list.size()]);
+        } else if (firstElement instanceof WhereRuleChartDataEntity) {
+            // ADD msjian 2012-2-9 TDQ-4470: get columns from the join conditions
+            EList<JoinElement> joinConditions = ((WhereRuleChartDataEntity) firstElement).getIndicator().getJoinConditions();
+            if (joinConditions != null && joinConditions.size() > 0) {
+                JoinElement joinElement = joinConditions.get(0);
+                list.add(RepositoryNodeHelper.recursiveFind(joinElement.getColA()));
+                list.add(RepositoryNodeHelper.recursiveFind(joinElement.getColB()));
+                return list.toArray(new IRepositoryNode[list.size()]);
+            }
+            // TDQ-4470 ~
         }
         return null;
     }

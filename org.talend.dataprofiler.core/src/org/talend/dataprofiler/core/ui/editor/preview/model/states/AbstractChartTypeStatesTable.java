@@ -133,7 +133,7 @@ public abstract class AbstractChartTypeStatesTable implements IChartTypeStates {
 
     protected abstract IStructuredContentProvider getContentProvider();
 
-    private void createTableColumnStructure(TableStructureEntity entity, Table table) {
+    protected void createTableColumnStructure(TableStructureEntity entity, Table table) {
         if (entity.isValid()) {
             for (int i = 0; i < entity.getColumnCount(); i++) {
                 TableColumn column = new TableColumn(table, SWT.NONE);

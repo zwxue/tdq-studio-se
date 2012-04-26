@@ -468,7 +468,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         JFreeChart chart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
                 .getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
                 PlotOrientation.HORIZONTAL);
-        ChartDecorator.decorate(chart);
+        ChartDecorator.decorate(chart, null);
 
         GridData gd = new GridData();
         gd.heightHint = 180;

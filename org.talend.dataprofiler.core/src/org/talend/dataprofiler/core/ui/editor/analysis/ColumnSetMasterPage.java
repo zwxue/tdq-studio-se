@@ -509,7 +509,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // chartTypeState.getDataEntity());
 
         JFreeChart chart = chartTypeState.getChart();
-        ChartDecorator.decorate(chart);
+        ChartDecorator.decorate(chart, null);
         if (chart != null) {
             ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 
@@ -534,7 +534,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         // create chart
         JFreeChart chart = chartTypeState.getChart();
-        ChartDecorator.decorate(chart);
+        ChartDecorator.decorate(chart, null);
         if (chart != null) {
             ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
 

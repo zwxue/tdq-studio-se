@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -33,6 +34,7 @@ import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateSimpleAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
@@ -49,6 +51,7 @@ import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
@@ -56,6 +59,7 @@ import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -63,6 +67,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -107,8 +112,10 @@ public final class ChartTableFactory {
                         table.setMenu(menu);
 
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
+                        Long rowCount = getRowCount(analysis, dataEntity.getIndicator().getAnalyzedElement());
 
                         if (!isJAVALanguage) {
+                            boolean showExtraMenu = false;
                             for (final MenuItemEntity itemEntity : itemEntities) {
                                 MenuItem item = new MenuItem(menu, SWT.PUSH);
                                 item.setText(itemEntity.getLabel());
@@ -123,6 +130,16 @@ public final class ChartTableFactory {
                                         CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                     }
                                 });
+
+                                // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join
+                                // condition columns
+                                if (indicator instanceof WhereRuleIndicator) {
+                                    WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
+                                    if (rowCount.doubleValue() < ind.getUserCount().doubleValue()) {
+                                        showExtraMenu = true;
+                                    }
+                                }
+                                // TDQ-4470~
 
                                 if (isPatternFrequencyIndicator(indicator)) {
                                     MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
@@ -139,6 +156,22 @@ public final class ChartTableFactory {
                                         }
                                     });
                                 }
+                            }
+                            // show extra menu to create simple analysis, help user to find the duplicated rows
+                            if (showExtraMenu) {
+                                MenuItem itemCreateWhereRule = new MenuItem(menu, SWT.PUSH);
+                                itemCreateWhereRule.setText(DefaultMessagesImpl
+                                        .getString("ChartTableFactory.JoinConditionColumnsAnalysis")); //$NON-NLS-1$
+                                itemCreateWhereRule.addSelectionListener(new SelectionAdapter() {
+
+                                    @Override
+                                    public void widgetSelected(SelectionEvent e) {
+                                        final StructuredSelection selectionOne = (StructuredSelection) tbViewer.getSelection();
+                                        CreateSimpleAnalysisAction action = new CreateSimpleAnalysisAction();
+                                        action.setSelection(selectionOne);
+                                        action.run();
+                                    }
+                                });
                             }
                         } else {
                             AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
@@ -247,6 +280,24 @@ public final class ChartTableFactory {
                         menu.setVisible(true);
                     }
                 }
+            }
+
+            /**
+             * DOC xqliu Comment method "getRowCount".
+             * 
+             * @param analysis
+             * @param analyzedElement
+             * @return
+             */
+            private Long getRowCount(Analysis analysis, ModelElement analyzedElement) {
+                Long rowCount = 0L;
+                EList<Indicator> indicators = analysis.getResults().getIndicators();
+                for (Indicator ind : indicators) {
+                    if (ind instanceof RowCountIndicator && ind.getAnalyzedElement().equals(analyzedElement)) {
+                        rowCount = ind.getCount();
+                    }
+                }
+                return rowCount;
             }
 
             private SelectionAdapter getAdapter(final IDatabaseJobService service) {

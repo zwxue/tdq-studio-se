@@ -65,6 +65,7 @@ public class IndicatorSqlFactoryImpl extends EFactoryImpl implements IndicatorSq
             case IndicatorSqlPackage.USER_DEF_INDICATOR: return createUserDefIndicator();
             case IndicatorSqlPackage.WHERE_RULE_INDICATOR: return createWhereRuleIndicator();
             case IndicatorSqlPackage.JAVA_USER_DEF_INDICATOR: return createJavaUserDefIndicator();
+            case IndicatorSqlPackage.WHERE_RULE_AIDE_INDICATOR: return createWhereRuleAideIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -98,6 +99,16 @@ public class IndicatorSqlFactoryImpl extends EFactoryImpl implements IndicatorSq
     public JavaUserDefIndicator createJavaUserDefIndicator() {
         JavaUserDefIndicatorImpl javaUserDefIndicator = new JavaUserDefIndicatorImpl();
         return javaUserDefIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public WhereRuleAideIndicator createWhereRuleAideIndicator() {
+        WhereRuleAideIndicatorImpl whereRuleAideIndicator = new WhereRuleAideIndicatorImpl();
+        return whereRuleAideIndicator;
     }
 
     /**
