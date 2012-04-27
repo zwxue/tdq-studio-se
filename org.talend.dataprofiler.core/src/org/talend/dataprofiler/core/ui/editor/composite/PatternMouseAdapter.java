@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -108,7 +109,9 @@ public class PatternMouseAdapter extends MouseAdapter {
         if (dialog.open() == Window.OK) {
 
             for (IndicatorUnit indicatorUnit : meIndicator.getIndicatorUnits()) {
-                meIndicator.removeIndicatorUnit(indicatorUnit);
+                if (indicatorUnit.getIndicator() instanceof PatternMatchingIndicator) {
+                    meIndicator.removeIndicatorUnit(indicatorUnit);
+                }
             }
             treeItem.removeAll();
 
