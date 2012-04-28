@@ -273,6 +273,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             }
         });
+        // ADD msjian TDQ-5184 2012-4-8: set the connCombo background color as system set color
+        connCombo.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        // TDQ-5184~
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(labelButtonClient);
         reloadDataproviderAndFillConnCombo();
         // ~
