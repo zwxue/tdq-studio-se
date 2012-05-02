@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPartListener;
@@ -50,6 +51,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
@@ -69,6 +71,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -270,10 +273,23 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * @param connectionItem
      * 
      */
-    public void reloadDatabase(ConnectionItem connectionItem) {
+    public ReturnCode reloadDatabase(ConnectionItem connectionItem) {
+        ReturnCode retCode = new ReturnCode(Boolean.TRUE);
         Connection conn = connectionItem.getConnection();
         try {
             if (conn instanceof DatabaseConnection) {
+                List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
+                if (!(dependencyClients == null || dependencyClients.isEmpty())) {
+                    int isOk = DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null, new ModelElement[] { conn },
+                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
+                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", conn.getLabel()));
+                    if (isOk != Dialog.OK) {
+                        retCode.setOk(Boolean.FALSE);
+                        retCode.setMessage("The user canceled the operation!"); //$NON-NLS-1$
+                        return retCode;
+                    }
+                }
+
                 final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(conn);
                 Connection newConnection = creatComparisonLevel.reloadCurrentLevelElement();
 
@@ -287,18 +303,18 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                     }
                 }
                 // update the related analyses.
-                List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
-                if (!(dependencyClients == null || dependencyClients.isEmpty())) {
-                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
-                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", newConnection.getLabel()));
-                }
                 WorkbenchUtils.impactExistingAnalyses(newConnection);
             }
         } catch (ReloadCompareException e) {
             log.error(e, e);
+            retCode.setOk(Boolean.FALSE);
+            retCode.setMessage(e.getMessage());
         } catch (PartInitException e) {
             log.error(e, e);
+            retCode.setOk(Boolean.FALSE);
+            retCode.setMessage(e.getMessage());
         }
+        return retCode;
     }
 
     public void updateImpactOnAnalysis(ConnectionItem connectionItem) {
