@@ -41,24 +41,12 @@ public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
         if (this.valueToFreq == null) {
             this.valueToFreq = new HashMap<Object, Long>();
         }
-        // if (this.uniqueValues == null) {
-        // uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this,
-        // IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES);
-        // for (int i = 0; i < 10; i++) {
-        // uniqueValues.add(0);
-        // }
-        // }
-        // you can call super method in order to automatically increase the number of count
-        // super.handle(data);
-        // you can also increment count yourself here
         this.count++;
 
         if (data == null)
             return true;
 
         Integer leadDigit = Integer.valueOf(String.valueOf(data).substring(0, 1));
-
-        // System.err.println("-in ben UDI-" + this.valueToFreq + "--" + leadDigit);
 
         // increment frequency of leading digit in data
         Long c = this.valueToFreq.get(leadDigit);
@@ -72,14 +60,6 @@ public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
             this.valueToFreq.put(leadDigit, c);
         }
 
-        // compute the frequency from 1~9
-        // Double d = (double) c / count;
-        // if (this.uniqueValues.size() > (leadDigit - 1) && uniqueValues.get((leadDigit - 1)) != null) {
-        // this.uniqueValues.remove((leadDigit - 1));
-        // }
-        // this.uniqueValues.add((leadDigit - 1), d);
-        // System.err.println("--" + d + "--" + leadDigit + ",count:" + count);
-        // System.err.println("-f-" + this.uniqueValues);
         return true;
     }
 
