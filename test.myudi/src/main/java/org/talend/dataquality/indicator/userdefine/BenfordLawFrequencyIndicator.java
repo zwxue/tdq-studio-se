@@ -63,18 +63,6 @@ public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
         return true;
     }
 
-    /**
-     * overide
-     * 
-     * public EList<Object> getUniqueValues() { if (this.uniqueValues == null) { uniqueValues = new
-     * EDataTypeUniqueEList<Object>(Object.class, this, IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES);
-     * 
-     * } for (Object val : valueToFreq.keySet()) { Long freq = this.valueToFreq.get(val); this.uniqueValues.add((double)
-     * freq / (double) count); System.err.println("-f-" + this.uniqueValues); }
-     * 
-     * return this.uniqueValues; }
-     */
-
     /*
      * (non-Javadoc)
      * 
