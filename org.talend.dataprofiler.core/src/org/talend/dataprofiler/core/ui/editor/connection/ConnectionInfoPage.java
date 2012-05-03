@@ -50,8 +50,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.PluginChecker;
-import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -80,7 +78,6 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ConnectionRepNode;
@@ -91,7 +88,6 @@ import org.talend.i18n.Messages;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -579,7 +575,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         };
         try {
             ProgressUI.popProgressDialog(op);
-            CorePlugin.getDefault().refreshDQView();
+            CorePlugin.getDefault().refreshDQView(connRecursiveFind);
             this.initialize(this.getEditor());
             // MOD klliu this don't need to close the Editor
             // this.getEditor().close(false);

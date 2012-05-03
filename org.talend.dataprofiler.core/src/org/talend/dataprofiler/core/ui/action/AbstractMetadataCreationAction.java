@@ -63,7 +63,7 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
             initDialogBeforeOpen(dialog);
 
             if (Window.OK == dialog.open()) {
-                CorePlugin.getDefault().refreshDQView();
+                CorePlugin.getDefault().refreshDQView(node);
                 // MOD gdbu 2011-11-24 TDQ-3969 : after create items re-filter the tree , to create a new list .
                 if (DQRepositoryNode.isOnFilterring()) {
                     RepositoryNodeHelper.fillTreeList(null);
