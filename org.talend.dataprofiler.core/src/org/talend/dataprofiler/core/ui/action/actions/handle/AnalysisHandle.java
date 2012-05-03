@@ -47,7 +47,6 @@ public class AnalysisHandle extends EMFResourceHandle {
     protected ModelElement update(ModelElement oldObject, ModelElement newObject) {
         newObject = super.update(oldObject, newObject);
 
-        AnalysisHelper.getDataFilter((Analysis) newObject).clear();
         AnalysisHelper.setStringDataFilter((Analysis) newObject, AnalysisHelper.getStringDataFilter((Analysis) oldObject));
 
         return newObject;
