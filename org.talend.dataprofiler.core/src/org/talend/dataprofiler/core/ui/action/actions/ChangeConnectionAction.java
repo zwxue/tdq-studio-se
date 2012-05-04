@@ -93,7 +93,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
     public ChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, Connection tdProvider) {
         Object connectionObj = masterPage.getConnCombo().getData(
-                masterPage.getConnCombo().getSelectionIndex() + PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+                masterPage.getConnCombo().getSelectionIndex() + PluginConstant.EMPTY_STRING);
         if (connectionObj instanceof DBConnectionRepNode || connectionObj instanceof MDMConnectionRepNode
                 || connectionObj instanceof DFConnectionRepNode) {
             this.newDataProvider = ((ConnectionItem) (((RepositoryNode) connectionObj).getObject().getProperty().getItem()))
@@ -104,14 +104,14 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
         this.oldDataProvider = tdProvider;
         this.synAnalysis = masterPage.getAnalysis();
-        changeActionStatus = new ReturnCode(Boolean.FALSE);
+        this.changeActionStatus = new ReturnCode(Boolean.FALSE);
     }
 
     public ChangeConnectionAction(Connection oldDataProvider, Connection newDataProvider, Analysis analysis) {
         this.oldDataProvider = oldDataProvider;
         this.newDataProvider = newDataProvider;
         this.synAnalysis = analysis;
-        changeActionStatus = new ReturnCode(Boolean.FALSE);
+        this.changeActionStatus = new ReturnCode(Boolean.FALSE);
     }
 
     public void run(String[] params, ICheatSheetManager manager) {
@@ -159,7 +159,6 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 DefaultMessagesImpl.getString("ChangeConnectionAction.ChangeConnection"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("ChangeConnectionAction.MayCauseAsynProblem")); //$NON-NLS-1$
         if (retCode) {
-
             if (analyzedElements.get(0) instanceof TdColumn) {
                 anaEleSynDialog = new AnalyzedColumnsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
             } else if (analyzedElements.get(0) instanceof ColumnSet) {

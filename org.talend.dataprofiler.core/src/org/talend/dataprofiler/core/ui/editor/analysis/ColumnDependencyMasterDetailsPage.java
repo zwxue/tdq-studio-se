@@ -275,7 +275,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
                 log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
             }
         } else {
-        	deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysis);
         }
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();

@@ -200,6 +200,9 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         EObject rightElement = addElement.getRightElement();
         Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
         if (catalog != null) {
+            // ADD xqliu 2012-05-03 TDQ-4853
+            catalog.getDataManager().clear();
+            // ~ TDQ-4853
             ConnectionHelper.addCatalog(catalog, oldDataProvider);
             this.tempReloadProvider.getDataPackage().remove(catalog);
         } else {
@@ -218,13 +221,15 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                         schemaParent.getOwnedElement().remove(schema);
                     }
                 } else {
+                    // ADD xqliu 2012-05-03 TDQ-4853
+                    schema.getDataManager().clear();
+                    // ~ TDQ-4853
                     ConnectionHelper.addSchema(schema, oldDataProvider);
                     this.tempReloadProvider.getDataPackage().remove(catalog);
                 }
             }
         }
         return;
-
     }
 
     @Override
