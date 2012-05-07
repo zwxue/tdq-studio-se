@@ -54,6 +54,7 @@ import orgomg.cwm.resource.relational.Schema;
 public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     private static Logger log = Logger.getLogger(DataProviderComparisonLevel.class);
+
     public DataProviderComparisonLevel(Object selectedObj) {
         super(selectedObj);
     }
@@ -199,6 +200,9 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         EObject rightElement = addElement.getRightElement();
         Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(rightElement);
         if (catalog != null) {
+            // ADD xqliu 2012-05-03 TDQ-4853
+            catalog.getDataManager().clear();
+            // ~ TDQ-4853
             ConnectionHelper.addCatalog(catalog, oldDataProvider);
             this.tempReloadProvider.getDataPackage().remove(catalog);
         } else {
@@ -217,13 +221,15 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                         schemaParent.getOwnedElement().remove(schema);
                     }
                 } else {
+                    // ADD xqliu 2012-05-03 TDQ-4853
+                    schema.getDataManager().clear();
+                    // ~ TDQ-4853
                     ConnectionHelper.addSchema(schema, oldDataProvider);
                     this.tempReloadProvider.getDataPackage().remove(catalog);
                 }
             }
         }
         return;
-
     }
 
     @Override
@@ -233,7 +239,6 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
             return;
         }
         popRemoveElementConfirm();
-
         // MOD qiongli 2012-2-2 TDQ 4498,if this connection have Catalog and Schema,should remove schema from catalog.
         Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(removePackage);
         if (schema != null && schema.eContainer() != null && schema.eContainer() instanceof Catalog) {

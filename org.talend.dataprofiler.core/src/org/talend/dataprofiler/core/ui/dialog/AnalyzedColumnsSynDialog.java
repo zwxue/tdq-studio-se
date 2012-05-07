@@ -34,7 +34,6 @@ import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
- * 
  * DOC mzhao analyzed columns synchronized dialog. 2009-06-02 Feature 5887
  */
 public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
@@ -43,8 +42,7 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
 
     private EList<ModelElement> analyzedElements;
 
-    public AnalyzedColumnsSynDialog(Shell parent, Analysis analysis, Connection dataprovider,
-            EList<ModelElement> analyzedElements) {
+    public AnalyzedColumnsSynDialog(Shell parent, Analysis analysis, Connection dataprovider, EList<ModelElement> analyzedElements) {
         super(parent, analysis, dataprovider);
         this.analyzedElements = analyzedElements;
     }
@@ -56,11 +54,10 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
         synedEleMap.clear();
         for (ModelElement element : analyzedElements) {
             try {
-
                 column = (TdColumn) element;
                 synedEleMap.put(column, null);
 
-                ColumnSet anaColumnSet = ColumnHelper.getColumnSetOwner(column);
+                ColumnSet anaColumnSet = ColumnHelper.getColumnOwnerAsColumnSet(column);
                 Package anaPackage = ColumnSetHelper.getParentCatalogOrSchema(anaColumnSet);
                 if (anaPackage == null) {
                     return;
@@ -102,9 +99,7 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
                             // }
                             break;
                         }
-
                     }
-
                 }
                 boolean loadFromDb = connPackage.getOwnedElement().size() == 0;
                 if (anaColumnSet instanceof TdTable) {
@@ -144,7 +139,10 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
 
                 TdColumn connColumn = null;
 
-                loadFromDb = connColumnSet.getOwnedElement().size() == 0;
+                // MOD xqliu 2012-05-04 TDQ-4853 should call getFeature(instead of getOwnedElement) method to get the
+                // column list
+                loadFromDb = connColumnSet.getFeature().size() == 0;
+                // ~ TDQ-4853
                 List<TdColumn> columns = DqRepositoryViewService.getColumns(newDataProvider, connColumnSet, null, loadFromDb);
                 ColumnSetHelper.addColumns(connColumnSet, columns);
                 for (TdColumn loopColumn : columns) {
@@ -169,12 +167,10 @@ public class AnalyzedColumnsSynDialog extends AnalyzedElementSynDialog {
                     modelInput.add(synTreeModel);
                     continue;
                 }
-
             } catch (Exception e) {
                 log.error(e, e);
                 e.printStackTrace();
             }
         }
-
     }
 }

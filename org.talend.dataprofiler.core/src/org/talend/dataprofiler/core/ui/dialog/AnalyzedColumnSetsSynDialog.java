@@ -32,38 +32,35 @@ import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
- * 
  * DOC mzhao analyzed columns synchronized dialog. 2009-06-02 Feature 5887
  */
 public class AnalyzedColumnSetsSynDialog extends AnalyzedElementSynDialog {
 
-	private static Logger log = Logger
-			.getLogger(AnalyzedColumnsSynDialog.class);
-	private EList<ModelElement> analyzedElements = null;
+    private static Logger log = Logger.getLogger(AnalyzedColumnsSynDialog.class);
 
-	public AnalyzedColumnSetsSynDialog(Shell parent, Analysis analysis,
- Connection dataprovider,
+    private EList<ModelElement> analyzedElements = null;
+
+    public AnalyzedColumnSetsSynDialog(Shell parent, Analysis analysis, Connection dataprovider,
             EList<ModelElement> analyzedElements) {
-		super(parent, analysis, dataprovider);
-		this.analyzedElements = analyzedElements;
-	}
+        super(parent, analysis, dataprovider);
+        this.analyzedElements = analyzedElements;
+    }
 
-	@Override
-	public void reloadInputModel() {
-		ColumnSet anaColumnSet = null;
-		modelInput.clear();
-		synedEleMap.clear();
-		for (ModelElement element : analyzedElements) {
-			try {
-				anaColumnSet = (ColumnSet) element;
-				synedEleMap.put(anaColumnSet, null);
+    @Override
+    public void reloadInputModel() {
+        ColumnSet anaColumnSet = null;
+        modelInput.clear();
+        synedEleMap.clear();
+        for (ModelElement element : analyzedElements) {
+            try {
+                anaColumnSet = (ColumnSet) element;
+                synedEleMap.put(anaColumnSet, null);
 
-				Package anaPackage = ColumnSetHelper
-						.getParentCatalogOrSchema(anaColumnSet);
-				if (anaPackage == null) {
+                Package anaPackage = ColumnSetHelper.getParentCatalogOrSchema(anaColumnSet);
+                if (anaPackage == null) {
                     return;
                 }
-				Package connPackage = null;
+                Package connPackage = null;
                 // MOD by zshen for bug 16775 on 2010.12.28 for mssql case
                 for (Package pk : newDataProvider.getDataPackage()) {
                     if (pk instanceof Catalog && anaPackage instanceof Schema) {
@@ -98,9 +95,7 @@ public class AnalyzedColumnSetsSynDialog extends AnalyzedElementSynDialog {
                             // }
                             // break;
                         }
-
                     }
-
                 }
                 boolean loadFromDb = connPackage.getOwnedElement().size() == 0;
                 if (anaColumnSet instanceof TdTable) {
@@ -137,13 +132,10 @@ public class AnalyzedColumnSetsSynDialog extends AnalyzedElementSynDialog {
                     continue;
                 }
                 synedEleMap.put(anaColumnSet, connColumnSet);
-
             } catch (Exception e) {
                 log.error(e, e);
                 e.printStackTrace();
             }
         }
-
-	}
-
+    }
 }

@@ -21,53 +21,47 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
- * 
  * DOC mzhao analyzed columns synchronized dialog. 2009-06-02 Feature 5887
  */
 public class AnalyzedPackageSynDialog extends AnalyzedElementSynDialog {
 
-	private static Logger log = Logger
-			.getLogger(AnalyzedColumnsSynDialog.class);
-	private EList<ModelElement> analyzedElements = null;
+    private static Logger log = Logger.getLogger(AnalyzedColumnsSynDialog.class);
 
-	public AnalyzedPackageSynDialog(Shell parent, Analysis analysis,
- Connection dataprovider, EList<ModelElement> analyzedElements) {
-		super(parent, analysis, dataprovider);
-		this.analyzedElements = analyzedElements;
-	}
+    private EList<ModelElement> analyzedElements = null;
 
-	@Override
-	public void reloadInputModel() {
-		Package anaPackage = null;
-		modelInput.clear();
-		synedEleMap.clear();
-		for (ModelElement element : analyzedElements) {
-			try {
-				anaPackage = (Package) element;
-				synedEleMap.put(anaPackage, null);
-				Package connPackage = null;
-				for (Package pk : newDataProvider.getDataPackage()) {
-					//
-					if (pk.getName().equalsIgnoreCase(anaPackage.getName())) {
-						connPackage = pk;
-						break;
-					}
-				}
-				if (connPackage == null) {
-					SynTreeModel synTreeModel = new SynTreeModel(anaPackage);
-					synTreeModel.setOldDataProvElement(anaPackage);
-					// synTreeModel.setNewDataProvElement(connPackage);
-					modelInput.add(synTreeModel);
-					continue;
-				}
-				synedEleMap.put(anaPackage, connPackage);
+    public AnalyzedPackageSynDialog(Shell parent, Analysis analysis, Connection dataprovider, EList<ModelElement> analyzedElements) {
+        super(parent, analysis, dataprovider);
+        this.analyzedElements = analyzedElements;
+    }
 
-			} catch (Exception e) {
-				log.error(e, e);
-				e.printStackTrace();
-			}
-		}
-
-	}
-
+    @Override
+    public void reloadInputModel() {
+        Package anaPackage = null;
+        modelInput.clear();
+        synedEleMap.clear();
+        for (ModelElement element : analyzedElements) {
+            try {
+                anaPackage = (Package) element;
+                synedEleMap.put(anaPackage, null);
+                Package connPackage = null;
+                for (Package pk : newDataProvider.getDataPackage()) {
+                    if (pk.getName().equalsIgnoreCase(anaPackage.getName())) {
+                        connPackage = pk;
+                        break;
+                    }
+                }
+                if (connPackage == null) {
+                    SynTreeModel synTreeModel = new SynTreeModel(anaPackage);
+                    synTreeModel.setOldDataProvElement(anaPackage);
+                    // synTreeModel.setNewDataProvElement(connPackage);
+                    modelInput.add(synTreeModel);
+                    continue;
+                }
+                synedEleMap.put(anaPackage, connPackage);
+            } catch (Exception e) {
+                log.error(e, e);
+                e.printStackTrace();
+            }
+        }
+    }
 }

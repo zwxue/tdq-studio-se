@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.core.model.metadata.builder.connection.AbstractMetadataObject;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -89,6 +90,12 @@ public class EMFResourceHandle implements IDuplicateHandle {
         if (modelElement != null) {
             ModelElement newObject = (ModelElement) EMFSharedResources.getInstance().copyEObject(modelElement);
             newObject.setName(newLabel);
+            // ADD xqliu 2012-05-03 TDQ-4853
+            if (newObject instanceof AbstractMetadataObject) {
+                AbstractMetadataObject amObj = (AbstractMetadataObject) newObject;
+                amObj.setLabel(newLabel);
+            }
+            // ~ TDQ-4853
 
             IFolder folder = extractFolder(modelElement);
 
