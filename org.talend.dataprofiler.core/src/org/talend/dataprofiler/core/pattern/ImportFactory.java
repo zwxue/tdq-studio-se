@@ -31,6 +31,7 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -92,7 +93,19 @@ public final class ImportFactory {
      * @return
      */
     public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile) {
-        return doInport(resourceType, importFile, true, true);
+        return doInport(resourceType, importFile, null);
+    }
+
+    /**
+     * DOC xqliu Comment method "doInport".
+     * 
+     * @param resourceType
+     * @param importFile
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile, String importItemName) {
+        return doInport(resourceType, importFile, true, true, importItemName);
     }
 
     /**
@@ -103,21 +116,34 @@ public final class ImportFactory {
      * @return
      */
     public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename) {
+        return doInport(resourceType, importFile, skip, rename, null);
+    }
+
+    /**
+     * DOC xqliu Comment method "doInport".
+     * 
+     * @param resourceType
+     * @param importFile
+     * @param skip
+     * @param rename
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename,
+            String importItemName) {
         assert resourceType != null;
 
         IFolder restoreFolder = ResourceManager.getOneFolder(resourceType);
 
         switch (resourceType) {
         case PATTERN_REGEX:
-            return importToStucture(importFile, restoreFolder, ExpressionType.REGEXP, skip, rename);
+            return importToStucture(importFile, restoreFolder, ExpressionType.REGEXP, skip, rename, importItemName);
         case PATTERN_SQL:
-            return importToStucture(importFile, restoreFolder, ExpressionType.SQL_LIKE, skip, rename);
-
+            return importToStucture(importFile, restoreFolder, ExpressionType.SQL_LIKE, skip, rename, importItemName);
         case USER_DEFINED_INDICATORS:
-            return importIndicatorToStucture(importFile, restoreFolder, skip, rename);
+            return importIndicatorToStucture(importFile, restoreFolder, skip, rename, importItemName);
         case RULES_PARSER:
-            return importParserRuleToStucture(importFile, restoreFolder, skip, rename);
-
+            return importParserRuleToStucture(importFile, restoreFolder, skip, rename, importItemName);
         default:
             return null;
         }
@@ -125,6 +151,22 @@ public final class ImportFactory {
 
     public static List<ReturnCode> importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
             boolean rename) {
+        return importToStucture(importFile, selectionFolder, type, skip, rename, null);
+    }
+
+    /**
+     * DOC xqliu Comment method "importToStucture".
+     * 
+     * @param importFile
+     * @param selectionFolder
+     * @param type
+     * @param skip
+     * @param rename
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
+            boolean rename, String importItemName) {
 
         List<ReturnCode> importEvent = new ArrayList<ReturnCode>();
 
@@ -255,7 +297,25 @@ public final class ImportFactory {
             }
         }
 
+        // ADD xqliu 2012-04-27 TDQ-5149
+        checkImportEvent(importItemName, importEvent);
+        // ~ TDQ-5149
         return importEvent;
+    }
+
+    /**
+     * check the importEvent list, if it is empty add message into it.
+     * 
+     * @param importItemName
+     * @param importEvent
+     */
+    private static void checkImportEvent(String importItemName, List<ReturnCode> importEvent) {
+        if (importEvent.isEmpty()) {
+            if (!StringUtils.isBlank(importItemName)) {
+                importEvent
+                        .add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.ImportFailed", importItemName), false)); //$NON-NLS-1$                    
+            }
+        }
     }
 
     /**
@@ -439,6 +499,21 @@ public final class ImportFactory {
      */
     public static List<ReturnCode> importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip,
             boolean rename) {
+        return importIndicatorToStucture(importFile, selectionFolder, skip, rename, null);
+    }
+
+    /**
+     * DOC xqliu Comment method "importIndicatorToStucture".
+     * 
+     * @param importFile
+     * @param selectionFolder
+     * @param skip
+     * @param rename
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip,
+            boolean rename, String importItemName) {
 
         List<ReturnCode> information = new ArrayList<ReturnCode>();
 
@@ -512,7 +587,6 @@ public final class ImportFactory {
                 }
 
                 reader.close();
-
             } catch (Exception e) {
                 log.error(e, e);
                 information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed", name), false)); //$NON-NLS-1$
@@ -623,9 +697,11 @@ public final class ImportFactory {
                 log.error(e);
                 information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedFailed", name), false)); //$NON-NLS-1$
             }
-
         }
 
+        // ADD xqliu 2012-04-27 TDQ-5149
+        checkImportEvent(importItemName, information);
+        // ~ TDQ-5149
         return information;
     }
 
@@ -747,6 +823,21 @@ public final class ImportFactory {
      */
     public static List<ReturnCode> importParserRuleToStucture(File importFile, IFolder selectionFolder, boolean skip,
             boolean rename) {
+        return importParserRuleToStucture(importFile, selectionFolder, skip, rename, null);
+    }
+
+    /**
+     * DOC xqliu Comment method "importParserRuleToStucture".
+     * 
+     * @param importFile
+     * @param selectionFolder
+     * @param skip
+     * @param rename
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> importParserRuleToStucture(File importFile, IFolder selectionFolder, boolean skip,
+            boolean rename, String importItemName) {
         List<ReturnCode> information = new ArrayList<ReturnCode>();
 
         Set<String> names = DQRuleResourceFileHelper.getInstance().getAllParserRlueNames(selectionFolder);
@@ -814,6 +905,9 @@ public final class ImportFactory {
                         DefaultMessagesImpl.getString("ImportFactory.importedParserRuleFailed", name), false)); //$NON-NLS-1$
             }
         }
+        // ADD xqliu 2012-04-27 TDQ-5149
+        checkImportEvent(importItemName, information);
+        // ~ TDQ-5149
         return information;
     }
 
