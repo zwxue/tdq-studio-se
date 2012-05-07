@@ -20,6 +20,9 @@ import org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl;
  * DOC yyin 201204 This Class provide the function to compute a group of data by Benford's Law and output the leading
  * digits with its distribution in this dataset. Then the user can use it to compare with the standard, to detect
  * possible cases of Fraud.
+ * 
+ * related SQL: SELECT cast(LEFT(<%=__COLUMN_NAMES__%>,1) as char), COUNT(*) c FROM <%=__TABLE_NAME__%> t
+ * <%=__WHERE_CLAUSE__%> GROUP BY LEFT(<%=__COLUMN_NAMES__%>,1) order by LEFT(<%=__COLUMN_NAMES__%>,1)
  */
 public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
 
@@ -41,24 +44,12 @@ public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
         if (this.valueToFreq == null) {
             this.valueToFreq = new HashMap<Object, Long>();
         }
-        // if (this.uniqueValues == null) {
-        // uniqueValues = new EDataTypeUniqueEList<Object>(Object.class, this,
-        // IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES);
-        // for (int i = 0; i < 10; i++) {
-        // uniqueValues.add(0);
-        // }
-        // }
-        // you can call super method in order to automatically increase the number of count
-        // super.handle(data);
-        // you can also increment count yourself here
         this.count++;
 
         if (data == null)
             return true;
 
         Integer leadDigit = Integer.valueOf(String.valueOf(data).substring(0, 1));
-
-        // System.err.println("-in ben UDI-" + this.valueToFreq + "--" + leadDigit);
 
         // increment frequency of leading digit in data
         Long c = this.valueToFreq.get(leadDigit);
@@ -72,28 +63,8 @@ public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
             this.valueToFreq.put(leadDigit, c);
         }
 
-        // compute the frequency from 1~9
-        // Double d = (double) c / count;
-        // if (this.uniqueValues.size() > (leadDigit - 1) && uniqueValues.get((leadDigit - 1)) != null) {
-        // this.uniqueValues.remove((leadDigit - 1));
-        // }
-        // this.uniqueValues.add((leadDigit - 1), d);
-        // System.err.println("--" + d + "--" + leadDigit + ",count:" + count);
-        // System.err.println("-f-" + this.uniqueValues);
         return true;
     }
-
-    /**
-     * overide
-     * 
-     * public EList<Object> getUniqueValues() { if (this.uniqueValues == null) { uniqueValues = new
-     * EDataTypeUniqueEList<Object>(Object.class, this, IndicatorSqlPackage.USER_DEF_INDICATOR__UNIQUE_VALUES);
-     * 
-     * } for (Object val : valueToFreq.keySet()) { Long freq = this.valueToFreq.get(val); this.uniqueValues.add((double)
-     * freq / (double) count); System.err.println("-f-" + this.uniqueValues); }
-     * 
-     * return this.uniqueValues; }
-     */
 
     /*
      * (non-Javadoc)
