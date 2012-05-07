@@ -122,7 +122,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
      */
     private void saveAndRefresh() {
         ProxyRepositoryManager.getInstance().save();
-        CorePlugin.getDefault().refreshDQView();
+        CorePlugin.getDefault().refreshDQView(node);
         CorePlugin.getDefault().refreshWorkSpace();
     }
 

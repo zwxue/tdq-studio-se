@@ -32,6 +32,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
@@ -95,7 +96,7 @@ public class ReloadDatabaseAction extends Action {
         };
         try {
             ProgressUI.popProgressDialog(op);
-            CorePlugin.getDefault().refreshDQView();
+            CorePlugin.getDefault().refreshDQView(selectedObject);
         } catch (InvocationTargetException e) {
             MessageUI.openError(Messages.getString("ReloadDatabaseAction.checkConnectionFailured", e.getCause().getMessage())); //$NON-NLS-1$
             log.error(e, e);

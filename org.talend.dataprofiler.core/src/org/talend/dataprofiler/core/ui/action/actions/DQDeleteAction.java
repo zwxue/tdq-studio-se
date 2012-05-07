@@ -50,6 +50,7 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteAction;
 import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -295,7 +296,8 @@ public class DQDeleteAction extends DeleteAction {
                         CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
                     }
                     excuteSuperRun(tempNode, tempNode.getParent());
-                    CorePlugin.getDefault().refreshDQView();
+                    // Del yyin 20120507 TDQ-4959
+                    // CorePlugin.getDefault().refreshDQView();
                 }
                 // physical delete dependcy element.
                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);

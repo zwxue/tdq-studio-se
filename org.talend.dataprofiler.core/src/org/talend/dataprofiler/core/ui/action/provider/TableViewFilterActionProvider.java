@@ -49,11 +49,13 @@ public class TableViewFilterActionProvider extends AbstractCommonActionProvider 
                 IRepositoryViewObject viewObject = node.getObject();
                 if (viewObject instanceof MetadataSchemaRepositoryObject) {
                     MetadataSchemaRepositoryObject schemaObject = (MetadataSchemaRepositoryObject) viewObject;
-                    TableViewFilterAction tvfAction = new TableViewFilterAction(schemaObject.getSchema());
+                    // MOD yyin TDQ-4959 20120503
+                    TableViewFilterAction tvfAction = new TableViewFilterAction(schemaObject.getSchema(), node);
                     menu.add(tvfAction);
                 } else if (viewObject instanceof MetadataCatalogRepositoryObject) {
                     MetadataCatalogRepositoryObject catalogObject = (MetadataCatalogRepositoryObject) viewObject;
-                    TableViewFilterAction tvfAction = new TableViewFilterAction(catalogObject.getCatalog());
+                    // MOD yyin TDQ-4959 20120503
+                    TableViewFilterAction tvfAction = new TableViewFilterAction(catalogObject.getCatalog(), node);
                     menu.add(tvfAction);
                 }
             }

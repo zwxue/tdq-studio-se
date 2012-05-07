@@ -55,11 +55,11 @@ public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
         if (treeSelection.size() == 1) {
             RepositoryNode node = (RepositoryNode) treeSelection.getFirstElement();
             if (node instanceof SourceFileSubFolderNode) {
-                menu.add(new AddSqlFileAction(WorkbenchUtils.getFolder(node)));
+                menu.add(new AddSqlFileAction(node));
                 menu.add(new ImportSqlFileAction(node));
                 menu.add(new RenameFolderAction(node));
             } else if (node instanceof SourceFileFolderRepNode) {
-                menu.add(new AddSqlFileAction(WorkbenchUtils.getFolder(node)));
+                menu.add(new AddSqlFileAction(node));
                 menu.add(new ImportSqlFileAction(node));
             } else if (node instanceof SourceFileRepNode) {
                 // MOD klliu bug TDQ-4797 2012-02-29

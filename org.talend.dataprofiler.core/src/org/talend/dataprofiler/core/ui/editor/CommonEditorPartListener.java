@@ -130,6 +130,8 @@ public class CommonEditorPartListener extends PartListener {
         CommonViewer dqCommonViewer = RepositoryNodeHelper.getDQCommonViewer();
         if (dqCommonViewer != null && null != recursiveFind) {
             dqCommonViewer.refresh(recursiveFind);
+        } else if (null != recursiveFind) {
+            CorePlugin.getDefault().refreshDQView(recursiveFind);
         } else {
             CorePlugin.getDefault().refreshDQView();
         }

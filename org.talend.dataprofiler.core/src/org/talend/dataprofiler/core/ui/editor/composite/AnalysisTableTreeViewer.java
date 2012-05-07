@@ -109,6 +109,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
+
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -1320,11 +1321,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
                     NamedColumnSet set = tableIndicator.getColumnSet();
                     // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-                    CorePlugin.getDefault().refreshWorkSpace();
-                    CorePlugin.getDefault().refreshDQView();
                     RepositoryNode node = RepositoryNodeHelper.recursiveFind(set);
                     dqview.showSelectedElements(node);
-
+                    CorePlugin.getDefault().refreshWorkSpace();
+                    CorePlugin.getDefault().refreshDQView(node);
                 } catch (Exception e) {
                     log.error(e, e);
                 }

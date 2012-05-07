@@ -88,6 +88,7 @@ import org.talend.i18n.Messages;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
 import org.talend.utils.sugars.ReturnCode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -574,7 +575,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         };
         try {
             ProgressUI.popProgressDialog(op);
-            CorePlugin.getDefault().refreshDQView();
+            CorePlugin.getDefault().refreshDQView(connRecursiveFind);
             this.initialize(this.getEditor());
             // MOD klliu this don't need to close the Editor
             // this.getEditor().close(false);

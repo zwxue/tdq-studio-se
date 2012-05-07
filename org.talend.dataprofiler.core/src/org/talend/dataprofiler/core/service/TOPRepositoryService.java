@@ -68,8 +68,10 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -130,6 +132,24 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         CorePlugin.getDefault().refreshDQView();
     }
 
+    /**
+     * ADDED yyin 20120503 TDQ-4959
+     * 
+     * @param node
+     */
+    public void refresh(Object refreshObject) {
+        if (refreshObject instanceof RepositoryNode) {
+            CorePlugin.getDefault().refreshWorkSpace();
+            CorePlugin.getDefault().refreshDQView(refreshObject);
+        } else if (refreshObject instanceof Item) {
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(((Item) refreshObject).getProperty());
+            CorePlugin.getDefault().refreshWorkSpace();
+            CorePlugin.getDefault().refreshDQView(node);
+        } else {
+            this.refresh();
+        }
+    }
+
     public void initProxyRepository() {
         CorePlugin.getDefault().initProxyRepository();
     }
@@ -186,7 +206,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         if (object instanceof Item) {
             ParserRuleItemEditorInput parserRuleEditorInput = new ParserRuleItemEditorInput((Item) object);
             CorePlugin.getDefault().openEditor(parserRuleEditorInput, DQRuleEditor.class.getName());
-            this.refresh();
+            this.refresh(object);
         }
     }
 

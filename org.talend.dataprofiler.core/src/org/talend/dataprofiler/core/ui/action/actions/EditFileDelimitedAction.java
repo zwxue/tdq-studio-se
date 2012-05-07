@@ -53,7 +53,7 @@ public class EditFileDelimitedAction extends Action {
             Wizard wizard = new DelimitedFileWizard(PlatformUI.getWorkbench(), false, (RepositoryNode) node, null);
             WizardDialog dialog = new WizardDialog(null, wizard);
             if (Window.OK == dialog.open()) {
-                CorePlugin.getDefault().refreshDQView();
+                CorePlugin.getDefault().refreshDQView(node);
             }
         }
     }

@@ -17,6 +17,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.database.TableViewFilterWizard;
+import org.talend.repository.model.RepositoryNode;
+
 import orgomg.cwm.objectmodel.core.Package;
 
 /**
@@ -32,12 +34,16 @@ public class TableViewFilterAction extends Action {
 
     private Package packageObj;
 
-    public TableViewFilterAction() {
+    // ADD yyin TDQ-4959 20120503
+    private RepositoryNode node;
+
+    private TableViewFilterAction() {
         super(DefaultMessagesImpl.getString("TableViewFilterAction.tableViewFilter")); //$NON-NLS-1$
     }
 
-    public TableViewFilterAction(Package packageObj) {
+    public TableViewFilterAction(Package packageObj, RepositoryNode node) {
         this();
+        this.node = node;
         this.packageObj = packageObj;
     }
 
@@ -47,6 +53,6 @@ public class TableViewFilterAction extends Action {
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         dialog.open();
-        CorePlugin.getDefault().refreshDQView();
+        CorePlugin.getDefault().refreshDQView(node);
     }
 }

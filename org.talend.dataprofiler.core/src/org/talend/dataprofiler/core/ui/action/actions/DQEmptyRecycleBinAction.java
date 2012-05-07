@@ -40,6 +40,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.EmptyRecycleBinAction;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -85,7 +86,7 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
         super.setAvoidUnloadResources(true);
         super.run();
 
-        CorePlugin.getDefault().refreshDQView();
+        CorePlugin.getDefault().refreshDQView(findAllRecycleBinNodes.get(0).getParent());
         CorePlugin.getDefault().refreshWorkSpace();
 
         // MOD gdbu 2011-11-18 TDQ-3969 : after empty recycle bin re-filter the tree , to create a new list .

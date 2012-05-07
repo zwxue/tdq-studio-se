@@ -29,7 +29,9 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -44,15 +46,17 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
 
     private IFolder folder;
 
+    private RepositoryNode node;
+
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
      * 
-     * @param folder
+     * @param node
      */
-    public AddSqlFileAction(IFolder folder) {
+    public AddSqlFileAction(RepositoryNode node) {
         this();
-
-        this.folder = folder;
+        this.node = node;
+        this.folder = WorkbenchUtils.getFolder(node);
     }
 
     /**
@@ -60,7 +64,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
      * DOC zshen AddSqlFileAction constructor comment.
      * 
      */
-    public AddSqlFileAction() {
+    private AddSqlFileAction() {
         setText(DefaultMessagesImpl.getString("AddSqlFileAction.createSQLFile")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.folder = ResourceManager.getSourceFileFolder();
@@ -88,7 +92,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
 
             try {
                 CorePlugin.getDefault().refreshWorkSpace();
-                CorePlugin.getDefault().refreshDQView();
+                CorePlugin.getDefault().refreshDQView(node);
 
                 IDE.openEditor(ap, WorkspaceUtils.fileToIFile(fileWizard.getSqlFile()));
             } catch (PartInitException e) {
