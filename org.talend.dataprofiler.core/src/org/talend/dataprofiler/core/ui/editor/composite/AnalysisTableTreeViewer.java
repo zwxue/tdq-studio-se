@@ -986,15 +986,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     createOneUnit(treeItem, addIndicatorUnit);
                     setDirty(true);
                 }
-                // ADD xqliu 2012-04-23 TDQ-5057
-                TableIndicatorUnit addIndicatorAideUnit = DQRuleUtilities.createIndicatorAideUnit(file, (TableIndicator) data,
-                        analysis);
-                if (addIndicatorUnit != null) {
-                    setDirty(true);
-                } else {
-                    log.error("Create WhereRuleAideIndicator failed!"); //$NON-NLS-1$
-                }
-                // ~ TDQ-5057
             }
         }
     }

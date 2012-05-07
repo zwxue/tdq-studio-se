@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -20,6 +21,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard;
@@ -27,8 +29,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.RowCountIndicator;
-import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
-import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
@@ -154,15 +154,9 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
                 // add user selected WhereRuleIndicator
                 if (whereRules != null) {
                     for (WhereRule whereRule : whereRules) {
-                        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
-                        wrIndicator.setAnalyzedElement(ncs);
-                        wrIndicator.setIndicatorDefinition(whereRule);
-                        indicatorList.add(wrIndicator);
-                        // create WhereRuleAideIndicator according to WhereRuleIndicator
-                        WhereRuleAideIndicator wraIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleAideIndicator();
-                        wraIndicator.setAnalyzedElement(wrIndicator.getAnalyzedElement());
-                        wraIndicator.setIndicatorDefinition(wrIndicator.getIndicatorDefinition());
-                        indicatorList.add(wraIndicator);
+                        WhereRuleIndicator[] compositeWhereRuleIndicator = DQRuleUtilities.createCompositeWhereRuleIndicator(ncs,
+                                whereRule);
+                        indicatorList.addAll(Arrays.asList(compositeWhereRuleIndicator));
                     }
                 }
             }

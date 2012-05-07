@@ -24,6 +24,7 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -50,40 +51,34 @@ public final class DQRuleUtilities {
             }
         }
 
-        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
-        wrIndicator.setAnalyzedElement(tableIndicator.getColumnSet());
-        wrIndicator.setIndicatorDefinition(whereRule);
-
-        IndicatorEnum type = IndicatorEnum.findIndicatorEnum(wrIndicator.eClass());
-        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, wrIndicator);
+        WhereRuleIndicator[] compositeWhereRuleIndicator = createCompositeWhereRuleIndicator(tableIndicator.getColumnSet(),
+                whereRule);
+        IndicatorEnum type = IndicatorEnum.findIndicatorEnum(compositeWhereRuleIndicator[0].eClass());
+        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, compositeWhereRuleIndicator[0]);
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, whereRule);
+
+        // The where rule aid indicator won't be shown on UI, so just create a indicator unit.
+        IndicatorEnum whereRuleAidType = IndicatorEnum.findIndicatorEnum(compositeWhereRuleIndicator[1].eClass());
+        tableIndicator.addSpecialIndicator(fe, whereRuleAidType, compositeWhereRuleIndicator[1]);
+
         return addIndicatorUnit;
     }
+
+
 
     /**
-     * DOC xqliu Comment method "createIndicatorAideUnit".
-     * 
-     * @param fe
-     * @param tableIndicator
-     * @param analysis
-     * @return
+     * @return 0 based index is WhereRuleIndicator, 1 based index is WhereRuleAideIndicator
      */
-    public static TableIndicatorUnit createIndicatorAideUnit(IFile fe, TableIndicator tableIndicator, Analysis analysis) {
-        WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(fe);
-
-        for (Indicator indicator : tableIndicator.getIndicators()) {
-            if (indicator instanceof WhereRuleAideIndicator && whereRule.getName().equals(indicator.getName())) {
-                return null;
-            }
-        }
+    public static WhereRuleIndicator[] createCompositeWhereRuleIndicator(ModelElement anaElement, WhereRule whereRuleDef) {
+        WhereRuleIndicator wrIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
+        wrIndicator.setAnalyzedElement(anaElement);
+        wrIndicator.setIndicatorDefinition(whereRuleDef);
 
         WhereRuleAideIndicator wraIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleAideIndicator();
-        wraIndicator.setAnalyzedElement(tableIndicator.getColumnSet());
-        wraIndicator.setIndicatorDefinition(whereRule);
+        wraIndicator.setAnalyzedElement(anaElement);
+        wraIndicator.setIndicatorDefinition(whereRuleDef);
+        return new WhereRuleIndicator[] { wrIndicator, wraIndicator };
 
-        IndicatorEnum type = IndicatorEnum.findIndicatorEnum(wraIndicator.eClass());
-        TableIndicatorUnit addIndicatorUnit = tableIndicator.addSpecialIndicator(fe, type, wraIndicator);
-        DependenciesHandler.getInstance().setUsageDependencyOn(analysis, whereRule);
-        return addIndicatorUnit;
     }
+
 }
