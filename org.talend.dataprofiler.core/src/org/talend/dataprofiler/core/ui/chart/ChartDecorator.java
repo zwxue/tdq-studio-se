@@ -262,7 +262,7 @@ public final class ChartDecorator {
         PiePlot plot = (PiePlot) chart.getPlot();
         font = new Font("Monospaced", Font.PLAIN, 10);//$NON-NLS-1$
         plot.setLabelFont(font);
-        plot.setNoDataMessage(DefaultMessagesImpl.getString("PieTypeState.NoDataMessage"));
+        plot.setNoDataMessage(DefaultMessagesImpl.getString("ChartDecorator.NoDataMessage")); //$NON-NLS-1$
         StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),
                 NumberFormat.getNumberInstance(), new DecimalFormat("0.00%"));
         plot.setLabelGenerator(standardPieSectionLabelGenerator);
