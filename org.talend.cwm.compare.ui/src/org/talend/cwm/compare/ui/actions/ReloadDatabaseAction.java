@@ -95,7 +95,7 @@ public class ReloadDatabaseAction extends Action {
         };
         try {
             ProgressUI.popProgressDialog(op);
-            CorePlugin.getDefault().refreshDQView();
+            CorePlugin.getDefault().refreshDQView(this.selectedObject);
         } catch (InvocationTargetException e) {
             MessageUI.openError(Messages.getString("ReloadDatabaseAction.checkConnectionFailured", e.getCause().getMessage())); //$NON-NLS-1$
             log.error(e, e);
