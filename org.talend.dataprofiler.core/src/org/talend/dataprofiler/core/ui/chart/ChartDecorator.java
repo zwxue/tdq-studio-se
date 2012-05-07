@@ -249,10 +249,16 @@ public final class ChartDecorator {
 
         Font font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);//$NON-NLS-1$
         TextTitle textTitle = chart.getTitle();
-        textTitle.setFont(font);
+        // MOD msjian TDQ-5213 2012-5-7: fixed NPE
+        if (textTitle != null) {
+            textTitle.setFont(font);
+        }
         font = new Font("Tahoma", Font.PLAIN, BASE_ITEM_LABEL_SIZE);//$NON-NLS-1$
         LegendTitle legend = chart.getLegend();
-        legend.setItemFont(font);
+        if (legend != null) {
+            legend.setItemFont(font);
+        }
+        // TDQ-5213~
         PiePlot plot = (PiePlot) chart.getPlot();
         font = new Font("Monospaced", Font.PLAIN, 10);//$NON-NLS-1$
         plot.setLabelFont(font);
