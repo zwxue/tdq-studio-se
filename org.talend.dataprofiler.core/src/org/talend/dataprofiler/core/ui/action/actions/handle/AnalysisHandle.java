@@ -47,7 +47,7 @@ public class AnalysisHandle extends EMFResourceHandle {
     protected ModelElement update(ModelElement oldObject, ModelElement newObject) {
         newObject = super.update(oldObject, newObject);
 
-        AnalysisHelper.getDataFilter((Analysis) newObject).clear();
+        // MOD yyi 2012-05-07 TDQ-5270 duplicate an overview analysis with table/view filters.
         AnalysisHelper.setStringDataFilter((Analysis) newObject, AnalysisHelper.getStringDataFilter((Analysis) oldObject));
 
         return newObject;
