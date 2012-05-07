@@ -92,11 +92,14 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
                 } else if (ReportSubFolderType.GENERATED_DOCS.equals(getReportSubFolderType())) {
                     IResource[] repFiles = ReportUtils
                             .getReportListFiles(ResourceFileMap.findCorrespondingFile(this.getReport()));
-                    if (repFiles == null || repFiles.length == 0) {
-                        loadChildrenLocalFolder();
-                    } else {
-                        buildChildrenReportFile(repFiles);
-                    }
+                    // MOD msjian TDQ-5128 2012-5-4: fixed when the user delete a file from file system display error
+                    buildChildrenReportFile(repFiles);
+                    // if (repFiles == null || repFiles.length == 0) {
+                    // loadChildrenLocalFolder();
+                    // } else {
+                    // buildChildrenReportFile(repFiles);
+                    // }
+                    // TDQ-5128~
                 }
             } catch (Exception e) {
                 log.warn(e, e);
@@ -169,30 +172,30 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
         return this.getReportSubFolderChildren();
     }
 
-    /**
-     * load report file form default folder of the Report.
-     */
-    private void loadChildrenLocalFolder() {
-        IFolder currentRportFolder = ReportHelper.getOutputFolder(RepResourceFileHelper.getInstance().findCorrespondingFile(
-                this.getReport()));
-        if (!currentRportFolder.exists()) {
-            return;
-        }
-
-        try {
-            IResource[] members = currentRportFolder.members();
-            List<IResource> children = new ArrayList<IResource>();
-            for (IResource member : members) {
-                if (member.getType() == IResource.FOLDER || member.getName().equals(ReportUtils.REPORT_LIST)) {
-                    continue;
-                }
-                children.add(member);
-            }
-            buildChildrenReportFile(children.toArray(new IResource[children.size()]));
-        } catch (CoreException e) {
-            log.error(e, e);
-        }
-    }
+    // /**
+    // * load report file form default folder of the Report.
+    // */
+    // private void loadChildrenLocalFolder() {
+    // IFile findCorrespondingFile = RepResourceFileHelper.getInstance().findCorrespondingFile(this.getReport());
+    // IFolder currentRportFolder = ReportHelper.getOutputFolder(findCorrespondingFile);
+    // if (!currentRportFolder.exists()) {
+    // return;
+    // }
+    //
+    // try {
+    // IResource[] members = currentRportFolder.members();
+    // List<IResource> children = new ArrayList<IResource>();
+    // for (IResource member : members) {
+    // if (member.getType() == IResource.FOLDER || member.getName().equals(ReportUtils.REPORT_LIST)) {
+    // continue;
+    // }
+    // children.add(member);
+    // }
+    // buildChildrenReportFile(children.toArray(new IResource[children.size()]));
+    // } catch (CoreException e) {
+    // log.error(e, e);
+    // }
+    // }
 
     public String getCount() {
         int count = getReportSubFolderChildren().size();
