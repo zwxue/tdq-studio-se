@@ -36,7 +36,6 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -262,7 +261,7 @@ public final class ChartDecorator {
         PiePlot plot = (PiePlot) chart.getPlot();
         font = new Font("Monospaced", Font.PLAIN, 10);//$NON-NLS-1$
         plot.setLabelFont(font);
-        plot.setNoDataMessage(DefaultMessagesImpl.getString("PieTypeState.NoDataMessage"));
+        plot.setNoDataMessage("No data available"); //$NON-NLS-1$
         StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),
                 NumberFormat.getNumberInstance(), new DecimalFormat("0.00%"));
         plot.setLabelGenerator(standardPieSectionLabelGenerator);
