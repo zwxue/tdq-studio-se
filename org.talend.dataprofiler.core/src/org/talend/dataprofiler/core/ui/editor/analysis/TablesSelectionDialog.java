@@ -111,8 +111,16 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             IRepositoryNode packageNode = csk.getPackageNode();
             List<IRepositoryNode> filterTableView = filterTableView(packageNode.getChildren());
             StructuredSelection structSel = new StructuredSelection(packageNode);
+            // MOD qiongli 2012-5-4 TDQ-5137,make DBView could selected correctly.
             if (filterTableView.size() > 0) {
-                structSel = new StructuredSelection(filterTableView.get(0));
+                for (Object obj : super.getInitialElementSelections()) {
+                    for (IRepositoryNode node : filterTableView) {
+                        if (obj.equals(node)) {
+                            structSel = new StructuredSelection(node);
+                            break;
+                        }
+                    }
+                }
             }
             getTreeViewer().setSelection(structSel);
         }
@@ -123,7 +131,24 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         for (IRepositoryNode tableNode : tableList) {
             if (tableNode instanceof DBTableRepNode) {
                 DBTableRepNode tableRepNode = (DBTableRepNode) tableNode;
-                IRepositoryNode parentPackageNode = DBTableRepNode.getParentPackageNode(tableRepNode);
+                // MOD qiongli 2012-5-4 TDQ-5137 use the table parent(DBTableFolderRepNode not DBCatalogRepNode or DBSchemaRepNode).
+                IRepositoryNode parentPackageNode = tableRepNode.getParent();
+                if (parentPackageNode != null) {
+                    if (!packageList.contains(parentPackageNode)) {
+                        packageList.add(parentPackageNode);
+                    }
+                    RepositoryNodeKey packageKey = new RepositoryNodeKey(parentPackageNode);
+                    TableCheckedMap tableCheckedMap = packageCheckedMap.get(packageKey);
+                    if (tableCheckedMap == null) {
+                        tableCheckedMap = new TableCheckedMap();
+                        this.packageCheckedMap.put(packageKey, tableCheckedMap);
+                    }
+                    tableCheckedMap.putTableChecked(tableNode, Boolean.TRUE);
+                }
+            } else if (tableNode instanceof DBViewRepNode) {
+                // support DBview
+                DBViewRepNode viewRepNode = (DBViewRepNode) tableNode;
+                IRepositoryNode parentPackageNode = viewRepNode.getParent();
                 if (parentPackageNode != null) {
                     if (!packageList.contains(parentPackageNode)) {
                         packageList.add(parentPackageNode);
@@ -233,7 +258,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     private void handleTableChecked(IRepositoryNode table, Boolean checkedFlag) {
-        IRepositoryNode parentPackageNode = DBTableRepNode.getParentPackageNode(table);
+        // IRepositoryNode parentPackageNode = DBTableRepNode.getParentPackageNode(table);
+        IRepositoryNode parentPackageNode = table.getParent();
         if (checkedFlag) {
             getTreeViewer().setChecked(parentPackageNode, true);
         }
@@ -347,6 +373,8 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                         : SwitchHelpers.SCHEMA_SWITCH.doSwitch(schemaNode.getSchema()).getName();
             } else if (node instanceof DBTableFolderRepNode || node instanceof DBViewFolderRepNode) {
                 initNames(node.getParent());
+                //MOD qiongli 2012-5-4 TDQ-5137.
+                this.node = node.getParent();
             } else {
                 catalogName = CATALOG_NAME;
                 schemaName = SCHEMA_NAME;
