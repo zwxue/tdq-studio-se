@@ -433,6 +433,9 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                     conn.setName(connName);
                     conn.setLabel(connName);
                     property.setLabel(connName);
+                    // MOD qiongli 2012-5-7 TDQ-4939 save the new displayName in this case.
+                    property.setDisplayName(connName);
+                    EMFUtil.saveResource(property.eResource());
 
                     // EMFUtil.saveResource(itemResource);
                 }
