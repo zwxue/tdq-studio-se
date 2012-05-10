@@ -262,7 +262,7 @@ public class PatternTestView extends ViewPart {
         // MOD gdbu 2011-5-31 bug : 19119
         textAreaLabel = new Label(textCom, SWT.NONE);
         textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$
-        testText = new Text(textCom, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        testText = AutoScrollBarTextFactory.getDefault().createText(textCom, SWT.BORDER | SWT.MULTI | SWT.WRAP);
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = 40;
         testText.setLayoutData(data);
@@ -280,7 +280,7 @@ public class PatternTestView extends ViewPart {
         regularLabel.setLayoutData(regularLabelGD);
         // ~19119
 
-        this.regularText = new Text(textCom, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        this.regularText = AutoScrollBarTextFactory.getDefault().createText(textCom, SWT.BORDER | SWT.MULTI | SWT.WRAP);
         this.regularText.setLayoutData(data);
         regularText.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.enterHereAgainst")); //$NON-NLS-1$
         regularText.addModifyListener(new ModifyListener() {
