@@ -204,7 +204,7 @@ public final class PatternUtilities {
             boolean openPattern = MessageDialog
                     .openQuestion(
                             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                            DefaultMessagesImpl.getString("PatternUtilities.Warning"), DefaultMessagesImpl.getString("PatternUtilities.NoExpression", executeType)); //$NON-NLS-1$ //$NON-NLS-2$
+                            DefaultMessagesImpl.getString("PatternUtilities.Warning"), DefaultMessagesImpl.getString("PatternUtilities.NoExpression", executeType, pattern.getName())); //$NON-NLS-1$ //$NON-NLS-2$
             if (openPattern) {
                 RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.recursiveFind(pattern);
                 if (RepositoryNodeHelper.canOpenEditor(node)) {

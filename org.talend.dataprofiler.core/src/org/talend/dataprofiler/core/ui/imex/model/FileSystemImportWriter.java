@@ -48,7 +48,6 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.xml.TdXmlSchema;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
@@ -156,17 +155,6 @@ public class FileSystemImportWriter implements IImportWriter {
             return true;
         } else if (p1.getId().equals(p2.getId())) {
             return true;
-        }
-        try {
-            String uuid1 = FilesUtils.getUUID(PropertyHelper.getModelElementPath(p1));
-            String uuid2 = FilesUtils.getUUID(PropertyHelper.getModelElementPath(p2));
-            if (PluginConstant.EMPTY_STRING.equals(uuid1) || PluginConstant.EMPTY_STRING.equals(uuid2)) {
-                return false;
-            }
-            return uuid1.equals(uuid2);
-
-        } catch (Exception e) {
-
         }
         return false;
     }
