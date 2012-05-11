@@ -610,6 +610,22 @@ public final class ConnectionUtils {
     }
 
     /**
+     * 
+     * Comment method "isDB2".
+     * 
+     * @param metadata
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isDB2(DatabaseMetaData metadata) throws SQLException {
+        if (metadata != null && metadata.getDatabaseProductName() != null
+                && metadata.getDatabaseProductName().indexOf(DatabaseConstant.IBM_DB2_ZOS_PRODUCT_NAME) > -1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * DOC xqliu Comment method "isMssql".
      * 
      * @param connection

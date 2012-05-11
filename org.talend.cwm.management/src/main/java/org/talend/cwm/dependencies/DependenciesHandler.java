@@ -551,4 +551,42 @@ public final class DependenciesHandler {
         return listProperty;
     }
 
+    /**
+     * 
+     * Comment method "removeDependenciesBetweenModel".
+     * 
+     * @param supplier
+     * @param client
+     * @return
+     */
+    public boolean removeDependenciesBetweenModel(ModelElement supplier, ModelElement client) {
+        // get the supplier's usage dependencies
+        EList<Dependency> supplierDependencies = supplier.getSupplierDependency();
+        Iterator<Dependency> suppiterator = supplierDependencies.iterator();
+        while (suppiterator.hasNext()) {
+            Dependency supplierDep = suppiterator.next();
+            if (supplierDep.getClient().contains(client)) {
+                supplierDep.getClient().remove(client);
+                break;
+            }
+        }
+
+        // clint and supplier ues a same dependency so only need to remove once
+        // there can do another logic to revert supplier and client then we use this method will not consider the order
+        // for the argument
+        // EList<Dependency> clientDependency = client.getClientDependency();
+        // Iterator<Dependency> clientiterator = clientDependency.iterator();
+        // while (clientiterator.hasNext()) {
+        // Dependency clientDep = clientiterator.next();
+        // if (clientDep.getSupplier().contains(supplier)) {
+        // clientDep.getSupplier().remove(supplier);
+        // }
+        // }
+
+        return false;
+
+    }
+
+
+
 }
