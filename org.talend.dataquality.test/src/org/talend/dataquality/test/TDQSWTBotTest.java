@@ -20,11 +20,12 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 /**
  * DOC yyi class global comment. Detailled comment
  */
-
+@Ignore("SWT bot test cases won't be exectued in junit test environment")
 public class TDQSWTBotTest {
 
     protected final static int PLAYBACK_DELAY = 500;
