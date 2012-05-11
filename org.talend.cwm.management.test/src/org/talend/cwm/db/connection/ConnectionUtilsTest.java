@@ -64,11 +64,12 @@ public class ConnectionUtilsTest {
     @Test
     public void testRetrieveColumn() {
         ColumnSet tdTable = mock(TdTable.class);
+        when(tdTable.getName()).thenReturn("testTableName"); //$NON-NLS-1$
+
         PowerMockito.mockStatic(ColumnSetHelper.class);
         List<TdColumn> columnList = new ArrayList<TdColumn>();
-        TdColumnImpl testColumn = new TdColumnImpl();
-        testColumn.setName("testColumnName"); //$NON-NLS-1$
-        testColumn.setSqlDataType(null);
+        TdColumnImpl testColumn = mock(TdColumnImpl.class);
+        when(testColumn.getName()).thenReturn("testColumnName"); //$NON-NLS-1$
         columnList.add(testColumn);
         when(ColumnSetHelper.getColumns((ColumnSet) tdTable)).thenReturn(columnList);
 
@@ -84,15 +85,11 @@ public class ConnectionUtilsTest {
         when(JavaSqlFactory.createConnection(tempConnection)).thenReturn(rc);
         when(rc.getObject()).thenReturn(connection);
 
-        when(tdTable.getName()).thenReturn("testTableName"); //$NON-NLS-1$
-        
-        Catalog catalog = new CatalogImpl();
-        catalog.setName("testCatalogName"); //$NON-NLS-1$
+        Catalog catalog = mock(CatalogImpl.class);
         PowerMockito.mockStatic(CatalogHelper.class);
         when(CatalogHelper.getParentCatalog(tdTable)).thenReturn(catalog);
 
-        Schema schema = new SchemaImpl();
-        schema.setName("testSchemaName"); //$NON-NLS-1$
+        Schema schema = mock(SchemaImpl.class);
         PowerMockito.mockStatic(SchemaHelper.class);
         when(SchemaHelper.getParentSchema(tdTable)).thenReturn(schema);
         
