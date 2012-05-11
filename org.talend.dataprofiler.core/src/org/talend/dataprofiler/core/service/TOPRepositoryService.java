@@ -16,13 +16,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
@@ -50,6 +54,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
@@ -70,8 +75,10 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -287,7 +294,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * 
-     * DOC zshen Comment method "reloadDatabase".
+     * Comment method "reloadDatabase".
      * 
      * @param connectionItem
      * 
@@ -382,5 +389,82 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             }
         }
         return false;
+    }
+
+    /**
+     * Comment method "confimDelete".
+     * 
+     * @param deleteObject which you want to delete
+     * @return SWT.OK or SWT.Cancel
+     */
+    public int confimDelete(IRepositoryViewObject deleteObject) {
+        Shell workbenchShell = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell();
+        Property deleteProperty = deleteObject.getProperty();
+        ModelElement deleteModelElement = PropertyHelper.getModelElement(deleteProperty);
+        List<ModelElement> dependencyElements = EObjectHelper.getDependencyClients(deleteObject);
+        String lable = deleteProperty.getDisplayName() == null ? PluginConstant.EMPTY_STRING : deleteProperty.getDisplayName();
+        String dialogTitle = DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete");//$NON-NLS-1$
+        String dialogMessage = DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther", lable);//$NON-NLS-1$
+        return DeleteModelElementConfirmDialog.showConfirmDialog(workbenchShell, deleteModelElement,
+                dependencyElements.toArray(new ModelElement[dependencyElements.size()]), dialogTitle, dialogMessage);
+    }
+
+    /**
+     * Comment method "confimDelete".
+     * 
+     * @param deleteObject which you want to delete
+     * @return SWT.OK or SWT.Cancel
+     */
+    public InputDialog getInputDialog(final Item newItem) {
+        Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+        String dialogTitle = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.Title");//$NON-NLS-1$
+        String dialogMessage = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.Message");//$NON-NLS-1$
+        final InputDialog inputDialog = new InputDialog(parentShell,
+ dialogTitle,
+                dialogMessage,//$NON-NLS-1$//$NON-NLS-2$
+ newItem.getProperty().getLabel()
+ + DateUtils.formatTimeStamp(DateUtils.PATTERN_6, System.currentTimeMillis()),
+                new IInputValidator() {
+
+                    public String isValid(String newText) {
+                        String returnStr = null;
+                        Item item = newItem;
+                        ERepositoryObjectType type = ERepositoryObjectType.getItemType(item);
+                        String pattern = RepositoryConstants.getPattern(type);
+                        boolean matches = Pattern.matches(pattern, newText);
+                        boolean nameAvailable = false;
+                        try {
+                            List<IRepositoryViewObject> listExistingObjects = ProxyRepositoryFactory.getInstance().getAll(type, true, false);
+                            nameAvailable = ProxyRepositoryFactory.getInstance().isNameAvailable(item, newText,
+                                    listExistingObjects);
+                        } catch (PersistenceException e) {
+                           log.error(e, e);
+                           return e.getMessage();
+                        }
+                        if(!matches){
+                            returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage1");//$NON-NLS-1$
+                        }else if(!nameAvailable){
+                            returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage2");//$NON-NLS-1$
+                        }
+                        return returnStr;
+                    }
+                });
+        return inputDialog;
+    }
+
+
+
+    /**
+     * Comment method "changeElementName".
+     * 
+     * @param item the item which will be changed
+     * @param newName
+     * 
+     */
+    public void changeElementName(Item item, String newName) {
+        
+        Property property = item.getProperty();
+        PropertyHelper.changeName(property, newName);
+
     }
 }
