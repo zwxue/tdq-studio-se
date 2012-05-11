@@ -20,11 +20,9 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
@@ -32,7 +30,6 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -43,8 +40,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 @PrepareForTest({ DbmsLanguageFactory.class, IndicatorEnum.class })
 public class PatternExplorerTest {
 
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
+    // @Rule
+    // public PowerMockRule powerMockRule = new PowerMockRule();
 
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
@@ -67,13 +64,13 @@ public class PatternExplorerTest {
     public void setUp() throws Exception {
         patternExplorer = new PatternExplorer();
 
-        //mock : setAnalysis(Analysis analysis) in DataExplorer
+        // mock : setAnalysis(Analysis analysis) in DataExplorer
         Analysis analysis = mock(Analysis.class);
         AnalysisContext context = mock(AnalysisContext.class);
         when(analysis.getContext()).thenReturn(context);
         DataManager dataManager = mock(DataManager.class);
         when(context.getConnection()).thenReturn(dataManager);
-        
+
         // mock setEntity
         indicator = mock(PatternMatchingIndicator.class);
         when(indicator.eClass()).thenReturn(null);
