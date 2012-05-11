@@ -444,7 +444,7 @@ public class PatternTestView extends ViewPart {
             if (regexStr.length() >= 2) {
                 regexStr = regexStr.substring(1, regexStr.length() - 1);
             }
-            boolean flag = java.util.regex.Pattern.matches(regexStr, testText.getText());
+            boolean flag = java.util.regex.Pattern.compile(regexStr).matcher(testText.getText()).find();
             if (flag) {
                 emoticonLabel.setImage(ImageLib.getImage(ImageLib.EMOTICON_SMILE));
                 resultLabel.setText(DefaultMessagesImpl.getString("PatternTestView.Match")); //$NON-NLS-1$
