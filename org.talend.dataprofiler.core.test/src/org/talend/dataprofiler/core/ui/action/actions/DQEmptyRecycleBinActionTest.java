@@ -12,12 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.*;
 import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -31,9 +33,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryObject;
+import org.talend.core.repository.i18n.Messages;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -49,7 +53,8 @@ import org.talend.repository.model.IRepositoryNode;
  */
 // @RunWith(PowerMockRunner.class)
 @PrepareForTest({ CorePlugin.class, DQDeleteHelper.class, IProxyRepositoryFactory.class, PropertyHelper.class,
-        MessageDialog.class, ProxyRepositoryFactory.class, RepositoryNodeHelper.class, CoreRuntimePlugin.class })
+        MessageDialog.class, ProxyRepositoryFactory.class, RepositoryNodeHelper.class, CoreRuntimePlugin.class, Messages.class,
+        DefaultMessagesImpl.class })
 public class DQEmptyRecycleBinActionTest {
 
     @Rule
@@ -68,6 +73,13 @@ public class DQEmptyRecycleBinActionTest {
      */
     @Before
     public void setUp() throws Exception {
+        ResourceBundle rb = mock(ResourceBundle.class);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb);
+        // when(ResourceBundle.getBundle(anyString())).thenReturn(rb);
+        PowerMockito.mockStatic(Messages.class);
+        when(Messages.getString(anyString())).thenReturn("aa");
+        PowerMockito.mockStatic(DefaultMessagesImpl.class);
+        when(DefaultMessagesImpl.getString(anyString())).thenReturn("bb");
         dqEmptyAction_real = new DQEmptyRecycleBinAction();
         dqEmptyAction_mock = PowerMockito.spy(dqEmptyAction_real);
         PowerMockito.doReturn(null).when(dqEmptyAction_mock).getActivePage();
