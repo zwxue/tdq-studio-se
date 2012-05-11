@@ -45,7 +45,7 @@ public class DataProviderWriter extends AElementPersistance {
     /**
      * DOC bZhou DataProviderWriter constructor comment.
      */
-    DataProviderWriter() {
+    public DataProviderWriter() {
         super();
     }
 

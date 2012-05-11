@@ -116,13 +116,16 @@ public final class ConnectionUtils {
 
     public static final int LOGIN_TIMEOUT_SECOND = 20;
 
-    private static boolean timeout = Platform.getPreferencesService().getBoolean(
-            CWMPlugin.getDefault().getBundle().getSymbolicName(), PluginConstant.CONNECTION_TIMEOUT, false, null);
+    private static Boolean timeout = null;
 
     // MOD mzhao 2009-06-05 Bug 7571
     private static final Map<String, Driver> DRIVER_CACHE = new HashMap<String, Driver>();
 
     public static boolean isTimeout() {
+        if (timeout == null) {
+            timeout = Platform.getPreferencesService().getBoolean(CWMPlugin.getDefault().getBundle().getSymbolicName(),
+                    PluginConstant.CONNECTION_TIMEOUT, false, null);
+        }
         return timeout;
     }
 
@@ -1373,8 +1376,9 @@ public final class ConnectionUtils {
 
                             try {
                                 List<TdSqlDataType> newDataTypeList = getDataType(
-                                        getName(CatalogHelper.getParentCatalog(tdTable)),
-                                        getName(SchemaHelper.getParentSchema(tdTable)), tdTable.getName(), tdColumn.getName(),
+                                        ConnectionUtils.getName(CatalogHelper.getParentCatalog(tdTable)),
+                                        ConnectionUtils.getName(SchemaHelper.getParentSchema(tdTable)), tdTable.getName(),
+                                        tdColumn.getName(),
                                         connection);
                                 if (newDataTypeList.size() > 0) {
                                     tdColumn.setSqlDataType(newDataTypeList.get(0));
@@ -1428,7 +1432,7 @@ public final class ConnectionUtils {
         JavaSqlFactory.setURL(target, JavaSqlFactory.getURL(source));
     }
 
-    private static String getName(ModelElement element) {
+    static String getName(ModelElement element) {
         String name = element == null ? null : element.getName();
         if (StringUtils.isEmpty(name)) {
             return null;

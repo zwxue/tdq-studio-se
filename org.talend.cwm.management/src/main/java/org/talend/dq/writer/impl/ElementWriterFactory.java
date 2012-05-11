@@ -31,7 +31,7 @@ public final class ElementWriterFactory {
 
     private static ElementWriterFactory instance;
 
-    private ElementWriterFactory() {
+    public ElementWriterFactory() {
     }
 
     /**
