@@ -64,6 +64,8 @@ public final class DependenciesHandler {
 
     private static DependenciesHandler instance;
 
+    private static Logger log = Logger.getLogger(DependenciesHandler.class);
+
     private DependenciesHandler() {
         // this.dependencyResource = loadFromFile(PATH_NAME);
     }
@@ -74,8 +76,6 @@ public final class DependenciesHandler {
         }
         return instance;
     }
-    
-    private static Logger log = Logger.getLogger(DependenciesHandler.class);
 
     /**
      * Method "clearDependencies" is to be used before a file is deleted. The root element is given as argument and the
@@ -395,34 +395,36 @@ public final class DependenciesHandler {
         }
     }
 
-    /** 
-     *  		     
-     * @param object 
-     * @return SupplierDependency 
-     */ 
-    public List<IRepositoryViewObject> getSupplierDependency(IRepositoryViewObject object) { 
-    	List<IRepositoryViewObject> listViewObject = new ArrayList<IRepositoryViewObject>(); 
-    	ModelElement modelElement = PropertyHelper.getModelElement(object.getProperty()); 
-    	//MOD zshen if item is source sql don't need get Dependency. 
-    	if(object.getProperty().getItem() instanceof TDQSourceFileItem){
-    		return listViewObject;
-    	}
-    	if (modelElement instanceof IndicatorDefinition) { 
-    		listViewObject.addAll(getIndicatorDependency(object)); 
-    	} else { 
-    		EList<Dependency> supplierDependency = modelElement.getSupplierDependency(); 
-    		for (Dependency supplier : supplierDependency) { 
-    			for (ModelElement depencyModelElement : supplier.getClient()) { 
-    				Property property = PropertyHelper.getProperty(depencyModelElement); 
-    				IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property); 
-    				listViewObject.add(repositoryViewObject); 
-    			} 
-    		} 
-    	} 
-    	
-    	return listViewObject; 
-    } 
-    
+    /**
+     * 
+     * @param object
+     * @return SupplierDependency
+     * 
+     * getSupplierDependency
+     */
+    public List<IRepositoryViewObject> getSupplierDependency(IRepositoryViewObject object) {
+        List<IRepositoryViewObject> listViewObject = new ArrayList<IRepositoryViewObject>();
+        ModelElement modelElement = PropertyHelper.getModelElement(object.getProperty());
+        //MOD zshen if item is source sql don't need get Dependency. 
+        if (object.getProperty().getItem() instanceof TDQSourceFileItem) {
+            return listViewObject;
+        }
+        if (modelElement instanceof IndicatorDefinition) {
+            listViewObject.addAll(getIndicatorDependency(object));
+        } else {
+            EList<Dependency> supplierDependency = modelElement.getSupplierDependency();
+            for (Dependency supplier : supplierDependency) {
+                for (ModelElement depencyModelElement : supplier.getClient()) {
+                    Property property = PropertyHelper.getProperty(depencyModelElement);
+                    IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
+                    listViewObject.add(repositoryViewObject);
+                }
+            }
+        }
+
+        return listViewObject;
+    }
+
     /**
      * 
      * @param property
@@ -442,33 +444,34 @@ public final class DependenciesHandler {
         if (modelElement instanceof Analysis) {
             listProperty.addAll(getAnaDependency(property));
         }
-            EList<Dependency> clientDependency = modelElement.getClientDependency();
-            for (Dependency clienter : clientDependency) {
+        EList<Dependency> clientDependency = modelElement.getClientDependency();
+        for (Dependency clienter : clientDependency) {
             for (ModelElement depencyModelElement : clienter.getSupplier()) {
                 Property dependencyProperty = PropertyHelper.getProperty(depencyModelElement);
                 // IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
-                listProperty.add(dependencyProperty);
+                if (dependencyProperty != null) {
+                    listProperty.add(dependencyProperty);
                 }
             }
-
+        }
 
         return listProperty;
     }
-    
+
     /**
-     * 
      * @param object
      * @return SupplierDependency
      * 
      * getClintDependency
      */
     public List<Property> getClintDependency(ModelElement object) {
+        List<Property> result = new ArrayList<Property>();
         Property property = PropertyHelper.getProperty(object);
         if (property != null) {
             // IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
-            return iterateClientDependencies(property);
+            result = iterateClientDependencies(property);
         }
-        return null;
+        return result;
     }
 
     private List<Property> iterateClientDependencies(Property property) {
@@ -479,41 +482,41 @@ public final class DependenciesHandler {
         }
         return returnList;
     }
-    
-    /** 
-     * get Indicator Dependency 
-     *  
-     * @return get the list for analysis which use parameter to be a Indicator 
-     */ 
-    public static List<IRepositoryViewObject> getIndicatorDependency(IRepositoryViewObject viewObject) { 
-    	Item item = viewObject.getProperty().getItem(); 
-    	List<IRepositoryViewObject> listAnalysisViewObject = new ArrayList<IRepositoryViewObject>(); 
-    	if (item instanceof TDQIndicatorDefinitionItemImpl) { 
-    		TDQIndicatorDefinitionItemImpl tdqIndicatorItem = (TDQIndicatorDefinitionItemImpl) item; 
-    		IndicatorDefinition newIndicatorDefinition = tdqIndicatorItem.getIndicatorDefinition(); 
-    		List<IRepositoryViewObject> allAnaList = new ArrayList<IRepositoryViewObject>(); 
-    		try { 
-    			allAnaList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT, true)); 
-    		} catch (PersistenceException e) { 
-    			log.error(e, e); 
-    		} 
-    		for (IRepositoryViewObject theAna : allAnaList) { 
-    			List<Indicator> indicators = IndicatorHelper.getIndicators(((TDQAnalysisItem) theAna.getProperty().getItem()) 
-    					.getAnalysis().getResults()); 
-    			for (Indicator indicator : indicators) { 
-    				IndicatorDefinition oldIndicatorDefinition = indicator.getIndicatorDefinition(); 
-    				if (ModelElementHelper.compareUUID(oldIndicatorDefinition, newIndicatorDefinition)) { 
-    					listAnalysisViewObject.add(theAna); 
-    					break; 
-    				} 
-    			} 
-    		} 
-    	} 
-    	return listAnalysisViewObject; 
-    }
-    
+
     /**
-     * get Analysis Dependency (for indicator only)
+     * get Indicator Dependency.
+     * 
+     * @return get the list for analysis which use parameter to be a Indicator
+     */
+    public static List<IRepositoryViewObject> getIndicatorDependency(IRepositoryViewObject viewObject) {
+        Item item = viewObject.getProperty().getItem();
+        List<IRepositoryViewObject> listAnalysisViewObject = new ArrayList<IRepositoryViewObject>();
+        if (item instanceof TDQIndicatorDefinitionItemImpl) {
+            TDQIndicatorDefinitionItemImpl tdqIndicatorItem = (TDQIndicatorDefinitionItemImpl) item;
+            IndicatorDefinition newIndicatorDefinition = tdqIndicatorItem.getIndicatorDefinition();
+            List<IRepositoryViewObject> allAnaList = new ArrayList<IRepositoryViewObject>();
+            try {
+                allAnaList.addAll(ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT, true));
+            } catch (PersistenceException e) {
+                log.error(e, e);
+            }
+            for (IRepositoryViewObject theAna : allAnaList) {
+                List<Indicator> indicators = IndicatorHelper.getIndicators(((TDQAnalysisItem) theAna.getProperty().getItem())
+                        .getAnalysis().getResults());
+                for (Indicator indicator : indicators) {
+                    IndicatorDefinition oldIndicatorDefinition = indicator.getIndicatorDefinition();
+                    if (ModelElementHelper.compareUUID(oldIndicatorDefinition, newIndicatorDefinition)) {
+                        listAnalysisViewObject.add(theAna);
+                        break;
+                    }
+                }
+            }
+        }
+        return listAnalysisViewObject;
+    }
+
+    /**
+     * get Analysis Dependency (for indicator only).
      * 
      * @return get the list of indicator which in use by the analysis
      */
@@ -540,7 +543,9 @@ public final class DependenciesHandler {
                 }
                 if (!isContain) {
                     Property iniProperty = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
-                    listProperty.add(iniProperty);
+                    if (iniProperty != null) {
+                        listProperty.add(iniProperty);
+                    }
                 }
             }
         }
