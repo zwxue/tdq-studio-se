@@ -12,42 +12,49 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
-import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.MetadataFillFactory;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
-import org.talend.core.repository.model.IRepositoryFactory;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.RepositoryFactoryProvider;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
-import org.talend.utils.properties.PropertiesLoader;
-import org.talend.utils.properties.TypedProperties;
-import org.talend.utils.sql.metadata.constants.TableType;
+import org.talend.cwm.relational.impl.TdColumnImpl;
+import org.talend.dq.writer.impl.DataProviderWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
+import orgomg.cwm.resource.relational.impl.CatalogImpl;
+import orgomg.cwm.resource.relational.impl.SchemaImpl;
 
 /**
  * DOC msjian class global comment. Detailled comment
  */
+// @RunWith(PowerMockRunner.class)
+@PrepareForTest({ ConnectionUtils.class, ColumnSetHelper.class, ConnectionHelper.class, JavaSqlFactory.class,
+        CatalogHelper.class, SchemaHelper.class, org.talend.utils.sql.ConnectionUtils.class, ElementWriterFactory.class })
 public class ConnectionUtilsTest {
 
-    protected static Logger log = Logger.getLogger(ConnectionUtilsTest.class);
-
-    private static final Class<ConnectionUtilsTest> THAT = ConnectionUtilsTest.class;
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     /**
      * Test method for
@@ -56,68 +63,77 @@ public class ConnectionUtilsTest {
      */
     @Test
     public void testRetrieveColumn() {
-        TypedProperties connectionParams = PropertiesLoader.getProperties(THAT, "db.properties"); //$NON-NLS-1$
-        java.util.Iterator<Object> iter = connectionParams.keySet().iterator();
-        Map<String, String> parameterMap = new HashMap<String, String>();
-        while (iter.hasNext()) {
-            String key = (String) iter.next();
-            String value = connectionParams.get(key) == null ? null : connectionParams.get(key).toString();
-            parameterMap.put(key, value);
-        }
+        ColumnSet tdTable = mock(TdTable.class);
+        PowerMockito.mockStatic(ColumnSetHelper.class);
+        List<TdColumn> columnList = new ArrayList<TdColumn>();
+        TdColumnImpl testColumn = new TdColumnImpl();
+        testColumn.setName("testColumnName"); //$NON-NLS-1$
+        testColumn.setSqlDataType(null);
+        columnList.add(testColumn);
+        when(ColumnSetHelper.getColumns((ColumnSet) tdTable)).thenReturn(columnList);
 
-        List<String> sqlDataTypeList = new ArrayList<String>();
-        IMetadataConnection metadataConn = MetadataFillFactory.getDBInstance().fillUIParams(parameterMap);
-        java.sql.Connection sqlconn = MetadataConnectionUtils.checkConnection(metadataConn).getObject();
-        Connection dbconn=MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConn,null);
-        DatabaseMetaData databaseMetaData=null;
+        Connection tempConnection = mock(Connection.class);
+        PowerMockito.mockStatic(ConnectionHelper.class);
+        when(ConnectionHelper.getConnection(testColumn)).thenReturn(tempConnection);
+
+        java.sql.Connection connection = mock(java.sql.Connection.class);
+
+        PowerMockito.mockStatic(JavaSqlFactory.class);
+        TypedReturnCode<java.sql.Connection> rc = mock(TypedReturnCode.class);
+
+        when(JavaSqlFactory.createConnection(tempConnection)).thenReturn(rc);
+        when(rc.getObject()).thenReturn(connection);
+
+        when(tdTable.getName()).thenReturn("testTableName"); //$NON-NLS-1$
+        
+        Catalog catalog = new CatalogImpl();
+        catalog.setName("testCatalogName"); //$NON-NLS-1$
+        PowerMockito.mockStatic(CatalogHelper.class);
+        when(CatalogHelper.getParentCatalog(tdTable)).thenReturn(catalog);
+
+        Schema schema = new SchemaImpl();
+        schema.setName("testSchemaName"); //$NON-NLS-1$
+        PowerMockito.mockStatic(SchemaHelper.class);
+        when(SchemaHelper.getParentSchema(tdTable)).thenReturn(schema);
+        
+        PowerMockito.mockStatic(ConnectionUtils.class);
+        when(ConnectionUtils.getName(catalog)).thenReturn("testCatalogName"); //$NON-NLS-1$
+        when(ConnectionUtils.getName(schema)).thenReturn("testSchemaName"); //$NON-NLS-1$
+
+        List<TdSqlDataType> list = mock(List.class);
         try {
-            databaseMetaData = sqlconn.getMetaData();
+            when(ConnectionUtils.getDataType("testCatalogName", "testSchemaName", "testTableName", "testColumnName", connection)) //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
+                    .thenReturn(list);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        when(list.size()).thenReturn(0);
+        
+        ReturnCode returnCode = new ReturnCode();
+        returnCode.setReturnCode("ok", true); //$NON-NLS-1$
+        PowerMockito.mockStatic(org.talend.utils.sql.ConnectionUtils.class);
+        when(org.talend.utils.sql.ConnectionUtils.closeConnection(connection)).thenReturn(returnCode);
 
-        List<Catalog> catalogList=MetadataFillFactory.getDBInstance().fillCatalogs(dbconn, databaseMetaData, null);
-        initProxyRepository();
-        List<TdTable> tableList = MetadataFillFactory.getDBInstance().fillTables(catalogList.get(1), databaseMetaData, null,
-                null,
-                new String[] { TableType.TABLE.toString() });
-        List<TdColumn> columnList = MetadataFillFactory.getDBInstance().fillColumns(tableList.get(0), databaseMetaData, null);
+        PowerMockito.mockStatic(ElementWriterFactory.class);
 
-        if (tableList.size() <= 0) {
-            fail("The table of db should have more than one."); //$NON-NLS-1$
-        }
+        ElementWriterFactory instance = mock(ElementWriterFactory.class);
+        when(ElementWriterFactory.getInstance()).thenReturn(instance);
 
-        for (TdColumn tdColumn : columnList) {
-            sqlDataTypeList.add(tdColumn.getSqlDataType().getName());
-            tdColumn.setSqlDataType(null);
-        }
-        ConnectionUtils.retrieveColumn((MetadataTable) tableList.get(0));
-        int i = 0;
-        for (TdColumn tdColumn : columnList) {
-            assertNotNull(tdColumn.getSqlDataType());
-            assertEquals(sqlDataTypeList.get(i), tdColumn.getSqlDataType().getName());
-            i++;
-        }
+        DataProviderWriter dataProviderWriter = mock(DataProviderWriter.class);
+        when(instance.createDataProviderWriter()).thenReturn(dataProviderWriter);
+
+        when(dataProviderWriter.save(tempConnection)).thenReturn(returnCode);
+
+        // PowerMockito.mockStatic(CWMPlugin.class);
+        // CWMPlugin cwmPluginInstance = mock(CWMPlugin.class);
+        // when(CWMPlugin.getDefault()).thenReturn(cwmPluginInstance);
+        //
+        // Bundle bundle = mock(Bundle.class);
+        // stub(method(CWMPlugin.class, "getBundle")).toReturn(bundle); //$NON-NLS-1$
+        // when(bundle.getSymbolicName()).thenReturn("SymbolicName"); //$NON-NLS-1$
+
+        ConnectionUtils.retrieveColumn((MetadataTable) tdTable);
+
     }
 
-    private static boolean showUnimplemented = false;
-
-    /**
-     * DOC msjian Comment method "initProxyRepository".
-     */
-    private void initProxyRepository() {
-        if (ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider() == null) {
-            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
-            if (repository != null) {
-                ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(repository);
-            }
-        }
-    }
-
-    private void fail(String str) {
-        if (showUnimplemented) {
-            Assert.fail(str);
-        }
-    }
 }

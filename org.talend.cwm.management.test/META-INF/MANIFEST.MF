@@ -25,3 +25,11 @@ Export-Package: org.talend.cwm.db.connection;uses:="org.apache.log4j",
    edu.uci.ics.jung.graph.decorators,
    edu.uci.ics.jung.visualization",
  org.talend.dq.sql.converters
+Bundle-ClassPath: lib/powermock-classloading-base-1.4.11.jar,
+ lib/powermock-classloading-objenesis-1.4.11.jar,
+ lib/powermock-classloading-xstream-1.4.11.jar,
+ lib/powermock-easymock-1.4.11-full.jar,
+ lib/powermock-mockito-1.4.11-full.jar,
+ lib/powermock-module-junit4-rule-1.4.11.jar,
+ lib/powermock-module-junit4-rule-agent-1.4.11.jar,
+ .
