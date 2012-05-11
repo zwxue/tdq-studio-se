@@ -443,33 +443,34 @@ public final class DependenciesHandler {
         if (modelElement instanceof Analysis) {
             listProperty.addAll(getAnaDependency(property));
         }
-            EList<Dependency> clientDependency = modelElement.getClientDependency();
-            for (Dependency clienter : clientDependency) {
+        EList<Dependency> clientDependency = modelElement.getClientDependency();
+        for (Dependency clienter : clientDependency) {
             for (ModelElement depencyModelElement : clienter.getSupplier()) {
                 Property dependencyProperty = PropertyHelper.getProperty(depencyModelElement);
                 // IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
-                listProperty.add(dependencyProperty);
+                if (dependencyProperty != null) {
+                    listProperty.add(dependencyProperty);
                 }
             }
-
+        }
 
         return listProperty;
     }
 
     /**
-     * 
      * @param object
      * @return SupplierDependency
      * 
      * getClintDependency
      */
     public List<Property> getClintDependency(ModelElement object) {
+        List<Property> result = new ArrayList<Property>();
         Property property = PropertyHelper.getProperty(object);
         if (property != null) {
             // IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
-            return iterateClientDependencies(property);
+            result = iterateClientDependencies(property);
         }
-        return null;
+        return result;
     }
 
     private List<Property> iterateClientDependencies(Property property) {
@@ -482,7 +483,7 @@ public final class DependenciesHandler {
     }
 
     /**
-     * get Indicator Dependency
+     * get Indicator Dependency.
      * 
      * @return get the list for analysis which use parameter to be a Indicator
      */
@@ -514,7 +515,7 @@ public final class DependenciesHandler {
     }
 
     /**
-     * get Analysis Dependency (for indicator only)
+     * get Analysis Dependency (for indicator only).
      * 
      * @return get the list of indicator which in use by the analysis
      */
@@ -541,7 +542,9 @@ public final class DependenciesHandler {
                 }
                 if (!isContain) {
                     Property iniProperty = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
-                    listProperty.add(iniProperty);
+                    if (iniProperty != null) {
+                        listProperty.add(iniProperty);
+                    }
                 }
             }
         }
