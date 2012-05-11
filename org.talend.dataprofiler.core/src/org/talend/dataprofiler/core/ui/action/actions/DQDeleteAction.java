@@ -32,6 +32,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -286,6 +287,7 @@ public class DQDeleteAction extends DeleteAction {
                     if (tempNode.getObject() != null) {
                         CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
                     }
+                    // need to pass the tempNode parameter at here for logical delete dependce.
                     excuteSuperRun(tempNode);
                     CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
                 }
@@ -293,9 +295,19 @@ public class DQDeleteAction extends DeleteAction {
                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
                 if (tempNode != null) {
                     excuteSuperRun(tempNode);
-                    IFile propertyFile = PropertyHelper.getPropertyFile(mod);
-                    if (propertyFile != null && propertyFile.exists()) {
+                    // MOD qiongli 2012-5-11 TDQ-5250,if not confirm phy-delete,shoud restore this dependence.
+                    if (!confirmFromDialog) {
+                        ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+                        String oldPath = tempNode.getObject().getProperty().getItem().getState().getPath();
+                        IPath path = new Path(oldPath);
+                        factory.restoreObject(tempNode.getObject(), path);
+                        CorePlugin.getDefault().refreshDQView();
                         isSucceed = false;
+                    } else {
+                        IFile propertyFile = PropertyHelper.getPropertyFile(mod);
+                        if (propertyFile != null && propertyFile.exists()) {
+                            isSucceed = false;
+                        }
                     }
                 }
             }
