@@ -222,8 +222,13 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
                 initializeIndicator(child); // recurse
             }
+        } else if (indicator instanceof CompositeIndicator) {
+            // MOD qiongli 2012-5-14 TDQ-5256 should initialize children
+            for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
+                initializeIndicator(child);
+            }
         }
-        // ~12161
+        
     }
 
     @Override

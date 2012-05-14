@@ -529,6 +529,10 @@ public final class DependenciesHandler {
             for (Indicator indicator : indicators) {
                 boolean isContain = false;
                 IndicatorDefinition newIndicatorDefinition = indicator.getIndicatorDefinition();
+                // MOD qiongli 2012-5-11 TDQ-5256
+                if (newIndicatorDefinition == null) {
+                    continue;
+                }
                 for (Property containViewObject : listProperty) {
                     Item item2 = containViewObject.getItem();
                     if (item2 instanceof TDQIndicatorDefinitionItemImpl) {
