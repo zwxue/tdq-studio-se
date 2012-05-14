@@ -13,13 +13,14 @@
 package org.talend.dataprofiler.core.ui.utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -40,6 +41,7 @@ import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.Item;
@@ -216,9 +218,11 @@ public final class UDIUtils {
      * DOC xqliu Comment method "createUdiCheckedTreeSelectionDialog".
      * 
      * @param udiProject
+     * @param meIndicator
      * @return
      */
-    public static CheckedTreeSelectionDialog createUdiCheckedTreeSelectionDialog(IFolder udiProject) {
+    public static CheckedTreeSelectionDialog createUdiCheckedTreeSelectionDialog(IFolder udiProject,
+            ModelElementIndicator meIndicator) {
         CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new UdiLabelProvider(),
                 new WorkbenchContentProvider());
         dialog.addFilter(new RecycleBinFilter());
@@ -263,10 +267,58 @@ public final class UDIUtils {
             }
         });
         dialog.setContainerMode(true);
+        dialog.setInitialSelections(getUDIFilesByIndicator(meIndicator));
         dialog.setTitle(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udiSelector")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udis")); //$NON-NLS-1$
         dialog.setSize(80, 30);
         return dialog;
+    }
+
+    /**
+     * get all udi resources
+     * 
+     * @return
+     */
+    public static List<IFile> getAllUdiFiles() {
+        List<IFile> udiFiles = new ArrayList<IFile>();
+        IFolder pfolder = ResourceManager.getUDIFolder();
+        IResource[] members = null;
+        try {
+            members = pfolder.members();
+        } catch (CoreException e) {
+            ExceptionHandler.process(e);
+        }
+        for (IResource resource : members) {
+            if (resource instanceof IFile) {
+                if (FactoriesUtil.isUDIFile(resource.getFileExtension())) {
+                    udiFiles.add((IFile) resource);
+                }
+            }
+        }
+        return udiFiles;
+    }
+
+    /**
+     * get the repository nodes corresponding to the indicator.
+     * 
+     * @param meIndicator
+     * @return
+     */
+    private static Object[] getUDIFilesByIndicator(ModelElementIndicator meIndicator) {
+        List<IFile> udiFiles = getAllUdiFiles();
+        ArrayList<Object> ret = new ArrayList<Object>();
+        for (Indicator indicator : meIndicator.getIndicators()) {
+            if (indicator instanceof UserDefIndicator) {
+                UserDefIndicator selectedIndicator = (UserDefIndicator) indicator;
+                for (IFile udiFile : udiFiles) {
+                    IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(udiFile);
+                    if (selectedIndicator.getName().equals(findUdi.getName())) {
+                        ret.add(udiFile);
+                    }
+                }
+            }
+        }
+        return ret.toArray();
     }
 
     /**
@@ -276,7 +328,7 @@ public final class UDIUtils {
      * @param udiJarProject
      * @return
      */
-    // MOD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already. 
+    // MOD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
     public static JavaUdiJarSelectDialog createUdiJarCheckedTreeSelectionDialog(IndicatorDefinition definition,
             IFolder udiJarProject, String[] selectionPath) {
         JavaUdiJarSelectDialog dialog = new JavaUdiJarSelectDialog(definition, null, new UdiLabelProvider(),
