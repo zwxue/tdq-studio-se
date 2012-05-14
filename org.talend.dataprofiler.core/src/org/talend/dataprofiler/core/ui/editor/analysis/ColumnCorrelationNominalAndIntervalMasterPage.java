@@ -221,8 +221,12 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
                 initializeIndicator(child); // recurse
             }
+        } else if (indicator instanceof CompositeIndicator) {
+            // MOD qiongli 2012-5-14 TDQ-5256 should initialize children
+            for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
+                initializeIndicator(child); // recurse
+            }
         }
-        // ~12161
     }
 
     @Override
@@ -663,7 +667,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             correlationAnalysisHandler.addIndicator(columnLst, columnSetMultiIndicator);
         } else {
 
-           
             // MOD by zshen for bug 12042.
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             ColumnSetMultiValueIndicator columnSetMultiValueIndicator = null;

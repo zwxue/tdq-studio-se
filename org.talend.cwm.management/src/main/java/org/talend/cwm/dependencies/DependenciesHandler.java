@@ -405,7 +405,7 @@ public final class DependenciesHandler {
     public List<IRepositoryViewObject> getSupplierDependency(IRepositoryViewObject object) {
         List<IRepositoryViewObject> listViewObject = new ArrayList<IRepositoryViewObject>();
         ModelElement modelElement = PropertyHelper.getModelElement(object.getProperty());
-        //MOD zshen if item is source sql don't need get Dependency. 
+        // MOD zshen if item is source sql don't need get Dependency.
         if (object.getProperty().getItem() instanceof TDQSourceFileItem) {
             return listViewObject;
         }
@@ -530,6 +530,10 @@ public final class DependenciesHandler {
             for (Indicator indicator : indicators) {
                 boolean isContain = false;
                 IndicatorDefinition newIndicatorDefinition = indicator.getIndicatorDefinition();
+                // MOD qiongli 2012-5-11 TDQ-5256
+                if (newIndicatorDefinition == null) {
+                    continue;
+                }
                 for (Property containViewObject : listProperty) {
                     Item item2 = containViewObject.getItem();
                     if (item2 instanceof TDQIndicatorDefinitionItemImpl) {
