@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.cwm.dependencies;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -31,15 +33,18 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.impl.TDQAnalysisItemImpl;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -49,7 +54,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC zshen class global comment. Detailled comment
  */
 
-@PrepareForTest({ PropertyHelper.class, ModelElementHelper.class })
+@PrepareForTest({ PropertyHelper.class, ModelElementHelper.class, IndicatorHelper.class })
 public class DependenciesHandlerTest {
 
     @Rule
@@ -158,4 +163,34 @@ public class DependenciesHandlerTest {
         }
         assert (clientDependencyTwo.size() == 0);
     }
+    /**
+     * Test method for {@link org.talend.cwm.dependencies.DependenciesHandler#getAnaDependency(org.talend.core.model.properties.Property)}.
+     */
+    @Test
+    public void testGetAnaDependency() {
+        Property property=mock(Property.class);
+        TDQAnalysisItemImpl item = mock(TDQAnalysisItemImpl.class);
+        when(property.getItem()).thenReturn(item);
+        Analysis ana = mock(Analysis.class);
+        when(item.getAnalysis()).thenReturn(ana);
+        AnalysisResult anaResult = mock(AnalysisResult.class);
+        when(ana.getResults()).thenReturn(anaResult);
+        PowerMockito.mockStatic(IndicatorHelper.class);
+        List<Indicator> indLs = new ArrayList<Indicator>();
+        Indicator ind1 = mock(Indicator.class);
+        IndicatorDefinition indDefinition1 = mock(IndicatorDefinition.class);
+        when(ind1.getIndicatorDefinition()).thenReturn(indDefinition1);
+        Indicator ind2 = mock(Indicator.class);
+        indLs.add(ind1);
+        indLs.add(ind2);
+        when(IndicatorHelper.getIndicators(anaResult)).thenReturn(indLs);
+        Property iniProperty = mock(Property.class);
+        PowerMockito.mockStatic(PropertyHelper.class);
+        when(PropertyHelper.getProperty(ind1)).thenReturn(iniProperty);
+        DependenciesHandler depenHand = DependenciesHandler.getInstance();
+        List<Property> propLs = depenHand.getAnaDependency(property);
+        assert (propLs.size() == 1);
+        
+    }
+
 }
