@@ -20,6 +20,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
@@ -61,12 +62,18 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
     @Override
     protected ModelElementIndicator[] getPredefinedColumnIndicator() {
 
-        IndicatorEnum[] allwedEnumes = new IndicatorEnum[5];
+        int count = 5;
+        if (isTimeType()) {
+            count = 3;
+        }
+        IndicatorEnum[] allwedEnumes = new IndicatorEnum[count];
         allwedEnumes[0] = IndicatorEnum.CountsIndicatorEnum;
         allwedEnumes[1] = IndicatorEnum.MinValueIndicatorEnum;
         allwedEnumes[2] = IndicatorEnum.MaxValueIndicatorEnum;
-        allwedEnumes[3] = IndicatorEnum.LowFrequencyIndicatorEnum;
-        allwedEnumes[4] = IndicatorEnum.FrequencyIndicatorEnum;
+        if (count == 5) {
+            allwedEnumes[3] = IndicatorEnum.LowFrequencyIndicatorEnum;
+            allwedEnumes[4] = IndicatorEnum.FrequencyIndicatorEnum;
+        }
 
         ModelElementIndicator[] returnColumnIndicator = composePredefinedColumnIndicator(allwedEnumes);
 
@@ -82,6 +89,21 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
         }
 
         return returnColumnIndicator;
+    }
+
+    // Added yyin2012-05-14 TDQ-5241
+    private boolean isTimeType() {
+        for (IRepositoryNode repositoryNode : getColumns()) {
+            MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
+            int javaSQLType = ((TdColumn) column).getSqlDataType().getJavaDataType();
+
+            if (Java2SqlType.isTimeSQL(javaSQLType)) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     /*
