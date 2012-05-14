@@ -155,18 +155,10 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private boolean isConflict(Property p1, Property p2) {
-    	if(p1.getLabel().equals(p2.getLabel())){
-    		return true;
-    	}else if(p1.getId().equals(p2.getId())){
-    		return true;
-    	}
-        try{
-        	String uuid1 = FilesUtils.getUUID(PropertyHelper.getModelElementPath(p1));
-        	String uuid2 = FilesUtils.getUUID(PropertyHelper.getModelElementPath(p2));
-            return uuid1.equals(uuid2);
-
-        }catch(Exception e){
-        	
+        if (p1.getLabel().equals(p2.getLabel())) {
+            return true;
+        } else if (p1.getId().equals(p2.getId())) {
+            return true;
         }
         return false;
     }

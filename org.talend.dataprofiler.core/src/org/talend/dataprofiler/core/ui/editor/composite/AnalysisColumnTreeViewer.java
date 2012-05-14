@@ -90,6 +90,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -478,7 +479,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         // MOD klliu if default ExecutionLanguage is java,it is not changed to SQL.2011-11-21
         String execLang = analysis.getParameters().getExecutionLanguage().getLiteral();
-        if (execLang != null && ExecutionLanguage.JAVA.getLiteral().equals(execLang)
+        if (execLang != null
+                && ExecutionLanguage.JAVA.getLiteral().equals(execLang)
                 && (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection) || ConnectionUtils
                         .isMdmConnection(connection))) {
             enableExecuteLanguageFlag = false;
@@ -639,9 +641,17 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
                 IFolder udiProject = ResourceManager.getUDIFolder();
 
-                CheckedTreeSelectionDialog dialog = UDIUtils.createUdiCheckedTreeSelectionDialog(udiProject);
+                CheckedTreeSelectionDialog dialog = UDIUtils.createUdiCheckedTreeSelectionDialog(udiProject, meIndicator);
 
                 if (dialog.open() == Window.OK) {
+
+                    for (IndicatorUnit indicatorUnit : meIndicator.getIndicatorUnits()) {
+                        if (indicatorUnit.getIndicator() instanceof UserDefIndicator) {
+                            meIndicator.removeIndicatorUnit(indicatorUnit);
+                        }
+                    }
+                    treeItem.removeAll();
+
                     for (Object obj : dialog.getResult()) {
                         if (obj instanceof IFile) {
                             IFile file = (IFile) obj;
@@ -658,6 +668,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                                 setDirty(true);
                             }
                         }
+                    }
+
+                    treeItem.setExpanded(true);
+                    if (masterPage instanceof ColumnMasterDetailsPage) {
+                        ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) masterPage;
+                        page.refreshTheTree(page.getCurrentModelElementIndicators());
                     }
                 }
             }
