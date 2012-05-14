@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -27,6 +30,8 @@ import org.eclipse.swt.widgets.Table;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -34,7 +39,7 @@ import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateSimpleAnalysisAction;
+import org.talend.dataprofiler.core.ui.action.actions.CreateDuplicatesAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
@@ -61,10 +66,12 @@ import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
+import org.talend.dataquality.rules.JoinElement;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -167,9 +174,33 @@ public final class ChartTableFactory {
                                     @Override
                                     public void widgetSelected(SelectionEvent e) {
                                         final StructuredSelection selectionOne = (StructuredSelection) tbViewer.getSelection();
-                                        CreateSimpleAnalysisAction action = new CreateSimpleAnalysisAction();
-                                        action.setSelection(selectionOne);
-                                        action.run();
+                                        // MOD xqliu 2012-05-11 TDQ-5314
+                                        Object firstElement = selectionOne.getFirstElement();
+                                        if (firstElement instanceof WhereRuleChartDataEntity) {
+
+                                            try {
+                                                WhereRuleChartDataEntity wrChartDataEntity = (WhereRuleChartDataEntity) firstElement;
+                                                WhereRuleIndicator wrInd = (WhereRuleIndicator) wrChartDataEntity.getIndicator();
+
+                                                List<TdColumn> columns = new ArrayList<TdColumn>();
+                                                EList<JoinElement> joinConditions = wrInd.getJoinConditions();
+                                                for (JoinElement joinElement : joinConditions) {
+                                                    columns.add((TdColumn) joinElement.getColA());
+                                                }
+
+                                                if (!columns.isEmpty()) {
+                                                    Connection connection = ConnectionHelper.getConnection(columns.get(0));
+                                                    if (connection != null) {
+                                                        CreateDuplicatesAnalysisAction action = new CreateDuplicatesAnalysisAction(
+                                                                columns, connection);
+                                                        action.run();
+                                                    }
+                                                }
+                                            } catch (Exception e1) {
+                                                e1.printStackTrace();
+                                            }
+                                        }
+                                        // ~ TDQ-5314
                                     }
                                 });
                             }
