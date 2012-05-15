@@ -290,7 +290,8 @@ public class DQDeleteAction extends DeleteAction {
                 if (tempNode == null) {
                     tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
                 }
-                if (tempNode != null && !RepositoryNodeHelper.isStateDeleted(tempNode)) {
+                boolean isStateDel = RepositoryNodeHelper.isStateDeleted(tempNode);
+                if (tempNode != null && !isStateDel) {
                     // logcial delete dependcy element.
                     if (tempNode.getObject() != null) {
                         CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
@@ -305,11 +306,13 @@ public class DQDeleteAction extends DeleteAction {
                     excuteSuperRun(tempNode, tempNode.getParent());
                     // MOD qiongli 2012-5-11 TDQ-5250,if not confirm phy-delete,shoud restore this dependence.
                     if (!confirmFromDialog) {
-                        ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
-                        String oldPath = tempNode.getObject().getProperty().getItem().getState().getPath();
-                        IPath path = new Path(oldPath);
-                        factory.restoreObject(tempNode.getObject(), path);
-                        CorePlugin.getDefault().refreshDQView();
+                        if (!isStateDel) {
+                            ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+                            String oldPath = tempNode.getObject().getProperty().getItem().getState().getPath();
+                            IPath path = new Path(oldPath);
+                            factory.restoreObject(tempNode.getObject(), path);
+                            CorePlugin.getDefault().refreshDQView();
+                        }
                         isSucceed = false;
                     } else {
                         IFile propertyFile = PropertyHelper.getPropertyFile(mod);
