@@ -84,8 +84,8 @@ public class ModelElementIndicatorRuleTest {
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.ModeIndicatorEnum, me, ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule
                 .patternRule(IndicatorEnum.FrequencyIndicatorEnum, me, ExecutionLanguage.JAVA));
-        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowFrequencyIndicatorEnum, me,
-                ExecutionLanguage.JAVA));
+        // Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowFrequencyIndicatorEnum, me,
+        // ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.DateFrequencyIndicatorEnum, me,
                 ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.WeekFrequencyIndicatorEnum, me,
