@@ -40,12 +40,14 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.database.conn.template.EDatabaseConnTemplate;
 import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
@@ -634,6 +636,12 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         String version = PluginConstant.EMPTY_STRING;
         if (dataProvider instanceof DatabaseConnection) {
             subtype = ((DatabaseConnection) dataProvider).getDatabaseType();
+            if (EDatabaseConnTemplate.GENERAL_JDBC.getDBDisplayName().equals(subtype)) {
+                String dbTypeFromMetaData = ExtractMetaDataUtils.getDbTypeByClassNameAndDriverJar(
+                        ((DatabaseConnection) dataProvider).getDriverClass(),
+                        ((DatabaseConnection) dataProvider).getDriverJarPath());
+                subtype = PluginConstant.EMPTY_STRING.equals(dbTypeFromMetaData) ? subtype : dbTypeFromMetaData;
+            }
             version = ((DatabaseConnection) dataProvider).getVersion();
         } else {
             boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
