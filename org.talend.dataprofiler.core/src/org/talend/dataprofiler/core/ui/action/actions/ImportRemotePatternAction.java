@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -125,7 +126,7 @@ public class ImportRemotePatternAction extends Action {
             }
             ImportInfoDialog
                     .openImportInformation(
-                            null,
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                             DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
 
             CorePlugin.getDefault().refreshDQView();
@@ -144,7 +145,8 @@ public class ImportRemotePatternAction extends Action {
 
         try {
             String categoryName = componet.getCategry().getName();
-            // MOD msjian 2012-2-22 TDQ-4603: change the unzip folder to system temp folder, else there is no svn info files for the old targetFolder
+            // MOD msjian 2012-2-22 TDQ-4603: change the unzip folder to system temp folder, else there is no svn info
+            // files for the old targetFolder
             // String targetFolder = ResourceManager.getExchangeFolder().getLocation().append(categoryName).toString();
             String targetFolder = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
             // TDQ-4603 ~

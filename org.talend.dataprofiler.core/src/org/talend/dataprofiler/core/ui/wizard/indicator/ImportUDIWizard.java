@@ -66,7 +66,7 @@ public class ImportUDIWizard extends Wizard {
 
             public void run() {
                 ImportInfoDialog.openImportInformation(
-                        null,
+                        getShell(),
                         DefaultMessagesImpl.getString("ImportInfoDialog.INFO_TSK"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
             }
 
