@@ -605,4 +605,19 @@ public final class PropertyHelper {
     	return PluginConstant.EMPTY_STRING;
     	
     }
+    /**
+     * 
+     * Comment method "changeName".
+     * 
+     * @param property which one need to be changed.
+     * @param newName the new value of name
+     * 
+     * waitting a day to remove the name attribute from ModelElement. it let ue have to use service to do this simple
+     * thing. If we need to do it on the TOS
+     */
+    public static void changeName(Property property, String newName) {
+        property.setLabel(newName);
+        ModelElement modelElement = PropertyHelper.getModelElement(property);
+        modelElement.setName(newName);
+    }
 }

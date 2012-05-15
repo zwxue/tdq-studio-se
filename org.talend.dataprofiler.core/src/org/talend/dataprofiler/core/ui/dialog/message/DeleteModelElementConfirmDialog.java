@@ -311,7 +311,7 @@ public class DeleteModelElementConfirmDialog {
             return dialog.open();
         }
 
-        return Window.CANCEL;
+        return Window.OK;
     }
 
     /**
