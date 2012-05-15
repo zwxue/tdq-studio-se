@@ -188,9 +188,9 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
 
     @Override
     protected WizardDialog getPredefinedDialog() {
-
-        ColumnWizard wizard = (ColumnWizard) WizardFactory.createAnalysisWizard(AnalysisType.MULTIPLE_COLUMN,
-                new AnalysisParameter());
+        AnalysisParameter parameter = new AnalysisParameter();
+        parameter.setConnectionRepNode(getColumns()[0]);
+        ColumnWizard wizard = (ColumnWizard) WizardFactory.createAnalysisWizard(AnalysisType.MULTIPLE_COLUMN, parameter);
         wizard.setForcePreviousAndNextButtons(true);
         TimeSliceOptionPage page = new TimeSliceOptionPage();
         wizard.setExtenalPages(new WizardPage[] { page });
