@@ -12,17 +12,23 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
+
+import java.util.ResourceBundle;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
@@ -37,7 +43,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-@PrepareForTest({ DbmsLanguageFactory.class, IndicatorEnum.class })
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ DbmsLanguageFactory.class, IndicatorEnum.class, Messages.class })
 public class PatternExplorerTest {
 
     // @Rule
@@ -62,6 +69,10 @@ public class PatternExplorerTest {
 
     @Before
     public void setUp() throws Exception {
+        ResourceBundle rb2 = mock(ResourceBundle.class);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb2);
+        PowerMockito.mockStatic(Messages.class);
+        when(Messages.getString(anyString())).thenReturn("unit test");
         patternExplorer = new PatternExplorer();
 
         // mock : setAnalysis(Analysis analysis) in DataExplorer
@@ -101,7 +112,7 @@ public class PatternExplorerTest {
         PowerMockito.mockStatic(IndicatorEnum.class);
         when(IndicatorEnum.findIndicatorEnum(indicator.eClass())).thenReturn(IndicatorEnum.RowCountIndicatorEnum);
 
-        verifyStatic();
+        // verifyStatic();
 
         patternExplorer.setEnitty(cdEntity);
 
