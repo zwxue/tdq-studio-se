@@ -118,6 +118,19 @@ public class DependenciesHandlerTest {
 
     }
 
+    @Test
+    /**
+     * Add by qiongli 2012-5-16,it is for TDQ-5259.
+     */
+    public void testGetClintDependencyProperty_2() {
+        Property property = mock(Property.class);
+        PowerMockito.mockStatic(PropertyHelper.class);
+        when(PropertyHelper.getModelElement(property)).thenReturn(null);
+        List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(property);
+        assertTrue(clintDependency.size() == 0);
+
+    }
+
 
 
     class ModelElementMatcher extends ArgumentMatcher<ModelElement> {

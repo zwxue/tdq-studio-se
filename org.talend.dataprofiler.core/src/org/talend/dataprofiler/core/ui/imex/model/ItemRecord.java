@@ -113,7 +113,6 @@ public class ItemRecord {
                 URI propURI = itemURI.trimFileExtension().appendFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
                 elementEName = EElementEName.findENameByExt(itemURI.fileExtension());
-
                 if (property == null && !file.getName().endsWith(PluginConstant.JASPER_STRING)) {
                     Resource resource = resourceSet.getResource(propURI, true);
                     property = (Property) EcoreUtil.getObjectByType(resource.getContents(),
@@ -403,7 +402,10 @@ public class ItemRecord {
         IPath path = new Path(file.getAbsolutePath());
         IPath propPath = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-        if ("jasper".equals(path.getFileExtension())) {
+        String fileName = file.getName();
+        // MOD qiongli 2012-5-14 TDQ-5259.".Talend.properties" exists on 401,need to filter it and ".Talend.definition".
+        if ("jasper".equals(path.getFileExtension())
+                || (fileName != null && (fileName.equals(".Talend.definition") || fileName.equals(".Talend.properties")))) {
             return false;
         }
 
