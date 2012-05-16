@@ -275,13 +275,13 @@ public final class UDIUtils {
     }
 
     /**
-     * get all udi resources
+     * get all udi resources in specified folder
      * 
+     * @param udiFiles container for udi IFile list
+     * @param pfolder folder to search
      * @return
      */
-    public static List<IFile> getAllUdiFiles() {
-        List<IFile> udiFiles = new ArrayList<IFile>();
-        IFolder pfolder = ResourceManager.getUDIFolder();
+    public static List<IFile> getAllUdiFiles(List<IFile> udiFiles, IFolder pfolder) {
         IResource[] members = null;
         try {
             members = pfolder.members();
@@ -293,6 +293,8 @@ public final class UDIUtils {
                 if (FactoriesUtil.isUDIFile(resource.getFileExtension())) {
                     udiFiles.add((IFile) resource);
                 }
+            } else if (resource instanceof IFolder) {
+                udiFiles = getAllUdiFiles(udiFiles, (IFolder) resource);
             }
         }
         return udiFiles;
@@ -305,7 +307,7 @@ public final class UDIUtils {
      * @return
      */
     private static Object[] getUDIFilesByIndicator(ModelElementIndicator meIndicator) {
-        List<IFile> udiFiles = getAllUdiFiles();
+        List<IFile> udiFiles = getAllUdiFiles(new ArrayList<IFile>(), ResourceManager.getUDIFolder());
         ArrayList<Object> ret = new ArrayList<Object>();
         for (Indicator indicator : meIndicator.getIndicators()) {
             if (indicator instanceof UserDefIndicator) {
@@ -461,7 +463,7 @@ public final class UDIUtils {
                 continue;
             }
 
-            // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already. 
+            // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
             // when it is itself, don't use this check.
             if (indiDef == definition) {
                 continue;
