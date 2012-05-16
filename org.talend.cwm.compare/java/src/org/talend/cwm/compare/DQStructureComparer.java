@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,7 @@ import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -332,6 +334,15 @@ public final class DQStructureComparer {
                         || ConnectionUtils.isDB2(prevDataProvider)) {
                     packageFilter = null;
                 }
+                // Added yyin 2012-05-15 TDQ-5190
+                if (ConnectionUtils.isDB2(prevDataProvider) && connectionParameters.getFilterSchema() != null
+                        && !connectionParameters.getFilterSchema().equals("")) {
+                    if (packageFilter == null) {
+                        packageFilter = new ArrayList<String>();
+                    }
+                    packageFilter.add(connectionParameters.getFilterSchema());
+                }
+                // ~5190
                 MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
                 MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
             } catch (SQLException e) {
