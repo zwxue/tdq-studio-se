@@ -36,7 +36,6 @@ import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -402,7 +401,10 @@ public class ItemRecord {
         IPath path = new Path(file.getAbsolutePath());
         IPath propPath = path.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
 
-        if ("jasper".equals(path.getFileExtension())) {
+        // MOD qiongli 2012-5-14 TDQ-5259.".Talend.properties" exists on 401,need to filter it and ".Talend.definition".
+        String fileName = file.getName();
+        if ("jasper".equals(path.getFileExtension())
+                || (fileName != null && (fileName.equals(".Talend.definition") || fileName.equals(".Talend.properties")))) {
             return false;
         }
 

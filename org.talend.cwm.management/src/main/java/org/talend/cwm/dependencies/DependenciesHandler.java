@@ -479,6 +479,10 @@ public final class DependenciesHandler {
             return listProperty;
         }
         ModelElement modelElement = PropertyHelper.getModelElement(property);
+        // MOD qiongli 2012-5-15 TDQ-5259,avoid NPE.
+        if (modelElement == null) {
+            return listProperty;
+        }
         if (property.getItem() instanceof TDQSourceFileItem) {
             return listProperty;
         }
