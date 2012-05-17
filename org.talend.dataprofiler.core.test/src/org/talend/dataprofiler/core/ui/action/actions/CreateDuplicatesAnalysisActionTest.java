@@ -22,7 +22,9 @@ import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IFolder;
@@ -39,7 +41,7 @@ import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.i18n.Messages;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -63,9 +65,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-@PrepareForTest({ PropertyHelper.class, ColumnHelper.class, Messages.class, DefaultMessagesImpl.class, ProjectManager.class,
+@PrepareForTest({ PropertyHelper.class, Messages.class, DefaultMessagesImpl.class, ProjectManager.class,
         DefinitionHandler.class, DependenciesHandler.class, RepositoryNodeHelper.class, WorkbenchUtils.class,
-        ElementWriterFactory.class, CorePlugin.class })
+        ElementWriterFactory.class, CorePlugin.class, ConnectionHelper.class })
 public class CreateDuplicatesAnalysisActionTest {
 
     @Rule
@@ -90,15 +92,17 @@ public class CreateDuplicatesAnalysisActionTest {
             PowerMockito.mockStatic(DefaultMessagesImpl.class);
             when(DefaultMessagesImpl.getString(anyString())).thenReturn("bb"); //$NON-NLS-1$
 
-            Connection connection = mock(Connection.class);
-            List<TdColumn> columns = new ArrayList<TdColumn>();
-            TdColumn columnMock = mock(TdColumn.class);
-            columns.add(columnMock);
-
+            Map<ColumnSet, List<TdColumn>> columnsMap = new HashMap<ColumnSet, List<TdColumn>>();
             ColumnSet columSetMock = mock(ColumnSet.class);
             when(columSetMock.getName()).thenReturn("TableName"); //$NON-NLS-1$
-            PowerMockito.mockStatic(ColumnHelper.class);
-            when(ColumnHelper.getColumnOwnerAsColumnSet(columnMock)).thenReturn(columSetMock);
+            TdColumn columnMock = mock(TdColumn.class);
+            List<TdColumn> columns = new ArrayList<TdColumn>();
+            columns.add(columnMock);
+            columnsMap.put(columSetMock, columns);
+
+            Connection connectionMock = mock(Connection.class);
+            PowerMockito.mockStatic(ConnectionHelper.class);
+            when(ConnectionHelper.getConnection(columSetMock)).thenReturn(connectionMock);
 
             PowerMockito.mockStatic(PropertyHelper.class);
             when(PropertyHelper.existDuplicateName(anyString(), anyString(), (ERepositoryObjectType) any(), anyBoolean()))
@@ -147,12 +151,12 @@ public class CreateDuplicatesAnalysisActionTest {
             stub(method(CorePlugin.class, "refreshDQView", Object.class)); //$NON-NLS-1$
 
             RepositoryNode connNodeMock = mock(RepositoryNode.class);
-            when(RepositoryNodeHelper.recursiveFind(connection)).thenReturn(connNodeMock);
+            when(RepositoryNodeHelper.recursiveFind(connectionMock)).thenReturn(connNodeMock);
 
             IEditorPart iepMock = mock(IEditorPart.class);
             when(cpMock.openEditor((AnalysisItemEditorInput) any(), anyString())).thenReturn(iepMock);
 
-            Action action = new CreateDuplicatesAnalysisAction(columns, connection);
+            Action action = new CreateDuplicatesAnalysisAction(columnsMap);
             action.run();
         } catch (Exception e) {
             fail(e.getMessage());
