@@ -54,8 +54,6 @@ import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
-import org.talend.dataquality.indicators.PatternFreqIndicator;
-import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
 import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
@@ -691,11 +689,17 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                 DateParameters dateParameters = parameters.getDateParameters();
                 // MOD qiongli 2011-11-8 TDQ-3864,set DateParameters outside of patternIndicator and
                 // PatternLowFreqIndicator.make this indicator running result same as Java engine.
+                // MOD msjian TDQ-5357 2012-5-17: fixed the result of "Frequency Table" indicator is same to
+                // "Year Frequency Table" when applying on "Time" type
                 if (dateParameters == null
-                        && !(indicator instanceof PatternFreqIndicator || indicator instanceof PatternLowFreqIndicator)) {
+                        && !(indicatorEnum == IndicatorEnum.PatternFreqIndicatorEnum
+                                || indicatorEnum == IndicatorEnum.PatternLowFreqIndicatorEnum
+                                || indicatorEnum == IndicatorEnum.FrequencyIndicatorEnum || indicatorEnum == IndicatorEnum.LowFrequencyIndicatorEnum)) {
+
                     dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
                     parameters.setDateParameters(dateParameters);
                 }
+                // TDQ-5357~
 
                 // MOD scorreia 2008-06-19 default is already set in the model
                 // dateParameters.setDateAggregationType(DateGrain.YEAR);
