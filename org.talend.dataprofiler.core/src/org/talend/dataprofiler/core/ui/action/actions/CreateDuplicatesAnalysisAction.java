@@ -15,6 +15,8 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
@@ -23,7 +25,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -51,20 +53,21 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * Create an Analysis which analyze duplicates.
  */
 public class CreateDuplicatesAnalysisAction extends Action {
 
-    private List<TdColumn> columns;
+    private Map<ColumnSet, List<TdColumn>> columnsMap;
 
-    public List<TdColumn> getColumns() {
-        return this.columns;
+    public Map<ColumnSet, List<TdColumn>> getColumnsMap() {
+        return this.columnsMap;
     }
 
-    public void setColumns(List<TdColumn> columns) {
-        this.columns = columns;
+    public void setColumnsMap(Map<ColumnSet, List<TdColumn>> columnsMap) {
+        this.columnsMap = columnsMap;
     }
 
     private Connection connection;
@@ -80,76 +83,86 @@ public class CreateDuplicatesAnalysisAction extends Action {
     /**
      * DOC xqliu CreateDuplicatesAnalysisAction constructor comment.
      * 
-     * @param columns
-     * @param connection
+     * @param columnsMap
      */
-    public CreateDuplicatesAnalysisAction(List<TdColumn> columns, Connection connection) {
-        this.setColumns(columns);
-        this.setConnection(connection);
+    public CreateDuplicatesAnalysisAction(Map<ColumnSet, List<TdColumn>> columnsMap) {
+        this.setColumnsMap(columnsMap);
+        if (columnsMap != null && !columnsMap.isEmpty()) {
+            this.setConnection(ConnectionHelper.getConnection(columnsMap.keySet().iterator().next()));
+        }
     }
 
     @Override
     public void run() {
         ReturnCode success = new ReturnCode(true);
 
+        if (this.getColumnsMap() == null || this.getColumnsMap().isEmpty() || this.getConnection() == null) {
+            return;
+        }
+
         try {
-            // create the analysis
-            Analysis analysis = null;
-            AnalysisBuilder analysisBuilder = new AnalysisBuilder();
-            boolean analysisInitialized = analysisBuilder.initializeAnalysis(getAnalysisName(), AnalysisType.MULTIPLE_COLUMN);
-            if (analysisInitialized) {
-                analysis = analysisBuilder.getAnalysis();
-            }
+            Set<ColumnSet> keySet = this.getColumnsMap().keySet();
+            for (ColumnSet cs : keySet) {
+                List<TdColumn> columns = this.getColumnsMap().get(cs);
+                // create the analysis
+                Analysis analysis = null;
+                AnalysisBuilder analysisBuilder = new AnalysisBuilder();
+                boolean analysisInitialized = analysisBuilder.initializeAnalysis(getAnalysisName(cs),
+                        AnalysisType.MULTIPLE_COLUMN);
+                if (analysisInitialized) {
+                    analysis = analysisBuilder.getAnalysis();
+                }
 
-            fillMetadataToAnalysis(analysis, createDefaultAnalysisParameter());
+                fillMetadataToAnalysis(analysis, createDefaultAnalysisParameter(cs));
 
-            // add Connection into the Analysis Context
-            analysis.getContext().setConnection(this.getConnection());
+                // add Connection into the Analysis Context
+                analysis.getContext().setConnection(this.getConnection());
 
-            for (TdColumn theColumn : this.getColumns()) {
-                // add TdColumn into the Analysis Context
-                analysis.getContext().getAnalysedElements().add(theColumn);
+                for (TdColumn theColumn : columns) {
+                    // add TdColumn into the Analysis Context
+                    analysis.getContext().getAnalysedElements().add(theColumn);
 
-                // create Row Count Indicator
-                RowCountIndicator rcIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
-                rcIndicator.setAnalyzedElement(theColumn);
-                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(rcIndicator);
-                analysis.getResults().getIndicators().add(rcIndicator);
+                    // create Row Count Indicator
+                    RowCountIndicator rcIndicator = IndicatorsFactory.eINSTANCE.createRowCountIndicator();
+                    rcIndicator.setAnalyzedElement(theColumn);
+                    DefinitionHandler.getInstance().setDefaultIndicatorDefinition(rcIndicator);
+                    analysis.getResults().getIndicators().add(rcIndicator);
 
-                // create Duplicate Count Indicator
-                DuplicateCountIndicator dcIndicator = IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator();
-                dcIndicator.setAnalyzedElement(theColumn);
-                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(dcIndicator);
-                analysis.getResults().getIndicators().add(dcIndicator);
-            }
+                    // create Duplicate Count Indicator
+                    DuplicateCountIndicator dcIndicator = IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator();
+                    dcIndicator.setAnalyzedElement(theColumn);
+                    DefinitionHandler.getInstance().setDefaultIndicatorDefinition(dcIndicator);
+                    analysis.getResults().getIndicators().add(dcIndicator);
+                }
 
-            // create dependencies
-            DependenciesHandler.getInstance().setDependencyOn(analysis, this.getConnection());
-            // set the domain
-            for (Domain domain : analysis.getParameters().getDataFilter()) {
-                domain.setName(analysis.getName());
-            }
-            // set execution language
-            analysis.getParameters().setExecutionLanguage(ExecutionLanguage.SQL);
+                // create dependencies
+                DependenciesHandler.getInstance().setDependencyOn(analysis, this.getConnection());
+                // set the domain
+                for (Domain domain : analysis.getParameters().getDataFilter()) {
+                    domain.setName(analysis.getName());
+                }
+                // set execution language
+                analysis.getParameters().setExecutionLanguage(ExecutionLanguage.SQL);
 
-            // save the analysis
-            RepositoryNode analysisRepNode = (RepositoryNode) RepositoryNodeHelper
-                    .getDataProfilingFolderNode(EResourceConstant.ANALYSIS);
-            IFolder folder = WorkbenchUtils.getFolder(analysisRepNode);
-            AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
-            TypedReturnCode<Object> create = analysisWriter.create(analysis, folder);
-            if (create.isOk()) {
-                // refresh the RepositoryView
-                CorePlugin.getDefault().refreshDQView(analysisRepNode);
-                // open the editor
-                AnalysisItemEditorInput analysisEditorInput = new AnalysisItemEditorInput((Item) create.getObject());
-                IRepositoryNode connectionRepNode = RepositoryNodeHelper.recursiveFind(this.getConnection());
-                analysisEditorInput.setConnectionNode(connectionRepNode);
-                CorePlugin.getDefault().openEditor(analysisEditorInput, AnalysisEditor.class.getName());
-            } else {
-                success.setOk(false);
-                success.setMessage(create.getMessage()); //$NON-NLS-1$
-            }
+                // save the analysis
+                RepositoryNode analysisRepNode = (RepositoryNode) RepositoryNodeHelper
+                        .getDataProfilingFolderNode(EResourceConstant.ANALYSIS);
+                IFolder folder = WorkbenchUtils.getFolder(analysisRepNode);
+                AnalysisWriter analysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
+                TypedReturnCode<Object> create = analysisWriter.create(analysis, folder);
+                if (create.isOk()) {
+                    // refresh the RepositoryView
+                    CorePlugin.getDefault().refreshDQView(analysisRepNode);
+                    // open the editor
+                    AnalysisItemEditorInput analysisEditorInput = new AnalysisItemEditorInput((Item) create.getObject());
+                    IRepositoryNode connectionRepNode = RepositoryNodeHelper.recursiveFind(this.getConnection());
+                    analysisEditorInput.setConnectionNode(connectionRepNode);
+                    CorePlugin.getDefault().openEditor(analysisEditorInput, AnalysisEditor.class.getName());
+                } else {
+                    success.setOk(false);
+                    success.setMessage(create.getMessage()); //$NON-NLS-1$
+                }
+            } // for
         } catch (Exception e) {
             success.setOk(false);
             success.setMessage(e.getMessage());
@@ -163,12 +176,12 @@ public class CreateDuplicatesAnalysisAction extends Action {
     /**
      * DOC xqliu Comment method "getAnalysisName".
      * 
+     * @param columnSet
      * @return
      */
-    private String getAnalysisName() {
+    private String getAnalysisName(ColumnSet columnSet) {
         String anaName = "AnalyzeDuplicatesOn_"; //$NON-NLS-1$
-        TdColumn tdColumn = this.getColumns().get(0);
-        anaName = anaName.concat(ColumnHelper.getColumnOwnerAsColumnSet(tdColumn).getName());
+        anaName = anaName.concat(columnSet.getName());
         SimpleDateFormat sf = new SimpleDateFormat("_yyyyMMddHHmmss"); //$NON-NLS-1$
         anaName = anaName.concat(sf.format(new Date()));
         // check the new Analysis Name
@@ -198,15 +211,15 @@ public class CreateDuplicatesAnalysisAction extends Action {
     /**
      * DOC xqliu Comment method "createDefaultAnalysisParameter".
      * 
+     * @param columnSet
      * @return
      */
-    private AnalysisParameter createDefaultAnalysisParameter() {
+    private AnalysisParameter createDefaultAnalysisParameter(ColumnSet columnSet) {
         AnalysisParameter result = new AnalysisParameter();
         result.setStatus("development"); //$NON-NLS-1$
         result.setAuthor(ProjectManager.getInstance().getCurrentProject().getAuthor().getLogin());
         result.setPurpose(""); //$NON-NLS-1$
-        TdColumn tdColumn = this.getColumns().get(0);
-        result.setDescription("Analysis the duplicated columns on the table " + ColumnHelper.getColumnOwnerAsColumnSet(tdColumn).getName()); //$NON-NLS-1$
+        result.setDescription("Analysis the duplicated columns on the table " + columnSet.getName()); //$NON-NLS-1$
         result.setVersion(VersionUtils.DEFAULT_VERSION);
         return result;
     }

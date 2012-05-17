@@ -63,7 +63,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     // Multiple map: one left checked element map to multiple right checked map. (e.g:
     // tableA->columnA,columnB,columnC...)
-    private MultiMap modelElementCheckedMap = null;
+    protected MultiMap modelElementCheckedMap = null;
 
     // Root node (database/xml/flat file connection)
     private RepositoryNode connNode = null;
@@ -297,7 +297,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     List<IRepositoryNode> allCheckedElements = new ArrayList<IRepositoryNode>();
 
-    private void getAllCheckElements() {
+    protected void getAllCheckElements() {
         Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
         for (int i = 0; i < checkedNodes.length; i++) {
             IRepositoryNode repNode = (IRepositoryNode) checkedNodes[i];

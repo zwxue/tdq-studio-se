@@ -13,12 +13,16 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -27,9 +31,11 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -40,6 +46,7 @@ import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IDatabaseJobService;
 import org.talend.dataprofiler.core.service.IJobService;
 import org.talend.dataprofiler.core.ui.action.actions.CreateDuplicatesAnalysisAction;
+import org.talend.dataprofiler.core.ui.dialog.ColumnsMapSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.utils.TableUtils;
 import org.talend.dataquality.analysis.Analysis;
@@ -70,11 +77,14 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -177,30 +187,120 @@ public final class ChartTableFactory {
                                         // MOD xqliu 2012-05-11 TDQ-5314
                                         Object firstElement = selectionOne.getFirstElement();
                                         if (firstElement instanceof WhereRuleChartDataEntity) {
-
-                                            try {
-                                                WhereRuleChartDataEntity wrChartDataEntity = (WhereRuleChartDataEntity) firstElement;
-                                                WhereRuleIndicator wrInd = (WhereRuleIndicator) wrChartDataEntity.getIndicator();
-
-                                                List<TdColumn> columns = new ArrayList<TdColumn>();
-                                                EList<JoinElement> joinConditions = wrInd.getJoinConditions();
-                                                for (JoinElement joinElement : joinConditions) {
-                                                    columns.add((TdColumn) joinElement.getColA());
-                                                }
-
-                                                if (!columns.isEmpty()) {
-                                                    Connection connection = ConnectionHelper.getConnection(columns.get(0));
-                                                    if (connection != null) {
-                                                        CreateDuplicatesAnalysisAction action = new CreateDuplicatesAnalysisAction(
-                                                                columns, connection);
-                                                        action.run();
-                                                    }
-                                                }
-                                            } catch (Exception e1) {
-                                                e1.printStackTrace();
-                                            }
+                                            // get the WhereRuleIndicator
+                                            WhereRuleChartDataEntity wrChartDataEntity = (WhereRuleChartDataEntity) firstElement;
+                                            WhereRuleIndicator wrInd = (WhereRuleIndicator) wrChartDataEntity.getIndicator();
+                                            // run the CreateDuplicatesAnalysisAction
+                                            CreateDuplicatesAnalysisAction action = new CreateDuplicatesAnalysisAction(
+                                                    buildColumnsMap(wrInd));
+                                            action.run();
                                         }
                                         // ~ TDQ-5314
+                                    }
+
+                                    /**
+                                     * DOC xqliu Comment method "buildColumnsMap".
+                                     * 
+                                     * @param wrInd
+                                     * @return
+                                     */
+                                    private Map<ColumnSet, List<TdColumn>> buildColumnsMap(WhereRuleIndicator wrInd) {
+                                        Map<ColumnSet, List<TdColumn>> map = new HashMap<ColumnSet, List<TdColumn>>();
+                                        // get all columns from the WhereRuleIndicator
+                                        List<TdColumn> columns = new ArrayList<TdColumn>();
+                                        EList<JoinElement> joinConditions = wrInd.getJoinConditions();
+                                        for (JoinElement joinElement : joinConditions) {
+                                            // add left column
+                                            TdColumn tempColumn = (TdColumn) joinElement.getColA();
+                                            if (!columns.contains(tempColumn)) {
+                                                columns.add(tempColumn);
+                                            }
+                                            // add right column
+                                            tempColumn = (TdColumn) joinElement.getColB();
+                                            if (!columns.contains(tempColumn)) {
+                                                columns.add(tempColumn);
+                                            }
+                                        }
+                                        // build the map
+                                        for (TdColumn column : columns) {
+                                            ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet(column);
+                                            List<TdColumn> list = map.get(columnSet);
+                                            if (list == null) {
+                                                list = new ArrayList<TdColumn>();
+                                                map.put(columnSet, list);
+                                            }
+                                            list.add(column);
+                                        }
+                                        // get the user selected map
+                                        return getUserSelectedMap(map);
+                                    }
+
+                                    /**
+                                     * DOC xqliu Comment method "getUserSelectedMap".
+                                     * 
+                                     * @param map
+                                     * @return
+                                     */
+                                    private Map<ColumnSet, List<TdColumn>> getUserSelectedMap(Map<ColumnSet, List<TdColumn>> map) {
+                                        Map<ColumnSet, List<TdColumn>> userMap = new HashMap<ColumnSet, List<TdColumn>>();
+                                        // get the column nodes
+                                        List<RepositoryNode> columnNodes = getColumnNodes(map);
+                                        // get the connection node
+                                        RepositoryNode rootNode = getConnectionNode(map);
+                                        // show the dialog, let user select the columns
+                                        if (!columnNodes.isEmpty() && rootNode != null) {
+                                            ColumnsMapSelectionDialog dialog = new ColumnsMapSelectionDialog(
+                                                    null,
+                                                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                                                    DefaultMessagesImpl.getString("ColumnsMapSelectionDialog.columnSelection"), columnNodes, rootNode, //$NON-NLS-1$
+                                                    DefaultMessagesImpl.getString("ColumnsMapSelectionDialog.columnSelections")); //$NON-NLS-1$
+                                            dialog.setAllMap(map);
+                                            if (dialog.open() == Window.OK) {
+                                                userMap = dialog.getUserMap();
+                                            }
+                                        }
+                                        return userMap;
+                                    }
+
+                                    /**
+                                     * DOC xqliu Comment method "getConnectionNode".
+                                     * 
+                                     * @param map
+                                     * @return
+                                     */
+                                    private RepositoryNode getConnectionNode(Map<ColumnSet, List<TdColumn>> map) {
+                                        RepositoryNode node = null;
+                                        if (map != null && !map.isEmpty()) {
+                                            Connection connection = ConnectionHelper
+                                                    .getConnection(map.keySet().iterator().next());
+                                            if (connection != null) {
+                                                node = RepositoryNodeHelper.recursiveFind(connection);
+                                            }
+                                        }
+                                        return node;
+                                    }
+
+                                    /**
+                                     * DOC xqliu Comment method "getColumnNodes".
+                                     * 
+                                     * @param map
+                                     * @return
+                                     */
+                                    private List<RepositoryNode> getColumnNodes(Map<ColumnSet, List<TdColumn>> map) {
+                                        List<RepositoryNode> nodes = new ArrayList<RepositoryNode>();
+                                        if (map != null && !map.isEmpty()) {
+                                            List<TdColumn> columns = new ArrayList<TdColumn>();
+                                            Set<ColumnSet> keySet = map.keySet();
+                                            for (ColumnSet cs : keySet) {
+                                                columns.addAll(map.get(cs));
+                                            }
+                                            if (!columns.isEmpty()) {
+                                                for (TdColumn column : columns) {
+                                                    nodes.add(RepositoryNodeHelper.recursiveFind(column));
+                                                }
+                                            }
+                                        }
+                                        return nodes;
                                     }
                                 });
                             }
