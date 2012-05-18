@@ -75,7 +75,6 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.dates.DateUtils;
@@ -430,7 +429,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                         String returnStr = null;
                         Item item = newItem;
                         ERepositoryObjectType type = ERepositoryObjectType.getItemType(item);
-                        String pattern = RepositoryConstants.getPattern(type);
+                        // String pattern = RepositoryConstants.getPattern(type);
+                        String pattern = "[_A-Za-z0-9-][a-zA-Z0-9\\\\.\\\\-_(), ]*";
                         boolean matches = Pattern.matches(pattern, newText);
                         boolean nameAvailable = false;
                         try {
