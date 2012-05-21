@@ -22,9 +22,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -75,7 +75,6 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.dates.DateUtils;
@@ -390,6 +389,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
         return false;
     }
+
     /**
      * Comment method "confimDelete".
      * 
@@ -418,31 +418,31 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         String dialogTitle = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.Title");//$NON-NLS-1$
         String dialogMessage = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.Message");//$NON-NLS-1$
-        final InputDialog inputDialog = new InputDialog(parentShell,
- dialogTitle,
+        final InputDialog inputDialog = new InputDialog(parentShell, dialogTitle,
                 dialogMessage,//$NON-NLS-1$//$NON-NLS-2$
- newItem.getProperty().getLabel()
- + DateUtils.formatTimeStamp(DateUtils.PATTERN_6, System.currentTimeMillis()),
+                newItem.getProperty().getLabel() + DateUtils.formatTimeStamp(DateUtils.PATTERN_6, System.currentTimeMillis()),
                 new IInputValidator() {
 
                     public String isValid(String newText) {
                         String returnStr = null;
                         Item item = newItem;
                         ERepositoryObjectType type = ERepositoryObjectType.getItemType(item);
-                        String pattern = RepositoryConstants.getPattern(type);
+                        // String pattern = RepositoryConstants.getPattern(type);
+                        String pattern = "[_A-Za-z0-9-][a-zA-Z0-9\\\\.\\\\-_(), ]*";
                         boolean matches = Pattern.matches(pattern, newText);
                         boolean nameAvailable = false;
                         try {
-                            List<IRepositoryViewObject> listExistingObjects = ProxyRepositoryFactory.getInstance().getAll(type, true, false);
+                            List<IRepositoryViewObject> listExistingObjects = ProxyRepositoryFactory.getInstance().getAll(type,
+                                    true, false);
                             nameAvailable = ProxyRepositoryFactory.getInstance().isNameAvailable(item, newText,
                                     listExistingObjects);
                         } catch (PersistenceException e) {
-                           log.error(e, e);
-                           return e.getMessage();
+                            log.error(e, e);
+                            return e.getMessage();
                         }
-                        if(!matches){
+                        if (!matches) {
                             returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage1");//$NON-NLS-1$
-                        }else if(!nameAvailable){
+                        } else if (!nameAvailable) {
                             returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage2");//$NON-NLS-1$
                         }
                         return returnStr;
@@ -450,8 +450,6 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                 });
         return inputDialog;
     }
-
-
 
     /**
      * Comment method "changeElementName".
@@ -461,7 +459,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * 
      */
     public void changeElementName(Item item, String newName) {
-        
+
         Property property = item.getProperty();
         PropertyHelper.changeName(property, newName);
 
