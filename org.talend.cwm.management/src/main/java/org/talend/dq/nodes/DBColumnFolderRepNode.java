@@ -104,6 +104,7 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
             return filterResultsIfAny(children);
             // return children;
         }
+        children.clear();
         String filterCharater = null;
         List<TdColumn> tdcolumns = new ArrayList<TdColumn>();
         IRepositoryViewObject meataColumnSetObject = this.getParent().getObject();
@@ -134,7 +135,7 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
                     tdcolumns = DqRepositoryViewService.getColumns(connection, tdView, null, true);
                 }
                 if (tdcolumns.size() > 0) {
-                    ElementWriterFactory.getInstance().createDataProviderWriter().save(item,false);
+                    ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
                 }
             } catch (Exception e) {
                 log.error(e, e);

@@ -403,8 +403,8 @@ public class ItemRecord {
 
         // MOD qiongli 2012-5-14 TDQ-5259.".Talend.properties" exists on 401,need to filter it and ".Talend.definition".
         String fileName = file.getName();
-        if ("jasper".equals(path.getFileExtension())
-                || (fileName != null && (fileName.equals(".Talend.definition") || fileName.equals(".Talend.properties")))) {
+        if ("jasper".equals(path.getFileExtension()) //$NON-NLS-1$
+                || (fileName != null && (fileName.equals(".Talend.definition") || fileName.equals(".Talend.properties")))) { //$NON-NLS-1$//$NON-NLS-2$
             return false;
         }
 
