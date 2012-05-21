@@ -104,6 +104,7 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
             return filterResultsIfAny(children);
             // return children;
         }
+        children.clear();
         String filterCharater = null;
         List<TdColumn> tdcolumns = new ArrayList<TdColumn>();
         IRepositoryViewObject meataColumnSetObject = this.getParent().getObject();

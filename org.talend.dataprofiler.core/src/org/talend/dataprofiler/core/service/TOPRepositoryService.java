@@ -430,7 +430,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                         Item item = newItem;
                         ERepositoryObjectType type = ERepositoryObjectType.getItemType(item);
                         // String pattern = RepositoryConstants.getPattern(type);
-                        String pattern = "[_A-Za-z0-9-][a-zA-Z0-9\\\\.\\\\-_(), ]*";
+                        String pattern = "[_A-Za-z0-9-][a-zA-Z0-9\\\\.\\\\-_(), ]*";//$NON-NLS-1$
                         boolean matches = Pattern.matches(pattern, newText);
                         boolean nameAvailable = false;
                         try {
