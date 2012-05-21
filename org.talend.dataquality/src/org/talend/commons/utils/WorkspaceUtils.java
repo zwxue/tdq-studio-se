@@ -14,6 +14,7 @@ package org.talend.commons.utils;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,7 +22,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.string.AsciiUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -93,7 +93,8 @@ public final class WorkspaceUtils {
     }
 
     public static String normalize(String pathName) {
-        return pathName == null ? pathName : AsciiUtils.replaceCharacters(pathName, "/: \\", "____");//$NON-NLS-1$ $NON-NLS-2$
+        // MOD qiongli 2012-5-18 TDQ-5384,replace these chars with '_'.
+        return pathName == null ? pathName : StringUtils.replaceChars(pathName, "//?*/: \\|<>", "__________");//$NON-NLS-1$ $NON-NLS-2$
 
     }
 }
