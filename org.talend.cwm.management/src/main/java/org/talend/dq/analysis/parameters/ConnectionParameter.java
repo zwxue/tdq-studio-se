@@ -72,14 +72,12 @@ public class ConnectionParameter {
     }
 
     public String getName() {
-        System.out.println("aaaa-----" + name);
         return name;
 
     }
 
     public void setName(String name) {
         this.name = name;
-        System.out.println("dddd-----" + name);
     }
 
     public String getPurpose() {
