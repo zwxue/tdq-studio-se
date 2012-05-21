@@ -130,17 +130,8 @@ public final class ModelElementIndicatorRule {
             }
             break;
         case ModeIndicatorEnum:
-            // Added yyin 20120511, TDQ-5241
-            if (Java2SqlType.isTimeSQL(javaType)) {
-                return true;
-            }
         case FrequencyIndicatorEnum:
         case LowFrequencyIndicatorEnum:
-            // Added yyin 20120511, TDQ-5241
-            // Mod 20120515, because it has a bug , after fixed, this will execute well
-            // if (Java2SqlType.isTimeSQL(javaType)) {
-            // return false;
-            // }
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
             if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL) {
