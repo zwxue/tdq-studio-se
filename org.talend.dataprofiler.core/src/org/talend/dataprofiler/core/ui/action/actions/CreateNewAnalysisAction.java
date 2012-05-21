@@ -18,13 +18,21 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
@@ -34,6 +42,7 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -197,7 +206,36 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
      * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
      */
     public void run(IIntroSite site, Properties params) {
-        PlatformUI.getWorkbench().getIntroManager().closeIntro(PlatformUI.getWorkbench().getIntroManager().getIntro());
-        run();
+
+        IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+        if (factory.isUserReadOnlyOnCurrentProject()) {
+            MessageDialog
+                    .openWarning(null, "User Authority", "Can't create Analysis! Current user is read-only on this project!");
+        } else {
+            PlatformUI.getWorkbench().getIntroManager().closeIntro(PlatformUI.getWorkbench().getIntroManager().getIntro());
+            IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            if (null == workbenchWindow) {
+                return;
+            }
+            IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+            if (null == workbenchPage) {
+                return;
+            }
+
+            IPerspectiveDescriptor currentPerspective = workbenchPage.getPerspective();
+            if (!IBrandingConfiguration.PERSPECTIVE_DQ_ID.equals(currentPerspective.getId())) {
+                // show dq perspective
+                try {
+                    workbenchWindow.getWorkbench().showPerspective(IBrandingConfiguration.PERSPECTIVE_DQ_ID, workbenchWindow);
+                    workbenchPage = workbenchWindow.getActivePage();
+                } catch (WorkbenchException e) {
+                    ExceptionHandler.process(e);
+                    return;
+                }
+            }
+
+            run();
+        }
+
     }
 }
