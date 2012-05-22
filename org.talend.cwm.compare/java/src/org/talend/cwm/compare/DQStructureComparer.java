@@ -47,6 +47,7 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -320,7 +321,9 @@ public final class DQStructureComparer {
             if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
                 java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
                 try {
-                    dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
+                    // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue 
+                 	// dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn); 
+                 	dbJDBCMetadata = ExtractMetaDataUtils.getConnectionMetadata(sqlConn); 
                 } catch (SQLException e) {
                     log.error(e, e);
                 }
