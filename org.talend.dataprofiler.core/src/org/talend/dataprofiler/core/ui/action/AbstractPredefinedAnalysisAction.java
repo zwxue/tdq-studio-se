@@ -34,6 +34,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataTableRepository
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -120,7 +121,16 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
                 return list.toArray(new IRepositoryNode[list.size()]);
             }
             // TDQ-4470 ~
-        }
+        } else if (firstElement instanceof TdView) {
+            // Added yyin 20120522 TDQ-4945, support tdView
+            TdView view = (TdView) firstElement;
+            EList<MetadataColumn> columns = view.getColumns();
+            for (MetadataColumn column : columns) {
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(column);
+                list.add(recursiveFind);
+            }
+            return list.toArray(new IRepositoryNode[list.size()]);
+        } // ~
         return null;
     }
 
@@ -157,8 +167,14 @@ public abstract class AbstractPredefinedAnalysisAction extends Action {
             parameter = new AnalysisParameter();
             parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
             return getStandardAnalysisWizardDialog(type, parameter);
+        } else if (firstElement instanceof TdView) { // Added yyin 20120522 TDQ-4945, support tdView
+            Connection connection = ConnectionHelper.getConnection((TdView) firstElement);
+            IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(connection);
+            parameter = new AnalysisParameter();
+            parameter.setConnectionRepNode((DBConnectionRepNode) repositoryNode);
+            return getStandardAnalysisWizardDialog(type, parameter);
+            // ~4945
         }
-
         // if (firstElement instanceof DBTableRepNode) {
         // DBTableRepNode tableNode = (DBTableRepNode) firstElement;
         // TdTableRepositoryObject viewObject = (TdTableRepositoryObject) tableNode.getObject();
