@@ -324,7 +324,16 @@ public final class PropertyHelper {
             }
         }
 
-        return statePathStr != null ? new Path(statePathStr) : Path.EMPTY;
+        // MOD msjian TDQ-5257 2012-5-22: fixed when migration from 4.1 show some redundant folder
+        Path returnValue = Path.EMPTY;
+        // include path
+        if (statePathStr != null && statePathStr.indexOf("/") != -1) {
+            statePathStr = statePathStr.substring(0, statePathStr.lastIndexOf("/"));
+            returnValue = new Path(statePathStr + "/");
+        }
+        return returnValue;
+        // return statePathStr != null ? new Path(statePathStr) : Path.EMPTY;
+        // TDQ-5257
     }
 
     /**
@@ -604,20 +613,5 @@ public final class PropertyHelper {
     	}
     	return PluginConstant.EMPTY_STRING;
     	
-    }
-    /**
-     * 
-     * Comment method "changeName".
-     * 
-     * @param property which one need to be changed.
-     * @param newName the new value of name
-     * 
-     * waitting a day to remove the name attribute from ModelElement. it let ue have to use service to do this simple
-     * thing. If we need to do it on the TOS
-     */
-    public static void changeName(Property property, String newName) {
-        property.setLabel(newName);
-        ModelElement modelElement = PropertyHelper.getModelElement(property);
-        modelElement.setName(newName);
     }
 }
