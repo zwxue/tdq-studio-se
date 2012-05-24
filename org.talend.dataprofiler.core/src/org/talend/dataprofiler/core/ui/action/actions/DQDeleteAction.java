@@ -43,8 +43,12 @@ import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.ReportFileRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -129,8 +133,16 @@ public class DQDeleteAction extends DeleteAction {
         HashSet<RepositoryNode> deleteElementsParents = new HashSet<RepositoryNode>();
         for (Object obj : deleteElements) {
             if (obj instanceof RepositoryNode) {
-                RepositoryNode parent = ((RepositoryNode) obj).getParent();
-                deleteElementsParents.add(parent);
+                RepositoryNode parent = null;
+                if (obj instanceof AnalysisRepNode || obj instanceof AnalysisSubFolderRepNode || obj instanceof ReportRepNode
+                        || obj instanceof ReportSubFolderRepNode) {
+                    parent = RepositoryNodeHelper.findNearestSystemFolderNode((RepositoryNode) obj);
+                } else {
+                    parent = ((RepositoryNode) obj).getParent();
+                }
+                if (parent != null) {
+                    deleteElementsParents.add(parent);
+                }
             }
         }
         // ~TDQ-4213

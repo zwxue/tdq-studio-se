@@ -552,19 +552,21 @@ public final class RepositoryNodeHelper {
         }
 
         if (fileRepNodes != null) {
-        	for (int i = 0; i < fileRepNodes.size(); i++) {
-        		RepositoryNode childNode = (RepositoryNode) fileRepNodes.get(i);
-        		
-        		String childNodeFileName = PluginConstant.EMPTY_STRING;
-        		if (childNode instanceof JrxmlTempleteRepNode) {
-        			childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.JRXML_STRING);
-        		} else if (childNode instanceof SourceFileRepNode) {
-        			childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment().replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.SQL_STRING);
-        		}
-        		if (fileName.equals(childNodeFileName)) {
-        			return childNode;
-        		}
-        	}
+            for (int i = 0; i < fileRepNodes.size(); i++) {
+                RepositoryNode childNode = (RepositoryNode) fileRepNodes.get(i);
+
+                String childNodeFileName = PluginConstant.EMPTY_STRING;
+                if (childNode instanceof JrxmlTempleteRepNode) {
+                    childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment()
+                            .replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.JRXML_STRING);
+                } else if (childNode instanceof SourceFileRepNode) {
+                    childNodeFileName = childNode.getObject().getProperty().eResource().getURI().lastSegment()
+                            .replaceAll(PluginConstant.PROPERTIES_STRING, PluginConstant.SQL_STRING);
+                }
+                if (fileName.equals(childNodeFileName)) {
+                    return childNode;
+                }
+            }
         }
 
         return null;
@@ -2311,7 +2313,7 @@ public final class RepositoryNodeHelper {
                 result.add((JrxmlTempleteRepNode) node);
             } else if (node instanceof JrxmlTempFolderRepNode || node instanceof JrxmlTempSubFolderNode) {
                 if (recursive) {
-                    result.addAll(getJrxmlFileRepNodes((JrxmlTempFolderRepNode)node, recursive));
+                    result.addAll(getJrxmlFileRepNodes((JrxmlTempFolderRepNode) node, recursive));
                 }
             }
         }
@@ -2918,5 +2920,24 @@ public final class RepositoryNodeHelper {
             }
         }
         return "";
+    }
+
+    /**
+     * 
+     * find the nearest system folder node by the given node(.eg.,give an AnalysisRepNode,will find the root node
+     * AnalysisFolderNode).
+     * 
+     * @param node
+     * @return
+     */
+    public static RepositoryNode findNearestSystemFolderNode(RepositoryNode node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.getType() == ENodeType.SYSTEM_FOLDER) {
+            return node;
+        }
+        return findNearestSystemFolderNode(node.getParent());
+
     }
 }
