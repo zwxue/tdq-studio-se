@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -12,18 +12,16 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.easymock.EasyMock.expect;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.properties.Property;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
@@ -34,9 +32,12 @@ import org.talend.dataquality.properties.TDQReportItem;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportHelper.class })
+// @RunWith(PowerMockRunner.class)
+@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportHelper.class, EObjectHelper.class })
 public class DQDeleteHelperTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     /**
      * Test method for
@@ -51,11 +52,10 @@ public class DQDeleteHelperTest {
         when(folder.exists()).thenReturn(true);
         Property prop = mock(Property.class);
         when(item.getProperty()).thenReturn(prop);
-        mockStatic(PropertyHelper.class);
-        expect(PropertyHelper.getItemFile(prop)).andReturn(file);
-        mockStatic(ReportHelper.class);
-        expect(ReportHelper.getOutputFolder(file)).andReturn(folder);
-        replayAll();
+        PowerMockito.mockStatic(PropertyHelper.class);
+        when(PropertyHelper.getItemFile(prop)).thenReturn(file);
+        PowerMockito.mockStatic(ReportHelper.class);
+        when(ReportHelper.getOutputFolder(file)).thenReturn(folder);
         DQDeleteHelper.deleteRelations(item);
 
     }

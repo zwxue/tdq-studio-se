@@ -1,23 +1,31 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
+// Talend Community Edition
 //
-// This source code is available under agreement available at
-// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+// Copyright (C) 2006-2011 Talend ¨C www.talend.com
 //
-// You should have received a copy of the agreement
-// along with this program; if not, write to Talend SA
-// 9 rue Pages 92150 Suresnes, France
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
 // ============================================================================
 package org.talend.dq.nodes;
 
-import static org.easymock.EasyMock.expect;
+// import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
 import java.util.ArrayList;
@@ -32,14 +40,14 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
-import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
@@ -52,10 +60,13 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-@RunWith(PowerMockRunner.class)
+// @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ReportUtils.class, ResourceFileMap.class, GlobalServiceRegister.class, IExtensionRegistry.class,
         IConfigurationElement.class, ProjectManager.class, CoreRuntimePlugin.class })
 public class ReportSubFolderRepNodeTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private ReportSubFolderRepNode reportSubRepNode;
 
@@ -208,19 +219,19 @@ public class ReportSubFolderRepNodeTest {
             when(fe.getFullPath()).thenReturn(new Path(""));
             res[i] = fe;
         }
-        mockStatic(ReportUtils.class);
+        PowerMockito.mockStatic(ReportUtils.class);
         IFile repFile = mock(IFile.class);
-        expect(ReportUtils.getReportListFiles(repFile)).andReturn(res);
-        mockStatic(ResourceFileMap.class);
-        expect(ResourceFileMap.findCorrespondingFile(report)).andReturn(repFile);
+        when(ReportUtils.getReportListFiles(repFile)).thenReturn(res);
+        PowerMockito.mockStatic(ResourceFileMap.class);
+        when(ResourceFileMap.findCorrespondingFile(report)).thenReturn(repFile);
 
-        mockStatic(ProjectManager.class);
+        PowerMockito.mockStatic(ProjectManager.class);
         ProjectManager projManager = mock(ProjectManager.class);
         when(projManager.getProjectNode("")).thenReturn(null);
-        mockStatic(CoreRuntimePlugin.class);
+        PowerMockito.mockStatic(CoreRuntimePlugin.class);
         CoreRuntimePlugin coreRunPlugin = mock(CoreRuntimePlugin.class);
-        expect(CoreRuntimePlugin.getInstance()).andReturn(coreRunPlugin).andReturn(coreRunPlugin).andReturn(coreRunPlugin);
-        expect(ProjectManager.getInstance()).andReturn(projManager).andReturn(projManager).andReturn(projManager);
+        when(CoreRuntimePlugin.getInstance()).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin);
+        when(ProjectManager.getInstance()).thenReturn(projManager).thenReturn(projManager).thenReturn(projManager);
         replayAll();
     }
 
