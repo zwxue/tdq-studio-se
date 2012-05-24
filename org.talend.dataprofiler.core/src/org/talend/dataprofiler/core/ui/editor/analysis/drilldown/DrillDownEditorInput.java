@@ -207,6 +207,11 @@ public class DrillDownEditorInput implements IEditorInput {
         for (Object[] tableRow : newColumnElementList) {
             int columnIndex = 0;
             for (Object tableValue : tableRow) {
+                // added yyin 20120523 TDQ-4691: in MDM, when these two size not equal, this for will throw exception
+                if (tableValue == null) {
+                    if (newColumnElementList.get(0).length != columnElementList.size())
+                        continue;
+                }// ~
                 columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
             }
             rowIndex++;
