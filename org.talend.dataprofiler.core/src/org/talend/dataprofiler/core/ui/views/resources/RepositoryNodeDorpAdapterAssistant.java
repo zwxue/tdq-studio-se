@@ -42,7 +42,10 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -67,12 +70,15 @@ import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC mzhao Handle drop event of repositoryNode on DQ repository viewer.
@@ -223,6 +229,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                             }
                         } else if (sourceNode instanceof PatternRepNode) {
                             movePatternRepNode(sourceNode, targetNode);
+                        } else if (sourceNode instanceof JrxmlTempleteRepNode) {
+                            moveJrxmlFileRepNode(sourceNode, targetNode);
+                        } else if (sourceNode instanceof SourceFileRepNode) {
+                            moveSourceFileRepNode(sourceNode, targetNode);
                         } else {
                             moveCommonRepNode(sourceNode, targetNode);
                         }
@@ -234,6 +244,41 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                     CorePlugin.getDefault().refreshDQView(sourceNode.getParent());
                 }
             }
+        }
+    }
+
+    /**
+     * move Jrxml File.
+     * 
+     * @param sourceNode
+     * @param targetNode
+     * @throws PersistenceException
+     */
+    private void moveJrxmlFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+        MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
+    }
+
+    /**
+     * move Source File(close the Source File editor when it's open).
+     * 
+     * @param sourceNode
+     * @param targetNode
+     * @throws PersistenceException
+     */
+    private void moveSourceFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+        if (WorkspaceResourceHelper.sourceFileHasBeenOpened(sourceNode)) {
+            MessageUI.openWarning(DefaultMessagesImpl.getString("SourceFileAction.sourceFileOpening", sourceNode.getLabel())); //$NON-NLS-1$
+        } else {
+            // move the source file
+            IRepositoryViewObject objectToMove = sourceNode.getObject();
+            ERepositoryObjectType targetObjectType = targetNode.getContentType();
+            IPath fullPath = getNodeFullPath(targetObjectType);
+            IPath makeRelativeTo = fullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
+            ENodeType type = targetNode.getType();
+            if (ENodeType.SIMPLE_FOLDER == type || ENodeType.SYSTEM_FOLDER == type) {
+                moveObject(objectToMove, sourceNode, targetNode, makeRelativeTo);
+            }
+            CorePlugin.getDefault().refreshDQView(targetNode.getParent());
         }
     }
 
@@ -418,6 +463,20 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     public void moveFolderRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+        // ADD xqliu 2012-05-24 TDQ-4831
+        if (sourceNode instanceof JrxmlTempSubFolderNode) {
+            MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
+            return;
+        }
+        if (sourceNode instanceof SourceFileSubFolderNode) {
+            SourceFileSubFolderNode folderNode = (SourceFileSubFolderNode) sourceNode;
+            ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(folderNode);
+            if (rc.isOk()) {
+                WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(rc.getMessage());
+                return;
+            }
+        }
+        // ~ TDQ-4831
         // MOD bu gdbu 2011-4-2 bug : 19537
         if (!canMoveNode(sourceNode, targetNode)) {
             // Doesn't allow the parent node moved to the child node
@@ -1110,9 +1169,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      */
     private boolean isForbidNode(IRepositoryNode sourceNode) {
         ENodeType type = sourceNode.getType();
+        // MOD xqliu 2012-05-22 TDQ-4831 allow user to drag Jrxml file
         boolean flag = (type != null && type == ENodeType.SYSTEM_FOLDER) || sourceNode instanceof ReportFileRepNode
-                || sourceNode instanceof ReportAnalysisRepNode || sourceNode instanceof JrxmlTempleteRepNode
-                || sourceNode instanceof JrxmlTempSubFolderNode;
+                || sourceNode instanceof ReportAnalysisRepNode;
+        // ~ TDQ-4831
         if (!flag) {
             RepositoryNode parent = sourceNode.getParent();
             if (parent != null) {

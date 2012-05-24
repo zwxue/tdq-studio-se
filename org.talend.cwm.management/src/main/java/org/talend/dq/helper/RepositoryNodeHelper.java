@@ -18,10 +18,13 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.TreeItem;
@@ -33,6 +36,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -66,8 +70,10 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.ParserRule;
@@ -2939,5 +2945,53 @@ public final class RepositoryNodeHelper {
         }
         return findNearestSystemFolderNode(node.getParent());
 
+    }
+
+    /**
+     * get the IFile according to the RepositoryNode.
+     * 
+     * @param node
+     * @return
+     */
+    public static IFile getIFile(IRepositoryNode node) {
+        IFile file = null;
+        if (node != null) {
+            try {
+                ModelElement me = getModelElementFromRepositoryNode(node);
+                IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+                if (me != null) {
+                    // TDQItem except TDQFileItem
+                    String platformString = me.eResource().getURI().toPlatformString(true);
+                    file = root.getFile(new Path(platformString));
+                } else {
+                    // TDQFileItem
+                    Item item = node.getObject().getProperty().getItem();
+                    URI uri = item.eResource().getURI();
+                    String propPathStr = uri.toPlatformString(Boolean.TRUE);
+                    int lastIndexOf = propPathStr.lastIndexOf("."); //$NON-NLS-1$
+                    String itemPathStr = propPathStr.substring(0, lastIndexOf) + "." + getTDQFileItemExtension(item); //$NON-NLS-1$
+                    file = root.getFile(new Path(itemPathStr));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return file;
+    }
+
+    /**
+     * DOC xqliu Comment method "getFileExtension".
+     * 
+     * @param item
+     * @return
+     */
+    private static String getTDQFileItemExtension(Item item) {
+        String result = ""; //$NON-NLS-1$
+        if (item instanceof TDQSourceFileItem) {
+            result = FactoriesUtil.SQL;
+        } else if (item instanceof TDQJrxmlItem) {
+            result = FactoriesUtil.JRXML;
+        }
+        return result;
     }
 }

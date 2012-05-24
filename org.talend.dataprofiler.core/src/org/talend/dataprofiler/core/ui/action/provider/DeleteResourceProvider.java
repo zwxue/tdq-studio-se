@@ -36,6 +36,7 @@ import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
@@ -93,7 +94,8 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
         } else if (node instanceof UserDefIndicatorSubFolderRepNode || node instanceof PatternRegexSubFolderRepNode
                 || node instanceof PatternSqlSubFolderRepNode || node instanceof RulesSQLSubFolderRepNode
                 || node instanceof RulesParserSubFolderRepNode || node instanceof DBConnectionSubFolderRepNode
-                || node instanceof MDMConnectionSubFolderRepNode || node instanceof DFConnectionSubFolderRepNode) {
+                || node instanceof MDMConnectionSubFolderRepNode || node instanceof DFConnectionSubFolderRepNode
+                || node instanceof JrxmlTempSubFolderNode) {
             show = true;
         }
         return show;

@@ -55,6 +55,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.PartListener;
@@ -72,6 +73,8 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -463,5 +466,22 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         Property property = item.getProperty();
         PropertyHelper.changeName(property, newName);
 
+    }
+
+    /*
+     * (non-Jsdoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#sourceFileOpening(org.talend.repository.model.RepositoryNode)
+     */
+    public boolean sourceFileOpening(RepositoryNode node) {
+        boolean result = false;
+        if (node instanceof SourceFileRepNode) {
+            SourceFileRepNode fileNode = (SourceFileRepNode) node;
+            result = WorkspaceResourceHelper.checkSourceFileNodeOpening(fileNode).isOk();
+        } else if (node instanceof SourceFileSubFolderNode) {
+            SourceFileSubFolderNode folderNode = (SourceFileSubFolderNode) node;
+            result = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(folderNode).isOk();
+        }
+        return result;
     }
 }

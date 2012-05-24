@@ -24,9 +24,11 @@ import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant;
+import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -53,6 +55,12 @@ public class RenameTdqFolderAction extends Action {
 
     @Override
     public void run() {
+        // ADD xqliu 2012-05-24 TDQ-4831
+        if (this.node instanceof JrxmlTempSubFolderNode) {
+            MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
+            return;
+        }
+        // ~ TDQ-4831
         InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(),
                 DefaultMessagesImpl.getString("RenameTdqFolderAction.renameFolderName"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("RenameTdqFolderAction.inputNewFolderName"), null, new IInputValidator() { //$NON-NLS-1$

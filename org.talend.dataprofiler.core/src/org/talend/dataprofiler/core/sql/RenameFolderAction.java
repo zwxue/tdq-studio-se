@@ -27,11 +27,14 @@ import org.eclipse.swt.widgets.Display;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -70,6 +73,16 @@ public class RenameFolderAction extends Action {
      */
     @Override
     public void run() {
+        // ADD xqliu 2012-05-24 TDQ-4831
+        if (this.node != null && this.node instanceof SourceFileSubFolderNode) {
+            SourceFileSubFolderNode folderNode = (SourceFileSubFolderNode) this.node;
+            ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(folderNode);
+            if (rc.isOk()) {
+                WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(rc.getMessage());
+                return;
+            }
+        }
+        // ~ TDQ-4831
         InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(),
                 DefaultMessagesImpl.getString("RenameFolderAction.renameFolderName"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("RenameFolderAction.inputNewFolderName"), null, new IInputValidator() { //$NON-NLS-1$

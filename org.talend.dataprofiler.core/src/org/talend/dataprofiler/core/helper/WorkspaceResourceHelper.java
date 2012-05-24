@@ -15,9 +15,11 @@ package org.talend.dataprofiler.core.helper;
 import java.io.File;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
@@ -25,14 +27,28 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.helper.FileUtils;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.ProjectManager;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -42,6 +58,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public final class WorkspaceResourceHelper {
 
     private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
+
+    public static final String COMMA = ", "; //$NON-NLS-1$
 
     private WorkspaceResourceHelper() {
     }
@@ -145,4 +163,107 @@ public final class WorkspaceResourceHelper {
         }
     }
 
+    /**
+     * if the source file has been opened then return true.
+     * 
+     * @param sourceNode the source file node
+     * @return
+     */
+    public static boolean sourceFileHasBeenOpened(IRepositoryNode sourceNode) {
+        boolean opened = false;
+        IWorkbenchWindow workbenchWindow = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+        if (workbenchWindow == null) {
+            IWorkbenchWindow[] workbenchWindows = CorePlugin.getDefault().getWorkbench().getWorkbenchWindows();
+            if (workbenchWindows != null && workbenchWindows.length > 0) {
+                workbenchWindow = workbenchWindows[0];
+            }
+        }
+        if (workbenchWindow != null) {
+            IWorkbenchPage activePage = workbenchWindow.getActivePage();
+            if (activePage != null) {
+                IEditorReference[] editorReferences = activePage.getEditorReferences();
+                if (editorReferences != null) {
+                    for (IEditorReference reference : editorReferences) {
+                        try {
+                            IEditorInput editorInput = reference.getEditorInput();
+                            if (editorInput != null && editorInput instanceof FileEditorInput) {
+                                FileEditorInput fileInput = (FileEditorInput) editorInput;
+                                IFile nodeFile = RepositoryNodeHelper.getIFile(sourceNode);
+                                if (nodeFile != null
+                                        && nodeFile.getFullPath().toString().equals(fileInput.getFile().getFullPath().toString())) {
+                                    opened = true;
+                                    break;
+                                }
+                            }
+                        } catch (PartInitException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        return opened;
+    }
+
+    /**
+     * DOC xqliu Comment method "checkSourceFileNodeOpening".
+     * 
+     * @param node
+     * @return
+     */
+    public static ReturnCode checkSourceFileNodeOpening(SourceFileRepNode node) {
+        boolean opened = false;
+        String msg = ""; //$NON-NLS-1$
+        if (WorkspaceResourceHelper.sourceFileHasBeenOpened(node)) {
+            opened = true;
+            msg += node.getLabel() + COMMA;
+        }
+        return new ReturnCode(msg, opened);
+    }
+
+    /**
+     * DOC xqliu Comment method "checkSourceFileSubFolderNodeOpening".
+     * 
+     * @param node
+     * @return
+     */
+    public static ReturnCode checkSourceFileSubFolderNodeOpening(SourceFileSubFolderNode node) {
+        boolean opened = false;
+        String msg = ""; //$NON-NLS-1$
+        List<IRepositoryNode> children = node.getChildren();
+        for (IRepositoryNode iNode : children) {
+            if (iNode instanceof SourceFileRepNode) {
+                SourceFileRepNode fileNode = (SourceFileRepNode) iNode;
+                ReturnCode rc = checkSourceFileNodeOpening(fileNode);
+                if (rc.isOk()) {
+                    opened = rc.isOk();
+                    msg += rc.getMessage();
+                }
+            } else if (iNode instanceof SourceFileSubFolderNode) {
+                SourceFileSubFolderNode folderNode = (SourceFileSubFolderNode) iNode;
+                ReturnCode rc = checkSourceFileSubFolderNodeOpening(folderNode);
+                if (rc.isOk()) {
+                    opened = rc.isOk();
+                    msg += rc.getMessage();
+                }
+            }
+        }
+        return new ReturnCode(msg, opened);
+    }
+
+    /**
+     * DOC xqliu Comment method "showSourceFilesOpeningWarnMessages".
+     * 
+     * @param openSourceFileNames
+     */
+    public static void showSourceFilesOpeningWarnMessages(String openSourceFileNames) {
+        if (openSourceFileNames.endsWith(COMMA)) {
+            openSourceFileNames = openSourceFileNames.substring(0, openSourceFileNames.lastIndexOf(COMMA));
+        }
+        String msgTag = "SourceFileAction.sourceFileOpening"; //$NON-NLS-1$
+        if (openSourceFileNames.indexOf(COMMA) > -1) {
+            msgTag = "SourceFileAction.sourceFilesOpening"; //$NON-NLS-1$
+        }
+        MessageUI.openWarning(DefaultMessagesImpl.getString(msgTag, openSourceFileNames));
+    }
 }
