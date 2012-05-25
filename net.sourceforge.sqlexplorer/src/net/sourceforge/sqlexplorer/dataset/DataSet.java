@@ -428,10 +428,15 @@ public class DataSet {
 	            
 	        case Types.TIME:
 	            return resultSet.getTime(columnIndex);
-	            
+	        
 	        default:
-	            //MOD yyi 2012-04-17 TDQ-5176 : Change get string to get bytes for mess decode.
-	            return null == resultSet.getBytes(columnIndex) ? null : new String(resultSet.getBytes(columnIndex));
+	            //MOD yyi 2012-05-25 TDQ-5369 : Fix getString of JConnector(sybase).
+                try {
+                    return resultSet.getString(columnIndex);
+                } catch (SQLException e) {
+                    //MOD yyi 2012-04-17 TDQ-5176 : Change get string to get bytes for mess decode.
+                    return null == resultSet.getBytes(columnIndex) ? null : new String(resultSet.getBytes(columnIndex));
+                }
 	    }
     }
     
