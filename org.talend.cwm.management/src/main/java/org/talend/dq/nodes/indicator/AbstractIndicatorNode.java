@@ -68,7 +68,8 @@ public abstract class AbstractIndicatorNode implements IIndicatorNode {
         if (getIndicatorInstance() != null) {
             IndicatorDefinition define = getIndicatorInstance().getIndicatorDefinition();
             if (define != null) {
-                return define.getLabel();
+                // MOD qiongli 2012-5-24 TDQ-5069 use attribute 'name' at here.
+                return define.getName();
             }
         }
 
