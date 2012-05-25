@@ -54,6 +54,7 @@ import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.StructuralFeature;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
@@ -285,23 +286,17 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
             ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
             // MOD zshen 2010.06.10 for feature 12842.
             // Case of pk
+           
             PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
             if (primaryKey != null) {
-                TableHelper.addPrimaryKey((TdTable) columnSet, primaryKey);
-                PrimaryKey newPrimaryKey = TableHelper.addPrimaryKey((TdTable) columnSet, primaryKey);
-                columnSetSwitch.getUniqueKey().remove(primaryKey);
-                columnSetSwitch.getUniqueKey().add(newPrimaryKey);
-
+            	 TableHelper.addPrimaryKey((TdTable) columnSet, columnSetSwitch);
             }
             Set<ForeignKey> foreignKeySet = ColumnHelper.getForeignKey(columnSetSwitch);
             for (ForeignKey foreignKey : foreignKeySet) {
                 if (foreignKey != null) {
-                    ForeignKey newForeignKey = TableHelper.addForeignKey((TdTable) columnSet, foreignKey);
-                    columnSetSwitch.getKeyRelationship().remove(foreignKey);
-                    columnSetSwitch.getKeyRelationship().add(newForeignKey);
+                   TableHelper.addForeignKey((TdTable) columnSet, foreignKey,columnSetSwitch);
                 }
             }
-
             return;
         }
         // MOD handle default value for a column 13411
