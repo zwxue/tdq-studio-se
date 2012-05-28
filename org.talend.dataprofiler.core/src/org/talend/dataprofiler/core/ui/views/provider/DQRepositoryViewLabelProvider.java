@@ -148,6 +148,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (node instanceof MDMConnectionRepNode) {
                     image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                } else if (node instanceof MDMSchemaRepNode) {
+                    image = ImageLib.getImage(ImageLib.XML_DOC);
+                } else if (node instanceof MDMXmlElementRepNode) {
+                    image = ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
                 } else if (node instanceof DFConnectionRepNode) {
                     image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
                 } else if (node instanceof AnalysisRepNode) {
