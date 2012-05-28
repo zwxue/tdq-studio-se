@@ -114,7 +114,7 @@ public class ImportRemotePatternAction extends Action {
                     if (ecosCategory != null) {
                         EResourceConstant resourceType = ecosCategory.getResource();
                         for (File oneFile : validFiles) {
-                            information.addAll(ImportFactory.doInport(resourceType, oneFile, componet.getName()));
+                            information.addAll(ImportFactory.doImport(resourceType, oneFile, componet.getName()));
                         }
                     }
                 }
