@@ -52,7 +52,6 @@ import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public final class WorkspaceResourceHelper {
@@ -171,32 +170,35 @@ public final class WorkspaceResourceHelper {
      */
     public static boolean sourceFileHasBeenOpened(IRepositoryNode sourceNode) {
         boolean opened = false;
-        IWorkbenchWindow workbenchWindow = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-        if (workbenchWindow == null) {
-            IWorkbenchWindow[] workbenchWindows = CorePlugin.getDefault().getWorkbench().getWorkbenchWindows();
-            if (workbenchWindows != null && workbenchWindows.length > 0) {
-                workbenchWindow = workbenchWindows[0];
+        if (sourceNode != null) {
+            IWorkbenchWindow workbenchWindow = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+            if (workbenchWindow == null) {
+                IWorkbenchWindow[] workbenchWindows = CorePlugin.getDefault().getWorkbench().getWorkbenchWindows();
+                if (workbenchWindows != null && workbenchWindows.length > 0) {
+                    workbenchWindow = workbenchWindows[0];
+                }
             }
-        }
-        if (workbenchWindow != null) {
-            IWorkbenchPage activePage = workbenchWindow.getActivePage();
-            if (activePage != null) {
-                IEditorReference[] editorReferences = activePage.getEditorReferences();
-                if (editorReferences != null) {
-                    for (IEditorReference reference : editorReferences) {
-                        try {
-                            IEditorInput editorInput = reference.getEditorInput();
-                            if (editorInput != null && editorInput instanceof FileEditorInput) {
-                                FileEditorInput fileInput = (FileEditorInput) editorInput;
-                                IFile nodeFile = RepositoryNodeHelper.getIFile(sourceNode);
-                                if (nodeFile != null
-                                        && nodeFile.getFullPath().toString().equals(fileInput.getFile().getFullPath().toString())) {
-                                    opened = true;
-                                    break;
+            if (workbenchWindow != null) {
+                IWorkbenchPage activePage = workbenchWindow.getActivePage();
+                if (activePage != null) {
+                    IEditorReference[] editorReferences = activePage.getEditorReferences();
+                    if (editorReferences != null) {
+                        for (IEditorReference reference : editorReferences) {
+                            try {
+                                IEditorInput editorInput = reference.getEditorInput();
+                                if (editorInput != null && editorInput instanceof FileEditorInput) {
+                                    FileEditorInput fileInput = (FileEditorInput) editorInput;
+                                    IFile nodeFile = RepositoryNodeHelper.getIFile(sourceNode);
+                                    if (nodeFile != null
+                                            && nodeFile.getFullPath().toString()
+                                                    .equals(fileInput.getFile().getFullPath().toString())) {
+                                        opened = true;
+                                        break;
+                                    }
                                 }
+                            } catch (PartInitException e) {
+                                e.printStackTrace();
                             }
-                        } catch (PartInitException e) {
-                            e.printStackTrace();
                         }
                     }
                 }
@@ -257,6 +259,9 @@ public final class WorkspaceResourceHelper {
      * @param openSourceFileNames
      */
     public static void showSourceFilesOpeningWarnMessages(String openSourceFileNames) {
+        if (openSourceFileNames == null || openSourceFileNames.trim().length() == 0) {
+            return;
+        }
         if (openSourceFileNames.endsWith(COMMA)) {
             openSourceFileNames = openSourceFileNames.substring(0, openSourceFileNames.lastIndexOf(COMMA));
         }

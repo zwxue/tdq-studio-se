@@ -4,19 +4,26 @@ Bundle-Name: org.talend.dataprofiler.core.test
 Bundle-SymbolicName: org.talend.dataprofiler.core.test
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: .Talend SA.
-Fragment-Host: org.talend.dataprofiler.core;bundle-version="4.0.1"
+Fragment-Host: org.talend.dataprofiler.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4,
- org.mockito,
- org.eclipse.swtbot.junit4_x;bundle-version="2.0.0",
- org.eclipse.swtbot.eclipse.finder;bundle-version="2.0.0",
- org.hamcrest;bundle-version="1.1.0",
- org.talend.dataquality.test
+ org.mockito
 Bundle-ClassPath: lib/powermock-classloading-base-1.4.11.jar,
  lib/powermock-classloading-objenesis-1.4.11.jar,
  lib/powermock-classloading-xstream-1.4.11.jar,
- lib/powermock-easymock-1.4.11-full.jar,
  lib/powermock-mockito-1.4.11-full.jar,
  lib/powermock-module-junit4-rule-1.4.11.jar,
  lib/powermock-module-junit4-rule-agent-1.4.11.jar,
  .
+Export-Package: org.talend.dataprofiler.core.helper,
+ org.talend.dataprofiler.core.migration.impl,
+ org.talend.dataprofiler.core.service,
+ org.talend.dataprofiler.core.ui,
+ org.talend.dataprofiler.core.ui.action.actions,
+ org.talend.dataprofiler.core.ui.editor.analysis.drilldown,
+ org.talend.dataprofiler.core.ui.imex,
+ org.talend.dataprofiler.core.ui.utils,
+ org.talend.dataprofiler.core.ui.views.provider,
+ org.talend.dataprofiler.core.ui.views.resources,
+ org.talend.dataprofiler.core.ui.wizard.analysis,
+ org.talend.dataprofiler.core.ui.wizard.database

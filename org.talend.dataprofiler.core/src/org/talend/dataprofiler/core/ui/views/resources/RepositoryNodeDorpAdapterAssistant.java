@@ -254,7 +254,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param targetNode
      * @throws PersistenceException
      */
-    private void moveJrxmlFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+    public void moveJrxmlFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
     }
 
@@ -265,7 +265,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param targetNode
      * @throws PersistenceException
      */
-    private void moveSourceFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+    public void moveSourceFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         if (WorkspaceResourceHelper.sourceFileHasBeenOpened(sourceNode)) {
             MessageUI.openWarning(DefaultMessagesImpl.getString("SourceFileAction.sourceFileOpening", sourceNode.getLabel())); //$NON-NLS-1$
         } else {
@@ -1073,7 +1073,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param targetNode
      * @param basePath
      */
-    private void moveObject(IRepositoryViewObject objectToMove, IRepositoryNode sourceNode, IRepositoryNode targetNode,
+    public void moveObject(IRepositoryViewObject objectToMove, IRepositoryNode sourceNode, IRepositoryNode targetNode,
             IPath basePath) {
         // IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
         IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);

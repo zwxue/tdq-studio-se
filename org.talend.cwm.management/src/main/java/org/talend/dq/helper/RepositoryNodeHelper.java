@@ -2961,13 +2961,20 @@ public final class RepositoryNodeHelper {
                 IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
                 if (me != null) {
                     // TDQItem except TDQFileItem
-                    String platformString = me.eResource().getURI().toPlatformString(true);
+                    URI uri = me.eResource().getURI();
+                    String platformString = uri.toPlatformString(Boolean.TRUE);
+                    if (platformString == null) {
+                        platformString = uri.toFileString();
+                    }
                     file = root.getFile(new Path(platformString));
                 } else {
                     // TDQFileItem
                     Item item = node.getObject().getProperty().getItem();
                     URI uri = item.eResource().getURI();
                     String propPathStr = uri.toPlatformString(Boolean.TRUE);
+                    if (propPathStr == null) {
+                        propPathStr = uri.toFileString();
+                    }
                     int lastIndexOf = propPathStr.lastIndexOf("."); //$NON-NLS-1$
                     String itemPathStr = propPathStr.substring(0, lastIndexOf) + "." + getTDQFileItemExtension(item); //$NON-NLS-1$
                     file = root.getFile(new Path(itemPathStr));

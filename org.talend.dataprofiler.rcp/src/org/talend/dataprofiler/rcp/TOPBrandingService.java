@@ -117,7 +117,6 @@ public class TOPBrandingService implements IBrandingService {
         return getProductName() + " " + getOptionName(); //$NON-NLS-1$
     }
 
-    @Override
     public String getStartingBrowserId() {
         // default is StartingBrowser implement in org.talend.rcp
         return "org.talend.rcp.intro.starting.StartingBrowser";

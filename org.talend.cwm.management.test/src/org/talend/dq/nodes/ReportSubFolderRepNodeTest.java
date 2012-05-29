@@ -2,7 +2,7 @@
 //
 // Talend Community Edition
 //
-// Copyright (C) 2006-2011 Talend ¨C www.talend.com
+// Copyright (C) 2006-2011 Talend ï¿½C www.talend.com
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -21,12 +21,10 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-// import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.easymock.PowerMock.replayAll;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +58,6 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
  * 
  */
-// @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ReportUtils.class, ResourceFileMap.class, GlobalServiceRegister.class, IExtensionRegistry.class,
         IConfigurationElement.class, ProjectManager.class, CoreRuntimePlugin.class })
 public class ReportSubFolderRepNodeTest {
@@ -232,7 +229,5 @@ public class ReportSubFolderRepNodeTest {
         CoreRuntimePlugin coreRunPlugin = mock(CoreRuntimePlugin.class);
         when(CoreRuntimePlugin.getInstance()).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin);
         when(ProjectManager.getInstance()).thenReturn(projManager).thenReturn(projManager).thenReturn(projManager);
-        replayAll();
     }
-
 }
