@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.DatabaseMetaData;
@@ -84,7 +87,6 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -251,7 +253,38 @@ public final class ConnectionUtils {
      * @return
      */
 
-    public static boolean isConnectionAvailable(Connection analysisDataProvider) {
+    public static ReturnCode isConnectionAvailable(Connection analysisDataProvider) {
+        ReturnCode returnCode = new ReturnCode();
+        // MOD yyin 20120529 TDQ-4651 check file connection is available
+        if (analysisDataProvider instanceof FileConnection) {
+            FileConnection fileConn = (FileConnection) analysisDataProvider;
+            // ADD msjian TDQ-4559 2012-2-28: when the fileconnection is context mode, getOriginalFileConnection.
+            if (fileConn.isContextMode()) {
+                fileConn = getOriginalFileConnection(fileConn);
+            }
+            // TDQ-4559 ~
+            String filePath = fileConn.getFilePath();
+            try {
+                BufferedReader filePathAvalible = FileConnectionContextUtils.isFilePathAvailable(filePath, fileConn);
+                if (filePathAvalible != null) {
+                    returnCode.setOk(true);
+                    return returnCode;
+                }
+            } catch (UnsupportedEncodingException e) {
+                returnCode.setOk(false);
+                returnCode.setMessage(filePath);
+                return returnCode;
+            } catch (FileNotFoundException e) {
+                returnCode.setOk(false);
+                returnCode.setMessage(filePath);
+                return returnCode;
+            } catch (IOException e) {
+                returnCode.setOk(false);
+                returnCode.setMessage(filePath);
+                return returnCode;
+            }
+        }
+        // ~
         Properties props = new Properties();
         String userName = JavaSqlFactory.getUsername(analysisDataProvider);
         String password = JavaSqlFactory.getPassword(analysisDataProvider);
@@ -263,11 +296,11 @@ public final class ConnectionUtils {
             props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) analysisDataProvider));
             MdmWebserviceConnection mdmWebserviceConnection = new MdmWebserviceConnection(
                     JavaSqlFactory.getURL(analysisDataProvider), props);
-            ReturnCode checkDatabaseConnection = mdmWebserviceConnection.checkDatabaseConnection();
-            return checkDatabaseConnection.isOk();
+            returnCode = mdmWebserviceConnection.checkDatabaseConnection();
+            return returnCode;
         }
-        ReturnCode returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
-        return returnCode.isOk();
+        returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
+        return returnCode;
     }
 
     /**
