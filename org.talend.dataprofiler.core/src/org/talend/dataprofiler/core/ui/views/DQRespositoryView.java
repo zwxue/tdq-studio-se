@@ -477,7 +477,7 @@ public class DQRespositoryView extends CommonNavigator {
         getCommonViewer().getTree().addKeyListener(new KeyListener() {
 
             public void keyPressed(KeyEvent e) {
-                if (e.keyCode == SWT.CR) {
+                if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
                     Object source = e.getSource();
                     Tree tree = (Tree) e.getSource();
                     TreeItem[] selection = tree.getSelection();
