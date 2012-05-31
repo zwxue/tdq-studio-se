@@ -1077,11 +1077,16 @@
            id="restoreItem"
            name="%command.name.restoreItem">
      </command>
+     <command
+           defaultHandler="org.talend.dataprofiler.core.ui.action.actions.handle.DQDeleteActionHandler"
+           id="org.talend.dataprofiler.core.dqDelete"
+           name="%command.name.dqDelete">
+     </command>
   </extension>
   <extension
         point="org.eclipse.ui.bindings">
      <key
-           commandId="org.talend.dataprofiler.core.removeAnalysis"
+           commandId="org.talend.dataprofiler.core.dqDelete"
            contextId="org.talend.dataprofiler.core.ui.views.DQRespositoryView.viewScope"
            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
            sequence="DEL">
