@@ -324,16 +324,7 @@ public final class PropertyHelper {
             }
         }
 
-        // MOD msjian TDQ-5257 2012-5-22: fixed when migration from 4.1 show some redundant folder
-        Path returnValue = Path.EMPTY;
-        // include path
-        if (statePathStr != null && statePathStr.indexOf("/") != -1) {
-            statePathStr = statePathStr.substring(0, statePathStr.lastIndexOf("/"));
-            returnValue = new Path(statePathStr + "/");
-        }
-        return returnValue;
-        // return statePathStr != null ? new Path(statePathStr) : Path.EMPTY;
-        // TDQ-5257
+        return statePathStr != null ? new Path(statePathStr) : Path.EMPTY;
     }
 
     /**
@@ -594,26 +585,29 @@ public final class PropertyHelper {
         }
         return false;
     }
+
     /**
      * 
      * @param property
      * @return get path of modelElement from property
      */
-    public static String getModelElementPath(Property property){
-    	if(property!=null&&property.getItem()!=null){
-    		EElementEName elementEName = FactoriesUtil.EElementEName.getElementEName(property.getItem());
-    		if(elementEName!=null){
-    			URI appendFileExtension = property.eResource().getURI().trimFileExtension().appendFileExtension(elementEName.getFileExt());
-    			if(appendFileExtension.isFile()){
-    				return appendFileExtension.toFileString();
-    			}else if(appendFileExtension.isPlatform()){
-    				return Platform.getLocation().append(appendFileExtension.toPlatformString(true)).toOSString();
-    				}
-    		}
-    	}
-    	return PluginConstant.EMPTY_STRING;
-    	
+    public static String getModelElementPath(Property property) {
+        if (property != null && property.getItem() != null) {
+            EElementEName elementEName = FactoriesUtil.EElementEName.getElementEName(property.getItem());
+            if (elementEName != null) {
+                URI appendFileExtension = property.eResource().getURI().trimFileExtension()
+                        .appendFileExtension(elementEName.getFileExt());
+                if (appendFileExtension.isFile()) {
+                    return appendFileExtension.toFileString();
+                } else if (appendFileExtension.isPlatform()) {
+                    return Platform.getLocation().append(appendFileExtension.toPlatformString(true)).toOSString();
+                }
+            }
+        }
+        return PluginConstant.EMPTY_STRING;
+
     }
+
     /**
      * 
      * Comment method "changeName".

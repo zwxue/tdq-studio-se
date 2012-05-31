@@ -52,9 +52,6 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-/**
- * DOC bZhou class global comment. Detailled comment
- */
 public class ItemRecord {
 
     private static Logger log = Logger.getLogger(ItemRecord.class);
@@ -95,7 +92,7 @@ public class ItemRecord {
         try {
             initialize();
         } catch (Exception e) {
-            String errorMessage = "Can't initialize element [" + getName() + "] : " + e.getMessage();
+            String errorMessage = "Can't initialize element [" + getName() + "] : " + e.getMessage(); //$NON-NLS-1$  //$NON-NLS-2$
             addError(errorMessage);
             log.error(errorMessage);
         }
