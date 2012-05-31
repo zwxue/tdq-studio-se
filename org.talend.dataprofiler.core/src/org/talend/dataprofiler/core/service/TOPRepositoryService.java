@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPartListener;
@@ -80,6 +81,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
@@ -141,6 +143,12 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     public void refresh() {
         CorePlugin.getDefault().refreshWorkSpace();
+        // ~ TDQ-5133 mzhao 2012-05-31 when there are many children for a db connection, it's more elegant to collapse
+        // the metadata folder when refreshing the tree to save time.
+        IRepositoryNode metadataNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
+        CorePlugin.getDefault().getRepositoryView().getCommonViewer()
+                .collapseToLevel(metadataNode, AbstractTreeViewer.ALL_LEVELS);
+        // ~ TDQ-5311
         CorePlugin.getDefault().refreshDQView();
     }
 
