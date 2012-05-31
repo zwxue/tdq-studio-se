@@ -17,13 +17,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.reports.util.ReportsSwitch;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -71,9 +71,10 @@ public final class RepResourceFileHelper extends ResourceFileMap {
     public List<IFile> getAnalysisFilesFromReport(Report report) {
         List<IFile> analysisFiles = new ArrayList<IFile>();
 
-        EList<RenderedObject> componentList = report.getComponent();
-        for (RenderedObject component : componentList) {
-            analysisFiles.add(ResourceFileMap.findCorrespondingFile(component));
+        // MOD yyin 20120530 TDQ-5050
+        for (AnalysisMap anaMap : ((TdReport) report).getAnalysisMap()) {
+            Analysis analysis = anaMap.getAnalysis();
+            analysisFiles.add(ResourceFileMap.findCorrespondingFile(analysis));
         }
 
         return analysisFiles;
