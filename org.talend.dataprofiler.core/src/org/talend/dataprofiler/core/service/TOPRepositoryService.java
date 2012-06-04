@@ -420,10 +420,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     }
 
     /**
-     * Comment method "confimDelete".
+     * Comment method "getInputDialog".
      * 
-     * @param deleteObject which you want to delete
-     * @return SWT.OK or SWT.Cancel
+     * @param get input dialog
+     * @return inputDialog
      */
     public InputDialog getInputDialog(final Item newItem) {
         Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
