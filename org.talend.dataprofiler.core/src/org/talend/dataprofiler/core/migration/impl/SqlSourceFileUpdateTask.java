@@ -167,9 +167,9 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
         itemState.setDeleted(false);
 
         IPath rootPath = getWorkspacePath().append(TDQ_SOURCE_FILE_PATH);
-        IPath filePath = new Path(srcFile.getAbsolutePath());
-        IPath path = filePath.makeRelativeTo(rootPath);
-        itemState.setPath(path.toString());
+        IPath folderPath = new Path(srcFile.getAbsolutePath()).removeLastSegments(1);
+        IPath itemStatePath = folderPath.makeRelativeTo(rootPath);
+        itemState.setPath(itemStatePath.toString());
 
         item.setState(itemState);
         return item;

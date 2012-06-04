@@ -574,10 +574,10 @@ public final class PropertyHelper {
             Property prop = null;
             if (existObjects != null) {
                 for (IRepositoryViewObject object : existObjects) {
-                    if(object==null||object.getProperty()==null){
+                    if (object == null || object.getProperty() == null) {
                         continue;
                     }
-                    prop=object.getProperty();
+                    prop = object.getProperty();
                     if (onlyCompDisplayName && newName.equals(prop.getDisplayName()) || !onlyCompDisplayName
                             && (newName.equals(prop.getDisplayName()) || newName.equals(prop.getLabel()))) {
                         return true;
