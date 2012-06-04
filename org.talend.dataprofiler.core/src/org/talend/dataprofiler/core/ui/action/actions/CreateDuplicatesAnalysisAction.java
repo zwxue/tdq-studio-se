@@ -187,7 +187,7 @@ public class CreateDuplicatesAnalysisAction extends Action {
         // check the new Analysis Name
         String finalAnaName = anaName;
         int i = 1;
-        while (PropertyHelper.existDuplicateName(finalAnaName, null, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT, true)) {
+        while (PropertyHelper.existDuplicateName(finalAnaName, null, ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT)) {
             finalAnaName = anaName + i;
             i++;
         }

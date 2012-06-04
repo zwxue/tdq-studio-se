@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -43,7 +44,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
-import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import orgomg.cwm.objectmodel.core.CorePackage;
 
@@ -350,6 +350,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }
+        // TDQ-5078,normalize some special chars with "_".
+        elementName = WorkspaceUtils.normalize(elementName);
         // elementName=elementName.replaceAll("/", "");
         // MOD qionlgi 2012-2-13 TDQ-4593,check if exsit name in old items list when input a name.
         if (existRepObjects == null || existRepObjects.isEmpty()) {
@@ -389,7 +391,8 @@ public abstract class MetadataWizardPage extends AbstractWizardPage {
                     continue;
                 }
                 if (elementName.equalsIgnoreCase(prop.getLabel()) || elementName.equalsIgnoreCase(prop.getDisplayName())) {
-                    updateStatus(IStatus.ERROR, UIMessages.MSG_EXIST_SAME_NAME);
+                    updateStatus(IStatus.ERROR,
+                            DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", prop.getLabel()));
                     return false;
                 }
             }

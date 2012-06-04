@@ -45,7 +45,6 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -402,7 +401,11 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         Property property = getProperty();
 
         if (property != null) {
-            String name = property.getDisplayName();
+            // MDO qionlgi 2012-5-30 TDQ-5078 the ModelElement name could contain special chars.
+            String name = currentModelElement.getName();
+            if (name == null || PluginConstant.EMPTY_STRING.equals(name)) {
+                name = property.getLabel();
+            }
             String purpose = property.getPurpose();
             String description = property.getDescription();
             String author = property.getAuthor().getLogin();
@@ -648,10 +651,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             return ret;
         }
         // MOD qiongli 2012-2-14 TDQ-4539.compare the name with all items of the specified type.
-        boolean exist = PropertyHelper.existDuplicateName(elementName, oldProperty.getDisplayName(), objectType, true);
+        boolean exist = PropertyHelper.existDuplicateName(elementName, oldProperty.getDisplayName(), objectType);
         if (exist) {
             this.nameText.setText(oldProperty != null ? oldProperty.getDisplayName() : PluginConstant.SPACE_STRING);
-            ret.setReturnCode(UIMessages.MSG_EXIST_SAME_NAME, false);
+            ret.setReturnCode(
+                    DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", repositoryViewObject.getLabel()),
+                    false);
             return ret;
         }
 

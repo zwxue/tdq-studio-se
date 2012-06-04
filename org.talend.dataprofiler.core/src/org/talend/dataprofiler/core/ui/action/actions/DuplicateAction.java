@@ -102,7 +102,7 @@ public class DuplicateAction extends Action {
                             new IInputValidator() {
 
                                 public String isValid(String newText) {
-                                    if (PropertyHelper.existDuplicateName(newText, null, node.getContentType(), true)) {
+                                    if (PropertyHelper.existDuplicateName(newText, null, node.getContentType())) {
                                         return DefaultMessagesImpl.getString("DuplicateAction.LabelExists"); //$NON-NLS-1$
                                     }
 
@@ -177,13 +177,13 @@ public class DuplicateAction extends Action {
     private String generateInitialLabel(IRepositoryNode node) {
         String initNameValue = "Copy_of_" + node.getLabel(); //$NON-NLS-1$
         ERepositoryObjectType type = node.getContentType();
-        if (!PropertyHelper.existDuplicateName(initNameValue, null, type, true)) {
+        if (!PropertyHelper.existDuplicateName(initNameValue, null, type)) {
             return initNameValue;
         } else {
             char j = 'a';
             String temp = initNameValue;
 
-            while (PropertyHelper.existDuplicateName(temp, null, type, true)) {
+            while (PropertyHelper.existDuplicateName(temp, null, type)) {
                 if (j <= 'z') {
                     temp = initNameValue + "_" + (j++) + ""; //$NON-NLS-1$ //$NON-NLS-2$
                 }

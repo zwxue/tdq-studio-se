@@ -94,7 +94,7 @@ public final class WorkspaceUtils {
 
     public static String normalize(String pathName) {
         // MOD qiongli 2012-5-18 TDQ-5384,replace these chars with '_'.
-        return pathName == null ? pathName : StringUtils.replaceChars(pathName, "//?*/: \\|<>", "__________");//$NON-NLS-1$ $NON-NLS-2$
+        return pathName == null ? pathName : StringUtils.replaceChars(pathName, "//?*/: \\|<>", "___________");//$NON-NLS-1$ $NON-NLS-2$
 
     }
 }
