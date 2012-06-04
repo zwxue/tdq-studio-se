@@ -44,6 +44,10 @@ import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.AnalysisSubFolderRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -204,7 +208,13 @@ public class DuplicateAction extends Action {
         RepositoryNode recursiveFind = null;
         recursiveFind = getSelctionNode(duplicateObject, modelElement, recursiveFind);
         if (recursiveFind != null) {
-            CorePlugin.getDefault().refreshDQView(recursiveFind.getParent());
+            if (recursiveFind instanceof AnalysisRepNode || recursiveFind instanceof AnalysisSubFolderRepNode
+                    || recursiveFind instanceof ReportRepNode || recursiveFind instanceof ReportSubFolderRepNode) {
+
+                CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.findNearestSystemFolderNode(recursiveFind));
+            } else {
+                CorePlugin.getDefault().refreshDQView(recursiveFind.getParent());
+            }
         }
         if (activePart instanceof ISetSelectionTarget) {
             ISelection selection = new StructuredSelection(recursiveFind);
