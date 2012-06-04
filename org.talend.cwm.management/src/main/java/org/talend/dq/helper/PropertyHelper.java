@@ -562,13 +562,13 @@ public final class PropertyHelper {
      * @param onlyCompDisplayName,if it is true,just compare the name of UI.
      * @return
      */
-    public static boolean existDuplicateName(String newName, String oldName, ERepositoryObjectType objectType,
-            boolean onlyCompDisplayName) {
+    public static boolean existDuplicateName(String newName, String oldName, ERepositoryObjectType objectType) {
 
         // if new name equals itself's old name ,return false
         if (newName == null || objectType == null || oldName != null && newName.equals(oldName)) {
             return false;
         }
+        String normalizeName = WorkspaceUtils.normalize(newName);
         try {
             List<IRepositoryViewObject> existObjects = ProxyRepositoryFactory.getInstance().getAll(objectType, true, false);
             Property prop = null;
@@ -578,8 +578,7 @@ public final class PropertyHelper {
                         continue;
                     }
                     prop = object.getProperty();
-                    if (onlyCompDisplayName && newName.equals(prop.getDisplayName()) || !onlyCompDisplayName
-                            && (newName.equals(prop.getDisplayName()) || newName.equals(prop.getLabel()))) {
+                    if (newName.equals(prop.getDisplayName()) || normalizeName.equals(prop.getLabel())) {
                         return true;
                     }
                 }
