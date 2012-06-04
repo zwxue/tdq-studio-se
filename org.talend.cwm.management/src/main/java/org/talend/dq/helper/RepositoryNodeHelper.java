@@ -2960,6 +2960,25 @@ public final class RepositoryNodeHelper {
     }
 
     /**
+     * 
+     * find the nearest system folder node by the given node(.eg.,give an AnalysisRepNode,will find the root node
+     * AnalysisFolderNode).
+     * 
+     * @param node
+     * @return
+     */
+    public static RepositoryNode findNearestSystemFolderNode(RepositoryNode node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.getType() == ENodeType.SYSTEM_FOLDER) {
+            return node;
+        }
+        return findNearestSystemFolderNode(node.getParent());
+
+    }
+
+    /**
      * get the IFile according to the RepositoryNode.
      * 
      * @param node

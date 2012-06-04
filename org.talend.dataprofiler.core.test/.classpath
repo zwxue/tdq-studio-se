@@ -3,7 +3,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/powermock-classloading-base-1.4.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/powermock-classloading-objenesis-1.4.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/powermock-classloading-xstream-1.4.11.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/powermock-easymock-1.4.11-full.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/powermock-mockito-1.4.11-full.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/powermock-module-junit4-rule-1.4.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/powermock-module-junit4-rule-agent-1.4.11.jar"/>

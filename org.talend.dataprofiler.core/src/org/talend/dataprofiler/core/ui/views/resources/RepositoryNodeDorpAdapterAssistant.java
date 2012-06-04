@@ -1069,7 +1069,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param targetNode
      * @param basePath
      */
-    private void moveObject(IRepositoryViewObject objectToMove, IRepositoryNode sourceNode, IRepositoryNode targetNode,
+    public void moveObject(IRepositoryViewObject objectToMove, IRepositoryNode sourceNode, IRepositoryNode targetNode,
             IPath basePath) {
         // IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
         IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
