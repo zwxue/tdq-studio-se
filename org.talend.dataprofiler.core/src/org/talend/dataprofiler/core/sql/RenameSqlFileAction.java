@@ -52,8 +52,10 @@ import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
@@ -105,14 +107,22 @@ public class RenameSqlFileAction extends Action {
     public RenameSqlFileAction(RepositoryNode node) {
         setText(DefaultMessagesImpl.getString("RenameSqlFileAction.renameSQLFile")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
-        filePath = WorkbenchUtils.getFilePath(node);
-        parentNode = node.getParent();
-        sourceFiletem = (TDQSourceFileItem) node.getObject().getProperty().getItem();
+        this.filePath = WorkbenchUtils.getFilePath(node);
+        this.parentNode = node.getParent();
+        this.sourceFiletem = (TDQSourceFileItem) node.getObject().getProperty().getItem();
         this.node = node;
     }
 
     @Override
     public void run() {
+        // ADD xqliu 2012-05-24 TDQ-4831
+        if (this.node != null) {
+            if (WorkspaceResourceHelper.sourceFileHasBeenOpened(this.node)) {
+                MessageUI.openWarning(DefaultMessagesImpl.getString("SourceFileAction.sourceFileOpening", this.node.getLabel())); //$NON-NLS-1$
+                return;
+            }
+        }
+        // ~ TDQ-4831
         RenameDialog dialog = new RenameDialog(Display.getDefault().getActiveShell());
         existNames = new ArrayList<String>();
         getExistNames(parentNode, existNames);
@@ -131,9 +141,7 @@ public class RenameSqlFileAction extends Action {
             } catch (BusinessException e) {
                 log.error(e);
             }
-
         }
-
     }
 
     private void moveSourceFile(Project project, String newFolderPath) throws PersistenceException, BusinessException {
@@ -149,6 +157,7 @@ public class RenameSqlFileAction extends Action {
     }
 
     private void renameSourceFile(Project project) throws PersistenceException {
+        CorePlugin.getDefault().closeEditorIfOpened(sourceFiletem);
         Property property = sourceFiletem.getProperty();
         property.setDisplayName(newName);
         property.setLabel(newName);

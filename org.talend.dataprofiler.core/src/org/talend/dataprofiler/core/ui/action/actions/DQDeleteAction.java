@@ -36,8 +36,10 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
@@ -45,12 +47,17 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.dq.nodes.JrxmlTempSubFolderNode;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
+import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteAction;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -109,6 +116,13 @@ public class DQDeleteAction extends DeleteAction {
         if (deleteElements.length == 0) {
             return;
         }
+        // ADD xqliu 2012-05-24 TDQ-4831
+        if (forbiddenDeleteJrxmlFileFolder(deleteElements)) {
+            return;
+        }
+        // remove the source file nodes which have been opened the editor
+        deleteElements = checkSourceFilesEditorOpening(deleteElements);
+        // ~ TDQ-4831
         for (Object obj : deleteElements) {
             if (obj instanceof RepositoryNode) {
                 selectedNodes.add((RepositoryNode) obj);
@@ -407,5 +421,63 @@ public class DQDeleteAction extends DeleteAction {
 
     public void setCurrentNode(RepositoryNode currentNode) {
         this.currentNode = currentNode;
+    }
+
+    /**
+     * DOC xqliu Comment method "checkSourceFilesEditorOpening".
+     * 
+     * @param deleteElements
+     * @return
+     */
+    private Object[] checkSourceFilesEditorOpening(Object[] deleteElements) {
+        List list = new ArrayList();
+        boolean opened = false;
+        String openSourceFileNames = ""; //$NON-NLS-1$
+        for (Object obj : deleteElements) {
+            if (obj instanceof SourceFileRepNode) {
+                SourceFileRepNode node = (SourceFileRepNode) obj;
+                ReturnCode rc = WorkspaceResourceHelper.checkSourceFileNodeOpening(node);
+                if (rc.isOk()) {
+                    opened = rc.isOk();
+                    openSourceFileNames += rc.getMessage();
+                } else {
+                    list.add(obj);
+                }
+            } else if (obj instanceof SourceFileSubFolderNode) {
+                SourceFileSubFolderNode node = (SourceFileSubFolderNode) obj;
+                ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(node);
+                if (rc.isOk()) {
+                    opened = rc.isOk();
+                    openSourceFileNames += rc.getMessage();
+                } else {
+                    list.add(obj);
+                }
+            } else {
+                list.add(obj);
+            }
+        }
+        if (opened) {
+            WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(openSourceFileNames);
+        }
+        return list.toArray();
+    }
+
+    /**
+     * DOC xqliu Comment method "forbiddenDeleteJrxmlFileFolder".
+     * 
+     * @param deleteElements
+     */
+    private boolean forbiddenDeleteJrxmlFileFolder(Object[] deleteElements) {
+        boolean includeJrxml = false;
+        for (Object obj : deleteElements) {
+            if (obj instanceof JrxmlTempleteRepNode || obj instanceof JrxmlTempSubFolderNode) {
+                includeJrxml = true;
+                break;
+            }
+        }
+        if (includeJrxml) {
+            MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
+        }
+        return includeJrxml;
     }
 }
