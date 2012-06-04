@@ -84,7 +84,7 @@ public class CreateSqlFileWizard extends Wizard {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
         property.setStatusCode(PluginConstant.EMPTY_STRING);
-        property.setLabel(parameter.getFileName());
+        property.setLabel(WorkspaceUtils.normalize(parameter.getFileName()));
 
         TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
                 .createTDQSourceFileItem();
@@ -95,7 +95,7 @@ public class CreateSqlFileWizard extends Wizard {
         ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
         byteArray.setInnerContent(PluginConstant.EMPTY_STRING.getBytes());
         sourceFileItem.setContent(byteArray);
-        
+
         IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
         try {
             property.setId(repositoryFactory.getNextId());
@@ -117,7 +117,7 @@ public class CreateSqlFileWizard extends Wizard {
      */
     private File getCreatedSqlFile(TDQSourceFileItem sourceFileItem, IPath path) {
         return ResourceManager.getSourceFileFolder().getRawLocation().append(path)
-                .append(sourceFileItem.getName() + "_0.1." + sourceFileItem.getExtension()).toFile(); //$NON-NLS-1$
+                .append(WorkspaceUtils.normalize(sourceFileItem.getName()) + "_0.1." + sourceFileItem.getExtension()).toFile(); //$NON-NLS-1$
     }
 
     /**

@@ -568,6 +568,7 @@ public final class PropertyHelper {
         if (newName == null || objectType == null || oldName != null && newName.equals(oldName)) {
             return false;
         }
+        newName = WorkspaceUtils.normalize(newName);
         try {
             List<IRepositoryViewObject> existObjects = ProxyRepositoryFactory.getInstance().getAll(objectType, true, false);
             if (existObjects != null) {

@@ -45,7 +45,6 @@ import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -402,7 +401,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         Property property = getProperty();
 
         if (property != null) {
-            String name = property.getLabel();
+            // MDO qionlgi 2012-5-30 TDQ-5078 the ModelElement name could contain special chars.
+            String name = currentModelElement.getName();
+            if (name == null || PluginConstant.EMPTY_STRING.equals(name)) {
+                name = property.getLabel();
+            }
+
             String purpose = property.getPurpose();
             String description = property.getDescription();
             String author = property.getAuthor().getLogin();
@@ -453,10 +457,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             nameText.setText(currentModelElement.getName());
             nameText.setFocus();
         } else {
-            // MOD gdbu 2011-4-8 bug : 19976
-            nameText.setText(WorkspaceUtils.normalize(nameText.getText()));
-            currentModelElement.setName(WorkspaceUtils.normalize(nameText.getText()));
-            // ~19976
+            // MDO qionlgi 2012-5-30 TDQ-5078 make the name in editor same as DQRepository View.
+            currentModelElement.setName(nameText.getText());
         }
 
         MetadataHelper.setPurpose(purposeText.getText(), currentModelElement);
@@ -469,7 +471,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // Property property = PropertyHelper.getProperty(currentModelElement);
         Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
         if (property != null) {
-            property.setLabel(nameText.getText());
+            property.setLabel(WorkspaceUtils.normalize(nameText.getText()));
             property.setPurpose(purposeText.getText());
             property.setDescription(descriptionText.getText());
             property.setStatusCode(statusCombo.getText());
@@ -645,8 +647,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // MOD qiongli 2012-2-14 TDQ-4539.compare the name with all items of the specified type.
         boolean exist = PropertyHelper.existDuplicateName(elementName, repositoryViewObject.getLabel(), objectType);
         if (exist) {
-            this.nameText.setText(repositoryViewObject.getLabel());
-            ret.setReturnCode(UIMessages.MSG_EXIST_SAME_NAME, false);
+            ret.setReturnCode(
+                    DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", repositoryViewObject.getLabel()),
+                    false);
             return ret;
         }
 

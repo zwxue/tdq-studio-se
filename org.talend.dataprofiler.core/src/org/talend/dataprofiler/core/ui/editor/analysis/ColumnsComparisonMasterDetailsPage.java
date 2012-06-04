@@ -286,7 +286,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
             }
         } else {
-        	deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysis);
         }
         // rowCountIndicator.setAnalyzedElement(value)
         // rowMatchingIndicatorA
@@ -310,7 +310,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
             // ADD gdbu 2011-3-3 bug 19179
-            tdqAnalysisItem.getProperty().setLabel(analysis.getName());
             this.nameText.setText(analysis.getName());
             // ~
 

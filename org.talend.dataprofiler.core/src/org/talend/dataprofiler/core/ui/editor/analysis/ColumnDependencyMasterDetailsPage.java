@@ -288,7 +288,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
             // ADD gdbu 2011-3-3 bug 19179
-            tdqAnalysisItem.getProperty().setLabel(analysis.getName());
             this.nameText.setText(analysis.getName());
             // ~
 

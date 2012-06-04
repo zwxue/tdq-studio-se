@@ -698,7 +698,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
             // ADD gdbu 2011-3-2 bug 19179
-            tdqAnalysisItem.getProperty().setLabel(analysis.getName());
             this.nameText.setText(analysis.getName());
             // ~
 

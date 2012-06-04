@@ -648,7 +648,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 analysisHandler.addIndicator(tableIndicator.getColumnSet(), tableIndicator.getIndicators());
             }
         } else {
-        	deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysis);
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 
@@ -663,7 +663,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
             // ADD gdbu 2011-3-3 bug 19179
-            tdqAnalysisItem.getProperty().setLabel(analysisHandler.getName());
             this.nameText.setText(analysisHandler.getName());
             // ~
 

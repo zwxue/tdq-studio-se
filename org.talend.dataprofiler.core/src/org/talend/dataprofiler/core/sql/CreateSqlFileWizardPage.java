@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -203,7 +204,7 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
      * @return
      */
     private boolean checkDuplicateName() {
-        String elementName = this.nameText.getText();
+        String elementName = WorkspaceUtils.normalize(this.nameText.getText());
 
         if (elementName == null || elementName.trim().equals(PluginConstant.EMPTY_STRING)) {
             updateStatus(IStatus.ERROR, UIMessages.MSG_EMPTY_FIELD);
@@ -222,7 +223,8 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
         if (existNamesViewObjects != null) {
             for (IRepositoryViewObject object : existNamesViewObjects) {
                 if (elementName.equalsIgnoreCase(object.getLabel())) {
-                    updateStatus(IStatus.ERROR, UIMessages.MSG_EXIST_SAME_NAME);
+                    updateStatus(IStatus.ERROR,
+                            DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", object.getLabel()));
                     return false;
                 }
             }

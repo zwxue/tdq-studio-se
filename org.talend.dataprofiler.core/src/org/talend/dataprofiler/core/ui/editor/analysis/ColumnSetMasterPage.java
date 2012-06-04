@@ -874,7 +874,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             // ~
         } else {
-        	deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysis);
         }
 
         // ADD xqliu 2010-07-19 bug 14014
@@ -888,7 +888,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
 
             // ADD gdbu 2011-3-2 bug 19179
-            tdqAnalysisItem.getProperty().setLabel(columnSetAnalysisHandler.getName());
             this.nameText.setText(columnSetAnalysisHandler.getName());
             // ~
 
