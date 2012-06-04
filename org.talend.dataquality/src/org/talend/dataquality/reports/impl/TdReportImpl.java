@@ -438,16 +438,17 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @generated NOT addAnalysis(Analysis analysis)
      */
     public boolean addAnalysis(Analysis analysis) {
-        boolean added = this.getComponent().add(analysis);
-        if (added) {
+        // MOD yyin 20120530 TDQ-5050
+        // boolean added = this.getComponent().add(analysis);
+        // if (added) {
             AnalysisMap createAnalysisMap = ReportsFactory.eINSTANCE.createAnalysisMap();
             createAnalysisMap.setAnalysis(analysis);
             createAnalysisMap.setMustRefresh(true); // refresh by default
             // MOD mzhao 2009-02-16 Basic type by default.
             createAnalysisMap.setReportType(ReportType.getReportType(analysis, ReportHelper.BASIC).getLabel());
             this.getAnalysisMap().add(createAnalysisMap);
-        }
-        return added;
+        // }
+        return true;
     }
 
     /**
@@ -466,7 +467,8 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 break;
             }
         }
-        return this.getComponent().remove(analysis) && removedFromMap;
+        // MOD yyin 20120530 TDQ-5050
+        return removedFromMap;
     }
 
     /**
@@ -489,15 +491,13 @@ public class TdReportImpl extends ReportImpl implements TdReport {
             }
         }
         if (!ok) {
-            boolean added = this.getComponent().add(analysis);
-            if (added) {
+            // MOD yyin 20120530 TDQ-5050
                 AnalysisMap createAnalysisMap = ReportsFactory.eINSTANCE.createAnalysisMap();
                 createAnalysisMap.setAnalysis(analysis);
                 createAnalysisMap.setMustRefresh(mustRefresh);
                 createAnalysisMap.setReportType(ReportType.getReportType(analysis, ReportHelper.BASIC).getLabel());
                 this.getAnalysisMap().add(createAnalysisMap);
                 ok = true;
-            }
         }
         return ok;
     }

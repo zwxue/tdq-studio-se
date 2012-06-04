@@ -39,7 +39,6 @@ import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
-import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -358,13 +357,14 @@ public final class ReportHelper {
      */
     public static List<Analysis> getAnalyses(Report report) {
         List<Analysis> analyses = new ArrayList<Analysis>();
-        EList<RenderedObject> components = report.getComponent();
-        for (RenderedObject renderedObject : components) {
-            Analysis analysis = DataqualitySwitchHelper.ANALYSIS_SWITCH.doSwitch(renderedObject);
+        // MOD yyin 20120530 TDQ-5050
+        for (AnalysisMap anaMap : ((TdReport) report).getAnalysisMap()) {
+            Analysis analysis = anaMap.getAnalysis();
             if (analysis != null) {
                 analyses.add(analysis);
             }
         }
+        
         return analyses;
     }
 
