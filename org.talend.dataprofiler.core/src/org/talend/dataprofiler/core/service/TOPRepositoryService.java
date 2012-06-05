@@ -39,6 +39,7 @@ import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
@@ -85,6 +86,7 @@ import org.talend.resource.ResourceManager;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -187,14 +189,16 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         // MOD klliu 2011-04-28 bug 20204 removing connection is synced to the connection view of SQL explore
         Item item = children.getObject().getProperty().getItem();
         // MOD mzhao filter the connections which is not a type of database.
-        if (item != null && item instanceof ConnectionItem
-                && ((ConnectionItem) item).getConnection() instanceof DatabaseConnection) {
+        if (item != null && item instanceof ConnectionItem) {
             Connection connection = ((ConnectionItem) item).getConnection();
-            List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(connection);
-            if (!(dependencyClients == null || dependencyClients.isEmpty())) {
-                hasDependencyItem = false;
-            } else {
-                CWMPlugin.getDefault().removeAliasInSQLExplorer(connection);
+            if (connection instanceof DatabaseConnection || connection instanceof DelimitedFileConnection
+                    || connection instanceof MDMConnection) {
+                List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(connection);
+                if (!(dependencyClients == null || dependencyClients.isEmpty())) {
+                    hasDependencyItem = false;
+                } else {
+                    CWMPlugin.getDefault().removeAliasInSQLExplorer(connection);
+                }
             }
         }
 
