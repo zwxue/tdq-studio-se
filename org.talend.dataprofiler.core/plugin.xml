@@ -1449,6 +1449,12 @@
            name="Update DQRule Analysis Task"
            version="5.1.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateItemStatePathForPatternsUDIsTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateItemStatePathForPatternsUDIsTask"
+           name="Update ItemState Path For Patterns UDIs Task"
+           version="5.1.2">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
