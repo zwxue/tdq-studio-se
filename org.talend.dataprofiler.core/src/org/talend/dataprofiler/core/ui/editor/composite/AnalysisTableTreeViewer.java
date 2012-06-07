@@ -62,6 +62,8 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.DataProviderHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.dqrule.DQRuleUtilities;
@@ -105,6 +107,7 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -837,11 +840,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     public void setInput(Object[] objs) {
         List<DBTableRepNode> tableNodeList = RepositoryNodeHelper.getTableNodeList(objs);
         List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
-        // if (objs != null && objs.length != 0) {
-        // if (!(objs[0] instanceof NamedColumnSet)) {
-        // return;
-        // }
-        // }
+
         // MOD by zshen for 2011.06.13 add the support for the view.
         List<DBViewRepNode> viewNodeList = RepositoryNodeHelper.getViewNodeList(objs);
         if (tableNodeList.size() == 0 && viewNodeList.size() == 0) {
@@ -884,9 +883,18 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         }
 
         for (TableIndicator tableIndicator : tableIndicators) {
-            if (setList.contains(tableIndicator.getColumnSet())) {
+            // ADDED yyin 20120606 TDQ-5343
+            NamedColumnSet selectedTable = tableIndicator.getColumnSet();
+            DQRepositoryNode tableNode = null;
+            if (selectedTable instanceof TdTable) {
+                tableNode = RepositoryNodeHelper.recursiveFindTdTable(((TdTable) selectedTable));
+            } else if (selectedTable instanceof TdView) {
+                tableNode = RepositoryNodeHelper.recursiveFindTdView(((TdView) selectedTable));
+            }
+            // ~
+            if (setList.contains(tableNode)) {
                 tableIndicatorList.add(tableIndicator);
-                setList.remove(tableIndicator.getColumnSet());
+                setList.remove(tableNode);
             }
         }
         for (RepositoryNode set : setList) {
