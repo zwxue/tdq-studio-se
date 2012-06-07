@@ -42,6 +42,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -85,14 +86,17 @@ public final class ExportFactory {
 
                 PatternToExcelEnum[] values = PatternToExcelEnum.values();
                 String[] temp = new String[values.length];
+            	Map<PatternToExcelEnum, String> relatedValueMap = null;
 
                 for (int i = 0; i < patterns.length + 1; i++) {
-
+                    if (i != 0) {
+                    	relatedValueMap = getRelatedValueFromPattern(patterns[i - 1], folder);
+                    }
                     for (int j = 0; j < values.length; j++) {
                         if (i == 0) {
                             temp[j] = values[j].getLiteral();
                         } else {
-                            temp[j] = getRelatedValueFromPattern(patterns[i - 1], folder).get(values[j]);
+                            temp[j] = relatedValueMap.get(values[j]);
                         }
                     }
 
@@ -335,14 +339,17 @@ public final class ExportFactory {
 
         if (folder != null) {
             IFile file = ResourceFileMap.findCorrespondingFile(pattern);
-            URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
+            // MOD sizhaoliu 2012-5-28 TDQ-5481 
+            URI parentURI = ResourceManager.getPatternFolder().getLocationURI();
+            String relativePath = parentURI.relativize(file.getParent().getLocationURI()).toString();
+            relativePath = relativePath.substring(relativePath.indexOf('/') + 1); // remove Regex or SQL prefix
 
             // get the basic information
             patternMap.put(PatternToExcelEnum.Label, pattern.getName());
             patternMap.put(PatternToExcelEnum.Purpose, MetadataHelper.getPurpose(pattern));
             patternMap.put(PatternToExcelEnum.Description, MetadataHelper.getDescription(pattern));
             patternMap.put(PatternToExcelEnum.Author, MetadataHelper.getAuthor(pattern));
-            patternMap.put(PatternToExcelEnum.RelativePath, relativeURI.toString());
+            patternMap.put(PatternToExcelEnum.RelativePath, relativePath);
 
             for (PatternLanguageType languagetype : PatternLanguageType.values()) {
                 for (PatternComponent component : pattern.getComponents()) {

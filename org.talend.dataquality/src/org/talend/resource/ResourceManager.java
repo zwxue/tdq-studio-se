@@ -358,12 +358,12 @@ public final class ResourceManager {
     }
 
     /**
-     * DOC bZhou Comment method "isPatternRegex".
+     * DOC bZhou Comment method "isPatternRegexFolder".
      * 
      * @param resource
      * @return
      */
-    public static boolean isPatternRegex(IResource resource) {
+    public static boolean isPatternRegexFolder(IResource resource) {
         return isOneFolder(resource, EResourceConstant.PATTERN_REGEX);
     }
 
