@@ -286,20 +286,10 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
             // MOD zshen 2010.06.10 for feature 12842.
             // Case of pk
             PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
-            if (primaryKey != null) {
-                TableHelper.addPrimaryKey((TdTable) columnSet, primaryKey);
-                PrimaryKey newPrimaryKey = TableHelper.addPrimaryKey((TdTable) columnSet, primaryKey);
-                columnSetSwitch.getUniqueKey().remove(primaryKey);
-                columnSetSwitch.getUniqueKey().add(newPrimaryKey);
-
-            }
+            TableHelper.addPrimaryKey((TdTable) columnSet, columnSetSwitch);
             Set<ForeignKey> foreignKeySet = ColumnHelper.getForeignKey(columnSetSwitch);
             for (ForeignKey foreignKey : foreignKeySet) {
-                if (foreignKey != null) {
-                    ForeignKey newForeignKey = TableHelper.addForeignKey((TdTable) columnSet, foreignKey);
-                    columnSetSwitch.getKeyRelationship().remove(foreignKey);
-                    columnSetSwitch.getKeyRelationship().add(newForeignKey);
-                }
+            	TableHelper.addForeignKey((TdTable) columnSet, foreignKey, columnSetSwitch); 
             }
 
             return;
