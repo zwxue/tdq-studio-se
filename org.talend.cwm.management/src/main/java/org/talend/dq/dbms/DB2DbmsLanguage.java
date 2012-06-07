@@ -96,4 +96,10 @@ public class DB2DbmsLanguage extends DbmsLanguage {
     public String trim(String colName) {
         return " LTRIM(RTRIM(" + colName + ")) ";//$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    @Override
+    public String isNotBlank(String colName) {
+        // ADD qiongli 2012-6-7 TDQ-5559
+        return " LENGTH(" + trim(colName) + ")!=0";//$NON-NLS-1$ //$NON-NLS-2$
+    }
 }
