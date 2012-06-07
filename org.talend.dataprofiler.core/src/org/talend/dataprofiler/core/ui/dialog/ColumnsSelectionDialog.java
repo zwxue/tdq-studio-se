@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.dialog;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
@@ -154,13 +155,33 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 ColumnSelectionViewer columnViewer = (ColumnSelectionViewer) event.getSource();
                 TreePath treePath = new TreePath(new Object[] { event.getElement() });
                 columnViewer.setSelection(new TreeSelection(treePath));
-                getTreeViewer().setSubtreeChecked(event.getElement(), event.getChecked());
                 setOutput(event.getElement());
                 RepositoryNode selectedNode = (RepositoryNode) event.getElement();
                 if (selectedNode instanceof DBTableRepNode || selectedNode instanceof DBViewRepNode
                         || selectedNode instanceof DFTableRepNode || selectedNode instanceof MDMSchemaRepNode
                         || selectedNode instanceof MDMXmlElementRepNode) {
                     handleTreeElementsChecked(selectedNode, event.getChecked());
+                } else {
+                    checkChildrenElements(selectedNode, event.getChecked());
+                }
+                getTreeViewer().setSubtreeChecked(event.getElement(), event.getChecked());
+            }
+
+            private void checkChildrenElements(RepositoryNode repNode, Boolean checkedFlag) {
+                Set<?> keySet = modelElementCheckedMap.keySet();
+
+                RepositoryNode[] repNodeArray = (RepositoryNode[]) modelElementCheckedMap.keySet().toArray(
+                        new RepositoryNode[keySet.size()]);
+                for (RepositoryNode reposNode : repNodeArray) {
+                    RepositoryNode parentNode = reposNode.getParent();
+                    while (parentNode != null) {
+                        if (repNode.equals(parentNode)) {
+                            handleTreeElementsChecked((RepositoryNode) reposNode, checkedFlag);
+                            break;
+                        } else {
+                            parentNode = parentNode.getParent();
+                        }
+                    }
                 }
             }
         });
