@@ -187,9 +187,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         boolean hasDependencyItem = true;
         // MOD klliu 2011-04-28 bug 20204 removing connection is synced to the connection view of SQL explore
         Item item = children.getObject().getProperty().getItem();
-        Object ob = ((ConnectionItem) item).getConnection();
         // MOD mzhao filter the connections which is not a type of database.
-        if (item != null && item instanceof ConnectionItem){
+        if (item != null && item instanceof ConnectionItem) {
             Connection connection = ((ConnectionItem) item).getConnection();
             // MOD yyin 20120525 TDQ-5359: add support for file &mdm connection
             if (connection instanceof DatabaseConnection || connection instanceof DelimitedFileConnection
