@@ -86,41 +86,41 @@ public final class ImportFactory {
     }
 
     /**
-     * DOC bZhou Comment method "doInport".
+     * DOC bZhou Comment method "doImport".
      * 
      * @param resourceType
      * @param importFile
      * @return
      */
-    public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile) {
-        return doInport(resourceType, importFile, null);
+    public static List<ReturnCode> doImport(EResourceConstant resourceType, File importFile) {
+        return doImport(resourceType, importFile, null);
     }
 
     /**
-     * DOC xqliu Comment method "doInport".
+     * DOC xqliu Comment method "doImport".
      * 
      * @param resourceType
      * @param importFile
      * @param importItemName
      * @return
      */
-    public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile, String importItemName) {
-        return doInport(resourceType, importFile, true, true, importItemName);
+    public static List<ReturnCode> doImport(EResourceConstant resourceType, File importFile, String importItemName) {
+        return doImport(resourceType, importFile, true, true, importItemName);
     }
 
     /**
-     * DOC bZhou Comment method "doInport".
+     * DOC bZhou Comment method "doImport".
      * 
      * @param category
      * @param importFile
      * @return
      */
-    public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename) {
-        return doInport(resourceType, importFile, skip, rename, null);
+    public static List<ReturnCode> doImport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename) {
+        return doImport(resourceType, importFile, skip, rename, null);
     }
 
     /**
-     * DOC xqliu Comment method "doInport".
+     * DOC xqliu Comment method "doImport".
      * 
      * @param resourceType
      * @param importFile
@@ -129,7 +129,7 @@ public final class ImportFactory {
      * @param importItemName
      * @return
      */
-    public static List<ReturnCode> doInport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename,
+    public static List<ReturnCode> doImport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename,
             String importItemName) {
         assert resourceType != null;
 
