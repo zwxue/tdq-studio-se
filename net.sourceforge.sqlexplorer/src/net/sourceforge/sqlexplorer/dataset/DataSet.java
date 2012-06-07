@@ -430,8 +430,14 @@ public class DataSet {
 	            return resultSet.getTime(columnIndex);
 	            
 	        default:
-	            // MOD yyi 2012-04-17 TDQ-5117:Change get string to get bytes for mess decode in tables.
-	             return null == resultSet.getBytes(columnIndex) ? null : new String(resultSet.getBytes(columnIndex));
+	        	//MOD by zshen 2012-06-07 can not support to chinese character on the sql Editor
+                // MOD yyi 2012-05-25 TDQ-5460 : Fix getString of JConnector(sybase).
+                try {
+                    return resultSet.getString(columnIndex);
+                } catch (SQLException e) {
+                    // MOD yyi 2012-04-17 TDQ-5176 : Change get string to get bytes for mess decode.
+                    return null == resultSet.getBytes(columnIndex) ? null : new String(resultSet.getBytes(columnIndex));
+                }
 	    }
     }
     
