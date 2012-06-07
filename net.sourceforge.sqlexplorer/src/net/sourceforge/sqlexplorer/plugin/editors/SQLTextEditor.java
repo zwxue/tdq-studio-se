@@ -111,6 +111,8 @@ public class SQLTextEditor extends TextEditor {
     // ADD xqliu 2010-03-23 feature 10675
     private static final String DEFAULT_FILE_EXTENSION = ".sql";
 
+    private static final String DEFAULT_VERSION_STRING = "_0.1";
+
     public SQLTextEditor(SQLEditor editor) {
         super();
         this.editor = editor;
@@ -250,8 +252,8 @@ public class SQLTextEditor extends TextEditor {
                     return;
                 } else {
                     IPath lseg = filePath.removeLastSegments(1);
-                    IPath append = lseg.append(inputDialog.getValue());
-                    file = workspace.getRoot().getFile(append);
+                    filePath = lseg.append(inputDialog.getValue());
+                    file = workspace.getRoot().getFile(filePath);
                 }
             }
             // ~10675
@@ -309,8 +311,7 @@ public class SQLTextEditor extends TextEditor {
      * @return
      */
     private boolean fileExist(IFile file) {
-        IPath filePath = file.getFullPath();
-        return file.exists() && SQLExplorerPlugin.isEditorSerialName(filePath.lastSegment());
+        return getCorrectPath(file).exists();
     }
 
     /**
@@ -322,11 +323,12 @@ public class SQLTextEditor extends TextEditor {
      * @throws CoreException
      */
     private IFile createIFile(IFile file, String content) throws CoreException {
-        // MOD qiongli 2011-4-21.bug 20205 .should create sql file and property.use extension of service mechenism.
+        // MOD qiongli 2011-4-21.bug 20205 .should create sql file and property.use extension of service mechanism.
         try {
             if (GlobalServiceRegister.getDefault().isServiceRegistered(ISaveAsService.class)) {
                 ISaveAsService service = (ISaveAsService) GlobalServiceRegister.getDefault().getService(ISaveAsService.class);
-                String fName = StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION);
+                String fName = StringUtils.removeEnd(StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION),
+                        DEFAULT_VERSION_STRING);
                 IWorkspace workspace = ResourcesPlugin.getWorkspace();
                 IPath rootPath = new Path("TDQ_Libraries/Source Files");
                 Item item = service.createFile(content,
@@ -347,6 +349,23 @@ public class SQLTextEditor extends TextEditor {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return file;
+    }
+
+    private IFile getCorrectPath(IFile file) {
+        String fName = StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION);
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IPath rootPath = new Path("TDQ_Libraries/Source Files");
+        IPath location = file.getLocation();
+        if (location != null) {
+
+            location = location.removeLastSegments(1);
+            StringBuffer strb = new StringBuffer();
+            strb.append(location.toString());
+            strb.append(Path.SEPARATOR).append(fName).append(DEFAULT_VERSION_STRING).append(DEFAULT_FILE_EXTENSION);
+            location = Path.fromOSString(strb.toString());
+            file = workspace.getRoot().getFileForLocation(location);
         }
         return file;
     }
