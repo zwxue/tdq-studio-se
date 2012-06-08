@@ -188,9 +188,13 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
             GraphBuilder gBuilder = new GraphBuilder();
             gBuilder.setTotalWeight(columnSetMultiIndicator.getCount());
             List<Object[]> listRows = columnSetMultiIndicator.getListRows();
-            JungGraphGenerator generator = new JungGraphGenerator(gBuilder, listRows);
-            // MOD yyi 2009-09-09 feature 8834
-            generator.generate(chartComposite, false, false);
+            // MOD msjian TDQ-4781 2012-6-8: make sure exist data
+            if (listRows != null && listRows.size() > 0) {
+                JungGraphGenerator generator = new JungGraphGenerator(gBuilder, listRows);
+                // MOD yyi 2009-09-09 feature 8834
+                generator.generate(chartComposite, false, false);
+            }
+            // TDQ-4781~
         } else {
             createBubbleOrGanttChart(form, chartComposite, columnSetMultiIndicator);
         }
