@@ -17,15 +17,12 @@ import junit.framework.TestSuite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProviderTest;
-import org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProviderTest;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { ResourceViewContentProviderTest.class, ResourceViewLabelProviderTest.class })
+// @Suite.SuiteClasses( { ResourceViewContentProviderTest.class, ResourceViewLabelProviderTest.class })
 public class DQRepositoryViewTestSuite {
 
     public static Test suite() {

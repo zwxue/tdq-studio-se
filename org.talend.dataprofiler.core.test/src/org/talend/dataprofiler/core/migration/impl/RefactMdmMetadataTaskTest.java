@@ -24,12 +24,13 @@ public class RefactMdmMetadataTaskTest {
      */
     @Test
     public void testDoExecute() {
-        try {
-            RefactMdmMetadataTask refactMdmMetadataTask = new RefactMdmMetadataTask();
-            refactMdmMetadataTask.doExecute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // FIXME need to implement this method with mock
+        // try {
+        // RefactMdmMetadataTask refactMdmMetadataTask = new RefactMdmMetadataTask();
+        // refactMdmMetadataTask.doExecute();
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
     }
 
 }

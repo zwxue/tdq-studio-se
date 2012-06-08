@@ -23,9 +23,7 @@ import org.powermock.api.mockito.PowerMockito;
 /**
  * DOC zshen class global comment. Detailled comment need to run it with a top application
  */
-
 public class ExportWizardPageTest {
-
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.imex.ExportWizardPage#updateBasePath()}.
@@ -45,7 +43,6 @@ public class ExportWizardPageTest {
 
         PowerMockito.doNothing().when(mockExportWizardPage).textModified(Mockito.anyString());
 
-        
         String updateBasePath1 = mockExportWizardPage.updateBasePath();
         String updateBasePath2 = mockExportWizardPage.updateBasePath();
         Mockito.verify(mockExportWizardPage, Mockito.times(2)).isDirState();

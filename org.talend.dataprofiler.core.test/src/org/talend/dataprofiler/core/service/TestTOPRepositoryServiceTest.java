@@ -36,16 +36,18 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ EObjectHelper.class })
 public class TestTOPRepositoryServiceTest extends TestCase {
 
     private ITDQRepositoryService tdqRepService;
-    /* (non-Jsdoc)
+
+    /*
+     * (non-Jsdoc)
+     * 
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
@@ -54,7 +56,9 @@ public class TestTOPRepositoryServiceTest extends TestCase {
                                                    // GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
@@ -62,8 +66,11 @@ public class TestTOPRepositoryServiceTest extends TestCase {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.service.TOPRepositoryService#removeAliasInSQLExplorer(org.talend.repository.model.IRepositoryNode)}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.service.TOPRepositoryService#removeAliasInSQLExplorer(org.talend.repository.model.IRepositoryNode)}
+     * .
      */
+     @Test
     public void testRemoveAliasInSQLExplorer() {
         IRepositoryNode child = mock(IRepositoryNode.class);
         IRepositoryViewObject obj = mock(IRepositoryViewObject.class);
@@ -77,7 +84,7 @@ public class TestTOPRepositoryServiceTest extends TestCase {
         DelimitedFileConnection dfile = mock(DelimitedFileConnection.class);
         DatabaseConnection dbc = mock(DatabaseConnection.class);
         when(item.getConnection()).thenReturn(dbc).thenReturn(dfile).thenReturn(mdm);
-        
+
         List<ModelElement> dependencyClients = new ArrayList<ModelElement>();
         ModelElement m1 = mock(ModelElement.class);
         dependencyClients.add(m1);
@@ -90,5 +97,4 @@ public class TestTOPRepositoryServiceTest extends TestCase {
         Assert.assertFalse(tdqRepService.removeAliasInSQLExplorer(child));
         Assert.assertFalse(tdqRepService.removeAliasInSQLExplorer(child));
     }
-
 }

@@ -9,5 +9,7 @@
 	<classpathentry kind="lib" path="lib/powermock-mockito-1.4.11-full.jar"/>
 	<classpathentry kind="lib" path="lib/powermock-module-junit4-rule-1.4.11.jar"/>
 	<classpathentry kind="lib" path="lib/powermock-module-junit4-rule-agent-1.4.11.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-all-1.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.15.0-GA.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

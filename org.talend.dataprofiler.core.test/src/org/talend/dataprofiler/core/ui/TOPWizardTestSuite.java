@@ -17,14 +17,12 @@ import junit.framework.TestSuite;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.talend.dataprofiler.core.ui.wizard.analysis.CreateNewAnalysisWizardTest;
-import org.talend.dataprofiler.core.ui.wizard.database.DatabaseConnectionWizardTest;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses( { CreateNewAnalysisWizardTest.class, DatabaseConnectionWizardTest.class })
 /**
- * DOC yyi  class global comment. Detailled comment
+ * DOC yyi class global comment. Detailled comment
  */
+@RunWith(Suite.class)
+// @Suite.SuiteClasses( { CreateNewAnalysisWizardTest.class, DatabaseConnectionWizardTest.class })
 public class TOPWizardTestSuite {
 
     public static Test suite() {

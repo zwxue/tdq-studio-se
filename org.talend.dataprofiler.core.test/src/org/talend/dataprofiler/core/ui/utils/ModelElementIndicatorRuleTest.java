@@ -29,9 +29,8 @@ import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class ModelElementIndicatorRuleTest {
 
@@ -57,7 +56,9 @@ public class ModelElementIndicatorRuleTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule#match(org.talend.dq.nodes.indicator.IIndicatorNode, org.talend.dataprofiler.core.model.ModelElementIndicator, org.talend.dataquality.analysis.ExecutionLanguage)}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule#match(org.talend.dq.nodes.indicator.IIndicatorNode, org.talend.dataprofiler.core.model.ModelElementIndicator, org.talend.dataquality.analysis.ExecutionLanguage)}
+     * .
      */
     @Test
     public void testMatch() {
@@ -108,7 +109,5 @@ public class ModelElementIndicatorRuleTest {
                 ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.YearLowFrequencyIndicatorEnum, me,
                 ExecutionLanguage.JAVA));
-
     }
-
 }

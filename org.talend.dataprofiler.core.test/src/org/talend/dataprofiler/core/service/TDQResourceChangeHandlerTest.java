@@ -23,7 +23,4 @@ public class TDQResourceChangeHandlerTest {
 
     private List<IRepositoryViewObject> repsList = null;
 
-
-
-
 }
