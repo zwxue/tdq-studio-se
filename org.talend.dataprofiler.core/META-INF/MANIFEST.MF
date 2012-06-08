@@ -111,7 +111,8 @@ Export-Package: org.eclipse.nebula.jface.gridviewer,
  org.talend.dataprofiler.core.ui.wizard.parserrule,
  org.talend.dataprofiler.core.ui.wizard.urlsetup
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Eclipse-RegisterBuddy: org.apache.log4j
+Eclipse-RegisterBuddy: org.apache.log4j,
+ org.mockito
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar,
