@@ -53,10 +53,22 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
             return Double.NaN;
         }
         // ~
+
         if (sum == null) {
             throw new RuntimeException("Invalid sum in mean computation!!");
         }
-        return sum / c;
+        // TDQ-4936 ADD mzhao TDQ-4936 mean count should not include null count.
+        Long nullCount = getNullCount();
+        if (nullCount == null) {
+            nullCount = 0L;
+        }
+
+        long nonNULLCount = c.longValue() - nullCount.longValue();
+        if (nonNULLCount == 0) {
+            return Double.NaN;
+        }
+        return sum / nonNULLCount;
+        // ~TDQ-4936
     }
 
     /*
@@ -83,6 +95,7 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
         boolean handled = super.handle(data);
         return handled;
     }
+
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -119,6 +132,9 @@ public class MeanIndicatorImpl extends SumIndicatorImpl implements MeanIndicator
 
         this.setSumStr(s);
         this.setCount(Long.valueOf(c));
+        // TDQ-4936 ADD mzhao TDQ-4936 mean count should not include null count.
+        this.setNullCount(Long.valueOf(0));
+        // TDQ-4936 ADD mzhao TDQ-4936 mean count should not include null count.
         return true;
     }
 
