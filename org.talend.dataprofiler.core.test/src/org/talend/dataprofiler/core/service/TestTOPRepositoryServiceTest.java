@@ -21,6 +21,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.junit.Assert;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -70,7 +71,7 @@ public class TestTOPRepositoryServiceTest extends TestCase {
      * {@link org.talend.dataprofiler.core.service.TOPRepositoryService#removeAliasInSQLExplorer(org.talend.repository.model.IRepositoryNode)}
      * .
      */
-     @Test
+    @Test
     public void testRemoveAliasInSQLExplorer() {
         IRepositoryNode child = mock(IRepositoryNode.class);
         IRepositoryViewObject obj = mock(IRepositoryViewObject.class);
