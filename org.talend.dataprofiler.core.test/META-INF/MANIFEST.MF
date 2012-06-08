@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.dataprofiler.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit4,
- org.mockito
+Require-Bundle: org.mockito
 Bundle-ClassPath: .
 Export-Package: org.talend.dataprofiler.core.helper,
  org.talend.dataprofiler.core.migration.impl,
