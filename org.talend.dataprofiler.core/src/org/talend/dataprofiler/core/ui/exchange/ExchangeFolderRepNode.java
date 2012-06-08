@@ -16,9 +16,13 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.ecos.jobs.ComponentSearcher;
 import org.talend.dataprofiler.ecos.model.IEcosCategory;
 import org.talend.dq.nodes.DQRepositoryNode;
@@ -46,21 +50,29 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         Object[] result = null;
+        // MOD msjian 2012-5-30 TDQ-4997 :no information about Exchange time out
+        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+        String title = DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailedTitle"); //$NON-NLS-1$
         try {
             if (timeoutFlag) {
                 String version = CorePlugin.getDefault().getProductVersion().toString();
                 result = ComponentSearcher.getAvailableCategory(version).toArray();
             } else {
-                result = new String[] { "Connection failed: time out" };//$NON-NLS-1$ 
+                MessageDialogWithToggle.openInformation(shell, title,
+                        DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailed1")); //$NON-NLS-1$
+                result = new String[] {};
             }
         } catch (SocketTimeoutException e) {
             timeoutFlag = false;
-            result = new String[] { "Connection failed:" + e.getMessage() };//$NON-NLS-1$ 
-
+            MessageDialogWithToggle.openInformation(shell, title, e.getMessage());
+            result = new String[] {};
         } catch (Exception e) {
             timeoutFlag = false;
-            result = new String[] { e.getMessage() };
+            MessageDialogWithToggle.openInformation(shell, title,
+                    DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailed2")); //$NON-NLS-1$
+            result = new String[] {};
         }
+        // TDQ-4997~
         // MOD gdbu 2011-6-29 bug : 22204
         return filterResultsIfAny(buildRepositoryNode(result));
         // ~22204
