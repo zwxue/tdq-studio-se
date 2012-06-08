@@ -238,10 +238,13 @@ public class DuplicateAction extends Action {
             }
             for (IRepositoryNode node : librariesFolderNode.getChildren()) {
                 Item sourceIitem = node.getObject().getProperty().getItem();
-                if (ResourceHelper.getUUID(sourceIitem).equals(uuid)) {
+                // MOD msjian TDQ-4830 2012-5-25: fixed NPE
+                String uuid2 = ResourceHelper.getUUID(sourceIitem);
+                if (uuid2 != null && uuid2.equals(uuid)) { 
                     recursiveFind = (RepositoryNode) node;
                     break;
                 }
+				// TDQ-4830~ 
             }
         }
         return recursiveFind;
