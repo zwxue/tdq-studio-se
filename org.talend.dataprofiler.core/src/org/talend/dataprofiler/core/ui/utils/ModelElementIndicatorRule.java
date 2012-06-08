@@ -14,7 +14,9 @@ package org.talend.dataprofiler.core.ui.utils;
 
 import java.sql.Types;
 
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -74,7 +76,12 @@ public final class ModelElementIndicatorRule {
         }
         // MOD qiongli 2012-4-25 TDQ-2699
         if (javaType == Types.LONGVARCHAR && ExecutionLanguage.SQL.equals(language)) {
-            return enableLongVarchar(indicatorType, dataminingType, me);
+            if (me instanceof TdColumn) {
+                Connection con = ConnectionHelper.getTdDataProvider((TdColumn) me);
+                if (con != null && ConnectionHelper.isDb2(con)) {
+                    return enableLongVarchar(indicatorType, dataminingType, me);
+                }
+            }
         }
 
         switch (indicatorType) {
@@ -240,11 +247,17 @@ public final class ModelElementIndicatorRule {
             return true;
         case TextIndicatorEnum:
         case MinLengthWithBlankIndicatorEnum:
+        case MinLengthWithNullIndicatorEnum:
         case MinLengthWithBlankNullIndicatorEnum:
         case MaxLengthWithBlankIndicatorEnum:
         case MaxLengthWithBlankNullIndicatorEnum:
+        case MaxLengthWithNullIndicatorEnum:
+        case AverageLengthIndicatorEnum:
         case AverageLengthWithBlankIndicatorEnum:
         case AverageLengthWithNullBlankIndicatorEnum:
+        case AverageLengthWithNullIndicatorEnum:
+        case MinLengthIndicatorEnum:
+        case MaxLengthIndicatorEnum:
             if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.UNSTRUCTURED_TEXT) {
                 return true;
             }
