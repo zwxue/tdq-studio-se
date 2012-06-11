@@ -45,7 +45,7 @@ Bundle-ClassPath: .,
  lib/commons-discovery-0.2.jar,
  lib/mdm_webservice.jar,
  lib/mail.jar
-Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist
+Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist,org.mockito
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.talend.dq.CWMPlugin
