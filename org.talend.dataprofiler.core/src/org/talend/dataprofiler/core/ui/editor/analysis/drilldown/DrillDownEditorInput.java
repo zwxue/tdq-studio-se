@@ -37,6 +37,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
+import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
@@ -309,6 +310,15 @@ public class DrillDownEditorInput implements IEditorInput {
                             .getXMLElements(parentElement);
                     offset = xmlElementList.indexOf(analysisElement);
                 }
+                // Added yyin 20120608 TDQ-3589
+                if (currIndicator instanceof DuplicateCountIndicator) {
+                    for (Object obj : ((DuplicateCountIndicator) currIndicator).getDuplicateValues()) {
+                        Object[] newObj = new Object[1];
+                        newObj[0] = obj;
+                        returnDataList.add(newObj);
+                    }
+                    return returnDataList;
+                }// ~
                 for (Object[] obj : dataList) {
                     Object[] newObj = new Object[1];
                     newObj[0] = obj[offset];

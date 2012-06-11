@@ -6,6 +6,10 @@
  */
 package org.talend.dataquality.indicators;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -56,4 +60,30 @@ public interface DuplicateCountIndicator extends Indicator {
      * @generated
      */
     void setDuplicateValueCount(Long value);
+
+    /**
+     * store the whole row in the map to avoid lose the first duplicate one.
+     * 
+     * @param colValue the analyzed column's value
+     * @param resultSet the result wich can fetch the whole row
+     * @param columnSize the col size of one row
+     * @throws SQLException
+     */
+    void handle(Object colValue, ResultSet resultSet, int columnSize) throws SQLException;
+
+    /**
+     * get the duplicate result, after handle the whole resultset, the result is in this map, it must be gotten and
+     * handled.
+     * 
+     * @return
+     */
+    Map<Object, List<Object[]>> getDuplicateMap();
+
+    /**
+     * DOC yyin Comment method "handle".
+     * 
+     * @param object
+     * @param rowValues
+     */
+    void handle(Object object, String[] rowValues);
 } // DuplicateCountIndicator

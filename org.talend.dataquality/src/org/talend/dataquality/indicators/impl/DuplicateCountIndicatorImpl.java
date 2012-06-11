@@ -5,8 +5,14 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -50,10 +56,15 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     protected Long duplicateValueCount = DUPLICATE_VALUE_COUNT_EDEFAULT;
 
-    private Set<Object> uniqueObjects = new HashSet<Object>();
-
     private Set<Object> duplicateObjects = new HashSet<Object>();
 
+    // Added yyin 20120607 TDQ-3589
+    // private Map<Object, Object[]> uniqueMap = new HashMap<Object, Object[]>();
+
+    // store all duplicate rows by one key, in its list.
+    private Map<Object, List<Object[]>> duplicateMap = new HashMap<Object, List<Object[]>>();
+
+    // ~
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
@@ -72,13 +83,13 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * MOD yyin 20120608 TDQ-3589 use this set for "view values", not all dup rows, but only different values <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public Set<Object> getDuplicateValues() {
-        // TODO: implement this method
-        // Ensure that you remove @generated or mark it @generated NOT
-        throw new UnsupportedOperationException();
+        return this.duplicateObjects;
     }
 
     /**
@@ -153,6 +164,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * @generated
      */
     public Long getDuplicateValueCount() {
+        // = countof(list.size >1) in the duplicateMap
         return duplicateValueCount;
     }
 
@@ -199,8 +211,19 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
 
     @Override
     public boolean finalizeComputation() {
-        uniqueObjects.removeAll(duplicateObjects);
-        this.setDuplicateValueCount(Long.valueOf(duplicateObjects.size()));
+        // Mod yyin 20120608 TDQ-3589
+        // at the end: remove the list.size()=1 , only remain the list.size()>1
+        Iterator<Object> iterator = duplicateMap.keySet().iterator();
+        long dupSize = 0;
+        while (iterator.hasNext()) {
+            Object key = iterator.next();
+            List<Object[]> valuelist = duplicateMap.get(key);
+            if (valuelist.size() > 1) {
+                dupSize++;
+                this.duplicateObjects.add(key);
+            }
+        }
+        this.setDuplicateValueCount(Long.valueOf(dupSize));
         return super.finalizeComputation();
     }
 
@@ -209,21 +232,73 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
         this.mustStoreRow = false;
         super.handle(data);
         // MOD yyi 2009-09-22 8769
-        if (!this.uniqueObjects.add(data)) {
-            // store duplicate objects
-            if (duplicateObjects.add(data)) {
-                this.mustStoreRow = true;
-            }
-        }
+        // if (!this.uniqueObjects.add(data)) {
+        // // store duplicate objects
+        // if (duplicateObjects.add(data)) {
+        // this.mustStoreRow = true;
+        // }
+        // }
         return true;
     }
 
     @Override
     public boolean reset() {
         this.duplicateValueCount = DUPLICATE_VALUE_COUNT_EDEFAULT;
-        this.uniqueObjects.clear();
-        this.duplicateObjects.clear();
+        this.duplicateMap.clear();
         return super.reset();
+    }
+
+    /*
+     * store the colValue as key, get the whole row from resultset as value. when duplicate, also get the first row from
+     * uMap into dMap Added yyin 20120608 TDQ-3589
+     * 
+     * @see org.talend.dataquality.indicators.DuplicateCountIndicator#handle(java.lang.Object, java.sql.ResultSet, int)
+     */
+    @Override
+    public void handle(Object colValue, ResultSet resultSet, int columnSize) throws SQLException {
+        this.mustStoreRow = false;
+        // first get the whole row from resultset
+        Object[] valueObject = new Object[columnSize];
+
+        for (int i = 0; i < columnSize; i++) {
+            valueObject[i] = resultSet.getObject(i + 1);
+        }
+
+        if (duplicateMap.containsKey(colValue)) {
+            duplicateMap.get(colValue).add(valueObject);
+        }else{
+            List<Object[]> temp = new ArrayList<Object[]>();
+            temp.add(valueObject);
+            duplicateMap.put(colValue, temp);
+        }
+
+    }
+
+    /*
+     * (non-Javadoc) Added yyin 20120608 TDQ-3589
+     * 
+     * @see org.talend.dataquality.indicators.DuplicateCountIndicator#getDuplicateMap()
+     */
+    @Override
+    public Map<Object, List<Object[]>> getDuplicateMap() {
+
+        return this.duplicateMap;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.DuplicateCountIndicator#handle(java.lang.Object, java.lang.String[])
+     */
+    @Override
+    public void handle(Object object, String[] rowValues) {
+        if (duplicateMap.containsKey(object)) {
+            duplicateMap.get(object).add(rowValues);
+        } else {
+            List<Object[]> temp = new ArrayList<Object[]>();
+            temp.add(rowValues);
+            duplicateMap.put(object, temp);
+        }
     }
 
 } // DuplicateCountIndicatorImpl
