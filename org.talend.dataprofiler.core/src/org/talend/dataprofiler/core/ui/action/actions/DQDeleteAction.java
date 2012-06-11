@@ -70,6 +70,14 @@ public class DQDeleteAction extends DeleteAction {
 
     private RepositoryNode currentNode = null;
 
+    public RepositoryNode getCurrentNode() {
+        return currentNode;
+    }
+
+    public void setCurrentNode(RepositoryNode currentNode) {
+        this.currentNode = currentNode;
+    }
+
     private static Logger log = Logger.getLogger(TDQResourceChangeHandler.class);
 
     public DQDeleteAction() {
