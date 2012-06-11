@@ -107,7 +107,6 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
-import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -885,17 +884,20 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         for (TableIndicator tableIndicator : tableIndicators) {
             // ADDED yyin 20120606 TDQ-5343
             NamedColumnSet selectedTable = tableIndicator.getColumnSet();
-            DQRepositoryNode tableNode = null;
             if (selectedTable instanceof TdTable) {
-                tableNode = RepositoryNodeHelper.recursiveFindTdTable(((TdTable) selectedTable));
+                DBTableRepNode tableNode = RepositoryNodeHelper.recursiveFindTdTable(((TdTable) selectedTable));
+                if (setList.contains(tableNode)) {
+                    tableIndicatorList.add(tableIndicator);
+                    setList.remove(tableNode);
+                }
             } else if (selectedTable instanceof TdView) {
-                tableNode = RepositoryNodeHelper.recursiveFindTdView(((TdView) selectedTable));
+                DBViewRepNode tableNode = RepositoryNodeHelper.recursiveFindTdView(((TdView) selectedTable));
+                if (setList.contains(tableNode)) {
+                    tableIndicatorList.add(tableIndicator);
+                    setList.remove(tableNode);
+                }
             }
             // ~
-            if (setList.contains(tableNode)) {
-                tableIndicatorList.add(tableIndicator);
-                setList.remove(tableNode);
-            }
         }
         for (RepositoryNode set : setList) {
             TableIndicator tableIndicator = null;
