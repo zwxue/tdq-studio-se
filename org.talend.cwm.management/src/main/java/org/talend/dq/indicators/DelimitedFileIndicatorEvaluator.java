@@ -31,6 +31,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -116,17 +117,33 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     break;
                 }
             }
-            // MOD qionlgi 2011-5-12,bug 21115.
+            // Added yyin 20120611 TDQ-5346
             String zero = "0"; //$NON-NLS-1$
-            int headValue = Integer.parseInt(delimitedFileconnection.getHeaderValue() == null ? zero : delimitedFileconnection
+            int headValue = 0;
+            int footValue = 0;
+            int limitValue = 0;
+            String heading = delimitedFileconnection.getHeaderValue();
+            String footing = delimitedFileconnection.getFooterValue();
+            String limiting = delimitedFileconnection.getLimitValue();
+            if (isContextMode) {
+                heading = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, heading);
+                footing = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, footing);
+                limiting = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, limiting);
+                headValue = Integer.parseInt(heading == PluginConstant.EMPTY_STRING ? zero : heading);
+                footValue = Integer.parseInt(footing == PluginConstant.EMPTY_STRING ? zero : footing);
+                limitValue = Integer.parseInt(limiting == PluginConstant.EMPTY_STRING ? "-1" : limiting);
+            } else {// ~ 5346
+            // MOD qionlgi 2011-5-12,bug 21115.
+                headValue = Integer.parseInt(delimitedFileconnection.getHeaderValue() == null ? zero : delimitedFileconnection
                     .getHeaderValue());
-            int footValue = Integer.parseInt(delimitedFileconnection.getFooterValue() == null ? zero : delimitedFileconnection
+                footValue = Integer.parseInt(delimitedFileconnection.getFooterValue() == null ? zero : delimitedFileconnection
                     .getFooterValue());
-            String limitStr=delimitedFileconnection.getLimitValue();      
-            if (limitStr == null || zero.equals(limitStr)) {
-                limitStr = "-1"; //$NON-NLS-1$
+                String limitStr = delimitedFileconnection.getLimitValue();
+                if (limitStr == null || zero.equals(limitStr)) {
+                    limitStr = "-1"; //$NON-NLS-1$
+                }
+                limitValue = Integer.parseInt(limitStr);
             }
-            int limitValue = Integer.parseInt(limitStr);
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
                 csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
