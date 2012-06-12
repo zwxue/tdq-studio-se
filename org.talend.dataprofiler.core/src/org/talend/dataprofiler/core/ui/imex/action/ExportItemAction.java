@@ -19,6 +19,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.talend.dataprofiler.core.ui.imex.ExportWizard;
+import org.talend.dq.helper.UpdatePatternUDIItemStatePathHelper;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -51,6 +52,7 @@ public class ExportItemAction extends Action implements IWorkbenchWindowActionDe
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     public void run(IAction action) {
+        UpdatePatternUDIItemStatePathHelper.doUpdate();
         ExportWizard wizard = new ExportWizard();
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(620, 500);
