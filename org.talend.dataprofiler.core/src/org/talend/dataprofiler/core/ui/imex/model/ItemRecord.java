@@ -37,6 +37,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
@@ -110,7 +111,7 @@ public class ItemRecord {
 
                 elementEName = EElementEName.findENameByExt(itemURI.fileExtension());
 
-                if (property == null) {
+                if (property == null && !file.getName().endsWith(PluginConstant.JASPER_STRING)) {
                     Resource resource = resourceSet.getResource(propURI, true);
                     property = (Property) EcoreUtil.getObjectByType(resource.getContents(),
                             PropertiesPackage.eINSTANCE.getProperty());

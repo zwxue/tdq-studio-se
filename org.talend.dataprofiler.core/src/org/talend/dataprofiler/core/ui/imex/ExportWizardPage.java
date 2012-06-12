@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -41,10 +42,15 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
+import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IExportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dq.helper.ReportUtils;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -71,6 +77,10 @@ public class ExportWizardPage extends WizardPage {
     public static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
     private final ViewerFilter treeFilter = new TreeFilter();
+
+    private final String underlineStr = "_";//$NON-NLS-1$
+
+    private final String subrepName = "columnset";//$NON-NLS-1$
 
     public ExportWizardPage(String specifiedPath) {
         super(Messages.getString("ExportWizardPage.2")); //$NON-NLS-1$
@@ -124,6 +134,7 @@ public class ExportWizardPage extends WizardPage {
             updateBasePath();
         }
     }
+
     /**
      * DOC zshen Comment method "updateBasePath".
      */
@@ -146,6 +157,7 @@ public class ExportWizardPage extends WizardPage {
     public boolean isDirState() {
         return dirBTN.getSelection();
     }
+
     /**
      * DOC zshen Comment method "getTextContent".
      * 
@@ -204,7 +216,7 @@ public class ExportWizardPage extends WizardPage {
         ModifyListener populateListener = new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-            	updateBasePath();
+                updateBasePath();
             }
         };
 
@@ -531,8 +543,13 @@ public class ExportWizardPage extends WizardPage {
         for (Object obj : checkedElements) {
             if (obj instanceof ItemRecord) {
                 ItemRecord record = (ItemRecord) obj;
-                if (record.getFile().isFile()) {
+                // MOD qiongli 2012-6-13,add related sub-report jrxml/jasper file to elements.
+                File file = record.getFile();
+                if (file.isFile()) {
                     itemRecords.add(record);
+                    if (file.getName().endsWith(FactoriesUtil.JRXML) && file.getName().contains("column_set")) {
+                        addSubRepToElements(record, itemRecords);
+                    }
                 }
             }
         }
@@ -563,6 +580,52 @@ public class ExportWizardPage extends WizardPage {
         public boolean select(Viewer viewer, Object parentElement, Object element) {
             ItemRecord record = (ItemRecord) element;
             return repositoryTree.getChecked(record);
+        }
+    }
+
+    /**
+     * 
+     * add related subReport jrxml/jasper file to List.
+     * 
+     * @param record
+     * @param itemRecords
+     */
+    private void addSubRepToElements(ItemRecord record, List<ItemRecord> itemRecords) {
+        File file = record.getFile();
+        if (record.getProperty() == null) {
+            return;
+        }
+        String version = record.getProperty().getVersion();
+        String nameWithoutVersion = file.getName().replaceAll(underlineStr + version, PluginConstant.EMPTY_STRING)
+                .replaceAll(PluginConstant.DOT_STRING + FactoriesUtil.JRXML, PluginConstant.EMPTY_STRING);
+        IFile iFile = ResourceManager.getJRXMLFolder().getFile(subrepName);
+        File subRepFolder = WorkspaceUtils.ifileToFile(iFile);
+        if (subRepFolder == null || !subRepFolder.exists()) {
+            return;
+        }
+        Map<String, List<String>> mainSubRepMap = ReportUtils.getMainSubRepMap();
+        String fName;
+        for (File f : subRepFolder.listFiles()) {
+            fName = f.getName();
+            if (fName.equalsIgnoreCase(file.getName())) {
+                continue;
+            }
+            // add the same name jasper file when the sub-report jrxml is checked on UI.
+            if (fName.equalsIgnoreCase(nameWithoutVersion + PluginConstant.DOT_STRING + PluginConstant.JASPER_STRING)) {
+                ItemRecord itemRecord = new ItemRecord(f);
+                itemRecords.add(itemRecord);
+                continue;
+            }
+            // add sub-reports jrxml and jasper when the main-report is checked on UI.
+            List<String> subLsFromMap = mainSubRepMap.get(nameWithoutVersion);
+            if (subLsFromMap != null) {
+                for (String name : subLsFromMap) {
+                    if (fName.startsWith(name)) {
+                        ItemRecord itemRecord = new ItemRecord(f);
+                        itemRecords.add(itemRecord);
+                    }
+                }
+            }
         }
     }
 }

@@ -18,7 +18,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -33,7 +35,7 @@ import com.csvreader.CsvWriter;
  * DOC xqliu class global comment. Detailled comment
  */
 public final class ReportUtils {
-    
+
     private ReportUtils() {
     }
 
@@ -46,6 +48,8 @@ public final class ReportUtils {
     public static final char TEXT_QUAL = '"';//$NON-NLS-1$
 
     public static final int ESCAPE_MODE_BACKSLASH = CsvReader.ESCAPE_MODE_BACKSLASH;
+
+    private static Map<String, List<String>> mainSubRepMap;
 
     /**
      * get report files list and rebuild the .report.list file.
@@ -159,8 +163,8 @@ public final class ReportUtils {
             reader.setUseTextQualifier(USE_TEXT_QUAL);
             reader.readHeaders();
             while (reader.readRecord()) {
-                repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()), reader.get(ReportListEnum.Path
-                        .getLiteral()), reader.get(ReportListEnum.CreateTime.getLiteral())));
+                repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()),
+                        reader.get(ReportListEnum.Path.getLiteral()), reader.get(ReportListEnum.CreateTime.getLiteral())));
             }
             reader.close();
         }
@@ -244,8 +248,8 @@ public final class ReportUtils {
             for (IResource res : members) {
                 if (res.getType() == IResource.FILE) {
                     IFile repFile = (IFile) res;
-                    repList.add(buildRepListParams(repFile.getName(), repFile.getRawLocation().toOSString(), String
-                            .valueOf(repFile.getModificationStamp())));
+                    repList.add(buildRepListParams(repFile.getName(), repFile.getRawLocation().toOSString(),
+                            String.valueOf(repFile.getModificationStamp())));
                 }
             }
 
@@ -272,4 +276,24 @@ public final class ReportUtils {
             createTime = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
         }
     }
+
+    /**
+     * 
+     * set the relationship of main-sub report.
+     * 
+     * @return
+     */
+    public static Map<String, List<String>> getMainSubRepMap() {
+        // for this map:key is main report name without version;value is a List about sub reports.
+        if (mainSubRepMap == null || mainSubRepMap.isEmpty()) {
+            mainSubRepMap = new HashMap<String, List<String>>();
+            String b01ColumnSetBasicSubreport1 = "b01_column_set_basic_subreport1";
+            List<String> columnSetSubLs = new ArrayList<String>();
+            columnSetSubLs.add(b01ColumnSetBasicSubreport1);
+            mainSubRepMap.put("b01_column_set_basic", columnSetSubLs);
+            mainSubRepMap.put("b02_column_set_evolution", columnSetSubLs);
+        }
+        return mainSubRepMap;
+    }
+
 }
