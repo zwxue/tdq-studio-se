@@ -14,25 +14,16 @@ package org.talend.core.model.metadata.builder.database;
 
 import static org.junit.Assert.fail;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
-import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.relational.TdColumn;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.cwm.xml.XmlFactory;
-import org.talend.dq.analysis.TestAnalysisCreation;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -135,84 +126,85 @@ public class DqRepositoryViewServiceTest {
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#getTables(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.Catalog, java.lang.String, boolean)}
      * .
+     * 
+     * Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testGetTablesConnectionCatalogStringBoolean() {
-        // MOD klliu this method is not suite to use MOCK,we will test the root method "fillTables" in the
-        // DBConnectionFillerImpl 2012-04-06
-        // try {
-        // TestAnalysisCreation helper = new TestAnalysisCreation();
-        //
-        // // create a mysql connection
-        // Connection connection = helper.getDataManager();
-        //
-        // // get the tbi catalog or default catalog
-        //            String tbi = "tbi"; //$NON-NLS-1$
-        // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-        // Assert.assertFalse(tdCatalogs.isEmpty());
-        // Catalog catalog = tdCatalogs.get(0);
-        // for (Catalog tdCatalog : tdCatalogs) {
-        // if (tbi.equals(tdCatalog.getName())) {
-        // catalog = tdCatalog;
-        // break;
-        // }
-        // }
-        //
-        // List<TdTable> tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
-        // Assert.assertFalse(tables.isEmpty());
-        // } catch (Exception e) {
-        // fail(e.getMessage());
-        // }
-    }
+
+    // @Test
+    // public void testGetTablesConnectionCatalogStringBoolean() {
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a mysql connection
+    // Connection connection = helper.getDataManager();
+    //
+    // // get the tbi catalog or default catalog
+    //            String tbi = "tbi"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = tdCatalogs.get(0);
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // List<TdTable> tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
+    // Assert.assertFalse(tables.isEmpty());
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#getTables(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.Schema, java.lang.String, boolean)}
      * .
+     * 
+     * Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testGetTablesConnectionSchemaStringBoolean() {
-        // MOD klliu this method is not suite to use MOCK,we will test the root method "fillTables" in the
-        // DBConnectionFillerImpl 2012-04-06
 
-        // try {
-        // TestAnalysisCreation helper = new TestAnalysisCreation();
-        //
-        // // create a postgresql connection
-        // Connection connection = helper.getDataManagerPostgresql();
-        //
-        // // get the tdq_db catalog
-        //            String tbi = "tdq_db"; //$NON-NLS-1$
-        // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-        // Assert.assertFalse(tdCatalogs.isEmpty());
-        // Catalog catalog = null;
-        // for (Catalog tdCatalog : tdCatalogs) {
-        // if (tbi.equals(tdCatalog.getName())) {
-        // catalog = tdCatalog;
-        // break;
-        // }
-        // }
-        //
-        // // get the talend schema
-        // Schema schema = null;
-        //            String talend = "talend"; //$NON-NLS-1$
-        // if (catalog != null) {
-        // List<Schema> tdSchemas = CatalogHelper.getSchemas(catalog);
-        // Assert.assertFalse(tdSchemas.isEmpty());
-        // for (Schema tdSchema : tdSchemas) {
-        // if (talend.equals(tdSchema.getName())) {
-        // schema = tdSchema;
-        // break;
-        // }
-        // }
-        // }
-        //
-        // List<TdTable> tables = DqRepositoryViewService.getTables(connection, schema, null, true);
-        // Assert.assertFalse(tables.isEmpty());
-        // } catch (Exception e) {
-        // fail(e.getMessage());
-        // }
-    }
+    // @Test
+    // public void testGetTablesConnectionSchemaStringBoolean() {
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a postgresql connection
+    // Connection connection = helper.getDataManagerPostgresql();
+    //
+    // // get the tdq_db catalog
+    //            String tbi = "tdq_db"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = null;
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // // get the talend schema
+    // Schema schema = null;
+    //            String talend = "talend"; //$NON-NLS-1$
+    // if (catalog != null) {
+    // List<Schema> tdSchemas = CatalogHelper.getSchemas(catalog);
+    // Assert.assertFalse(tdSchemas.isEmpty());
+    // for (Schema tdSchema : tdSchemas) {
+    // if (talend.equals(tdSchema.getName())) {
+    // schema = tdSchema;
+    // break;
+    // }
+    // }
+    // }
+    //
+    // List<TdTable> tables = DqRepositoryViewService.getTables(connection, schema, null, true);
+    // Assert.assertFalse(tables.isEmpty());
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for
@@ -228,80 +220,80 @@ public class DqRepositoryViewServiceTest {
     /**
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#getViews(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.Catalog, java.lang.String, boolean)}
-     * .
+     * . Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testGetViewsConnectionCatalogStringBoolean() {
-        try {
-            TestAnalysisCreation helper = new TestAnalysisCreation();
-
-            // create a mysql connection
-            Connection connection = helper.getDataManager();
-
-            // get the tbi catalog or default catalog
-            String tbi = "tbi"; //$NON-NLS-1$
-            List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-            Assert.assertFalse(tdCatalogs.isEmpty());
-            Catalog catalog = tdCatalogs.get(0);
-            for (Catalog tdCatalog : tdCatalogs) {
-                if (tbi.equals(tdCatalog.getName())) {
-                    catalog = tdCatalog;
-                    break;
-                }
-            }
-
-            List<TdView> views = DqRepositoryViewService.getViews(connection, catalog, null, true);
-            Assert.assertFalse(views.isEmpty());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
+    // @Test
+    // public void testGetViewsConnectionCatalogStringBoolean() {
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a mysql connection
+    // Connection connection = helper.getDataManager();
+    //
+    // // get the tbi catalog or default catalog
+    //            String tbi = "tbi"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = tdCatalogs.get(0);
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // List<TdView> views = DqRepositoryViewService.getViews(connection, catalog, null, true);
+    // Assert.assertFalse(views.isEmpty());
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#getViews(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.Schema, java.lang.String, boolean)}
-     * .
+     * . Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testGetViewsConnectionSchemaStringBoolean() {
-        try {
-            TestAnalysisCreation helper = new TestAnalysisCreation();
-
-            // create a postgresql connection
-            Connection connection = helper.getDataManagerPostgresql();
-
-            // get the tdq_db catalog
-            String tbi = "tdq_db"; //$NON-NLS-1$
-            List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-            Assert.assertFalse(tdCatalogs.isEmpty());
-            Catalog catalog = null;
-            for (Catalog tdCatalog : tdCatalogs) {
-                if (tbi.equals(tdCatalog.getName())) {
-                    catalog = tdCatalog;
-                    break;
-                }
-            }
-
-            // get the talend schema
-            Schema schema = null;
-            String talend = "talend"; //$NON-NLS-1$
-            if (catalog != null) {
-                List<Schema> tdSchemas = CatalogHelper.getSchemas(catalog);
-                Assert.assertFalse(tdSchemas.isEmpty());
-                for (Schema tdSchema : tdSchemas) {
-                    if (talend.equals(tdSchema.getName())) {
-                        schema = tdSchema;
-                        break;
-                    }
-                }
-            }
-
-            List<TdView> views = DqRepositoryViewService.getViews(connection, schema, null, true);
-            Assert.assertFalse(views.isEmpty());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
+    // @Test
+    // public void testGetViewsConnectionSchemaStringBoolean() {
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a postgresql connection
+    // Connection connection = helper.getDataManagerPostgresql();
+    //
+    // // get the tdq_db catalog
+    //            String tbi = "tdq_db"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = null;
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // // get the talend schema
+    // Schema schema = null;
+    //            String talend = "talend"; //$NON-NLS-1$
+    // if (catalog != null) {
+    // List<Schema> tdSchemas = CatalogHelper.getSchemas(catalog);
+    // Assert.assertFalse(tdSchemas.isEmpty());
+    // for (Schema tdSchema : tdSchemas) {
+    // if (talend.equals(tdSchema.getName())) {
+    // schema = tdSchema;
+    // break;
+    // }
+    // }
+    // }
+    //
+    // List<TdView> views = DqRepositoryViewService.getViews(connection, schema, null, true);
+    // Assert.assertFalse(views.isEmpty());
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for
@@ -318,48 +310,50 @@ public class DqRepositoryViewServiceTest {
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#getColumns(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.ColumnSet, java.lang.String, boolean)}
      * .
+     * 
+     * Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testGetColumns() {
-        try {
-            TestAnalysisCreation helper = new TestAnalysisCreation();
-
-            // create a mysql connection
-            Connection connection = helper.getDataManager();
-
-            // get the tbi catalog
-            String tbi = "tbi"; //$NON-NLS-1$
-            List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-            Assert.assertFalse(tdCatalogs.isEmpty());
-            Catalog catalog = null;
-            for (Catalog tdCatalog : tdCatalogs) {
-                if (tbi.equals(tdCatalog.getName())) {
-                    catalog = tdCatalog;
-                    break;
-                }
-            }
-
-            // get the customer table
-            String customer = "customer"; //$NON-NLS-1$
-            ColumnSet columnSet = null;
-            if (catalog != null) {
-                List<TdTable> tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
-                CatalogHelper.addTables(tables, catalog);
-                Assert.assertFalse(tables.isEmpty());
-                for (TdTable table : tables) {
-                    if (customer.equals(table.getName())) {
-                        columnSet = table;
-                        break;
-                    }
-                }
-            }
-
-            List<TdColumn> columns = DqRepositoryViewService.getColumns(connection, columnSet, null, true);
-            Assert.assertFalse(columns.isEmpty());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
+    // @Test
+    // public void testGetColumns() {
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a mysql connection
+    // Connection connection = helper.getDataManager();
+    //
+    // // get the tbi catalog
+    //            String tbi = "tbi"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = null;
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // // get the customer table
+    //            String customer = "customer"; //$NON-NLS-1$
+    // ColumnSet columnSet = null;
+    // if (catalog != null) {
+    // List<TdTable> tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
+    // CatalogHelper.addTables(tables, catalog);
+    // Assert.assertFalse(tables.isEmpty());
+    // for (TdTable table : tables) {
+    // if (customer.equals(table.getName())) {
+    // columnSet = table;
+    // break;
+    // }
+    // }
+    // }
+    //
+    // List<TdColumn> columns = DqRepositoryViewService.getColumns(connection, columnSet, null, true);
+    // Assert.assertFalse(columns.isEmpty());
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for
@@ -403,12 +397,12 @@ public class DqRepositoryViewServiceTest {
     @Test
     public void testBuildElementName() {
         try {
-            String label = "label"; //$NON-NLS-1$
+            String displayName = "displayName"; //$NON-NLS-1$
             String version = "version"; //$NON-NLS-1$
-            String elementName = label + " " + version; //$NON-NLS-1$
+            String elementName = displayName + " " + version; //$NON-NLS-1$
 
             Property createProperty = PropertiesFactory.eINSTANCE.createProperty();
-            createProperty.setLabel(label);
+            createProperty.setLabel(displayName);
             createProperty.setVersion(version);
 
             Assert.assertTrue(elementName.equals(DqRepositoryViewService.buildElementName(createProperty)));
@@ -445,154 +439,160 @@ public class DqRepositoryViewServiceTest {
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#isContainsTable(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.Catalog, java.lang.String)}
      * .
+     * 
+     * Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testIsContainsTableConnectionCatalogString() {
-        try {
-            TestAnalysisCreation helper = new TestAnalysisCreation();
-
-            // create a mysql connection
-            Connection connection = helper.getDataManager();
-
-            // get the tbi catalog or default catalog
-            String tbi = "tbi"; //$NON-NLS-1$
-            List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-            Assert.assertFalse(tdCatalogs.isEmpty());
-            Catalog catalog = tdCatalogs.get(0);
-            for (Catalog tdCatalog : tdCatalogs) {
-                if (tbi.equals(tdCatalog.getName())) {
-                    catalog = tdCatalog;
-                    break;
-                }
-            }
-
-            Assert.assertTrue(DqRepositoryViewService.isContainsTable(connection, catalog, null));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
+    // @Test
+    // public void testIsContainsTableConnectionCatalogString() {
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a mysql connection
+    // Connection connection = helper.getDataManager();
+    //
+    // // get the tbi catalog or default catalog
+    //            String tbi = "tbi"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = tdCatalogs.get(0);
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // Assert.assertTrue(DqRepositoryViewService.isContainsTable(connection, catalog, null));
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#isContainsTable(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.Schema, java.lang.String)}
      * .
+     * 
+     * Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testIsContainsTableConnectionSchemaString() {
-
-        try {
-            TestAnalysisCreation helper = new TestAnalysisCreation();
-
-            // create a postgresql connection
-            Connection connection = helper.getDataManagerPostgresql();
-
-            // get the tdq_db catalog
-            String tbi = "tdq_db"; //$NON-NLS-1$
-            List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-            Assert.assertFalse(tdCatalogs.isEmpty());
-            Catalog catalog = null;
-            for (Catalog tdCatalog : tdCatalogs) {
-                if (tbi.equals(tdCatalog.getName())) {
-                    catalog = tdCatalog;
-                    break;
-                }
-            }
-
-            // get the talend schema
-            Schema schema = null;
-            String talend = "talend"; //$NON-NLS-1$
-            if (catalog != null) {
-                List<Schema> tdSchemas = CatalogHelper.getSchemas(catalog);
-                Assert.assertFalse(tdSchemas.isEmpty());
-                for (Schema tdSchema : tdSchemas) {
-                    if (talend.equals(tdSchema.getName())) {
-                        schema = tdSchema;
-                        break;
-                    }
-                }
-            }
-
-            Assert.assertTrue(DqRepositoryViewService.isContainsTable(connection, schema, null));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
+    // @Test
+    // public void testIsContainsTableConnectionSchemaString() {
+    //
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a postgresql connection
+    // Connection connection = helper.getDataManagerPostgresql();
+    //
+    // // get the tdq_db catalog
+    //            String tbi = "tdq_db"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = null;
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // // get the talend schema
+    // Schema schema = null;
+    //            String talend = "talend"; //$NON-NLS-1$
+    // if (catalog != null) {
+    // List<Schema> tdSchemas = CatalogHelper.getSchemas(catalog);
+    // Assert.assertFalse(tdSchemas.isEmpty());
+    // for (Schema tdSchema : tdSchemas) {
+    // if (talend.equals(tdSchema.getName())) {
+    // schema = tdSchema;
+    // break;
+    // }
+    // }
+    // }
+    //
+    // Assert.assertTrue(DqRepositoryViewService.isContainsTable(connection, schema, null));
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#isContainsView(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.Catalog, java.lang.String)}
      * .
+     * 
+     * Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testIsContainsViewConnectionCatalogString() {
-        try {
-            TestAnalysisCreation helper = new TestAnalysisCreation();
-
-            // create a mysql connection
-            Connection connection = helper.getDataManager();
-
-            // get the tbi catalog or default catalog
-            String tbi = "tbi"; //$NON-NLS-1$
-            List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-            Assert.assertFalse(tdCatalogs.isEmpty());
-            Catalog catalog = tdCatalogs.get(0);
-            for (Catalog tdCatalog : tdCatalogs) {
-                if (tbi.equals(tdCatalog.getName())) {
-                    catalog = tdCatalog;
-                    break;
-                }
-            }
-
-            Assert.assertTrue(DqRepositoryViewService.isContainsView(connection, catalog, null));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
+    // @Test
+    // public void testIsContainsViewConnectionCatalogString() {
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a mysql connection
+    // Connection connection = helper.getDataManager();
+    //
+    // // get the tbi catalog or default catalog
+    //            String tbi = "tbi"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = tdCatalogs.get(0);
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // Assert.assertTrue(DqRepositoryViewService.isContainsView(connection, catalog, null));
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
     /**
      * Test method for
      * {@link org.talend.core.model.metadata.builder.database.DqRepositoryViewService#isContainsView(org.talend.core.model.metadata.builder.connection.Connection, orgomg.cwm.resource.relational.Schema, java.lang.String)}
-     * .
+     * . Has been done in the org.talend.metadata.management.test
      */
-    @Test
-    public void testIsContainsViewConnectionSchemaString() {
-
-        try {
-            TestAnalysisCreation helper = new TestAnalysisCreation();
-
-            // create a postgresql connection
-            Connection connection = helper.getDataManagerPostgresql();
-
-            // get the tdq_db catalog
-            String tbi = "tdq_db"; //$NON-NLS-1$
-            List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
-            Assert.assertFalse(tdCatalogs.isEmpty());
-            Catalog catalog = null;
-            for (Catalog tdCatalog : tdCatalogs) {
-                if (tbi.equals(tdCatalog.getName())) {
-                    catalog = tdCatalog;
-                    break;
-                }
-            }
-
-            // get the talend schema
-            Schema schema = null;
-            String talend = "talend"; //$NON-NLS-1$
-            if (catalog != null) {
-                List<Schema> tdSchemas = CatalogHelper.getSchemas(catalog);
-                Assert.assertFalse(tdSchemas.isEmpty());
-                for (Schema tdSchema : tdSchemas) {
-                    if (talend.equals(tdSchema.getName())) {
-                        schema = tdSchema;
-                        break;
-                    }
-                }
-            }
-
-            Assert.assertTrue(DqRepositoryViewService.isContainsView(connection, schema, null));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
+    // @Test
+    // public void testIsContainsViewConnectionSchemaString() {
+    //
+    // try {
+    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    //
+    // // create a postgresql connection
+    // Connection connection = helper.getDataManagerPostgresql();
+    //
+    // // get the tdq_db catalog
+    //            String tbi = "tdq_db"; //$NON-NLS-1$
+    // List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(connection.getDataPackage());
+    // Assert.assertFalse(tdCatalogs.isEmpty());
+    // Catalog catalog = null;
+    // for (Catalog tdCatalog : tdCatalogs) {
+    // if (tbi.equals(tdCatalog.getName())) {
+    // catalog = tdCatalog;
+    // break;
+    // }
+    // }
+    //
+    // // get the talend schema
+    // Schema schema = null;
+    //            String talend = "talend"; //$NON-NLS-1$
+    // if (catalog != null) {
+    // List<Schema> tdSchemas = CatalogHelper.getSchemas(catalog);
+    // Assert.assertFalse(tdSchemas.isEmpty());
+    // for (Schema tdSchema : tdSchemas) {
+    // if (talend.equals(tdSchema.getName())) {
+    // schema = tdSchema;
+    // break;
+    // }
+    // }
+    // }
+    //
+    // Assert.assertTrue(DqRepositoryViewService.isContainsView(connection, schema, null));
+    // } catch (Exception e) {
+    // fail(e.getMessage());
+    // }
+    // }
 
 }
