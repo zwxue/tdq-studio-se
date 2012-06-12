@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +38,7 @@ import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.analysis.impl.AnalyzedDataSetImpl;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -51,6 +53,7 @@ import org.talend.dq.dbms.MSSqlDbmsLanguage;
 import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
+
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -108,6 +111,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
             String mess = Messages.getString("Evaluator.NoResultSet", sqlStatement); //$NON-NLS-1$
             log.warn(mess);
             ok.setReturnCode(mess, false);
+            statement.close();
             return ok;
         }
 
@@ -119,10 +123,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = anaResult.getIndicToRowMap();
         indicToRowMap.clear();
         int recordIncrement = 0;
-        // MOD zshen compute the num of data which contain in resultSet.
-        // resultSet.last();
-        // int totalResultNum = resultSet.getRow();
-        // resultSet.beforeFirst();
         // --- for each row
         int columnListSize = columnlist.size();
         label: while (resultSet.next()) {
@@ -133,10 +133,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 String col = columnlist.get(i);
                 List<Indicator> indicators = getIndicators(col);
                 col = columnlistMap.get(col);
-                // FIXME scorreia this must not be done here!!! but outside the resultset loop
-                // int offset = col.lastIndexOf('.') + 1;
-                // col = col.substring(offset);
-                // ~ 13826
 
                 // --- get content of column
                 Object object = null;
@@ -160,8 +156,13 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     if (!continueRun()) {
                         break label;
                     }
+                    // Added yyin 20120608 TDQ-3589
+                    if (indicator instanceof DuplicateCountIndicator) {
+                        ((DuplicateCountIndicator) indicator).handle(object, resultSet, columnCount);
+                    } else { //~
                     indicator.handle(object);
                     // ~MOD mzhao feature: 12919
+                    }
 
                     AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
                     if (analyzedDataSet == null) {
@@ -180,9 +181,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH
                                 .doSwitch(indicator.getAnalyzedElement().eContainer());
                         List<TdColumn> columnList = ColumnSetHelper.getColumns(doSwitch);
-                        // List<TdColumn> columnList =
-                        // TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
-                        // .getAnalyzedElement().eContainer()));
+
                         for (int j = 0; j < columnCount; j++) {
                             String newcol = columnList.get(j).getName();
                             Object newobject = null;
@@ -217,9 +216,6 @@ public class IndicatorEvaluator extends Evaluator<String> {
                         ColumnSet doSwitch = SwitchHelpers.COLUMN_SET_SWITCH
                                 .doSwitch(indicator.getAnalyzedElement().eContainer());
                         List<TdColumn> columnElementList = ColumnSetHelper.getColumns(doSwitch);
-                        // List<TdColumn> columnElementList =
-                        // TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
-                        // .getAnalyzedElement().eContainer()));
                         int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
                         for (Object[] dataObject : removeValueObjectList) {
                             if (dataObject[offsetting].equals(object)) {
@@ -231,6 +227,24 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
             }
         }
+        //Added yyin 20120608 TDQ-3589
+        for (int i = 0; i < columnListSize; i++) {
+            String col = columnlist.get(i);
+            List<Indicator> indicators = getIndicators(col);
+            for (Indicator indicator : indicators) {
+                if (indicator instanceof DuplicateCountIndicator) {
+                    AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
+                    if (analyzedDataSet == null) {
+                        analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
+                        indicToRowMap.put(indicator, analyzedDataSet);
+                        analyzedDataSet.setDataCount(maxNumberRows);
+                        analyzedDataSet.setRecordSize(0);
+                    }
+                    // indicator.finalizeComputation();
+                    addResultToIndicatorToRowMap(indicator, indicToRowMap, maxNumberRows, columnCount);
+                } 
+            }
+        }//~
 
         // --- release resultset
         resultSet.close();
@@ -240,6 +254,34 @@ public class IndicatorEvaluator extends Evaluator<String> {
         getConnection().close();
 
         return ok;
+    }
+
+    // get the final result from duplicate indicator and set it into indicatorToRowMap
+    // Added yyin 20120608 TDQ-3589
+    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap,
+            int maxNumberRows, int columnCount) {
+        Map<Object, List<Object[]>> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
+
+        Iterator<Object> iterator = dupMap.keySet().iterator();
+
+        while (iterator.hasNext()) {
+            Object key = iterator.next();
+
+            List<Object[]> valuelist = dupMap.get(key);
+            if (valuelist.size() > 1) {
+                List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
+                // MOD zshen add another loop to insert all of columnValue on the row into indicator.
+                int recordIncrement = valueObjectList.size();
+
+                for (Object[] row : valuelist) {
+                    if (recordIncrement < maxNumberRows) {
+                        valueObjectList.add(row);
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     /**

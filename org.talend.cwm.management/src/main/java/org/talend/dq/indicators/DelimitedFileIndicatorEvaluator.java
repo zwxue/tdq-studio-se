@@ -17,7 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
@@ -31,13 +33,14 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
+import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
@@ -45,9 +48,10 @@ import org.talend.dq.helper.ParameterUtil;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.csvreader.CsvReader;
+
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC qiongli class global comment. Detailled comment
@@ -142,7 +146,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 if (limitStr == null || zero.equals(limitStr)) {
                     limitStr = "-1"; //$NON-NLS-1$
                 }
-                limitValue = Integer.parseInt(limitStr);
+            limitValue = Integer.parseInt(limitStr);
             }
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
@@ -199,6 +203,24 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 }
                 fileInputDelimited.close();
             }
+            // Added yyin 20120608 TDQ-3589
+            for (MetadataColumn col : columnElementList) {
+                List<Indicator> indicators = getIndicators(col.getLabel());
+                for (Indicator indicator : indicators) {
+                    if (indicator instanceof DuplicateCountIndicator) {
+                        AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
+                        if (analyzedDataSet == null) {
+                            analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
+                            indicToRowMap.put(indicator, analyzedDataSet);
+                            analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
+                            analyzedDataSet.setRecordSize(0);
+                        }
+                        // indicator.finalizeComputation();
+                        addResultToIndicatorToRowMap(indicator, indicToRowMap);
+                    }
+                }
+            }// ~
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -207,6 +229,38 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             }
         }
         return returnCode;
+    }
+
+    /**
+     * DOC yyin Comment method "addResultToIndicatorToRowMap".
+     * 
+     * @param indicator
+     * @param indicToRowMap
+     */
+    private void addResultToIndicatorToRowMap(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+        Map<Object, List<Object[]>> dupMap = ((DuplicateCountIndicator) indicator).getDuplicateMap();
+
+        Iterator<Object> iterator = dupMap.keySet().iterator();
+        int maxNumberRows = analysis.getParameters().getMaxNumberRows();
+
+        while (iterator.hasNext()) {
+            Object key = iterator.next();
+
+            List<Object[]> valuelist = dupMap.get(key);
+            if (valuelist.size() > 1) {
+                List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, key);
+                // MOD zshen add another loop to insert all of columnValue on the row into indicator.
+                int recordIncrement = valueObjectList.size();
+
+                for (Object[] row : valuelist) {
+                    if (recordIncrement < maxNumberRows) {
+                        valueObjectList.add(row);
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -300,7 +354,12 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 if (object == null && !(indicator instanceof RowCountIndicator)) {
                     continue element;
                 }
+                // Added yyin 20120608 TDQ-3589
+                if (indicator instanceof DuplicateCountIndicator) {
+                    ((DuplicateCountIndicator) indicator).handle(object, rowValues);
+                } else { // ~
                 indicator.handle(object);
+                }
                 AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
                 if (analyzedDataSet == null) {
                     analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
@@ -331,6 +390,13 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     }
                     int offsetting = columnElementList.indexOf(indicator.getAnalyzedElement());
                     for (Object[] dataObject : removeValueObjectList) {
+                        // Added yyin 20120611 TDQ5279
+                        if (object instanceof Integer) {
+                            if (object.equals(Integer.parseInt((String) dataObject[offsetting]))) {
+                                removeValueObjectList.remove(dataObject);
+                                break;
+                            }
+                        }// ~
                         if (dataObject[offsetting].equals(object)) {
                             removeValueObjectList.remove(dataObject);
                             break;
