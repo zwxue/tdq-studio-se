@@ -98,7 +98,7 @@ public class FileSystemExportWriter implements IExportWriter {
                     log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");//$NON-NLS-1$ //$NON-NLS-2$ 
                     break;
                 }
-                IPath desPath = ResourceManager.getMDMConnectionFolder().getFullPath().removeLastSegments(1).append(new Path(schema.getXsdFilePath()));
+                IPath desPath = ResourceManager.getMDMConnectionFolder().getFullPath().append(new Path(schema.getXsdFilePath()));
                 toExportMap.put(srcPath, desPath);
             }
         }
