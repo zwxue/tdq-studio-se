@@ -6,15 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.cwm.compare;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit4,
- org.mockito,
+Require-Bundle: org.mockito,
  org.talend.common.ui.runtime
-Bundle-ClassPath: .,
- lib/powermock-classloading-base-1.4.11.jar,
- lib/powermock-classloading-objenesis-1.4.11.jar,
- lib/powermock-classloading-xstream-1.4.11.jar,
- lib/powermock-mockito-1.4.11-full.jar,
- lib/powermock-module-junit4-rule-1.4.11.jar,
- lib/powermock-module-junit4-rule-agent-1.4.11.jar
+Bundle-ClassPath: .
 Export-Package: org.talend.cwm.compare,
  org.talend.cwm.compare.factory.comparisonlevel
