@@ -38,7 +38,7 @@ import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.dq.nodes.foldernode.IFolderNode;
+import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -69,12 +69,13 @@ public class RemoveAnalysisAction extends Action {
         Map<TdReport, List<Analysis>> removeMap = new HashMap<TdReport, List<Analysis>>();
         for (int i = 0; i < paths.length; i++) {
             Object lastSegment = paths[i].getLastSegment();
-            if (!(lastSegment instanceof Analysis)) {
+            if (!(lastSegment instanceof ReportAnalysisRepNode)) {
                 return;
             }
-            analysisObj = (Analysis) lastSegment;
-            IFolderNode folderNode = (IFolderNode) paths[i].getSegment(paths[i].getSegmentCount() - 2);
-            parentReport = (TdReport) folderNode.getParent();
+            // MOD sizhaoliu 2012-06-12 TDQ-5051 "Remove Anaysis" menu item is not in the right place
+            ReportAnalysisRepNode repNode = (ReportAnalysisRepNode) lastSegment;
+            analysisObj = repNode.getAnalysis();
+            parentReport = (TdReport) repNode.getReport();
             analysisList = removeMap.get(parentReport);
             if (analysisList == null) {
                 analysisList = new ArrayList<Analysis>();
@@ -90,8 +91,8 @@ public class RemoveAnalysisAction extends Action {
         String message = paths.length > 1 ? DefaultMessagesImpl.getString(
                 "RemoveAnalysisAction.areYouDeleteElement0", paths.length) //$NON-NLS-1$ //$NON-NLS-2$
                 : DefaultMessagesImpl.getString("RemoveAnalysisAction.areYouDeleteElement2", analysisObj.getName()); //$NON-NLS-1$ //$NON-NLS-2$
-        boolean openConfirm = MessageDialog.openConfirm(null, DefaultMessagesImpl
-                .getString("RemoveAnalysisAction.confirmResourceDelete"), message); //$NON-NLS-1$
+        boolean openConfirm = MessageDialog.openConfirm(null,
+                DefaultMessagesImpl.getString("RemoveAnalysisAction.confirmResourceDelete"), message); //$NON-NLS-1$
 
         if (openConfirm) {
             Iterator<TdReport> iterator = removeMap.keySet().iterator();
