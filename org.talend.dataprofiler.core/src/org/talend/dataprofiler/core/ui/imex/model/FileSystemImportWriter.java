@@ -215,12 +215,12 @@ public class FileSystemImportWriter implements IImportWriter {
                 Connection connection = item.getConnection();
                 List<TdXmlSchema> tdXmlDocumentList = ConnectionHelper.getTdXmlDocument(connection);
                 for (TdXmlSchema schema : tdXmlDocumentList) {
-                    IPath srcPath = record.getFilePath().removeLastSegments(1).append(schema.getXsdFilePath());
+                	IPath srcPath =getXsdFolderPath(record,schema); 
                     if (!srcPath.toFile().exists()) {
                         log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");//$NON-NLS-1$ //$NON-NLS-2$ 
                         break;
                     }
-                    IPath desPath = itemDesPath.removeLastSegments(1).append(new Path(schema.getXsdFilePath()));
+                    IPath desPath = ResourceManager.getMDMConnectionFolder().getLocation().append(new Path(schema.getXsdFilePath())); 
                     toImportMap.put(srcPath, desPath);
                 }
             }
@@ -228,6 +228,16 @@ public class FileSystemImportWriter implements IImportWriter {
 
         return toImportMap;
     }
+    
+    private IPath getXsdFolderPath(ItemRecord record, TdXmlSchema schema) {
+   	 IPath mdmPath=record.getFilePath().removeLastSegments(1);
+   	 IPath srcPath = mdmPath.append(schema.getXsdFilePath());
+   	 while(!srcPath.toFile().exists()){
+   		 mdmPath=mdmPath.removeLastSegments(1);
+   		 srcPath=mdmPath.append(schema.getXsdFilePath());
+   	 }
+   	 return srcPath;
+	}
 
     /*
      * (non-Javadoc)

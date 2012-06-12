@@ -93,12 +93,12 @@ public class FileSystemExportWriter implements IExportWriter {
             Connection connection = item.getConnection();
             List<TdXmlSchema> tdXmlDocumentList = ConnectionHelper.getTdXmlDocument(connection);
             for (TdXmlSchema schema : tdXmlDocumentList) {
-                IPath srcPath = itemResPath.removeLastSegments(1).append(schema.getXsdFilePath());
+            	IPath srcPath = ResourceManager.getMDMConnectionFolder().getLocation().append(schema.getXsdFilePath()); 
                 if (!srcPath.toFile().exists()) {
                     log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");//$NON-NLS-1$ //$NON-NLS-2$ 
                     break;
                 }
-                IPath desPath = itemDesPath.removeLastSegments(1).append(new Path(schema.getXsdFilePath()));
+                IPath desPath = ResourceManager.getMDMConnectionFolder().getFullPath().append(new Path(schema.getXsdFilePath())); 
                 toExportMap.put(srcPath, desPath);
             }
         }
