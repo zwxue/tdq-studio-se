@@ -629,7 +629,7 @@ Export-Package: org.eclipse.nebula.jface.gridviewer;
    org.eclipse.swt.widgets,
    org.talend.core.model.metadata.builder.database.dburl"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Eclipse-RegisterBuddy: org.apache.log4j
+Eclipse-RegisterBuddy: org.apache.log4j, org.mockito
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar,
