@@ -12,11 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,9 +65,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-@PrepareForTest({ PropertyHelper.class, Messages.class, DefaultMessagesImpl.class, ProjectManager.class,
-        DefinitionHandler.class, DependenciesHandler.class, RepositoryNodeHelper.class, WorkbenchUtils.class,
-        ElementWriterFactory.class, CorePlugin.class, ConnectionHelper.class })
+@PrepareForTest({ PropertyHelper.class, Messages.class, DefaultMessagesImpl.class, ProjectManager.class, DefinitionHandler.class,
+        DependenciesHandler.class, RepositoryNodeHelper.class, WorkbenchUtils.class, ElementWriterFactory.class,
+        CorePlugin.class, ConnectionHelper.class })
 public class CreateDuplicatesAnalysisActionTest {
 
     @Rule
@@ -102,8 +105,9 @@ public class CreateDuplicatesAnalysisActionTest {
             when(ConnectionHelper.getConnection(columSetMock)).thenReturn(connectionMock);
 
             PowerMockito.mockStatic(PropertyHelper.class);
-            when(PropertyHelper.existDuplicateName(anyString(), anyString(), (ERepositoryObjectType) any()))
-                    .thenReturn(false);
+            when(PropertyHelper.existDuplicateName(anyString(), anyString(), (ERepositoryObjectType) any(), anyBoolean()))
+                    .thenReturn(
+                    false);
 
             PowerMockito.mockStatic(ProjectManager.class);
             ProjectManager pmMock = mock(ProjectManager.class);
