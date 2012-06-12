@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.action.actions.RemoveAnalysisAction;
 import org.talend.repository.model.RepositoryNode;
+
 /**
  * DOC rli class global comment. Detailled comment
  */
@@ -37,7 +38,7 @@ public class RemoveAnalysisActionProvider extends AbstractCommonActionProvider {
             Object obj = treeSelection.getFirstElement();
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
-                if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.equals(node.getContentType())) {
+                if (ERepositoryObjectType.TDQ_REPORT_ELEMENT.equals(node.getContentType())) {
                     menu.add(new RemoveAnalysisAction());
                 }
             }
