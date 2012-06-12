@@ -315,7 +315,7 @@
             id="org.talend.dataprofiler.core.ui.action.provider.RemoveAnalysisActionProvider">
          <enablement>
             <and>
-	            <instanceof value="org.talend.dq.nodes.AnalysisRepNode"/>
+	            <instanceof value="org.talend.dq.nodes.ReportAnalysisRepNode"/>
 	        </and>
          </enablement>
       </actionProvider>
