@@ -24,6 +24,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.UpdatePatternUDIItemStatePathHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -47,6 +48,7 @@ public class UserDefIndicatorFolderRepNode extends DQRepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        UpdatePatternUDIItemStatePathHelper.doUpdate();
         return getChildren(false);
     }
 
@@ -67,7 +69,7 @@ public class UserDefIndicatorFolderRepNode extends DQRepositoryNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                if (!withDeleted&&folder.isDeleted()) {
+                if (!withDeleted && folder.isDeleted()) {
                     continue;
                 }
                 UserDefIndicatorSubFolderRepNode childNodeFolder = new UserDefIndicatorSubFolderRepNode(folder, this,
