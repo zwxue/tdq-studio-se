@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -48,6 +51,7 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -246,16 +250,20 @@ public class DuplicateAction extends Action {
             } else if (item instanceof TDQJrxmlItem) {
                 librariesFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.JRXML_TEMPLATE);
             }
-            for (IRepositoryNode node : librariesFolderNode.getChildren()) {
-                Item sourceIitem = node.getObject().getProperty().getItem();
-                // MOD msjian TDQ-4830 2012-5-25: fixed NPE
-                String uuid2 = ResourceHelper.getUUID(sourceIitem);
-                if (uuid2 != null && uuid2.equals(uuid)) {
-                    recursiveFind = (RepositoryNode) node;
-                    break;
+            // MOD msjian TDQ-4830 2012-5-25: fixed a NPE and should consider the subfolder
+            List<SourceFileRepNode> sourceNodeList = new ArrayList<SourceFileRepNode>();
+            sourceNodeList = RepositoryNodeHelper.getSourceFileRepNodes(librariesFolderNode, true);
+            if (sourceNodeList != null && sourceNodeList.size() > 0) {
+                for (SourceFileRepNode node : sourceNodeList) {
+                    Item sourceIitem = node.getObject().getProperty().getItem();
+                    String uuid2 = ResourceHelper.getUUID(sourceIitem);
+                    if (uuid2 != null && uuid2.equals(uuid)) {
+                        recursiveFind = (RepositoryNode) node;
+                        break;
+                    }
                 }
-                // TDQ-4830~
             }
+            // TDQ-4830~
         }
         return recursiveFind;
     }
