@@ -257,6 +257,14 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
     @Override
     public boolean handle(Object data) {
         boolean handled = super.handle(data);
+        if (!handled) {
+            return handled;
+        }
+        return handleGenericSum(data);
+    }
+
+    protected boolean handleGenericSum(Object data) {
+        boolean handled = Boolean.TRUE;
         if (data == null) {
             // TODO scorreia handle null values !!!
             return false;
@@ -265,6 +273,7 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
         this.getGenericSum(data).sumObject(data);
         return handled;
     }
+
 
     /**
      * DOC scorreia Comment method "getGenericSum".
