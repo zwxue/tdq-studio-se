@@ -57,11 +57,14 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
@@ -631,25 +634,37 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
         }
 
+        // MOD sizhaoliu TDQ-5408 retrieve DB version info from software system.
+        TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(dataProvider);
+        if (softwareSystem == null) { // software system info not present in
+                                      // "TDQ_Libraries/.softwaresystem.softwaredeployment" file
+            softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
+        }
+
         // MOD gdbu 2011-9-16 TDQ-3337
         String subtype = PluginConstant.EMPTY_STRING;
         String version = PluginConstant.EMPTY_STRING;
-        if (dataProvider instanceof DatabaseConnection) {
-            subtype = ((DatabaseConnection) dataProvider).getDatabaseType();
-            if (EDatabaseConnTemplate.GENERAL_JDBC.getDBDisplayName().equals(subtype)) {
-                String dbTypeFromMetaData = ExtractMetaDataUtils.getDbTypeByClassNameAndDriverJar(
-                        ((DatabaseConnection) dataProvider).getDriverClass(),
-                        ((DatabaseConnection) dataProvider).getDriverJarPath());
-                subtype = PluginConstant.EMPTY_STRING.equals(dbTypeFromMetaData) ? subtype : dbTypeFromMetaData;
+        if (softwareSystem == null) {
+            if (dataProvider instanceof DatabaseConnection) {
+                subtype = ((DatabaseConnection) dataProvider).getDatabaseType();
+                // do not retrieve DB version here because the format (ex: MYSQL_5) is different from softwareSystem.
+                if (EDatabaseConnTemplate.GENERAL_JDBC.getDBDisplayName().equals(subtype)) {
+                    String dbTypeFromMetaData = ExtractMetaDataUtils.getDbTypeByClassNameAndDriverJar(
+                            ((DatabaseConnection) dataProvider).getDriverClass(),
+                            ((DatabaseConnection) dataProvider).getDriverJarPath());
+                    subtype = PluginConstant.EMPTY_STRING.equals(dbTypeFromMetaData) ? subtype : dbTypeFromMetaData;
+                }
+            } else {
+                boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
+                subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE
+                        .getLanguage() : PluginConstant.EMPTY_STRING;
+                if (!DQRepositoryNode.isOnFilterring()) {
+                    version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
+                }
             }
-            version = ((DatabaseConnection) dataProvider).getVersion();
         } else {
-            boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
-            subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage()
-                    : PluginConstant.EMPTY_STRING;
-            if (!DQRepositoryNode.isOnFilterring()) {
-                version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
-            }
+            subtype = softwareSystem.getSubtype();
+            version = softwareSystem.getVersion();
         }
         // ~TDQ-3337
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
