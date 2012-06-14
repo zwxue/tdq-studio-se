@@ -25,8 +25,8 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.sql.AddSqlFileAction;
 import org.talend.dataprofiler.core.sql.ImportSqlFileAction;
 import org.talend.dataprofiler.core.sql.OpenSqlFileAction;
-import org.talend.dataprofiler.core.sql.RenameFolderAction;
 import org.talend.dataprofiler.core.sql.RenameSqlFileAction;
+import org.talend.dataprofiler.core.ui.action.actions.RenameTdqFolderAction;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
@@ -57,7 +57,7 @@ public class NewSourceFileActionProvider extends AbstractCommonActionProvider {
             if (node instanceof SourceFileSubFolderNode) {
                 menu.add(new AddSqlFileAction(node));
                 menu.add(new ImportSqlFileAction(node));
-                menu.add(new RenameFolderAction(node));
+                menu.add(new RenameTdqFolderAction(node));
             } else if (node instanceof SourceFileFolderRepNode) {
                 menu.add(new AddSqlFileAction(node));
                 menu.add(new ImportSqlFileAction(node));

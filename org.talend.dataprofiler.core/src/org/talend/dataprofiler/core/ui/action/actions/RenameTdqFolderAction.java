@@ -17,9 +17,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -32,11 +33,12 @@ import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.ui.actions.AContextualAction;
 
 /**
  * rename tdq folder action.
  */
-public class RenameTdqFolderAction extends Action {
+public class RenameTdqFolderAction extends AContextualAction {
 
     protected static Logger log = Logger.getLogger(RenameTdqFolderAction.class);
 
@@ -53,8 +55,13 @@ public class RenameTdqFolderAction extends Action {
         setText(DefaultMessagesImpl.getString("RenameTdqFolderAction.renameFolder")); //$NON-NLS-1$
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.ui.actions.AContextualAction#doRun()
+     */
     @Override
-    public void run() {
+    protected void doRun() {
         // ADD xqliu 2012-05-24 TDQ-4831
         if (this.node instanceof JrxmlTempSubFolderNode) {
             MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
@@ -105,5 +112,16 @@ public class RenameTdqFolderAction extends Action {
             }
         }
         return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.commons.ui.swt.actions.ITreeContextualAction#init(org.eclipse.jface.viewers.TreeViewer,
+     * org.eclipse.jface.viewers.IStructuredSelection)
+     */
+    public void init(TreeViewer viewer, IStructuredSelection selection) {
+        // TODO Auto-generated method stub
+
     }
 }
