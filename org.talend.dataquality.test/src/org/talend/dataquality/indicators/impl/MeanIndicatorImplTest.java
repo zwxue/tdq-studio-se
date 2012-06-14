@@ -26,14 +26,14 @@ public class MeanIndicatorImplTest {
         meanInd.setSumStr("18");
         meanInd.setCount(6L);
         meanInd.setNullCount(3L);
-        assertTrue(meanInd.getMean().doubleValue() == 6);
+        assertTrue(meanInd.getMean().doubleValue() == 3);
         meanInd.setNullCount(null);
         assertTrue(meanInd.getMean().doubleValue() == 3);
         meanInd.setNullCount(0L);
         assertTrue(meanInd.getMean().doubleValue() == 3);
         meanInd.setCount(6L);
         meanInd.setNullCount(6L);
-        assertTrue(meanInd.getMean().isNaN());
+        assertTrue(meanInd.getMean().doubleValue() == 3);
     }
 
 }
