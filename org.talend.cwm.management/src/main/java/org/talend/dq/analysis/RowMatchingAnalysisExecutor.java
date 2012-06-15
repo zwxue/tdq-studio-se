@@ -70,7 +70,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @see org.talend.dq.analysis.AnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
-    protected String createSqlStatement(Analysis analysis) {
+    public String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
         this.reset();
 
