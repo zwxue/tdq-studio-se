@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -174,7 +175,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
      * @see org.talend.dq.analysis.AnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
-    protected String createSqlStatement(Analysis analysis) {
+    public String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
         // CwmZQuery query = new CwmZQuery();
         StringBuilder sql = new StringBuilder("SELECT ");//$NON-NLS-1$
@@ -246,11 +247,16 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         // add from clause
         sql.append(dbms().from());
-        // if(CatalogHelper.fromPart.iterator().next())
         ModelElement element = fromPart.iterator().next();
         Package parentRelation = PackageHelper.getParentPackage((MetadataTable) fromPart.iterator().next());
         if (parentRelation instanceof Schema) {
-            sql.append(dbms().toQualifiedName(null, parentRelation.getName(), element.getName()));
+            // MOD msjian TDQ-5503 2012-6-12: fix when the db is mssql, there should exist catalog
+            String catalog = null;
+            if (SupportDBUrlType.isMssql(dbms().getDbmsName())) {
+                catalog = PackageHelper.getParentPackage(parentRelation).getName();
+            }
+            sql.append(dbms().toQualifiedName(catalog, parentRelation.getName(), element.getName()));
+            // TDQ-5503~
         } else if (parentRelation instanceof Catalog) {
             String ownerUser = null;
             if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
