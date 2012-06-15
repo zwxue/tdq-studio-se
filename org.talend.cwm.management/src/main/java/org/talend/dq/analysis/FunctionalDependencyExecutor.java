@@ -142,7 +142,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
     }
 
     @Override
-    protected String createSqlStatement(Analysis analysis) {
+    public String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
 
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis);

@@ -66,7 +66,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * org.talend.dq.analysis.ColumnAnalysisSqlExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
-    protected String createSqlStatement(Analysis analysis) {
+    public String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {

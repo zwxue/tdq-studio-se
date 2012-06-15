@@ -44,7 +44,6 @@ import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
@@ -69,6 +68,10 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.dbms.MSSqlDbmsLanguage;
+import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
@@ -154,11 +157,14 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         try {
             // MOD qiongli 2011-7-8 bug 22520,statement for sqlLite
             Connection dataManager = (Connection) analysis.getContext().getConnection();
-            if (ConnectionUtils.isSqlite(dataManager)) {
+            // MOD msjian TDQ-5503 2012-6-12: fixed SQLServerException: make the same with IndicatorEvaluator
+            DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dataManager);
+            if (dbmsLanguage instanceof MSSqlDbmsLanguage || dbmsLanguage instanceof SQLiteDbmsLanguage) {
                 statement = getConnection().createStatement();
             } else {
                 statement = getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             }
+            // TDQ-5503~
             statement.setFetchSize(fetchSize);
             if (continueRun()) {
                 if (log.isInfoEnabled()) {
