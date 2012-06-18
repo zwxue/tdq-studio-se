@@ -17,18 +17,19 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -84,8 +85,12 @@ public class RenameTdqFolderAction extends AContextualAction {
                 List<IRepositoryNode> openRepNodes = getOpenRepNodeForReName(node, true);
                 RepNodeUtils.closeModelElementEditor(openRepNodes, true);
 
-                RepositoryNodeDorpAdapterAssistant dndAsistant = new RepositoryNodeDorpAdapterAssistant();
-                dndAsistant.renameFolderRepNode(node, value2);
+                // MOD sizhaoliu TDQ-5613 When rename a folder containing a locked analysis, the analysis disappears
+                // RepositoryNodeDorpAdapterAssistant dndAsistant = new RepositoryNodeDorpAdapterAssistant();
+                // dndAsistant.renameFolderRepNode(node, value2);
+                IPath path = WorkbenchUtils.getPath(node);
+                ProxyRepositoryFactory.getInstance().renameFolder(node.getObjectType(), path, value2);
+                // ~ TDQ-5613
 
                 // refresh the dq repository view
                 if (node != null && node.getParent() != null) {
