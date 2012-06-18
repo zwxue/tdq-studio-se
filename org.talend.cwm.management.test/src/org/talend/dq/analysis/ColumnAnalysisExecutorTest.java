@@ -56,7 +56,7 @@ import orgomg.cwm.resource.relational.Schema;
 // @RunWith(PowerMockRunner.class)
 @PrepareForTest({ SupportDBUrlType.class, Logger.class, SwitchHelpers.class, PackageHelper.class, AnalysisHelper.class,
         DbmsLanguageFactory.class })
-public class TestColumnAnalysisExecutor {
+public class ColumnAnalysisExecutorTest {
 
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();

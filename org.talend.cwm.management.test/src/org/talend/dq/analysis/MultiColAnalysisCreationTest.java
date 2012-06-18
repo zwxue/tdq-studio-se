@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui;
+package org.talend.dq.analysis;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,9 +37,6 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
-import org.talend.dq.analysis.AnalysisBuilder;
-import org.talend.dq.analysis.IAnalysisExecutor;
-import org.talend.dq.analysis.MultiColumnAnalysisExecutor;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -54,14 +51,14 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class TestMultiColAnalysisCreation {
+public class MultiColAnalysisCreationTest {
 
     /**
      * 
      */
     private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
 
-    private static Logger log = Logger.getLogger(TestMultiColAnalysisCreation.class);
+    private static Logger log = Logger.getLogger(MultiColAnalysisCreationTest.class);
 
     private AnalysisBuilder analysisBuilder;
 
@@ -84,7 +81,7 @@ public class TestMultiColAnalysisCreation {
      */
     public static void main(String[] args) {
         try {
-            TestMultiColAnalysisCreation myTest = new TestMultiColAnalysisCreation();
+            MultiColAnalysisCreationTest myTest = new MultiColAnalysisCreationTest();
             myTest.run();
         } catch (TalendException e) {
             // TODO Auto-generated catch block
