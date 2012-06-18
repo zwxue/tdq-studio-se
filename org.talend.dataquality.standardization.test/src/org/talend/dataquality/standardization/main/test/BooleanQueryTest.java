@@ -32,8 +32,9 @@ import org.apache.lucene.store.FSDirectory;
  */
 public class BooleanQueryTest extends TestCase {
 
+    private String indexfolder = HandLuceneImplTest.indexfolder;
     public void testAnd() throws Exception {
-        String indexfolder = "data/TalendGivenNames_index";
+
         Directory dir = FSDirectory.open(new File(indexfolder));
         Term searchingBooks = new Term("name", "Christian"); // #1
         Term term = new Term("country", "french");

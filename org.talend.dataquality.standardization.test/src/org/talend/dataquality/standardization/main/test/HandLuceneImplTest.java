@@ -7,14 +7,17 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.apache.lucene.queryParser.ParseException;
+import org.talend.core.utils.PluginUtil;
 import org.talend.dataquality.standardization.main.HandleLucene;
 import org.talend.dataquality.standardization.main.HandleLuceneImpl;
 
 public class HandLuceneImplTest extends TestCase {
 
-    private String filename = "data/TalendGivenNames.TXT"; // $NON-NLS-1$
+    public final static String PLUGIN_ID = "org.talend.dataquality.standardization.test"; // $NON-NLS-1$
 
-    private String indexfolder = "data/TalendGivenNames_index"; // $NON-NLS-1$
+    public final static String filename = PluginUtil.getPluginInstallPath(PLUGIN_ID).concat("data/TalendGivenNames.TXT"); // $NON-NLS-1$
+
+    public final static String indexfolder = PluginUtil.getPluginInstallPath(PLUGIN_ID).concat("data/TalendGivenNames_index"); // $NON-NLS-1$
 
     private HandleLucene hl;
 

@@ -14,27 +14,31 @@ package org.talend.dataquality.standardization.main;
 
 import java.io.IOException;
 
+import junit.framework.TestCase;
+
 import org.apache.lucene.queryParser.ParseException;
+import org.junit.Test;
+import org.talend.dataquality.standardization.main.test.HandLuceneImplTest;
 
 /**
  * This class creates the lucene index file to be used in the component.
  */
-public final class HandleLuceneTest {
+public class HandleLuceneTest extends TestCase {
 
-    private HandleLuceneTest() {
-    }
+    private final static String filename = HandLuceneImplTest.filename;
+
+    private final static String indexfolder = HandLuceneImplTest.indexfolder;
 
     /**
      * @param args
      */
-    public static void main(String[] args) {
+    @Test
+    public void testHandle() {
         // choose here to test the replace methods
-        boolean testReplace = false;
+        boolean testReplace = true;
         // choose here the appropriate input file.
-        String filename = "data/TalendGivenNames.TXT";//$NON-NLS-1$
-        String indexfolder = "data/TalendGivenNames_index";//$NON-NLS-1$
         HandleLucene hl = new HandleLuceneImpl();
-        System.out.print(hl.createIndex(filename, indexfolder));
+        hl.createIndex(filename, indexfolder);
 
         if (!testReplace) {
             return;
@@ -42,16 +46,14 @@ public final class HandleLuceneTest {
         try {
 
             String res = hl.replaceName(indexfolder, "Philippe", false);//$NON-NLS-1$
-            System.out.println("replaceName:" + res);//$NON-NLS-1$
+            assertEquals("Philippe", res);
             try {
                 String res1 = hl.replaceNameWithCountryInfo(indexfolder, "Philippe", "china", false);//$NON-NLS-1$ $NON-NLS-2$
-                System.out.println("replaceNameWithCountryInfo:" + res1);//$NON-NLS-1$
-
+                assertEquals("Philippe", res1);
                 String res2 = hl.replaceNameWithGenderInfo(indexfolder, "Philippe", "0", false);//$NON-NLS-1$ $NON-NLS-2$
-
-                System.out.println("replaceNameWithGenderInfo:" + res2);//$NON-NLS-1$
+                assertEquals("Philippe", res2);
                 String res3 = hl.replaceNameWithCountryGenderInfo(indexfolder, "Philippe", "china", "1", false);//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
-                System.out.println("replaceNameWithCountryGenderInfo:" + res3);//$NON-NLS-1$
+                assertEquals("Philippe", res3);
             } catch (Exception e) {
                 e.printStackTrace();
             }

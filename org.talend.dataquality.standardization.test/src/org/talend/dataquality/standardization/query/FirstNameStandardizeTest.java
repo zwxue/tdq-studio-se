@@ -1,4 +1,4 @@
-package org.talend.dataquality.standardization.query.test;
+package org.talend.dataquality.standardization.query;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +15,13 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.talend.dataquality.standardization.constant.PluginConstant;
-import org.talend.dataquality.standardization.query.FirstNameStandardize;
+import org.talend.dataquality.standardization.main.test.HandLuceneImplTest;
 
 public class FirstNameStandardizeTest extends TestCase {
 
 //    private String filename = "./data/TalendGivenNames.TXT";
 
-    private String indexfolder = "data/TalendGivenNames_index"; // $NON-NLS-1$
+    private String indexfolder = HandLuceneImplTest.indexfolder;
 
     private IndexSearcher searcher = null;
 
