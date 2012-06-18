@@ -32,7 +32,6 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -70,7 +69,7 @@ public class SQLSourceFileWriter extends AElementPersistance {
      * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean)
      */
     @Override
-    public ReturnCode save(Item item, boolean careDependency) {
+    public ReturnCode save(Item item, boolean... careDependency) {
         ReturnCode rc = new ReturnCode();
         if (!(item instanceof TDQSourceFileItem)) {
             rc.setOk(Boolean.FALSE);
