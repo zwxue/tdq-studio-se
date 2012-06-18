@@ -7,5 +7,5 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.mockito;bundle-version="1.0.0"
-Export-Package: org.talend.dataquality.indicators.impl,org.talend.dataquality.test;uses:="org.eclipse.swtbot.eclipse.finder.widgets,org.eclipse.swtbot.swt.finder.widgets,org.eclipse.swtbot.eclipse.finder"
+Export-Package: org.talend.dataquality.indicators.impl
 Bundle-ClassPath: . 
