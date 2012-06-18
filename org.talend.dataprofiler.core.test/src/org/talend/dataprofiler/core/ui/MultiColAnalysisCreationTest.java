@@ -54,14 +54,14 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class TestMultiColAnalysisCreation {
+public class MultiColAnalysisCreationTest {
 
     /**
      * 
      */
     private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
 
-    private static Logger log = Logger.getLogger(TestMultiColAnalysisCreation.class);
+    private static Logger log = Logger.getLogger(MultiColAnalysisCreationTest.class);
 
     private AnalysisBuilder analysisBuilder;
 
@@ -84,7 +84,7 @@ public class TestMultiColAnalysisCreation {
      */
     public static void main(String[] args) {
         try {
-            TestMultiColAnalysisCreation myTest = new TestMultiColAnalysisCreation();
+            MultiColAnalysisCreationTest myTest = new MultiColAnalysisCreationTest();
             myTest.run();
         } catch (TalendException e) {
             // TODO Auto-generated catch block

@@ -133,7 +133,7 @@ public class DqRepositoryViewServiceTest {
     // @Test
     // public void testGetTablesConnectionCatalogStringBoolean() {
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a mysql connection
     // Connection connection = helper.getDataManager();
@@ -168,7 +168,7 @@ public class DqRepositoryViewServiceTest {
     // @Test
     // public void testGetTablesConnectionSchemaStringBoolean() {
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a postgresql connection
     // Connection connection = helper.getDataManagerPostgresql();
@@ -225,7 +225,7 @@ public class DqRepositoryViewServiceTest {
     // @Test
     // public void testGetViewsConnectionCatalogStringBoolean() {
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a mysql connection
     // Connection connection = helper.getDataManager();
@@ -257,7 +257,7 @@ public class DqRepositoryViewServiceTest {
     // @Test
     // public void testGetViewsConnectionSchemaStringBoolean() {
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a postgresql connection
     // Connection connection = helper.getDataManagerPostgresql();
@@ -316,7 +316,7 @@ public class DqRepositoryViewServiceTest {
     // @Test
     // public void testGetColumns() {
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a mysql connection
     // Connection connection = helper.getDataManager();
@@ -445,7 +445,7 @@ public class DqRepositoryViewServiceTest {
     // @Test
     // public void testIsContainsTableConnectionCatalogString() {
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a mysql connection
     // Connection connection = helper.getDataManager();
@@ -479,7 +479,7 @@ public class DqRepositoryViewServiceTest {
     // public void testIsContainsTableConnectionSchemaString() {
     //
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a postgresql connection
     // Connection connection = helper.getDataManagerPostgresql();
@@ -526,7 +526,7 @@ public class DqRepositoryViewServiceTest {
     // @Test
     // public void testIsContainsViewConnectionCatalogString() {
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a mysql connection
     // Connection connection = helper.getDataManager();
@@ -558,7 +558,7 @@ public class DqRepositoryViewServiceTest {
     // public void testIsContainsViewConnectionSchemaString() {
     //
     // try {
-    // TestAnalysisCreation helper = new TestAnalysisCreation();
+    // AnalysisCreationTest helper = new AnalysisCreationTest();
     //
     // // create a postgresql connection
     // Connection connection = helper.getDataManagerPostgresql();

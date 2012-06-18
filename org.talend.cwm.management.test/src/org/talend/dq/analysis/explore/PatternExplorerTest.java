@@ -153,7 +153,7 @@ public class PatternExplorerTest {
         String strStatement = patternExplorer.getInvalidRowsStatement();
         // System.out.println(strStatement);
         Assert.assertEquals(RES_NEG, strStatement);
-        // TestAnalysisCreation creator = new TestAnalysisCreation();
+        // AnalysisCreationTest creator = new AnalysisCreationTest();
         //
         // Analysis analysis;
         // try {
@@ -177,7 +177,7 @@ public class PatternExplorerTest {
      */
     // @Test
     // public void testGetValidRowsStatement() {
-    // TestAnalysisCreation creator = new TestAnalysisCreation();
+    // AnalysisCreationTest creator = new AnalysisCreationTest();
     //
     // Analysis analysis;
     // try {
@@ -221,7 +221,7 @@ public class PatternExplorerTest {
      */
     // @Test
     // public void testGetQueryMap() {
-    // TestAnalysisCreation creator = new TestAnalysisCreation();
+    // AnalysisCreationTest creator = new AnalysisCreationTest();
     //
     // Analysis analysis;
     // try {
@@ -243,7 +243,7 @@ public class PatternExplorerTest {
     /**
      * Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#getInvalidValuesStatement()}.
      * 
-     * @Test public void testGetInvalidValuesStatement() { TestAnalysisCreation creator = new TestAnalysisCreation();
+     * @Test public void testGetInvalidValuesStatement() { AnalysisCreationTest creator = new AnalysisCreationTest();
      * 
      * Analysis analysis; try { analysis = creator.createAndRunAnalysis(); PatternExplorer patternExplorer = new
      * PatternExplorer(); Assert.assertTrue(patternExplorer.setAnalysis(analysis)); ChartDataEntity cdEntity = new
@@ -256,7 +256,7 @@ public class PatternExplorerTest {
     /**
      * Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#getValidValuesStatement()}.
      * 
-     * @Test public void testGetValidValuesStatement() { TestAnalysisCreation creator = new TestAnalysisCreation();
+     * @Test public void testGetValidValuesStatement() { AnalysisCreationTest creator = new AnalysisCreationTest();
      * 
      * Analysis analysis; try { analysis = creator.createAndRunAnalysis(); PatternExplorer patternExplorer = new
      * PatternExplorer(); Assert.assertTrue(patternExplorer.setAnalysis(analysis)); ChartDataEntity cdEntity = new

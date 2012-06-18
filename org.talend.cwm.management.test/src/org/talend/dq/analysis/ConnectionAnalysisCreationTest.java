@@ -48,7 +48,7 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class TestConnectionAnalysisCreation {
+public class ConnectionAnalysisCreationTest {
 
     /**
      * 
@@ -133,7 +133,7 @@ public class TestConnectionAnalysisCreation {
         return expre.generateExpressions();
     }
 
-    private static Logger log = Logger.getLogger(TestConnectionAnalysisCreation.class);
+    private static Logger log = Logger.getLogger(ConnectionAnalysisCreationTest.class);
 
     /**
      * DOC scorreia Comment method "getIndicators".

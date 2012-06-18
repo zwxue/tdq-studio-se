@@ -17,9 +17,9 @@ import org.apache.log4j.Logger;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class TestPattern {
+public class PatternTest {
 
-    private static Logger log = Logger.getLogger(TestPattern.class);
+    private static Logger log = Logger.getLogger(PatternTest.class);
 
     /**
      * DOC scorreia Comment method "main".

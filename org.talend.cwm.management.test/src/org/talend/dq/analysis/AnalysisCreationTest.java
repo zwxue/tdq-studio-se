@@ -65,7 +65,7 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class TestAnalysisCreation {
+public class AnalysisCreationTest {
 
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
@@ -97,9 +97,9 @@ public class TestAnalysisCreation {
     private static final String INDICATOR_NAME_RegexpMatchingIndicator = "RegexpMatchingIndicator"; //$NON-NLS-1$
 
     /**
-     * DOC xqliu TestAnalysisCreation constructor comment.
+     * DOC xqliu AnalysisCreationTest constructor comment.
      */
-    public TestAnalysisCreation() {
+    public AnalysisCreationTest() {
         initProxyRepository();
     }
 
@@ -122,7 +122,7 @@ public class TestAnalysisCreation {
      */
     public static void main(String[] args) {
         try {
-            TestAnalysisCreation myTest = new TestAnalysisCreation();
+            AnalysisCreationTest myTest = new AnalysisCreationTest();
             myTest.run();
         } catch (TalendException e) {
             log.error(e, e);
@@ -249,7 +249,7 @@ public class TestAnalysisCreation {
         return expre.generateExpressions();
     }
 
-    private static Logger log = Logger.getLogger(TestAnalysisCreation.class);
+    private static Logger log = Logger.getLogger(AnalysisCreationTest.class);
 
     private AnalysisBuilder analysisBuilder;
 
