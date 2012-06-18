@@ -6,7 +6,6 @@ Fragment-Host: org.talend.dataquality;bundle-version="1.0.0"
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: .Talend SA.
-Require-Bundle: org.junit4,
- org.eclipse.core.resources,
- org.hamcrest;bundle-version="1.1.0"
-Export-Package: org.talend.dataquality.test
+Require-Bundle: org.mockito;bundle-version="1.0.0"
+Export-Package: org.talend.dataquality.indicators.impl,org.talend.dataquality.test;uses:="org.eclipse.swtbot.eclipse.finder.widgets,org.eclipse.swtbot.swt.finder.widgets,org.eclipse.swtbot.eclipse.finder"
+Bundle-ClassPath: . 
