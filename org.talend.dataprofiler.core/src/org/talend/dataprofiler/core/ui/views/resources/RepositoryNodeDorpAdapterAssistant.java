@@ -478,6 +478,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param folderNode
      * @param label
      * @throws PersistenceException
+     * @deprecated use ProxyRepositoryFactory.getInstance().renameFolder() instead
      */
     public void renameFolderRepNode(IRepositoryNode folderNode, String label) throws PersistenceException {
         if (folderNode == null || label == null || "".equals(label)) { //$NON-NLS-1$
