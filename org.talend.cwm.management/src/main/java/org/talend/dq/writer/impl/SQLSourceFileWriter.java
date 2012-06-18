@@ -1,0 +1,134 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dq.writer.impl;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import org.talend.commons.emf.FactoriesUtil.EElementEName;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
+import org.talend.core.model.properties.ByteArray;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.core.model.properties.Property;
+import org.talend.dataquality.properties.TDQSourceFileItem;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.writer.AElementPersistance;
+import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
+
+import orgomg.cwm.objectmodel.core.ModelElement;
+
+/**
+ * For save the xx.sql file, because it is not an EMF model DOC yyin added 20120614 TDQ-5468
+ */
+public class SQLSourceFileWriter extends AElementPersistance {
+
+    /* (non-Javadoc)
+     * @see org.talend.dq.writer.AElementPersistance#notifyResourceChanges()
+     */
+    @Override
+    protected void notifyResourceChanges() {
+        ProxyRepositoryManager.getInstance().save();
+    }
+
+    /* (non-Javadoc)
+     * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected void addDependencies(ModelElement element) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.talend.dq.writer.AElementPersistance#getFileExtension()
+     */
+    @Override
+    protected String getFileExtension() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean)
+     */
+    @Override
+    public ReturnCode save(Item item, boolean careDependency) {
+        ReturnCode rc = new ReturnCode();
+        if (!(item instanceof TDQSourceFileItem)) {
+            rc.setOk(Boolean.FALSE);
+            return rc;
+        }
+        TDQSourceFileItem sqlItem = (TDQSourceFileItem) item;
+        ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
+        InputStream stream = null;
+
+        try {
+            File file = new File(this.getItemFullPath(sqlItem.getProperty()));
+            stream = file.toURL().openStream();
+            byte[] innerContent = new byte[stream.available()];
+            stream.read(innerContent);
+
+            byteArray.setInnerContent(innerContent);
+        } catch (IOException e) {
+            rc.setOk(Boolean.FALSE);
+            ExceptionHandler.process(e);
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    rc.setOk(Boolean.FALSE);
+                    rc.setMessage(e.getMessage());
+                }
+            }
+        }
+        String routineContent = new String(byteArray.getInnerContent());
+        byteArray.setInnerContent(routineContent.getBytes());
+        // now the item has its content(with empty inner content), should not replace,just set its inner content.
+        sqlItem.getContent().setInnerContent(routineContent.getBytes());
+
+        return rc;
+    }
+
+    private String getItemFullPath(Property property) {
+        Item item = property.getItem();
+
+        IPath path = null;
+        String fileName = null;
+        EElementEName elementEName = EElementEName.getElementEName(item);
+        if (elementEName != null) {
+            URI uri = EObjectHelper.getURI(property);
+            path = new Path(uri.toPlatformString(false));
+            path = new Path(path.lastSegment());
+            fileName = path.removeFileExtension().addFileExtension(elementEName.getFileExt()).toString();
+        }
+        // IPath tpath = PropertyHelper.getItemTypedPath(item);
+        // if (fileName != null) {
+        // path = ResourceManager.getRootProject().getFullPath().append(tpath)
+        // .append(fileName);
+        // }
+        IPath typedPath = ResourceManager.getRootProject().getFolder(PropertyHelper.getItemTypedPath(item)).getLocation();
+
+        String fullpath = typedPath.toOSString() + "/" + fileName;
+        return fullpath;
+    }
+
+}

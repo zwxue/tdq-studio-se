@@ -22,6 +22,7 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.writer.AElementPersistance;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -107,6 +108,10 @@ public final class ElementWriterFactory {
      */
     public IndicatorDefinitionWriter createIndicatorDefinitionWriter() {
         return new IndicatorDefinitionWriter();
+    }
+
+    public SQLSourceFileWriter createSQLSourceFileWriter() {
+        return new SQLSourceFileWriter();
     }
 
     /**
