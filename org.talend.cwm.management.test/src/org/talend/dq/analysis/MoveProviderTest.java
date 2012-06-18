@@ -29,9 +29,9 @@ import org.talend.commons.emf.EMFUtil;
  * 
  * Files used are generated when running the Test application ConnectionIndicEvalMain.
  */
-public final class TestMoveProvider {
+public final class MoveProviderTest {
 
-    private TestMoveProvider() {
+    private MoveProviderTest() {
     }
 
     /**
