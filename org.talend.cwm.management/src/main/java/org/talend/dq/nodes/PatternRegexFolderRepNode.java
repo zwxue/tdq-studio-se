@@ -24,7 +24,6 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.UpdatePatternUDIItemStatePathHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -48,7 +47,6 @@ public class PatternRegexFolderRepNode extends DQRepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        UpdatePatternUDIItemStatePathHelper.doUpdate();
         return getChildren(false);
     }
 
