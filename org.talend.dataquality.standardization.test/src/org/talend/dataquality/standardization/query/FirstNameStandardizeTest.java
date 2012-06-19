@@ -10,14 +10,12 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.standardization.query.test;
+package org.talend.dataquality.standardization.query;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.SimpleAnalyzer;
@@ -25,18 +23,17 @@ import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.eclipse.core.runtime.URIUtil;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.talend.dataquality.standardization.query.FirstNameStandardize;
+import org.talend.dataquality.standardization.main.HandLuceneImplTest;
 
 /**
  * DOC sizhaoliu class global comment. Detailled comment
  */
 public class FirstNameStandardizeTest {
 
-    private static final String indexfolder = "/TalendGivenNames_index/"; // $NON-NLS-1$
+    private static String indexfolder = HandLuceneImplTest.indexfolder;
 
     private static IndexSearcher searcher = null;
 
@@ -65,11 +62,7 @@ public class FirstNameStandardizeTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        URL url = FirstNameStandardizeTest.class.getResource(indexfolder);
-        URI escapedURI = new URI(url.getProtocol(), url.getPath(), url.getQuery());
-        File folder = URIUtil.toFile(escapedURI);
-
-        Directory dir = FSDirectory.open(folder);
+        Directory dir = FSDirectory.open(new File(indexfolder));
         searcher = new IndexSearcher(dir);
         searchAnalyzer = new SimpleAnalyzer();
         fnameStandardize = new FirstNameStandardize(searcher, searchAnalyzer, 10);
