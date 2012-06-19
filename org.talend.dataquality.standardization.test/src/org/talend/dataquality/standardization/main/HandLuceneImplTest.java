@@ -1,4 +1,4 @@
-package org.talend.dataquality.standardization.main.test;
+package org.talend.dataquality.standardization.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,14 +9,15 @@ import junit.framework.TestCase;
 
 import org.apache.lucene.queryParser.ParseException;
 import org.junit.Test;
-import org.talend.dataquality.standardization.main.HandleLucene;
-import org.talend.dataquality.standardization.main.HandleLuceneImpl;
+import org.talend.core.utils.PluginUtil;
 
 public class HandLuceneImplTest extends TestCase {
 
-    private String filename = "data/TalendGivenNames.TXT"; // $NON-NLS-1$
+    public final static String PLUGIN_ID = "org.talend.dataquality.standardization.test"; // $NON-NLS-1$
 
-    private String indexfolder = "data/TalendGivenNames_index2"; // $NON-NLS-1$
+    public final static String indexfolder = PluginUtil.getPluginInstallPath(PLUGIN_ID).concat("data/TalendGivenNames_index"); // $NON-NLS-1$
+
+    public final static String filename = PluginUtil.getPluginInstallPath(PLUGIN_ID).concat("data/TalendGivenNames.TXT"); // $NON-NLS-1$
 
     private HandleLucene hl;
 
