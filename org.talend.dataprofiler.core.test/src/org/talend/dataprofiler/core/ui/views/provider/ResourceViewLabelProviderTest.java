@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -15,20 +15,49 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
+import org.apache.poi.hpsf.Property;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.core.model.metadata.MetadataFillFactory;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
+import org.talend.core.model.properties.ItemState;
+import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.PackageHelper;
+import org.talend.cwm.helper.SchemaHelper;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
+import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.writer.impl.AnalysisWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
+import org.talend.utils.sql.ConnectionUtils;
+
+import com.sun.mail.imap.protocol.Item;
 
 /**
  * DOC zshen class global comment. Test the method
  * org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider#getFileCount
  */
+
 public class ResourceViewLabelProviderTest {
+
 
     private static String[] filterExtensions = { "ana", "rep" };
 
@@ -43,9 +72,11 @@ public class ResourceViewLabelProviderTest {
      */
     @Test
     public void testGetFileCount() {
+    	
         IFolder anaFolder = initFolder(anaFolderName);
         IFolder repFolder = initFolder(repFolderName);
         ResourceViewLabelProvider reViewLabelProvider = new ResourceViewLabelProvider();
+        
         int AnalysisNum = reViewLabelProvider.getFileCount(anaFolder, filterExtensions);
         // System.out.println(AnalysisNum);
         assertEquals(AnalysisNum, 3);
@@ -89,17 +120,31 @@ public class ResourceViewLabelProviderTest {
         if (anaFolderName.equals(folderName)) {
             IFolder subfolder1 = createFolder(aa, "subfolder1");
             IFolder subfolder2 = createFolder(aa, "subfolder2");
-            createFile(aa, "a1.ana");
-            createFile(subfolder1, "a2.ana");
-            createFile(subfolder2, "a3.ana");
+            createFile(aa, "a1_0.1.ana");
+            createFile(aa, "a1_0.1.properties");
+            //logic delete one
+            createFile(aa, "a4_0.1.ana");
+            createFile(aa, "a4_0.1.properties");
+          //~logic delete one
+            createFile(subfolder1, "a2_0.1.ana");
+            createFile(subfolder1, "a2_0.1.properties");
+            createFile(subfolder2, "a3_0.1.ana");
+            createFile(subfolder2, "a3_0.1.properties");
         }
         // for reports
         if (repFolderName.equals(folderName)) {
             IFolder subfolder1 = createFolder(aa, "subfolder1");
             IFolder subfolder2 = createFolder(aa, "subfolder2");
-            createFile(aa, "a1.rep");
-            createFile(subfolder1, "a2.rep");
-            createFile(subfolder2, "a3.rep");
+            createFile(aa, "a1_0.1.rep");
+            createFile(aa, "a1_0.1.properties");
+          //logic delete one
+            createFile(aa, "a4_0.1.rep");
+            createFile(aa, "a4_0.1.properties");
+          //~logic delete one
+            createFile(subfolder1, "a2_0.1.rep");
+            createFile(subfolder1, "a2_0.1.properties");
+            createFile(subfolder2, "a3_0.1.rep");
+            createFile(subfolder2, "a3_0.1.properties");
         }
         // System.out.println(aa.getRawLocationURI());
         return aa;
@@ -136,10 +181,13 @@ public class ResourceViewLabelProviderTest {
      */
     public IFile createFile(IFolder parentFolder, String filName) {
         IFile file = parentFolder.getFile(filName);
+        IPath parentPath = parentFolder.getFullPath().removeFirstSegments(1);
         if (!file.exists()) {
             try {
-                byte a1[] = new byte[0];
-                file.create(new ByteArrayInputStream(a1), true, null);
+            	InputStream resourceAsStream = ResourceViewLabelProviderTest.class.getClassLoader().getResourceAsStream("/temp/"+parentPath.toOSString()+"/"+filName);
+//            	FileInputStream aa=new FileInputStream()
+//                byte a1[] = new byte[0];
+                file.create(resourceAsStream, true, null);
             } catch (CoreException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
