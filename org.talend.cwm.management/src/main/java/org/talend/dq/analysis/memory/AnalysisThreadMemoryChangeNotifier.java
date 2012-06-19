@@ -38,6 +38,8 @@ public final class AnalysisThreadMemoryChangeNotifier extends AbstractMemoryChan
         if (null == instance) {
             instance = new AnalysisThreadMemoryChangeNotifier();
         }
+        // MOD yyi 2012-06-19 TDQ-4916: reload for each instance to guarantee the threshold has been setted to the jvm.
+        instance.reloadPerference();
         return instance;
     }
 
@@ -92,6 +94,8 @@ public final class AnalysisThreadMemoryChangeNotifier extends AbstractMemoryChan
 
     public void reloadPerference() {
         if (isThresholdControl) {
+            // The #userDefineThreshold changes to the free memory, if the free memory size less than
+            // userDefineThreshold vlaue the analysis shoud be stop.
             setUsageThreshold(megaToByte(userDefineThreshold));
         } else {
             // Clear limit

@@ -43,7 +43,7 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
 
     private static Logger log = Logger.getLogger(Evaluator.class);
 
-    private boolean isLowMemory = false;
+    private volatile boolean isLowMemory = false;
 
     protected Connection connection;
 

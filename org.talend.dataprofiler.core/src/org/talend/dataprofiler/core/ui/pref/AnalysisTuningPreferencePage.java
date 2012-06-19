@@ -170,13 +170,15 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         // MOD yyi 2012-04-18 TDQ-4916 scale layout fixed.
         compositeScale.setLayoutData(gridData1);
 
+        // MOD yyi 2012-06-19 TDQ-4916 if the value is set to zero the threshold function would be disabled.
         memoryScaleField = new ScaleFieldEditor(AnalysisThreadMemoryChangeNotifier.ANALYSIS_MEMORY_THRESHOLD,
-                "", compositeScale, memTotal - memFree, memMax, 1, 8); //$NON-NLS-1$
+                "", compositeScale,  0, memMax -memTotal , 1, 8); //$NON-NLS-1$
 
         memoryScaleField.setPropertyChangeListener(new IPropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent event) {
                 labelScale2.setText(event.getNewValue().toString());
+                labelScale2.pack();
             }
 
         });
@@ -193,7 +195,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         }
 
         Composite composite3 = new Composite(composite2, SWT.NONE);
-        composite3.setLayout(gridLayout1);
+        composite3.setLayout(new GridLayout(4,false));
         composite3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Label label3 = new Label(composite3, SWT.NONE);
@@ -201,6 +203,9 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         HeapStatus heap = new HeapStatus(composite3, PlatformUI.getPreferenceStore());
         heap.setEnabled(false);
         heap.setMenu(null);
+
+        // Label label4 = new Label(composite3, SWT.NONE);
+        //        label4.setText("\tMax:"+(memMax) +"M\t"+"Free:"+(memFree) +"M"+"\tTotal:"+(memTotal) +"M"); //$NON-NLS-1$
 
         CLabel label2 = new CLabel(composite2, SWT.WRAP);
         label2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.JvmWarning")); //$NON-NLS-1$
