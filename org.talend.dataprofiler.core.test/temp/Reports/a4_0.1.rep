@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataquality.reports:TdReport xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dataquality.reports="http://dataquality.reports" xmi:id="__JVlAbnUEeGxf_rCFycUMQ" name="a4" creationDate="2012-06-19T14:07:01.750+0800">
+  <taggedValue xmi:id="__JVlArnUEeGxf_rCFycUMQ" tag="Status" value="development"/>
+  <taggedValue xmi:id="__JVlA7nUEeGxf_rCFycUMQ" tag="Author" value="a@a.a"/>
+  <taggedValue xmi:id="__JVlBLnUEeGxf_rCFycUMQ" tag="Purpose"/>
+  <taggedValue xmi:id="__JVlBbnUEeGxf_rCFycUMQ" tag="Description"/>
+  <taggedValue xmi:id="__JVlBrnUEeGxf_rCFycUMQ" tag="Version" value="0.1"/>
+  <taggedValue xmi:id="__JVlB7nUEeGxf_rCFycUMQ" tag="OutputFolder" value=""/>
+  <taggedValue xmi:id="__JVlCLnUEeGxf_rCFycUMQ" tag="REP_DBINFO_DBTYPE" value="HSQL"/>
+  <taggedValue xmi:id="__JVlCbnUEeGxf_rCFycUMQ" tag="REP_DBINFO_DBNAME" value="talend_dq"/>
+  <taggedValue xmi:id="__JVlCrnUEeGxf_rCFycUMQ" tag="REP_DBINFO_USER" value="sa"/>
+  <taggedValue xmi:id="__JVlC7nUEeGxf_rCFycUMQ" tag="REP_DBINFO_PASSWORD" value=""/>
+  <taggedValue xmi:id="__JVlDLnUEeGxf_rCFycUMQ" tag="REP_DBINFO_DRIVER" value="org.hsqldb.jdbcDriver"/>
+  <taggedValue xmi:id="__JVlDbnUEeGxf_rCFycUMQ" tag="REP_DBINFO_DIALECT" value="org.hibernate.dialect.HSQLDialect"/>
+  <taggedValue xmi:id="__JVlDrnUEeGxf_rCFycUMQ" tag="REP_DBINFO_URL" value="jdbc:hsqldb:file:/F:\workspace\branch5.0\TDQEE_windows_runtime\TDQ_reporting_db\talend_dq"/>
+  <taggedValue xmi:id="__JVlD7nUEeGxf_rCFycUMQ" tag="REP_DBINFO_HOST" value=""/>
+  <taggedValue xmi:id="__JVlELnUEeGxf_rCFycUMQ" tag="REP_DBINFO_PORT" value=""/>
+  <taggedValue xmi:id="__JVlEbnUEeGxf_rCFycUMQ" tag="REP_DBINFO_SCHEMA" value=""/>
+</dataquality.reports:TdReport>

@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Text;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.talend.dataprofiler.core.CorePlugin;
 
 /**
  * DOC zshen class global comment. Detailled comment need to run it with a top application
@@ -35,7 +36,7 @@ public class ExportWizardPageTest {
         String return2 = "archTxt";//$NON-NLS-1$
         ExportWizardPage exportWizardPage = new ExportWizardPage(null);
         ExportWizardPage mockExportWizardPage = Mockito.spy(exportWizardPage);
-        Shell shell = new Shell();
+        Shell shell = CorePlugin.getDefault().getWorkbench().getDisplay().getActiveShell();
         mockExportWizardPage.createSelectComposite(shell);
         mockExportWizardPage.createRepositoryTree(shell);
         Mockito.when(mockExportWizardPage.isDirState()).thenReturn(true).thenReturn(false);
