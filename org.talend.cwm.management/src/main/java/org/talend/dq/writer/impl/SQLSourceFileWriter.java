@@ -17,17 +17,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
-import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesFactory;
-import org.talend.core.model.properties.Property;
 import org.talend.dataquality.properties.TDQSourceFileItem;
-import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.resource.ResourceManager;
@@ -80,12 +74,12 @@ public class SQLSourceFileWriter extends AElementPersistance {
         InputStream stream = null;
 
         try {
-            File file = new File(this.getItemFullPath(sqlItem.getProperty()));
-            stream = file.toURL().openStream();
-            byte[] innerContent = new byte[stream.available()];
-            stream.read(innerContent);
+            File file = new File(this.getItemFullPath(sqlItem));
+            // stream = file.toURL().openStream();
+            // byte[] innerContent = new byte[stream.available()];
+            // stream.read(innerContent);
 
-            byteArray.setInnerContent(innerContent);
+            byteArray.setInnerContentFromFile(file);
         } catch (IOException e) {
             rc.setOk(Boolean.FALSE);
             ExceptionHandler.process(e);
@@ -107,26 +101,17 @@ public class SQLSourceFileWriter extends AElementPersistance {
         return rc;
     }
 
-    private String getItemFullPath(Property property) {
-        Item item = property.getItem();
-
-        IPath path = null;
-        String fileName = null;
-        EElementEName elementEName = EElementEName.getElementEName(item);
-        if (elementEName != null) {
-            URI uri = EObjectHelper.getURI(property);
-            path = new Path(uri.toPlatformString(false));
-            path = new Path(path.lastSegment());
-            fileName = path.removeFileExtension().addFileExtension(elementEName.getFileExt()).toString();
+    private String getItemFullPath(TDQSourceFileItem item) {
+        String statePathStr = null;
+        if (item.getState() != null) {
+            statePathStr = item.getState().getPath();
+            if (!statePathStr.equals("")) {
+                statePathStr = "/" + statePathStr;
+            }
         }
-        // IPath tpath = PropertyHelper.getItemTypedPath(item);
-        // if (fileName != null) {
-        // path = ResourceManager.getRootProject().getFullPath().append(tpath)
-        // .append(fileName);
-        // }
-        IPath typedPath = ResourceManager.getRootProject().getFolder(PropertyHelper.getItemTypedPath(item)).getLocation();
-
-        String fullpath = typedPath.toOSString() + "/" + fileName;
+        String fileName = item.getName() + "_" + item.getProperty().getVersion() + "." + item.getExtension();//$NON-NLS-1$
+        IPath typedPath = ResourceManager.getSourceFileFolder().getLocation();
+        String fullpath = typedPath.toOSString() + statePathStr + "/" + fileName;//$NON-NLS-1$
         return fullpath;
     }
 
