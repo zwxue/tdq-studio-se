@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UIMessages;
 import org.talend.dataquality.analysis.impl.AnalysisImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.reports.impl.TdReportImpl;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -40,10 +41,10 @@ import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwmx.analysis.informationreporting.impl.ReportFieldImpl;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -70,9 +71,9 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                         openEditor((Item) savedObj);
                     }
 
-                    if (modelElement instanceof AnalysisImpl || modelElement instanceof ReportFieldImpl) {
+                    if (modelElement instanceof AnalysisImpl || modelElement instanceof TdReportImpl) {
                         CorePlugin.getDefault().refreshDQView(
-                                RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING));
+                                RepositoryNodeHelper.findNearestSystemFolderNode((RepositoryNode) currentSelectionNode));
                     }
 
                     CorePlugin.getDefault().refreshWorkSpace();

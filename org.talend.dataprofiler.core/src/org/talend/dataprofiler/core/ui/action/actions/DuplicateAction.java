@@ -47,6 +47,10 @@ import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.AnalysisSubFolderRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -207,9 +211,20 @@ public class DuplicateAction extends Action {
         ModelElement modelElement = ModelElementFileFactory.getModelElement((IFile) duplicateObject);
         RepositoryNode recursiveFind = null;
         recursiveFind = getSelctionNode(duplicateObject, modelElement, recursiveFind);
-        if (recursiveFind != null) {
-            CorePlugin.getDefault().refreshDQView(recursiveFind.getParent());
-        }
+		if (recursiveFind != null) {
+			if (recursiveFind instanceof AnalysisRepNode
+					|| recursiveFind instanceof AnalysisSubFolderRepNode
+					|| recursiveFind instanceof ReportRepNode
+					|| recursiveFind instanceof ReportSubFolderRepNode) {
+
+				CorePlugin.getDefault().refreshDQView(
+						RepositoryNodeHelper
+								.findNearestSystemFolderNode(recursiveFind));
+			} else {
+				CorePlugin.getDefault()
+						.refreshDQView(recursiveFind.getParent());
+			}
+		}
         if (activePart instanceof ISetSelectionTarget) {
             ISelection selection = new StructuredSelection(recursiveFind);
             ((ISetSelectionTarget) activePart).selectReveal(selection);

@@ -45,11 +45,13 @@ import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -375,9 +377,13 @@ public class DQDeleteAction extends DeleteAction {
             // delete related output folder after physical delete a report.
             DQDeleteHelper.deleteRelations(item);
         }
-        // refresh parent node
+     // refresh parent node
         if (parent != null) {
-            CorePlugin.getDefault().refreshDQView(parent);
+            if (parent instanceof AnalysisSubFolderRepNode || parent instanceof ReportSubFolderRepNode) {
+                CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.findNearestSystemFolderNode(parent));
+            } else {
+                CorePlugin.getDefault().refreshDQView(parent);
+            }
         }
     }
 
