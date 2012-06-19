@@ -12,19 +12,19 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.imex;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.talend.dataprofiler.core.CorePlugin;
 
 /**
  * DOC zshen class global comment. Detailled comment need to run it with a top application
  */
+
 public class ExportWizardPageTest {
+
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.imex.ExportWizardPage#updateBasePath()}.
@@ -36,25 +36,29 @@ public class ExportWizardPageTest {
         String return2 = "archTxt";//$NON-NLS-1$
         ExportWizardPage exportWizardPage = new ExportWizardPage(null);
         ExportWizardPage mockExportWizardPage = Mockito.spy(exportWizardPage);
-        Shell shell = CorePlugin.getDefault().getWorkbench().getDisplay().getActiveShell();
-        mockExportWizardPage.createSelectComposite(shell);
-        mockExportWizardPage.createRepositoryTree(shell);
-        Mockito.when(mockExportWizardPage.isDirState()).thenReturn(true).thenReturn(false);
-        Mockito.when(mockExportWizardPage.getTextContent((Text) Mockito.any())).thenReturn(return1).thenReturn(return2);
 
+        // Shell shell = new Shell();
+        // mockExportWizardPage.createSelectComposite(shell);
+        // mockExportWizardPage.createRepositoryTree(shell);
+
+        PowerMockito.doReturn(true).when(mockExportWizardPage).isDirState();
+        PowerMockito.doReturn(return1).when(mockExportWizardPage).getTextContent((Text) Mockito.any());
         PowerMockito.doNothing().when(mockExportWizardPage).textModified(Mockito.anyString());
-
+        
         String updateBasePath1 = mockExportWizardPage.updateBasePath();
+
+        PowerMockito.doReturn(false).when(mockExportWizardPage).isDirState();
+        PowerMockito.doReturn(return2).when(mockExportWizardPage).getTextContent((Text) Mockito.any());
         String updateBasePath2 = mockExportWizardPage.updateBasePath();
         Mockito.verify(mockExportWizardPage, Mockito.times(2)).isDirState();
         Mockito.verify(mockExportWizardPage, Mockito.times(2)).getTextContent((Text) Mockito.any());
         Mockito.verify(mockExportWizardPage, Mockito.times(2)).textModified(Mockito.anyString());
-        Mockito.verify(mockExportWizardPage).createSelectComposite(shell);
-        Mockito.verify(mockExportWizardPage).createRepositoryTree(shell);
+        // Mockito.verify(mockExportWizardPage).createSelectComposite(shell);
+        // Mockito.verify(mockExportWizardPage).createRepositoryTree(shell);
 
         assertEquals(updateBasePath1, return1);
         assertEquals(updateBasePath2, return2);
-        shell.dispose();
+        // shell.dispose();
     }
 
     public void textModified(String pathStr) {
