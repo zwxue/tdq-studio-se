@@ -35,6 +35,8 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -52,9 +54,11 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPoolMap;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -108,6 +112,18 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         // MOD klliu bug 19244 2011-03-10
         if (node != null) {
+            // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
+            Item item = node.getObject().getProperty().getItem();
+            // try to lock item, the status will be updated in case it is already locked by someone else
+            ProxyRepositoryManager.getInstance().lock(item);
+            if (ProxyRepositoryFactory.getInstance().getStatus(item) == ERepositoryStatus.LOCK_BY_OTHER) {
+                CorePlugin.getDefault().refreshDQView(node);
+                MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                        DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"),
+                        DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers"));
+                return;
+            }
+            // ~ TDQ-5452
             editor = CorePlugin.getDefault().openEditor(new AnalysisItemEditorInput(node.getObject().getProperty().getItem()),
                     AnalysisEditor.class.getName());
         }
