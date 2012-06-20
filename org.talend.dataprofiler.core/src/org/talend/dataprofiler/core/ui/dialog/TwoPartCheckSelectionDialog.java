@@ -320,7 +320,11 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
             public void run() {
                 parentCreate();
-                fViewer.setCheckedElements(getInitialElementSelections().toArray());
+                if(fViewer instanceof ICheckBoxTreeViewer2){
+                	((ICheckBoxTreeViewer2)fViewer).setCheckedElements(getInitialElementSelections().toArray(), false);
+                }else{
+                	fViewer.setCheckedElements(getInitialElementSelections().toArray());
+                }
                 fViewer.getTree().addTreeListener(new TreeAdapter() {
 
                     @Override

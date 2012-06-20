@@ -210,7 +210,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         // RepositoryNode tableParent = reposNode.getParent().getParent();
         IRepositoryNode tableParent = getParentNode(reposNode);
         if (checkedFlag) {
-            getTreeViewer().setChecked(tableParent, checkedFlag);
+        	
+//        	if(getTreeViewer() instanceof ICheckBoxTreeViewer2){
+//        		((ICheckBoxTreeViewer2)getTreeViewer()).setChecked(tableParent, checkedFlag,false);
+//        	}else{
+        		getTreeViewer().setChecked(tableParent, checkedFlag);
+//        	}
+            
             modelElementCheckedMap.put(tableParent, reposNode);
         } else {
             modelElementCheckedMap.remove(tableParent, reposNode);
@@ -341,13 +347,16 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     }
                 }
             } else if (repNode instanceof MDMXmlElementRepNode) {
-                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(repNode, true).length > 0;
-                if (!isLeaf) {
+            	//MOD by zshen two case need to consider which 
+            	//1 select a node on the treeview then select the parent node of the node check whether the element will be joined twice.
+            	//2 select a node on the tableview and which contain more than one node in the treeview check whether can be select after click on the ok button.
+//                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(repNode, true).length > 0;
+//                if (!isLeaf) {
                     if (!getTableviewCheckedElements(allCheckedElements, repNode)) {
-                        List<IRepositoryNode> children = repNode.getChildren();
-                        allCheckedElements.addAll(children);
+//                        List<IRepositoryNode> children = repNode.getChildren();
+//                        allCheckedElements.addAll(children);
                     }
-                }
+//                }
             }
         }
 
