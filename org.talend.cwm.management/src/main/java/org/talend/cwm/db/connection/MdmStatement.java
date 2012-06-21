@@ -79,7 +79,7 @@ public class MdmStatement {
             Map<String, String> rowMap = new HashMap<String, String>();
             for (int j = 0; j < arraySize; j++) {
                 String columnTitleName = columnTitle[j].getName();
-                rowMap.put(columnTitleName, getXmlNodeValue(resultSet[i], columnTitleName));
+                rowMap.put(columnTitleName, getAllXmlNodeValue(resultSet[i], columnTitleName));
             }
             resultSetList.add(rowMap);
         }
@@ -95,7 +95,7 @@ public class MdmStatement {
      * @return
      */
     public String getXmlNodeValue(String xmlValue, String columnTitleName) {
-        String matchStrHaveValue = "<" + columnTitleName + ">([^>^<]*)</" + columnTitleName + ">"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+        String matchStrHaveValue = "<" + columnTitleName + ".*>([^>^<]*)</" + columnTitleName + ">"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
         Pattern pattern = Pattern.compile(matchStrHaveValue);
         Matcher matcher = pattern.matcher(xmlValue);
         if (matcher.find()) {
@@ -104,5 +104,29 @@ public class MdmStatement {
             return null;
         }
 
+    }
+
+    /**
+     * 
+     * get all sub-nodes value under the node columnTitleName.
+     * 
+     * @param xmlValue
+     * @param columnTitleName
+     * @return
+     */
+    private String getAllXmlNodeValue(String xmlValue, String columnTitleName) {
+        String matchStrHaveValue = "<" + columnTitleName + ".*>(.*)</" + columnTitleName + ">"; //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+        Pattern pattern = Pattern.compile(matchStrHaveValue);
+        Matcher matcher = pattern.matcher(xmlValue);
+        String values = null;
+        while (matcher.find()) {
+            if (values != null) {
+                values += "_//_";//$NON-NLS-1$
+            } else {
+                values = "";//$NON-NLS-1$
+            }
+            values += matcher.group(1);
+        }
+        return values;
     }
 }

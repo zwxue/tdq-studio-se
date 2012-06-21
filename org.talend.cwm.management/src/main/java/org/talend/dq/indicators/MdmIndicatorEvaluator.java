@@ -23,6 +23,7 @@ import javax.xml.rpc.ServiceException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.db.connection.XQueryExpressionUtil;
@@ -116,7 +117,14 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
         TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
                 .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElementList.get(0))));
         // all the column under the parentElement
-        List<TdXmlElementType> columnList = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
+        List<TdXmlElementType> columnListTemp = org.talend.cwm.db.connection.ConnectionUtils.getXMLElements(parentElement);
+        // MOD qiongli 2012-6-21 TDQ-5139
+        List<TdXmlElementType> columnList = new ArrayList<TdXmlElementType>();
+        for (TdXmlElementType tdXmlEle : columnListTemp) {
+            if (!DqRepositoryViewService.hasChildren(tdXmlEle)) {
+                columnList.add(tdXmlEle);
+            }
+        }
 
         // FIXME the first instance of resultSetList is never used.
         List<Map<String, String>> resultSetList = new ArrayList<Map<String, String>>();
@@ -126,62 +134,76 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
             resultSetList = statement.tidyResultSet(analysisElementList.toArray(new ModelElement[analysisElementList.size()]),
                     resultSet);
         }
+        String splitStr = "_//_"; //$NON-NLS-1$
         label: for (Map<String, String> rowMap : resultSetList) {
             for (int i = 0; i < analysisElementList.size(); i++) {
                 String col = analysisElementList.get(i).getName();// the name of column
                 List<Indicator> indicators = getIndicators(col);
-                String object = rowMap.get(col);// the value of column
-                // --- give row to handle to indicators
-                for (Indicator indicator : indicators) {
-                    if (!continueRun()) {
-                        break label;
-                    }
-                    indicator.handle(object);
-                    // 12919
-                    AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
-                    if (analyzedDataSet == null) {
-                        analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
-                        indicToRowMap.put(indicator, analyzedDataSet);
-                        analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
-                        analyzedDataSet.setRecordSize(0);
-                    }
+                // String object = rowMap.get(col);// the value of column
+                // TDQ-5139 the node maybe have some sub-nodes
+                String xmlValues = rowMap.get(col);
+                if (xmlValues == null) {
+                    continue;
+                }
+                String[] split = xmlValues.split(splitStr);
+                for (int k = 0; k < split.length; k++) {
+                    String object = split[k];
+                    // --- give row to handle to indicators
+                    for (Indicator indicator : indicators) {
+                        if (!continueRun()) {
+                            break label;
+                        }
+                        indicator.handle(object);
+                        // 12919
+                        AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
+                        if (analyzedDataSet == null) {
+                            analyzedDataSet = AnalysisFactory.eINSTANCE.createAnalyzedDataSet();
+                            indicToRowMap.put(indicator, analyzedDataSet);
+                            analyzedDataSet.setDataCount(analysis.getParameters().getMaxNumberRows());
+                            analyzedDataSet.setRecordSize(0);
+                        }
 
-                    if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
-                        List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
-                        // MOD zshen add another loop to insert all of columnValue on the row into indicator.
-                        recordIncrement = valueObjectList.size();
+                        if (analysis.getParameters().isStoreData() && indicator.mustStoreRow()) {
+                            List<Object[]> valueObjectList = initDataSet(indicator, indicToRowMap, object);
+                            // MOD zshen add another loop to insert all of columnValue on the row into indicator.
+                            recordIncrement = valueObjectList.size();
 
-                        int offset = 0;
-                        for (TdXmlElementType columnElement : columnList) {
-                            Object newobject = rowMap.get(columnElement.getName());
-                            if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                                if (recordIncrement < valueObjectList.size()) {
-                                    valueObjectList.get(recordIncrement)[offset] = newobject;
-                                } else {
-                                    Object[] valueObject = new Object[columnList.size()];
-                                    valueObject[offset] = newobject;
-                                    valueObjectList.add(valueObject);
+                            int offset = 0;
+                            for (TdXmlElementType columnElement : columnList) {
+                                Object newobject = rowMap.get(columnElement.getName());
+                                if (split.length > 1) {
+                                    newobject = object;
+                                }
+                                if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                                    if (recordIncrement < valueObjectList.size()) {
+                                        valueObjectList.get(recordIncrement)[offset] = newobject;
+                                    } else {
+                                        Object[] valueObject = new Object[columnList.size()];
+                                        valueObject[offset] = newobject;
+                                        valueObjectList.add(valueObject);
+                                    }
+                                }
+                                offset++;
+                            }
+                            // ~
+                        } else if (indicator instanceof UniqueCountIndicator
+                                && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
+                            List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator)
+                                    .getData();
+                            // List<TdColumn> columnElementList =
+                            // TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
+                            // .getAnalyzedElement().eContainer()));
+                            int offsetting = columnList.indexOf(indicator.getAnalyzedElement());
+                            for (Object[] dataObject : removeValueObjectList) {
+                                if (dataObject[offsetting].equals(object)) {
+                                    removeValueObjectList.remove(dataObject);
+                                    break;
                                 }
                             }
-                            offset++;
-                        }
-                        // ~
-                    } else if (indicator instanceof UniqueCountIndicator
-                            && analysis.getResults().getIndicToRowMap().get(indicator).getData() != null) {
-                        List<Object[]> removeValueObjectList = analysis.getResults().getIndicToRowMap().get(indicator).getData();
-                        // List<TdColumn> columnElementList =
-                        // TableHelper.getColumns(SwitchHelpers.TABLE_SWITCH.doSwitch(indicator
-                        // .getAnalyzedElement().eContainer()));
-                        int offsetting = columnList.indexOf(indicator.getAnalyzedElement());
-                        for (Object[] dataObject : removeValueObjectList) {
-                            if (dataObject[offsetting].equals(object)) {
-                                removeValueObjectList.remove(dataObject);
-                                break;
-                            }
-                        }
 
+                        }
+                        // 12919~
                     }
-                    // 12919~
                 }
             }
         }

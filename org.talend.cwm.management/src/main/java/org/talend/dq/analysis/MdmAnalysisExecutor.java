@@ -112,7 +112,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
         // int paginationNum = analysis.getParameters().getMaxNumberRows();
-        StringBuilder sql = new StringBuilder("let $_leres0_ := //");//$NON-NLS-1$
+        StringBuilder sql = new StringBuilder("let $_leres0_ := ");//$NON-NLS-1$
         StringBuilder selectElement = new StringBuilder();
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
@@ -195,8 +195,20 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             this.errorMessage = Messages.getString("MdmAnalysisExecutor.NOTANAELEMENTTOBECHOICE");//$NON-NLS-1$
             return null;
         }
-        // for
-        sql.append(parentAnalyzedElementName);// remaind on version 2
+        // MOD qiongli 2012-6-19 TDQ-5139.in order to query accurately,should use like
+        // "count(collection('Product/Product')//Store)"
+        // String parentElementCollection = null;
+        StringBuilder parentElementCollection = new StringBuilder();
+        // StringBuilder currentElementCollection = new StringBuilder();
+        TdXmlElementType tdXmlEle = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysedElements.get(0));
+        if (tdXmlEle != null) {
+            parentElementCollection.append("(collection('").append(getTopLevelsName(tdXmlEle)).append("')//")//$NON-NLS-1$//$NON-NLS-2$
+                    .append(XmlElementHelper.getFullPath(tdXmlEle, PluginConstant.EMPTY_STRING)).append(")");//$NON-NLS-1$
+            //            currentElementCollection.append("(collection('").append(getTopLevelsName(tdXmlEle)).append("')//")//$NON-NLS-1$//$NON-NLS-2$
+            //                    .append(XmlElementHelper.getFullPath(tdXmlEle, tdXmlEle.getName())).append(")");//$NON-NLS-1$
+        }
+        sql.append(parentElementCollection);// remaind on version 2
+        // sql.append(" let $_leres1_ := ").append(currentElementCollection);
         sql.append(" let $_page_ := for $");//$NON-NLS-1$
 
         sql.append(parentAnalyzedElementName);
@@ -219,9 +231,10 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         sql.append("return <result>{if ($");//$NON-NLS-1$
         sql.append(parentAnalyzedElementName);
         sql.append(") then ");//$NON-NLS-1$
-        sql.append(selectElement);
-
-        sql.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres0_)}</totalCount>)");//$NON-NLS-1$
+        // replace 'selectElement' with 'parentAnalyzedElementName',parentAnalyzedElementName contain all elements
+        sql.append("$").append(parentAnalyzedElementName);
+        // sql.append(selectElement);
+        sql.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres1_)}</totalCount>)");//$NON-NLS-1$
         return sql.toString();
     }
 
@@ -309,6 +322,33 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         rc.setOk(tempMdmConnection.checkDatabaseConnection().isOk());
         rc.setMessage(dataProvider.getPathname());
         return rc;
+    }
+
+    /**
+     * 
+     * get the 2 levels name(.e.g,"Product/Store").
+     * 
+     * @param xmlElement
+     * @param levelStr
+     * @return
+     */
+    protected String getTopLevelsName(TdXmlElementType xmlElement) {
+        if (xmlElement == null) {
+            return null;
+        }
+
+        ModelElement parentElement = XmlElementHelper.getParentElement(xmlElement);
+        TdXmlSchema xmlSchema = SwitchHelpers.XMLSCHEMA_SWITCH.doSwitch(parentElement);
+        if (xmlSchema != null) {
+            return xmlSchema.getName() + "/" + xmlElement.getName();//$NON-NLS-1$
+            // return xmlSchema.getName();
+        } else {
+            TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
+            if (parentXmlElement != null) {
+                return getTopLevelsName(parentXmlElement);
+            }
+        }
+        return PluginConstant.EMPTY_STRING;
     }
 
 }

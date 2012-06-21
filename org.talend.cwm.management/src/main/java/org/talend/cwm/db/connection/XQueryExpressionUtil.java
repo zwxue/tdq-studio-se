@@ -31,6 +31,8 @@ public final class XQueryExpressionUtil {
 
     private static String columnNodeNameArraystr = null;
 
+    private static String tableNodeWithFunction;
+
     private XQueryExpressionUtil() {
 
     }
@@ -45,8 +47,18 @@ public final class XQueryExpressionUtil {
         int beginIndex = 0;
         int endIndex = 0;
         beginIndex = xqueryStr.indexOf("//") + 2;//$NON-NLS-1$
-        endIndex = xqueryStr.indexOf(" let $_page_ := ", beginIndex);//$NON-NLS-1$
+        endIndex = xqueryStr.indexOf(") let $_page_ := ", beginIndex);//$NON-NLS-1$
         tableNode = xqueryStr.substring(beginIndex, endIndex);
+        // MOD qiongli 2012-6-20 bug TDQ-5139 in order to query accurately,need to use collection
+        int rootNodeEndindex = tableNode.indexOf("/");
+        if (rootNodeEndindex != -1) {
+            tableNode = tableNode.substring(0, rootNodeEndindex);
+        }
+
+        // function.tableNodeWithFunction is a collection function with tableNode.
+        int beginIndexTable = xqueryStr.indexOf("$_leres0_ :=") + 13;
+        int endIndexTable = xqueryStr.indexOf(" let $_page_ :", beginIndex);
+        tableNodeWithFunction = xqueryStr.substring(beginIndexTable, endIndexTable);
         // MOD klliu bug TDQ-3542 revert some code
         beginIndex = xqueryStr.indexOf(PluginConstant.COMMA_STRING, endIndex) + 1;
         endIndex = xqueryStr.indexOf(PluginConstant.COMMA_STRING, beginIndex);
@@ -71,8 +83,9 @@ public final class XQueryExpressionUtil {
             return null;
         }
         expression.delete(0, expression.length());
-        expression.append("let $_leres0_ := //");//$NON-NLS-1$
-        expression.append(tableNode);
+        expression.append("let $_leres0_ := ");//$NON-NLS-1$
+        // MOD qiongli 2012-6-20 bug TDQ-5139 replace tableNode with tableNodeWithFunction.
+        expression.append(tableNodeWithFunction);
         expression.append(" let $_page_ := for $");//$NON-NLS-1$
         expression.append(tableNode);
         expression.append(" in subsequence($_leres0_,");//$NON-NLS-1$
@@ -82,7 +95,9 @@ public final class XQueryExpressionUtil {
         expression.append(") return <result>{if ($");//$NON-NLS-1$
         expression.append(tableNode);
         expression.append(") then ");//$NON-NLS-1$
-        expression.append(columnNodeNameArraystr == null ? "$" + tableNode : columnNodeNameArraystr);//$NON-NLS-1$
+        //        expression.append(columnNodeNameArraystr == null ? "$" + tableNode : columnNodeNameArraystr);//$NON-NLS-1$
+        expression.append("$" + tableNode);//$NON-NLS-1$
+
         expression.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres0_)}</totalCount>)");//$NON-NLS-1$
 
         return expression.toString();

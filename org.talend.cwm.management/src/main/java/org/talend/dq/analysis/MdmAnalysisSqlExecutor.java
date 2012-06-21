@@ -144,11 +144,26 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             whereExpression.add(dataFilterAsString);
         }
         String parentElementName = XmlElementHelper.getParentElementName(xmlElement);
+        String body = sqlGenericExpression.getBody();
+        // MOD qiongli 2012-6-19 TDQ-5139.should use like "(collection("Product/Product")//Product/Stores/Store)" or
+        // "(collection("Product/Product")//Product/Stores)/Store"
+        if (parentElementName != null) {
+            if (body != null) {
+                body = sqlGenericExpression.getBody().replaceAll("//", PluginConstant.EMPTY_STRING);//$NON-NLS-1$
+                String path = null;
+                if (!body.contains("/<%=__COLUMN_NAMES__%")) {//$NON-NLS-1$
+                    path = XmlElementHelper.getFullPath(xmlElement, xmlElement.getName());
+                } else {
+                    path = XmlElementHelper.getFullPath(xmlElement, PluginConstant.EMPTY_STRING);
+                }
+                parentElementName = "(collection('" + super.getTopLevelsName(xmlElement) + "')//" + path + ")";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+            }
+        }
+
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
         // --- default case
-        completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(sqlGenericExpression.getBody(), elementName,
-                parentElementName);
+        completedSqlString = dbms().fillGenericQueryWithColumnsAndTable(body, elementName, parentElementName);
         completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
         // completedSqlString is the final query
         String finalQuery = completedSqlString;
