@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,6 +35,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.jfree.util.Log;
@@ -77,6 +79,7 @@ import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -515,7 +518,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param folderNode
      * @param label
      * @throws PersistenceException
-     * @deprecated use ProxyRepositoryFactory.getInstance().renameFolder() instead
      */
     public void renameFolderRepNode(IRepositoryNode folderNode, String label) throws PersistenceException {
         if (folderNode == null || label == null || "".equals(label)) { //$NON-NLS-1$
@@ -542,6 +544,12 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
         path = path == null ? "" : path; //$NON-NLS-1$
         path = path.startsWith(String.valueOf(IPath.SEPARATOR)) ? path : IPath.SEPARATOR + path;
+
+        if (hasLockedItems(objectType, path)){
+        	MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                    DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameFolderLocked")); //$NON-NLS-1$
+        	return;
+        }
 
         // create target folder
         Folder targetFoler = ProxyRepositoryFactory.getInstance()
@@ -779,5 +787,16 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             }
         }
         return flag;
+    }
+    
+    private boolean hasLockedItems(ERepositoryObjectType type, String path) throws PersistenceException {
+        List<IRepositoryViewObject> objects = ProxyRepositoryFactory.getInstance().getAll(type, true);
+        for (IRepositoryViewObject repositoryObject : objects) {
+        	ERepositoryStatus status = ProxyRepositoryFactory.getInstance().getStatus(repositoryObject.getProperty().getItem());
+            if (status == ERepositoryStatus.LOCK_BY_USER || status == ERepositoryStatus.LOCK_BY_OTHER){
+            	return true;
+            }
+        }
+        return false;
     }
 }
