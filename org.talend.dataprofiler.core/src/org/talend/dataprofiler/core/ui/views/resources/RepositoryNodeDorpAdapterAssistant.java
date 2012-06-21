@@ -12,9 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -50,6 +53,7 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -181,7 +185,12 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             }
 
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            if (log.isInfoEnabled()) {
+                // e.printStackTrace();
+                log.info(e.toString());
+
+            }
+
         }
         // MOD gdbu TDQ-3546 unload resource after move item.
         ProxyRepositoryManager.getInstance().refresh();
@@ -269,18 +278,47 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         if (WorkspaceResourceHelper.sourceFileHasBeenOpened(sourceNode)) {
             MessageUI.openWarning(DefaultMessagesImpl.getString("SourceFileAction.sourceFileOpening", sourceNode.getLabel())); //$NON-NLS-1$
         } else {
-            // move the source file
+            // move the source file item
             IRepositoryViewObject objectToMove = sourceNode.getObject();
             ERepositoryObjectType targetObjectType = targetNode.getContentType();
-            IPath fullPath = getNodeFullPath(targetObjectType);
+            IPath fullPath = ResourceManager.getSourceFileFolder().getFullPath();
             IPath makeRelativeTo = fullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
             ENodeType type = targetNode.getType();
             if (ENodeType.SIMPLE_FOLDER == type || ENodeType.SYSTEM_FOLDER == type) {
+                TDQSourceFileItem fileItem = (TDQSourceFileItem) objectToMove.getProperty().getItem();
+                String oldPath = ResourceManager.getRootFolderLocation()
+                        .append(fileItem.eResource().getURI().toPlatformString(true)).toOSString();
+                if (oldPath != null) {
+                    oldPath = StringUtils.removeEnd(oldPath, ".properties").concat(".sql");
+                } else {
+                    return;
+                }
+
                 moveObject(objectToMove, sourceNode, targetNode, makeRelativeTo);
+
+                String newPath = ResourceManager.getRootFolderLocation()
+                        .append(fileItem.eResource().getURI().toPlatformString(true)).toOSString();
+
+                if (newPath == null) {
+                    // TODO throw an exception
+                    log.error("error occured when move the source file item.");
+                }
+
+                // 4, move the .sql
+                File srcFile = new File(oldPath);// old file
+                File dtnFile = new File(newPath); // new file
+                // srcFile.renameTo(dtnFile);
+                try {
+                    FileUtils.copyFileToDirectory(srcFile, dtnFile.getParentFile());
+                    FileUtils.forceDelete(srcFile);
+                } catch (Throwable e) {
+                    log.error(e.getMessage(), e);
+                }
             }
             CorePlugin.getDefault().refreshDQView(targetNode.getParent());
         }
     }
+
 
     private void moveAnalysisRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         IRepositoryViewObject objectToMove = sourceNode.getObject();

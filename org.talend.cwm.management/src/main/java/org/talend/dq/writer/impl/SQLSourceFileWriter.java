@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -17,13 +17,19 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.core.runtime.IPath;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.model.properties.ByteArray;
+import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -32,6 +38,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * For save the xx.sql file, because it is not an EMF model DOC yyin added 20120614 TDQ-5468
  */
 public class SQLSourceFileWriter extends AElementPersistance {
+
+    XmiResourceManager xmiResourceManager;
+
+    SQLSourceFileWriter() {
+        super();
+        xmiResourceManager = new XmiResourceManager();
+    }
 
     /* (non-Javadoc)
      * @see org.talend.dq.writer.AElementPersistance#notifyResourceChanges()
@@ -113,6 +126,37 @@ public class SQLSourceFileWriter extends AElementPersistance {
         IPath typedPath = ResourceManager.getSourceFileFolder().getLocation();
         String fullpath = typedPath.toOSString() + statePathStr + "/" + fileName;//$NON-NLS-1$
         return fullpath;
+    }
+
+    public void move(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+
+
+
+    }
+
+    /**
+     * DOC yyin Comment method "saveBeforeMove".
+     * 
+     * @param newPath
+     * 
+     * @param sourceNode
+     * @param iRepositoryViewObject
+     * @throws PersistenceException
+     */
+    private void saveBeforeMove(IRepositoryViewObject obj, IRepositoryViewObject target, IPath newPath)
+            throws PersistenceException {
+        Item currentItem = obj.getProperty().getItem();
+        if (currentItem.getParent() instanceof FolderItem) {
+            ((FolderItem) currentItem.getParent()).getChildren().remove(currentItem);
+        }
+        FolderItem newFolderItem = (FolderItem) target.getProperty().getItem();
+        newFolderItem.getChildren().add(currentItem);
+        currentItem.setParent(newFolderItem);
+
+        ItemState state = obj.getProperty().getItem().getState();
+        state.setPath(newPath.toString());
+        xmiResourceManager.saveResource(state.eResource());
+
     }
 
 }
