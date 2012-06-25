@@ -1684,6 +1684,9 @@ public final class ConnectionUtils {
      * @return
      */
     public static String getOriginalConntextValue(Connection connection, String rawValue) {
+        if(rawValue==null){
+        	return PluginConstant.EMPTY_STRING;
+        }
         String origValu = null;
         if (connection != null && connection.isContextMode()) {
             String contextName = connection.getContextName();
@@ -1695,8 +1698,8 @@ public final class ConnectionUtils {
             }
 
             origValu = ConnectionContextHelper.getOriginalValue(contextType, rawValue);
-        }
-        return origValu == null ? PluginConstant.EMPTY_STRING : origValu;
+        }        
+        return origValu == null ? rawValue : origValu;
     }
 
     /**
