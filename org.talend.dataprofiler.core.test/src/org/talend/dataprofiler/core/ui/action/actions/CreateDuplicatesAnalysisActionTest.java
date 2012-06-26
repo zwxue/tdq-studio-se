@@ -105,7 +105,7 @@ public class CreateDuplicatesAnalysisActionTest {
             when(ConnectionHelper.getConnection(columSetMock)).thenReturn(connectionMock);
 
             PowerMockito.mockStatic(PropertyHelper.class);
-            when(PropertyHelper.existDuplicateName(anyString(), anyString(), (ERepositoryObjectType) any(), anyBoolean()))
+            when(PropertyHelper.existDuplicateName(anyString(), anyString(), (ERepositoryObjectType) any()))
                     .thenReturn(
                     false);
 
