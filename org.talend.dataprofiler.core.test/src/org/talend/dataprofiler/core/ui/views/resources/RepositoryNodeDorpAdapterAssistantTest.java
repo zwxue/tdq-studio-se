@@ -12,15 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ResourceBundle;
 
@@ -29,12 +25,15 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -42,6 +41,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -186,6 +186,19 @@ public class RepositoryNodeDorpAdapterAssistantTest {
             RepositoryNodeDorpAdapterAssistant spyAssistant = spy(new RepositoryNodeDorpAdapterAssistant());
             doNothing().when(spyAssistant).moveObject((IRepositoryViewObject) any(), (IRepositoryNode) any(),
                     (IRepositoryNode) any(), (IPath) any());
+
+            // added by yyin, 20120626, for TDQ-5468 modifications
+            TDQSourceFileItem fileItem = mock(TDQSourceFileItem.class);
+            Property propertyMock = mock(Property.class);
+            when(repViewObjMock.getProperty()).thenReturn(propertyMock);
+            when(propertyMock.getItem()).thenReturn(fileItem);
+
+            Resource resourceMock = mock(Resource.class);
+            when(fileItem.eResource()).thenReturn(resourceMock);
+            URI uri = URI.createPlatformResourceURI("org.talend.dataprofiler.core.test/cc_0.1.properties", false);
+            when(resourceMock.getURI()).thenReturn(uri);
+            when(ResourceManager.getRootFolderLocation()).thenReturn(folderPath);
+            // ~
 
             spyAssistant.moveSourceFileRepNode(sourceNodeMock, targetNodeMock);
         } catch (PersistenceException e) {
