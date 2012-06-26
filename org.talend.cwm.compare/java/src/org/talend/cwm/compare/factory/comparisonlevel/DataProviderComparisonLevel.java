@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.DatabaseConnStrUtil;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -95,7 +96,11 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                                 .getOriginalDatabaseConnection((DatabaseConnection) con);
                         String urlStr = DatabaseConnStrUtil.getURLString(dbConn);
                         if (urlStr != null) {
-                            ((DatabaseConnection) con).setURL(urlStr);
+                            // mzhao 2012-06-25 bug TDI-21552 , in case of generic JDBC connection, we must not change
+                            // the connection url in .item file.
+                            if (!dbConn.getDatabaseType().equals(EDatabaseTypeName.GENERAL_JDBC.getDisplayName())) {
+                                ((DatabaseConnection) con).setURL(urlStr);
+                            }
                             ConnectionHelper.setUsingURL(con, urlStr);
                         }
 

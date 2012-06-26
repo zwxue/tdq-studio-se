@@ -219,10 +219,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
         String loginValue = JavaSqlFactory.getUsername(connection);
         loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
+        loginText.setEditable(!connection.isContextMode());
 
         // MOD scorreia 2009-01-09 handle encrypted password
         String passwordValue = JavaSqlFactory.getPassword(connection);
         passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
+        passwordText.setEditable(!connection.isContextMode());
 
         Label urlLabel = new Label(sectionClient, SWT.NONE);
         urlLabel.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.Url")); //$NON-NLS-1$
@@ -400,54 +402,31 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         String userName = loginText.getText();
         String password = passwordText.getText();
         String url = urlText.getText();
+        String driverClassName = JavaSqlFactory.getDriverClass(connection);
 
         if (connection.isContextMode()) {
             userName = ConnectionUtils.getOriginalConntextValue(connection, userName);
             password = ConnectionUtils.getOriginalConntextValue(connection, password);
             url = ConnectionUtils.getOriginalConntextValue(connection, url);
+            driverClassName = ConnectionUtils.getOriginalConntextValue(connection, driverClassName);
         }
         props.put(TaggedValueHelper.USER, userName);
         props.put(TaggedValueHelper.PASSWORD, password);
 
-        // MOD xqliu 2009-12-17 bug 10238
-        Connection tdDataProvider2 = connection;
-        // MOD by zshen tmpParam alaways is null
-        // if (null == tmpParam) {
-        // tdDataProvider2 = connection;
-        // } else {
-        // // MOD xqliu 2010-08-04 bug 13406
-        // if (ConnectionUtils.isMdmConnection(connection)) {
-        // tdDataProvider2 = connection;
-        // JavaSqlFactory.setURL(tdDataProvider2, url);
-        // } else {
-        //
-        // IMetadataConnection metadataConnection = MetadataFillFactory.getDBInstance().fillUIParams(
-        // ParameterUtil.toMap(tmpParam));
-        // TypedReturnCode<?> typedRC = org.talend.core.model.metadata.builder.util.MetadataConnectionUtils
-        // .checkConnection(metadataConnection);
-        // if (!typedRC.isOk()) {
-        // return typedRC;
-        // } else {
-        // tdDataProvider2 = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
-        // }
-        // }
-        // // ~ 13406
-        // }
-
-        if (tdDataProvider2 instanceof MDMConnection) {
-            props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) tdDataProvider2));
-            props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) tdDataProvider2));
+        if (connection instanceof MDMConnection) {
+            props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) connection));
+            props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) connection));
         }
 
-        if (ConnectionUtils.isTeradata(tdDataProvider2)) {
-            DatabaseConnection dbConn = (DatabaseConnection) tdDataProvider2;
+        if (ConnectionUtils.isTeradata(connection)) {
+            DatabaseConnection dbConn = (DatabaseConnection) connection;
             props.put(TaggedValueHelper.DBTYPE, dbConn.getDatabaseType());
             props.put(TaggedValueHelper.DBNAME, dbConn.getSID());
         }
 
-        ReturnCode returnCode = ConnectionUtils.isMdmConnection(tdDataProvider2) ? new MdmWebserviceConnection(
-                JavaSqlFactory.getURL(tdDataProvider2), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(url,
-                JavaSqlFactory.getDriverClass(tdDataProvider2), props);
+		ReturnCode returnCode = ConnectionUtils.isMdmConnection(connection) ? new MdmWebserviceConnection(
+                JavaSqlFactory.getURL(connection), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(url,
+                driverClassName, props);
         // ~
 
         return returnCode;
@@ -598,9 +577,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             connection = (Connection) EObjectHelper.resolveObject(connection);
         }
 
-        JavaSqlFactory.setUsername(connection, loginText.getText());
-        JavaSqlFactory.setPassword(connection, passwordText.getText());
-        JavaSqlFactory.setURL(connection, urlText.getText());
+        if(!connection.isContextMode()){
+        	JavaSqlFactory.setUsername(connection, loginText.getText());
+        	JavaSqlFactory.setPassword(connection, passwordText.getText());
+        }
+        // JavaSqlFactory.setURL(connection, urlText.getText());
         // MOD zshen for bug 12327:to save driverClassName.
         //        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {//$NON-NLS-1$
         // ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());

@@ -276,6 +276,7 @@ public final class DQStructureComparer {
         // ~11951
         String urlString = JavaSqlFactory.getURL(prevDataProvider);
         String driverClassName = JavaSqlFactory.getDriverClass(prevDataProvider);
+        driverClassName = ConnectionUtils.getOriginalConntextValue(prevDataProvider,driverClassName);
         Properties properties = new Properties();
         properties.setProperty(TaggedValueHelper.USER, JavaSqlFactory.getUsername(prevDataProvider));
         properties.setProperty(TaggedValueHelper.PASSWORD, JavaSqlFactory.getPassword(prevDataProvider));
@@ -286,7 +287,6 @@ public final class DQStructureComparer {
         connectionParameters.setDescription(MetadataHelper.getDescription(prevDataProvider));
         connectionParameters.setPurpose(MetadataHelper.getPurpose(prevDataProvider));
         connectionParameters.setStatus(MetadataHelper.getDevStatus(prevDataProvider));
-
         // MOD qiongli 2010-12-2 bug 16605.setSqlTypeName for connectionParameters.
         String dbType = ConnectionUtils.getDatabaseType(prevDataProvider);
         connectionParameters.setSqlTypeName(dbType);
@@ -299,22 +299,31 @@ public final class DQStructureComparer {
         if (prevDataProvider instanceof DatabaseConnection) {
             DatabaseConnection dbConn = (DatabaseConnection) prevDataProvider;
             String uiSchema = dbConn.getUiSchema();
+            // ADD mzhao 2012-06-25 bug TDI-21552, set the class jar path in case of generic JDBC connection in context
+            // mode.
+            String driverJarPath = dbConn.getDriverJarPath();
             if (dbConn.isContextMode() && uiSchema != null) {
                 uiSchema = ConnectionUtils.getOriginalConntextValue(dbConn, uiSchema);
+                driverJarPath = ConnectionUtils.getOriginalConntextValue(dbConn, driverJarPath);
             }
+            connectionParameters.setDriverPath(driverJarPath);
             connectionParameters.setFilterSchema(uiSchema);
         }
         // ~11412
         // MOD xqliu 2010-03-29 bug 11951 have mod by zshen 2010/11/29
-        IMetadataConnection metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
-                ParameterUtil.toMap(connectionParameters));
+        IMetadataConnection metadataConnection = null;
         List<String> packageFilter = ConnectionUtils.getPackageFilter(connectionParameters);
         Connection conn = null;
         if (mdm) {
+        	metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
+                     ParameterUtil.toMap(connectionParameters));
             conn = MetadataFillFactory.getMDMInstance().fillUIConnParams(metadataConnection, null);
             MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, packageFilter);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
+        	// FIXME why do we use MetadataFillFactory.getMDMInstance()
+        	metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
+                     ParameterUtil.toMap(connectionParameters));
             TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
