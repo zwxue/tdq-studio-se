@@ -72,12 +72,14 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     }
 
                     if (modelElement instanceof AnalysisImpl || modelElement instanceof TdReportImpl) {
-                        CorePlugin.getDefault().refreshDQView(
-                                RepositoryNodeHelper.findNearestSystemFolderNode((RepositoryNode) currentSelectionNode));
+                        //MOD by zshen refresh the folder which contain the modelElement neither nor which one be select current.
+                    	CorePlugin.getDefault().refreshDQView(
+                        		RepositoryNodeHelper.findNearestSystemFolderNode(RepositoryNodeHelper.recursiveFind(modelElement)));
+                    }else{
+                    	CorePlugin.getDefault().refreshDQView(currentSelectionNode);
                     }
 
                     CorePlugin.getDefault().refreshWorkSpace();
-                    CorePlugin.getDefault().refreshDQView(currentSelectionNode);
 
                     // MOD gdbu 2011-11-18 TDQ-3969 : after create items re-filter the tree , to create a new list .
                     if (DQRepositoryNode.isOnFilterring()) {

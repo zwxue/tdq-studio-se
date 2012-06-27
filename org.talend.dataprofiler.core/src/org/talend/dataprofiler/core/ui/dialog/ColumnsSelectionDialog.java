@@ -350,13 +350,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             	//MOD by zshen two case need to consider which 
             	//1 select a node on the treeview then select the parent node of the node check whether the element will be joined twice.
             	//2 select a node on the tableview and which contain more than one node in the treeview check whether can be select after click on the ok button.
-//                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(repNode, true).length > 0;
-//                if (!isLeaf) {
-                    if (!getTableviewCheckedElements(allCheckedElements, repNode)) {
-//                        List<IRepositoryNode> children = repNode.getChildren();
-//                        allCheckedElements.addAll(children);
-                    }
-//                }
+               getTableviewCheckedElements(allCheckedElements, repNode);
             }
         }
 
