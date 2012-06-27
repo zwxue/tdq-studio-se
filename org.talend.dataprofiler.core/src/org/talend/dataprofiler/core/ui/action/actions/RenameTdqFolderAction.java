@@ -20,9 +20,11 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -97,7 +99,11 @@ public class RenameTdqFolderAction extends AContextualAction {
                     CorePlugin.getDefault().refreshDQView(node.getParent());
                 }
             } catch (PersistenceException e) {
-                log.error(e, e);
+                log.error(e.getMessage());
+                MessageDialog
+                        .openError(
+                                PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                                DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameFolderLocked")); //$NON-NLS-1$ 
             }
         }
     }
