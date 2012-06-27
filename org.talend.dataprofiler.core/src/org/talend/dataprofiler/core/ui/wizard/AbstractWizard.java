@@ -41,7 +41,6 @@ import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -72,13 +71,15 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                     }
 
                     if (modelElement instanceof AnalysisImpl || modelElement instanceof TdReportImpl) {
+                        // MOD by zshen refresh the folder which contain the modelElement neither nor which one be
+                        // select current.
                         CorePlugin.getDefault().refreshDQView(
-                                RepositoryNodeHelper.findNearestSystemFolderNode((RepositoryNode) currentSelectionNode));
+                                        RepositoryNodeHelper.findNearestSystemFolderNode(RepositoryNodeHelper
+                                                .recursiveFind(modelElement)));
+                    } else {
+                        CorePlugin.getDefault().refreshDQView(currentSelectionNode);
                     }
-
                     CorePlugin.getDefault().refreshWorkSpace();
-                    CorePlugin.getDefault().refreshDQView(currentSelectionNode);
-
                     // MOD gdbu 2011-11-18 TDQ-3969 : after create items re-filter the tree , to create a new list .
                     if (DQRepositoryNode.isOnFilterring()) {
                         RepositoryNodeHelper.fillTreeList(null);
