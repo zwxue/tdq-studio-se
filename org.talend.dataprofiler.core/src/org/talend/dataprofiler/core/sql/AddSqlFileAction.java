@@ -64,7 +64,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
      * DOC zshen AddSqlFileAction constructor comment.
      * 
      */
-    private AddSqlFileAction() {
+    public AddSqlFileAction() {
         setText(DefaultMessagesImpl.getString("AddSqlFileAction.createSQLFile")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.CREATE_SQL_ACTION));
         this.folder = ResourceManager.getSourceFileFolder();
