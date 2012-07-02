@@ -38,6 +38,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
@@ -93,7 +94,7 @@ public class ItemRecord {
         try {
             initialize();
         } catch (Exception e) {
-            String errorMessage = "Can't initialize element [" + getName() + "] : " + e.getMessage(); //$NON-NLS-1$  //$NON-NLS-2$ 
+            String errorMessage = DefaultMessagesImpl.getString("ItemRecord.cantInitializeElement", getName(), e.getMessage()); //$NON-NLS-1$
             addError(errorMessage);
             log.error(errorMessage);
         }
@@ -201,7 +202,7 @@ public class ItemRecord {
             // MOD by zshen for bug 18724 2011.02.23
             TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, element.getTaggedValue());
             if (tv != null) {
-                IPath libFolderPath = getFilePath().removeLastSegments(1).append("lib");
+                IPath libFolderPath = getFilePath().removeLastSegments(1).append("lib"); //$NON-NLS-1$
                 File libFolder = libFolderPath.toFile();
                 if (libFolder.exists()) {
                     for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
@@ -415,7 +416,7 @@ public class ItemRecord {
      */
     private boolean isValidDirectory(File file) {
         // filter the bin folder
-        if (!file.getName().startsWith(".") && !file.getName().equals("bin")) {
+        if (!file.getName().startsWith(".") && !file.getName().equals("bin")) { //$NON-NLS-1$ //$NON-NLS-2$
             IPath filePath = new Path(file.getAbsolutePath());
             String pathStr = filePath.toPortableString();
 
