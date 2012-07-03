@@ -306,8 +306,14 @@ public class DrillDownEditorInput implements IEditorInput {
                 } else if (analysisElement instanceof TdXmlElementType) {
                     TdXmlElementType parentElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(XmlElementHelper
                             .getParentElement(SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(analysisElement)));
-                    List<TdXmlElementType> xmlElementList = org.talend.cwm.db.connection.ConnectionUtils
+                    List<TdXmlElementType> xmlElementListTmp = org.talend.cwm.db.connection.ConnectionUtils
                             .getXMLElements(parentElement);
+                    List<TdXmlElementType> xmlElementList = new ArrayList<TdXmlElementType>();
+                    for (TdXmlElementType tdXmlEle : xmlElementListTmp) {
+                        if (!DqRepositoryViewService.hasChildren(tdXmlEle)) {
+                            xmlElementList.add(tdXmlEle);
+                        }
+                    }
                     offset = xmlElementList.indexOf(analysisElement);
                 }
                 // Added yyin 20120608 TDQ-3589
