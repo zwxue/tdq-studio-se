@@ -6,4 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.dataquality.matching;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit4
+Require-Bundle: org.junit4,
+ org.eclipse.core.runtime,
+ org.talend.commons.runtime
+Bundle-ClassPath: data/,
+ .
