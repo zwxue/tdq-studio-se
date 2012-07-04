@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -52,7 +51,6 @@ import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.EObjectHelper;
@@ -358,35 +356,5 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         return rc.isOk();
     }
     
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see
-     * org.talend.core.repository.utils.AbstractResourceChangesService#postMove(org.talend.core.model.properties.Item)
-     */
-    @Override
-    public void postMove(Item dqItem, String targetPath) {
-        if (!(dqItem instanceof TDQSourceFileItem)) {
-            return;
-        }
-        String oldPath = ResourceManager.getRootFolderLocation().append(dqItem.eResource().getURI().toPlatformString(true))
-                .toOSString();
-        if (oldPath != null) {
-            oldPath = StringUtils.removeEnd(oldPath, ".properties").concat(".sql");
-        } else {
-            return;
-        }
-        IPath typedPath = ResourceManager.getSourceFileFolder().getLocation();
-
-        File srcFile = new File(oldPath);// old file
-        File dtnFile = new File(typedPath.toOSString() + IPath.SEPARATOR + targetPath);
-        // srcFile.renameTo(dtnFile);
-        try {
-            org.apache.commons.io.FileUtils.copyFileToDirectory(srcFile, dtnFile);
-            // org.apache.commons.io.FileUtils.forceDelete(srcFile);
-        } catch (Throwable e) {
-            log.error(e.getMessage(), e);
-        }
-    }
 
 }
