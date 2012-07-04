@@ -135,18 +135,15 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 limiting = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, limiting);
                 headValue = Integer.parseInt(heading == PluginConstant.EMPTY_STRING ? zero : heading);
                 footValue = Integer.parseInt(footing == PluginConstant.EMPTY_STRING ? zero : footing);
-                limitValue = Integer.parseInt(limiting == PluginConstant.EMPTY_STRING ? "-1" : limiting);
+                limitValue = Integer.parseInt(PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)? "-1" : limiting); //$NON-NLS-1$
             } else {// ~ 5346
             // MOD qionlgi 2011-5-12,bug 21115.
-                headValue = Integer.parseInt(delimitedFileconnection.getHeaderValue() == null ? zero : delimitedFileconnection
-                    .getHeaderValue());
-                footValue = Integer.parseInt(delimitedFileconnection.getFooterValue() == null ? zero : delimitedFileconnection
-                    .getFooterValue());
-                String limitStr = delimitedFileconnection.getLimitValue();
-                if (limitStr == null || zero.equals(limitStr)) {
-                    limitStr = "-1"; //$NON-NLS-1$
+                headValue = Integer.parseInt(heading == null ? zero : heading);
+                footValue = Integer.parseInt(footing == null ? zero : footing);
+                if (limiting == null || zero.equals(limiting)) {
+                	limiting = "-1"; //$NON-NLS-1$
                 }
-            limitValue = Integer.parseInt(limitStr);
+            limitValue = Integer.parseInt(limiting);
             }
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
