@@ -39,6 +39,16 @@ import org.talend.dataquality.standardization.constant.PluginConstant;
  */
 public class FirstNameStandardize {
 
+    /**
+     * According to levenshtein algorithm, the following value means a distance of 1 is allowed to match a first name
+     * containing 4 to 7 letters, while for those with 8 to 12 letters, 2 erroneous letters are allowed. a first name
+     * between 12 and 15 letters, allows a distance of 3, and so on ...
+     * <p>
+     * For the first names with minus sign inside, ex: Jean-Baptiste, the matching is done for Jean and Baptiste
+     * separately, and the number of tokens is also considered by Lucene.
+     */
+    private static final float MATCHING_SIMILARITY = 0.74f;
+
     private Analyzer analyzer;
 
     private IndexSearcher searcher;
@@ -58,22 +68,20 @@ public class FirstNameStandardize {
         if (input == null || input.length() == 0) {
             return new ScoreDoc[0];
         }
-        Query q = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_NAME, analyzer).parse(input);
-
-        TopDocsCollector<?> collector = createTopDocsCollector();
-        searcher.search(q, collector);
-
+        // MOD sizhaoliu 2012-7-4 TDQ-1576 tFirstnameMatch returns no firstname when several matches exist
+        // Do not use doc collector which contains an inner sort.
+        ScoreDoc[] matches = null;
         if (fuzzyQuery) {
             try {
-
-                return getFuzzySearch(input).scoreDocs;
+                matches = getFuzzySearch(input).scoreDocs;
             } catch (Exception e) {
-
                 e.printStackTrace();
             }
+        } else {
+            Query q = new QueryParser(Version.LUCENE_30, PluginConstant.FIRST_NAME_STANDARDIZE_NAME, analyzer).parse(input);
+            matches = searcher.search(q, 10).scoreDocs;
         }
-        return collector.topDocs().scoreDocs;
-
+        return matches;
     }
 
     public void getFuzzySearch(String input, TopDocsCollector<?> collector) throws Exception {
@@ -84,12 +92,13 @@ public class FirstNameStandardize {
     }
 
     public TopDocs getFuzzySearch(String input) throws Exception {
-        Query q = new FuzzyQuery(new Term("name", input), 0.5f, 2);//$NON-NLS-1$
+        // MOD sizhaoliu 2012-7-4 TDQ-1576 tFirstnameMatch returns no firstname when several matches exist
+        // The 2 letter prefix requires exact match while the word to search may not be lowercased as in the index.
+        // Extracted and documented MATCHING_SIMILARITY constant.
+        Query q = new FuzzyQuery(new Term("name", input.toLowerCase()), MATCHING_SIMILARITY, 2);//$NON-NLS-1$
         TopDocs matches = searcher.search(q, 10);
         return matches;
     }
-
-
 
     // FIXME this variable is only for tests
     public static final boolean SORT_WITH_COUNT = true;
@@ -149,6 +158,7 @@ public class FirstNameStandardize {
         return matches.scoreDocs;
     }
 
+    @SuppressWarnings("unused")
     private TopDocsCollector<?> createTopDocsCollector() throws IOException {
         // TODO the goal is to sort the result in descending order according to the "count" field
         if (SORT_WITH_COUNT) { // TODO enable this when it works correctly
@@ -179,6 +189,7 @@ public class FirstNameStandardize {
         }
         return (results == null || results.length == 0) ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
     }
+
     public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender, boolean fuzzyQuery)
             throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
