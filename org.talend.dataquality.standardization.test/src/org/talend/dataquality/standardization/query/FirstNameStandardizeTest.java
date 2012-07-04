@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.standardization.query;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +54,15 @@ public class FirstNameStandardizeTest {
             { "Adrian", "FRA", "ADRIAN", "ADRIAN", "ADRIAN" }, { "Adrian", "ITA", "ADRIANO", "ADRIANO", "ADRIANO" },
             { "Adrian", "RUS", "BRIAN", "BRIAN", "BRIAN" }, { "Adrian", "USA", "ADRIAN", "ADRIAN", "ADRIAN" }, };
 
+    private static final String[][] expected_fuzzy = { { "Alessandra", "ALESSANDRA", "ALESSANDRA" },
+            { "Antonino", "ANTONINO", "ANTONINO" }, { "amar", "AMAR", "AMAR" }, { "jan", "JAN", "JAN" },
+            { "James", "JAMES", "JAMES" }, { "Keith", "KEITH", "KEITH" }, { "guy", "GUY", "GUY" },
+            { "roland", "ROLAND", "ROLAND" }, { "Angela", "ANGELA", "ANGELA" }, { "Joe", "JOE", "JOE" },
+            { "eric", "ERIC", "ERIC" }, { "francesco", "FRANCESCO", "FRANCESCO" }, { "Manfred", "MANFRED", "MANFRED" },
+            { "malathi", "", "MALACHI" }, { "Aly", "ALY", "ALY" }, { "sreedhar", "", "" }, { "Louann", "LOUANN", "LOUANN" },
+            { "Elif", "ELIF", "ELIF" }, { "Sreenivas", "", "" }, { "subhash", "SUBHASH", "SUBHASH" }, { "Dara", "DARA", "DARA" },
+            { "Gabor", "GABOR", "GABOR" }, { "Jill", "JILL", "JILL" }, { "Michael", "MICHAEL", "MICHAEL" },
+            { "bhargav", "", "BHARGAW" }, { "nonya", "", "NONNA" } };
 
     /**
      * DOC sizhaoliu Comment method "setUpBeforeClass".
@@ -84,7 +93,7 @@ public class FirstNameStandardizeTest {
         try {
             String res = fnameStandardize.replaceName(inputName, true);
             System.out.println("testReplaceName:\n" + res);
-            assertEquals("", res);
+            assertEquals("MICHEL", res);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,6 +112,7 @@ public class FirstNameStandardizeTest {
         try {
 
             System.out.println("\ntestReplaceNameWithCountryGenderInfo:");
+            System.out.println("Name\tCountry\tNon-gender\tMale\tFemale");
             for (String[] testCase : expected) {
                 String res, resF, resM = "";
                 System.out.print("{\"" + testCase[0] + "\", \"" + testCase[1] + "\", \"");
@@ -121,6 +131,37 @@ public class FirstNameStandardizeTest {
                 resM = fnameStandardize.replaceNameWithCountryGenderInfo(testCase[0], testCase[1], "M", true);
                 System.out.println(resM + "\"},");
                 assertEquals(testCase[4], resM);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testReplaceNameWithFuzzyOption() {
+        try {
+
+            System.out.println("\ntestReplaceNameWithFuzzyOption:");
+            System.out.println("Name\tNon-fuzzy\tFuzzy");
+            for (String[] testCase : expected_fuzzy) {
+                String res = "";
+                System.out.print("{\"" + testCase[0] + "\", \"");
+
+                // results for non-country, non-fuzzy match
+                res = fnameStandardize.replaceName(testCase[0], false);
+                System.out.print(res + "\", \"");
+                assertEquals(testCase[1], res);
+
+                // results for non-country, fuzzy match
+                res = fnameStandardize.replaceName(testCase[0], true);
+                System.out.print(res + "\"},\n");
+                assertEquals(testCase[2], res);
             }
 
         } catch (IOException e) {
