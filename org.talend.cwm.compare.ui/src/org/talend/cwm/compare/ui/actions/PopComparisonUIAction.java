@@ -38,13 +38,15 @@ public class PopComparisonUIAction extends Action {
     private Object selectedObject;
 
     public void setSelectedObject(Object selectedObject) {
-		this.selectedObject = selectedObject;
-	}
-	public PopComparisonUIAction(String menuText) {
-		this(null, menuText);
+        this.selectedObject = selectedObject;
+    }
+
+    public PopComparisonUIAction(String menuText) {
+        this(null, menuText);
 
     }
-	public PopComparisonUIAction(Object selectedNode, String menuText) {
+
+    public PopComparisonUIAction(Object selectedNode, String menuText) {
         super(menuText);
         this.selectedObject = selectedNode;
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.COMPARE_IMAGE));
@@ -64,11 +66,16 @@ public class PopComparisonUIAction extends Action {
                 final IComparisonLevel creatComparisonLevel = ComparisonLevelFactory.creatComparisonLevel(selectedObject);
 
                 try {
-                    creatComparisonLevel.popComparisonUI(new UiHandler());
+                    if (creatComparisonLevel != null) {
+                        creatComparisonLevel.popComparisonUI(new UiHandler());
+                    } else {
+                        String errMsg = Messages.getString("PopComparisonUIAction.dontSupport"); //$NON-NLS-1$
+                        log.error(errMsg, new Exception(errMsg));
+                    }
                 } catch (ReloadCompareException e) {
-                	MessageDialog.openError(shell,
-							Messages.getString("PopComparisonUIAction.ErrorDuringComparison"), e.getMessage() //$NON-NLS-1$
-									);
+                    MessageDialog.openError(shell,
+                            Messages.getString("PopComparisonUIAction.ErrorDuringComparison"), e.getMessage() //$NON-NLS-1$
+                            );
                     log.error(e, e);
                 }
             }
