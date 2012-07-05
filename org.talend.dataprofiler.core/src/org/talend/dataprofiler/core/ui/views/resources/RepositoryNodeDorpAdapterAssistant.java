@@ -547,6 +547,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
                         moveUDIRepNode(inode, targetNode);
                     } else if (inode instanceof PatternRepNode) {
                         movePatternRepNode(inode, targetNode);
+                    } else if (inode instanceof SourceFileRepNode) {// Added yyin 20120705 TDQ-5716 when rename
+                                                                    // sourcefile folder, the sql file in it is lost.
+                        moveSourceFileRepNode(inode, targetNode);
                     } else {
                         IRepositoryViewObject viewObj = inode.getObject();
                         if (viewObj != null) {
