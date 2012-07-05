@@ -69,8 +69,7 @@ public class SQLSourceFileWriter extends AElementPersistance {
     /* (non-Javadoc)
      * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean)
      */
-    @Override
-    public ReturnCode save(Item item, boolean careDependency) {
+    public ReturnCode loadFileContentInItem(Item item, boolean careDependency) {
         ReturnCode rc = new ReturnCode();
         if (!(item instanceof TDQSourceFileItem)) {
             rc.setOk(Boolean.FALSE);
@@ -116,6 +115,17 @@ public class SQLSourceFileWriter extends AElementPersistance {
         IPath typedPath = ResourceManager.getSourceFileFolder().getLocation();
         IPath fullpath = typedPath.append(statePathStr + "/" + fileName);//$NON-NLS-1$
         return fullpath;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean)
+     */
+    @Override
+    public ReturnCode save(Item item, boolean careDependency) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -68,6 +68,7 @@ import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.files.FileUtils;
 import org.talend.utils.sugars.ReturnCode;
+
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -350,9 +351,9 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
      * @return
      */
     @Override
-    public boolean saveSourceFile(TDQItem item) {
+    public boolean loadFileContent(TDQItem item) {
         SQLSourceFileWriter ssWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createSQLSourceFileWriter();
-        ReturnCode rc = ssWriter.save(item, false);
+        ReturnCode rc = ssWriter.loadFileContentInItem(item, false);
         return rc.isOk();
     }
     

@@ -163,7 +163,7 @@ public class RenameSqlFileAction extends Action {
         // Added yyin 20120705 TDQ-5716, rename sql file error
         // load the file content into bytearray
         SQLSourceFileWriter ssWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createSQLSourceFileWriter();
-        ReturnCode rc = ssWriter.save(sourceFiletem, false);
+        ReturnCode rc = ssWriter.loadFileContentInItem(sourceFiletem, false);
         // ~
 
         Property property = sourceFiletem.getProperty();
