@@ -295,7 +295,24 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
      * @return
      */
     public Package getPackage() {
-        return this.getCatalog() != null ? this.getCatalog() : this.getSchema();
-    }
+        Package result = null;
 
+        if (this.getCatalog() != null) {
+            result = this.getCatalog();
+        } else if (this.getSchema() != null) {
+            result = this.getSchema();
+        } else {
+            RepositoryNode parent = this.getParent();
+
+            if (parent instanceof DBSchemaRepNode) {
+                this.schema = ((DBSchemaRepNode) parent).getSchema();
+                result = this.schema;
+            } else if (parent instanceof DBCatalogRepNode) {
+                this.catalog = ((DBCatalogRepNode) parent).getCatalog();
+                result = this.catalog;
+            }
+        }
+
+        return result;
+    }
 }

@@ -41,7 +41,6 @@ import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class SubelementCompareAction extends Action {
@@ -102,12 +101,16 @@ public class SubelementCompareAction extends Action {
             } else if (selectedElement instanceof Catalog) {
                 // Judge and see if there are schemas under the catalog.(Case of
                 // SQL Servers)
-                List<Schema> schemas = CatalogHelper.getSchemas((Catalog) selectedElement);
+                Catalog catalog = (Catalog) selectedElement;
+                List<Schema> schemas = CatalogHelper.getSchemas(catalog);
                 if (schemas != null && schemas.size() > 0) {
                     IRepositoryViewObject reposViewObj = (IRepositoryViewObject) selectedOjbect;
                     ConnectionItem item = (ConnectionItem) reposViewObj.getProperty().getItem();
                     Connection conn = item.getConnection();
-                    popCompUIAction.setSelectedObject(findMatchedModelElement(conn, selectedElement));
+                    if (catalog.getDataManager().isEmpty()) {
+                        catalog.getDataManager().add(conn);
+                    }
+                    popCompUIAction.setSelectedObject(getTableOrViewFolder(getFirstSchema(catalog)));
                     popCompUIAction.run();
                 } else {
                     IRepositoryNode repositoryfolderNode = getTableOrViewFolder(selectedElement);
@@ -138,22 +141,50 @@ public class SubelementCompareAction extends Action {
         }
     }
 
+    /**
+     * get the first Schema under the Catalog.
+     * 
+     * @param catalog
+     * @return
+     */
+    private Schema getFirstSchema(Catalog catalog) {
+        Schema schema = null;
+        List<Schema> schemas = CatalogHelper.getSchemas(catalog);
+        if (schemas != null && schemas.size() > 0) {
+            for (Schema tdSchema : schemas) {
+                schema = tdSchema;
+                break;
+            }
+        }
+        return schema;
+    }
+
+    /**
+     * DOC klliu Comment method "openComparisonEditor".
+     * 
+     * @param folderNode
+     */
     public void openComparisonEditor(IFolderNode folderNode) {
         folderNode.loadChildren();
-        // closeCurrentEditor();
         popCompUIAction.setSelectedObject(folderNode);
         popCompUIAction.run();
     }
 
+    /**
+     * DOC zshen Comment method "openComparisonEditor".
+     * 
+     * @param repositoryfolderNode
+     */
     public void openComparisonEditor(IRepositoryNode repositoryfolderNode) {
         repositoryfolderNode.getChildren();
-        // closeCurrentEditor();
         popCompUIAction.setSelectedObject(repositoryfolderNode);
         popCompUIAction.run();
     }
 
     private IRepositoryNode getTableOrViewFolder(EObject selectedElement) {
         IRepositoryNode folderNode = null;
+        ModelElement matchedElement = null;
+
         Connection conn = null;
         if (selectedOjbect instanceof Catalog) {
             conn = ConnectionHelper.getTdDataProvider(((Catalog) selectedOjbect));
@@ -162,36 +193,67 @@ public class SubelementCompareAction extends Action {
             ConnectionItem item = (ConnectionItem) reposViewObj.getProperty().getItem();
             conn = item.getConnection();
         }
-        // ((Package) selectedElement).getDataManager().add(dataProvider);
-        ModelElement matchedElement = findMatchedModelElement(conn, selectedElement);
-        IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(matchedElement);
-        if (actionType == TABLE_COMPARE) {
-            return repositoryNode.getChildren().get(0);
-        } else if (actionType == VIEW_COMPARE) {
-            return repositoryNode.getChildren().get(1);
-        }
+        matchedElement = findMatchedModelElement(conn, selectedElement);
 
+        if (matchedElement != null) {
+            IRepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(matchedElement);
+            if (repositoryNode != null) {
+                if (actionType == TABLE_COMPARE) {
+                    folderNode = repositoryNode.getChildren().get(0);
+                } else if (actionType == VIEW_COMPARE) {
+                    folderNode = repositoryNode.getChildren().get(1);
+                }
+            }
+        }
         return folderNode;
     }
 
+    /**
+     * DOC klliu Comment method "findMatchedModelElement". don't understand this method!!!
+     * 
+     * @param parent
+     * @param similarElement
+     * @return
+     */
     private ModelElement findMatchedModelElement(EObject parent, EObject similarElement) {
         if (parent instanceof Connection) {
             if (similarElement instanceof Schema) {
+                Schema schema = (Schema) similarElement;
+
                 // Case of MS SQL Server.
-                if (selectedOjbect instanceof Catalog) {
+                if (selectedOjbect instanceof Catalog) { // ??????
                     List<Schema> schemas = CatalogHelper.getSchemas((Catalog) selectedOjbect);
                     if (schemas != null && schemas.size() > 0) {
                         for (Schema tdSchema : schemas) {
-                            if (tdSchema.getName().equalsIgnoreCase(((Schema) similarElement).getName())) {
+                            if (tdSchema.getName().equalsIgnoreCase((schema).getName())) {
                                 return tdSchema;
                             }
                         }
                     }
                 }
+
+                // case of MS SQL Server, Postgresql......
+                EObject eContainer = schema.eContainer();
+                if (eContainer != null && eContainer instanceof Catalog) {
+                    List<Catalog> catalogs = ConnectionHelper.getCatalogs((Connection) parent);
+                    for (Catalog catalog : catalogs) {
+                        if (((Catalog) eContainer).getName().equals(catalog.getName())) {
+                            List<Schema> schemas = CatalogHelper.getSchemas(catalog);
+                            if (schemas != null && schemas.size() > 0) {
+                                for (Schema tdSchema : schemas) {
+                                    if (tdSchema.getName().equalsIgnoreCase((schema).getName())) {
+                                        return tdSchema;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 // Case of Oracle
                 List<Schema> schames = ConnectionHelper.getSchema((Connection) parent);
                 for (Schema schame : schames) {
-                    if (schame.getName().equalsIgnoreCase(((Schema) similarElement).getName())) {
+                    if (schame.getName().equalsIgnoreCase((schema).getName())) {
                         return schame;
                     }
                 }
@@ -224,11 +286,4 @@ public class SubelementCompareAction extends Action {
         }
         return null;
     }
-
-    // private void closeCurrentEditor() {
-    // IWorkbenchPage activePage =
-    // PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    // activePage.closeEditor(activePage.getActiveEditor(), false);
-    // }
-
 }
