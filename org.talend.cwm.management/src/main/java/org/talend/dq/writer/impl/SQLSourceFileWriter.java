@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,11 +19,9 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.IPath;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
-import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
-import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.dataquality.properties.TDQSourceFileItem;
@@ -83,16 +81,20 @@ public class SQLSourceFileWriter extends AElementPersistance {
             return rc;
         }
         TDQSourceFileItem sqlItem = (TDQSourceFileItem) item;
-        ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
+        // ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
         InputStream stream = null;
 
         try {
-            File file = new File(this.getItemFullPath(sqlItem));
-            // stream = file.toURL().openStream();
-            // byte[] innerContent = new byte[stream.available()];
-            // stream.read(innerContent);
+            File file = getItemFullPath(sqlItem).toFile();// new
+                                                                                // File(this.getItemFullPath(sqlItem));
+            stream = file.toURL().openStream();
+            byte[] innerContent = new byte[stream.available()];
+            stream.read(innerContent);
+            stream.close();
+            sqlItem.getContent().setInnerContent(innerContent);
+            //FileUtils.
 
-            byteArray.setInnerContentFromFile(file);
+// byteArray.setInnerContentFromFile(file);
         } catch (IOException e) {
             rc.setOk(Boolean.FALSE);
             ExceptionHandler.process(e);
@@ -106,15 +108,15 @@ public class SQLSourceFileWriter extends AElementPersistance {
                 }
             }
         }
-        String routineContent = new String(byteArray.getInnerContent());
-        byteArray.setInnerContent(routineContent.getBytes());
+        // String routineContent = new String(byteArray.getInnerContent());
+        // byteArray.setInnerContent(routineContent.getBytes());
         // now the item has its content(with empty inner content), should not replace,just set its inner content.
-        sqlItem.getContent().setInnerContent(routineContent.getBytes());
 
         return rc;
     }
 
-    private String getItemFullPath(TDQSourceFileItem item) {
+
+    private IPath getItemFullPath(TDQSourceFileItem item) {
         String statePathStr = null;
         if (item.getState() != null) {
             statePathStr = item.getState().getPath();
@@ -124,7 +126,7 @@ public class SQLSourceFileWriter extends AElementPersistance {
         }
         String fileName = item.getName() + "_" + item.getProperty().getVersion() + "." + item.getExtension();//$NON-NLS-1$
         IPath typedPath = ResourceManager.getSourceFileFolder().getLocation();
-        String fullpath = typedPath.toOSString() + statePathStr + "/" + fileName;//$NON-NLS-1$
+        IPath fullpath = typedPath.append(statePathStr + "/" + fileName);//$NON-NLS-1$
         return fullpath;
     }
 
