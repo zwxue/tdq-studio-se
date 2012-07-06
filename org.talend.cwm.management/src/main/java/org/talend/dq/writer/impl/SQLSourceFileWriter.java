@@ -73,8 +73,7 @@ public class SQLSourceFileWriter extends AElementPersistance {
     /* (non-Javadoc)
      * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean)
      */
-    @Override
-    public ReturnCode save(Item item, boolean careDependency) {
+    public ReturnCode loadFileContentInItem(Item item, boolean careDependency) {
         ReturnCode rc = new ReturnCode();
         if (!(item instanceof TDQSourceFileItem)) {
             rc.setOk(Boolean.FALSE);
