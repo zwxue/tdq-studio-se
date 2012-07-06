@@ -51,6 +51,7 @@ import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.EObjectHelper;
@@ -352,9 +353,13 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
      */
     @Override
     public boolean loadFileContent(TDQItem item) {
-        SQLSourceFileWriter ssWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createSQLSourceFileWriter();
-        ReturnCode rc = ssWriter.loadFileContentInItem(item, false);
-        return rc.isOk();
+        if (item instanceof TDQSourceFileItem) {
+            SQLSourceFileWriter ssWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance()
+                    .createSQLSourceFileWriter();
+            ReturnCode rc = ssWriter.loadFileContentInItem(item, false);
+            return rc.isOk();
+        }
+        return false;
     }
     
 
