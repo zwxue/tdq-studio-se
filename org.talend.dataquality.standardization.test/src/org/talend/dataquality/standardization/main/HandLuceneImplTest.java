@@ -15,7 +15,7 @@ public class HandLuceneImplTest extends TestCase {
 
     public final static String PLUGIN_ID = "org.talend.dataquality.standardization.test"; // $NON-NLS-1$
 
-    public final static String indexfolder = PluginUtil.getPluginInstallPath(PLUGIN_ID).concat("data/TalendGivenNames_index"); // $NON-NLS-1$
+    public final static String indexfolder = PluginUtil.getPluginInstallPath(PLUGIN_ID).concat("data/TalendGivenNames_custom"); // $NON-NLS-1$
 
     public final static String filename = PluginUtil.getPluginInstallPath(PLUGIN_ID).concat("data/TalendGivenNames.TXT"); // $NON-NLS-1$
 

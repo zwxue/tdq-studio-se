@@ -26,6 +26,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.talend.core.utils.PluginUtil;
 import org.talend.dataquality.standardization.main.HandLuceneImplTest;
 
 /**
@@ -33,7 +34,8 @@ import org.talend.dataquality.standardization.main.HandLuceneImplTest;
  */
 public class FirstNameStandardizeTest {
 
-    private static String indexfolder = HandLuceneImplTest.indexfolder;
+    private final static String indexfolder = PluginUtil.getPluginInstallPath(HandLuceneImplTest.PLUGIN_ID).concat(
+            "data/TalendGivenNames_index"); // $NON-NLS-1$
 
     private static IndexSearcher searcher = null;
 
