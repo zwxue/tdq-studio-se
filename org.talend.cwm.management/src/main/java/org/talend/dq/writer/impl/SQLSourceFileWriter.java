@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2011 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,17 +16,12 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
-import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.ItemState;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
-import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -80,23 +75,14 @@ public class SQLSourceFileWriter extends AElementPersistance {
             return rc;
         }
         TDQSourceFileItem sqlItem = (TDQSourceFileItem) item;
-        // ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
-        InputStream stream = null;
 
         try {
-            File file = getItemFullPath(sqlItem).toFile();// new
-                                                                                // File(this.getItemFullPath(sqlItem));
+            File file = getItemFullPath(sqlItem).toFile();
             sqlItem.getContent().setInnerContentFromFile(file);
-            //FileUtils.
-
-// byteArray.setInnerContentFromFile(file);
         } catch (IOException e) {
             rc.setOk(Boolean.FALSE);
             ExceptionHandler.process(e);
         }
-        // String routineContent = new String(byteArray.getInnerContent());
-        // byteArray.setInnerContent(routineContent.getBytes());
-        // now the item has its content(with empty inner content), should not replace,just set its inner content.
 
         return rc;
     }
@@ -116,35 +102,5 @@ public class SQLSourceFileWriter extends AElementPersistance {
         return fullpath;
     }
 
-    public void move(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
-
-
-
-    }
-
-    /**
-     * DOC yyin Comment method "saveBeforeMove".
-     * 
-     * @param newPath
-     * 
-     * @param sourceNode
-     * @param iRepositoryViewObject
-     * @throws PersistenceException
-     */
-    private void saveBeforeMove(IRepositoryViewObject obj, IRepositoryViewObject target, IPath newPath)
-            throws PersistenceException {
-        Item currentItem = obj.getProperty().getItem();
-        if (currentItem.getParent() instanceof FolderItem) {
-            ((FolderItem) currentItem.getParent()).getChildren().remove(currentItem);
-        }
-        FolderItem newFolderItem = (FolderItem) target.getProperty().getItem();
-        newFolderItem.getChildren().add(currentItem);
-        currentItem.setParent(newFolderItem);
-
-        ItemState state = obj.getProperty().getItem().getState();
-        state.setPath(newPath.toString());
-        xmiResourceManager.saveResource(state.eResource());
-
-    }
 
 }
