@@ -136,15 +136,15 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 headValue = Integer.parseInt(heading == PluginConstant.EMPTY_STRING ? zero : heading);
                 footValue = Integer.parseInt(footing == PluginConstant.EMPTY_STRING ? zero : footing);
                 limitValue = Integer.parseInt(PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)? "-1" : limiting); //$NON-NLS-1$
-            } else {// ~ 5346
-            // MOD qionlgi 2011-5-12,bug 21115.
-                headValue = Integer.parseInt(heading == null ? zero : heading);
-                footValue = Integer.parseInt(footing == null ? zero : footing);
-                if (limiting == null || zero.equals(limiting)) {
-                	limiting = "-1"; //$NON-NLS-1$
-                }
-            limitValue = Integer.parseInt(limiting);
-            }
+			} else {// ~ 5346
+				// MOD qionlgi 2011-5-12,bug 21115.
+				headValue = Integer.parseInt(heading == null|| PluginConstant.EMPTY_STRING.equals(heading) ? zero: heading);
+				footValue = Integer.parseInt(footing == null|| PluginConstant.EMPTY_STRING.equals(footing) ? zero: footing);
+				if (limiting == null|| PluginConstant.EMPTY_STRING.equals(limiting)|| zero.equals(limiting)) {
+					limiting = "-1"; //$NON-NLS-1$
+				}
+				limitValue = Integer.parseInt(limiting);
+			}
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
                 csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
