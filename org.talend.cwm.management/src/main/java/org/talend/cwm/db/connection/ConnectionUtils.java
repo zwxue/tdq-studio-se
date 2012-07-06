@@ -1462,6 +1462,9 @@ public final class ConnectionUtils {
      * 
      * @param connectionParam
      * @return
+     * @deprecated After branch4.2 we unique the ui for the wizard which to create connection so no retrieveAll and Data
+     * filter again don't needed this method. And have all kinds of filter can be use in the repository view when the
+     * tree be display not fill connection.
      */
     public static List<String> getPackageFilter(DBConnectionParameter connectionParam) {
         List<String> packageFilter = null;

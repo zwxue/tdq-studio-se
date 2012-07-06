@@ -17,11 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -45,10 +43,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
-import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
@@ -60,13 +57,9 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -274,56 +267,17 @@ public final class DQStructureComparer {
         TypedReturnCode<Connection> returnProvider = new TypedReturnCode<Connection>();
         boolean mdm = ConnectionUtils.isMdmConnection(prevDataProvider);
         // ~11951
-        String urlString = JavaSqlFactory.getURL(prevDataProvider);
-        String driverClassName = JavaSqlFactory.getDriverClass(prevDataProvider);
-        driverClassName = ConnectionUtils.getOriginalConntextValue(prevDataProvider,driverClassName);
-        Properties properties = new Properties();
-        properties.setProperty(TaggedValueHelper.USER, JavaSqlFactory.getUsername(prevDataProvider));
-        properties.setProperty(TaggedValueHelper.PASSWORD, JavaSqlFactory.getPassword(prevDataProvider));
-        DBConnectionParameter connectionParameters = new DBConnectionParameter();
 
-        connectionParameters.setName(prevDataProvider.getName());
-        connectionParameters.setAuthor(MetadataHelper.getAuthor(prevDataProvider));
-        connectionParameters.setDescription(MetadataHelper.getDescription(prevDataProvider));
-        connectionParameters.setPurpose(MetadataHelper.getPurpose(prevDataProvider));
-        connectionParameters.setStatus(MetadataHelper.getDevStatus(prevDataProvider));
-        // MOD qiongli 2010-12-2 bug 16605.setSqlTypeName for connectionParameters.
-        String dbType = ConnectionUtils.getDatabaseType(prevDataProvider);
-        connectionParameters.setSqlTypeName(dbType);
-        connectionParameters.setJdbcUrl(urlString);
-        connectionParameters.setDriverClassName(driverClassName);
-        connectionParameters.setParameters(properties);
-        // ADD xqliu 2010-03-04 feature 11412
-        connectionParameters.setDbName(ConnectionUtils.getSID(prevDataProvider));
-        connectionParameters.setRetrieveAllMetadata(ConnectionHelper.getRetrieveAllMetadata(prevDataProvider));
-        if (prevDataProvider instanceof DatabaseConnection) {
-            DatabaseConnection dbConn = (DatabaseConnection) prevDataProvider;
-            String uiSchema = dbConn.getUiSchema();
-            // ADD mzhao 2012-06-25 bug TDI-21552, set the class jar path in case of generic JDBC connection in context
-            // mode.
-            String driverJarPath = dbConn.getDriverJarPath();
-            if (dbConn.isContextMode() && uiSchema != null) {
-                uiSchema = ConnectionUtils.getOriginalConntextValue(dbConn, uiSchema);
-                driverJarPath = ConnectionUtils.getOriginalConntextValue(dbConn, driverJarPath);
-            }
-            connectionParameters.setDriverPath(driverJarPath);
-            connectionParameters.setFilterSchema(uiSchema);
-        }
-        // ~11412
-        // MOD xqliu 2010-03-29 bug 11951 have mod by zshen 2010/11/29
-        IMetadataConnection metadataConnection = null;
-        List<String> packageFilter = ConnectionUtils.getPackageFilter(connectionParameters);
+        // MOD by zshen 2012-07-05 for bug 5074 remove convert about DatabaseParameter instead
+        // Connection->DatabaseParameter->ImetadataConnection into Connection->ImetadataConnection
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(prevDataProvider);
         Connection conn = null;
         if (mdm) {
-        	metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
-                     ParameterUtil.toMap(connectionParameters));
             conn = MetadataFillFactory.getMDMInstance().fillUIConnParams(metadataConnection, null);
-            MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, packageFilter);
+            MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, null);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
         	// FIXME why do we use MetadataFillFactory.getMDMInstance()
-        	metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
-                     ParameterUtil.toMap(connectionParameters));
             TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
@@ -338,27 +292,8 @@ public final class DQStructureComparer {
                 }
             }
             conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
-            // bug: 4622 incase of Ingres, informix and DB2, database parameters
-            // on conn wizard should not used as a filter.
-            try {
-                if (ConnectionUtils.isIngres(prevDataProvider) || ConnectionUtils.isInformix(prevDataProvider)
-                        || ConnectionUtils.isDB2(prevDataProvider)) {
-                    packageFilter = null;
-                }
-                // Added yyin 2012-05-15 TDQ-5190
-                if (ConnectionUtils.isDB2(prevDataProvider) && connectionParameters.getFilterSchema() != null
-                        && !connectionParameters.getFilterSchema().equals("")) {
-                    if (packageFilter == null) {
-                        packageFilter = new ArrayList<String>();
-                    }
-                    packageFilter.add(connectionParameters.getFilterSchema());
-                }
-                // ~5190
-                MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
-                MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
-            } catch (SQLException e) {
-                log.error(e);
-            }
+            MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, null);
+            MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, null);
             // returnProvider = ConnectionService.createConnection(connectionParameters);
         }
         if (conn == null) {
