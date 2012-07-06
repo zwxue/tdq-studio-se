@@ -14,7 +14,6 @@ package org.talend.dq.writer.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.eclipse.core.runtime.IPath;
 import org.talend.commons.exception.PersistenceException;
@@ -87,26 +86,13 @@ public class SQLSourceFileWriter extends AElementPersistance {
         try {
             File file = getItemFullPath(sqlItem).toFile();// new
                                                                                 // File(this.getItemFullPath(sqlItem));
-            stream = file.toURL().openStream();
-            byte[] innerContent = new byte[stream.available()];
-            stream.read(innerContent);
-            stream.close();
-            sqlItem.getContent().setInnerContent(innerContent);
+            sqlItem.getContent().setInnerContentFromFile(file);
             //FileUtils.
 
 // byteArray.setInnerContentFromFile(file);
         } catch (IOException e) {
             rc.setOk(Boolean.FALSE);
             ExceptionHandler.process(e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    rc.setOk(Boolean.FALSE);
-                    rc.setMessage(e.getMessage());
-                }
-            }
         }
         // String routineContent = new String(byteArray.getInnerContent());
         // byteArray.setInnerContent(routineContent.getBytes());
@@ -116,7 +102,7 @@ public class SQLSourceFileWriter extends AElementPersistance {
     }
 
 
-    private IPath getItemFullPath(TDQSourceFileItem item) {
+    protected IPath getItemFullPath(TDQSourceFileItem item) {
         String statePathStr = null;
         if (item.getState() != null) {
             statePathStr = item.getState().getPath();
