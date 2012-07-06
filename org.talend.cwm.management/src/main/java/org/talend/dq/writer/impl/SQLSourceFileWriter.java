@@ -160,4 +160,15 @@ public class SQLSourceFileWriter extends AElementPersistance {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean)
+     */
+    @Override
+    public ReturnCode save(Item item, boolean careDependency) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
