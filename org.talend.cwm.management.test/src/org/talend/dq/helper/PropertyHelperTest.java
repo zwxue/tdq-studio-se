@@ -1,8 +1,7 @@
 package org.talend.dq.helper;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -30,9 +30,15 @@ public class PropertyHelperTest {
         String oldName = "ab";
         ERepositoryObjectType type = mock(ERepositoryObjectType.class);
         IRepositoryViewObject repObj1 = mock(IRepositoryViewObject.class);
-        when(repObj1.getLabel()).thenReturn("a_");
+        Property prop1 = mock(Property.class);
+        when(repObj1.getProperty()).thenReturn(prop1);
+        when(prop1.getLabel()).thenReturn("a_");
+        when(prop1.getDisplayName()).thenReturn("a?");
         IRepositoryViewObject repObj2 = mock(IRepositoryViewObject.class);
-        when(repObj2.getLabel()).thenReturn("b");
+        Property prop2 = mock(Property.class);
+        when(repObj2.getProperty()).thenReturn(prop2);
+        when(prop2.getDisplayName()).thenReturn("b");
+        when(prop2.getLabel()).thenReturn("b");
         List<IRepositoryViewObject> ls = new ArrayList<IRepositoryViewObject>();
         ls.add(repObj1);
         ls.add(repObj2);
