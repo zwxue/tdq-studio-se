@@ -69,4 +69,31 @@ public class HandLuceneImplTest extends TestCase {
         }
     }
 
+    @Test
+    public void testHandle() {
+        try {
+
+            String res = hl.replaceName(indexfolder, "Philippe", false);//$NON-NLS-1$
+            assertEquals("Philippe", res);
+            try {
+                String res1 = hl.replaceNameWithCountryInfo(indexfolder, "Philippe", "china", false);//$NON-NLS-1$ $NON-NLS-2$
+                assertEquals("Philippe", res1);
+
+                String res2 = hl.replaceNameWithGenderInfo(indexfolder, "Philippe", "0", false);//$NON-NLS-1$ $NON-NLS-2$
+                assertEquals("Philippe", res2);
+                String res3 = hl.replaceNameWithCountryGenderInfo(indexfolder, "Philippe", "china", "1", false);//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
+                assertEquals("Philippe", res3);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
