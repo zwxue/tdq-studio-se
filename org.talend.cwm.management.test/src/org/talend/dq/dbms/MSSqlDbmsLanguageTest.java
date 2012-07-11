@@ -12,27 +12,27 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 public class MSSqlDbmsLanguageTest {
 
-    
     private String charsToReplace = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";//$NON-NLS-1$ 
 
     private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";//$NON-NLS-1$ 
 
-    String[][] valuesNresults = { { "abc", "aaa" }, { "a1e", "a9a" }, { "dkmné", "aaaaa" } };//$NON-NLS-1$ 
+    String[][] valuesNresults = { { "abc", "aaa" }, { "a1e", "a9a" }, { "dkmné", "aaaaa" } };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
 
     private String columnName = "navarchar";//$NON-NLS-1$ 
 
     /**
-     * Test method for {@link org.talend.dq.dbms.MSSqlDbmsLanguage#getPatternFinderFunction(java.lang.String, java.lang.String, java.lang.String)}.
+     * Test method for
+     * {@link org.talend.dq.dbms.MSSqlDbmsLanguage#getPatternFinderFunction(java.lang.String, java.lang.String, java.lang.String)}
+     * .
      */
     @Test
     public void testGetPatternFinderFunction() {
@@ -40,6 +40,7 @@ public class MSSqlDbmsLanguageTest {
         String value = "toto";//$NON-NLS-1$ 
         System.out.println(dbms.getPatternFinderFunction(value, charsToReplace, replacementChars));
     }
+
     /**
      * Test method for {@link org.talend.dq.dbms.MSSqlDbmsLanguage#CharLength(java.lang.String)}.
      */

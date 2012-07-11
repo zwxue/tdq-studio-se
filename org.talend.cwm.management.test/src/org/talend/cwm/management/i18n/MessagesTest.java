@@ -23,25 +23,25 @@ import org.junit.Test;
  */
 public class MessagesTest {
 
-    private static final String ARG = "salut";
+    private static final String ARG = "salut"; //$NON-NLS-1$
 
     private static String[][] keyToExpected = {
-            { "DefinitionHandler.IndicatorsDefinition", "Indicators' definition not loaded!" },
-            { "AbstractTableBuilder.NoTypeGiven", "No type given. Type must be set to either tables, views, system tables..." },
-            { "EIndicatorChartType.PatternFrequencyStatistics", "Pattern Frequency Statistics" },
-            { "Evaluator.NoConnectionFoundInMetadata", "DB Connection \"{0}\" is not available in Meatdata." },
-            { "JavaSqlFactory.UnableDecryptPassword",
-                    "Unable to decrypt given password correctly. It's probably due to a change in the passphrase used in encryption." }
+            { "DefinitionHandler.IndicatorsDefinition", "Indicators' definition not loaded!" }, //$NON-NLS-1$//$NON-NLS-2$
+            { "AbstractTableBuilder.NoTypeGiven", "No type given. Type must be set to either tables, views, system tables..." }, //$NON-NLS-1$//$NON-NLS-2$
+            { "EIndicatorChartType.PatternFrequencyStatistics", "Pattern Frequency Statistics" }, //$NON-NLS-1$//$NON-NLS-2$
+            { "Evaluator.NoConnectionFoundInMetadata", "DB Connection \"{0}\" is not available in Meatdata." }, //$NON-NLS-1$//$NON-NLS-2$
+            { "JavaSqlFactory.UnableDecryptPassword", //$NON-NLS-1$
+                    "Unable to decrypt given password correctly. It's probably due to a change in the passphrase used in encryption." } //$NON-NLS-1$
 
     };
 
     private static String[][] keyToExpectedWithArgs = {
-            { "Evaluator.NoConnectionFoundInMetadata", "DB Connection \"" + ARG + "\" is not available in Meatdata." },
-            { "DefinitionHandler.IndicatorsDefinition", "Indicators' definition not loaded!" },
-            { "AbstractTableBuilder.NoTypeGiven", "No type given. Type must be set to either tables, views, system tables..." },
-            { "EIndicatorChartType.PatternFrequencyStatistics", "Pattern Frequency Statistics" },
-            { "JavaSqlFactory.UnableDecryptPassword",
-                    "Unable to decrypt given password correctly. It's probably due to a change in the passphrase used in encryption." }
+            { "Evaluator.NoConnectionFoundInMetadata", "DB Connection \"" + ARG + "\" is not available in Meatdata." }, //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+            { "DefinitionHandler.IndicatorsDefinition", "Indicators' definition not loaded!" }, //$NON-NLS-1$//$NON-NLS-2$
+            { "AbstractTableBuilder.NoTypeGiven", "No type given. Type must be set to either tables, views, system tables..." }, //$NON-NLS-1$//$NON-NLS-2$
+            { "EIndicatorChartType.PatternFrequencyStatistics", "Pattern Frequency Statistics" }, //$NON-NLS-1$//$NON-NLS-2$
+            { "JavaSqlFactory.UnableDecryptPassword", //$NON-NLS-1$
+                    "Unable to decrypt given password correctly. It's probably due to a change in the passphrase used in encryption." } //$NON-NLS-1$
 
     };
 
@@ -50,12 +50,12 @@ public class MessagesTest {
      */
     @Test
     public void testGetStringString() {
-        for (int i = 0; i < keyToExpected.length; i++) {
-            String key = keyToExpected[i][0];
-            String expected = keyToExpected[i][1];
+        for (String[] element : keyToExpected) {
+            String key = element[0];
+            String expected = element[1];
             String mess = Messages.getString(key);
             System.out.println(mess);
-            Assert.assertEquals("Failed to get the correct result for key " + key, expected, mess);
+            Assert.assertEquals("Failed to get the correct result for key " + key, expected, mess); //$NON-NLS-1$
         }
     }
 
@@ -64,14 +64,14 @@ public class MessagesTest {
      */
     @Test
     public void testGetStringStringObjectArray() {
-        for (int i = 0; i < keyToExpectedWithArgs.length; i++) {
+        for (String[] keyToExpectedWithArg : keyToExpectedWithArgs) {
 
-            String key = keyToExpectedWithArgs[i][0];
+            String key = keyToExpectedWithArg[0];
             String arg = ARG;
-            String expected = keyToExpectedWithArgs[i][1];
+            String expected = keyToExpectedWithArg[1];
             String mess = Messages.getString(key, arg);
             System.out.println(mess);
-            Assert.assertEquals("Failed to get the correct result for key " + key, expected, mess);
+            Assert.assertEquals("Failed to get the correct result for key " + key, expected, mess); //$NON-NLS-1$
         }
 
     }

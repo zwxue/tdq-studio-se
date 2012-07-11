@@ -34,10 +34,10 @@ public class CategoryHandlerTest {
         Assert.assertNotNull(categories);
         Assert.assertFalse(categories.isEmpty());
         for (AnalysisCategory analysisCategory : categories) {
-            System.out.println("-" + analysisCategory.getLabel());
+            System.out.println("-" + analysisCategory.getLabel()); //$NON-NLS-1$
             if (!analysisCategory.getSubCategories().isEmpty()) {
                 for (AnalysisCategory subCategory : analysisCategory.getSubCategories()) {
-                    System.out.println("\t+--" + subCategory.getLabel());
+                    System.out.println("\t+--" + subCategory.getLabel()); //$NON-NLS-1$
                 }
             }
         }

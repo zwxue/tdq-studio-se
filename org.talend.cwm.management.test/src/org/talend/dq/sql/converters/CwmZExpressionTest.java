@@ -29,7 +29,8 @@ public class CwmZExpressionTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.sql.converters.CwmZExpression#CwmZExpression(org.talend.dataquality.domain.sql.SqlPredicate)}.
+     * {@link org.talend.dq.sql.converters.CwmZExpression#CwmZExpression(org.talend.dataquality.domain.sql.SqlPredicate)}
+     * .
      */
     @Test
     public void testCwmZExpression() {
@@ -57,7 +58,8 @@ public class CwmZExpressionTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.sql.converters.CwmZExpression#setOperands(orgomg.cwm.resource.relational.Column, java.lang.Object)}.
+     * {@link org.talend.dq.sql.converters.CwmZExpression#setOperands(orgomg.cwm.resource.relational.Column, java.lang.Object)}
+     * .
      */
     @Test
     public void testSetOperandsColumnT() {
@@ -70,7 +72,7 @@ public class CwmZExpressionTest {
     }
 
     private TdColumn getColumn(String name) {
-        return ColumnHelper.createColumn(name);
+        return ColumnHelper.createTdColumn(name);
     }
 
     private TdTable getTable(String name) {
@@ -82,7 +84,8 @@ public class CwmZExpressionTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.sql.converters.CwmZExpression#setOperands(orgomg.cwm.resource.relational.Column, orgomg.cwm.resource.relational.Column)}.
+     * {@link org.talend.dq.sql.converters.CwmZExpression#setOperands(orgomg.cwm.resource.relational.Column, orgomg.cwm.resource.relational.Column)}
+     * .
      */
     @Test
     public void testSetOperandsColumnColumn() {
@@ -169,7 +172,7 @@ public class CwmZExpressionTest {
         String list = "1,2,3,45,4,6"; //$NON-NLS-1$
         generateExpression(SqlPredicate.IN, "USER_ID", list); //$NON-NLS-1$
 
-        String exp = "Select id from lookup";
+        String exp = "Select id from lookup"; //$NON-NLS-1$
         generateExpression(SqlPredicate.IN, "USER_ID", exp); //$NON-NLS-1$
     }
 
@@ -230,8 +233,8 @@ public class CwmZExpressionTest {
 
         String nameStr = tableName + "." + column.getName(); //$NON-NLS-1$
         System.out.println(expre.generateExpressions().getExpression().getBody());
-        Assert.assertEquals(simpleExpectedExpression(nameStr, SqlPredicate.EQUAL, "\"sunny\""), expre.generateExpressions()
-                .getExpression().getBody()); //$NON-NLS-1$
+        Assert.assertEquals(simpleExpectedExpression(nameStr, SqlPredicate.EQUAL, "\"sunny\""), expre.generateExpressions() //$NON-NLS-1$
+                .getExpression().getBody());
     }
 
 }
