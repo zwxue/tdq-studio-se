@@ -514,7 +514,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         path = path == null ? "" : path; //$NON-NLS-1$
         path = path.startsWith(String.valueOf(IPath.SEPARATOR)) ? path : IPath.SEPARATOR + path;
 
-        if (hasLockedItems(objectType, path)){
+        // MOD sizhaoliu 2012-7-11 TDQ-5613 check lock status before removing/renaming a folder
+    	ProxyRepositoryFactory.getInstance().updateLockStatus();
+        if (ProxyRepositoryManager.getInstance().hasLockedItems(folderNode)){
         	MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                     DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameFolderLocked")); //$NON-NLS-1$
         	return;
@@ -757,15 +759,5 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
         return flag;
     }
-    
-    private boolean hasLockedItems(ERepositoryObjectType type, String path) throws PersistenceException {
-        List<IRepositoryViewObject> objects = ProxyRepositoryFactory.getInstance().getAll(type, true);
-        for (IRepositoryViewObject repositoryObject : objects) {
-        	ERepositoryStatus status = ProxyRepositoryFactory.getInstance().getStatus(repositoryObject.getProperty().getItem());
-            if (status == ERepositoryStatus.LOCK_BY_USER || status == ERepositoryStatus.LOCK_BY_OTHER){
-            	return true;
-            }
-        }
-        return false;
-    }
+
 }

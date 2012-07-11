@@ -19,10 +19,12 @@ import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.ERepositoryStatus;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -161,4 +163,27 @@ public class ProxyRepositoryManager {
             return false;
         }
     }
+    
+	/**
+	 * Test whether a repository node is locked or contains locked items.
+	 * 
+	 * @param node the node to test
+	 * @return true if the node is locked or contains locked items.
+	 * @throws PersistenceException
+	 */
+	public boolean hasLockedItems(IRepositoryNode node) throws PersistenceException {
+		ERepositoryStatus status = ProxyRepositoryFactory.getInstance()
+				.getStatus(node.getObject().getProperty().getItem());
+		if (status == ERepositoryStatus.LOCK_BY_USER || status == ERepositoryStatus.LOCK_BY_OTHER) {
+			return true;
+		}
+		if (node.getObjectType().equals(ERepositoryObjectType.FOLDER) && node.hasChildren()) {
+			for (IRepositoryNode childNode : node.getChildren()) {
+				if (hasLockedItems(childNode)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
