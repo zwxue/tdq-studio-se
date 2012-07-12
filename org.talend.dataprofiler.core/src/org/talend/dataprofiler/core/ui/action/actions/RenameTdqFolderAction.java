@@ -24,16 +24,19 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.AContextualAction;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * rename tdq folder action.
@@ -68,6 +71,15 @@ public class RenameTdqFolderAction extends AContextualAction {
             return;
         }
         // ~ TDQ-4831
+        // Added yyin 20120712 TDQ-5721 when rename the sql file folder with file opening, should inform
+        if (this.node instanceof SourceFileSubFolderNode) {
+            ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening((SourceFileSubFolderNode) node);
+            if (rc.isOk()) {
+                WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(rc.getMessage());
+                return;
+            }
+        }// ~
+
         InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(),
                 DefaultMessagesImpl.getString("RenameTdqFolderAction.renameFolderName"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("RenameTdqFolderAction.inputNewFolderName"), null, new IInputValidator() { //$NON-NLS-1$
