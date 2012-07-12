@@ -83,40 +83,35 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         fragment="true"/>
 
    <plugin
          id="org.talend.dataprofiler.core.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         fragment="true"/>
 
    <plugin
          id="org.talend.dataquality.record.linkage.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         fragment="true"/>
 
    <plugin
          id="org.talend.dataquality.parser.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         fragment="true"/>
 
    <plugin
          id="org.talend.dataquality.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
-         unpack="false"/>
+         fragment="true"/>
 
    <plugin
          id="org.talend.dataquality.record.linkage"
@@ -150,7 +145,20 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"
+         fragment="true"/>
+
+   <plugin
+         id="org.talend.designer.components.libs.tdq.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"/>
+
+   <plugin
+         id="org.talend.designer.components.libs.tdq"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
