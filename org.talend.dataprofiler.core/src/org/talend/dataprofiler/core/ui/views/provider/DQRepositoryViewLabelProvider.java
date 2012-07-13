@@ -25,14 +25,17 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
@@ -144,8 +147,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (node instanceof DBConnectionRepNode) {
                     if (!isSupportedConnection(node)) {
                         image = ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
+                    }else if(isInvalidJDBCConnection(node)){
+                    	image = ImageLib.createInvalidIcon(ImageLib.TD_DATAPROVIDER).createImage();
+                    }else{
+                    	image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                     }
-                    image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (node instanceof MDMConnectionRepNode) {
                     image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
                 } else if (node instanceof MDMSchemaRepNode) {
@@ -393,6 +399,30 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
         return false;
     }
+    
+	/**
+	 * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
+	 * @param repNode
+	 * @return
+	 */
+	private boolean isInvalidJDBCConnection(IRepositoryNode repNode) {
+		Property property = repNode.getObject().getProperty();
+		if (property != null && property.getItem() != null) {
+			DatabaseConnectionItem connectionItem = (DatabaseConnectionItem) property.getItem();
+			if (connectionItem != null) {
+				DatabaseConnection connection = (DatabaseConnection) connectionItem.getConnection();
+				String databaseType = ((DatabaseConnection) connection).getDatabaseType();
+				if (databaseType.equalsIgnoreCase(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey())
+						&& ((connection.getDriverJarPath() == null) || (connection.getDriverJarPath()).trim().equals(PluginConstant.EMPTY_STRING))) {
+					
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+    
 
     /*
      * yyi 2011-04-14 20362:connection modified
