@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.utils.XmiResourceManager;
@@ -93,16 +92,8 @@ public class SQLSourceFileWriter extends AElementPersistance {
         String statePathStr = null;
         if (item.getState() != null) {
             statePathStr = item.getState().getPath();
-            // Added yyin 20120712 TDQ-5721 when path changed to "path: TDQ_Libraries/Source Files/xxx", remove the
-            // first two segment.
             if (!statePathStr.equals("")) {
-            org.eclipse.core.runtime.IPath path = new Path(statePathStr);
-            IPath typedPath = ResourceManager.getSourceFileFolder().getLocation();
-            if (path.matchingFirstSegments(typedPath) > -1) {
-                statePathStr = path.removeFirstSegments(2).toString();
-                } else {// ~
                 statePathStr = "/" + statePathStr;
-            }
             }
         }
         String fileName = item.getName() + "_" + item.getProperty().getVersion() + "." + item.getExtension();//$NON-NLS-1$
