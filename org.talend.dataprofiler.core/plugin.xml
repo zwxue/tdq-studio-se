@@ -1446,6 +1446,12 @@
            name="Update ItemState Path For Patterns UDIs Task"
            version="5.0.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateMsSqlToJdbcTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateMsSqlToJdbcTask"
+           name="Update Database type MsSql to General JDBC"
+           version="5.0.3">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
