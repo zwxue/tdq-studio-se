@@ -91,6 +91,8 @@ public class CreateSqlFileWizard extends Wizard {
         sourceFileItem.setProperty(property);
         sourceFileItem.setName(parameter.getFileName());
         sourceFileItem.setExtension(PluginConstant.SQL_STRING);
+        sourceFileItem.setFilename(property.getLabel() + "_" + property.getVersion() + PluginConstant.DOT_STRING
+                + PluginConstant.SQL_STRING);
         // set empty content
         ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
         byteArray.setInnerContent(PluginConstant.EMPTY_STRING.getBytes());

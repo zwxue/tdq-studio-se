@@ -52,6 +52,7 @@ import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
@@ -171,8 +172,10 @@ public class RenameSqlFileAction extends Action {
         property.setLabel(newName);
         sourceFiletem.setName(newName);
         sourceFiletem.setFileExtension(FileConstants.SQL_EXTENSION);
-        // sourceFiletem.setFilename(filePath.toString());
+        sourceFiletem.setFilename(property.getLabel() + "_" + property.getVersion() + PluginConstant.DOT_STRING
+                + PluginConstant.SQL_STRING);
         ProxyRepositoryFactory.getInstance().save(project, sourceFiletem);
+
         CorePlugin.getDefault().refreshDQView(parentNode);
     }
 
