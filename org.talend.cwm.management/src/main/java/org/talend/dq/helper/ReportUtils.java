@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -36,8 +37,7 @@ import com.csvreader.CsvWriter;
  */
 public final class ReportUtils {
 
-    private ReportUtils() {
-    }
+    private static Logger log = Logger.getLogger(ReportUtils.class);
 
     public static final String REPORT_LIST = ".report.list";//$NON-NLS-1$
 
@@ -64,7 +64,7 @@ public final class ReportUtils {
             return null;
         }
 
-        IFolder folder = ReportHelper.getOutputFolder(reportFile);
+        IFolder folder = getOutputFolder(reportFile);
 
         List<IResource> repFileList = new ArrayList<IResource>();
 
@@ -180,13 +180,7 @@ public final class ReportUtils {
      */
     public static File getReportListFile(IFile reportFile) throws IOException {
         String reportFileName = reportFile.getName();
-        int indexOf = reportFileName.indexOf(PluginConstant.DOT_STRING);
-        String simpleName = PluginConstant.EMPTY_STRING;
-        if (indexOf != -1) {
-            simpleName = reportFileName.substring(0, indexOf);
-        } else {
-            return null;
-        }
+        String simpleName = getSimpleName(reportFileName);
         File file = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName) + "/"//$NON-NLS-1$
                 + REPORT_LIST);
         if (!file.exists()) {
@@ -203,6 +197,23 @@ public final class ReportUtils {
         }
         return file;
     }
+
+	/**
+	 * remove the extension of full name to get the simple name of a report file
+	 * 
+	 * @param reportFileName
+	 * @return
+	 */
+	public static String getSimpleName(String reportFileName) {
+		int indexOf = reportFileName.lastIndexOf(PluginConstant.DOT_STRING);
+        String simpleName = PluginConstant.EMPTY_STRING;
+        if (indexOf != -1) {
+            simpleName = reportFileName.substring(0, indexOf);
+        } else {
+            return null;
+        }
+		return simpleName;
+	}
 
     /**
      * DOC xqliu Comment method "buildRepListParams".
@@ -229,11 +240,8 @@ public final class ReportUtils {
      */
     public static void initRepListFile(IFile reportFile) throws Exception {
         String reportFileName = reportFile.getName();
-        int indexOf = reportFileName.indexOf(PluginConstant.DOT_STRING);
-        String simpleName = PluginConstant.EMPTY_STRING;
-        if (indexOf != -1) {
-            simpleName = reportFileName.substring(0, indexOf);
-        } else {
+        String simpleName = getSimpleName(reportFileName);
+        if(simpleName == null){
             return;
         }
         IFolder reportFileFolder = ((IFolder) reportFile.getParent()).getFolder(PluginConstant.DOT_STRING + simpleName);
@@ -296,4 +304,20 @@ public final class ReportUtils {
         return mainSubRepMap;
     }
 
+    /**
+     * DOC xqliu Comment method "getOutputFolder".
+     * 
+     * @param reportFile
+     * @return
+     */
+    public static IFolder getOutputFolder(IFile reportFile) {
+        IFolder reportContainer = (IFolder) reportFile.getParent();
+        String fileName = reportFile.getName();
+        String simpleName = getSimpleName(fileName);
+        if(simpleName == null){
+            log.error("The current report file name: " + reportFile.getFullPath() + " is a illegal name."); //$NON-NLS-1$ //$NON-NLS-2$
+            return null;
+        }
+        return reportContainer.getFolder(PluginConstant.DOT_STRING + simpleName);
+    }
 }
