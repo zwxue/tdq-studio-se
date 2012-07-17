@@ -1,3 +1,12 @@
+2.0.2 # sizhaoliu 2012/07/17 
+- correct some issues to improve match results of tFirstnameMatch (TDQ-1576) :  
+  for standard mode, removed the doc collector and augmented the similarity 
+  for fuzzy mode, lowercase the word to assure the prefix is identical to indexed words 
+
+2.0.1 # sizhaoliu 2012/03/15
+- Move boost changes from SynonymIndexBuilder to SynonymIndexSearcher, so that we can
+  change the boost values without regeneration of the indexes "out of the box".
+
 2.0.0 # sizhaoliu 2012/03/06
 - improvements for better scoring with combined query across multiple fields. (related to TDQ-3606)
 - do not filter English stop words any more during indexing. (related to TDQ-3330)
