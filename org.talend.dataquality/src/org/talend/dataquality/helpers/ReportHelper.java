@@ -923,26 +923,6 @@ public final class ReportHelper {
     }
 
     /**
-     * DOC xqliu Comment method "getOutputFolder".
-     * 
-     * @param reportFile
-     * @return
-     */
-    public static IFolder getOutputFolder(IFile reportFile) {
-        IFolder reportContainer = (IFolder) reportFile.getParent();
-        String fileName = reportFile.getName();
-        String simpleName = null;
-        int indexOf = fileName.indexOf(DOT_MARK);
-        if (indexOf != -1) {
-            simpleName = fileName.substring(0, indexOf);
-        } else {
-            log.error("The current report file name: " + reportFile.getFullPath() + " is a illegal name."); //$NON-NLS-1$ //$NON-NLS-2$
-            return null;
-        }
-        return reportContainer.getFolder(DOT_MARK + simpleName);
-    }
-
-    /**
      * DOC yyi Comment method "getSubReportsPath".
      * 
      * @return

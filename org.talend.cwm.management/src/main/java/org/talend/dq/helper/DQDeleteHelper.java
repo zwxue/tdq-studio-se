@@ -70,7 +70,7 @@ public final class DQDeleteHelper {
      * @param reportFile
      */
     private static void deleteRepOutputFolder(IFile reportFile) {
-        IFolder currentRportFolder = ReportHelper.getOutputFolder(reportFile);
+        IFolder currentRportFolder = ReportUtils.getOutputFolder(reportFile);
         if (currentRportFolder != null && currentRportFolder.exists()) {
             try {
                 currentRportFolder.delete(true, null);
