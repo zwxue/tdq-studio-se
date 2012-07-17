@@ -55,6 +55,7 @@ public enum EDriverName {
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
                     "net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
                     "-11", "lib/jtds-1.2.jar"), //$NON-NLS-1$
+   //After 5.1.1,the sqljdbc jar of MSSQL2008URL will not be used because of license
     MSSQL2008URL("MSSQL2008", //$NON-NLS-1$
                  "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
                  "-52", isAboveJDK15() ? "lib/sqljdbc4.jar" : "lib/sqljdbc.jar"), //$NON-NLS-1$
