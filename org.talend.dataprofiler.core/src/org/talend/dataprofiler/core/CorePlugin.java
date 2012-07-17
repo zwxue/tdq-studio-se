@@ -383,6 +383,28 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param fileRes
      */
     public void closeEditorIfOpened(Item item) {
+        itemIsOpening(item, true);
+    }
+
+    /**
+     * check the item's editor is opening or not.
+     * 
+     * @param item
+     * @return
+     */
+    public boolean itemIsOpening(Item item) {
+        return itemIsOpening(item, false);
+    }
+
+    /**
+     * check the item's editor is opening or not.
+     * 
+     * @param item
+     * @param closeEditor close the editor if it is opening
+     * @return
+     */
+    public boolean itemIsOpening(Item item, boolean closeEditor) {
+        boolean opening = false;
         IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
         IEditorReference[] editorReferences = activePage.getEditorReferences();
         IEditorInput editorInput = null;
@@ -395,10 +417,11 @@ public class CorePlugin extends AbstractUIPlugin {
 
                     if (property.eResource() != null) {
                         IPath itemPath = PropertyHelper.getItemPath(property);
-                        // IPath propPath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension();
-                        // IPath filePath = new Path(fileInput.getFile().getName()).removeFileExtension();
                         if (itemPath != null && itemPath.equals(fileInput.getFile().getFullPath())) {
-                            activePage.closeEditor(reference.getEditor(false), false);
+                            opening = true;
+                            if (closeEditor) {
+                                activePage.closeEditor(reference.getEditor(false), false);
+                            }
                             break;
                         }
                     }
@@ -407,23 +430,36 @@ public class CorePlugin extends AbstractUIPlugin {
                     // MOD qiongli 2010-11-26 bug 17009
                     if (sqlEditorInput.getUser() == null) {
                         if (sqlEditorInput.getName().equals(property.getLabel())) {
-                            activePage.closeEditor(reference.getEditor(false), false);
+                            opening = true;
+                            if (closeEditor) {
+                                activePage.closeEditor(reference.getEditor(false), false);
+                            }
+                            break;
                         }
                     } else if (sqlEditorInput.getUser().getAlias().getName().equals(property.getLabel())) {
-                        activePage.closeEditor(reference.getEditor(false), false);
+                        opening = true;
+                        if (closeEditor) {
+                            activePage.closeEditor(reference.getEditor(false), false);
+                        }
+                        break;
                     }
 
                 } else if (editorInput instanceof AbstractItemEditorInput) {
                     AbstractItemEditorInput input = (AbstractItemEditorInput) editorInput;
                     Item it = input.getItem();
                     if (it != null && item.equals(it)) {
-                        activePage.closeEditor(reference.getEditor(false), false);
+                        opening = true;
+                        if (closeEditor) {
+                            activePage.closeEditor(reference.getEditor(false), false);
+                        }
+                        break;
                     }
                 }
             } catch (PartInitException e) {
                 e.printStackTrace();
             }
         }
+        return opening;
     }
 
     public List<AnalysisEditor> getCurrentOpenAnalysisEditor() {
