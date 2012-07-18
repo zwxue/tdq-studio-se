@@ -1450,7 +1450,7 @@
            class="org.talend.dataprofiler.core.migration.impl.UpdateMsSqlToJdbcTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateMsSqlToJdbcTask"
            name="Update Database type MsSql to General JDBC"
-           version="5.0.3">
+           version="5.0.4">
      </workspacetask>
   </extension>
   <extension
