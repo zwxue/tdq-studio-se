@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,6 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
  * 
@@ -48,21 +49,22 @@ public class DQDeleteHelperTest {
     public PowerMockRule powerMockRule = new PowerMockRule();
 
     /**
-     * Test method for {@link org.talend.dq.helper.DQDeleteHelper#deleteRelations(org.talend.core.model.properties.Item)}.
+     * Test method for
+     * {@link org.talend.dq.helper.DQDeleteHelper#deleteRelations(org.talend.core.model.properties.Item)}.
      */
     @Test
     public void testDeleteRelations() {
         TDQReportItem item = mock(TDQReportItem.class);
-        IFile file=mock(IFile.class);
+        IFile file = mock(IFile.class);
         when(file.exists()).thenReturn(false);
-        IFolder folder=mock(IFolder.class);
+        IFolder folder = mock(IFolder.class);
         when(folder.exists()).thenReturn(true);
-        Property prop=mock(Property.class);
+        Property prop = mock(Property.class);
         when(item.getProperty()).thenReturn(prop);
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getItemFile(prop)).thenReturn(file);
         PowerMockito.mockStatic(ReportHelper.class);
-        when(ReportHelper.getOutputFolder(file)).thenReturn(folder);
+        when(ReportUtils.getOutputFolder(file)).thenReturn(folder);
         DQDeleteHelper.deleteRelations(item);
 
     }
