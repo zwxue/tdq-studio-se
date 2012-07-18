@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.*;
 import static org.powermock.api.support.membermodification.MemberModifier.*;
@@ -25,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -54,9 +56,9 @@ public class UpdateMsSqlToJdbcTaskTest {
         ConnectionItem item = mock(ConnectionItem.class);
         when(repObject.getProperty()).thenReturn(prop);
         when(prop.getItem()).thenReturn(item);
-        DatabaseConnection dbConn = mock(DatabaseConnection.class);
+        DatabaseConnection dbConn = ConnectionFactory.eINSTANCE.createDatabaseConnection();
+        dbConn.setDatabaseType("Microsoft SQL Server 2005/2008");
         when(item.getConnection()).thenReturn(dbConn);
-        when(dbConn.getDatabaseType()).thenReturn("Microsoft SQL Server 2005/2008");
 
         // mock something for super-class AbstractWorksapceUpdateTask
         IProject proj = mock(IProject.class);
@@ -64,6 +66,8 @@ public class UpdateMsSqlToJdbcTaskTest {
         stub(method(ResourceManager.class, "getRootProject")).toReturn(proj);
         UpdateMsSqlToJdbcTask updateMsSqlToJdbcTask = new UpdateMsSqlToJdbcTask();
         updateMsSqlToJdbcTask.doExecute();
+        assertTrue("General JDBC".equals(dbConn.getDatabaseType()));
+
     }
 
 }
