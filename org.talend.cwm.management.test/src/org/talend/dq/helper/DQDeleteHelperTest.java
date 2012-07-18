@@ -55,7 +55,7 @@ public class DQDeleteHelperTest {
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getItemFile(prop)).thenReturn(file);
         PowerMockito.mockStatic(ReportHelper.class);
-        when(ReportHelper.getOutputFolder(file)).thenReturn(folder);
+        when(ReportUtils.getOutputFolder(file)).thenReturn(folder);
         DQDeleteHelper.deleteRelations(item);
 
     }
