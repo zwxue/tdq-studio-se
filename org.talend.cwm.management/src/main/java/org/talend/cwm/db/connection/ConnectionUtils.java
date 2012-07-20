@@ -336,18 +336,18 @@ public final class ConnectionUtils {
         ReturnCode returnCode = new ReturnCode();
         String driverClass = dbConn.getDriverClass();
         String driverJarPath = dbConn.getDriverJarPath();
-        if (driverClass == null || driverClass.trim().equals("")) {
+        if (driverClass == null || driverClass.trim().equals("")) { //$NON-NLS-1$
             returnCode.setOk(false);
-            returnCode.setMessage("Driver Class is empty!");
+            returnCode.setMessage(Messages.getString("ConnectionUtils.DriverClassEmpty")); //$NON-NLS-1$
         } else {
-            if (driverJarPath == null || driverJarPath.trim().equals("")) {
+            if (driverJarPath == null || driverJarPath.trim().equals("")) { //$NON-NLS-1$
                 returnCode.setOk(false);
-                returnCode.setMessage("Driver Jar File Path is empty!");
+                returnCode.setMessage(Messages.getString("ConnectionUtils.DriverJarFileEmpty")); //$NON-NLS-1$
             } else {
                 File jarFile = new File(driverJarPath);
                 if (!jarFile.exists() || jarFile.isDirectory()) {
                     returnCode.setOk(false);
-                    returnCode.setMessage("Driver Jar File Path is invalid!");
+                    returnCode.setMessage(Messages.getString("ConnectionUtils.DriverJarFileInvalid")); //$NON-NLS-1$
                 }
             }
         }
