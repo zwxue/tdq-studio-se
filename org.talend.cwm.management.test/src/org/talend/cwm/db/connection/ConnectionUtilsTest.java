@@ -12,25 +12,35 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
@@ -50,7 +60,8 @@ import orgomg.cwm.resource.relational.impl.SchemaImpl;
  */
 // @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ConnectionUtils.class, ColumnSetHelper.class, ConnectionHelper.class, JavaSqlFactory.class,
-        CatalogHelper.class, SchemaHelper.class, org.talend.utils.sql.ConnectionUtils.class, ElementWriterFactory.class })
+        CatalogHelper.class, SchemaHelper.class, org.talend.utils.sql.ConnectionUtils.class, ElementWriterFactory.class,
+        Messages.class })
 public class ConnectionUtilsTest {
 
     @Rule
@@ -92,7 +103,7 @@ public class ConnectionUtilsTest {
         Schema schema = mock(SchemaImpl.class);
         PowerMockito.mockStatic(SchemaHelper.class);
         when(SchemaHelper.getParentSchema(tdTable)).thenReturn(schema);
-        
+
         PowerMockito.mockStatic(ConnectionUtils.class);
         when(ConnectionUtils.getName(catalog)).thenReturn("testCatalogName"); //$NON-NLS-1$
         when(ConnectionUtils.getName(schema)).thenReturn("testSchemaName"); //$NON-NLS-1$
@@ -105,7 +116,7 @@ public class ConnectionUtilsTest {
             e.printStackTrace();
         }
         when(list.size()).thenReturn(0);
-        
+
         ReturnCode returnCode = new ReturnCode();
         returnCode.setReturnCode("ok", true); //$NON-NLS-1$
         PowerMockito.mockStatic(org.talend.utils.sql.ConnectionUtils.class);
@@ -130,7 +141,45 @@ public class ConnectionUtilsTest {
         // when(bundle.getSymbolicName()).thenReturn("SymbolicName"); //$NON-NLS-1$
 
         ConnectionUtils.retrieveColumn((MetadataTable) tdTable);
-
     }
 
+    /**
+     * Test method for
+     * {@link org.talend.cwm.db.connection.ConnectionUtils#isGeneralJdbc(org.talend.core.model.metadata.builder.connection.Connection)}
+     * .
+     */
+    @Test
+    public void testIsGeneralJdbc() {
+        DatabaseConnection dbConnMock = mock(DatabaseConnection.class);
+        EDatabaseTypeName generalJdbcType = EDatabaseTypeName.GENERAL_JDBC;
+        when(dbConnMock.getDatabaseType()).thenReturn(generalJdbcType.getDisplayName());
+        assertTrue(ConnectionUtils.isGeneralJdbc(dbConnMock));
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.cwm.db.connection.ConnectionUtils#checkGeneralJdbcJarFilePathDriverClassName(org.talend.core.model.metadata.builder.connection.DatabaseConnection)}
+     * .
+     */
+    @Test
+    public void testCheckGeneralJdbcJarFilePathDriverClassName() {
+        String driverClass = "DriverClassName"; //$NON-NLS-1$
+        String driverJarPath = "DriverJarFilePath"; //$NON-NLS-1$
+        String msg = "msg"; //$NON-NLS-1$
+
+        ResourceBundle rb = mock(ResourceBundle.class);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb); //$NON-NLS-1$
+
+        PowerMockito.mockStatic(Messages.class);
+        when(Messages.getString(anyString())).thenReturn(msg);
+
+        DatabaseConnection dbConnMock = mock(DatabaseConnection.class);
+        when(dbConnMock.getDriverClass()).thenReturn(driverClass);
+        when(dbConnMock.getDriverJarPath()).thenReturn(driverJarPath);
+
+        ReturnCode rc = ConnectionUtils.checkGeneralJdbcJarFilePathDriverClassName(dbConnMock);
+
+        assertFalse(rc.isOk());
+        assertEquals(msg, rc.getMessage());
+    }
 }
