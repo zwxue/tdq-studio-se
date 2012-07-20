@@ -228,8 +228,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
         if (!connectionAvailable.isOk()) {
             MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("RunAnalysisAction.urlChanged"),//$NON-NLS-1$
-                    DefaultMessagesImpl.getString("RunAnalysisAction.checkDBConnection") + connectionAvailable.getMessage());//$NON-NLS-1$
+                    DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailTitle"),//$NON-NLS-1$
+                    DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
             return;
         }
         // ~

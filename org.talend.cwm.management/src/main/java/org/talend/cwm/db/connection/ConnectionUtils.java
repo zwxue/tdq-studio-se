@@ -298,8 +298,59 @@ public final class ConnectionUtils {
                     JavaSqlFactory.getURL(analysisDataProvider), props);
             returnCode = mdmWebserviceConnection.checkDatabaseConnection();
             return returnCode;
+        } else if (isGeneralJdbc(analysisDataProvider)) {
+            ReturnCode rcJdbc = checkGeneralJdbcJarFilePathDriverClassName((DatabaseConnection) analysisDataProvider);
+            if (!rcJdbc.isOk()) {
+                return rcJdbc;
+            }
         }
         returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
+        return returnCode;
+    }
+
+    /**
+     * if the Connection's type is General JDBC return true.
+     * 
+     * @param conn a database connection
+     * @return
+     */
+    public static boolean isGeneralJdbc(Connection conn) {
+        boolean jdbc = false;
+        if (conn instanceof DatabaseConnection) {
+            DatabaseConnection dbConn = (DatabaseConnection) conn;
+            EDatabaseTypeName databaseType = EDatabaseTypeName.getTypeFromDbType(dbConn.getDatabaseType());
+            if (EDatabaseTypeName.GENERAL_JDBC.equals(databaseType)) {
+                jdbc = true;
+            }
+        }
+        return jdbc;
+    }
+
+    /**
+     * if the DriverClassName is empty or Jar File Path is invalid return false.
+     * 
+     * @param dbConn a General JDBC database connection
+     * @return
+     */
+    public static ReturnCode checkGeneralJdbcJarFilePathDriverClassName(DatabaseConnection dbConn) {
+        ReturnCode returnCode = new ReturnCode();
+        String driverClass = dbConn.getDriverClass();
+        String driverJarPath = dbConn.getDriverJarPath();
+        if (driverClass == null || driverClass.trim().equals("")) {
+            returnCode.setOk(false);
+            returnCode.setMessage("Driver Class is empty!");
+        } else {
+            if (driverJarPath == null || driverJarPath.trim().equals("")) {
+                returnCode.setOk(false);
+                returnCode.setMessage("Driver Jar File Path is empty!");
+            } else {
+                File jarFile = new File(driverJarPath);
+                if (!jarFile.exists() || jarFile.isDirectory()) {
+                    returnCode.setOk(false);
+                    returnCode.setMessage("Driver Jar File Path is invalid!");
+                }
+            }
+        }
         return returnCode;
     }
 
@@ -1394,8 +1445,7 @@ public final class ConnectionUtils {
                                 List<TdSqlDataType> newDataTypeList = getDataType(
                                         ConnectionUtils.getName(CatalogHelper.getParentCatalog(tdTable)),
                                         ConnectionUtils.getName(SchemaHelper.getParentSchema(tdTable)), tdTable.getName(),
-                                        tdColumn.getName(),
-                                        connection);
+                                        tdColumn.getName(), connection);
                                 if (newDataTypeList.size() > 0) {
                                     tdColumn.setSqlDataType(newDataTypeList.get(0));
                                 }
@@ -1701,8 +1751,8 @@ public final class ConnectionUtils {
      * @return
      */
     public static String getOriginalConntextValue(Connection connection, String rawValue) {
-        if(rawValue==null){
-        	return PluginConstant.EMPTY_STRING;
+        if (rawValue == null) {
+            return PluginConstant.EMPTY_STRING;
         }
         String origValu = null;
         if (connection != null && connection.isContextMode()) {
@@ -1715,7 +1765,7 @@ public final class ConnectionUtils {
             }
 
             origValu = ConnectionContextHelper.getOriginalValue(contextType, rawValue);
-        }        
+        }
         return origValu == null ? rawValue : origValu;
     }
 
