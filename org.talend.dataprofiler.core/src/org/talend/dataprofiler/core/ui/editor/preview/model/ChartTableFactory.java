@@ -83,6 +83,7 @@ import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
+
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -398,6 +399,9 @@ public final class ChartTableFactory {
                                 } else if (isPhonseNumberIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
                                     item.setText("Generate a standardization phone number job");
+                                } else if (isDqRule(indicator)) {
+                                    item = new MenuItem(menu, SWT.PUSH);
+                                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
                                 }
 
                                 if (item != null) {
@@ -579,6 +583,31 @@ public final class ChartTableFactory {
             public Indicator caseDatePatternFreqIndicator(DatePatternFreqIndicator object) {
                 return object;
             }
+        };
+
+        return iSwitch.doSwitch(indicator) != null;
+    }
+
+    /**
+     * Added yyin TDQ-4829 20120717 To add the new feature: generate job from DQ rule
+     * 
+     * @param indicator
+     * @return
+     */
+    public static boolean isDqRule(Indicator indicator) {
+        // RulesSwitch<DQRule> dqRulesSwitch = new RulesSwitch<DQRule>() {
+        IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
+
+            @Override
+            public WhereRuleIndicator caseIndicator(Indicator object) {
+                if (object instanceof WhereRuleIndicator)
+                    return (WhereRuleIndicator) object;
+                return null;
+            }
+// @Override
+            // public DQRule caseDQRule(DQRule object) {
+            // return object;
+            // }
         };
 
         return iSwitch.doSwitch(indicator) != null;
