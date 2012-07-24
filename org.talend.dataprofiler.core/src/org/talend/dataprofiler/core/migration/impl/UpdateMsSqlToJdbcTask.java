@@ -23,6 +23,7 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 
 /**
@@ -55,6 +56,8 @@ public class UpdateMsSqlToJdbcTask extends AbstractWorksapceUpdateTask {
                 String rawType = connection.getDatabaseType();
                 if (StringUtils.equalsIgnoreCase(rawType, SQLSERVER22008_TYPE)) {
                     connection.setDatabaseType(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey());
+                    connection.setDriverClass(null);
+                    connection.setDriverClass(PluginConstant.EMPTY_STRING);
                 }
 
                 ProxyRepositoryFactory.getInstance().save(item);
