@@ -82,7 +82,7 @@ public class ModelElementIndicatorRuleTest {
         // when(MetadataHelper.getDataminingType(me)).thenReturn(DataminingType.OTHER);
         
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.ModeIndicatorEnum, me, ExecutionLanguage.JAVA));
-        Assert.assertFalse(ModelElementIndicatorRule
+        Assert.assertTrue(ModelElementIndicatorRule
                 .patternRule(IndicatorEnum.FrequencyIndicatorEnum, me, ExecutionLanguage.JAVA));
         // Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowFrequencyIndicatorEnum, me,
         // ExecutionLanguage.JAVA));
