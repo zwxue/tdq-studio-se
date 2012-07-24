@@ -67,7 +67,8 @@ public class UpdateMsSqlToJdbcTaskTest {
         UpdateMsSqlToJdbcTask updateMsSqlToJdbcTask = new UpdateMsSqlToJdbcTask();
         updateMsSqlToJdbcTask.doExecute();
         assertTrue("General JDBC".equals(dbConn.getDatabaseType()));
-
+        assertTrue(dbConn.getDriverJarPath() == null);
+        assertTrue("".equals(dbConn.getDriverClass()));
     }
 
 }
