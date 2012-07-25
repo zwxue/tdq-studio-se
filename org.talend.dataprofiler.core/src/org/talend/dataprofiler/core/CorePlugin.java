@@ -79,6 +79,7 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
@@ -232,6 +233,12 @@ public class CorePlugin extends AbstractUIPlugin {
             editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
 
+		String username = JavaSqlFactory.getUsername(tdDataProvider);
+		if (username == null || "".equals(username)) { //$NON-NLS-1$
+			MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
+			return null;
+		}
+		
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 

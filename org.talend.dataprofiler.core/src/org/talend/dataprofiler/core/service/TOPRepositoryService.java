@@ -41,6 +41,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.ContextItem;
@@ -107,7 +108,12 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         for (Item item : items) {
             if (item instanceof ConnectionItem) {
                 Connection connection = ((ConnectionItem) item).getConnection();
-                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connection);
+                // MOD xqliu TDQ-5853 2012-07-25 SqlExplorer don't support the connection which has empty username
+				String username = JavaSqlFactory.getUsername(connection);
+				if (username != null && !"".equals(username.trim())) {  //$NON-NLS-1$
+					CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(
+							connection);
+				}
             }
         }
     }

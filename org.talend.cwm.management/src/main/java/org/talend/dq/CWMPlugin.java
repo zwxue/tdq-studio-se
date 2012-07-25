@@ -115,8 +115,6 @@ public class CWMPlugin extends Plugin {
 
                     String url = JavaSqlFactory.getURL(connection);
 
-                    user = "".equals(user) ? JavaSqlFactory.DEFAULT_USERNAME : user; //$NON-NLS-1$
-
                     User previousUser = new User(user, password);
                     alias.setDefaultUser(previousUser);
 
