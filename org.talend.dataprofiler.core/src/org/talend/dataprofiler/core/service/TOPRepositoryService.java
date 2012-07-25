@@ -86,7 +86,6 @@ import org.talend.resource.ResourceManager;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -154,7 +153,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     }
 
     /**
-     * ADDED yyin 20120503 TDQ-4959
+     * ADDED yyin 20120503 TDQ-4959.
      * 
      * @param node
      */
@@ -303,7 +302,6 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-
     }
 
     /**
@@ -385,7 +383,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     public boolean confirmUpdateAnalysis(ConnectionItem connectionItem) {
         // optimize code, just open an dialog,don't need to judge if has dependce in here.
         if (MessageDialog.openQuestion(null, DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("TOPRepositoryService.propgateAnalyses", connectionItem.getProperty() //$NON-NLS-1$
+                DefaultMessagesImpl.getString("TOPRepositoryService.propgateAnalyses", connectionItem.getProperty() //$NON-NLS-1$
                         .getLabel()))) {
             return true;
         }
@@ -433,11 +431,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         String dialogTitle = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.Title");//$NON-NLS-1$
         String dialogMessage = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.Message");//$NON-NLS-1$
-        final InputDialog inputDialog = new InputDialog(parentShell,
- dialogTitle,
+        final InputDialog inputDialog = new InputDialog(parentShell, dialogTitle,
                 dialogMessage,//$NON-NLS-1$//$NON-NLS-2$
- newItem.getProperty().getLabel()
- + DateUtils.formatTimeStamp(DateUtils.PATTERN_6, System.currentTimeMillis()),
+                newItem.getProperty().getLabel() + DateUtils.formatTimeStamp(DateUtils.PATTERN_6, System.currentTimeMillis()),
                 new IInputValidator() {
 
                     public String isValid(String newText) {
@@ -449,16 +445,17 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                         boolean matches = Pattern.matches(pattern, newText);
                         boolean nameAvailable = false;
                         try {
-                            List<IRepositoryViewObject> listExistingObjects = ProxyRepositoryFactory.getInstance().getAll(type, true, false);
+                            List<IRepositoryViewObject> listExistingObjects = ProxyRepositoryFactory.getInstance().getAll(type,
+                                    true, false);
                             nameAvailable = ProxyRepositoryFactory.getInstance().isNameAvailable(item, newText,
                                     listExistingObjects);
                         } catch (PersistenceException e) {
-                           log.error(e, e);
-                           return e.getMessage();
+                            log.error(e, e);
+                            return e.getMessage();
                         }
-                        if(!matches){
+                        if (!matches) {
                             returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage1");//$NON-NLS-1$
-                        }else if(!nameAvailable){
+                        } else if (!nameAvailable) {
                             returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage2");//$NON-NLS-1$
                         }
                         return returnStr;
@@ -466,8 +463,6 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                 });
         return inputDialog;
     }
-
-
 
     /**
      * Comment method "changeElementName".
@@ -477,10 +472,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * 
      */
     public void changeElementName(Item item, String newName) {
-        
         Property property = item.getProperty();
         PropertyHelper.changeName(property, newName);
-
     }
 
     /*
@@ -498,5 +491,16 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             result = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(folderNode).isOk();
         }
         return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#checkUsernameBeforeSaveConnection(org.talend.core.model.properties.
+     * ConnectionItem)
+     */
+    public void checkUsernameBeforeSaveConnection(ConnectionItem connectionItem) {
+        Connection connection = connectionItem.getConnection();
+        ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(connection);
     }
 }

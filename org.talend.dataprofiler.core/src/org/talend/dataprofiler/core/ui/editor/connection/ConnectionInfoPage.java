@@ -88,7 +88,6 @@ import org.talend.i18n.Messages;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.wizards.metadata.connection.database.DatabaseWizard;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -424,7 +423,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             props.put(TaggedValueHelper.DBNAME, dbConn.getSID());
         }
 
-		ReturnCode returnCode = ConnectionUtils.isMdmConnection(connection) ? new MdmWebserviceConnection(
+        ReturnCode returnCode = ConnectionUtils.isMdmConnection(connection) ? new MdmWebserviceConnection(
                 JavaSqlFactory.getURL(connection), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(url,
                 driverClassName, props);
         // ~
@@ -503,8 +502,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
             this.initialize(this.getEditor());
 
-            if (checkDBConnection)
+            if (checkDBConnection) {
                 reloadDataProvider();
+            }
 
             this.isUrlChanged = false;
             this.isDirty = false;
@@ -577,9 +577,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             connection = (Connection) EObjectHelper.resolveObject(connection);
         }
 
-        if(!connection.isContextMode()){
-        	JavaSqlFactory.setUsername(connection, loginText.getText());
-        	JavaSqlFactory.setPassword(connection, passwordText.getText());
+        if (!connection.isContextMode()) {
+            JavaSqlFactory.setUsername(connection, loginText.getText());
+            JavaSqlFactory.setPassword(connection, passwordText.getText());
         }
         // JavaSqlFactory.setURL(connection, urlText.getText());
         // MOD zshen for bug 12327:to save driverClassName.
@@ -603,6 +603,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (connection != null && connection.eIsProxy()) {
             connection = (Connection) EObjectHelper.resolveObject(connection);
         }
+
+        ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(connection);
+
         ReturnCode returnCode = ElementWriterFactory.getInstance().createDataProviderWriter().save(connection);
         if (returnCode.isOk()) {
             if (log.isDebugEnabled()) {

@@ -263,7 +263,7 @@ public class CorePlugin extends AbstractUIPlugin {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
                 if (connection != null) {
-                    String userName = JavaSqlFactory.getUsernameDefault(connection);
+                    String userName = JavaSqlFactory.getUsername(connection);
                     SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     input.setUser(alias.getUser(userName));
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();

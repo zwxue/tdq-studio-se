@@ -1321,8 +1321,8 @@ public final class ConnectionUtils {
 
         Properties properties = new Properties();
         // MOD xqliu 2010-08-06 bug 14593
-        properties.setProperty(TaggedValueHelper.USER, JavaSqlFactory.getUsernameDefault(conn));
-        properties.setProperty(TaggedValueHelper.PASSWORD, JavaSqlFactory.getPasswordDefault(conn));
+        properties.setProperty(TaggedValueHelper.USER, JavaSqlFactory.getUsername(conn));
+        properties.setProperty(TaggedValueHelper.PASSWORD, JavaSqlFactory.getPassword(conn));
         // ~ 14593
         connectionParam.setParameters(properties);
         connectionParam.setName(conn.getName());
@@ -1815,4 +1815,17 @@ public final class ConnectionUtils {
         return fileConn;
     }
 
+    /**
+     * DOC xqliu Comment method "checkUsernameBeforeSaveConnection4Sqlite".
+     * 
+     * @param connection
+     */
+    public static void checkUsernameBeforeSaveConnection4Sqlite(Connection connection) {
+        if (ConnectionUtils.isSqlite(connection)) {
+            String username = JavaSqlFactory.getUsername(connection);
+            if (username == null || "".equals(username)) { //$NON-NLS-1$
+                ConnectionHelper.setUsername(connection, JavaSqlFactory.DEFAULT_USERNAME);
+            }
+        }
+    }
 }

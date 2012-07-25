@@ -1467,6 +1467,12 @@
            name="Update Database type MsSql to General JDBC"
            version="5.2.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateSqliteUsernameTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateSqliteUsernameTask"
+           name="Update Sqlite Username Task"
+           version="5.1.2">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
