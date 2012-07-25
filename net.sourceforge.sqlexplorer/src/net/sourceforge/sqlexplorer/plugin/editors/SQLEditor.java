@@ -14,10 +14,8 @@
  */
 package net.sourceforge.sqlexplorer.plugin.editors;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -1014,6 +1012,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         Object adapter = textEditor.getAdapter(org.eclipse.swt.widgets.Control.class);
         if (adapter instanceof StyledText) {
             StyledText text = (StyledText) adapter;
+            // ADD xqliu 2012-07-24 TDQ-5853 forced to navigate to the first row
+            lineNo = 1;
+            // ~ TDQ-5853
             int lineOffset = text.getOffsetAtLine(lineNo - 1);
             text.setCaretOffset(lineOffset + charNo - 1);
             updateCursorPosition();

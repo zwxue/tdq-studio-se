@@ -98,14 +98,10 @@ public class CWMPlugin extends Plugin {
 
                     Alias alias = new Alias(dataProvider.getName());
 
-                    // MOD xqliu 2010-08-06 bug 14593
-                    // String clearTextUser = ConnectionUtils.getUsername(connection);
-                    // String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$
-                    String user = JavaSqlFactory.getUsernameDefault(connection);
+                    String user = JavaSqlFactory.getUsername(connection);
                     // MOD gdbu 2011-3-17 bug 19539
                     String password = JavaSqlFactory.getPassword(connection);
                     // ~19539
-                    // ~ 14593
 
                     // password should not be null
                     password = password == null ? "" : password; //$NON-NLS-1$
@@ -118,6 +114,8 @@ public class CWMPlugin extends Plugin {
                     password = password != null ? password : ""; //$NON-NLS-1$
 
                     String url = JavaSqlFactory.getURL(connection);
+
+                    user = "".equals(user) ? JavaSqlFactory.DEFAULT_USERNAME : user; //$NON-NLS-1$
 
                     User previousUser = new User(user, password);
                     alias.setDefaultUser(previousUser);
