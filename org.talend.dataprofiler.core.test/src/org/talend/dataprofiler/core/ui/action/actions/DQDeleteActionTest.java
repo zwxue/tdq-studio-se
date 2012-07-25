@@ -12,12 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.actions.DeleteAction;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 
@@ -71,7 +69,7 @@ public class DQDeleteActionTest {
 
     private DQDeleteAction dqDeleteAction_real;
 
-    private DeleteAction deleteAction_mock;
+    private DQDeleteAction deleteAction_mock;
 
     private CorePlugin corePlugin;
 
