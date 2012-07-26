@@ -12,9 +12,13 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +82,7 @@ public class SQLSourceFileWriterTest {
         when(item.getContent()).thenReturn(bytearray);
         doNothing().when(bytearray).setInnerContentFromFile(file);
 
-        ReturnCode rc = spyWriter.loadFileContentInItem(item, false);
+        ReturnCode rc = spyWriter.save(item, false);
         Assert.assertTrue(rc.isOk());
     }
 
