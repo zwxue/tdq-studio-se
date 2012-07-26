@@ -33,9 +33,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -58,7 +60,6 @@ import orgomg.cwm.resource.relational.impl.SchemaImpl;
 /**
  * DOC msjian class global comment. Detailled comment
  */
-// @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ConnectionUtils.class, ColumnSetHelper.class, ConnectionHelper.class, JavaSqlFactory.class,
         CatalogHelper.class, SchemaHelper.class, org.talend.utils.sql.ConnectionUtils.class, ElementWriterFactory.class,
         Messages.class })
@@ -181,5 +182,26 @@ public class ConnectionUtilsTest {
 
         assertFalse(rc.isOk());
         assertEquals(msg, rc.getMessage());
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.cwm.db.connection.ConnectionUtils#checkUsernameBeforeSaveConnection4Sqlite(org.talend.core.model.metadata.builder.connection.Connection)}
+     * .
+     */
+    @Test
+    public void testCheckUsernameBeforeSaveConnection4Sqlite() {
+        DatabaseConnection sqliteConn = ConnectionFactory.eINSTANCE.createDatabaseConnection();
+        sqliteConn.setDatabaseType(SupportDBUrlType.SQLITE3DEFAULTURL.getDBKey());
+        sqliteConn.setUsername(""); //$NON-NLS-1$
+        sqliteConn.setContextMode(false);
+        ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(sqliteConn);
+        assertTrue(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
+
+        String username = "abc"; //$NON-NLS-1$
+        sqliteConn.setUsername(username);
+        ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(sqliteConn);
+        assertFalse(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
+        assertTrue(username.equals(sqliteConn.getUsername()));
     }
 }
