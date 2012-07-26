@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,8 +24,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.properties.Property;
-import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -33,7 +34,7 @@ import org.talend.dataquality.properties.TDQReportItem;
  * 
  */
 // @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportHelper.class, EObjectHelper.class })
+@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportUtils.class, EObjectHelper.class })
 public class DQDeleteHelperTest {
 
     @Rule
@@ -54,9 +55,10 @@ public class DQDeleteHelperTest {
         when(item.getProperty()).thenReturn(prop);
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getItemFile(prop)).thenReturn(file);
-        PowerMockito.mockStatic(ReportHelper.class);
+        PowerMockito.mockStatic(ReportUtils.class);
         when(ReportUtils.getOutputFolder(file)).thenReturn(folder);
-        DQDeleteHelper.deleteRelations(item);
+        ReturnCode rc = DQDeleteHelper.deleteRelations(item);
+        assertTrue(rc.isOk());
 
     }
 

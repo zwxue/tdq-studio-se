@@ -16,9 +16,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
-import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -42,19 +44,23 @@ public final class DQDeleteHelper {
      * 
      * @param item
      */
-    public static void deleteRelations(Item item) {
-        if (item == null || item.getProperty() == null) {
-            return;
+    public static ReturnCode deleteRelations(Item item) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        if (item == null || item.getProperty() == null || item instanceof FolderItem) {
+            rc.setOk(Boolean.FALSE);
+            return rc;
         }
 
         IFile itemFile = PropertyHelper.getItemFile(item.getProperty());
         // if file is null or this file is not physical deleted,do nothing.
         if (itemFile == null || itemFile.exists()) {
-            return;
+            rc.setOk(Boolean.FALSE);
+            return rc;
         }
         if (item instanceof TDQReportItem) {
-            deleteRepOutputFolder(itemFile);
+            return deleteRepOutputFolder(itemFile);
         }
+        return rc;
     }
 
     /**
@@ -63,15 +69,21 @@ public final class DQDeleteHelper {
      * 
      * @param reportFile
      */
-    private static void deleteRepOutputFolder(IFile reportFile) {
+    private static ReturnCode deleteRepOutputFolder(IFile reportFile) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
         IFolder currentRportFolder = ReportUtils.getOutputFolder(reportFile);
         if (currentRportFolder != null && currentRportFolder.exists()) {
             try {
-                currentRportFolder.delete(true, null);
+                currentRportFolder.delete(true, new NullProgressMonitor());
             } catch (CoreException e) {
                 log.error(e, e);
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getMessage());
             }
+        } else {
+            rc.setOk(Boolean.FALSE);
         }
+        return rc;
     }
 
 }

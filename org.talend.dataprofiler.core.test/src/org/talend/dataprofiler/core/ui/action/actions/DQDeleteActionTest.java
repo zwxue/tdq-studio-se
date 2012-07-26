@@ -49,7 +49,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.actions.DeleteAction;
 
 /**
  * DOC qionli class global comment. Detailled comment <br/>
@@ -68,7 +67,7 @@ public class DQDeleteActionTest {
 
     private DQDeleteAction dqDeleteAction_real;
 
-    private DeleteAction deleteAction_mock;
+    private DQDeleteAction deleteAction_mock;
 
     private CorePlugin corePlugin;
 
