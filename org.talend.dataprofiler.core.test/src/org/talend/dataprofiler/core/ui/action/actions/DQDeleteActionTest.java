@@ -71,7 +71,7 @@ public class DQDeleteActionTest {
 
     private DQDeleteAction dqDeleteAction_real;
 
-    private DeleteAction deleteAction_mock;
+    private DQDeleteAction deleteAction_mock;
 
     private CorePlugin corePlugin;
 
