@@ -1816,7 +1816,7 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC xqliu Comment method "checkUsernameBeforeSaveConnection4Sqlite".
+     * if sqlite connection don't set username, set it with a default username.
      * 
      * @param connection
      */
