@@ -22,13 +22,13 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public final class RunDBConnect {
+public final class RunDBConnectMain {
 
-    private static final Class<RunDBConnect> THAT = RunDBConnect.class;
+    private static final Class<RunDBConnectMain> THAT = RunDBConnectMain.class;
 
     private static Logger log = Logger.getLogger(THAT);
 
-    private RunDBConnect() {
+    private RunDBConnectMain() {
     }
 
     /**

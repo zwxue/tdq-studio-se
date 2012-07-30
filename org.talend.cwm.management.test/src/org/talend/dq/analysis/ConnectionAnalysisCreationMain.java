@@ -48,7 +48,7 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class ConnectionAnalysisCreationTest {
+public class ConnectionAnalysisCreationMain {
 
     /**
      * 
@@ -133,7 +133,7 @@ public class ConnectionAnalysisCreationTest {
         return expre.generateExpressions();
     }
 
-    private static Logger log = Logger.getLogger(ConnectionAnalysisCreationTest.class);
+    private static Logger log = Logger.getLogger(ConnectionAnalysisCreationMain.class);
 
     /**
      * DOC scorreia Comment method "getIndicators".
@@ -189,11 +189,13 @@ public class ConnectionAnalysisCreationTest {
         TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties");
         String driverClassName = connectionParams.getProperty("driver");
         String dbUrl = connectionParams.getProperty("url");
+        String sqlTypeName = connectionParams.getProperty("sqlTypeName"); //$NON-NLS-1$
 
         DBConnectionParameter params = new DBConnectionParameter();
         params.setName("My connection");
         params.setDriverClassName(driverClassName);
         params.setJdbcUrl(dbUrl);
+        params.setSqlTypeName(sqlTypeName);
         params.setParameters(connectionParams);
 
         // create connection

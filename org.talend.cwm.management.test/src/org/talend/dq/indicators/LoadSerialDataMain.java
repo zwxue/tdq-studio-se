@@ -21,13 +21,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.dataquality.indicators.FrequencyIndicator;
-import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class LoadSerialData {
+public class LoadSerialDataMain {
 
     /**
      * DOC scorreia Comment method "main".
@@ -36,7 +35,7 @@ public class LoadSerialData {
      */
     public static void main(String[] args) {
         EMFUtil util = new EMFUtil();
-        File file = new File("out/myi." + IndicatorsPackage.eNAME);
+        File file = new File("out/columnTest_0.1.ana");
         System.out.println("Loading file " + file.getAbsolutePath());
         ResourceSet rs = util.getResourceSet();
         Resource r = rs.getResource(URI.createFileURI(file.getAbsolutePath()), true);

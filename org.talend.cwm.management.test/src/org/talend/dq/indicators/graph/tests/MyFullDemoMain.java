@@ -149,7 +149,7 @@ import edu.uci.ics.jung.visualization.transform.Transformer;
  * 
  * @author Danyel Fisher, Joshua O'Madadhain, Tom Nelson
  */
-public class MyFullDemo extends JApplet implements ActionListener {
+public class MyFullDemoMain extends JApplet implements ActionListener {
 
     protected JCheckBox v_color;
 
@@ -256,19 +256,19 @@ public class MyFullDemo extends JApplet implements ActionListener {
     public static void main(String[] s) {
         JFrame jf = new JFrame();
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel jp = new MyFullDemo().startFunction();
+        JPanel jp = new MyFullDemoMain().startFunction();
         jf.getContentPane().add(jp);
         jf.pack();
         jf.setVisible(true);
     }
 
-    public MyFullDemo() {
+    public MyFullDemoMain() {
     }
 
     public JPanel startFunction() {
         final GraphBuilder graphBuilder = new GraphBuilder();
         Graph g = // getGraph();
-        graphBuilder.createMultiGraph(MyFirstTest.createListObjects());
+        graphBuilder.createMultiGraph(MyFirstMain.createListObjects());
 
         // init variables
         edge_weight = graphBuilder.getEdgeWeight();
