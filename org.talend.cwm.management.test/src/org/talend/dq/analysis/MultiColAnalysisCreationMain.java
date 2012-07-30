@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.ui;
+package org.talend.dq.analysis;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,9 +37,6 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
-import org.talend.dq.analysis.AnalysisBuilder;
-import org.talend.dq.analysis.IAnalysisExecutor;
-import org.talend.dq.analysis.MultiColumnAnalysisExecutor;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -54,14 +51,14 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class MultiColAnalysisCreationTest {
+public class MultiColAnalysisCreationMain {
 
     /**
      * 
      */
     private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
 
-    private static Logger log = Logger.getLogger(MultiColAnalysisCreationTest.class);
+    private static Logger log = Logger.getLogger(MultiColAnalysisCreationMain.class);
 
     private AnalysisBuilder analysisBuilder;
 
@@ -73,7 +70,7 @@ public class MultiColAnalysisCreationTest {
     private static final String[] NUMERICFUNC = GRAPHICALTEST ? new String[] { "SUM({0})", "COUNT({0})", "SUM(ISNULL({0}))" }
             : new String[] { "AVG({0})", "SUM(ISNULL({0}))", "COUNT({0})", "MIN({0})" };
 
-    private static final String CATALOG = "tdq_demo";
+    private static final String CATALOG = "tbi";
 
     private static final String TABLE = "employee";
 
@@ -84,7 +81,7 @@ public class MultiColAnalysisCreationTest {
      */
     public static void main(String[] args) {
         try {
-            MultiColAnalysisCreationTest myTest = new MultiColAnalysisCreationTest();
+            MultiColAnalysisCreationMain myTest = new MultiColAnalysisCreationMain();
             myTest.run();
         } catch (TalendException e) {
             // TODO Auto-generated catch block
@@ -294,11 +291,13 @@ public class MultiColAnalysisCreationTest {
         TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties");
         String driverClassName = connectionParams.getProperty("driver");
         String dbUrl = connectionParams.getProperty("url");
+        String sqlTypeName = connectionParams.getProperty("sqlTypeName"); //$NON-NLS-1$ 
 
         DBConnectionParameter params = new DBConnectionParameter();
         params.setName("My connection");
         params.setDriverClassName(driverClassName);
         params.setJdbcUrl(dbUrl);
+        params.setSqlTypeName(sqlTypeName);
         params.setParameters(connectionParams);
         params.getParameters();
 

@@ -60,7 +60,7 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class MyFirstTest {
+public class MyFirstMain {
 
     public static final String[][] DATA = { { "high", "overcast", "yes", "2" }, { "high", "rainy", "no", "1" },
             { "high", "rainy", "yes", "1200" }, { "high", "sunny", "no", "30" }, { "normal", "overcast", "yes", "22" },
@@ -81,7 +81,7 @@ public class MyFirstTest {
     /**
      * DOC scorreia MyFirstTest constructor comment.
      */
-    public MyFirstTest() {
+    public MyFirstMain() {
     }
 
     public void run(final GraphBuilder graphbuilder) {
@@ -295,9 +295,9 @@ public class MyFirstTest {
      * @param args
      */
     public static void main(String[] args) {
-        final MyFirstTest myFirstTest = new MyFirstTest();
-        myFirstTest.setAllData(createListObjects());
-        myFirstTest.run(new GraphBuilder());
+        final MyFirstMain myFirstMain = new MyFirstMain();
+        myFirstMain.setAllData(createListObjects());
+        myFirstMain.run(new GraphBuilder());
     }
     
  

@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dq.analysis;
+package org.talend.dataprofiler.core.ui;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
@@ -38,11 +37,12 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
+import org.talend.dq.analysis.AnalysisBuilder;
+import org.talend.dq.analysis.IAnalysisExecutor;
+import org.talend.dq.analysis.MultiColumnAnalysisExecutor;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.indicators.graph.GraphBuilder;
-import org.talend.dq.indicators.graph.tests.MyFirstTest;
 import org.talend.dq.sql.converters.CwmZExpression;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
@@ -54,25 +54,28 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class MultiNominalColAnalysisTest {
+public class MultiColAnalysisCreationMain {
 
     /**
      * 
      */
     private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
 
-    private static Logger log = Logger.getLogger(MultiNominalColAnalysisTest.class);
+    private static Logger log = Logger.getLogger(MultiColAnalysisCreationMain.class);
 
     private AnalysisBuilder analysisBuilder;
 
-    private static final String[] COLUMNS = new String[] { "city", "houseowner", "occupation", "country", "marital_status",
-            "member_card" };
+    private static final boolean GRAPHICALTEST = true;
 
-    private static final String[] NUMERICFUNC = new String[] {};
+    private static final String[] COLUMNS = GRAPHICALTEST ? new String[] { "position_title", "gender", "management_role",
+            "salary" } : new String[] { "position_title", "gender", "management_role", "salary" };
 
-    private static final String CATALOG = "tdq_demo";
+    private static final String[] NUMERICFUNC = GRAPHICALTEST ? new String[] { "SUM({0})", "COUNT({0})", "SUM(ISNULL({0}))" }
+            : new String[] { "AVG({0})", "SUM(ISNULL({0}))", "COUNT({0})", "MIN({0})" };
 
-    private static final String TABLE = "customer";
+    private static final String CATALOG = "tbi";
+
+    private static final String TABLE = "employee";
 
     /**
      * DOC scorreia Comment method "main".
@@ -81,14 +84,8 @@ public class MultiNominalColAnalysisTest {
      */
     public static void main(String[] args) {
         try {
-            MultiNominalColAnalysisTest myTest = new MultiNominalColAnalysisTest();
-            final ColumnSetMultiValueIndicator indicator = myTest.run();
-            final List<Object[]> listRows = indicator.getListRows();
-            final MyFirstTest myFirstTest = new MyFirstTest();
-            myFirstTest.setAllData(listRows);
-            GraphBuilder g = new GraphBuilder();
-            g.setTotalWeight(indicator.getCount());
-            myFirstTest.run(g);
+            MultiColAnalysisCreationMain myTest = new MultiColAnalysisCreationMain();
+            myTest.run();
         } catch (TalendException e) {
             // TODO Auto-generated catch block
             log.error(e, e);
@@ -216,7 +213,7 @@ public class MultiNominalColAnalysisTest {
      * @return
      */
     private ColumnSetMultiValueIndicator getIndicator(List<TdColumn> columns) {
-        ColumnSetMultiValueIndicator ind = ColumnsetFactory.eINSTANCE.createWeakCorrelationIndicator();
+        ColumnSetMultiValueIndicator ind = ColumnsetFactory.eINSTANCE.createColumnSetMultiValueIndicator();
         ind.getAnalyzedColumns().addAll(columns);
 
         boolean definitionSet = DefinitionHandler.getInstance().setDefaultIndicatorDefinition(ind);
@@ -297,16 +294,18 @@ public class MultiNominalColAnalysisTest {
         TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties");
         String driverClassName = connectionParams.getProperty("driver");
         String dbUrl = connectionParams.getProperty("url");
+        String sqlTypeName = connectionParams.getProperty("sqlTypeName"); //$NON-NLS-1$
 
         DBConnectionParameter params = new DBConnectionParameter();
         params.setName("My connection");
         params.setDriverClassName(driverClassName);
         params.setJdbcUrl(dbUrl);
+        params.setSqlTypeName(sqlTypeName);
         params.setParameters(connectionParams);
         params.getParameters();
 
         // create connection
-        ConnectionUtils.setTimeout(false);
+
         Connection dataProvider = ConnectionService.createConnection(params).getObject();
 
         dataProvider.setName("My data provider");

@@ -23,9 +23,9 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class BubbleChartTest {
+public class BubbleChartMain {
 
-    protected static Logger log = Logger.getLogger(BubbleChartTest.class);
+    protected static Logger log = Logger.getLogger(BubbleChartMain.class);
 
     /**
      * DOC scorreia Comment method "main".
@@ -34,7 +34,7 @@ public class BubbleChartTest {
      */
     public static void main(String[] args) {
         try {
-            MultiColAnalysisCreationTest myTest = new MultiColAnalysisCreationTest();
+            MultiColAnalysisCreationMain myTest = new MultiColAnalysisCreationMain();
             final ColumnSetMultiValueIndicator indic = myTest.run();
             JFreeChart chart = TopChartFactory.createBubbleChart(indic, indic.getNumericColumns().get(0));
 

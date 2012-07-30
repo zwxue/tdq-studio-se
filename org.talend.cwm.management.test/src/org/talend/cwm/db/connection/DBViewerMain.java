@@ -28,16 +28,16 @@ import org.talend.utils.sql.ConnectionUtils;
 /**
  * Example code from http://www.unix.org.ua/orelly/java-ent/jenut/ch02_09.htm.
  */
-public class DBViewer {
+public class DBViewerMain {
 
-    protected static Logger log = Logger.getLogger(DBViewer.class);
+    protected static Logger log = Logger.getLogger(DBViewerMain.class);
 
     public static void main(java.lang.String[] args) {
 
         System.out.println("--- Database Viewer ---");
 
         try {
-            TypedProperties connectionParams = PropertiesLoader.getProperties(DBViewer.class, "db.properties");
+            TypedProperties connectionParams = PropertiesLoader.getProperties(DBViewerMain.class, "db.properties");
             assertNotNull("No properties found", connectionParams);
 
             String driverClassName = connectionParams.getProperty("driver");

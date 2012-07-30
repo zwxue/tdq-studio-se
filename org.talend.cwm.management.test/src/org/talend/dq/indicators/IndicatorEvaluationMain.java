@@ -33,7 +33,6 @@ import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
-import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.MaxLengthIndicator;
 import org.talend.dataquality.indicators.MeanIndicator;
 import org.talend.dataquality.indicators.MedianIndicator;
@@ -107,7 +106,7 @@ public final class IndicatorEvaluationMain {
             List<String> columns = Arrays.asList(columnsArray);
 
             // store in file
-            File file = new File("out/myi." + IndicatorsPackage.eNAME);
+            File file = new File("out/columnTest_0.1.ana");
             EMFUtil util = new EMFUtil();
             Resource resource = util.getResourceSet().createResource(URI.createFileURI(file.getAbsolutePath()));
             rContents = resource.getContents();

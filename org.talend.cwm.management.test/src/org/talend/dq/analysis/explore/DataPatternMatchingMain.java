@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * DOC scorreia  class global comment. Detailled comment
  */
-public class DataPatternMatchingTest {
+public class DataPatternMatchingMain {
 
     // private static final String REGEX = "SELECT (.*)\\s*, COUNT\\(\\*\\)\\s*\\w*\\s* FROM";
     private static final String REGEX = "SELECT (.*)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM";
