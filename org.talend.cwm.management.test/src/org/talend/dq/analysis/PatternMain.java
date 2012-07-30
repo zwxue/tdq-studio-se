@@ -17,9 +17,9 @@ import org.apache.log4j.Logger;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class PatternTest {
+public class PatternMain {
 
-    private static Logger log = Logger.getLogger(PatternTest.class);
+    private static Logger log = Logger.getLogger(PatternMain.class);
 
     /**
      * DOC scorreia Comment method "main".
@@ -45,12 +45,12 @@ public class PatternTest {
         // }
         if (connectionString.matches("jdbc:mysql://\\p{Alnum}*\\:\\p{Digit}*.*")) {
             if (!connectionString.matches("jdbc:mysql://\\p{Alnum}*\\:\\p{Digit}*/(\\p{Alnum})+")) {
-                if (log.isDebugEnabled()) {
-                    log.debug("INVALID Mysql connection string: " + connectionString);
+                if (log.isInfoEnabled()) {
+                    log.info("INVALID Mysql connection string: " + connectionString);
                 }
             } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Valid Mysql connection string: " + connectionString);
+                if (log.isInfoEnabled()) {
+                    log.info("Valid Mysql connection string: " + connectionString);
                 }
 
             }

@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.TalendException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
@@ -40,6 +41,8 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.indicators.graph.GraphBuilder;
+import org.talend.dq.indicators.graph.tests.MyFirstMain;
 import org.talend.dq.sql.converters.CwmZExpression;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
@@ -51,28 +54,25 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class MultiColAnalysisCreationTest {
+public class MultiNominalColAnalysisMain {
 
     /**
      * 
      */
     private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
 
-    private static Logger log = Logger.getLogger(MultiColAnalysisCreationTest.class);
+    private static Logger log = Logger.getLogger(MultiNominalColAnalysisMain.class);
 
     private AnalysisBuilder analysisBuilder;
 
-    private static final boolean GRAPHICALTEST = true;
+    private static final String[] COLUMNS = new String[] { "city", "houseowner", "occupation", "country", "marital_status",
+            "member_card" };
 
-    private static final String[] COLUMNS = GRAPHICALTEST ? new String[] { "position_title", "gender", "management_role",
-            "salary" } : new String[] { "position_title", "gender", "management_role", "salary" };
+    private static final String[] NUMERICFUNC = new String[] {};
 
-    private static final String[] NUMERICFUNC = GRAPHICALTEST ? new String[] { "SUM({0})", "COUNT({0})", "SUM(ISNULL({0}))" }
-            : new String[] { "AVG({0})", "SUM(ISNULL({0}))", "COUNT({0})", "MIN({0})" };
+    private static final String CATALOG = "tbi";
 
-    private static final String CATALOG = "tdq_demo";
-
-    private static final String TABLE = "employee";
+    private static final String TABLE = "customer";
 
     /**
      * DOC scorreia Comment method "main".
@@ -81,8 +81,14 @@ public class MultiColAnalysisCreationTest {
      */
     public static void main(String[] args) {
         try {
-            MultiColAnalysisCreationTest myTest = new MultiColAnalysisCreationTest();
-            myTest.run();
+            MultiNominalColAnalysisMain myTest = new MultiNominalColAnalysisMain();
+            final ColumnSetMultiValueIndicator indicator = myTest.run();
+            final List<Object[]> listRows = indicator.getListRows();
+            final MyFirstMain myFirstMain = new MyFirstMain();
+            myFirstMain.setAllData(listRows);
+            GraphBuilder g = new GraphBuilder();
+            g.setTotalWeight(indicator.getCount());
+            myFirstMain.run(g);
         } catch (TalendException e) {
             // TODO Auto-generated catch block
             log.error(e, e);
@@ -210,7 +216,7 @@ public class MultiColAnalysisCreationTest {
      * @return
      */
     private ColumnSetMultiValueIndicator getIndicator(List<TdColumn> columns) {
-        ColumnSetMultiValueIndicator ind = ColumnsetFactory.eINSTANCE.createColumnSetMultiValueIndicator();
+        ColumnSetMultiValueIndicator ind = ColumnsetFactory.eINSTANCE.createWeakCorrelationIndicator();
         ind.getAnalyzedColumns().addAll(columns);
 
         boolean definitionSet = DefinitionHandler.getInstance().setDefaultIndicatorDefinition(ind);
@@ -288,22 +294,24 @@ public class MultiColAnalysisCreationTest {
      * @return
      */
     public Connection getDataManager() {
-        TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties");
-        String driverClassName = connectionParams.getProperty("driver");
-        String dbUrl = connectionParams.getProperty("url");
+        TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties"); //$NON-NLS-1$
+        String driverClassName = connectionParams.getProperty("driver"); //$NON-NLS-1$
+        String dbUrl = connectionParams.getProperty("url"); //$NON-NLS-1$
+        String sqlTypeName = connectionParams.getProperty("sqlTypeName"); //$NON-NLS-1$
 
         DBConnectionParameter params = new DBConnectionParameter();
-        params.setName("My connection");
+        params.setName("My connection"); //$NON-NLS-1$
         params.setDriverClassName(driverClassName);
         params.setJdbcUrl(dbUrl);
+        params.setSqlTypeName(sqlTypeName);
         params.setParameters(connectionParams);
         params.getParameters();
 
         // create connection
-
+        ConnectionUtils.setTimeout(false);
         Connection dataProvider = ConnectionService.createConnection(params).getObject();
 
-        dataProvider.setName("My data provider");
+        dataProvider.setName("My data provider"); //$NON-NLS-1$
         return dataProvider;
 
     }
