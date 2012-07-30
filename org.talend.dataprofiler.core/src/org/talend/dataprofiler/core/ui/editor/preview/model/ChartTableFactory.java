@@ -34,10 +34,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -595,6 +599,22 @@ public final class ChartTableFactory {
      * @return
      */
     public static boolean isDqRule(Indicator indicator) {
+        // only support 3 kinds of db: mysql, oracle, postgressql
+        String[] supportDB = { "MySQL", "Oracle with SID", "PostgreSQL" };
+        TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        Connection tdDataProvider = TableHelper.getFirstConnection(table);
+        if (tdDataProvider instanceof DatabaseConnection) {
+            String type = ((DatabaseConnection) tdDataProvider).getDatabaseType();
+            boolean isSupport = false;
+            for (String support : supportDB) {
+                if (support.equals(type)) {
+                    isSupport = true;
+                }
+            }
+            if (!isSupport)
+                return false;
+        }
+
         // RulesSwitch<DQRule> dqRulesSwitch = new RulesSwitch<DQRule>() {
         IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
 
