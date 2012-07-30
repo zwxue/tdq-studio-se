@@ -79,7 +79,7 @@ public class MyFirstMain {
     private List<Object[]> allData;
 
     /**
-     * DOC scorreia MyFirstTest constructor comment.
+     * DOC scorreia MyFirstMain constructor comment.
      */
     public MyFirstMain() {
     }
