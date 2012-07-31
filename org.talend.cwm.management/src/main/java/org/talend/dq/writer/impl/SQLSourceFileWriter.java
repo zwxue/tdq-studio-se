@@ -62,7 +62,7 @@ public class SQLSourceFileWriter extends AElementPersistance {
     @Override
     protected String getFileExtension() {
         // TODO Auto-generated method stub
-        return null;
+        return "sql";
     }
 
     /* (non-Javadoc)

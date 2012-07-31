@@ -33,7 +33,6 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -51,7 +50,6 @@ import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.EObjectHelper;
@@ -64,11 +62,9 @@ import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
-import org.talend.dq.writer.impl.SQLSourceFileWriter;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.files.FileUtils;
-import org.talend.utils.sugars.ReturnCode;
 
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -344,23 +340,5 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         EMFSharedResources.getInstance().saveResource(toSave);
     }
 
-    /**
-     * 
-     * DOC yyin Comment method "saveSourceFile". added 20120614 TDQ-5468
-     * 
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean loadFileContent(TDQItem item) {
-        if (item instanceof TDQSourceFileItem) {
-            SQLSourceFileWriter ssWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance()
-                    .createSQLSourceFileWriter();
-            ReturnCode rc = ssWriter.loadFileContentInItem(item, false);
-            return rc.isOk();
-        }
-        return false;
-    }
-    
 
 }
