@@ -337,6 +337,13 @@ public final class TopChartFactory {
                 true, // tooltips
                 false // urls
                 );
+
+        // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setShadowVisible(false);
+        // TDQ-5251~
+
         return chart;
     }
 
@@ -376,6 +383,10 @@ public final class TopChartFactory {
         renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat
                 .getInstance()));
 
+        // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
+        renderer.setShadowVisible(false);
+        // TDQ-5251~
+
         // plot.setForegroundAlpha(0.50f);
 
         // CategoryAxis domainAxis = plot.getDomainAxis();
@@ -403,6 +414,12 @@ public final class TopChartFactory {
         CategoryAxis domainAxis = plot.getDomainAxis();
         domainAxis.setTickLabelPaint(SpecialValueDisplay.NULL_FIELD, Color.RED);
         domainAxis.setTickLabelPaint(SpecialValueDisplay.EMPTY_FIELD, Color.RED);
+
+        // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setShadowVisible(false);
+        // TDQ-5251~
+
         return createBarChart;
     }
 
@@ -505,6 +522,10 @@ public final class TopChartFactory {
         // ADD xqliu 2010-03-10 feature 10834
         sbr.setBaseToolTipGenerator(new DQRuleToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat.getInstance()));
         // ~10834
+
+        // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
+        sbr.setShadowVisible(false);
+        // TDQ-5251~
 
         NumberAxis axis = (NumberAxis) plot.getRangeAxis();
         axis.setNumberFormatOverride(NumberFormat.getPercentInstance());
