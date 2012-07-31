@@ -18,6 +18,7 @@ import java.io.IOException;
 import org.eclipse.core.runtime.IPath;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.constants.FileConstants;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
@@ -57,7 +58,7 @@ public class SQLSourceFileWriter extends AElementPersistance {
     @Override
     protected String getFileExtension() {
         // TODO Auto-generated method stub
-        return null;
+        return FileConstants.SQL_EXTENSION;
     }
 
     /* (non-Javadoc)
