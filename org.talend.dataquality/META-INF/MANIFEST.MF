@@ -71,4 +71,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.talend.core.runtime,
  org.talend.libraries.google.libphonumber
 Bundle-ActivationPolicy: lazy
-Eclipse-RegisterBuddy: org.apache.log4j,org.mockito
+Eclipse-RegisterBuddy: org.apache.log4j,org.talend.testutils
