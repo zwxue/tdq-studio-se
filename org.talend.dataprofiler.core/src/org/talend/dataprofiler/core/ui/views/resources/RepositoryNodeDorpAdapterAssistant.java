@@ -12,11 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -36,6 +42,8 @@ import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.jfree.util.Log;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -53,6 +61,7 @@ import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -70,6 +79,7 @@ import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -286,7 +296,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         }
     }
 
-
     private void moveAnalysisRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         IRepositoryViewObject objectToMove = sourceNode.getObject();
         IPath fullPath = ResourceManager.getAnalysisFolder().getFullPath();
@@ -300,10 +309,22 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         CorePlugin.getDefault().refreshDQView(targetNode.getParent());
     }
 
+    /**
+     * remove the report node (remove the report generate doc folder also).
+     * 
+     * @param sourceNode
+     * @param targetNode
+     * @throws PersistenceException
+     */
     private void moveReportRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         // MOD yyi 2012-02-22:TDQ-4545 Update user define jrxml template path.
         relocateJrxmlTemplates(sourceNode, targetNode);
 
+        // get the original source node and folder
+        IFolder outputFolder = ReportUtils.getOutputFolder((ReportRepNode) sourceNode);
+        File sourceFile = WorkspaceUtils.ifolderToFile(outputFolder);
+
+        // move the ReportRepNode
         IRepositoryViewObject objectToMove = sourceNode.getObject();
         IPath fullPath = ResourceManager.getReportsFolder().getFullPath();
         if (targetNode.getType() == ENodeType.SIMPLE_FOLDER) {
@@ -312,8 +333,39 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         } else if (targetNode.getType() == ENodeType.SYSTEM_FOLDER) {
             moveObject(objectToMove, sourceNode, targetNode, Path.EMPTY);
         }
+
+        // get the target node and folder
+        IFolder targetFolder = RepositoryNodeHelper.getIFolder(targetNode);
+        File targetFile = WorkspaceUtils.ifolderToFile(targetFolder);
+
+        // move the report generate doc folder
+        FilesUtils.copyDirectory(sourceFile, targetFile);
+        FilesUtils.deleteFile(sourceFile, true);
+
+        // update the file .report.list
+        updateReportListFile(outputFolder, targetFolder);
+
         // refresh the dq repository tree view
         CorePlugin.getDefault().refreshDQView(targetNode.getParent());
+    }
+
+    /**
+     * update the file .report.list to deal with the report generated doc folder's movement.
+     * 
+     * @param outputFolder source folder, the original report generated doc folder
+     * @param targetFolder target folder, the new folder which source folder moved into
+     */
+    private void updateReportListFile(IFolder outputFolder, IFolder targetFolder) {
+        try {
+            File oldFolder = WorkspaceUtils.ifolderToFile(outputFolder);
+            File newFolder = WorkspaceUtils.ifolderToFile(targetFolder.getFolder(outputFolder.getName()));
+            File file = new File(newFolder.getAbsolutePath() + IPath.SEPARATOR + ReportUtils.REPORT_LIST);
+            if (file.exists() && file.isFile()) {
+                FilesUtils.replaceInFile(oldFolder.toString(), file.toString(), newFolder.toString());
+            }
+        } catch (IOException e) {
+            log.warn(e, e);
+        }
     }
 
     /**
@@ -468,6 +520,22 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             return;
         }
         // ~19537
+
+        // deal with ReportSubFolderRepNode
+        Map<IFolder, IFolder> reportGenDocInfoMap = new HashMap<IFolder, IFolder>();
+        if (sourceNode instanceof ReportSubFolderRepNode) {
+            // get the source folder
+            IFolder sourceFolder = RepositoryNodeHelper.getIFolder(sourceNode);
+            // get the target folder
+            IFolder targetFolder = RepositoryNodeHelper.getIFolder(targetNode);
+
+            List<ReportRepNode> reportRepNodeList = new ArrayList<ReportRepNode>();
+            getAllReportRepNode((ReportSubFolderRepNode) sourceNode, reportRepNodeList);
+            if (!reportRepNodeList.isEmpty()) {
+                buildReportGenDocInfoMap(reportRepNodeList, sourceFolder, targetFolder, reportGenDocInfoMap);
+            }
+        }
+
         RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         FolderHelper folderHelper = instance.getFolderHelper();
         IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
@@ -476,6 +544,49 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         IPath nodeFullPath = this.getNodeFullPath(objectType);
         IPath makeRelativeTo = nodeFullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
         computePath(folderHelper, sourcePath, targetPath, makeRelativeTo, objectType, sourceNode, targetNode);
+
+        if (!reportGenDocInfoMap.isEmpty()) {
+            for (IFolder outputFolder : reportGenDocInfoMap.keySet()) {
+                updateReportListFile(outputFolder, reportGenDocInfoMap.get(outputFolder));
+            }
+        }
+    }
+
+    /**
+     * build the map which contain the report generated doc folder's update information.
+     * 
+     * @param reportRepNodeList
+     * @param sourceFolder
+     * @param targetFolder
+     * @param reportGenDocInfoMap
+     */
+    private void buildReportGenDocInfoMap(List<ReportRepNode> reportRepNodeList, IFolder sourceFolder, IFolder targetFolder,
+            Map<IFolder, IFolder> reportGenDocInfoMap) {
+        for (ReportRepNode repNode : reportRepNodeList) {
+            IFolder outputFolder = ReportUtils.getOutputFolder(RepositoryNodeHelper.getIFile(repNode));
+            IPath relativePath = outputFolder.getFullPath().removeLastSegments(1)
+                    .makeRelativeTo(sourceFolder.getParent().getFullPath());
+            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            IFolder valueFolder = root.getFolder(targetFolder.getFullPath().append(relativePath));
+            reportGenDocInfoMap.put(outputFolder, valueFolder);
+        }
+    }
+
+    /**
+     * get all ReportRepNode under the folder.
+     * 
+     * @param sourceNode a ReportSubFolderRepNode
+     * @param reportRepNodeList the ReportRepNode list
+     */
+    private void getAllReportRepNode(ReportSubFolderRepNode sourceNode, List<ReportRepNode> reportRepNodeList) {
+        List<IRepositoryNode> children = sourceNode.getChildren();
+        for (IRepositoryNode node : children) {
+            if (node instanceof ReportRepNode) {
+                reportRepNodeList.add((ReportRepNode) node);
+            } else if (node instanceof ReportSubFolderRepNode) {
+                getAllReportRepNode((ReportSubFolderRepNode) node, reportRepNodeList);
+            }
+        }
     }
 
     /**
