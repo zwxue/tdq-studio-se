@@ -314,7 +314,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
 
         if (pooledConnection == null) {
-            rc.setReturnCode("Can't get any useable connection!", false);
+            rc.setReturnCode("Can't get any useable connection!", false); //$NON-NLS-1$
             return rc;
         }
 
@@ -393,6 +393,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     /**
      * DOC xqliu Comment method "releasePooledConnection".
      * 
+     * @deprecated use {@link resetConnectionPool}
      * @param analysis
      * @param dataProvider the talend Connection
      * @param connection the java.sql.Connection
@@ -414,6 +415,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     /**
      * DOC xqliu Comment method "releasePooledConnection".
      * 
+     * @deprecated use {@link resetConnectionPool}
      * @param connection
      * @param closeConn
      */
@@ -428,22 +430,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
     }
 
-    /**
-     * DOC xqliu Comment method "releasePooledConnection".
-     * 
-     * @param connection
-     * @param closeConn
-     */
-    protected void releasePooledConnection(Analysis analysis, java.sql.Connection connection, boolean closeConn) {
-        TdqAnalysisConnectionPool connectionPool = getConnectionPool(analysis);
-        if (connectionPool != null) {
-            connectionPool.returnConnection(connection);
-            if (closeConn) {
-                connectionPool.closeConnection(connection);
-                connectionPool.removeConnection(connection);
-            }
-        }
-    }
 
     /**
      * DOC xqliu Comment method "returnPooledConnection".

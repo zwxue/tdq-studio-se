@@ -115,6 +115,8 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             eval.setMdmWebserviceConn(mdmReturnObj.getObject());
         } else if (!isDelimitedFile) {
             if (POOLED_CONNECTION) {
+                // reset the connection pool before run this analysis
+                resetConnectionPool(analysis);
                 connection = getPooledConnection(analysis);
             } else {
                 connection = getConnection(analysis);
@@ -141,7 +143,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         if (connection != null) {
             if (POOLED_CONNECTION) {
                 // release the pooled connection
-                releasePooledConnection(connection.getObject(), true);
+                resetConnectionPool(analysis);
             } else {
                 ConnectionUtils.closeConnection(connection.getObject());
             }

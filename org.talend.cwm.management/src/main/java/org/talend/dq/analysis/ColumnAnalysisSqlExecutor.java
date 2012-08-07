@@ -77,6 +77,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -390,7 +391,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 // need to generate different SQL where clause for each type.
                 int javaType = tdColumn.getSqlDataType().getJavaDataType();
                 // MOD qiongli 2011-10-31 add single quotation '' for mysql date type.
-                if (!Java2SqlType.isNumbericInSQL(javaType) && !isFunction(defValue, table)
+                if (!Java2SqlType.isNumbericInSQL(javaType)
+                        && !isFunction(defValue, table)
                         || (Java2SqlType.isDateInSQL(javaType) && SupportDBUrlType.MYSQLDEFAULTURL.getLanguage().equals(language))) {
                     defValue = "'" + defValue + "'"; //$NON-NLS-1$ //$NON-NLS-2$
                 }
@@ -669,16 +671,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String sql = dbms().fillGenericQueryWithColumnTableAndAlias(sqlExpression.getBody(), result, table, result);
         return sql;
     }
-
-    // private String getAlias(String colName, DateGrain dateAggregationType) {
-    // if (dbms().supportAliasesInGroupBy()) {
-    // // return " TDAL_" + unquote(colName) + dateAggregationType.getName() + " ";
-    // // MOD by hcheng for 7338 SQL syntax error if the name of column has invalid char.
-    //            return " TDAL_" + dateAggregationType.getName() + " "; //$NON-NLS-1$ //$NON-NLS-2$
-    // } else {
-    //            return ""; //$NON-NLS-1$
-    // }
-    // }
 
     /**
      * Method "unquote" remove surrounding identifier quotes.
@@ -1036,76 +1028,66 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;
 
-        // MOD gdbu 2011-6-10 bug 21273
-        // Connection connection = null;
-        // ConnectionPool connPool = null;
+        // store map of element to each indicator used for computation (leaf indicator)
+        Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
 
+        // execute the sql statement for each indicator
+        Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
+
+        TypedReturnCode<java.sql.Connection> connection = null;
         try {
-            // reset the connection pool before run this analysis
-            resetConnectionPool(analysis);
-
-            TypedReturnCode<java.sql.Connection> connection = null;
-            if (POOLED_CONNECTION) {
-                connection = getPooledConnection(analysis);
-            } else {
-                connection = getConnection(analysis);
-            }
-
-            if (!connection.isOk()) {
-                log.error(connection.getMessage());
-                this.errorMessage = connection.getMessage();
-                return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$//$NON-NLS-1$  
-            }
-
-            // store map of element to each indicator used for computation (leaf indicator)
-            Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
-
-            // execute the sql statement for each indicator
-            Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
-            // MOD xqliu 2009-08-07 bug 6194
             if (canParallel()) {
-                // connPool = new ConnectionPool(trc);
-                // try {
-                // connPool.createPool();
-                // } catch (Exception e1) {
-                // log.error(e1);
-                // }
                 ok = runAnalysisIndicatorsParallel(analysis, elementToIndicator, indicators, POOLED_CONNECTION);
             } else {
-                // connection = trc.getObject();
+                if (POOLED_CONNECTION) {
+                    // reset the connection pool before run this analysis
+                    resetConnectionPool(analysis);
+                    connection = getPooledConnection(analysis);
+                } else {
+                    connection = getConnection(analysis);
+                }
+
+                if (!connection.isOk()) {
+                    log.error(connection.getMessage());
+                    this.errorMessage = connection.getMessage();
+                    return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$//$NON-NLS-1$  
+                }
+
                 ok = runAnalysisIndicators(connection.getObject(), elementToIndicator, indicators);
-            }
-            // ~
-            // connection.close();
 
-            // --- finalize indicators by setting the row count and null when they exist.
-            setRowCountAndNullCount(elementToIndicator);
-
-            if (POOLED_CONNECTION) {
-                // release the pooled connection
-                releasePooledConnection(analysis, connection.getObject(), true);
-            } else {
-                ConnectionUtils.closeConnection(connection.getObject());
+                // --- finalize indicators by setting the row count and null when they exist.
+                setRowCountAndNullCount(elementToIndicator);
             }
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
         } finally {
-            // if (null != connection) {
-            // ConnectionUtils.closeConnection(connection);
-            // }
-            //
-            // if (null != connPool) {
-            // try {
-            // connPool.closeConnectionPool();
-            // } catch (SQLException e) {
-            //                    log.error("Close connection pool error : " + e);//$NON-NLS-1$ 
-            // }
-            // }
+            if (connection != null) {
+                ReturnCode rc = closeConnection(analysis, connection.getObject());
+                ok = rc.isOk();
+            }
         }
-        // ~21273
+
         return ok;
+    }
+
+    protected ReturnCode closeConnection(Analysis analysis, java.sql.Connection connection) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        if (connection != null) {
+            if (POOLED_CONNECTION) {
+                resetConnectionPool(analysis);
+            } else {
+                rc = ConnectionUtils.closeConnection(connection);
+                if (!rc.isOk()) {
+                    this.errorMessage = rc.getMessage();
+                }
+            }
+        } else {
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage("Connection is null when running analysis: " + analysis.getName()); //$NON-NLS-1$
+        }
+        return rc;
     }
 
     /**
@@ -1168,19 +1150,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         Indicator indicator;
 
-        // ConnectionPool connPool;
-
         String errorMessage;
-
-        // public ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor parent, Connection connection,
-        // Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator, ConnectionPool connPool) {
-        // super(PluginConstant.EMPTY_STRING);
-        // this.connPool = connPool;
-        // this.parent = parent;
-        // this.connection = connection;
-        // this.elementToIndicator = elementToIndicator;
-        // this.indicator = indicator;
-        // }
 
         public ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor parent, Connection connection,
                 Map<ModelElement, List<Indicator>> elementToIndicator, Indicator indicator) {
@@ -1202,12 +1172,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     connection, elementToIndicator, indicator);
             columnSqlParallel.run();
 
-            if (POOLED_CONNECTION) {
-                returnPooledConnection(connection);
-            } else {
-                ConnectionUtils.closeConnection(connection);
-            }
-
             if (columnSqlParallel.ok) {
                 return Status.OK_STATUS;
             } else {
@@ -1216,54 +1180,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         }
     }
-
-    /**
-     * The original method have been removed,this is the rewriting method. The logic of the new approach by Job to
-     * executive indicators,replace the original thread in the thread way nested. Each indicator corresponds to a job,
-     * after all the indicators executed and then running the main thread.
-     * 
-     * @param analysis
-     * @param elementToIndicator
-     * @param indicators
-     * @return ok(execution results)
-     * @deprecated use runAnalysisIndicatorsParallel(Analysis analysis, Map<ModelElement, List<Indicator>>
-     * elementToIndicator, Collection<Indicator> indicators) instead of
-     * @throws SQLException
-     */
-    // private boolean runAnalysisIndicatorsParallel(Analysis analysis, Map<ModelElement, List<Indicator>>
-    // elementToIndicator,
-    // Collection<Indicator> indicators, ConnectionPool connPool) throws SQLException {
-    // // MOD qiongli 2011-5-20 bug 21580.backport rightly for bug 19107 and 19522.
-    // List<ExecutiveAnalysisJob> excuteAnalysisJober = new ArrayList<ExecutiveAnalysisJob>();
-    // // MOD gdbu 2011-6-10 bug : 21273
-    // try {
-    // for (Indicator indicator : indicators) {
-    // if (connPool.isOK()) {
-    // Connection conn = connPool.getConnection();
-    // ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn, elementToIndicator,
-    // indicator, connPool);
-    // excuteAnalysisJober.add(eaj);
-    // eaj.schedule();
-    // }
-    // }
-    // for (ExecutiveAnalysisJob exeAnaJober : excuteAnalysisJober) {
-    // try {
-    // exeAnaJober.join();
-    // } catch (InterruptedException e) {
-    // log.error(e);
-    // }
-    // if (exeAnaJober.errorMessage != null) {
-    // ColumnAnalysisSqlExecutor.this.errorMessage = exeAnaJober.errorMessage;
-    // ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
-    // }
-    // }
-    // } catch (Throwable thr) {
-    // log.error(thr);
-    // }
-    // // ~21273
-    // return parallelExeStatus;
-    // // ~
-    // }
 
     /**
      * DOC xqliu Comment method "runAnalysisIndicatorsParallel".
@@ -1277,10 +1193,15 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private boolean runAnalysisIndicatorsParallel(Analysis analysis, Map<ModelElement, List<Indicator>> elementToIndicator,
             Collection<Indicator> indicators, boolean pooledConnection) throws SQLException {
+        // reset the connection pool before run this analysis
+        resetConnectionPool(analysis);
+
         // MOD qiongli 2011-5-20 bug 21580.backport rightly for bug 19107 and 19522.
         List<ExecutiveAnalysisJob> excuteAnalysisJober = new ArrayList<ExecutiveAnalysisJob>();
+
         // MOD gdbu 2011-6-10 bug : 21273
         try {
+            List<ExecutiveAnalysisJob> jobs = new ArrayList<ExecutiveAnalysisJob>();
             for (Indicator indicator : indicators) {
                 Connection conn = null;
                 if (pooledConnection) {
@@ -1294,12 +1215,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                             indicator);
                     excuteAnalysisJober.add(eaj);
                     eaj.schedule();
-
-                    try {
-                        eaj.join();
-                    } catch (InterruptedException e) {
-                        log.error(e);
-                    }
+                    jobs.add(eaj);
                     if (eaj.errorMessage != null) {
                         ColumnAnalysisSqlExecutor.this.errorMessage = eaj.errorMessage;
                         ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
@@ -1307,19 +1223,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 }
             }
 
-            // for (ExecutiveAnalysisJob exeAnaJober : excuteAnalysisJober) {
-            // try {
-            // exeAnaJober.join();
-            // } catch (InterruptedException e) {
-            // log.error(e);
-            // }
-            // if (exeAnaJober.errorMessage != null) {
-            // ColumnAnalysisSqlExecutor.this.errorMessage = exeAnaJober.errorMessage;
-            // ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
-            // }
-            // }
+            for (ExecutiveAnalysisJob job : jobs) {
+                job.join();
+            }
         } catch (Throwable thr) {
             log.error(thr);
+        } finally {
+            resetConnectionPool(analysis);
         }
         // ~21273
         return parallelExeStatus;

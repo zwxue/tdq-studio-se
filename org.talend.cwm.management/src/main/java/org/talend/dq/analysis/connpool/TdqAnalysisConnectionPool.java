@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -27,7 +28,9 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class TdqAnalysisConnectionPool {
 
-    private static final int MAX_CONNECTIONS = 50;
+    public static final int CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH = 1;
+
+    public static final String NUMBER_OF_CONNECTIONS_PER_ANALYSIS = "NUMBER_OF_CONNECTIONS_PER_ANALYSIS"; //$NON-NLS-1$\
 
     private static final int DEFAULT_WAIT_MILLISECOND = 500;
 
@@ -35,7 +38,7 @@ public class TdqAnalysisConnectionPool {
 
     private static final float DEFAULT_CONNECTION_NUMBER_OFFSET = 0.5f;
 
-    private static final boolean SHOW_CONNECTIONS_INFO = false;
+    private static final boolean SHOW_CONNECTIONS_INFO = Boolean.FALSE;
 
     private static Logger log = Logger.getLogger(TdqAnalysisConnectionPool.class);
 
@@ -43,7 +46,19 @@ public class TdqAnalysisConnectionPool {
 
     private Vector<PooledTdqAnalysisConnection> pConnections;
 
-    private int maxConnections = MAX_CONNECTIONS;
+    private int driverMaxConnections = Integer.MAX_VALUE;
+
+    private String synchronizedFlag = ""; //$NON-NLS-1$\
+
+    public int getDriverMaxConnections() {
+        return this.driverMaxConnections;
+    }
+
+    public void setDriverMaxConnections(int driverMaxConnections) {
+        if (driverMaxConnections > 0) {
+            this.driverMaxConnections = driverMaxConnections;
+        }
+    }
 
     /**
      * DOC xqliu TdqAnalysisConnectionPool constructor comment.
@@ -59,7 +74,7 @@ public class TdqAnalysisConnectionPool {
      * 
      * @return
      */
-    public synchronized org.talend.core.model.metadata.builder.connection.Connection getTConnection() {
+    public org.talend.core.model.metadata.builder.connection.Connection getTConnection() {
         return this.tConnection;
     }
 
@@ -68,7 +83,7 @@ public class TdqAnalysisConnectionPool {
      * 
      * @param tConnection
      */
-    public synchronized void setTConnection(org.talend.core.model.metadata.builder.connection.Connection tConnection) {
+    public void setTConnection(org.talend.core.model.metadata.builder.connection.Connection tConnection) {
         this.tConnection = tConnection;
     }
 
@@ -77,7 +92,7 @@ public class TdqAnalysisConnectionPool {
      * 
      * @return
      */
-    public synchronized Vector<PooledTdqAnalysisConnection> getPConnections() {
+    public Vector<PooledTdqAnalysisConnection> getPConnections() {
         if (this.pConnections == null) {
             this.pConnections = new Vector<PooledTdqAnalysisConnection>();
         }
@@ -89,7 +104,7 @@ public class TdqAnalysisConnectionPool {
      * 
      * @param pConnections
      */
-    public synchronized void setPConnections(Vector<PooledTdqAnalysisConnection> pConnections) {
+    public void setPConnections(Vector<PooledTdqAnalysisConnection> pConnections) {
         this.pConnections = pConnections;
     }
 
@@ -98,17 +113,8 @@ public class TdqAnalysisConnectionPool {
      * 
      * @return
      */
-    public synchronized int getMaxConnections() {
-        return this.maxConnections;
-    }
-
-    /**
-     * DOC xqliu Comment method "setMaxConnections".
-     * 
-     * @param maxConnections
-     */
-    public synchronized void setMaxConnections(int maxConnections) {
-        this.maxConnections = maxConnections;
+    public int getMaxConnections() {
+        return Integer.valueOf(PlatformUI.getPreferenceStore().getString(NUMBER_OF_CONNECTIONS_PER_ANALYSIS));
     }
 
     /**
@@ -117,7 +123,7 @@ public class TdqAnalysisConnectionPool {
      * @return
      * @throws SQLException
      */
-    public synchronized Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         Connection conn = findFreeConnection();
         while (conn == null) {
             wait(DEFAULT_WAIT_MILLISECOND);
@@ -135,7 +141,7 @@ public class TdqAnalysisConnectionPool {
      * 
      * @return
      */
-    private synchronized Connection newConnection() {
+    private Connection newConnection() {
         Connection conn = null;
         if (isFull()) {
             return conn;
@@ -145,7 +151,9 @@ public class TdqAnalysisConnectionPool {
             TypedReturnCode<Connection> trcConn = JavaSqlFactory.createConnection(this.getTConnection());
             if (trcConn.isOk()) {
                 conn = trcConn.getObject();
-                this.getPConnections().add(new PooledTdqAnalysisConnection(conn));
+                synchronized (this.synchronizedFlag) {
+                    this.getPConnections().add(new PooledTdqAnalysisConnection(conn));
+                }
             }
 
         } catch (Exception e) {
@@ -154,9 +162,10 @@ public class TdqAnalysisConnectionPool {
 
         try {
             DatabaseMetaData metaData = conn.getMetaData();
-            int driverMaxConnections = new Float(metaData.getMaxConnections() * DEFAULT_CONNECTION_NUMBER_OFFSET).intValue();
-            if (driverMaxConnections > 0 && this.getMaxConnections() > driverMaxConnections) {
-                this.setMaxConnections(driverMaxConnections);
+            int currentDriverMaxConnections = new Float(metaData.getMaxConnections() * DEFAULT_CONNECTION_NUMBER_OFFSET)
+                    .intValue();
+            synchronized (this.synchronizedFlag) {
+                this.setDriverMaxConnections(currentDriverMaxConnections);
             }
         } catch (Exception e) {
             log.debug(e, e);
@@ -172,10 +181,11 @@ public class TdqAnalysisConnectionPool {
      */
     private synchronized boolean isFull() {
         boolean result = true;
-        if (this.getMaxConnections() < 1) {
+        int topLimit = Math.min(this.getMaxConnections(), this.getDriverMaxConnections());
+        if (topLimit < 1) {
             result = false;
         } else {
-            result = !(this.getPConnections().size() < this.getMaxConnections());
+            result = !(this.getPConnections().size() < topLimit);
         }
         return result;
     }
@@ -235,7 +245,7 @@ public class TdqAnalysisConnectionPool {
     /**
      * DOC xqliu Comment method "showConnectionInfo".
      */
-    public synchronized void showConnectionInfo() {
+    public void showConnectionInfo() {
         if (SHOW_CONNECTIONS_INFO) {
             int i = 0;
             Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
@@ -245,11 +255,11 @@ public class TdqAnalysisConnectionPool {
                     hasElement = true;
                     PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
                     i++;
-                    log.info("pConn: id=[" + i + "] conn=[" + pConn.getConnection().toString() + "] [closed="
-                            + pConn.getConnection().isClosed() + "] busy=[" + pConn.isBusy() + "]");
+                    log.info("pConn: id=[" + i + "] pid=[" + pConn.hashCode() + "] conn=[" + pConn.getConnection().toString() + "] [closed=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                            + pConn.getConnection().isClosed() + "] busy=[" + pConn.isBusy() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 if (!hasElement) {
-                    log.info("the connection pool is empty!");
+                    log.info("the connection pool is empty!"); //$NON-NLS-1$
                 }
             } catch (Exception e) {
                 log.debug(e);
@@ -289,7 +299,7 @@ public class TdqAnalysisConnectionPool {
     /**
      * DOC xqliu Comment method "closeConnectionPool".
      */
-    public synchronized void closeConnectionPool() {
+    public void closeConnectionPool() {
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
             PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
@@ -302,8 +312,8 @@ public class TdqAnalysisConnectionPool {
                 }
             }
             closeConnection(pConn.getConnection());
-            this.getPConnections().removeElement(pConn);
         }
+        getPConnections().removeAllElements();
         this.setPConnections(null);
     }
 
@@ -312,16 +322,15 @@ public class TdqAnalysisConnectionPool {
      * 
      * @param conn
      */
-    public synchronized void closeConnection(Connection conn) {
+    public void closeConnection(Connection conn) {
         if (conn != null) {
             try {
                 if (!conn.isClosed()) {
                     conn.close();
                 }
             } catch (Exception e) {
-                log.debug(e);
+                log.error(e.getMessage(), e);
             }
-
             showConnectionInfo();
         }
     }
@@ -337,13 +346,14 @@ public class TdqAnalysisConnectionPool {
         while (enumerate.hasMoreElements()) {
             PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
             if (pConn.getConnection().equals(conn)) {
-                this.getPConnections().remove(pConn);
+                getPConnections().remove(pConn);
                 break;
             }
         }
 
         showConnectionInfo();
     }
+
 
     /**
      * DOC xqliu Comment method "wait".

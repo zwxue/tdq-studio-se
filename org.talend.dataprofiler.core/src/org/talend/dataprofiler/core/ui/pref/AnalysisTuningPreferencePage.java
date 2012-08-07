@@ -40,6 +40,7 @@ import org.talend.commons.ui.swt.preferences.CheckBoxFieldEditor;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 
 /**
@@ -52,6 +53,8 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     public static final String CHECKED_ELEMENTS_LENGTH = "CHECKED_ELEMENTS_LENGTH";//$NON-NLS-1$
 
     private Text textAnalyzedColumnsLimit;
+
+    private Text textNumberOfConnectionsPerAnalysis;
 
     private ScaleFieldEditor memoryScaleField;
 
@@ -102,32 +105,12 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         Composite composite = new Composite(group1, SWT.FILL);
         composite.setLayout(new GridLayout(2, false));
 
-        Label label = new Label(composite, SWT.NONE);
-        label.setAlignment(SWT.CENTER);
-        label.setText("Analyzed columns limit:"); //$NON-NLS-1$
-        textAnalyzedColumnsLimit = new Text(composite, SWT.BORDER);
         GridData gdText = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
         gdText.widthHint = 50;
-        textAnalyzedColumnsLimit.setLayoutData(gdText);
-        String elementLength = PlatformUI.getPreferenceStore().getString(CHECKED_ELEMENTS_LENGTH);
 
-        if (elementLength == null || elementLength.equals(PluginConstant.EMPTY_STRING)) {
-            elementLength = ELEMENTS_DEFAUL_TLENGTH + PluginConstant.EMPTY_STRING;
-        }
-        textAnalyzedColumnsLimit.setText(elementLength);
-        textAnalyzedColumnsLimit.addVerifyListener(new VerifyListener() {
+        createAnalyzedColumnsLimitLine(composite, gdText);
 
-            public void verifyText(VerifyEvent e) {
-                String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9.]"); //$NON-NLS-1$
-                char[] charArray = inputValue.toCharArray();
-                for (char c : charArray) {
-                    if (!pattern.matcher(String.valueOf(c)).matches()) {
-                        e.doit = false;
-                    }
-                }
-            }
-        });
+        createNumberOfConnectionsPerAnalysisLine(composite, gdText);
 
         Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
         group2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.MemoryGroup")); //$NON-NLS-1$
@@ -210,6 +193,72 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     }
 
     /**
+     * DOC xqliu Comment method "createAnalyzedColumnsLimitLine".
+     * 
+     * @param composite
+     * @param gdText
+     */
+    private void createAnalyzedColumnsLimitLine(Composite composite, GridData gdText) {
+        Label label = new Label(composite, SWT.NONE);
+        label.setAlignment(SWT.CENTER);
+        label.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.AnalyzedColumnsLimit")); //$NON-NLS-1$
+        textAnalyzedColumnsLimit = new Text(composite, SWT.BORDER);
+        textAnalyzedColumnsLimit.setLayoutData(gdText);
+        String elementLength = PlatformUI.getPreferenceStore().getString(CHECKED_ELEMENTS_LENGTH);
+
+        if (elementLength == null || elementLength.equals(PluginConstant.EMPTY_STRING)) {
+            elementLength = ELEMENTS_DEFAUL_TLENGTH + PluginConstant.EMPTY_STRING;
+        }
+        textAnalyzedColumnsLimit.setText(elementLength);
+        textAnalyzedColumnsLimit.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9.]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * DOC xqliu Comment method "createNumberOfConnectionsPerAnalysisLine".
+     * 
+     * @param composite
+     * @param gdText
+     */
+    private void createNumberOfConnectionsPerAnalysisLine(Composite composite, GridData gdText) {
+        Label labelNocpa = new Label(composite, SWT.NONE);
+        labelNocpa.setAlignment(SWT.CENTER);
+        labelNocpa.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
+        textNumberOfConnectionsPerAnalysis = new Text(composite, SWT.BORDER);
+        textNumberOfConnectionsPerAnalysis.setLayoutData(gdText);
+        String nocpa = PlatformUI.getPreferenceStore().getString(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS);
+
+        if (nocpa == null || nocpa.equals(PluginConstant.EMPTY_STRING)) {
+            nocpa = TdqAnalysisConnectionPool.CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH + PluginConstant.EMPTY_STRING;
+        }
+        textNumberOfConnectionsPerAnalysis.setText(nocpa);
+        textNumberOfConnectionsPerAnalysis.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9.]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * 
      * DOC gdbu Comment method "getCheckedElementsLength". Return the default analyzed columns limit size.
      * 
@@ -249,6 +298,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     @Override
     public boolean performOk() {
         getNewAnalyzedColumnsLimit();
+        saveNumberOfConnectionsPerAnalysis();
         memoryScaleField.store();
         autoComboField.store();
         return super.performOk();
@@ -262,6 +312,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     @Override
     protected void performApply() {
         getNewAnalyzedColumnsLimit();
+        saveNumberOfConnectionsPerAnalysis();
         memoryScaleField.store();
         autoComboField.store();
         super.performApply();
@@ -277,6 +328,23 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
                 textAnalyzedColumnsLimit.setText(newLimit + PluginConstant.EMPTY_STRING);
             }
             PlatformUI.getPreferenceStore().setValue(CHECKED_ELEMENTS_LENGTH, newLimit + PluginConstant.EMPTY_STRING);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "saveNumberOfConnectionsPerAnalysis".
+     */
+    private void saveNumberOfConnectionsPerAnalysis() {
+        if (this.textNumberOfConnectionsPerAnalysis != null) {
+            String text = this.textNumberOfConnectionsPerAnalysis.getText();
+            int newNumber = TdqAnalysisConnectionPool.CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
+            if (!text.equals(PluginConstant.EMPTY_STRING)) {
+                newNumber = Integer.valueOf(text);
+            } else {
+                this.textNumberOfConnectionsPerAnalysis.setText(newNumber + PluginConstant.EMPTY_STRING);
+            }
+            PlatformUI.getPreferenceStore().setValue(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
+                    newNumber + PluginConstant.EMPTY_STRING);
         }
     }
 

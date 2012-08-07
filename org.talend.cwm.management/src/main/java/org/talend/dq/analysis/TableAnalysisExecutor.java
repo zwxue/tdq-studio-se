@@ -134,12 +134,12 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
             eval.storeIndicator(setName, indicator);
         }
 
-        // reset the connection pool before run this analysis
-        resetConnectionPool(analysis);
 
         // open a connection
         TypedReturnCode<java.sql.Connection> connection = null;
         if (POOLED_CONNECTION) {
+            // reset the connection pool before run this analysis
+            resetConnectionPool(analysis);
             connection = getPooledConnection(analysis);
         } else {
             connection = getConnection(analysis);
@@ -166,7 +166,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
 
         if (POOLED_CONNECTION) {
             // release the pooled connection
-            releasePooledConnection(analysis, connection.getObject(), true);
+            resetConnectionPool(analysis);
         } else {
             ConnectionUtils.closeConnection(connection.getObject());
         }
