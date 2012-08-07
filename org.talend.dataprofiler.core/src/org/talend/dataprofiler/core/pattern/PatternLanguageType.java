@@ -90,7 +90,12 @@ public enum PatternLanguageType {
           12,
           SupportDBUrlType.AS400DEFAULTURL.getLanguage(),
           SupportDBUrlType.AS400DEFAULTURL.getLanguage(),
-          PatternToExcelEnum.AS400);
+          PatternToExcelEnum.AS400),
+    HIVE(
+         13,
+         SupportDBUrlType.HIVEDEFAULTURL.getLanguage(),
+         SupportDBUrlType.HIVEDEFAULTURL.getLanguage(),
+         PatternToExcelEnum.Hive);
 
     private int index;
 

@@ -100,7 +100,17 @@ public enum EDriverName {
     AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar"),
     // MOD klliu bug 14791 add ingres database url and modify default_driver.xml
     INGRESDEFAULTURL("Ingres", "com.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar"),
-    NETEZZADEFAULTURL("Netezza", "org.netezza.Driver", "-66", "lib/nzjdbc.jar") //$NON-NLS-1$
+    NETEZZADEFAULTURL("Netezza", "org.netezza.Driver", "-66", "lib/nzjdbc.jar"), //$NON-NLS-1$
+    HIVE("Hive", //$NON-NLS-1$
+         "org.apache.hadoop.hive.jdbc.HiveDriver", //$NON-NLS-1$
+         "-55", //$NON-NLS-1$
+         "lib/hive-jdbc-0.8.1.jar", //$NON-NLS-1$
+         "lib/hive-metastore-0.8.1.jar", //$NON-NLS-1$
+         "lib/hive-exec-0.8.1.jar", //$NON-NLS-1$
+         "lib/hive-service-0.8.1.jar", //$NON-NLS-1$
+         "lib/libfb303_new.jar", //$NON-NLS-1$
+         "lib/hadoop-core-1.0.0.jar", //$NON-NLS-1$
+         "lib/commons-logging-1.0.4.jar", "lib/log4j-1.2.15.jar", "lib/slf4j-api-1.6.1.jar", "lib/slf4j-log4j12-1.6.1.jar") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     ;
 
     private final String dbKey;
@@ -209,6 +219,9 @@ public enum EDriverName {
             break;
         case NETEZZADEFAULTURL:
             plugins = "org.talend.libraries.jdbc.netezza";
+            break;
+        case HIVE:
+            plugins = "org.talend.libraries.apache.hive";
             break;
         default:
             return linkedList;

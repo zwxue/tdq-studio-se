@@ -100,6 +100,8 @@ public class DbmsLanguage {
 
     static final String DELIMITEDFILE = SupportDBUrlType.DELIMITEDFILE.getLanguage();
 
+    static final String HIVE = SupportDBUrlType.HIVEDEFAULTURL.getLanguage();
+
     /**
      * Ansi SQL.
      */

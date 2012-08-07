@@ -182,4 +182,9 @@
 		<url>jdbc:netezza://&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>
 		<jars></jars>
 	</driver>
+	<driver id="-55">
+		<name>Hive</name>
+		<url>jdbc:hive://&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>
+		<jars></jars>
+	</driver>
 </drivers>

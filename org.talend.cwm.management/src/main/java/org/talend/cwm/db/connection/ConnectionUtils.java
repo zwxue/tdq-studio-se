@@ -612,6 +612,22 @@ public final class ConnectionUtils {
     }
 
     /**
+     * 
+     * judge if it is hive connection.
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public static boolean isHive(java.sql.Connection connection)throws SQLException{
+        DatabaseMetaData connectionMetadata = ExtractMetaDataUtils.getConnectionMetadata(connection);
+        if (MetadataConnectionUtils.isHive(connectionMetadata)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * mzhao bug: TDQ-4622 Is the connection is an ingres connection?
      * 
      * @param connection
@@ -675,6 +691,7 @@ public final class ConnectionUtils {
         }
         return false;
     }
+    
 
     /**
      * DOC xqliu Comment method "isMssql".

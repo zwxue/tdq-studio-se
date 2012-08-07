@@ -128,6 +128,8 @@ public final class DbmsLanguageFactory {
             // MOD zshen fixed bug 11005: SQL syntax error for all analysis on Informix databases in Talend Open
             // Profiler
             dbmsLanguage = new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isHive(dbmsSubtype)) {
+            dbmsLanguage = new HiveDbmsLanguage(dbmsSubtype, dbVersion);
         } else {
             dbmsLanguage = new DbmsLanguage(dbmsSubtype, dbVersion);
         }
@@ -242,6 +244,10 @@ public final class DbmsLanguageFactory {
     // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
     public static boolean isInfomix(String dbms) {
         return compareDbmsLanguage(DbmsLanguage.INFOMIX, dbms);
+    }
+
+    public static boolean isHive(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.HIVE, dbms);
     }
 
     // ~11005

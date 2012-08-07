@@ -104,3 +104,10 @@ The method in class of "net.sourceforge.sqlexplorer.plugin.views.DatabaseStructu
 2011-6-9 gdbu bug 21854 : TOP gives an error with Oracle db connection when viewing profiled data
 ---------------------------------------------------------------------------------------------------
 1.  modified class 'EDriverName' : Repair the product on the jdbc-oracle's driver class support problems.
+
+2012-8-6 qiongli feature TDQ-5907 Enable Hive profiling 
+---------------------------------------------------------------------------------------------------
+1.  modified default_drivers.xml : Add a driver tag with Hive.
+2.  modified class EDriverName  : Add driver information for Hive.
+3.  modified class ExecutionResultImpl  : modified line 107,HivePreparedStatement dosenot support method 'getResultSet()'.
+4.  modified fiel MANIFEST.MF  : add plugin dependencies with 'org.talend.libraries.apache.hive'.
