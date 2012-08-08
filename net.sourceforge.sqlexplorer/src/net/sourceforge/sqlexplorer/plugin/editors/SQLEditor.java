@@ -18,11 +18,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.connections.ConnectionsView;
 import net.sourceforge.sqlexplorer.connections.SessionEstablishedAdapter;
+import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -32,6 +34,8 @@ import net.sourceforge.sqlexplorer.sqleditor.results.ResultsTab;
 import net.sourceforge.sqlexplorer.sqlpanel.AbstractSQLExecution;
 import net.sourceforge.sqlexplorer.util.PartAdapter2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -106,6 +110,8 @@ import org.eclipse.ui.part.FileEditorInput;
  * 
  */
 public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
+	
+	private static Log log = LogFactory.getLog(SQLEditor.class);
 
     // The color of the sash
     private static final Color SASH_COLOR = IConstants.TAB_BORDER_COLOR;
@@ -755,7 +761,17 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         textEditor.getDocumentProvider().disconnect(getEditorInput());
         textEditor.setInput(null);
         clearResults();
-    }
+        
+        // ADD msjian TDQ-5952: we should close connections always
+        // when close the SQLEditor, close the connection
+		if (session != null) {
+			List<SQLConnection> connections = session.getUser().getUnusedConnections();
+			for (SQLConnection sqlConn : connections) {
+				session.getUser().releaseFromPool(sqlConn);
+			}
+		}
+		// TDQ-5952~
+	}
 
     /**
      * Closes all result tabs and signals all associated AbstractSQLExecutions to stop (if they're still running)

@@ -390,6 +390,16 @@ public class User implements Comparable<User>, SessionEstablishedListener {
 	}
 	
 	/**
+	 * Returns unused connections
+	 * @return
+	 */
+	public List<SQLConnection> getUnusedConnections() {
+		LinkedList<SQLConnection> result = new LinkedList<SQLConnection>();
+		result.addAll(unused);
+		return result;
+	}
+	
+	/**
 	 * Returns true if the user has successfully authenticated at some point; IE, 
 	 * will grabConnection() be able to return a valid connection, either from the
 	 * pool or by establishing a new connection, without normally causing an 

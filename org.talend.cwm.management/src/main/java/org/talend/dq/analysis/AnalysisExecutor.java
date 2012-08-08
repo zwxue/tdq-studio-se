@@ -35,6 +35,7 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionHelper;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPoolMap;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -111,6 +112,11 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             ok = runAnalysis(analysis, sql);
         } catch (Exception e) {
             log.error(e, e);
+        } finally {
+            // ADD msjian TDQ-5952: we should close connections always.
+            // after run analysis, close connection at once when don't need it
+            TdqAnalysisConnectionHelper.closeConnectionPool(analysis);
+            // TDQ-5952~
         }
 
         // --- set metadata information of analysis
