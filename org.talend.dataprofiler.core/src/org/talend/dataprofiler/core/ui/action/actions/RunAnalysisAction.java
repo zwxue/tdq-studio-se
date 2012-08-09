@@ -40,7 +40,6 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -52,8 +51,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
-import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPoolMap;
-import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -61,7 +59,6 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -221,7 +218,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             return;
         }
         // MOD klliu bug 4546 check connectiong is connected well.
-        Connection analysisDataProvider = this.getAnalysisDataProvider(analysis);
+        Connection analysisDataProvider = TdqAnalysisConnectionHelper.getAnalysisDataProvider(analysis);
         // MOD yyin 20120529 TDQ-4651
         ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
         if (!connectionAvailable.isOk()) {
@@ -285,7 +282,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     if (monitor.isCanceled()) {
                         thread.interrupt();
-                        closeConnectionPool(analysis);
+                        TdqAnalysisConnectionHelper.closeConnectionPool(analysis);
                         executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
                         break;
                     }
@@ -312,21 +309,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         job.setUser(true);
         job.schedule();
-    }
-
-    /**
-     * close the connection pool which belong to the analysis(whether use pooled connection to execute the analysis or
-     * not, can call this method safely).
-     * 
-     * @param ana
-     */
-    protected void closeConnectionPool(Analysis ana) {
-        TdqAnalysisConnectionPoolMap instance = TdqAnalysisConnectionPoolMap.getInstance(ana);
-        Connection analysisDataProvider = this.getAnalysisDataProvider(ana);
-        if (analysisDataProvider != null) {
-            instance.closePool(analysisDataProvider);
-        }
-        instance.closePools();
     }
 
     /*
@@ -370,11 +352,4 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
     }
 
-    protected Connection getAnalysisDataProvider(Analysis analysis) {
-        DataManager datamanager = analysis.getContext().getConnection();
-        if (datamanager != null && datamanager.eIsProxy()) {
-            datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
-        }
-        return SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
-    }
 }
