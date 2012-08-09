@@ -22,6 +22,7 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -54,6 +55,11 @@ public class ReportExecutor implements IReportExecutor {
                             Messages.getString("ReportExecutor.CannotEvaluateNullAnalysis", report.getName()), false); //$NON-NLS-1$
                 }
                 ReturnCode executeRc = AnalysisExecutorSelector.executeAnalysis(analysis);
+
+                // ADD msjian TDQ-5952: we should close connections always
+                TdqAnalysisConnectionHelper.closeConnectionPool(analysis);
+                // TDQ-5952~
+
                 if (!executeRc.isOk()) {
                     log.error("Failed to execute analysis " + analysis.getName() + ". Reason: " + executeRc.getMessage());
                     atLeastOneFailure = true;

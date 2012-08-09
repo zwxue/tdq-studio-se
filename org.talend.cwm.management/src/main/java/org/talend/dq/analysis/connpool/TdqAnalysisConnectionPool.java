@@ -28,7 +28,7 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class TdqAnalysisConnectionPool {
 
-    public static final int CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH = 1;
+    public static final int CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH = 5;
 
     public static final String NUMBER_OF_CONNECTIONS_PER_ANALYSIS = "NUMBER_OF_CONNECTIONS_PER_ANALYSIS"; //$NON-NLS-1$\
 
@@ -114,7 +114,14 @@ public class TdqAnalysisConnectionPool {
      * @return
      */
     public int getMaxConnections() {
-        return Integer.valueOf(PlatformUI.getPreferenceStore().getString(NUMBER_OF_CONNECTIONS_PER_ANALYSIS));
+		int max = CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
+		try {
+			max = Integer.valueOf(PlatformUI.getPreferenceStore().getString(
+					NUMBER_OF_CONNECTIONS_PER_ANALYSIS));
+		} catch (Exception e) {
+			log.debug(e);
+		}
+		return max;
     }
 
     /**
