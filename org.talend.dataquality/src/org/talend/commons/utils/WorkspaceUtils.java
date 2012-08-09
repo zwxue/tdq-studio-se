@@ -56,6 +56,17 @@ public final class WorkspaceUtils {
         return ifile;
     }
 
+    public static IFolder fileToIFolder(File file) {
+        IFolder folder = null;
+        String filePath = file.getAbsolutePath();
+        String rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocationURI().getPath();
+        if (filePath.startsWith(rootPath)) {
+            folder = ResourcesPlugin.getWorkspace().getRoot()
+                    .getFolder(new Path(filePath.substring(rootPath.length(), filePath.length())));
+        }
+        return folder;
+    }
+
     /**
      * 
      * Comment method "toFile".

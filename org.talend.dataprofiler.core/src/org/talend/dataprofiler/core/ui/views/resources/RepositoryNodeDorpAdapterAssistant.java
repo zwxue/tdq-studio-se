@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.views.resources;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +87,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -343,29 +343,10 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         FilesUtils.deleteFile(sourceFile, true);
 
         // update the file .report.list
-        updateReportListFile(outputFolder, targetFolder);
+        ReportUtils.updateReportListFile(outputFolder, targetFolder);
 
         // refresh the dq repository tree view
         CorePlugin.getDefault().refreshDQView(targetNode.getParent());
-    }
-
-    /**
-     * update the file .report.list to deal with the report generated doc folder's movement.
-     * 
-     * @param outputFolder source folder, the original report generated doc folder
-     * @param targetFolder target folder, the new folder which source folder moved into
-     */
-    private void updateReportListFile(IFolder outputFolder, IFolder targetFolder) {
-        try {
-            File oldFolder = WorkspaceUtils.ifolderToFile(outputFolder);
-            File newFolder = WorkspaceUtils.ifolderToFile(targetFolder.getFolder(outputFolder.getName()));
-            File file = new File(newFolder.getAbsolutePath() + IPath.SEPARATOR + ReportUtils.REPORT_LIST);
-            if (file.exists() && file.isFile()) {
-                FilesUtils.replaceInFile(oldFolder.toString(), file.toString(), newFolder.toString());
-            }
-        } catch (IOException e) {
-            log.warn(e, e);
-        }
     }
 
     /**
@@ -522,8 +503,22 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         // ~19537
 
         // deal with ReportSubFolderRepNode
+        boolean isReportSubFolderRepNode = sourceNode instanceof ReportSubFolderRepNode;
         Map<IFolder, IFolder> reportGenDocInfoMap = new HashMap<IFolder, IFolder>();
-        if (sourceNode instanceof ReportSubFolderRepNode) {
+        IFolder folder = null; // source folder
+        File tarFile = null; // temp folder
+        if (isReportSubFolderRepNode) {
+            String tempFolderName = StringUtilities.getRandomString(8);
+            folder = RepositoryNodeHelper.getIFolder(sourceNode);
+            File srcFile = WorkspaceUtils.ifolderToFile(folder);
+            tarFile = WorkspaceUtils.ifolderToFile(folder.getParent().getFolder(new Path(tempFolderName)));
+            if (!tarFile.exists()) {
+                tarFile.mkdirs();
+            }
+            if (srcFile.exists() && tarFile.exists()) {
+                FilesUtils.copyDirectory(srcFile, tarFile);
+            }
+
             // get the source folder
             IFolder sourceFolder = RepositoryNodeHelper.getIFolder(sourceNode);
             // get the target folder
@@ -545,9 +540,20 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         IPath makeRelativeTo = nodeFullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
         computePath(folderHelper, sourcePath, targetPath, makeRelativeTo, objectType, sourceNode, targetNode);
 
-        if (!reportGenDocInfoMap.isEmpty()) {
-            for (IFolder outputFolder : reportGenDocInfoMap.keySet()) {
-                updateReportListFile(outputFolder, reportGenDocInfoMap.get(outputFolder));
+        if (isReportSubFolderRepNode) {
+            if (tarFile != null) {
+                File file1 = new File(tarFile.getAbsolutePath() + IPath.SEPARATOR + sourceNode.getLabel());
+                File file2 = WorkspaceUtils.ifolderToFile(RepositoryNodeHelper.getIFolder(targetNode).getFolder(
+                        new Path(sourceNode.getLabel())));
+
+                ReportUtils.moveHiddenFolders(file1, file2);
+                // delete temp folder
+                FilesUtils.deleteFile(tarFile, Boolean.TRUE);
+            }
+            if (!reportGenDocInfoMap.isEmpty()) {
+                for (IFolder outputFolder : reportGenDocInfoMap.keySet()) {
+                    ReportUtils.updateReportListFile(outputFolder, reportGenDocInfoMap.get(outputFolder));
+                }
             }
         }
     }

@@ -27,16 +27,22 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.nodes.ReportRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.eclipse.IPath;
+import org.talend.utils.sugars.ReturnCode;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
@@ -419,5 +425,265 @@ public final class ReportUtils {
                 log.warn(e, e);
             }
         }
+    }
+
+    /**
+     * get the link files which link to the Report Generated Doc File.
+     * 
+     * @param file Report file
+     * @return
+     */
+    public static List<IFile> getRepDocLinkFiles(IFile file) {
+        List<IFile> linkFiles = new ArrayList<IFile>();
+        try {
+            IResource[] reportListFiles = ReportUtils.getReportListFiles(file);
+            for (IResource res : reportListFiles) {
+                IFile linkFile = ResourceManager.getRoot().getFile(res.getFullPath());
+                if (linkFile.exists() && linkFile.isLinked()) {
+                    linkFiles.add(linkFile);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return linkFiles;
+    }
+
+    /**
+     * get the link files which link to the Report Generated Doc File.
+     * 
+     * @param findAllRecycleBinNodes RepositoryNode list(can be any type)
+     * @return
+     */
+    public static List<IFile> getRepGenDocLinkFiles(List<IRepositoryNode> findAllRecycleBinNodes) {
+        List<IFile> linkFiles = new ArrayList<IFile>();
+        for (IRepositoryNode iNode : findAllRecycleBinNodes) {
+            IRepositoryViewObject object = iNode.getObject();
+            if (object != null) {
+                Property property = object.getProperty();
+                if (property != null) {
+                    Item item = property.getItem();
+                    if (item != null && item instanceof TDQReportItem) {
+                        linkFiles.addAll(ReportUtils.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(iNode)));
+                    }
+                }
+            }
+        }
+        return linkFiles;
+    }
+
+    /**
+     * remove the link files which link to the Report Generated Doc File.
+     * 
+     * @param repDocLinkFiles
+     */
+    public static void removeRepDocLinkFiles(List<IFile> repDocLinkFiles) {
+        try {
+            for (IFile file : repDocLinkFiles) {
+                if (file.isLinked()) {
+                    file.delete(Boolean.TRUE, new NullProgressMonitor());
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * delete the related output folder of report.
+     * 
+     * @param reportFile
+     */
+    public static ReturnCode deleteRepOutputFolder(IFile reportFile) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        IFolder currentRportFolder = ReportUtils.getOutputFolder(reportFile);
+        if (currentRportFolder != null && currentRportFolder.exists()) {
+            try {
+                currentRportFolder.delete(true, new NullProgressMonitor());
+            } catch (CoreException e) {
+                log.error(e, e);
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getMessage());
+            }
+        } else {
+            rc.setOk(Boolean.FALSE);
+        }
+        return rc;
+    }
+
+    /**
+     * get the IFile of the Report.
+     * 
+     * @param findAllRecycleBinNodes
+     * @return
+     */
+    public static List<IFile> getReportFiles(List<IRepositoryNode> findAllRecycleBinNodes) {
+        List<IFile> reportFiles = new ArrayList<IFile>();
+        for (IRepositoryNode iNode : findAllRecycleBinNodes) {
+            IRepositoryViewObject object = iNode.getObject();
+            if (object != null) {
+                Property property = object.getProperty();
+                if (property != null) {
+                    Item item = property.getItem();
+                    if (item != null && item instanceof TDQReportItem) {
+                        reportFiles.add(RepositoryNodeHelper.getIFile(iNode));
+                    }
+                }
+            }
+        }
+        return reportFiles;
+    }
+
+    /**
+     * delete the related output folder of reports.
+     * 
+     * @param repFiles
+     */
+    public static void deleteRepOutputFolders(List<IFile> repFiles) {
+        for (IFile repFile : repFiles) {
+            deleteRepOutputFolder(repFile);
+        }
+    }
+
+    /**
+     * update the file .report.list to deal with the report generated doc folder's movement.
+     * 
+     * @param outputFolder source folder, the original report generated doc folder
+     * @param targetFolder target folder, the new folder which source folder moved into
+     */
+    public static void updateReportListFile(IFolder outputFolder, IFolder targetFolder) {
+        try {
+            File oldFolder = WorkspaceUtils.ifolderToFile(outputFolder);
+            File newFolder = WorkspaceUtils.ifolderToFile(targetFolder.getFolder(outputFolder.getName()));
+            File file = new File(newFolder.getAbsolutePath() + IPath.SEPARATOR + ReportUtils.REPORT_LIST);
+            if (file.exists() && file.isFile()) {
+                FilesUtils.replaceInFile(oldFolder.toString(), file.toString(), newFolder.toString());
+            }
+        } catch (IOException e) {
+            log.warn(e, e);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "copyAndUpdateRepGenDocFileInfo".
+     * 
+     * @param newFolder
+     * @param tempFolder
+     * @param subFolderName
+     */
+    public static void copyAndUpdateRepGenDocFileInfo(IFolder newFolder, File tempFolder, String subFolderName) {
+        File srcFolder = new File(tempFolder.getAbsolutePath() + IPath.SEPARATOR + subFolderName);
+        File tarFolder = WorkspaceUtils.ifolderToFile(newFolder);
+        // move folder
+        moveHiddenFolders(srcFolder, tarFolder);
+        // update info
+        updateReportListFileInfo(srcFolder, tarFolder, tempFolder.getName());
+        // delete temp folder
+        FilesUtils.deleteFile(tempFolder, Boolean.TRUE);
+    }
+
+    /**
+     * DOC xqliu Comment method "updateReportListFileInfo".
+     * 
+     * @param srcFolder
+     * @param tarFolder
+     */
+    public static void updateReportListFileInfo(File srcFolder, File tarFolder, String tempFolderName) {
+        if (srcFolder == null || tarFolder == null) {
+            return;
+        }
+        File[] listFiles = tarFolder.listFiles();
+        for (File file : listFiles) {
+            if (file.isDirectory()) {
+                if (file.getName().startsWith(".")) { //$NON-NLS-1$
+                    IFolder outputFolder = WorkspaceUtils.fileToIFolder(new File(getOriginalOutoutFolderPath(srcFolder, file,
+                            tempFolderName)));
+                    IFolder tFolder = WorkspaceUtils.fileToIFolder(file);
+                    IFolder targetFolder = tFolder == null ? null : (IFolder) tFolder.getParent();
+                    if (outputFolder != null && targetFolder != null) {
+                        ReportUtils.updateReportListFile(outputFolder, targetFolder);
+                    }
+                } else {
+                    updateReportListFileInfo(getSourceFolder(file, srcFolder, tarFolder), file, tempFolderName);
+                }
+            }
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getOriginalOutoutFolderPath".
+     * 
+     * @param srcFolder
+     * @param file
+     * @param tempFolderName
+     * @return
+     */
+    public static String getOriginalOutoutFolderPath(File srcFolder, File file, String tempFolderName) {
+        String path = srcFolder.getAbsolutePath() + IPath.SEPARATOR + file.getName();
+        int indexOf = path.indexOf(tempFolderName);
+        if (indexOf > 0) {
+            path = path.substring(0, indexOf) + path.substring(indexOf + tempFolderName.length() + 1, path.length());
+        }
+        return path;
+    }
+
+    /**
+     * DOC xqliu Comment method "getSourceFolder".
+     * 
+     * @param file
+     * @param srcFolder
+     * @param tarFolder
+     * @return
+     */
+    public static File getSourceFolder(File file, File srcFolder, File tarFolder) {
+        File tarFile = null;
+        String absolutePath = file.getAbsolutePath();
+        String absolutePath2 = tarFolder.getAbsolutePath();
+        if (absolutePath.startsWith(absolutePath2)) {
+            String absolutePath3 = srcFolder.getAbsolutePath();
+            tarFile = new File(absolutePath3 + absolutePath.subSequence(absolutePath2.length(), absolutePath.length()));
+        }
+        return tarFile;
+    }
+
+    /**
+     * DOC xqliu Comment method "moveHiddenFolders".
+     * 
+     * @param srcFolder
+     * @param tarFolder
+     */
+    public static void moveHiddenFolders(File srcFolder, File tarFolder) {
+        if (srcFolder == null || tarFolder == null) {
+            return;
+        }
+        File[] listFiles = srcFolder.listFiles();
+        for (File file : listFiles) {
+            if (file.isDirectory()) {
+                if (file.getName().startsWith(".")) { //$NON-NLS-1$
+                    FilesUtils.copyDirectory(file, tarFolder);
+                } else {
+                    moveHiddenFolders(file, getTargetFile(file, srcFolder, tarFolder));
+                }
+            }
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "getTargetFile".
+     * 
+     * @param file
+     * @param srcFolder
+     * @param tarFolder
+     * @return
+     */
+    public static File getTargetFile(File file, File srcFolder, File tarFolder) {
+        File tarFile = null;
+        String absolutePath = file.getAbsolutePath();
+        String absolutePath2 = srcFolder.getAbsolutePath();
+        if (absolutePath.startsWith(absolutePath2)) {
+            String absolutePath3 = tarFolder.getAbsolutePath();
+            tarFile = new File(absolutePath3 + absolutePath.subSequence(absolutePath2.length(), absolutePath.length()));
+        }
+        return tarFile;
     }
 }
