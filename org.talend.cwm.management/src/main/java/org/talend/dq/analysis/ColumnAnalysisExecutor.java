@@ -95,12 +95,12 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         // get the dataprovider of the analysis
         org.talend.core.model.metadata.builder.connection.Connection analysisDataProvider = getAnalysisDataProvider(analysis);
-        // reset the connection pool before run this analysis
-        resetConnectionPool(analysis, analysisDataProvider);
 
         // open a connection
         TypedReturnCode<java.sql.Connection> connection = null;
         if (POOLED_CONNECTION) {
+            // reset the connection pool before run this analysis
+            resetConnectionPool(analysis, analysisDataProvider);
             connection = getPooledConnection(analysis, analysisDataProvider);
         } else {
             connection = getConnection(analysis);
@@ -128,7 +128,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         // MOD gdbu 2011-8-15 : file delimited connection is null
         if (POOLED_CONNECTION && null != connection) {
             // release the pooled connection
-            releasePooledConnection(analysis, analysisDataProvider, connection.getObject(), true);
+            resetConnectionPool(analysis);
         } else {
             ConnectionUtils.closeConnection(connection.getObject());
         }

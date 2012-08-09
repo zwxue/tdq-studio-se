@@ -320,17 +320,10 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;
 
-        // reset the connection pool before run this analysis
-        resetConnectionPool(analysis);
-
-        // TypedReturnCode<Connection> trc = this.getConnection(analysis);
-        // if (!trc.isOk()) {
-        //            return traceError(Messages.getString("FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(),//$NON-NLS-1$
-        // trc.getMessage()));
-        // }
-
         TypedReturnCode<java.sql.Connection> trc = null;
         if (POOLED_CONNECTION) {
+            // reset the connection pool before run this analysis
+            resetConnectionPool(analysis);
             trc = getPooledConnection(analysis);
         } else {
             trc = getConnection(analysis);
@@ -368,21 +361,12 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
             }
 
-            if (POOLED_CONNECTION) {
-                releasePooledConnection(analysis, connection, true);
-            } else {
-                ReturnCode rc = ConnectionUtils.closeConnection(connection);
-                ok = rc.isOk();
-                if (!ok) {
-                    this.errorMessage = rc.getMessage();
-                }
-            }
         } catch (AnalysisExecutionException e) {
             ok = traceError(e.getMessage());
+        } finally {
+            ReturnCode rc = closeConnection(analysis, connection);
+            ok = rc.isOk();
         }
-        // finally {
-        // ConnectionUtils.closeConnection(connection);
-        // }
         return ok;
     }
 

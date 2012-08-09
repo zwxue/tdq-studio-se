@@ -76,8 +76,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     private DbmsLanguage dbmsLanguage;
 
-    // protected Analysis cachedAnalysis;
-
     @Override
     protected String createSqlStatement(Analysis analysis) {
         this.cachedAnalysis = analysis;
@@ -93,7 +91,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
                 if (!createSqlQuery(stringDataFilter, indicator)) {
-                    log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName());//$NON-NLS-1$
+                    log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName()); //$NON-NLS-1$
                     return null;
                 }
             }
@@ -303,17 +301,10 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;
 
-        // reset the connection pool before run this analysis
-        resetConnectionPool(analysis);
-
-        // TypedReturnCode<Connection> trc = this.getConnection(analysis);
-        // if (!trc.isOk()) {
-        // return traceError(Messages.getString(
-        //                    "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
-        // }
-
         TypedReturnCode<java.sql.Connection> trc = null;
         if (POOLED_CONNECTION) {
+            // reset the connection pool before run this analysis
+            resetConnectionPool(analysis);
             trc = getPooledConnection(analysis);
         } else {
             trc = getConnection(analysis);
@@ -358,16 +349,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
             }
 
-            if (POOLED_CONNECTION) {
-                releasePooledConnection(analysis, connection, true);
-            } else {
-                ReturnCode rc = ConnectionUtils.closeConnection(connection);
-                ok = rc.isOk();
-                if (!ok) {
-                    this.errorMessage = rc.getMessage();
-                }
-            }
-
             // ADD xqliu 2012-04-23 TDQ-5057
             // set the aide count for the DQRule indicator
             setDQRuleAideCount(elementToIndicator);
@@ -376,10 +357,17 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
+        } finally {
+            if (POOLED_CONNECTION) {
+                resetConnectionPool(analysis);
+            } else {
+                ReturnCode rc = ConnectionUtils.closeConnection(connection);
+                ok = rc.isOk();
+                if (!ok) {
+                    this.errorMessage = rc.getMessage();
+                }
+            }
         }
-        // finally {
-        // ConnectionUtils.closeConnection(connection);
-        // }
         return ok;
     }
 
