@@ -44,6 +44,7 @@ import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
@@ -98,7 +99,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     protected MdmWebserviceConnection mdmWebserviceConn;
 
-    private boolean isBablyFormFlatFile = false;
+    private boolean isBadlyFormFlatFile = false;
 
     public ColumnSetIndicatorEvaluator(Analysis analysis) {
         this.analysis = analysis;
@@ -222,25 +223,48 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     private ReturnCode evaluateByDelimitedFile(String sqlStatement, ReturnCode returnCode) {
         DelimitedFileConnection con = (DelimitedFileConnection) analysis.getContext().getConnection();
         String path = con.getFilePath();
-        IPath iPath = new Path(path);
-        File file = iPath.toFile();
+        // MOD msjian TDQ-5851: we should consider the context mode
         String separator = con.getFieldSeparatorValue();
         String encoding = con.getEncoding();
+        boolean isContextMode = con.isContextMode();
+        if (isContextMode) {
+            path = ConnectionUtils.getOriginalConntextValue(con, path);
+            separator = ConnectionUtils.getOriginalConntextValue(con, separator);
+            encoding = ConnectionUtils.getOriginalConntextValue(con, encoding);
+        }
+        IPath iPath = new Path(path);
+        File file = iPath.toFile();
         if (!file.exists()) {
-            returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false); //$NON-NLS-1$ 
+            returnCode.setReturnCode(Messages.getString("ColumnSetIndicatorEvaluator.FileNotFound", file.getName()), false); //$NON-NLS-1$ 
             return returnCode;
         }
-        // CsvReader csvReader = null;
+
         try {
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
             indicToRowMap.clear();
             String zero = "0"; //$NON-NLS-1$
-            int headValue = Integer.parseInt(con.getHeaderValue() == null ? zero : con.getHeaderValue());
-            int footValue = Integer.parseInt(con.getFooterValue() == null ? zero : con.getFooterValue());
-            String limitValue = con.getLimitValue();
-            if (limitValue == null || zero.equals(limitValue)) {
-                limitValue = "-1"; //$NON-NLS-1$
+            int headValue = 0;
+            int footValue = 0;
+            int limitValue = 0;
+            String heading = con.getHeaderValue();
+            String footing = con.getFooterValue();
+            String limiting = con.getLimitValue();
+            if (isContextMode) {
+                heading = ConnectionUtils.getOriginalConntextValue(con, heading);
+                footing = ConnectionUtils.getOriginalConntextValue(con, footing);
+                limiting = ConnectionUtils.getOriginalConntextValue(con, limiting);
+                headValue = Integer.parseInt(heading == PluginConstant.EMPTY_STRING ? zero : heading);
+                footValue = Integer.parseInt(footing == PluginConstant.EMPTY_STRING ? zero : footing);
+                limitValue = Integer
+                        .parseInt(PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting) ? "-1" : limiting); //$NON-NLS-1$
+            } else {
+                headValue = Integer.parseInt(heading == null || PluginConstant.EMPTY_STRING.equals(heading) ? zero : heading);
+                footValue = Integer.parseInt(footing == null || PluginConstant.EMPTY_STRING.equals(footing) ? zero : footing);
+                if (limiting == null || PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)) {
+                    limiting = "-1"; //$NON-NLS-1$
+                }
+                limitValue = Integer.parseInt(limiting);
             }
             if (Escape.CSV.equals(con.getEscapeType())) {
                 // use CsvReader to parse.
@@ -248,13 +272,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
                 String rowSeparator = con.getRowSeparatorValue();
+                if (isContextMode) {
+                    rowSeparator = ConnectionUtils.getOriginalConntextValue(con, rowSeparator);
+                }
                 boolean isSpliteRecord = con.isSplitRecord();
                 boolean isSkipeEmptyRow = con.isRemoveEmptyRow();
                 String languageName = LanguageManager.getCurrentLanguage().getName();
                 FileInputDelimited fileInputDelimited = new FileInputDelimited(ParameterUtil.trimParameter(path),
                         ParameterUtil.trimParameter(encoding), ParameterUtil.trimParameter(StringUtils.loadConvert(separator,
                                 languageName)), ParameterUtil.trimParameter(StringUtils.loadConvert(rowSeparator, languageName)),
-                        isSkipeEmptyRow, headValue, footValue, Integer.parseInt(limitValue), -1, isSpliteRecord);
+                        isSkipeEmptyRow, headValue, footValue, limitValue, -1, isSpliteRecord);
                 long currentRow = headValue;
                 int columsCount = 0;
                 while (fileInputDelimited.nextRecord()) {
@@ -269,8 +296,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                     for (int i = 0; i < columsCount; i++) {
                         rowValues[i] = fileInputDelimited.get(i);
                     }
-                    orgnizeObjectsToHandel(con.getFilePath(), rowValues, currentRow, analysisElementList, rowSeparator);
+                    orgnizeObjectsToHandel(path, rowValues, currentRow, analysisElementList, rowSeparator);
                 }
+                // TDQ-5851~
                 fileInputDelimited.close();
             }
         } catch (Exception e) {
@@ -346,8 +374,8 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             if (position == null || position >= rowValues.length) {
                 log.warn(Messages.getString("DelimitedFileIndicatorEvaluator.incorrectData", //$NON-NLS-1$
                         mColumn.getLabel(), currentRow, fileName));
-                if (!isBablyFormFlatFile) {
-                    isBablyFormFlatFile = true;
+                if (!isBadlyFormFlatFile) {
+                    isBadlyFormFlatFile = true;
                     Display.getDefault().asyncExec(new Runnable() {
 
                         public void run() {
