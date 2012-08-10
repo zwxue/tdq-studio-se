@@ -560,34 +560,36 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
         int recordIncrement = 0;
-        for (Indicator indicator : indicators) {
-            if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
-                indicator.handle(objectLs);
-                // feature 19192,store all rows value for RowCountIndicator
-                if (indicator instanceof SimpleStatIndicator) {
-                    SimpleStatIndicator simpIndi = (SimpleStatIndicator) indicator;
-                    for (Indicator leafIndicator : simpIndi.getLeafIndicators()) {
-                        if (!(leafIndicator instanceof RowCountIndicator) || !analysis.getParameters().isStoreData()) {
-                            continue;
-                        }
-                        List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
+        if (indicators != null) {
+            for (Indicator indicator : indicators) {
+                if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
+                    indicator.handle(objectLs);
+                    // feature 19192,store all rows value for RowCountIndicator
+                    if (indicator instanceof SimpleStatIndicator) {
+                        SimpleStatIndicator simpIndi = (SimpleStatIndicator) indicator;
+                        for (Indicator leafIndicator : simpIndi.getLeafIndicators()) {
+                            if (!(leafIndicator instanceof RowCountIndicator) || !analysis.getParameters().isStoreData()) {
+                                continue;
+                            }
+                            List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
 
-                        recordIncrement = valueObjectList.size();
-                        Object[] valueObject = new Object[columnList.size()];
-                        if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                            for (int j = 0; j < columnList.size(); j++) {
-                                Object newobject = PluginConstant.EMPTY_STRING;
-                                // if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
-                                if (j < rowValues.length) {
-                                    newobject = rowValues[j];
+                            recordIncrement = valueObjectList.size();
+                            Object[] valueObject = new Object[columnList.size()];
+                            if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                                for (int j = 0; j < columnList.size(); j++) {
+                                    Object newobject = PluginConstant.EMPTY_STRING;
+                                    // if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
+                                    if (j < rowValues.length) {
+                                        newobject = rowValues[j];
+                                    }
+                                    if (recordIncrement < valueObjectList.size()) {
+                                        valueObjectList.get(recordIncrement)[j] = newobject;
+                                    } else {
+                                        valueObject[j] = newobject;
+                                        valueObjectList.add(valueObject);
+                                    }
+                                    // }
                                 }
-                                if (recordIncrement < valueObjectList.size()) {
-                                    valueObjectList.get(recordIncrement)[j] = newobject;
-                                } else {
-                                    valueObject[j] = newobject;
-                                    valueObjectList.add(valueObject);
-                                }
-                                // }
                             }
                         }
                     }
