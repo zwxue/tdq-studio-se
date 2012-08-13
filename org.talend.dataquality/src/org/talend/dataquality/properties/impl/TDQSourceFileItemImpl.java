@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.talend.core.model.properties.ByteArray;
-import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.helper.ByteArrayResource;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.utils.URIHelper;
@@ -76,7 +75,7 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
 
     @Override
     public EObject eResolveProxy(InternalEObject proxy) {
-        if (!proxy.eClass().equals(PropertiesPackage.eINSTANCE.getByteArray())) {
+        if (!proxy.eClass().equals(org.talend.core.model.properties.PropertiesPackage.eINSTANCE.getByteArray())) {
             return super.eResolveProxy(proxy);
         }
 
