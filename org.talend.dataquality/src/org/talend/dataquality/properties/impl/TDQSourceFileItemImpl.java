@@ -6,7 +6,6 @@
 package org.talend.dataquality.properties.impl;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -61,7 +60,7 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
-     * @generated
+     * @generated NOT
      */
     @Override
     public ByteArray getContent() {
@@ -75,6 +74,7 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
         return content;
     }
 
+    @Override
     public EObject eResolveProxy(InternalEObject proxy) {
         if (!proxy.eClass().equals(PropertiesPackage.eINSTANCE.getByteArray())) {
             return super.eResolveProxy(proxy);
@@ -93,8 +93,8 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
         URI normalizedURI = theURIConverter.normalize(resourceUri);
 
         if ("platform".equals(proxyUri.scheme()) && proxyUri.segmentCount() > 1 && "resource".equals(proxyUri.segment(0))) { //$NON-NLS-1$ //$NON-NLS-2$
-            for (Iterator i = resourceSet.getResources().iterator(); i.hasNext();) {
-                Resource resource = (Resource) i.next();
+            for (Object element : resourceSet.getResources()) {
+                Resource resource = (Resource) element;
                 if (theURIConverter.normalize(resource.getURI()).equals(normalizedURI)) {
                     byteArrayResource = (ByteArrayResource) resource;
                 }
@@ -112,8 +112,8 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
                 e.printStackTrace();
             }
         } else {
-            for (Iterator i = resourceSet.getResources().iterator(); i.hasNext();) {
-                Resource resource = (Resource) i.next();
+            for (Object element : resourceSet.getResources()) {
+                Resource resource = (Resource) element;
                 if (theURIConverter.normalize(resource.getURI()).equals(normalizedURI)) {
                     byteArrayResource = (ByteArrayResource) resource;
                 }
@@ -132,14 +132,14 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
 
     private void loadContentFromFile() {
         if (content.eResource() != null) {
-        IFile file = URIHelper.getFile(content.eResource().getURI());
-        try {
-            content.setInnerContentFromFile(file);
-        } catch (IOException e) {
-            // ignore this exception because after moving the resource , the path has been changed.
-        } catch (CoreException e) {
+            IFile file = URIHelper.getFile(content.eResource().getURI());
+            try {
+                content.setInnerContentFromFile(file);
+            } catch (IOException e) {
+                // ignore this exception because after moving the resource , the path has been changed.
+            } catch (CoreException e) {
 
-        }
+            }
         }
     }
 
