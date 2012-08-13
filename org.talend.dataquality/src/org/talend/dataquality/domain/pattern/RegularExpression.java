@@ -6,6 +6,7 @@
  */
 package org.talend.dataquality.domain.pattern;
 
+import org.talend.cwm.relational.TdExpression;
 import orgomg.cwm.objectmodel.core.Expression;
 
 
@@ -37,12 +38,12 @@ public interface RegularExpression extends PatternComponent {
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Expression</em>' containment reference.
-     * @see #setExpression(Expression)
+     * @see #setExpression(TdExpression)
      * @see org.talend.dataquality.domain.pattern.PatternPackage#getRegularExpression_Expression()
      * @model containment="true"
      * @generated
      */
-    Expression getExpression();
+    TdExpression getExpression();
 
     /**
      * Sets the value of the '{@link org.talend.dataquality.domain.pattern.RegularExpression#getExpression <em>Expression</em>}' containment reference.
@@ -52,7 +53,7 @@ public interface RegularExpression extends PatternComponent {
      * @see #getExpression()
      * @generated
      */
-    void setExpression(Expression value);
+    void setExpression(TdExpression value);
 
     /**
      * Returns the value of the '<em><b>Expression Type</b></em>' attribute.

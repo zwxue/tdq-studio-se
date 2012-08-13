@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.cwm.relational.RelationalPackage;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.category.CategoryPackage;
@@ -374,6 +375,7 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
 
         // Obtain other dependent packages
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+        RelationalPackage theRelationalPackage = (RelationalPackage)EPackage.Registry.INSTANCE.getEPackage(RelationalPackage.eNS_URI);
 
         // Create type parameters
 
@@ -392,7 +394,7 @@ public class PatternPackageImpl extends EPackageImpl implements PatternPackage {
         initEClass(patternComponentEClass, PatternComponent.class, "PatternComponent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(regularExpressionEClass, RegularExpression.class, "RegularExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getRegularExpression_Expression(), theCorePackage.getExpression(), null, "expression", null, 0, 1, RegularExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getRegularExpression_Expression(), theRelationalPackage.getTdExpression(), null, "expression", null, 0, 1, RegularExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getRegularExpression_ExpressionType(), ecorePackage.getEString(), "expressionType", null, 0, 1, RegularExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(attributeReferenceEClass, AttributeReference.class, "AttributeReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

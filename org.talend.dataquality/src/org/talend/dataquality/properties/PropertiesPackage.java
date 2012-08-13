@@ -97,6 +97,24 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_ANALYSIS_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
 
     /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_ANALYSIS_ITEM__REFERENCE_RESOURCES = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_ANALYSIS_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -159,6 +177,24 @@ public interface PropertiesPackage extends EPackage {
      * @ordered
      */
     int TDQ_REPORT_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
+
+    /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_REPORT_ITEM__REFERENCE_RESOURCES = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_REPORT_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
@@ -225,6 +261,24 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_INDICATOR_DEFINITION_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
 
     /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_INDICATOR_DEFINITION_ITEM__REFERENCE_RESOURCES = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_INDICATOR_DEFINITION_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -287,6 +341,24 @@ public interface PropertiesPackage extends EPackage {
      * @ordered
      */
     int TDQ_BUSINESS_RULE_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
+
+    /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_BUSINESS_RULE_ITEM__REFERENCE_RESOURCES = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_BUSINESS_RULE_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
@@ -353,6 +425,24 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_PATTERN_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
 
     /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_PATTERN_ITEM__REFERENCE_RESOURCES = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_PATTERN_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -415,6 +505,24 @@ public interface PropertiesPackage extends EPackage {
      * @ordered
      */
     int TDQ_FILE_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
+
+    /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_FILE_ITEM__REFERENCE_RESOURCES = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_FILE_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
@@ -499,6 +607,24 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_JRXML_ITEM__PARENT = TDQ_FILE_ITEM__PARENT;
 
     /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__REFERENCE_RESOURCES = TDQ_FILE_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__FILE_EXTENSION = TDQ_FILE_ITEM__FILE_EXTENSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -579,6 +705,24 @@ public interface PropertiesPackage extends EPackage {
      * @ordered
      */
     int TDQ_SOURCE_FILE_ITEM__PARENT = TDQ_FILE_ITEM__PARENT;
+
+    /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__REFERENCE_RESOURCES = TDQ_FILE_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__FILE_EXTENSION = TDQ_FILE_ITEM__FILE_EXTENSION;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.

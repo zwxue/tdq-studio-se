@@ -380,6 +380,7 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/useNulls"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/charactersToReplace"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/replacementCharacters"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/TextParameters/countryCode"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//indicators/LowerQuartileIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/UpperQuartileIndicator"/>
@@ -430,6 +431,51 @@
       <genClasses ecoreClass="dataquality.ecore#//indicators/QuarterLowFrequencyIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/YearLowFrequencyIndicator"/>
       <genClasses ecoreClass="dataquality.ecore#//indicators/BinLowFrequencyIndicator"/>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/ValidPhoneCountIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/ValidPhoneCountIndicator/validPhoneNumCount"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/ValidPhoneCountIndicator/getValidPhoneValues"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/PossiblePhoneCountIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/PossiblePhoneCountIndicator/possiblePhoneCount"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/PossiblePhoneCountIndicator/getPossiblePhoneValues"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/ValidRegCodeCountIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/ValidRegCodeCountIndicator/validRegCount"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/ValidRegCodeCountIndicator/getValidRegValues"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/InvalidRegCodeCountIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/InvalidRegCodeCountIndicator/invalidRegCount"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/InvalidRegCodeCountIndicator/getInvalidRegValues"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/WellFormNationalPhoneCountIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/WellFormNationalPhoneCountIndicator/wellFormNatiPhoneCount"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/WellFormNationalPhoneCountIndicator/getWellFormNatiPhoneValues"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/WellFormIntePhoneCountIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/WellFormIntePhoneCountIndicator/wellFormIntePhoneCount"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/WellFormIntePhoneCountIndicator/getWellFormIntePhoneValues"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/WellFormE164PhoneCountIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/WellFormE164PhoneCountIndicator/wellFormE164PhoneCount"/>
+        <genOperations ecoreOperation="dataquality.ecore#//indicators/WellFormE164PhoneCountIndicator/getWellFormE164PhoneValues"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator/wellFormNationalPhoneCountIndicator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator/wellFormIntePhoneCountIndicator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator/wellFormE164PhoneCountIndicator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator/invalidRegCodeCountIndicator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator/possiblePhoneCountIndicator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator/validRegCodeCountIndicator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator/validPhoneCountIndicator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//indicators/PhoneNumbStatisticsIndicator/formatFreqPieIndicator"/>
+      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//indicators/FormatFreqPieIndicator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/FormatFreqPieIndicator/wellFormE164Count"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/FormatFreqPieIndicator/wellFormInteCount"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/FormatFreqPieIndicator/wellFormNatiCount"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/FormatFreqPieIndicator/invalidFormCount"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//indicators/FormatFreqPieIndicator/currentKey"/>
+      </genClasses>
       <nestedGenPackages prefix="Schema" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/schema">
         <genClasses ecoreClass="dataquality.ecore#//indicators/schema/SchemaIndicator">
@@ -535,7 +581,9 @@
           <genOperations ecoreOperation="dataquality.ecore#//indicators/sql/JavaUserDefIndicator/setExecuteEngine">
             <genParameters ecoreParameter="dataquality.ecore#//indicators/sql/JavaUserDefIndicator/setExecuteEngine/executionLanguage"/>
           </genOperations>
+          <genOperations ecoreOperation="dataquality.ecore#//indicators/sql/JavaUserDefIndicator/getJavaUserDefObject"/>
         </genClasses>
+        <genClasses ecoreClass="dataquality.ecore#//indicators/sql/WhereRuleAideIndicator"/>
       </nestedGenPackages>
       <nestedGenPackages prefix="Columnset" basePackage="org.talend.dataquality.indicators"
           disposableProviderFactory="true" ecorePackage="dataquality.ecore#//indicators/columnset">

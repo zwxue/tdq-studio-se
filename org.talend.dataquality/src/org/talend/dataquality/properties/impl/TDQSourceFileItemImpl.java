@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
+import org.talend.dataquality.properties.PropertiesPackage;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -27,14 +28,13 @@ import org.talend.dataquality.properties.TDQSourceFileItem;
  * end-user-doc -->
  * <p>
  * </p>
- * 
+ *
  * @generated
  */
 public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected TDQSourceFileItemImpl() {
@@ -43,12 +43,11 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     protected EClass eStaticClass() {
-        return org.talend.dataquality.properties.PropertiesPackage.Literals.TDQ_SOURCE_FILE_ITEM;
+        return PropertiesPackage.Literals.TDQ_SOURCE_FILE_ITEM;
     }
 
     @Override

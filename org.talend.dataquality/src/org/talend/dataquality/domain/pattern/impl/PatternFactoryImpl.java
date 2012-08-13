@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.talend.dataquality.domain.pattern.*;
 import org.talend.dataquality.domain.pattern.AttributeReference;
 import org.talend.dataquality.domain.pattern.ComponentReference;
 import org.talend.dataquality.domain.pattern.ExpressionType;

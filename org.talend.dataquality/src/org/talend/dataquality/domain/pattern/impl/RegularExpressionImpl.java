@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -38,7 +39,7 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
      * @generated
      * @ordered
      */
-    protected Expression expression;
+    protected TdExpression expression;
 
     /**
      * The default value of the '{@link #getExpressionType() <em>Expression Type</em>}' attribute.
@@ -83,7 +84,7 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
      * <!-- end-user-doc -->
      * @generated
      */
-    public Expression getExpression() {
+    public TdExpression getExpression() {
         return expression;
     }
 
@@ -92,8 +93,8 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
      * <!-- end-user-doc -->
      * @generated
      */
-    public NotificationChain basicSetExpression(Expression newExpression, NotificationChain msgs) {
-        Expression oldExpression = expression;
+    public NotificationChain basicSetExpression(TdExpression newExpression, NotificationChain msgs) {
+        TdExpression oldExpression = expression;
         expression = newExpression;
         if (eNotificationRequired()) {
             ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PatternPackage.REGULAR_EXPRESSION__EXPRESSION, oldExpression, newExpression);
@@ -107,7 +108,7 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
      * <!-- end-user-doc -->
      * @generated
      */
-    public void setExpression(Expression newExpression) {
+    public void setExpression(TdExpression newExpression) {
         if (newExpression != expression) {
             NotificationChain msgs = null;
             if (expression != null)
@@ -181,7 +182,7 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
             case PatternPackage.REGULAR_EXPRESSION__EXPRESSION:
-                setExpression((Expression)newValue);
+                setExpression((TdExpression)newValue);
                 return;
             case PatternPackage.REGULAR_EXPRESSION__EXPRESSION_TYPE:
                 setExpressionType((String)newValue);
@@ -199,7 +200,7 @@ public class RegularExpressionImpl extends PatternComponentImpl implements Regul
     public void eUnset(int featureID) {
         switch (featureID) {
             case PatternPackage.REGULAR_EXPRESSION__EXPRESSION:
-                setExpression((Expression)null);
+                setExpression((TdExpression)null);
                 return;
             case PatternPackage.REGULAR_EXPRESSION__EXPRESSION_TYPE:
                 setExpressionType(EXPRESSION_TYPE_EDEFAULT);
