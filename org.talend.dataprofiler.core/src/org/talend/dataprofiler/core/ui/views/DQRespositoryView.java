@@ -442,14 +442,16 @@ public class DQRespositoryView extends CommonNavigator {
                             superDoubleClick = false;
                             ReportFileRepNode reportFileNode = (ReportFileRepNode) obj;
                             IPath location = Path.fromOSString(reportFileNode.getResource().getRawLocation().toOSString());
-                            // TDQ-5458 sizhaoliu 2012-07-17 add "." before the full name to make sure it is ignored by SVN.
-                            IFile latestRepIFile = ResourceManager.getRootProject().getFile("." + location.lastSegment());
+                            // TDQ-5458 sizhaoliu 2012-07-17 add "." before the full name to make sure it is ignored by
+                            // SVN.
+                            IFile latestRepIFile = ResourceManager.getRootProject().getFile("." + location.lastSegment()); //$NON-NLS-1$
                             try {
-                            	// TDQ-5458 sizhaoliu 2012-07-17 the link creation should be after report generation, but not at the openning.
+                                // TDQ-5458 sizhaoliu 2012-07-17 the link creation should be after report generation,
+                                // but not at the openning.
                                 // latestRepIFile.createLink(location, IResource.REPLACE, null);
                                 IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                                 page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-                            } catch (Throwable e1) {
+                            } catch (PartInitException e1) {
                                 log.error(e1, e1);
                             }
                         } else if (obj instanceof DFConnectionRepNode) { // MOD gdbu 2011-4-1 bug 20051
@@ -468,7 +470,6 @@ public class DQRespositoryView extends CommonNavigator {
                                 superDoubleClick = false;
                             }
                         }
-
                     }
                 }
                 if (superDoubleClick) {
@@ -841,7 +842,10 @@ public class DQRespositoryView extends CommonNavigator {
                     };
                     try {
                         progressDialog.executeProcess();
-                    } catch (Exception eProgress) {
+                    } catch (InvocationTargetException e) {
+                        // do nothing ???
+                    } catch (InterruptedException e) {
+                        // do nothing ???
                     }
                 }
             });

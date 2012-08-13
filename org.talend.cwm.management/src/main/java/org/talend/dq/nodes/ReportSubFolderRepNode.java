@@ -170,31 +170,6 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
         return this.getReportSubFolderChildren();
     }
 
-    // /**
-    // * load report file form default folder of the Report.
-    // */
-    // private void loadChildrenLocalFolder() {
-    // IFile findCorrespondingFile = RepResourceFileHelper.getInstance().findCorrespondingFile(this.getReport());
-    // IFolder currentRportFolder = ReportHelper.getOutputFolder(findCorrespondingFile);
-    // if (!currentRportFolder.exists()) {
-    // return;
-    // }
-    //
-    // try {
-    // IResource[] members = currentRportFolder.members();
-    // List<IResource> children = new ArrayList<IResource>();
-    // for (IResource member : members) {
-    // if (member.getType() == IResource.FOLDER || member.getName().equals(ReportUtils.REPORT_LIST)) {
-    // continue;
-    // }
-    // children.add(member);
-    // }
-    // buildChildrenReportFile(children.toArray(new IResource[children.size()]));
-    // } catch (CoreException e) {
-    // log.error(e, e);
-    // }
-    // }
-
     public String getCount() {
         int count = getReportSubFolderChildren().size();
         if (count == 0) {

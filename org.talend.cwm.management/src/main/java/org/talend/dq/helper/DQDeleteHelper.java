@@ -16,9 +16,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -37,14 +34,10 @@ public final class DQDeleteHelper {
 
     private static Logger log = Logger.getLogger(DQDeleteHelper.class);
 
-    private static DQDeleteHelper instance;
-
     private DQDeleteHelper() {
-
     }
 
     /**
-     * 
      * physical delete related.
      * 
      * @param item
@@ -63,36 +56,12 @@ public final class DQDeleteHelper {
             return rc;
         }
         if (item instanceof TDQReportItem) {
-            return deleteRepOutputFolder(itemFile);
+            return ReportUtils.deleteRepOutputFolder(itemFile);
         }
         return rc;
     }
 
     /**
-     * 
-     * delete the related output folder of report.
-     * 
-     * @param reportFile
-     */
-    private static ReturnCode deleteRepOutputFolder(IFile reportFile) {
-        ReturnCode rc = new ReturnCode(Boolean.TRUE);
-        IFolder currentRportFolder = ReportUtils.getOutputFolder(reportFile);
-        if (currentRportFolder != null && currentRportFolder.exists()) {
-            try {
-                currentRportFolder.delete(true, new NullProgressMonitor());
-            } catch (CoreException e) {
-                log.error(e, e);
-                rc.setOk(Boolean.FALSE);
-                rc.setMessage(e.getMessage());
-            }
-        } else {
-            rc.setOk(Boolean.FALSE);
-        }
-        return rc;
-    }
-
-    /**
-     * 
      * if these items in recycle bin are depended by others which is not in recycle bin,show a warning and return.
      * 
      * @param allNodes
@@ -117,5 +86,4 @@ public final class DQDeleteHelper {
         }
         return true;
     }
-
 }
