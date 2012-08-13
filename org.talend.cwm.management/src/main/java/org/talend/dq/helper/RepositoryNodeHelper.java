@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -37,6 +38,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -48,6 +50,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ISubRepositoryObject;
@@ -2587,6 +2590,37 @@ public final class RepositoryNodeHelper {
         return resetColumns;
     }
 
+    /**
+     * 
+     * This method is used for filtering packages by patterns.
+     * 
+     * @param dataPackage
+     * @param packageFilter
+     * @return
+     */
+    public static List<orgomg.cwm.objectmodel.core.Package> filterPackages(
+            EList<orgomg.cwm.objectmodel.core.Package> dataPackages, String packageFilter) {
+        int size = 0;
+        String[] patterns = cleanPatterns(packageFilter.split(",")); //$NON-NLS-1$
+        List<orgomg.cwm.objectmodel.core.Package> filterMatchingPackages = new ArrayList<orgomg.cwm.objectmodel.core.Package>();
+        for (orgomg.cwm.objectmodel.core.Package dbPackage : dataPackages) {
+            for (String pattern : patterns) {
+                String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
+                String name = dbPackage.getName().toLowerCase();
+                boolean matches = java.util.regex.Pattern.compile(regex).matcher(name).find();// name.matches(regex);
+                if (matches) {
+                    filterMatchingPackages.add(dbPackage);
+                    size++;
+                    if (size > 2000) {
+                        return filterMatchingPackages;
+                    }
+                    break;
+                }
+            }
+        }
+        return filterMatchingPackages;
+    }
+
     private static String[] cleanPatterns(String[] split) {
         ArrayList<String> ret = new ArrayList<String>();
         for (String s : split) {
@@ -2948,10 +2982,30 @@ public final class RepositoryNodeHelper {
     }
 
     /**
+     * get the IFolder according to the RepositoryNode, if the RepositoryNode is not a folder, return null.
+     * 
+     * @param node
+     * @return an IFolder or null
+     */
+    public static IFolder getIFolder(IRepositoryNode node) {
+        IFolder folder = null;
+        if (node != null) {
+            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            Project currentProject = ProjectManager.getInstance().getCurrentProject();
+            IRepositoryViewObject object = node.getObject();
+            if (object instanceof Folder) {
+                IPath path = getPath(node);
+                folder = root.getFolder(new Path(currentProject.getTechnicalLabel() + IPath.SEPARATOR + path.toString()));
+            }
+        }
+        return folder;
+    }
+
+    /**
      * get the IFile according to the RepositoryNode.
      * 
      * @param node
-     * @return
+     * @return an IFile or null
      */
     public static IFile getIFile(IRepositoryNode node) {
         IFile file = null;

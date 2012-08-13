@@ -41,9 +41,11 @@ import org.talend.dataprofiler.core.service.TDQResourceChangeHandler;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
@@ -383,20 +385,42 @@ public class DQDeleteAction extends DeleteAction {
                 item = property.getItem();
             }
         }
+
+        // is TDQReportItem or not
+        boolean isReport = item != null && item instanceof TDQReportItem;
+        List<IFile> repDocLinkFiles = new ArrayList<IFile>();
+        if (isReport) {
+            repDocLinkFiles = ReportUtils.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(currentNode));
+        }
+
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
         super.setAvoidUnloadResources(true);
         super.run();
         // because reuse tos codes.remove current node from its parent(simple folder) for phisical delete or logical
         // delete dependency.
+        RepositoryNode parent = null;
         if (currentNode != null) {
-            RepositoryNode parent = currentNode.getParent();
+            parent = currentNode.getParent();
             if (parent != null
                     && (parent.getType() == ENodeType.SIMPLE_FOLDER || parent.getLabel().equalsIgnoreCase(
                             ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", PluginConstant.SPACE_STRING)))) {//$NON-NLS-1$
                 parent.getChildren(true).remove(currentNode);
             }
-            // delete related elements after physical delete itself.
+            // delete related output folder after physical delete a report.
             DQDeleteHelper.deleteRelations(item);
+            // delete the link files which links to the Report Generated Doc File
+            if (isReport && !repDocLinkFiles.isEmpty()) {
+                ReportUtils.removeRepDocLinkFiles(repDocLinkFiles);
+            }
+        }
+
+        // refresh parent node
+        if (parent != null) {
+            if (parent instanceof AnalysisSubFolderRepNode || parent instanceof ReportSubFolderRepNode) {
+                CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.findNearestSystemFolderNode(parent));
+            } else {
+                CorePlugin.getDefault().refreshDQView(parent);
+            }
         }
     }
 

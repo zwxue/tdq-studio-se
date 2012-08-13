@@ -16,7 +16,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -59,8 +58,6 @@ import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
-//import org.talend.dataquality.analysis.AnalysisParameters;
-//import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
@@ -126,7 +123,6 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         workUnit.setAvoidUnloadResources(true);
         ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
         // duRun();
-
     }
 
     protected void duRun() {
@@ -145,11 +141,12 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     // TDQ-5458 sizhaoliu 2012-07-17 add "." before the full name to make sure it is ignored by SVN.
                     IFile latestRepIFile = ResourceManager.getRootProject().getFile("." + location.lastSegment());
                     try {
-                    	// TDQ-5458 sizhaoliu 2012-07-17 the link creation should be after report generation, but not at the openning.
-                    	// latestRepIFile.createLink(location, IResource.REPLACE, null);
-                    	IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                        // TDQ-5458 sizhaoliu 2012-07-17 the link creation should be after report generation, but not at
+                        // the openning.
+                        // latestRepIFile.createLink(location, IResource.REPLACE, null);
+                        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                         page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-                    } catch (Throwable e) {
+                    } catch (PartInitException e) {
                         log.error(e, e);
                     }
                 }
@@ -174,7 +171,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
      * @return
      */
     public IEditorInput computeEditorInput(boolean isOpenItemEditorAction) {
-    	IEditorInput result = null;
+        IEditorInput result = null;
         if (repViewObj != null) {
             // Connection editor
             String key = repViewObj.getRepositoryObjectType().getKey();
@@ -186,8 +183,8 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
                 result = new AnalysisItemEditorInput(item);
                 Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
-//                AnalysisParameters parameters = analysis.getParameters();
-//                AnalysisType analysisType = parameters.getAnalysisType();
+                // AnalysisParameters parameters = analysis.getParameters();
+                // AnalysisType analysisType = parameters.getAnalysisType();
                 // boolean equals = analysisType.equals(AnalysisType.CONNECTION);
                 // if (equals) {
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
@@ -247,39 +244,19 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             }
             // ADD msjian TDQ-4209 2012-2-7 : return the editorInput of *.jrxml and *.sql files
             if (!isOpenItemEditorAction) {
-            	if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.getKey().equals(key)
-            			|| ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
-            		
-            		// if there don't found the correct ItemEditorInput, try to open it as a File
-            		IPath append = WorkbenchUtils.getFilePath((RepositoryNode) repViewObj.getRepositoryNode());
-            		result = new FileEditorInput(ResourceManager.getRootProject().getFile(append));
-            		editorID = FileEditorInput.class.getName();
-            	}
+                if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.getKey().equals(key)
+                        || ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
+
+                    // if there don't found the correct ItemEditorInput, try to open it as a File
+                    IPath append = WorkbenchUtils.getFilePath((RepositoryNode) repViewObj.getRepositoryNode());
+                    result = new FileEditorInput(ResourceManager.getRootProject().getFile(append));
+                    editorID = FileEditorInput.class.getName();
+                }
             }
             // TDQ-4209~
         }
         return result;
     }
-
-//    /**
-//     * DOC klliu Comment method "retiveConnections".
-//     * 
-//     * @param modelElement
-//     * @return
-//     */
-//    private Connection retiveConnections(ModelElement modelElement) {
-//        Connection conn = SwitchHelpers.CONNECTION_SWITCH.doSwitch(modelElement);
-//        if (conn == null) {
-//            Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(modelElement);
-//            Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(modelElement);
-//            if (catalog != null) {
-//                conn = ConnectionHelper.getConnection(catalog);
-//            } else if (schema != null) {
-//                conn = ConnectionHelper.getConnection(schema);
-//            }
-//        }
-//        return conn;
-//    }
 
     /*
      * (non-Jsdoc)

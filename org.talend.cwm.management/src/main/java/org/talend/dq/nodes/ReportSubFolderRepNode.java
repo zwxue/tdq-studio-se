@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -27,7 +25,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
-import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -136,7 +133,8 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
             }
             // ~TDQ-3301
 
-            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this,
+                    ENodeType.TDQ_REPOSITORY_ELEMENT);
             node.setReport(this.getReport());
             node.setAnalysis(analysis);
             node.setId(this.getReport().getName() + analysis.getName());
@@ -171,31 +169,6 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
         }
         return this.getReportSubFolderChildren();
     }
-
-    // /**
-    // * load report file form default folder of the Report.
-    // */
-    // private void loadChildrenLocalFolder() {
-    // IFile findCorrespondingFile = RepResourceFileHelper.getInstance().findCorrespondingFile(this.getReport());
-    // IFolder currentRportFolder = ReportHelper.getOutputFolder(findCorrespondingFile);
-    // if (!currentRportFolder.exists()) {
-    // return;
-    // }
-    //
-    // try {
-    // IResource[] members = currentRportFolder.members();
-    // List<IResource> children = new ArrayList<IResource>();
-    // for (IResource member : members) {
-    // if (member.getType() == IResource.FOLDER || member.getName().equals(ReportUtils.REPORT_LIST)) {
-    // continue;
-    // }
-    // children.add(member);
-    // }
-    // buildChildrenReportFile(children.toArray(new IResource[children.size()]));
-    // } catch (CoreException e) {
-    // log.error(e, e);
-    // }
-    // }
 
     public String getCount() {
         int count = getReportSubFolderChildren().size();

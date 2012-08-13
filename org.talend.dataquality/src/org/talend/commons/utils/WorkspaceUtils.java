@@ -16,6 +16,7 @@ import java.io.File;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -25,13 +26,18 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public final class WorkspaceUtils {
 
     private WorkspaceUtils() {
 
+    }
+
+    public static File ifolderToFile(IFolder ifolder) {
+        IPath location = ifolder.getLocation() == null ? ResourceManager.getRootProject().getLocation()
+                .append(ifolder.getFullPath()) : ifolder.getLocation();
+        return location.toFile();
     }
 
     public static File ifileToFile(IFile ifile) {
@@ -48,6 +54,36 @@ public final class WorkspaceUtils {
             ifile = workspace.getRoot().getFile(location);
         }
         return ifile;
+    }
+
+    public static IFolder fileToIFolder(File file) {
+        IFolder folder = null;
+        String filePath = file.getAbsolutePath();
+        String rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocationURI().getPath();
+        if (filePath.startsWith(rootPath)) {
+            folder = ResourcesPlugin.getWorkspace().getRoot()
+                    .getFolder(new Path(filePath.substring(rootPath.length(), filePath.length())));
+        }
+        return folder;
+    }
+
+    /**
+     * 
+     * Comment method "toFile".
+     * 
+     * @param object
+     * @return turn URI to File
+     */
+    public static String toFile(Object object) {
+        if (object instanceof URI) {
+            URI uri = ((URI) object);
+            if (uri.isFile()) {
+                return uri.toFileString();
+            } else if (uri.isPlatform()) {
+                return ResourceManager.getRootFolderLocation().append(uri.toPlatformString(true)).toOSString();
+            }
+        }
+        return null;
     }
 
     /**
@@ -76,25 +112,5 @@ public final class WorkspaceUtils {
     public static String normalize(String pathName) {
         // MOD qiongli 2012-5-18 TDQ-5384,replace these chars with '_'.
         return pathName == null ? pathName : StringUtils.replaceChars(pathName, "//?*/: \\|<>", "___________");//$NON-NLS-1$ $NON-NLS-2$
-
-    }
-
-    /**
-     * 
-     * Comment method "toFile".
-     * 
-     * @param object
-     * @return turn URI to File
-     */
-    public static String toFile(Object object) {
-        if (object instanceof URI) {
-            URI uri = ((URI) object);
-            if (uri.isFile()) {
-                return uri.toFileString();
-            } else if (uri.isPlatform()) {
-                return ResourceManager.getRootFolderLocation().append(uri.toPlatformString(true)).toOSString();
-            }
-        }
-        return null;
     }
 }

@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -32,6 +33,7 @@ import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmD
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.ProjectManager;
@@ -89,9 +91,20 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
             return;
         }
 
+        // get the link files which link to the Report Generated Doc File
+        List<IFile> linkFiles = ReportUtils.getRepGenDocLinkFiles(findAllRecycleBinNodes);
+        List<IFile> repFiles = ReportUtils.getReportFiles(findAllRecycleBinNodes);
+
         // MOD qiongli 2011-5-20 bug 21035,avoid to unload resource.
         super.setAvoidUnloadResources(true);
         super.run();
+
+        if (!linkFiles.isEmpty()) {
+            ReportUtils.removeRepDocLinkFiles(linkFiles);
+        }
+        if (!repFiles.isEmpty()) {
+            ReportUtils.deleteRepOutputFolders(repFiles);
+        }
 
         CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
         CorePlugin.getDefault().refreshWorkSpace();
