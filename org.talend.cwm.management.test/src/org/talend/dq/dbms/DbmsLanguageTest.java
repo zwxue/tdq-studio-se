@@ -23,12 +23,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
-import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -128,7 +128,7 @@ public class DbmsLanguageTest {
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         pattern.setName("My Pattern"); //$NON-NLS-1$
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
-        Expression expression = createExpression();
+        TdExpression expression = createExpression();
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
         return pattern;
@@ -139,8 +139,8 @@ public class DbmsLanguageTest {
      * 
      * @return
      */
-    private Expression createExpression() {
-        Expression expression = CoreFactory.eINSTANCE.createExpression();
+    private TdExpression createExpression() {
+        TdExpression expression = RelationalFactory.eINSTANCE.createTdExpression();
         expression.setBody(REGEXP);
         expression.setLanguage("SQL"); //$NON-NLS-1$
         return expression;

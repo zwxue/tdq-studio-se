@@ -57,8 +57,6 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sugars.ReturnCode;
-import orgomg.cwm.objectmodel.core.CoreFactory;
-import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -350,7 +348,7 @@ public class AnalysisCreationMain {
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         pattern.setName("My Pattern"); //$NON-NLS-1$
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
-        Expression expression = CoreFactory.eINSTANCE.createExpression();
+        TdExpression expression = RelationalFactory.eINSTANCE.createTdExpression();
         expression.setBody(REGEXP);
         expression.setLanguage("SQL"); //$NON-NLS-1$
         regularExpr.setExpression(expression);
