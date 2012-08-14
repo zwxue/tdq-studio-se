@@ -49,11 +49,11 @@ import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.dbms.HiveDbmsLanguage;
 import org.talend.dq.dbms.MSSqlDbmsLanguage;
 import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -91,13 +91,16 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // MOD qiongli 2011-6-28 bug 22520,statement for sqlLite
         Connection dataManager = (Connection) analysis.getContext().getConnection();
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dataManager);
-        if (dbmsLanguage instanceof MSSqlDbmsLanguage || dbmsLanguage instanceof SQLiteDbmsLanguage) {
+        boolean isHiveDbms = dbmsLanguage instanceof HiveDbmsLanguage;
+        if (dbmsLanguage instanceof MSSqlDbmsLanguage || dbmsLanguage instanceof SQLiteDbmsLanguage || isHiveDbms) {
             statement = connection.createStatement();
         } else {
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         }
         // ~10630
-        statement.setFetchSize(fetchSize);
+        if (!isHiveDbms) {
+            statement.setFetchSize(fetchSize);
+        }
         // MOD xqliu 2009-02-09 bug 6237
         if (continueRun()) {
             if (log.isInfoEnabled()) {

@@ -139,17 +139,17 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 schema = ColumnSetHelper.getTableOwner(t);
             }
             // ~11934
-            // ---- pk
-            int pkCount = getPKCount(catalog, schema, table);
-            schemaIndic.setKeyCount(schemaIndic.getKeyCount() + pkCount);
-
-            // get imported/exported keys
-            // getConnection().getMetaData().getImportedKeys(catalog, schema, table);
-            // getConnection().getMetaData().getExportedKeys(catalog, schema, table);
-
-            // indexes
-            int idxCount = getIndexCount(catalog, schema, table);
-            schemaIndic.setIndexCount(schemaIndic.getIndexCount() + idxCount);
+            // MOD qiongli 2012-8-13 TDQ-5907.Hive dosen't support PK/INDEX.
+            boolean isHive = ConnectionUtils.isHive(getConnection());
+            // ---- pk----indexes
+            int pkCount = 0;
+            int idxCount = 0;
+            if (!isHive) {
+                pkCount = getPKCount(catalog, schema, table);
+                schemaIndic.setKeyCount(schemaIndic.getKeyCount() + pkCount);
+                idxCount = getIndexCount(catalog, schema, table);
+                schemaIndic.setIndexCount(schemaIndic.getIndexCount() + idxCount);
+            }
 
             // create Table Indicator
             // TODO create tableindicator only if it's in top N or in bottom N (use an option?)
@@ -336,8 +336,14 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             return totalRowCount;
         }
 
-        Statement statement = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        Statement statement = null;
+        // MOD qiongli 2012-8-13.TDQ-5907
+        if (ConnectionUtils.isHive(conn)) {
+            statement = conn.createStatement();
+        } else {
+            statement = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 
+        }
         // not needed here statement.setFetchSize(fetchSize);
         try {
             if (log.isInfoEnabled()) {

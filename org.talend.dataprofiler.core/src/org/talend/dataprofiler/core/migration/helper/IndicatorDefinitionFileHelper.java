@@ -87,4 +87,23 @@ public final class IndicatorDefinitionFileHelper {
     public static boolean save(IndicatorDefinition definition) {
         return IndicatorResourceFileHelper.getInstance().save(definition).isOk();
     }
+
+    /**
+     * 
+     * judge if exist a sq expression with specify language.
+     * 
+     * @param definition
+     * @param language
+     * @return
+     */
+    public static boolean isExistSqlExprWithLanguage(IndicatorDefinition definition, String language) {
+        if (null == definition)
+            return false;
+        for (TdExpression e : definition.getSqlGenericExpression()) {
+            if (e.getLanguage().equals(language)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

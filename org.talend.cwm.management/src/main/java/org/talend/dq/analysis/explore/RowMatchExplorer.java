@@ -24,6 +24,7 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
+import org.talend.dq.dbms.HiveDbmsLanguage;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -38,7 +39,10 @@ public class RowMatchExplorer extends DataExplorer {
      */
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
-        map.put(MENU_VIEW_MATCH_ROWS, getComment(MENU_VIEW_MATCH_ROWS) + getRowsMatchStatement());
+        // MOD qiongli 2012-8-14 TDQ-5907 Hive dosen't support 'NOT IN'
+        if (!(dbmsLanguage instanceof HiveDbmsLanguage)) {
+            map.put(MENU_VIEW_MATCH_ROWS, getComment(MENU_VIEW_MATCH_ROWS) + getRowsMatchStatement());
+        }
         map.put(MENU_VIEW_NOT_MATCH_ROWS, getComment(MENU_VIEW_NOT_MATCH_ROWS) + getRowsNotMatchStatement());
         map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getAllRowsStatement());
         return map;
@@ -99,7 +103,12 @@ public class RowMatchExplorer extends DataExplorer {
                     (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_B
                             : AnalysisHelper.DATA_FILTER_A)) : whereDataFilter(tableB, null))
                     + ") B";//$NON-NLS-1$
-            query += clauseA + " LEFT JOIN " + clauseB + onClause + realWhereClause;//$NON-NLS-1$
+            // MOD qiongli 2012-8-14 TDQ-5907.
+            if (dbmsLanguage instanceof HiveDbmsLanguage) {
+                query += clauseA + " LEFT OUTER JOIN " + clauseB + onClause + realWhereClause;//$NON-NLS-1$
+            } else {
+                query += clauseA + " LEFT JOIN " + clauseB + onClause + realWhereClause;//$NON-NLS-1$
+            }
         }
         return getComment(MENU_VIEW_NOT_MATCH_ROWS) + query;
     }

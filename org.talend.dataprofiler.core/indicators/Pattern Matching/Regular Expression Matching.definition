@@ -6,4 +6,5 @@
   <sqlGenericExpression xmi:id="_-YK6s4qnEd-SocVM_rHvUg" body="SELECT COUNT(CASE WHEN &lt;%=__COLUMN_NAMES__%> REGEXP BINARY &lt;%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="MySQL"/>
   <sqlGenericExpression xmi:id="_-YK6tIqnEd-SocVM_rHvUg" body="SELECT COUNT(CASE WHEN REGEXP_LIKE(&lt;%=__COLUMN_NAMES__%>,&lt;%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Oracle"/>
   <sqlGenericExpression xmi:id="_-YK6tYqnEd-SocVM_rHvUg" body="SELECT COUNT(CASE WHEN &lt;%=__COLUMN_NAMES__%> ~ &lt;%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="PostgreSQL"/>
+  <sqlGenericExpression xmi:id="_uc8wYeLKEeGVkLEAJh_9Ew" body="SELECT COUNT(CASE WHEN &lt;%=__COLUMN_NAMES__%> REGEXP &lt;%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Hive"/>
 </dataquality.indicators.definition:IndicatorDefinition>

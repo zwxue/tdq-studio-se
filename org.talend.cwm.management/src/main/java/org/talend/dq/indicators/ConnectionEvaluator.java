@@ -19,6 +19,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -191,7 +192,9 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
     private boolean setCatalogOk(java.sql.Connection connection, String name) {
         if (connection != null) {
             try {
-                connection.setCatalog(name);
+                if (!ConnectionUtils.isHive(connection)) {
+                    connection.setCatalog(name);
+                }
             } catch (SQLException e) {
                 return false;
             }

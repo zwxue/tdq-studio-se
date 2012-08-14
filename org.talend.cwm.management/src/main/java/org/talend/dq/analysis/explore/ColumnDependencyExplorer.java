@@ -22,6 +22,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.dbms.HiveDbmsLanguage;
 import org.talend.dq.helper.ColumnDependencyHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -33,6 +34,10 @@ public class ColumnDependencyExplorer extends DataExplorer {
 
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
+        // MOD qiongli 2012-8-14 TDQ-5907 Hive dosen't support these sql
+        if (dbmsLanguage instanceof HiveDbmsLanguage) {
+            return map;
+        }
         map.put(MENU_VIEW_VALID_VALUES, getComment(MENU_VIEW_VALID_VALUES) + getValidValuesStatement());
         map.put(MENU_VIEW_INVALID_VALUES, getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement());
         map.put(MENU_VIEW_DETAILED_INVALID_VALUES, getComment(MENU_VIEW_DETAILED_INVALID_VALUES)

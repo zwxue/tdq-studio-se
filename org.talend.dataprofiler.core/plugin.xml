@@ -1479,6 +1479,8 @@
            name="change pattern&apos;s expression type from Expression to TdExpression"
            version="5.2.0">
      </workspacetask>
+     <workspacetask class="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorForHiveTask" id="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorForHiveTask" name="Update Indicators For Hive Task" version="5.2.0" /> 
+     
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

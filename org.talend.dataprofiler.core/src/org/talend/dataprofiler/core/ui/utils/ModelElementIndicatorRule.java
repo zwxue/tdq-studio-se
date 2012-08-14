@@ -75,14 +75,18 @@ public final class ModelElementIndicatorRule {
             dataminingType = MetadataHelper.getDefaultDataminingType(javaType);
         }
         // MOD qiongli 2012-4-25 TDQ-2699
+        Connection connection = null;
+        if (me instanceof TdColumn) {
+            connection = ConnectionHelper.getTdDataProvider((TdColumn) me);
+        }
         if (javaType == Types.LONGVARCHAR && ExecutionLanguage.SQL.equals(language)) {
-            if (me instanceof TdColumn) {
-                Connection con = ConnectionHelper.getTdDataProvider((TdColumn) me);
-                if (con != null && ConnectionHelper.isDb2(con)) {
-                    return enableLongVarchar(indicatorType, dataminingType, me);
-                }
+            if (connection != null && ConnectionHelper.isDb2(connection)) {
+                return enableLongVarchar(indicatorType, dataminingType, me);
             }
         }
+        // MOD qiongli 2012-8-10 TDQ-5907 need to disabled indicators for hive with sql engine.
+        boolean isHiveSQL = connection == null ? false : ConnectionHelper.isHive(connection)
+                && ExecutionLanguage.SQL.equals(language);
 
         switch (indicatorType) {
         case CountsIndicatorEnum:
@@ -142,6 +146,10 @@ public final class ModelElementIndicatorRule {
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
             if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL) {
+                if (isHiveSQL
+                        && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {
+                    return false;
+                }
                 return true;
             }
             break;
@@ -157,6 +165,9 @@ public final class ModelElementIndicatorRule {
         case SoundexLowIndicatorEnum:
             if (!Java2SqlType.isDateInSQL(javaType) && !Java2SqlType.isNumbericInSQL(javaType)
                     && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
+                if (isHiveSQL) {
+                    return false;
+                }
                 return true;
             }
             break;
@@ -170,6 +181,9 @@ public final class ModelElementIndicatorRule {
             // graphics and database yet.
             if (Java2SqlType.isNumbericInSQL(javaType) /* || Java2SqlType.isDateInSQL(javaType) */) {
                 if (dataminingType == DataminingType.INTERVAL) {
+                    if (isHiveSQL && !(indicatorType == IndicatorEnum.MeanIndicatorEnum)) {
+                        return false;
+                    }
                     return true;
                 }
             }

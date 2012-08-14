@@ -248,7 +248,8 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
             return false;
         }
         try {
-            if (!ConnectionUtils.isOdbcProgress(connection)) {
+            // MOD qiongli 2012-8-9,Method 'Method not supported' not supported for HiveConnection
+            if (!(ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isHive(connection))) {
                 connection.setCatalog(catalogName);
             }
             return true;

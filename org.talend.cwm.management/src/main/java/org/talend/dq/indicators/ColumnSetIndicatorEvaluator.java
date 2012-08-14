@@ -71,6 +71,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.dbms.HiveDbmsLanguage;
 import org.talend.dq.dbms.MSSqlDbmsLanguage;
 import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.dq.helper.ParameterUtil;
@@ -160,13 +161,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             Connection dataManager = (Connection) analysis.getContext().getConnection();
             // MOD msjian TDQ-5503 2012-6-12: fixed SQLServerException: make the same with IndicatorEvaluator
             DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dataManager);
-            if (dbmsLanguage instanceof MSSqlDbmsLanguage || dbmsLanguage instanceof SQLiteDbmsLanguage) {
+            boolean isHiveDbms = dbmsLanguage instanceof HiveDbmsLanguage;
+            if (dbmsLanguage instanceof MSSqlDbmsLanguage || dbmsLanguage instanceof SQLiteDbmsLanguage || isHiveDbms) {
                 statement = getConnection().createStatement();
             } else {
                 statement = getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             }
             // TDQ-5503~
-            statement.setFetchSize(fetchSize);
+            if (!isHiveDbms) {
+                statement.setFetchSize(fetchSize);
+            }
             if (continueRun()) {
                 if (log.isInfoEnabled()) {
                     log.info("Executing query: " + sqlStatement); //$NON-NLS-1$

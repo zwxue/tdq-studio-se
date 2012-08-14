@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -81,7 +82,11 @@ public class CatalogEvaluator extends AbstractSchemaEvaluator<Catalog> {
                 return ok;
             }
             // ~
-            connection.setCatalog(catName);
+            // MOD qiongli 2012-8-9,Method 'Method not supported' not supported for HiveConnection
+            if (!ConnectionUtils.isHive(connection)) {
+                connection.setCatalog(catName);
+            }
+
             List<Schema> schemas = CatalogHelper.getSchemas(catalog);
             if (schemas.isEmpty()) { // no schema
                 evalCatalogIndic(catalogIndicator, catalog, ok);

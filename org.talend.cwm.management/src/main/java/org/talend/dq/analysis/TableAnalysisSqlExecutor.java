@@ -429,7 +429,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     protected boolean changeCatalog(String catalogName, Connection connection) {
         try {
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
-                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection))) {
+                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ConnectionUtils
+                    .isHive(connection))) {
                 connection.setCatalog(catalogName);
             }
             return true;
