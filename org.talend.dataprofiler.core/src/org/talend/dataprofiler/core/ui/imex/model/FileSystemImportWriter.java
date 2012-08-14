@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -47,17 +48,27 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.migration.IMigrationTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternComponent;
+import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -89,7 +100,8 @@ public class FileSystemImportWriter implements IImportWriter {
     private String projectName;
 
     /*
-     * (non-Javadoc)
+     * check the dependency and conflict; when the record is a indicator(system or user): if overwrite should not add
+     * error in record(only check conflict, but not check dependency)
      * 
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#populate(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
@@ -102,9 +114,16 @@ public class FileSystemImportWriter implements IImportWriter {
 
             record.getErrors().clear();
 
+            // modify: if it is a indicator and used in analysis, do not add errors
+            checkConflict(record, isIndicator(record.getElement()) || isPattern(record.getElement()));
+
+            // Added 20120809 yyin TDQ-4189, when it is indicator, can be overwrite
+            if (!checkExisted && (isIndicator(record.getElement()) || isPattern(record.getElement()))) {
+                continue;
+            }// ~
+
             checkDependency(record);
 
-            checkConflict(record);
             if (checkExisted && record.getConflictObject() != null) {
                 record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.hasConflictObject", record.getName()));//$NON-NLS-1$ 
             }
@@ -118,11 +137,33 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /**
-     * DOC bZhou Comment method "checkConflict".
+     * judge if the record is a indicator or not.
+     * 
+     * @param element
+     * @return
+     */
+    private boolean isIndicator(ModelElement element) {
+        return element instanceof IndicatorDefinition;
+    }
+
+    /**
+     * judge if the record is a indicator or not.
+     * 
+     * @param element
+     * @return
+     */
+    private boolean isPattern(ModelElement element) {
+        return element instanceof Pattern;
+    }
+
+    /**
+     * MOdified 20120810 yyin TDQ-4189 when the record is a system indicator and be used by some analysis, only remember
+     * the conflict object to merge, but do not add any errors which will cause it can't be imported
      * 
      * @param record
+     * @param checkExisted
      */
-    private void checkConflict(ItemRecord record) {
+    private void checkConflict(ItemRecord record, boolean isIndicator) {
         Property property = record.getProperty();
         if (property != null) {
             try {
@@ -131,12 +172,14 @@ public class FileSystemImportWriter implements IImportWriter {
                 List<IRepositoryViewObject> allObjects = ProxyRepositoryFactory.getInstance().getAll(itemType, true);
                 for (IRepositoryViewObject object : allObjects) {
                     if (isConflict(property, object.getProperty())) {
-                        List<IRepositoryViewObject> supplierDependency = DependenciesHandler.getInstance().getSupplierDependency(
-                                object);
-                        for (IRepositoryViewObject supplierViewObject : supplierDependency) {
-                            record.addError(DefaultMessagesImpl
-                                    .getString(
-                                            "FileSystemImproWriter.DependencyWarning", new Object[] { record.getName(), supplierViewObject.getProperty().getLabel(), object.getLabel() }));//$NON-NLS-1$
+                        if (!isIndicator) {
+                            List<IRepositoryViewObject> supplierDependency = DependenciesHandler.getInstance()
+                                    .getSupplierDependency(object);
+                            for (IRepositoryViewObject supplierViewObject : supplierDependency) {
+                                record.addError(DefaultMessagesImpl
+                                        .getString(
+                                                "FileSystemImproWriter.DependencyWarning", new Object[] { record.getName(), supplierViewObject.getProperty().getLabel(), object.getLabel() }));//$NON-NLS-1$
+                            }
                         }
                         // If set this parameter will delete the object when finished the wizard.
                         record.setConflictObject(object);
@@ -317,7 +360,9 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /*
-     * (non-Javadoc)
+     * After check the conflicts of the imported object, calling this method (from ImportWizard) replace the conflicts
+     * object in the records if the record is valid; then call the finish to do migrate. OR: merge the conflict system
+     * indicators if valid.(overwrite)
      * 
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
@@ -352,16 +397,33 @@ public class FileSystemImportWriter implements IImportWriter {
 
                             // Delete the conflict node before import.
                             IRepositoryViewObject object = record.getConflictObject();
+                            boolean isDelete = true;
                             if (object != null) {
-                                ProxyRepositoryFactory.getInstance().deleteObjectPhysical(object);
+                                // added 20120808 yyin TDQ-4189
+                                // when record is valid&conflict, means it need to be merged with the current one if it
+                                // is a system indicator, (using its UUid to find this SI not label)
+                                if (isIndicator(record.getElement())) {
+                                    IndicatorDefinition siDef = ((TDQIndicatorDefinitionItem) object.getProperty().getItem())
+                                            .getIndicatorDefinition();
+
+                                    mergeSystemIndicator(record, siDef);
+                                    isDelete = false;
+                                } else if (isPattern(record.getElement())) {
+                                    mergePattern(record, (TDQPatternItem) object.getProperty().getItem());
+                                    isDelete = false;
+                                } else {// ~
+                                    ProxyRepositoryFactory.getInstance().deleteObjectPhysical(object);
+                                }
                             }
 
-                            for (IPath resPath : toImportMap.keySet()) {
-                                IPath desPath = toImportMap.get(resPath);
-                                ResourceSet resourceSet = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
-                                        .getResourceManager().resourceSet;
-                                synchronized (resourceSet) {
-                                    write(resPath, desPath);
+                            if (isDelete) {
+                                for (IPath resPath : toImportMap.keySet()) {
+                                    IPath desPath = toImportMap.get(resPath);
+                                    ResourceSet resourceSet = ProxyRepositoryFactory.getInstance()
+                                            .getRepositoryFactoryFromProvider().getResourceManager().resourceSet;
+                                    synchronized (resourceSet) {
+                                        write(resPath, desPath);
+                                    }
                                 }
                             }
 
@@ -380,14 +442,132 @@ public class FileSystemImportWriter implements IImportWriter {
                     log.error(e, e);
                 }
             }
+
         };
 
         workUnit.setAvoidUnloadResources(Boolean.TRUE);
         ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
     }
 
+    /**
+     * Added: (20120808 yyin, TDQ-4189) The system indicators are not read-only because the user may want to write his
+     * own SQL template. so this task deals with the modified SI from imported one, and merge them with the current
+     * studio. 1)only when the user select the"Overwrite existing items" on the import wizard(and the modifydate is
+     * newer than the current studio's SI), the conflict modification in imported SI will overwrite the ones in current
+     * studio, otherwise, the SI in current studio will keep. 2)If a language does not exist in the system indicator but
+     * exists in the user modified indicator, then we add it 3)if a language exists in the system indicator but has been
+     * removed in the user modified indicator, then we keep the system indicator definition
+     * 
+     * @param record imported modified system indicator
+     * @param siDef the system indicator in the current studio
+     */
+    protected void mergeSystemIndicator(ItemRecord record, IndicatorDefinition siDef) {
+        // only when the Si is modified, do the save
+        boolean isModified = false;
+        // get expression list from record
+        EList<TdExpression> templates = ((IndicatorDefinition) record.getElement()).getSqlGenericExpression();
+        // for each expression:
+        for (TdExpression template : templates) {
+            // if the modify date ==null, means it is not modified, do nothing
+            if (template.getModificationDate() == null) {
+                continue;
+            }
+
+            // find the related template in system indicator(with same language)
+            boolean isContain = false;
+            String systemModifyDate = null;
+            for (TdExpression ex : siDef.getSqlGenericExpression()) {
+                if (ex.getLanguage().equals(template.getLanguage())) {
+                    isContain = true;
+                    systemModifyDate = ex.getModificationDate();
+                    break;
+                }
+            }
+
+            // if new, add to SI
+            if (!isContain) {
+                IndicatorDefinitionFileHelper.addSqlExpression(siDef, template.getLanguage(), template.getBody());
+                isModified = true;
+            } else {// if the expression are different: compare the modify date, make the SI keep the new one
+                String importModifyDate = template.getModificationDate();
+                if (systemModifyDate == null || importModifyDate.compareToIgnoreCase(systemModifyDate) > 0) {
+                    // the imported one modified but the system is not modified; or the imported modified date
+                    // newer than the system--> replace the system indicator's template by the imported one
+                    IndicatorDefinitionFileHelper.removeSqlExpression(siDef, template.getLanguage());
+                    IndicatorDefinitionFileHelper.addSqlExpression(siDef, template.getLanguage(), template.getBody());
+                    isModified = true;
+                }
+            }
+        }
+        // replace the name (using the imported name incase of modify the name), and save the SI
+        // siDef.setName(record.getElement().getName());
+        if (isModified) {
+            IndicatorDefinitionFileHelper.save(siDef);
+        }
+    }
+
+    /**
+     * when imported pattern is from lower version, even if it is modified, the "modify date" is still null, so, even if
+     * the modify date is null ,still do the comparation.
+     * 
+     * @param record
+     * @param patternItem
+     */
+    protected void mergePattern(ItemRecord record, TDQPatternItem patternItem) {
+        Pattern pattern = patternItem.getPattern();
+        // only when the Si is modified, do the save
+        boolean isModified = false;
+        // get expression list from record
+        EList<PatternComponent> components = ((Pattern) record.getElement()).getComponents();
+        // for each expression:
+        for (PatternComponent component : components) {
+            // if the modify date ==null, maybe it is from lower version, still do the compare
+            TdExpression ex = ((RegularExpression) component).getExpression();
+            PatternComponent replaced = null;
+            String systemModifyDate = null;
+            for (PatternComponent pComp : pattern.getComponents()) {
+                TdExpression pex = ((RegularExpression) pComp).getExpression();
+                if (ex.getLanguage().equals(pex.getLanguage())) {
+                    replaced = pComp;
+                    systemModifyDate = pex.getModificationDate();
+                    break;
+                }
+            }
+
+            // if new, add to SI
+            if (replaced == null) {
+                pattern.getComponents().add(createPatternComponent(component));
+                isModified = true;
+            } else {// if the expression are different: compare the modify date, make the SI keep the new one
+                String importModifyDate = ex.getModificationDate();
+                // if the import and current modifydate = null ,do nothing.
+                if (systemModifyDate == null && importModifyDate == null) {
+                    continue;
+                } else if (importModifyDate != null && importModifyDate.compareToIgnoreCase(systemModifyDate) > 0) {
+                    // the imported one modified but the system is not modified; or the imported modified date
+                    // newer than the system--> replace the system indicator's template by the imported one
+                    pattern.getComponents().remove(replaced);
+                    pattern.getComponents().add(createPatternComponent(component));
+                    isModified = true;
+                }
+            }
+        }
+        // replace the name (using the imported name incase of modify the name), and save the SI
+        // siDef.setName(record.getElement().getName());
+        if (isModified) {
+            ElementWriterFactory.getInstance().createPatternWriter().save(patternItem, true);
+        }
+    }
+
+    private PatternComponent createPatternComponent(PatternComponent oldComponent) {
+        RegularExpression newComponent = PatternFactory.eINSTANCE.createRegularExpression();
+        newComponent.setExpression(((RegularExpression) oldComponent).getExpression());
+        newComponent.setExpressionType(((RegularExpression) oldComponent).getExpressionType());
+        return newComponent;
+    }
+
     /*
-     * (non-Javadoc)
+     * when clicking the finish button on the import wizard, execute this method.
      * 
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImportWriter#finish(org.talend.dataprofiler.core.ui.imex.model.ItemRecord

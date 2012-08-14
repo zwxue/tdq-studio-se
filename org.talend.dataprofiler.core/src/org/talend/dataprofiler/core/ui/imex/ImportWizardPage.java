@@ -242,7 +242,7 @@ public class ImportWizardPage extends WizardPage {
     }
 
     /**
-     * DOC bZhou Comment method "populateElement".
+     * if the user select:overwrite, the conflick records become valid.otherwise, invalid when conflict
      */
     private void populateElement() {
         ItemRecord[] invalidRecords = writer.populate(getElements(), !overwriteBTN.getSelection());

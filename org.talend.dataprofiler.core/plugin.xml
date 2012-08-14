@@ -1473,6 +1473,12 @@
            name="Update Sqlite Username Task"
            version="5.1.2">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdatePatternExpressionToTdExpressionTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdatePatternExpressionToTdExpressionTask"
+           name="change pattern&apos;s expression type from Expression to TdExpression"
+           version="5.2.0">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
