@@ -86,7 +86,7 @@ public class ReportExecutor implements IReportExecutor {
         long endTime = System.currentTimeMillis();
         // fill in the execution informations
         ExecutionInformations execInformations = ReportHelper.getExecutionInformations(report);
-        execInformations.setExecutionDate(new Date());
+        execInformations.setExecutionDate(new Date(startTime));
         int duration = (int) (endTime - startTime);
         execInformations.setExecutionDuration(duration);
         execInformations.setExecutionNumber(execInformations.getExecutionNumber() + 1);
