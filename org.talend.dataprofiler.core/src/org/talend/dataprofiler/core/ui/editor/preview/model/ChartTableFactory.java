@@ -87,7 +87,6 @@ import org.talend.dq.indicators.preview.table.WhereRuleChartDataEntity;
 import org.talend.dq.pattern.PatternTransformer;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.ColumnSet;
 
@@ -466,7 +465,7 @@ public final class ChartTableFactory {
         String query = itemEntity.getQuery();
 
         if (analysis.getParameters().getExecutionLanguage().compareTo(ExecutionLanguage.SQL) == 0) {
-            query = query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1);//$NON-NLS-1$ //$NON-NLS-2$
+            query = query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1);
         }
         String regex = pattTransformer.getRegexp(query);
         IFolder folder = ResourceManager.getPatternRegexFolder();
@@ -499,14 +498,17 @@ public final class ChartTableFactory {
     public static boolean isDUDIndicator(Indicator indicator) {
         IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
 
+            @Override
             public Indicator caseDuplicateCountIndicator(DuplicateCountIndicator object) {
                 return object;
             };
 
+            @Override
             public Indicator caseUniqueCountIndicator(UniqueCountIndicator object) {
                 return object;
             };
 
+            @Override
             public Indicator caseDistinctCountIndicator(DistinctCountIndicator object) {
                 return object;
             };
@@ -599,6 +601,9 @@ public final class ChartTableFactory {
      * @return
      */
     public static boolean isDqRule(Indicator indicator) {
+        if (indicator == null || indicator.getAnalyzedElement() == null) {
+            return false;
+        }
         // only support 3 kinds of db: mysql, oracle, postgressql
         String[] supportDB = { "MySQL", "Oracle with SID", "PostgreSQL" };
         TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
@@ -611,8 +616,9 @@ public final class ChartTableFactory {
                     isSupport = true;
                 }
             }
-            if (!isSupport)
+            if (!isSupport) {
                 return false;
+            }
         }
 
         // RulesSwitch<DQRule> dqRulesSwitch = new RulesSwitch<DQRule>() {
@@ -620,11 +626,12 @@ public final class ChartTableFactory {
 
             @Override
             public WhereRuleIndicator caseIndicator(Indicator object) {
-                if (object instanceof WhereRuleIndicator)
+                if (object instanceof WhereRuleIndicator) {
                     return (WhereRuleIndicator) object;
+                }
                 return null;
             }
-// @Override
+            // @Override
             // public DQRule caseDQRule(DQRule object) {
             // return object;
             // }
