@@ -465,36 +465,33 @@ public class FileSystemImportWriter implements IImportWriter {
         // only when the Si is modified, do the save
         boolean isModified = false;
         // get expression list from record
-        EList<TdExpression> templates = ((IndicatorDefinition) record.getElement()).getSqlGenericExpression();
+        EList<TdExpression> importedExs = ((IndicatorDefinition) record.getElement()).getSqlGenericExpression();
         // for each expression:
-        for (TdExpression template : templates) {
+        for (TdExpression importedEx : importedExs) {
             // if the modify date ==null, means it is not modified, do nothing
-            if (template.getModificationDate() == null) {
+            if (importedEx.getModificationDate() == null) {
                 continue;
             }
 
             // find the related template in system indicator(with same language)
-            boolean isContain = false;
-            String systemModifyDate = null;
+            TdExpression systemExpression = null;
             for (TdExpression ex : siDef.getSqlGenericExpression()) {
-                if (ex.getLanguage().equals(template.getLanguage())) {
-                    isContain = true;
-                    systemModifyDate = ex.getModificationDate();
+                if (ex.getLanguage().equals(importedEx.getLanguage())) {
+                    systemExpression = ex;
                     break;
                 }
             }
 
             // if new, add to SI
-            if (!isContain) {
-                IndicatorDefinitionFileHelper.addSqlExpression(siDef, template.getLanguage(), template.getBody());
+            if (systemExpression == null) {
+                IndicatorDefinitionFileHelper.addSqlExpression(siDef, importedEx.getLanguage(), importedEx.getBody(),
+                        importedEx.getModificationDate());
                 isModified = true;
             } else {// if the expression are different: compare the modify date, make the SI keep the new one
-                String importModifyDate = template.getModificationDate();
-                if (systemModifyDate == null || importModifyDate.compareToIgnoreCase(systemModifyDate) > 0) {
-                    // the imported one modified but the system is not modified; or the imported modified date
-                    // newer than the system--> replace the system indicator's template by the imported one
-                    IndicatorDefinitionFileHelper.removeSqlExpression(siDef, template.getLanguage());
-                    IndicatorDefinitionFileHelper.addSqlExpression(siDef, template.getLanguage(), template.getBody());
+                if (replaceExpression(systemExpression, importedEx)) {
+                    IndicatorDefinitionFileHelper.removeSqlExpression(siDef, importedEx.getLanguage());
+                    IndicatorDefinitionFileHelper.addSqlExpression(siDef, importedEx.getLanguage(), importedEx.getBody(),
+                            importedEx.getModificationDate());
                     isModified = true;
                 }
             }
@@ -518,18 +515,16 @@ public class FileSystemImportWriter implements IImportWriter {
         // only when the Si is modified, do the save
         boolean isModified = false;
         // get expression list from record
-        EList<PatternComponent> components = ((Pattern) record.getElement()).getComponents();
+        EList<PatternComponent> importComponents = ((Pattern) record.getElement()).getComponents();
         // for each expression:
-        for (PatternComponent component : components) {
+        for (PatternComponent component : importComponents) {
             // if the modify date ==null, maybe it is from lower version, still do the compare
-            TdExpression ex = ((RegularExpression) component).getExpression();
+            TdExpression importEx = ((RegularExpression) component).getExpression();
             PatternComponent replaced = null;
-            String systemModifyDate = null;
             for (PatternComponent pComp : pattern.getComponents()) {
                 TdExpression pex = ((RegularExpression) pComp).getExpression();
-                if (ex.getLanguage().equals(pex.getLanguage())) {
+                if (importEx.getLanguage().equals(pex.getLanguage())) {
                     replaced = pComp;
-                    systemModifyDate = pex.getModificationDate();
                     break;
                 }
             }
@@ -539,13 +534,7 @@ public class FileSystemImportWriter implements IImportWriter {
                 pattern.getComponents().add(createPatternComponent(component));
                 isModified = true;
             } else {// if the expression are different: compare the modify date, make the SI keep the new one
-                String importModifyDate = ex.getModificationDate();
-                // if the import and current modifydate = null ,do nothing.
-                if (systemModifyDate == null && importModifyDate == null) {
-                    continue;
-                } else if (importModifyDate != null && importModifyDate.compareToIgnoreCase(systemModifyDate) > 0) {
-                    // the imported one modified but the system is not modified; or the imported modified date
-                    // newer than the system--> replace the system indicator's template by the imported one
+                if (replaceExpression(((RegularExpression) replaced).getExpression(), importEx)) {
                     pattern.getComponents().remove(replaced);
                     pattern.getComponents().add(createPatternComponent(component));
                     isModified = true;
@@ -563,7 +552,31 @@ public class FileSystemImportWriter implements IImportWriter {
         RegularExpression newComponent = PatternFactory.eINSTANCE.createRegularExpression();
         newComponent.setExpression(((RegularExpression) oldComponent).getExpression());
         newComponent.setExpressionType(((RegularExpression) oldComponent).getExpressionType());
+
         return newComponent;
+    }
+
+    private boolean replaceExpression(TdExpression currentEx, TdExpression importedEx) {
+        // when both modify date=null, compare the body
+        if (importedEx.getModificationDate() == null) {
+            if (currentEx.getModificationDate() == null) {
+                if (!importedEx.getBody().equalsIgnoreCase(currentEx.getBody())) {
+                    return true;
+                }
+            } else {
+                // when current workspace has modified, the imported one not, keep the workspace
+                return false;
+            }
+        } else {// import has modify date
+            if (currentEx.getModificationDate() == null) {
+                return true;
+            } else {
+                if (importedEx.getModificationDate().compareToIgnoreCase(currentEx.getModificationDate()) > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /*

@@ -64,6 +64,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -124,6 +125,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         super(editor, id, title);
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         reset();
@@ -156,6 +158,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         return pattern;
     }
 
+    @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         form = managedForm.getForm();
@@ -229,6 +232,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 remainDBTypeList.clear();
                 remainDBTypeList.addAll(allDBTypeList);
@@ -264,6 +268,9 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         final RegularExpression finalRegExpress = regularExpress;
         String language = regularExpress.getExpression().getLanguage();
         String body = regularExpress.getExpression().getBody();
+        // added yyin 20120815 TDQ-5982
+        // regularExpress.getExpression().setModificationDate(getCurrentDateTime());
+        // ~
 
         if (language == null) {
             combo.setText(remainDBTypeList.get(0));
@@ -275,9 +282,12 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
         combo.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 String lang = combo.getText();
                 finalRegExpress.getExpression().setLanguage(PatternLanguageType.findLanguageByName(lang));
+                // added yyin 20120815 TDQ-5982
+                finalRegExpress.getExpression().setModificationDate(getCurrentDateTime());
                 setDirty(true);
             }
         });
@@ -288,6 +298,8 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
             public void modifyText(ModifyEvent e) {
                 finalRegExpress.getExpression().setBody(patternText.getText());
+                // added yyin 20120815 TDQ-5982
+                finalRegExpress.getExpression().setModificationDate(getCurrentDateTime());
                 setDirty(true);
             }
 
@@ -298,6 +310,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(delButton);
         delButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 tempPatternComponents.remove(finalRegExpress);
                 expressComp.dispose();
@@ -315,6 +328,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
             GridDataFactory.fillDefaults().span(1, 1).grab(false, false).applyTo(testPatternButton);
             testPatternButton.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     // Open test pattern viewer
                     PatternTestView patternTestView = CorePlugin.getDefault().getPatternTestView();
@@ -324,6 +338,10 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
         }
 
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(expressComp);
+    }
+
+    private String getCurrentDateTime() {
+        return DateUtils.getCurrentDate(DateUtils.PATTERN_5);
     }
 
     @Override

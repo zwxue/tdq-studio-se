@@ -683,6 +683,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 remainDBTypeListCM.clear();
                 remainDBTypeListCM.addAll(allDBTypeList);
@@ -740,6 +741,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         combo.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 String lang = combo.getText();
                 charactersMapping.setLanguage(PatternLanguageType.findLanguageByName(lang));
@@ -918,6 +920,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         combo.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 String lang = combo.getText();
                 aggregateDateExpression.setLanguage(PatternLanguageType.findLanguageByName(lang));
@@ -1057,6 +1060,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 remainDBTypeListAF.clear();
                 remainDBTypeListAF.addAll(allDBTypeList);
@@ -1338,6 +1342,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         button.addSelectionListener(new SelectionAdapter() {
 
             // MOD by zshen for bug 18724 2011.02.23
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // MOD msjian 2011-8-9 TDQ-3199 fixed: define a new method use the exsit sourse, because there are two
                 // places used the same sourse
@@ -1483,26 +1488,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
         // ~
         combo.select(0);
-        // String language = expression.getLanguage();
-        // String body = expression.getBody();
 
-        // if (language == null) {
-        // combo.setText(remainDBTypeList.get(0));
-        // } else {
-        // combo.setText(PatternLanguageType.findNameByLanguage(language));
-        // }
         combo.addSelectionListener(new LangCombSelectionListener());
-        // combo.addSelectionListener(new SelectionAdapter() {
-        //
-        // public void widgetSelected(SelectionEvent e) {
-        // String lang = combo.getText();
-        // expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
-        // setDirty(true);
-        // }
-        // });
-        // ADD xqliu 2010-02-25 feature 11201
-        // createDbVersionText(combo, lineComp, null, 30);
-        // ~
+
         TdExpression expression = BooleanExpressionHelper.createTdExpression(combo.getText(), null);
         String oldLanguage = expression.getLanguage();
         expression.setModificationDate(getCurrentDateTime());
@@ -1590,6 +1578,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private class LangCombSelectionListener extends SelectionAdapter {
 
+        @Override
         public void widgetSelected(SelectionEvent e) {
             CCombo combo = (CCombo) e.getSource();
             String lang = combo.getText();
@@ -1668,26 +1657,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         definitionSection.setExpanded(false);
         definitionSection.setExpanded(true);
-        // detailComp = new Composite(combo.getParent(), SWT.NONE);
-        // widgetMap.put(combo, detailComp);
-        // detailComp.setLayout(new GridLayout(4, false));
-        // // ADD xqliu 2010-04-02 feature 11201
-        // createDbVersionText(combo, detailComp, expression.getVersion(), 30);
-        // // ~
-        // final Text patternText = new Text(detailComp, SWT.BORDER);
-        // patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        // ((GridData) patternText.getLayoutData()).widthHint = 600;
-        // patternText.addModifyListener(new ExpressTextModListener(combo));
-        // // MOD xqliu 2010-03-23 feature 11201
-        //        patternText.setText(expression.getBody() == null ? "" : expression.getBody());//$NON-NLS-1$
-        // // ~11201
-        // createExpressionEditButton(detailComp, patternText);
-        // createExpressionDelButton(detailComp, combo);
-        // GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
-        // detailComp.getParent().layout();
-        //
-        // definitionSection.setExpanded(false);
-        // definitionSection.setExpanded(true);
+
     }
 
     private void createDataBaseLineComponent(final CCombo combo, TdExpression expression, Composite detailComp) {
@@ -1746,6 +1716,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         button.addSelectionListener(new SelectionAdapter() {
 
             // MOD by zshen for bug 18724 2011.02.23
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // MOD msjian 2011-8-9 TDQ-3199 fixed: define a new method use the exsit sourse, because there are two
                 // places used the same sourse
@@ -1800,35 +1771,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         selectDialog.setControl(jarPathText);
         selectDialog.open();
 
-        // if (selectDialog.open() == Window.OK) {
-        //                    String path = "";//$NON-NLS-1$
-        // for (Object obj : selectDialog.getResult()) {
-        // if (obj instanceof File) {
-        //
-        // IFile file = ResourceManager.getRoot().getFile(
-        // new org.eclipse.core.runtime.Path(((File) obj).getPath()));
-        //
-        //                            if (!"".equalsIgnoreCase(path)) {//$NON-NLS-1$
-        //                                path += "||";//$NON-NLS-1$
-        // }
-        // path += file.getName();
-        // setDirty(true);
-        // }
-        // }
-        // jarPathText.setText(path);
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
         validateJavaUDI(classNameText, jarPathText);
         ProxyRepositoryManager.getInstance().save();
-        // }
 
-        // FileDialog dialog = new FileDialog(combo.getParent().getShell(), SWT.NONE);
-        //                dialog.setFilterExtensions(new String[] { "*.jar" }); //$NON-NLS-1$
-        // String path = dialog.open();
-        // if (path != null) {
-        // jarPathText.setText(path);
-        // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-        // validateJavaUDI(classNameText, jarPathText);
-        // }
     }
 
     /**
@@ -1845,7 +1791,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (!combo.isDisposed() && combo != cb) {
                 String tx = cb.getText();
                 // MOD xqliu 2010-03-23 feature 11201
-                // cb.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
                 cb.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
                 // ~11201
                 cb.setText(tx);
@@ -1943,40 +1888,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.addSelectionListener(new SelectionAdapter() {
 
             // MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-27
+            @Override
             public void widgetSelected(SelectionEvent e) {
-                // MOD xqliu 2010-03-23 feature 11201
-                // rebuildRemainDBTypeList();
-                // ~11201
-                // String language = PatternLanguageType.findLanguageByName(remainDBTypeList.get(0));
-                // Expression expression = BooleanExpressionHelper.createExpression(language, null);
                 createNewLine();
-                // tempExpression.add(expression);
                 definitionSection.setExpanded(true);
                 setDirty(true);
             }
         });
     }
-
-    // MOD xqliu 2010-03-23 feature 11201
-    // /**
-    // * DOC xqliu Comment method "rebuildRemainDBTypeList". MOD mzhao feature 11128 Be able to add Java UDI.
-    // */
-    // private void rebuildRemainDBTypeList() {
-    // remainDBTypeList.clear();
-    // remainDBTypeList.addAll(allDBTypeList);
-    // Collection<Expression> expValues = tempExpressionMap.values();
-    // for (Expression expression : expValues) {
-    // String language = expression.getLanguage();
-    // String languageName = PatternLanguageType.findNameByLanguage(language);
-    // remainDBTypeList.remove(languageName);
-    // }
-    // if (remainDBTypeList.size() == 0) {
-    // MessageDialog.openWarning(null,
-    // DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
-    // return;
-    // }
-    // }
-    // ~11201
 
     /*
      * (non-Javadoc)
@@ -2154,17 +2073,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         // MOD by zshen for bug 18724 2011.02.23
-        // EMFUtil.saveSingleResource(definition.eResource());
-        // CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.INDICATORS));
-        // RepositoryNode indicatorNode = RepositoryNodeHelper.recursiveFind(definition);
-        // if (indicatorNode != null) {
-        // ((TDQIndicatorDefinitionItem) indicatorNode.getObject().getProperty().getItem())
-        // .setIndicatorDefinition(definition);
-        // }
         if (this.definitionItem != null) {
             this.definitionItem.setIndicatorDefinition(definition);
         }
-        // IndicatorResourceFileHelper.getInstance().save(definition);
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
         ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem, true);
         this.isDirty = false;
@@ -2610,6 +2521,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return false;
         }
 
+        @Override
         public int hashCode() {
             return this.getLanguage().concat(this.getBody()).hashCode();
         }
@@ -2847,6 +2759,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return false;
         }
 
+        @Override
         public int hashCode() {
             return this.getLanguage().concat(this.getBody()).hashCode();
         }

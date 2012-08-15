@@ -160,6 +160,13 @@ public class FileSystemImportWriterTest {
         td3.setModificationDate("20130101");//$NON-NLS-1$
         re3.setExpression(td3);
         importComponents.add(re3);
+        RegularExpression re4 = PatternFactory.eINSTANCE.createRegularExpression();
+        TdExpression td4 = RelationalFactory.eINSTANCE.createTdExpression();
+        td4.setBody("imported 4 body");//$NON-NLS-1$
+        td4.setLanguage("Default");//$NON-NLS-1$
+        td4.setModificationDate(null);
+        re4.setExpression(td4);
+        importComponents.add(re4);
         when(importPattern.getComponents()).thenReturn(importComponents);
 
         // for system pattern's expression
@@ -167,11 +174,19 @@ public class FileSystemImportWriterTest {
                 PatternPackage.PATTERN__COMPONENTS);
         RegularExpression re2 = PatternFactory.eINSTANCE.createRegularExpression();
         TdExpression td2 = RelationalFactory.eINSTANCE.createTdExpression();
-        td2.setBody("system body");//$NON-NLS-1$
+        td2.setBody("system 2 body");//$NON-NLS-1$
         td2.setLanguage("MYSQL");//$NON-NLS-1$
         td2.setModificationDate("20120101");//$NON-NLS-1$
         re2.setExpression(td2);
         components.add(re2);
+        // for re5: should be replace by re4
+        RegularExpression re5 = PatternFactory.eINSTANCE.createRegularExpression();
+        TdExpression td5 = RelationalFactory.eINSTANCE.createTdExpression();
+        td5.setBody("system 5 body");//$NON-NLS-1$
+        td5.setLanguage("Default");//$NON-NLS-1$
+        td5.setModificationDate(null);
+        re5.setExpression(td5);
+        components.add(re5);
         when(pattern.getComponents()).thenReturn(components);
 
         ElementWriterFactory ewFactory = mock(ElementWriterFactory.class);
@@ -188,6 +203,8 @@ public class FileSystemImportWriterTest {
                 Assert.assertEquals("sql body", ex.getBody());//$NON-NLS-1$
             } else if (ex.getLanguage().equals("MYSQL")) {//$NON-NLS-1$
                 Assert.assertEquals("imported body", ex.getBody());//$NON-NLS-1$
+            } else if (ex.getLanguage().equals("Default")) {//$NON-NLS-1$
+                Assert.assertEquals("imported 4 body", ex.getBody());//$NON-NLS-1$
             }
         }
     }

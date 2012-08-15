@@ -78,6 +78,9 @@ public class UpdatePatternExpressionToTdExpressionTask extends AbstractWorksapce
                     // change each expression to TdExpression type.
                     RegularExpressionImpl regularExpress = (RegularExpressionImpl) pComponet;
                     Expression ex = regularExpress.getExpression();
+                    if (ex instanceof TdExpression) {
+                        continue;
+                    }
                     TdExpression tdExpression = RelationalFactory.eINSTANCE.createTdExpression();
                     tdExpression.setBody(ex.getBody());
                     tdExpression.setLanguage(ex.getLanguage());
