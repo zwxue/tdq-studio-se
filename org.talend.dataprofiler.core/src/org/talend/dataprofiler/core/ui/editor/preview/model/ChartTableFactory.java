@@ -607,6 +607,9 @@ public final class ChartTableFactory {
         // only support 3 kinds of db: mysql, oracle, postgressql
         String[] supportDB = { "MySQL", "Oracle with SID", "PostgreSQL" };
         TdTable table = SwitchHelpers.TABLE_SWITCH.doSwitch(indicator.getAnalyzedElement());
+        if (table == null) {
+            return false;
+        }
         Connection tdDataProvider = TableHelper.getFirstConnection(table);
         if (tdDataProvider instanceof DatabaseConnection) {
             String type = ((DatabaseConnection) tdDataProvider).getDatabaseType();
