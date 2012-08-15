@@ -13,8 +13,8 @@
 package org.talend.dq.nodes;
 
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.repository.model.RepositoryNode;
-
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -22,6 +22,8 @@ import org.talend.repository.model.RepositoryNode;
 public class PatternLanguageRepNode extends DQRepositoryNode {
 
     private String label;
+
+    private RegularExpression regularExpression = null;
 
     public PatternLanguageRepNode(RepositoryNode parent, ENodeType type) {
         super(null, parent, type);
@@ -32,8 +34,17 @@ public class PatternLanguageRepNode extends DQRepositoryNode {
     public void setLabel(String label) {
         this.label = label;
     }
+
     @Override
     public String getLabel() {
         return this.label == null ? PluginConstant.EMPTY_STRING : this.label;
+    }
+
+    public RegularExpression getRegularExpression() {
+        return regularExpression;
+    }
+
+    public void setRegularExpression(RegularExpression regularExpression) {
+        this.regularExpression = regularExpression;
     }
 }

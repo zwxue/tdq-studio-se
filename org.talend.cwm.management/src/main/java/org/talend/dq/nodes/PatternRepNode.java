@@ -66,6 +66,7 @@ public class PatternRepNode extends DQRepositoryNode {
             Expression expression = re.getExpression();
             String language = expression.getLanguage();
             PatternLanguageRepNode plrn = new PatternLanguageRepNode(this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            plrn.setRegularExpression(re);
             plrn.setId(language);
             plrn.setLabel(language);
             languageElement.add(plrn);

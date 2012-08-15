@@ -95,6 +95,7 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.PatternLanguageRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.RuleRepNode;
@@ -121,6 +122,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private Group tContainer;
 
+    private ScrolledComposite scomp = null;
+
+    private Composite composite = null;
+
     /**
      * DOC qzhang RespositoryDetailView constructor comment.
      */
@@ -131,17 +136,15 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     public void createPartControl(Composite parent) {
         Composite comp = new Composite(parent, SWT.NONE);
         comp.setLayout(new FillLayout());
-        ScrolledComposite scomp = new ScrolledComposite(comp, SWT.H_SCROLL | SWT.V_SCROLL);
+        scomp = new ScrolledComposite(comp, SWT.H_SCROLL | SWT.V_SCROLL);
         scomp.setLayout(new FillLayout());
 
-        Composite composite = new Composite(scomp, SWT.NONE);
+        composite = new Composite(scomp, SWT.NONE);
         composite.setLayout(new GridLayout());
         composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         scomp.setExpandHorizontal(true);
         scomp.setExpandVertical(true);
-        scomp.setMinWidth(400);
-        scomp.setMinHeight(350);
         scomp.setContent(composite);
 
         gContainer = new Group(composite, SWT.NONE);
@@ -241,6 +244,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         clearContainer();
+        // FIXME What's the fucking "is" mean here???
         boolean is = true;
         if (part instanceof DQRespositoryView) {
             StructuredSelection sel = (StructuredSelection) selection;
@@ -307,6 +311,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 RegularExpression regularExpression = (RegularExpression) fe;
                 createRegularExpression(regularExpression);
                 is = false;
+            } else if (fe instanceof PatternLanguageRepNode) {
+                // MOD mzhao 2012-08-15,feature TDQ-4037.
+                PatternLanguageRepNode pattLangNode = (PatternLanguageRepNode) fe;
+                createRegularExpression(pattLangNode.getRegularExpression());
+                is = false;
             } else if (fe instanceof SourceFileRepNode) {
                 // MOD klliu 2001-02-28 bug 19154
                 IPath filePath = WorkbenchUtils.getFilePath((SourceFileRepNode) fe);
@@ -343,6 +352,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                     createExtDefault();
                 }
             }
+            if (!scomp.isDisposed()) {
+                scomp.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+                composite.layout();
+            }
+
         } else if (part instanceof CommonFormEditor) {
             CommonFormEditor editor = (CommonFormEditor) part;
             IEditorInput editorInput = editor.getEditorInput();
