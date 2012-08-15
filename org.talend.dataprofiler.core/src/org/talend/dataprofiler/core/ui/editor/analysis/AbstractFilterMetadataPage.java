@@ -181,9 +181,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private Text tableFilterText;
 
-    // private static Logger log1 =
-    // Logger.getLogger(ConnectionMasterDetailsPage.class);
-
     private Text viewFilterText;
 
     protected Connection tdDataProvider;
@@ -216,10 +213,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private SchemaIndicator currentCatalogIndicator = null; // used in sqlserver
 
-    /**
-     * 
-     * 
-     */
     class DisplayTableAndViewListener implements ISelectionChangedListener {
 
         public void selectionChanged(SelectionChangedEvent event) {
@@ -361,11 +354,19 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         analysisParamSection = createSection(form, topComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisParameter")); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
-        sectionClient.setLayout(new GridLayout(2, false));
-        Label tableFilterLabel = new Label(sectionClient, SWT.None);
+        sectionClient.setLayout(new GridLayout(1, false));
+
+        Composite comp1 = new Composite(sectionClient, SWT.NONE);
+        comp1.setLayout(new GridLayout(1, false));
+        this.createAnalysisLimitComposite(comp1);
+
+        Composite comp2 = new Composite(sectionClient, SWT.NONE);
+        comp2.setLayout(new GridLayout(2, false));
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(comp2);
+        Label tableFilterLabel = new Label(comp2, SWT.None);
         tableFilterLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.filterOnTable")); //$NON-NLS-1$
         tableFilterLabel.setLayoutData(new GridData());
-        tableFilterText = new Text(sectionClient, SWT.BORDER);
+        tableFilterText = new Text(comp2, SWT.BORDER);
         EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
         String tablePattern = DomainHelper.getTablePattern(dataFilters);
         latestTableFilterValue = tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern;
@@ -379,10 +380,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             }
 
         });
-        Label viewFilterLabel = new Label(sectionClient, SWT.None);
+        Label viewFilterLabel = new Label(comp2, SWT.None);
         viewFilterLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.filterOnView")); //$NON-NLS-1$
         viewFilterLabel.setLayoutData(new GridData());
-        viewFilterText = new Text(sectionClient, SWT.BORDER);
+        viewFilterText = new Text(comp2, SWT.BORDER);
         String viewPattern = DomainHelper.getViewPattern(dataFilters);
         latestViewFilterValue = viewPattern == null ? PluginConstant.EMPTY_STRING : viewPattern;
         viewFilterText.setText(latestViewFilterValue);
@@ -399,7 +400,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
         addWhitespaceValidate(tableFilterText, viewFilterText);
         // ADD xqliu 2010-01-04 bug 10190
-        createReloadDatabasesButton(sectionClient);
+        createReloadDatabasesButton(comp2);
         // ~
         analysisParamSection.setClient(sectionClient);
     }
@@ -834,6 +835,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
+
+        // save the number of connections per analysis
+        this.saveNumberOfConnectionsPerAnalysis();
+
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();

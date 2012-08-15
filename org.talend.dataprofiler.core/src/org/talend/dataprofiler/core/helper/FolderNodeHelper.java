@@ -26,26 +26,13 @@ import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author rli
- * 
  */
 public final class FolderNodeHelper {
 
     private FolderNodeHelper() {
     }
 
-    // private static final String TABLEFOLDER_SWITCH = "TABLEFOLDER_SWITCH";
-    //    
-    // private static final String TABLEFOLDER_SWITCH = "TABLEFOLDER_SWITCH";
-
     private static Map<EObject, IFolderNode[]> catalogFolderNodeMap = new HashMap<EObject, IFolderNode[]>();
-
-    // public static void put(Catalog catalog, IFolderNode[] folderNodes) {
-    // catalogFolderNodeMap.put(catalog, folderNodes);
-    // }
-
-    // public static IFolderNode[] get(Catalog catalog) {
-    // return catalogFolderNodeMap.get(catalog);
-    // }
 
     public static IFolderNode[] getFolderNodes(EObject eObject) {
         IFolderNode[] folderNodes = catalogFolderNodeMap.get(eObject);
@@ -62,7 +49,6 @@ public final class FolderNodeHelper {
         }
         return folderNodes == null ? new IFolderNode[] {} : folderNodes;
     }
-
 
     /**
      * 

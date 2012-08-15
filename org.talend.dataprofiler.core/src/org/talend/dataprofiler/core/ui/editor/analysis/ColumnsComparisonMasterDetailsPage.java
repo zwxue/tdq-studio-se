@@ -68,14 +68,9 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * This page show the comparisons information of column set.
  */
-/**
- * DOC Administrator class global comment. Detailled comment
- */
 public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnsComparisonMasterDetailsPage.class);
-
-    // private ColumnAnalysisHandler analysisHandler;
 
     private RowMatchingIndicator rowMatchingIndicatorA;
 
@@ -101,6 +96,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     private Section dataFilterSection = null;
 
+    private Section analysisParamSection;
+
     private String stringDataFilterA;
 
     private String stringDataFilterB;
@@ -110,32 +107,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     }
 
-    /**
-     * DOC rli ColumnsComparisonAnalysisResultPage class global comment. Detailled comment
-     */
-    // class ColumnComparisonAnalysisHandler extends ColumnAnalysisHandler {
-    //
-    // public boolean addIndicator(TdColumn column, Indicator... indicators) {
-    // if (!analysis.getContext().getAnalysedElements().contains(column)) {
-    // analysis.getContext().getAnalysedElements().add(column);
-    // }
-    //
-    // for (Indicator indicator : indicators) {
-    // // store first level of indicators in result.
-    // analysis.getResults().getIndicators().add(indicator);
-    // // initializeIndicator(indicator, column);
-    // }
-    // DataManager connection = analysis.getContext().getConnection();
-    // if (connection == null) {
-    // // try to get one
-    // log.error("Connection has not been set in analysis Context");
-    // connection = DataProviderHelper.getTdDataProvider(column);
-    // analysis.getContext().setConnection(connection);
-    // }
-    // return true;
-    // }
-    //
-    // }
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         Analysis analysis = (Analysis) this.currentModelElement;
@@ -185,6 +156,23 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
         createDataFilterSection(form, topComp);
+
+        createAnalysisParamSection(form, topComp);
+    }
+
+    /**
+     * DOC xqliu Comment method "createAnalysisParamSection".
+     * 
+     * @param pForm
+     * @param pComp
+     */
+    void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
+        this.analysisParamSection = createSection(pForm, pComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        Composite sectionClient = this.toolkit.createComposite(this.analysisParamSection);
+        sectionClient.setLayout(new GridLayout(1, false));
+        this.createAnalysisLimitComposite(sectionClient);
+        this.analysisParamSection.setClient(sectionClient);
     }
 
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
@@ -289,8 +277,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         } else {
             deleteConnectionDependency(analysis);
         }
-        // rowCountIndicator.setAnalyzedElement(value)
-        // rowMatchingIndicatorA
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(this.analysis);
         if (anaColumnCompareViewer.getCheckComputeButton().getSelection()) {
@@ -303,6 +289,10 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
+
+        // save the number of connections per analysis
+        this.saveNumberOfConnectionsPerAnalysis();
+
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
@@ -341,7 +331,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     @Override
     public ReturnCode canSave() {
-
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = super.canSave();
         if (!canModRetCode.isOk()) {
@@ -402,12 +391,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     @Override
     protected ReturnCode canRun() {
-
-        // return new ReturnCode(rowMatchingIndicatorA.getColumnSetA().size() != 0);
-
         return 0 == rowMatchingIndicatorA.getColumnSetA().size() ? new ReturnCode(
                 DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsBlankRunMessage"), false) : new ReturnCode(true); //$NON-NLS-1$
-
     }
 
     public ScrolledForm getScrolledForm() {

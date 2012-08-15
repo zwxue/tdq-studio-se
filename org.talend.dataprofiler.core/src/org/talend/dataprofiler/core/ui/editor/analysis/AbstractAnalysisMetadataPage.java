@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -25,8 +26,12 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.tablecombo.TableCombo;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -39,6 +44,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -59,6 +65,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -215,7 +222,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * 
      * MOD mzhao 2009-06-17 feature 5887.
      * 
      * @param parentComp
@@ -237,8 +243,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // group.setText(" ");
 
         // create label
-//        Label label = new Label(group, SWT.NONE);
-//        label.setText("Metadata Name & Type:");
+        // Label label = new Label(group, SWT.NONE);
+        // label.setText("Metadata Name & Type:");
 
         // create TableCombo
         connCombo = new TableCombo(labelButtonClient, SWT.BORDER | SWT.READ_ONLY);
@@ -313,16 +319,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                         version = initConnectionVersion(connection);
                     }
                 }
-                // shouldn't use RepositoryNodeHelper.recursiveFind() to find the RepositoryNode, because this method
-                // will return the last version of the connection, not the correct version of connection which analysis
-                // depend on
-                //
-                // RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
-                // if (recursiveFind != null) {
-                // if (recursiveFind.getObject() != null && recursiveFind.getObject().getProperty() != null) {
-                // version = recursiveFind.getObject().getProperty().getVersion();
-                // }
-                // }
             }
         }
         return version == null ? getConnectionVersionDefault() : version; //$NON-NLS-1$
@@ -410,8 +406,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
             TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
-            ti.setText(new String[] { property.getDisplayName(),
-                    RepositoryNodeHelper.getConnectionType(repNode) });
+            ti.setText(new String[] { property.getDisplayName(), RepositoryNodeHelper.getConnectionType(repNode) });
             // connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
             connCombo.setData(property.getDisplayName() + RepositoryNodeHelper.getConnectionType(repNode), index);
@@ -488,7 +483,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * 
      * create a label to indicate this connection is logical deleted.
      * 
      * @param parentComp
@@ -570,5 +564,74 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
         }
         return true;
+    }
+
+    /**
+     * DOC xqliu Comment method "createAnalysisLimitSection".
+     * 
+     * @param sForm
+     * @param pComp
+     * @return
+     * @deprecated use createAnalysisLimitComposite(Composite pComp) instead
+     */
+    protected Section createAnalysisLimitSection(final ScrolledForm sForm, Composite pComp) {
+        Section section = createSection(sForm, pComp,
+                DefaultMessagesImpl.getString("AbstractMetadataFormPage.AnalysisLimit"), null); //$NON-NLS-1$
+        Composite parent = this.toolkit.createComposite(section);
+        parent.setLayout(new GridLayout(1, false));
+        this.createAnalysisLimitComposite(parent);
+        section.setClient(parent);
+        return section;
+    }
+
+    /**
+     * DOC xqliu Comment method "createAnalysisLimitComposite".
+     * 
+     * @param pComp
+     * @return
+     */
+    protected Composite createAnalysisLimitComposite(Composite pComp) {
+        Composite comp = new Composite(pComp, SWT.NONE);
+        comp.setLayout(new GridLayout(2, false));
+
+        this.toolkit.createLabel(comp,
+                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"));
+
+        this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp,
+                String.valueOf(AnalysisHandler.createHandler(getAnalysis()).getNumberOfConnectionsPerAnalysis()), SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(false, true).applyTo(this.numberOfConnectionsPerAnalysisText);
+        ((GridData) this.numberOfConnectionsPerAnalysisText.getLayoutData()).widthHint = 60;
+
+        this.numberOfConnectionsPerAnalysisText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                setDirty(true);
+            }
+
+        });
+
+        this.numberOfConnectionsPerAnalysisText.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
+        });
+
+        return comp;
+    }
+
+    /**
+     * DOC xqliu Comment method "saveNumberOfConnectionsPerAnalysis".
+     */
+    protected void saveNumberOfConnectionsPerAnalysis() {
+        AnalysisHandler.createHandler(this.getAnalysis()).setNumberOfConnectionsPerAnalysis(
+                this.numberOfConnectionsPerAnalysisText.getText());
     }
 }

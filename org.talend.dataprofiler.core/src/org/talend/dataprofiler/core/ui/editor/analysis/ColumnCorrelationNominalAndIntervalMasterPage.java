@@ -28,12 +28,9 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -99,7 +96,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author xzhao
- * 
  */
 public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
@@ -152,7 +148,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         recomputeIndicators();
-
     }
 
     public void recomputeIndicators() {
@@ -228,7 +223,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 initializeIndicator(child);
             }
         }
-        
+
     }
 
     @Override
@@ -267,6 +262,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         createDataFilterSection(form, topComp);
 
+        createAnalysisParamSection(form, topComp);
+
         // createAnalysisParamSection(form, topComp);
         if (!EditorPreferencePage.isHideGraphics()) {
             previewComp = toolkit.createComposite(sForm);
@@ -291,7 +288,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             // ~
             createPreviewSection(form, previewComp);
         }
-
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
@@ -327,9 +323,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     }
 
-    /**
-     * 
-     */
     public void openColumnsSelectionDialog() {
         List<RepositoryNode> columnList = treeViewer.getColumnSetMultiValueList();
         if (columnList == null) {
@@ -348,7 +341,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
-
         previewSection = createSection(
                 form,
                 parent,
@@ -412,7 +404,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
-
         List<Composite> previewChartList = new ArrayList<Composite>();
 
         if (ColumnsetPackage.eINSTANCE.getWeakCorrelationIndicator() == columnSetMultiIndicator.eClass()) {
@@ -499,20 +490,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     @Override
     public void refresh() {
-        // if (chartComposite != null) {
-        // try {
-        // for (Control control : chartComposite.getChildren()) {
-        // control.dispose();
-        // }
-        //
-        // createPreviewCharts(form, chartComposite, true);
-        // chartComposite.layout();
-        // getForm().reflow(true);
-        // } catch (Exception ex) {
-        // log.error(ex, ex);
-        // }
-        //
-        // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
@@ -601,25 +578,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         analysisParamSection = createSection(form, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
-        sectionClient.setLayout(new GridLayout(2, false));
-        toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
-        final CCombo execCombo = new CCombo(sectionClient, SWT.BORDER);
-        execCombo.setEditable(false);
-        for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
-            String temp = language.getLiteral();
-            execCombo.add(temp);
-        }
-        // ExecutionLanguage executionLanguage =
-        // analysis.getParameters().getExecutionLanguage();
-        execCombo.setText(ExecutionLanguage.SQL.getLiteral());
-        execCombo.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                execLang = execCombo.getText();
-            }
-
-        });
+        sectionClient.setLayout(new GridLayout(1, false));
+        this.createAnalysisLimitComposite(sectionClient);
         analysisParamSection.setClient(sectionClient);
     }
 
@@ -637,7 +597,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
         }
-
         // ~
 
         IRepositoryViewObject reposObject = null;
@@ -693,6 +652,10 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
+
+        // save the number of connections per analysis
+        this.saveNumberOfConnectionsPerAnalysis();
+
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
@@ -779,7 +742,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     @Override
     public ReturnCode canSave() {
-
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = super.canSave();
         if (!canModRetCode.isOk()) {
@@ -809,14 +771,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                         break;
                     }
                 }
-                // for (int i = 0; i < nodes.size(); i++) {
-                // TdColumn tdColumn = (TdColumn) nodes.get(i);
-                //
-                // if (correlationAnalysisHandler.getDatamingType(tdColumn) != DataminingType.NOMINAL) {
-                //                        message = DefaultMessagesImpl.getString("ColumnCorrelationNominalAndIntervalMasterPage.NotAllNominal"); //$NON-NLS-1$
-                // break;
-                // }
-                // }
             }
         }
         if (message == null) {
@@ -885,6 +839,5 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         }
 
         return new ReturnCode(true);
-
     }
 }

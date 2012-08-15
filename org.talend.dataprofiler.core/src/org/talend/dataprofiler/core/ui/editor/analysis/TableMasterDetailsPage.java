@@ -153,6 +153,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private Section previewSection = null;
 
+    private Section analysisParamSection;
+
     private List<ExpandableComposite> previewChartList = null;
 
     private SashForm sForm;
@@ -187,7 +189,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         EList<ModelElement> analyzedTables = analysisHandler.getAnalyzedTables();
         List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
         for (ModelElement element : analyzedTables) {
-
             NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(element);
             if (set == null) {
                 continue;
@@ -221,6 +222,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         createAnalysisTablesSection(form, topComp);
 
         createDataFilterSection(form, topComp);
+
+        createAnalysisParamSection(form, topComp);
+
         // MOD klliu Hide the setting pate graphics 2011-03-11
         if (!EditorPreferencePage.isHideGraphics()) {
             previewComp = toolkit.createComposite(sForm);
@@ -245,6 +249,21 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             createPreviewSection(form, previewComp);
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "createAnalysisParamSection".
+     * 
+     * @param pForm
+     * @param pComp
+     */
+    void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
+        this.analysisParamSection = createSection(pForm, pComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        Composite sectionClient = this.toolkit.createComposite(this.analysisParamSection);
+        sectionClient.setLayout(new GridLayout(1, false));
+        this.createAnalysisLimitComposite(sectionClient);
+        this.analysisParamSection.setClient(sectionClient);
     }
 
     void createAnalysisTablesSection(final ScrolledForm form, Composite anasisDataComp) {
@@ -310,7 +329,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * 
      * DOC xqliu Comment method "packOtherColumns".
      */
     private void packOtherColumns() {
@@ -321,7 +339,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * 
      * DOC xqliu Comment method "expandTreeItems".
      * 
      * @param items
@@ -609,7 +626,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     @Override
     public ReturnCode canSave() {
-
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = super.canSave();
         if (!canModRetCode.isOk()) {
@@ -655,6 +671,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
+
+        // save the number of connections per analysis
+        this.saveNumberOfConnectionsPerAnalysis();
+
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
@@ -691,18 +711,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     @Override
     public void refresh() {
-        // if (chartComposite != null) {
-        // try {
-        // for (Control control : chartComposite.getChildren()) {
-        // control.dispose();
-        // }
-        // createPreviewCharts(form, chartComposite, true);
-        // chartComposite.getParent().layout();
-        // chartComposite.layout();
-        // } catch (Exception ex) {
-        // log.error(ex, ex);
-        // }
-        // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
@@ -710,7 +718,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 topComp.getParent().layout();
                 topComp.layout();
             }
-
         } else {
             if (chartComposite != null && !chartComposite.isDisposed()) {
                 try {

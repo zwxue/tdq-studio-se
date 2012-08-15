@@ -261,7 +261,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             createPreviewSection(form, previewComp);
         }
-
     }
 
     void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
@@ -372,9 +371,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         } else {
             uiPagination.reset();
         }
-        // if (previewChartList == null) {
-        // previewChartList = new ArrayList<ExpandableComposite>();
-        // }
         final ModelElementIndicator[] modelElementIndicatorArrary = this.getCurrentModelElementIndicators();
         int pageSize = IndicatorPaginationInfo.getPageSize();
         int totalPages = modelElementIndicatorArrary.length / pageSize;
@@ -454,12 +450,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (dialog.open() == Window.OK) {
             Object[] modelElements = dialog.getResult();
             setTreeViewInput(modelElements);
-            // ModelElementIndicator[] filterInputData = treeViewer.filterInputData(modelElements);
-            // if (filterInputData == null) {
-            // return;
-            // }
-            // refreshTheTree(treeViewer.getModelElementIndicator());
-            // this.setDirty(true);
         }
     }
 
@@ -477,7 +467,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
-
         previewSection = createSection(
                 form,
                 parent,
@@ -576,37 +565,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
-        // previewChartList = new ArrayList<ExpandableComposite>();
         uiPagination.setChartComposite(composite);
-        // final ModelElementIndicator[] modelElementIndicatores = this.getCurrentModelElementIndicators();
-        // uiPagination = new UIPagination(toolkit, navigationComposite, composite);
-        // int pageSize = IndicatorPaginationInfo.getPageSize();
-        // int totalPages = modelElementIndicatores.length / pageSize;
-        // List<ModelElementIndicator> modelElementIndicators = null;
-        // for (int index = 0; index < totalPages; index++) {
-        // modelElementIndicators = new ArrayList<ModelElementIndicator>();
-        // for (int idx = 0; idx < pageSize; idx++) {
-        // modelElementIndicators.add(modelElementIndicatores[index * pageSize + idx]);
-        // }
-        // // IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators,
-        // // uiPagination);
-        // // uiPagination.addPage(pginfo);
-        //
-        // }
-        // int left = modelElementIndicatores.length % pageSize;
-        // if (left != 0) {
-        // modelElementIndicators = new ArrayList<ModelElementIndicator>();
-        // for (int leftIdx = 0; leftIdx < left; leftIdx++) {
-        // modelElementIndicators.add(modelElementIndicatores[totalPages * pageSize + leftIdx]);
-        // }
-        // IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators,
-        // uiPagination);
-        // uiPagination.addPage(pginfo);
-        // // FIXME totalPages won't used anymore.
-        // totalPages++;
-        // }
         uiPagination.init();
-        // ~
 
         for (ExpandableComposite comp : previewChartList) {
             registerSection(comp);
@@ -619,19 +579,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     public void refresh() {
-        // if (chartComposite != null) {
-        // try {
-        // for (Control control : chartComposite.getChildren()) {
-        // control.dispose();
-        // }
-        //
-        // createPreviewCharts(form, chartComposite, true);
-        // chartComposite.getParent().layout();
-        // chartComposite.layout();
-        // } catch (Exception ex) {
-        // log.error(ex, ex);
-        // }
-        // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
@@ -699,11 +646,18 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         analysisParamSection = createSection(form, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
+        sectionClient.setLayout(new GridLayout(1, false));
 
-        sectionClient.setLayout(new GridLayout(2, false));
-        toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
+        Composite comp1 = new Composite(sectionClient, SWT.NONE);
+        comp1.setLayout(new GridLayout(1, false));
+        this.createAnalysisLimitComposite(comp1);
+
+        Composite comp2 = new Composite(sectionClient, SWT.NONE);
+        comp2.setLayout(new GridLayout(2, false));
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(comp2);
+        toolkit.createLabel(comp2, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
         // MOD zshen:need to use the component with finish indicator Selection.
-        execCombo = new CCombo(sectionClient, SWT.BORDER);
+        execCombo = new CCombo(comp2, SWT.BORDER);
         // ~
         execCombo.setEditable(false);
 
@@ -726,7 +680,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
         // MOD zshen feature 12919 : add allow drill down and max number row component for java engin.
-        final Composite javaEnginSection = createjavaEnginSection(sectionClient);
+        final Composite javaEnginSection = createjavaEnginSection(comp2);
         if (ExecutionLanguage.SQL.equals(executionLanguage)) {
             javaEnginSection.setVisible(false);
         }
@@ -828,12 +782,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         });
         GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
-        // ((GridData) maxNumText.getLayoutData()).widthHint = 200;
         GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).applyTo(drillDownCheck);
-        // GridData data1 = new GridData();
-        // data1.horizontalSpan = 2;
-        // drillDownCheck.setLayoutData(data1);
-        // maxNumLabel.setLayoutData(data1);
         return javaEnginSection;
     }
 
@@ -917,6 +866,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         this.updateAnalysisClientDependency();
         // ~ 14014
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
+
+        // save the number of connections per analysis
+        this.saveNumberOfConnectionsPerAnalysis();
+
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
 
@@ -940,13 +893,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#logSaved(ReturnCode)
         logSaved(saved);
 
-        // Domain dataFilter = getDataFilter(dataManager, (Column) column); //
-        // CAST here for test
-        // analysisBuilder.addFilterOnData(dataFilter);
-        //
-        // FolderProvider folderProvider = new FolderProvider();
-        // folderProvider.setFolder(new File(outputFolder));
-        // DqRepositoryViewService.saveDomain(dataFilter, folderProvider);
         treeViewer.setDirty(false);
         dataFilterComp.setDirty(false);
     }
@@ -987,11 +933,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (uiPagination == null) {
             return;
         }
-        // if (-1 != columnIndex) {
-        // int pageIndex = (columnIndex % IndicatorPaginationInfo.getPageSize() > 0 ? columnIndex
-        // / IndicatorPaginationInfo.getPageSize() + 1 : columnIndex / IndicatorPaginationInfo.getPageSize());
-        //
-        // uiPagination.setCurrentPage(pageIndex);
 
         if (previewChartList != null && !previewChartList.isEmpty()) {
             for (ExpandableComposite comp : previewChartList) {
@@ -1001,16 +942,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 }
             }
         }
-        // }
     }
-
-    // public void setDirty(boolean isDirty) {
-    // if (this.isDirty != isDirty) {
-    // this.isDirty = isDirty;
-    // ((AnalysisEditor)
-    // this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
-    // }
-    // }
 
     /**
      * DOC yyi 2011-06-02 16929:get index of the column selected in the tree viewer.
@@ -1108,7 +1040,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     public ReturnCode canSave() {
-
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = super.canSave();
         if (!canModRetCode.isOk()) {
@@ -1116,12 +1047,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
         // ~19179
 
-        // ADD xqliu 2010-01-22 bug 11200
-        // ReturnCode checkMdmExecutionEngine = checkMdmExecutionEngine();
-        // if (!checkMdmExecutionEngine.isOk()) {
-        // // such judgment?
-        // return checkMdmExecutionEngine;
-        // }
         // MOD klliu 2011-04-18 code cleaning.
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
@@ -1154,10 +1079,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
             analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
-        // feature 13573 add the support to java engine
-        // if (analysisHandler.isMdmConnection() && ExecutionLanguage.JAVA.getLiteral().equals(this.execLang)) {
-        //            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mdmSQL"), false); //$NON-NLS-1$
-        // }
         return new ReturnCode(true);
     }
 

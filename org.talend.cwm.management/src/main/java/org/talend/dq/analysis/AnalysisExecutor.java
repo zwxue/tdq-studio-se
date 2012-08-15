@@ -393,7 +393,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return
      */
     protected TdqAnalysisConnectionPool getConnectionPool(Analysis analysis, Connection dataProvider) {
-        return TdqAnalysisConnectionPoolMap.getInstance(analysis).getConnectionPool(dataProvider);
+        return TdqAnalysisConnectionPoolMap.getInstance(analysis).getConnectionPool(dataProvider,
+                AnalysisHandler.createHandler(analysis).getNumberOfConnectionsPerAnalysis());
     }
 
     /**
@@ -435,7 +436,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             }
         }
     }
-
 
     /**
      * DOC xqliu Comment method "returnPooledConnection".
@@ -557,7 +557,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * 
      * 2012-3-14 TDQ-4433,reset indicatorDefinition for indicator if needed(indicatorDefinition is null or proxy).
      */
     protected void initializeIndicators(List<Indicator> indicators) {
@@ -567,5 +566,4 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             modHandler.initializeIndicator(ind);
         }
     }
-
 }

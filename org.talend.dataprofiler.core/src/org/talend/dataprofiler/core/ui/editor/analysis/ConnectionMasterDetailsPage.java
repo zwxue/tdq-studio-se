@@ -42,7 +42,6 @@ import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * @author rli
- * 
  */
 public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
 
@@ -50,16 +49,8 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
 
     public ConnectionMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
-
     }
 
-    // protected void fillDataProvider() {
-    // EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
-    // tdDataProvider = null;
-    // if (analysedElements.size() > 0) {
-    // tdDataProvider = (Connection) analysedElements.get(0);
-    // }
-    // }
     protected void fillDataProvider() {
         connectionNode = (ConnectionRepNode) getCurrentRepNodeOnUI();
         if (connectionNode != null) {
@@ -91,8 +82,6 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
     }
 
     public List<OverviewIndUIElement> getSchemaIndicators() {
-        // ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
-        // return conIndicator.getSchemaIndicators();
         ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
         Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
         EList<SchemaIndicator> schemaIndicators = conIndicator.getSchemaIndicators();
@@ -138,8 +127,5 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         }
 
         return cataUIEleList;
-        // ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
-        // return conIndicator.getCatalogIndicators();
     }
-
 }

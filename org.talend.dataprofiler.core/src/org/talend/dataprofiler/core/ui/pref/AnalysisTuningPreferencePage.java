@@ -110,8 +110,6 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
         createAnalyzedColumnsLimitLine(composite, gdText);
 
-        createNumberOfConnectionsPerAnalysisLine(composite, gdText);
-
         Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
         group2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.MemoryGroup")); //$NON-NLS-1$
         gridLayout1 = new GridLayout(2, false);
@@ -155,7 +153,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
         // MOD yyi 2012-06-19 TDQ-4916 if the value is set to zero the threshold function would be disabled.
         memoryScaleField = new ScaleFieldEditor(AnalysisThreadMemoryChangeNotifier.ANALYSIS_MEMORY_THRESHOLD,
-                "", compositeScale,  0, memMax -memTotal , 1, 8); //$NON-NLS-1$
+                "", compositeScale, 0, memMax - memTotal, 1, 8); //$NON-NLS-1$
 
         memoryScaleField.setPropertyChangeListener(new IPropertyChangeListener() {
 
@@ -178,7 +176,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         }
 
         Composite composite3 = new Composite(composite2, SWT.NONE);
-        composite3.setLayout(new GridLayout(4,false));
+        composite3.setLayout(new GridLayout(4, false));
         composite3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Label label3 = new Label(composite3, SWT.NONE);
@@ -186,9 +184,6 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         HeapStatus heap = new HeapStatus(composite3, PlatformUI.getPreferenceStore());
         heap.setEnabled(false);
         heap.setMenu(null);
-
-        // Label label4 = new Label(composite3, SWT.NONE);
-        //        label4.setText("\tMax:"+(memMax) +"M\t"+"Free:"+(memFree) +"M"+"\tTotal:"+(memTotal) +"M"); //$NON-NLS-1$
 
         CLabel label2 = new CLabel(composite2, SWT.WRAP);
         label2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.JvmWarning")); //$NON-NLS-1$
@@ -219,7 +214,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
             public void verifyText(VerifyEvent e) {
                 String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9.]"); //$NON-NLS-1$
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
                 char[] charArray = inputValue.toCharArray();
                 for (char c : charArray) {
                     if (!pattern.matcher(String.valueOf(c)).matches()) {
@@ -235,6 +230,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
      * 
      * @param composite
      * @param gdText
+     * @deprecated don't delete this method, we will use it later
      */
     private void createNumberOfConnectionsPerAnalysisLine(Composite composite, GridData gdText) {
         Label labelNocpa = new Label(composite, SWT.NONE);
@@ -252,7 +248,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
             public void verifyText(VerifyEvent e) {
                 String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9.]"); //$NON-NLS-1$
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
                 char[] charArray = inputValue.toCharArray();
                 for (char c : charArray) {
                     if (!pattern.matcher(String.valueOf(c)).matches()) {
@@ -303,7 +299,6 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     @Override
     public boolean performOk() {
         getNewAnalyzedColumnsLimit();
-        saveNumberOfConnectionsPerAnalysis();
         memoryScaleField.store();
         autoComboField.store();
         return super.performOk();
@@ -317,7 +312,6 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     @Override
     protected void performApply() {
         getNewAnalyzedColumnsLimit();
-        saveNumberOfConnectionsPerAnalysis();
         memoryScaleField.store();
         autoComboField.store();
         super.performApply();
@@ -338,6 +332,8 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
     /**
      * DOC xqliu Comment method "saveNumberOfConnectionsPerAnalysis".
+     * 
+     * @deprecated don't delete this method, we will use it later
      */
     private void saveNumberOfConnectionsPerAnalysis() {
         if (this.textNumberOfConnectionsPerAnalysis != null) {
@@ -379,6 +375,5 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
     // Get top or d defulat method.
     private int getDefaultThreshold() {
         return AnalysisThreadMemoryChangeNotifier.getDefaultThresholdValue();
-
     }
 }

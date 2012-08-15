@@ -39,8 +39,6 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
     // FIXME remove it.
     private List<SchemaIndicator> schemaIndicatorList = new ArrayList<SchemaIndicator>();
 
-    // private List<Schema> schemas = new ArrayList<Schema>();
-
     public SchemaAnalysisMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -67,31 +65,17 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
 
     @Override
     protected List<OverviewIndUIElement> getSchemaIndicators() {
-        // EList<Indicator> indicators = analysis.getResults().getIndicators();
-        // schemaIndicatorList.clear();
-        // for (Indicator indicator : indicators) {
-        // schemaIndicatorList.add((SchemaIndicator) indicator);
-        // }
-        // return schemaIndicatorList;
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         Connection connection = ConnectionHelper.getConnection(SwitchHelpers.SCHEMA_SWITCH.caseSchema((Schema) indicators.get(0)
                 .getAnalyzedElement()));
         RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(connection);
         for (Indicator indicator : indicators) {
-            // for (IRepositoryNode schemaNode : connNode.getChildren()) {
-            // String nodeUuid = ResourceHelper.getUUID(((MetadataSchemaRepositoryObject)
-            // schemaNode.getObject()).getSchema());
-            // String anaUuid = ResourceHelper.getUUID(indicator.getAnalyzedElement());
-            // if (nodeUuid.equals(anaUuid)) {
             RepositoryNode schemaNode = RepositoryNodeHelper.recursiveFind(indicator.getAnalyzedElement());
             OverviewIndUIElement cataUIEle = new OverviewIndUIElement();
             cataUIEle.setNode(schemaNode);
             cataUIEle.setOverviewIndicator(indicator);
             cataUIEleList.add(cataUIEle);
-            // break;
-            // }
-            // }
         }
         return cataUIEleList;
     }

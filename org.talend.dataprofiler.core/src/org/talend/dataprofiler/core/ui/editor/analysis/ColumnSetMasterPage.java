@@ -116,7 +116,6 @@ import com.informix.util.stringUtil;
 
 /**
  * @author yyi 2009-12-16
- * 
  */
 public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
@@ -237,13 +236,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper
                         .recursiveFind(xmlElement));
             }
-            // currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
-            // .recursiveFind(tdColumn));
 
             DataminingType dataminingType = MetadataHelper.getDataminingType(element);
             MetadataHelper.setDataminingType(dataminingType == null ? DataminingType.NOMINAL : dataminingType, element);
-            // MetadataHelper.setDataminingType(dataminingType, tdColumn);
-            // DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
 
             Collection<Indicator> indicatorList = columnSetAnalysisHandler.getRegexMathingIndicators(element);
             if (null != currentIndicator) {
@@ -296,7 +291,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         createAnalysisParamSection(form, topComp);
 
-        // createAnalysisParamSection(form, topComp);
         if (!EditorPreferencePage.isHideGraphics()) {
             previewComp = toolkit.createComposite(sForm);
             previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -320,7 +314,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             // ~
             createPreviewSection(form, previewComp);
         }
-
     }
 
     /**
@@ -377,9 +370,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     }
 
-    /**
-     * 
-     */
     public void openColumnsSelectionDialog() {
         List<IRepositoryNode> columnList = treeViewer.getColumnSetMultiValueList();
         if (columnList == null) {
@@ -399,7 +389,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
-
         previewSection = createSection(
                 form,
                 parent,
@@ -500,14 +489,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     private void createAllMatch(final ScrolledForm form, final Composite composite) {
-
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
         units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator, null));
 
         EIndicatorChartType matchingType = EIndicatorChartType.PATTERN_MATCHING;
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(matchingType, units);
-        // ChartWithData chartData = new ChartWithData(matchingType, chartTypeState.getChart(),
-        // chartTypeState.getDataEntity());
 
         JFreeChart chart = chartTypeState.getChart();
         ChartDecorator.decorate(chart, null);
@@ -522,7 +508,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     private void createSimpleStatistics(final ScrolledForm form, final Composite composite) {
-
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
         units.add(new IndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, simpleStatIndicator.getRowCountIndicator(), null));
         units.add(new IndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator.getDistinctCountIndicator(),
@@ -548,20 +533,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     public void refresh() {
-        // if (chartComposite != null) {
-        // try {
-        // for (Control control : chartComposite.getChildren()) {
-        // control.dispose();
-        // }
-        //
-        // createPreviewCharts(form, chartComposite, true);
-        // chartComposite.layout();
-        // getForm().reflow(true);
-        // } catch (Exception ex) {
-        // log.error(ex, ex);
-        // }
-        //
-        // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
@@ -621,7 +592,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * 
      * DOC qiongli Comment method "createAnalysisParamSection".
      * 
      * @param form
@@ -631,11 +601,18 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         analysisParamSection = createSection(form, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
+        sectionClient.setLayout(new GridLayout(1, false));
 
-        sectionClient.setLayout(new GridLayout(2, false));
-        toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
+        Composite comp1 = new Composite(sectionClient, SWT.NONE);
+        comp1.setLayout(new GridLayout(1, false));
+        this.createAnalysisLimitComposite(comp1);
+
+        Composite comp2 = new Composite(sectionClient, SWT.NONE);
+        comp2.setLayout(new GridLayout(2, false));
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(comp2);
+        toolkit.createLabel(comp2, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
         // MOD zshen:need to use the component with finish indicator Selection.
-        execCombo = new CCombo(sectionClient, SWT.BORDER);
+        execCombo = new CCombo(comp2, SWT.BORDER);
         // ~
         execCombo.setEditable(false);
 
@@ -645,8 +622,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         }
         ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
         // MOD qiongli 2011-2-28,feature 19192.create 'storeDataSection' only for sql engine.
-        final Composite javaEnginSection = createjavaEnginSection(sectionClient);
-        final Composite storeDataSection = createStoreDataCheck(sectionClient);
+        final Composite javaEnginSection = createjavaEnginSection(comp2);
+        final Composite storeDataSection = createStoreDataCheck(comp2);
         // MOD qiongli 2011-3-15 set DataFilterText disabled except TdColumn.
         if (analyzedColumns != null && !analyzedColumns.isEmpty()) {
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumns.get(0));
@@ -709,7 +686,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * 
      * DOC qiongli Comment method "createStoreDataCheck".
      * 
      * @param sectionClient
@@ -735,14 +711,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * 
      * DOC qiongli Comment method "createjavaEnginSection".
      * 
      * @param sectionClient
      * @return
      */
     protected Composite createjavaEnginSection(Composite sectionClient) {
-
         AnalysisParameters anaParameters = columnSetAnalysisHandler.getAnalysis().getParameters();
         Composite javaEnginSection = toolkit.createComposite(sectionClient);
         Composite checkSection = toolkit.createComposite(javaEnginSection);
@@ -880,6 +854,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
+
+        // save the number of connections per analysis
+        this.saveNumberOfConnectionsPerAnalysis();
+
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
@@ -955,7 +933,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     public SimpleStatIndicator getSimpleStatIndicator() {
-        // simpleStatIndicator.getListRows();
         return simpleStatIndicator;
     }
 
@@ -969,7 +946,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     public ReturnCode canSave() {
-
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = super.canSave();
         if (!canModRetCode.isOk()) {
@@ -986,7 +962,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // MOD klliu 2001-03-28 19464 filter column from same table
         Set<EObject> nodeTypeName = new HashSet<EObject>();
         for (IRepositoryNode rd : columnSetMultiValueList) {
-            // columnList.add(((MetadataColumnRepositoryObject) rd.getObject()).getTdColumn());
             ModelElement modelElementFromRepositoryNode = RepositoryNodeHelper.getModelElementFromRepositoryNode(rd);
             EObject eContainer = modelElementFromRepositoryNode.eContainer();
             nodeTypeName.add(eContainer);
@@ -1059,7 +1034,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * 
      * DOC qiongli Comment method "includeDatePatternFreqIndicator".
      * 
      * @return
@@ -1074,7 +1048,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * 
      * DOC qiongli Comment method "getDataFilterComp".
      * 
      * @return
@@ -1084,7 +1057,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * 
      * DOC qiongli Comment method "chageExecuteLanguageToJava".
      */
     public void changeExecuteLanguageToJava(boolean isDisabled) {

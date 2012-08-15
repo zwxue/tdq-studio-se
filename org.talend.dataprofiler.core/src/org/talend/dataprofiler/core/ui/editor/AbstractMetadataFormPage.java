@@ -73,10 +73,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private static final String AUTHOR_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.author"); //$NON-NLS-1$
 
-    // private static final String LOCKER_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.locker"); //$NON-NLS-1$
-
-    // private static final String VERSION_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.version"); //$NON-NLS-1$
-
     private static final String STATUS_LABEL = DefaultMessagesImpl.getString("AbstractMetadataFormPage.status"); //$NON-NLS-1$
 
     private static final String WHITESPACE_CHECK_MSG = DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace"); //$NON-NLS-1$
@@ -91,11 +87,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected Text authorText;
 
+    protected Text numberOfConnectionsPerAnalysisText;
+
     protected boolean modify;
-
-    // protected Text lockerText;
-
-    // protected Text versionText;
 
     protected CCombo statusCombo;
 
@@ -141,7 +135,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         form.setText(getFormTitle());
         Composite body = form.getBody();
 
-        // TableWrapLayout layout = new TableWrapLayout();
         body.setLayout(new GridLayout());
 
         topComp = toolkit.createComposite(body);
@@ -167,7 +160,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {
-        Section section = createSection(form, topComp, getMetadataTitle(), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        Section section = createSection(form, topComp, getMetadataTitle(), ""); //$NON-NLS-1$
         Composite parent = toolkit.createComposite(section);
         parent.setLayout(new GridLayout(2, false));
 
@@ -203,12 +196,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             authorText.setEnabled(false);
             authorText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         }
-        // toolkit.createLabel(parent, VERSION_LABEL);
-        // createVersionUI(parent);
-
-        // lockerText = createMetadataTextFiled(LOCKER_LABEL, parent);
-
-        // versionText = createMetadataVersionFiled(VERSION_LABEL, parent);
 
         toolkit.createLabel(parent, STATUS_LABEL); //$NON-NLS-1$
         statusCombo = new CCombo(parent, SWT.BORDER);
@@ -250,18 +237,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 } else {
                     getManagedForm().getMessageManager().removeMessage(NAMECONNOTBEEMPTY, nameText);
                 }
-
-                // if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
-                // setDirty(dirty);
-                // MessageDialog.openError(null,
-                //                            DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.nameCannotBeEmpty"));//$NON-NLS-1$//$NON-NLS-2$
-                // nameText.removeModifyListener(this);
-                // Property property = getProperty();
-                // nameText.setText(property.getLabel());
-                // nameText.addModifyListener(this);
-                // }
-
-                // fireTextChange();
             }
 
         });
@@ -290,18 +265,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             }
         });
 
-        // versionText.addModifyListener(new ModifyListener() {
-        //
-        // /*
-        // * (non-Javadoc)
-        // *
-        // * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-        // */
-        // public void modifyText(ModifyEvent e) {
-        // setDirty(true);
-        // }
-        // });
-
         statusCombo.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -315,70 +278,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         section.setClient(parent);
         return section;
     }
-
-    // private Text createMetadataVersionFiled(String label, Composite parent) {
-    // toolkit.createLabel(parent, label);
-    // return createVersionUI(parent);
-    // }
-
-    // /**
-    // * DOC bZhou Comment method "createVersionUI".
-    // *
-    // * @param parent
-    // */
-    // private Text createVersionUI(Composite parent) {
-    // Composite versionContainer = new Composite(parent, SWT.NONE);
-    // versionContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    // GridLayout versionLayout = new GridLayout(3, false);
-    // versionLayout.marginHeight = 0;
-    // versionLayout.marginWidth = 0;
-    // versionLayout.horizontalSpacing = 0;
-    // versionContainer.setLayout(versionLayout);
-    //
-    // final Text text = new Text(versionContainer, SWT.BORDER);
-    // text.setEnabled(false);
-    // text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    //
-    // Button versionMajorBtn = new Button(versionContainer, SWT.PUSH);
-    //        versionMajorBtn.setText("M"); //$NON-NLS-1$
-    //
-    // Button versionMinorBtn = new Button(versionContainer, SWT.PUSH);
-    //        versionMinorBtn.setText("m"); //$NON-NLS-1$
-    //
-    // versionMajorBtn.addSelectionListener(new SelectionAdapter() {
-    //
-    // @Override
-    // public void widgetSelected(SelectionEvent e) {
-    // String version = text.getText();
-    // version = VersionUtils.upMajor(version);
-    // text.setText(version);
-    // Property property = getProperty();
-    // if (property != null) {
-    // property.setVersion(version);
-    // property.setCreationDate(new Date());
-    // }
-    // setDirty(true);
-    // }
-    // });
-    //
-    // versionMinorBtn.addSelectionListener(new SelectionAdapter() {
-    //
-    // @Override
-    // public void widgetSelected(SelectionEvent e) {
-    // String version = text.getText();
-    // version = VersionUtils.upMinor(version);
-    // text.setText(version);
-    // Property property = getProperty();
-    // if (property != null) {
-    // property.setVersion(version);
-    // property.setCreationDate(new Date());
-    // }
-    // setDirty(true);
-    // }
-    // });
-    //
-    // return text;
-    // }
 
     /**
      * DOC bZhou Comment method "createMetadataTextFiled".
@@ -412,15 +311,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             // String version = property.getVersion();
             String devStatus = property.getStatusCode();
 
-            // String lockerStr = null;
-            // ItemState state = property.getItem().getState();
-            // if (state != null) {
-            // User locker = state.getLocker();
-            // if (locker != null) {
-            // lockerStr = locker.getLogin();
-            // }
-            // }
-
             nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
             // MOD klliu 2010-04-21 bug 20204 get the init value
             setOldDataproviderName(nameText.getText());
@@ -433,11 +323,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                     : (tv.getValue() == null ? PluginConstant.EMPTY_STRING : tv.getValue())) : author);
             // ~
             authorText.setEnabled(false);
-            // lockerText.setText(lockerStr == null ? PluginConstant.EMPTY_STRING : lockerStr);
-            // lockerText.setEnabled(false);
-            // versionText.setText(version == null ? VersionUtils.DEFAULT_VERSION : version);
             statusCombo.setText(devStatus == null ? PluginConstant.EMPTY_STRING : devStatus);
-
         }
     }
 
@@ -642,7 +528,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             oldProperty = this.repositoryViewObject.getProperty();
         }
         ReturnCode ret = new ReturnCode();
-        if (oldProperty == null||objectType==null) {
+        if (oldProperty == null || objectType == null) {
             return ret;
         }
         if (PluginConstant.EMPTY_STRING.equals(elementName.trim())) {

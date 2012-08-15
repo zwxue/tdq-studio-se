@@ -225,10 +225,10 @@ public final class AnalysisHelper {
             EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
             int size = dataFilters.size();
             if (size == 0) {
-                dataFilters.add(createDomain(analysis, ""));
-                return dataFilters.add(createDomain(analysis, datafilterString, "1"));
+                dataFilters.add(createDomain(analysis, "")); //$NON-NLS-1$
+                return dataFilters.add(createDomain(analysis, datafilterString, "1")); //$NON-NLS-1$
             } else if (size == 1) {
-                return dataFilters.add(createDomain(analysis, datafilterString, "1"));
+                return dataFilters.add(createDomain(analysis, datafilterString, "1")); //$NON-NLS-1$
             } else if (size == 2) {
                 Domain domain = dataFilters.get(1);
                 EList<RangeRestriction> ranges = domain.getRanges();
@@ -377,8 +377,14 @@ public final class AnalysisHelper {
         return TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.RELOAD_DATABASES, String.valueOf(reloadDatabases));
     }
 
+    /**
+     * DOC xqliu Comment method "getPurpose".
+     * 
+     * @param analysis
+     * @return
+     */
     public static String getPurpose(Analysis analysis) {
-        String purpose = "";
+        String purpose = ""; //$NON-NLS-1$
         if (analysis != null) {
             TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PURPOSE, analysis.getTaggedValue());
             if (taggedValue != null && taggedValue.getValue() != null) {
@@ -388,8 +394,14 @@ public final class AnalysisHelper {
         return purpose;
     }
 
+    /**
+     * DOC xqliu Comment method "getDescription".
+     * 
+     * @param analysis
+     * @return
+     */
     public static String getDescription(Analysis analysis) {
-        String description = "";
+        String description = ""; //$NON-NLS-1$
         if (analysis != null) {
             TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DESCRIPTION, analysis.getTaggedValue());
             if (taggedValue != null && taggedValue.getValue() != null) {
@@ -398,16 +410,4 @@ public final class AnalysisHelper {
         }
         return description;
     }
-
-    // MOD scorreia 2009-10-07 User defined matching indicator is NOT a pattern matching indicator.
-    // private static IndicatorCategory getIndicatorCategory(IndicatorDefinition indicatorDefinition) {
-    // IndicatorCategory category = null;
-    // if (indicatorDefinition != null) {
-    // EList<IndicatorCategory> categories = indicatorDefinition.getCategories();
-    // if (categories != null && categories.size() > 0) {
-    // category = categories.get(0);
-    // }
-    // }
-    // return category;
-    // }
 }

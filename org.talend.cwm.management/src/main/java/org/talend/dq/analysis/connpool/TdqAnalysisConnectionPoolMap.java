@@ -81,10 +81,10 @@ public final class TdqAnalysisConnectionPoolMap {
      * @return
      */
     public synchronized TdqAnalysisConnectionPool getConnectionPool(
-            org.talend.core.model.metadata.builder.connection.Connection key) {
+            org.talend.core.model.metadata.builder.connection.Connection key, int maxConnections) {
         TdqAnalysisConnectionPool pool = connectionPools.get(key);
         if (pool == null) {
-            pool = new TdqAnalysisConnectionPool(key);
+            pool = new TdqAnalysisConnectionPool(key, maxConnections);
             connectionPools.put(key, pool);
         }
         return pool;

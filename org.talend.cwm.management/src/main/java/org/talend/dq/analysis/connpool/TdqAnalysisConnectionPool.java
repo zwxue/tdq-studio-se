@@ -19,7 +19,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -50,6 +49,18 @@ public class TdqAnalysisConnectionPool {
 
     private String synchronizedFlag = ""; //$NON-NLS-1$\
 
+    private int maxConnections = CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
+
+    public int getMaxConnections() {
+        return this.maxConnections;
+    }
+
+    public void setMaxConnections(int maxConnections) {
+        if (maxConnections > 0) {
+            this.maxConnections = maxConnections;
+        }
+    }
+
     public int getDriverMaxConnections() {
         return this.driverMaxConnections;
     }
@@ -65,8 +76,9 @@ public class TdqAnalysisConnectionPool {
      * 
      * @param tConnection
      */
-    public TdqAnalysisConnectionPool(org.talend.core.model.metadata.builder.connection.Connection tConnection) {
+    public TdqAnalysisConnectionPool(org.talend.core.model.metadata.builder.connection.Connection tConnection, int maxConnections) {
         this.setTConnection(tConnection);
+        this.setMaxConnections(maxConnections);
     }
 
     /**
@@ -106,22 +118,6 @@ public class TdqAnalysisConnectionPool {
      */
     public void setPConnections(Vector<PooledTdqAnalysisConnection> pConnections) {
         this.pConnections = pConnections;
-    }
-
-    /**
-     * DOC xqliu Comment method "getMaxConnections".
-     * 
-     * @return
-     */
-    public int getMaxConnections() {
-		int max = CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
-		try {
-			max = Integer.valueOf(PlatformUI.getPreferenceStore().getString(
-					NUMBER_OF_CONNECTIONS_PER_ANALYSIS));
-		} catch (Exception e) {
-			log.debug(e);
-		}
-		return max;
     }
 
     /**
@@ -360,7 +356,6 @@ public class TdqAnalysisConnectionPool {
 
         showConnectionInfo();
     }
-
 
     /**
      * DOC xqliu Comment method "wait".

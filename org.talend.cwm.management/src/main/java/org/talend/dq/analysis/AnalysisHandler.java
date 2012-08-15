@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -24,14 +25,17 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.RelationalPackage;
 import orgomg.cwm.resource.relational.Table;
@@ -42,12 +46,26 @@ import orgomg.cwm.resource.relational.View;
  */
 public class AnalysisHandler {
 
+    private static Logger log = Logger.getLogger(AnalysisHandler.class);
+
     protected Analysis analysis;
 
     private ExecutionInformations resultMetadata;
 
     public AnalysisHandler() {
         super();
+    }
+
+    /**
+     * DOC xqliu Comment method "createHandler".
+     * 
+     * @param pAnalysis
+     * @return
+     */
+    public static AnalysisHandler createHandler(Analysis pAnalysis) {
+        AnalysisHandler handler = new AnalysisHandler();
+        handler.setAnalysis(pAnalysis);
+        return handler;
     }
 
     /**
@@ -283,5 +301,42 @@ public class AnalysisHandler {
             }
         }
         return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "getNumberOfConnectionsPerAnalysis".
+     * 
+     * @return
+     */
+    public int getNumberOfConnectionsPerAnalysis() {
+        int num = TdqAnalysisConnectionPool.CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
+        if (this.analysis != null) {
+            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(
+                    TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS, this.analysis.getTaggedValue());
+            if (taggedValue != null) {
+                try {
+                    num = Integer.valueOf(taggedValue.getValue());
+                } catch (NumberFormatException e) {
+                    log.debug(e);
+                }
+            }
+        }
+        return num;
+    }
+
+    /**
+     * DOC xqliu Comment method "setNumberOfConnectionsPerAnalysis".
+     * 
+     * @param str
+     */
+    public void setNumberOfConnectionsPerAnalysis(String str) {
+        int num = TdqAnalysisConnectionPool.CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
+        try {
+            num = Integer.valueOf(str);
+        } catch (NumberFormatException e) {
+            log.debug(e);
+        }
+        TaggedValueHelper.setTaggedValue(this.analysis, TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
+                String.valueOf(num));
     }
 }

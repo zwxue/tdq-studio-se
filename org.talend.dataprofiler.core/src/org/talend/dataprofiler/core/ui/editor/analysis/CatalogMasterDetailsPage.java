@@ -92,19 +92,6 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
         return cataUIEleList;
     }
 
-    // protected List<CatalogIndicator> getCatalogIndicators() {
-    // EList<Indicator> indicators = analysis.getResults().getIndicators();
-    // catalogIndicatorList.clear();
-    // for (Indicator indicator : indicators) {
-    // catalogIndicatorList.add((CatalogIndicator) indicator);
-    // }
-    // return catalogIndicatorList;
-    // }
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getCatalogs()
-     */
     @Override
     protected List<Catalog> getCatalogs() {
         catalogs.clear();
@@ -115,8 +102,6 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
         return catalogs;
     }
 
-    // private List<SchemaIndicator> default
-
     /*
      * (non-Javadoc)
      * 
@@ -126,5 +111,4 @@ public class CatalogMasterDetailsPage extends AbstractFilterMetadataPage {
     protected List<OverviewIndUIElement> getSchemaIndicators() {
         return Collections.emptyList();
     }
-
 }

@@ -70,7 +70,6 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * Analysis</a>.
  * 
  * @author jet
- * 
  */
 public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
@@ -95,6 +94,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     DataFilterComp dataFilterComp;
 
     private Section dataFilterSection = null;
+
+    private Section analysisParamSection;
 
     private String stringDataFilter;
 
@@ -133,6 +134,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
         createDataFilterSection(form, topComp);
 
+        createAnalysisParamSection(form, topComp);
+
         columnListA = anaColumnCompareViewer.getColumnListA();
         columnListB = anaColumnCompareViewer.getColumnListB();
 
@@ -140,6 +143,21 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
         form.reflow(true);
+    }
+
+    /**
+     * DOC xqliu Comment method "createAnalysisParamSection".
+     * 
+     * @param pForm
+     * @param pComp
+     */
+    void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
+        this.analysisParamSection = createSection(pForm, pComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        Composite sectionClient = this.toolkit.createComposite(this.analysisParamSection);
+        sectionClient.setLayout(new GridLayout(1, false));
+        this.createAnalysisLimitComposite(sectionClient);
+        this.analysisParamSection.setClient(sectionClient);
     }
 
     /**
@@ -191,7 +209,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      */
     @Override
     protected ReturnCode canRun() {
-
         return columnListA.size() > 0 ? new ReturnCode(true) : new ReturnCode(
                 DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.columnsBlankRunMessage"), false); //$NON-NLS-1$
     }
@@ -230,7 +247,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      */
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
-
         // ADD gdbu 2011-3-3 bug 19179
         // remove the space from analysis name
         //        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
@@ -281,6 +297,10 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();
         // ~ 14014
+
+        // save the number of connections per analysis
+        this.saveNumberOfConnectionsPerAnalysis();
+
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
@@ -312,7 +332,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
             currentEditor.setRefreshResultPage(true);
@@ -339,7 +358,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     }
 
     private ReturnCode validator(List<RepositoryNode> columnASet, List<RepositoryNode> columnBSet) {
-
         // MOD by gdbu 2011-3-21 bug 19179
         ReturnCode canModRetCode = super.canSave();
         if (!canModRetCode.isOk()) {
