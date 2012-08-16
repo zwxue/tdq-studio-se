@@ -31,7 +31,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public final class WorkspaceUtils {
 
     private WorkspaceUtils() {
-
     }
 
     public static File ifolderToFile(IFolder ifolder) {

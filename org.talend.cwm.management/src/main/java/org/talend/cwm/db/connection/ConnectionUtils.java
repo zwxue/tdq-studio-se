@@ -134,10 +134,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * The query to execute in order to verify the connection.
-     */
-    // private static final String PING_SELECT = "SELECT 1";
-    /**
      * private constructor.
      */
     private ConnectionUtils() {
@@ -246,7 +242,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * This method is used to check conectiton is avalible for analysis or report ,when analysis or report runs.
      * 
      * @param analysisDataProvider
@@ -344,10 +339,16 @@ public final class ConnectionUtils {
                 returnCode.setOk(false);
                 returnCode.setMessage(Messages.getString("ConnectionUtils.DriverJarFileEmpty")); //$NON-NLS-1$
             } else {
-                File jarFile = new File(driverJarPath);
-                if (!jarFile.exists() || jarFile.isDirectory()) {
-                    returnCode.setOk(false);
-                    returnCode.setMessage(Messages.getString("ConnectionUtils.DriverJarFileInvalid")); //$NON-NLS-1$
+                String[] splits = driverJarPath.split(";"); //$NON-NLS-1$
+                for (String str : splits) {
+                    if (str != null && str.trim().length() > 0) {
+                        File jarFile = new File(str);
+                        if (!jarFile.exists() || jarFile.isDirectory()) {
+                            returnCode.setOk(false);
+                            returnCode.setMessage(Messages.getString("ConnectionUtils.DriverJarFileInvalid")); //$NON-NLS-1$
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -355,7 +356,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * DOC xqliu Comment method "createConnectionWithTimeout".
      * 
      * @param driver
@@ -612,14 +612,13 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * judge if it is hive connection.
      * 
      * @param connection
      * @return
      * @throws SQLException
      */
-    public static boolean isHive(java.sql.Connection connection)throws SQLException{
+    public static boolean isHive(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = ExtractMetaDataUtils.getConnectionMetadata(connection);
         if (MetadataConnectionUtils.isHive(connectionMetadata)) {
             return true;
@@ -677,7 +676,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * Comment method "isDB2".
      * 
      * @param metadata
@@ -691,7 +689,6 @@ public final class ConnectionUtils {
         }
         return false;
     }
-    
 
     /**
      * DOC xqliu Comment method "isMssql".
@@ -761,7 +758,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * DOC qiongli Comment method "isDelimitedFileConnection".
      * 
      * @param dataprovider
@@ -1033,15 +1029,11 @@ public final class ConnectionUtils {
     public static void setName(Connection conn, String name) {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(conn);
         if (dbConn != null) {
-            // ProxyRepositoryViewObject.getRepositoryViewObject(conn)
-            // .getProperty().setLabel(name);
             dbConn.setName(name);
             dbConn.setLabel(name);
         }
         MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(conn);
         if (mdmConn != null) {
-            // ProxyRepositoryViewObject.getRepositoryViewObject(mdmConn)
-            // .getProperty().setLabel(name);
             mdmConn.setName(name);
             mdmConn.setLabel(name);
         }
@@ -1220,7 +1212,6 @@ public final class ConnectionUtils {
         if (saveFlag && conn != null) {
             ElementWriterFactory.getInstance().createDataProviderWriter().save(conn);
         }
-        // updateRetrieveAllFlag(conn);
         return conn;
     }
 
@@ -1290,14 +1281,6 @@ public final class ConnectionUtils {
         } else {
             boolean noStructureExists = ConnectionHelper.getAllCatalogs(dbConn).isEmpty()
                     && ConnectionHelper.getAllSchemas(dbConn).isEmpty();
-            // MOD xqliu 2010-10-19 bug 16441: case insensitive
-            // if (ConnectionHelper.getAllSchemas(dbConn).isEmpty()
-            // && (ConnectionUtils.isMssql(dbConn) ||
-            // ConnectionUtils.isPostgresql(dbConn) || ConnectionUtils
-            // .isAs400(dbConn))) {
-            // noStructureExists = true;
-            // }
-            // ~ 16441
             java.sql.Connection sqlConn = null;
             try {
                 if (noStructureExists) { // do no override existing catalogs or
@@ -1434,12 +1417,9 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
-     * DOC zshen Comment method "retrieveColumn".
+     * retrieve sqlDataType if it have a name is "Null".
      * 
      * @param tdTable
-     * 
-     * retrieve sqlDataType if it have a name is "Null".
      */
     public static void retrieveColumn(MetadataTable tdTable) {
         List<TdColumn> columnList = ColumnSetHelper.getColumns((ColumnSet) tdTable);
@@ -1524,7 +1504,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * DOC zshen Comment method "getPackageFilter".
      * 
      * @param connectionParam
@@ -1605,7 +1584,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * DOC gdbu Comment method "getXMLElementsWithOutSave".
      * 
      * @param document
@@ -1626,7 +1604,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * DOC gdbu Comment method "getXMLElementsWithOutSave".
      * 
      * @param element
@@ -1701,7 +1678,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * if the connection has sid return false, else return true (don't need the TaggedValue any more).
      * 
      * @param element
@@ -1751,16 +1727,9 @@ public final class ConnectionUtils {
             }
         }
         return true;
-        // TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.RETRIEVE_ALL,
-        // element.getTaggedValue());
-        // if (taggedValue == null) {
-        // return true;
-        // }
-        // return Boolean.valueOf(taggedValue.getValue());
     }
 
     /**
-     * 
      * Get the original value for context mode.
      * 
      * @param connection
@@ -1787,7 +1756,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * Get the original DatabaseConnection for context mode.
      * 
      * @param connection
@@ -1808,7 +1776,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
      * Get the original FileConnection for context mode.
      * 
      * @param fileConn
