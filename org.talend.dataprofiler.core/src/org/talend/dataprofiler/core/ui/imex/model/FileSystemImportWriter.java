@@ -277,6 +277,9 @@ public class FileSystemImportWriter implements IImportWriter {
         IPath mdmPath = record.getFilePath().removeLastSegments(1);
         IPath srcPath = mdmPath.append(schema.getXsdFilePath());
         while (!srcPath.toFile().exists()) {
+            if (mdmPath.isRoot()) {
+                break;
+            }
             mdmPath = mdmPath.removeLastSegments(1);
             srcPath = mdmPath.append(schema.getXsdFilePath());
         }
