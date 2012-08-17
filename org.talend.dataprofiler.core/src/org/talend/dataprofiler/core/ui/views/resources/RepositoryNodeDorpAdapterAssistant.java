@@ -338,17 +338,19 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
         // get the target node and folder
         IFolder targetFolder = RepositoryNodeHelper.getIFolder(targetNode);
-        File targetFile = WorkspaceUtils.ifolderToFile(targetFolder);
+        if (targetFolder != null) {
+            File targetFile = WorkspaceUtils.ifolderToFile(targetFolder);
 
-        // move the report generate doc folder
-        FilesUtils.copyDirectory(sourceFile, targetFile);
-        FilesUtils.deleteFile(sourceFile, true);
+            // move the report generate doc folder
+            FilesUtils.copyDirectory(sourceFile, targetFile);
+            FilesUtils.deleteFile(sourceFile, true);
 
-        // update the file .report.list
-        ReportUtils.updateReportListFile(outputFolder, targetFolder);
+            // update the file .report.list
+            ReportUtils.updateReportListFile(outputFolder, targetFolder);
 
-        // refresh the dq repository tree view
-        CorePlugin.getDefault().refreshDQView(targetNode.getParent());
+            // refresh the dq repository tree view
+            CorePlugin.getDefault().refreshDQView(targetNode.getParent());
+        }
     }
 
     /**
