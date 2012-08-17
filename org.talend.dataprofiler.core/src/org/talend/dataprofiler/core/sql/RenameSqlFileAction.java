@@ -59,12 +59,10 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
-import org.talend.dq.writer.impl.SQLSourceFileWriter;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -160,11 +158,6 @@ public class RenameSqlFileAction extends Action {
 
     private void renameSourceFile(Project project) throws PersistenceException {
         CorePlugin.getDefault().closeEditorIfOpened(sourceFiletem);
-        // Added yyin 20120705 TDQ-5716, rename sql file error
-        // load the file content into bytearray
-        SQLSourceFileWriter ssWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createSQLSourceFileWriter();
-        ReturnCode rc = ssWriter.loadFileContentInItem(sourceFiletem, false);
-        // ~
 
         Property property = sourceFiletem.getProperty();
         property.setDisplayName(newName);
