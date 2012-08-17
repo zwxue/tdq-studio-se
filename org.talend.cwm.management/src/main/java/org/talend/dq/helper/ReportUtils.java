@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -41,7 +42,6 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.eclipse.IPath;
 import org.talend.utils.sugars.ReturnCode;
 
 import com.csvreader.CsvReader;
@@ -211,8 +211,8 @@ public final class ReportUtils {
     public static File getReportListFile(IFile reportFile) throws IOException {
         String reportFileName = reportFile.getName();
         String simpleName = getSimpleName(reportFileName);
-        File file = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName) + "/"//$NON-NLS-1$
-                + REPORT_LIST);
+        File file = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName)
+                + File.separator + REPORT_LIST);
         if (!file.exists()) {
             File parentFile = file.getParentFile();
             if (parentFile != null) {
@@ -288,7 +288,7 @@ public final class ReportUtils {
         if (reportFileFolder != null && reportFileFolder.exists()) {
 
             File repListFile = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName)
-                    + "/" + REPORT_LIST);//$NON-NLS-1$
+                    + File.separator + REPORT_LIST);//$NON-NLS-1$
             List<ReportListParameters> repList = new ArrayList<ReportListParameters>();
 
             IResource[] members = reportFileFolder.members();
@@ -415,7 +415,7 @@ public final class ReportUtils {
                 oldFolder.renameTo(newFolder);
                 // replace the path in the .report.list
                 File file = new File(ReportHelper.getOutputFolderNameDefault((IFolder) repItemParent, newFolderName)
-                        + IPath.SEPARATOR + REPORT_LIST);
+                        + File.separator + REPORT_LIST);
                 if (file.exists() && file.isFile()) {
                     FilesUtils.replaceInFile(oldFolder.toString(), file.toString(), newFolder.toString());
                 }
@@ -555,11 +555,15 @@ public final class ReportUtils {
         try {
             File oldFolder = WorkspaceUtils.ifolderToFile(outputFolder);
             File newFolder = WorkspaceUtils.ifolderToFile(targetFolder.getFolder(outputFolder.getName()));
-            File file = new File(newFolder.getAbsolutePath() + IPath.SEPARATOR + ReportUtils.REPORT_LIST);
+            File file = new File(newFolder.getAbsolutePath() + File.separator + ReportUtils.REPORT_LIST);
             if (file.exists() && file.isFile()) {
-                FilesUtils.replaceInFile(oldFolder.toString(), file.toString(), newFolder.toString());
+                String str1 = oldFolder.toString();
+                String str2 = newFolder.toString();
+                str1 = StringUtils.replace(str1, "\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
+                str2 = StringUtils.replace(str2, "\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
+                FilesUtils.replaceInFile(str1, file.toString(), str2);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.warn(e, e);
         }
     }
@@ -572,7 +576,7 @@ public final class ReportUtils {
      * @param subFolderName
      */
     public static void copyAndUpdateRepGenDocFileInfo(IFolder newFolder, File tempFolder, String subFolderName) {
-        File srcFolder = new File(tempFolder.getAbsolutePath() + IPath.SEPARATOR + subFolderName);
+        File srcFolder = new File(tempFolder.getAbsolutePath() + File.separator + subFolderName);
         File tarFolder = WorkspaceUtils.ifolderToFile(newFolder);
         // move folder
         moveHiddenFolders(srcFolder, tarFolder);
@@ -619,7 +623,7 @@ public final class ReportUtils {
      * @return
      */
     public static String getOriginalOutoutFolderPath(File srcFolder, File file, String tempFolderName) {
-        String path = srcFolder.getAbsolutePath() + IPath.SEPARATOR + file.getName();
+        String path = srcFolder.getAbsolutePath() + File.separator + file.getName();
         int indexOf = path.indexOf(tempFolderName);
         if (indexOf > 0) {
             path = path.substring(0, indexOf) + path.substring(indexOf + tempFolderName.length() + 1, path.length());

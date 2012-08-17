@@ -338,17 +338,19 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
         // get the target node and folder
         IFolder targetFolder = RepositoryNodeHelper.getIFolder(targetNode);
-        File targetFile = WorkspaceUtils.ifolderToFile(targetFolder);
+        if (targetFolder != null) {
+            File targetFile = WorkspaceUtils.ifolderToFile(targetFolder);
 
-        // move the report generate doc folder
-        FilesUtils.copyDirectory(sourceFile, targetFile);
-        FilesUtils.deleteFile(sourceFile, true);
+            // move the report generate doc folder
+            FilesUtils.copyDirectory(sourceFile, targetFile);
+            FilesUtils.deleteFile(sourceFile, true);
 
-        // update the file .report.list
-        ReportUtils.updateReportListFile(outputFolder, targetFolder);
+            // update the file .report.list
+            ReportUtils.updateReportListFile(outputFolder, targetFolder);
 
-        // refresh the dq repository tree view
-        CorePlugin.getDefault().refreshDQView(targetNode.getParent());
+            // refresh the dq repository tree view
+            CorePlugin.getDefault().refreshDQView(targetNode.getParent());
+        }
     }
 
     /**
@@ -630,11 +632,13 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         path = path.startsWith(String.valueOf(IPath.SEPARATOR)) ? path : IPath.SEPARATOR + path;
 
         // MOD sizhaoliu 2012-7-11 TDQ-5613 check lock status before removing/renaming a folder
-    	ProxyRepositoryFactory.getInstance().updateLockStatus();
-        if (ProxyRepositoryManager.getInstance().hasLockedItems(folderNode)){
-        	MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                    DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameFolderLocked")); //$NON-NLS-1$
-        	return;
+        ProxyRepositoryFactory.getInstance().updateLockStatus();
+        if (ProxyRepositoryManager.getInstance().hasLockedItems(folderNode)) {
+            MessageDialog
+                    .openError(
+                            PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                            DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameFolderLocked")); //$NON-NLS-1$
+            return;
         }
 
         // create target folder
