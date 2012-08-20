@@ -64,6 +64,7 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -143,7 +144,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * @return
      */
     private boolean isIndicator(ModelElement element) {
-        return element instanceof IndicatorDefinition;
+        return element instanceof IndicatorDefinition && !(element instanceof DQRule);
     }
 
     /**
