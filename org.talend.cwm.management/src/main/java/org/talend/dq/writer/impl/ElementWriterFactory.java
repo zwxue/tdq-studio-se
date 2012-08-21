@@ -22,7 +22,6 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.writer.AElementPersistance;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -110,10 +109,6 @@ public final class ElementWriterFactory {
         return new IndicatorDefinitionWriter();
     }
 
-    public SQLSourceFileWriter createSQLSourceFileWriter() {
-        return new SQLSourceFileWriter();
-    }
-
     /**
      * DOC bZhou Comment method "create".
      * 
@@ -166,9 +161,10 @@ public final class ElementWriterFactory {
         }
         return null;
     }
-/**
- * create a Writer by the type of Item
- */
+
+    /**
+     * create a Writer by the type of Item
+     */
     public AElementPersistance create(Item currItem) {
         if (currItem instanceof TDQAnalysisItem) {
             return createAnalysisWrite();
