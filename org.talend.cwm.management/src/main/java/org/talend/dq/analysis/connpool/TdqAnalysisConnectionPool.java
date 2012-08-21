@@ -32,7 +32,7 @@ public class TdqAnalysisConnectionPool {
 
 	public static final String NUMBER_OF_CONNECTIONS_PER_ANALYSIS = "NUMBER_OF_CONNECTIONS_PER_ANALYSIS"; //$NON-NLS-1$\
 
-	private static final int DEFAULT_WAIT_MILLISECOND = 500;
+    private static final int DEFAULT_WAIT_MILLISECOND = 5;
 
 	private static final int DEFAULT_WAIT_TIMES = 10;
 
