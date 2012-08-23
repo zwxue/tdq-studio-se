@@ -187,6 +187,7 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
             case IndicatorsPackage.WELL_FORM_E164_PHONE_COUNT_INDICATOR: return createWellFormE164PhoneCountIndicator();
             case IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR: return createPhoneNumbStatisticsIndicator();
             case IndicatorsPackage.FORMAT_FREQ_PIE_INDICATOR: return createFormatFreqPieIndicator();
+            case IndicatorsPackage.BENFORD_LAW_FREQUENCY_INDICATOR: return createBenfordLawFrequencyIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -942,6 +943,16 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
     public FormatFreqPieIndicator createFormatFreqPieIndicator() {
         FormatFreqPieIndicatorImpl formatFreqPieIndicator = new FormatFreqPieIndicatorImpl();
         return formatFreqPieIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public BenfordLawFrequencyIndicator createBenfordLawFrequencyIndicator() {
+        BenfordLawFrequencyIndicatorImpl benfordLawFrequencyIndicator = new BenfordLawFrequencyIndicatorImpl();
+        return benfordLawFrequencyIndicator;
     }
 
     /**

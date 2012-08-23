@@ -647,6 +647,15 @@ public interface IndicatorsFactory extends EFactory {
     FormatFreqPieIndicator createFormatFreqPieIndicator();
 
     /**
+     * Returns a new object of class '<em>Benford Law Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Benford Law Frequency Indicator</em>'.
+     * @generated
+     */
+    BenfordLawFrequencyIndicator createBenfordLawFrequencyIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

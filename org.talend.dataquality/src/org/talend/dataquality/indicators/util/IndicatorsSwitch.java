@@ -829,6 +829,16 @@ public class IndicatorsSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case IndicatorsPackage.BENFORD_LAW_FREQUENCY_INDICATOR: {
+                BenfordLawFrequencyIndicator benfordLawFrequencyIndicator = (BenfordLawFrequencyIndicator)theEObject;
+                T result = caseBenfordLawFrequencyIndicator(benfordLawFrequencyIndicator);
+                if (result == null) result = caseFrequencyIndicator(benfordLawFrequencyIndicator);
+                if (result == null) result = caseIndicator(benfordLawFrequencyIndicator);
+                if (result == null) result = caseModelElement(benfordLawFrequencyIndicator);
+                if (result == null) result = caseElement(benfordLawFrequencyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -1668,6 +1678,21 @@ public class IndicatorsSwitch<T> {
      * @generated
      */
     public T caseFormatFreqPieIndicator(FormatFreqPieIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Benford Law Frequency Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Benford Law Frequency Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseBenfordLawFrequencyIndicator(BenfordLawFrequencyIndicator object) {
         return null;
     }
 

@@ -36,6 +36,7 @@ import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
+import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
 import org.talend.dataquality.indicators.BinFrequencyIndicator;
 import org.talend.dataquality.indicators.BinLowFrequencyIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
@@ -599,6 +600,13 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
      * @generated
      */
     private EClass formatFreqPieIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass benfordLawFrequencyIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2200,6 +2208,15 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getBenfordLawFrequencyIndicator() {
+        return benfordLawFrequencyIndicatorEClass;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -2535,6 +2552,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         createEAttribute(formatFreqPieIndicatorEClass, FORMAT_FREQ_PIE_INDICATOR__INVALID_FORM_COUNT);
         createEAttribute(formatFreqPieIndicatorEClass, FORMAT_FREQ_PIE_INDICATOR__CURRENT_KEY);
 
+        benfordLawFrequencyIndicatorEClass = createEClass(BENFORD_LAW_FREQUENCY_INDICATOR);
+
         // Create enums
         enumStatisticsEEnum = createEEnum(ENUM_STATISTICS);
         dataminingTypeEEnum = createEEnum(DATAMINING_TYPE);
@@ -2659,6 +2678,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         wellFormE164PhoneCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
         phoneNumbStatisticsIndicatorEClass.getESuperTypes().add(this.getCompositeIndicator());
         formatFreqPieIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
+        benfordLawFrequencyIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(indicatorEClass, Indicator.class, "Indicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2988,6 +3008,8 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         initEAttribute(getFormatFreqPieIndicator_WellFormNatiCount(), ecorePackage.getELong(), "wellFormNatiCount", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getFormatFreqPieIndicator_InvalidFormCount(), ecorePackage.getELong(), "invalidFormCount", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getFormatFreqPieIndicator_CurrentKey(), ecorePackage.getEString(), "currentKey", null, 0, 1, FormatFreqPieIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(benfordLawFrequencyIndicatorEClass, BenfordLawFrequencyIndicator.class, "BenfordLawFrequencyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         // Initialize enums and add enum literals
         initEEnum(enumStatisticsEEnum, EnumStatistics.class, "EnumStatistics");
