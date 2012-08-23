@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -400,27 +399,27 @@ public final class ReportUtils {
      * @param oldFolderName
      * @param repItem
      */
-    public static void checkAndUpdateRepFolderName4Rename(String oldFolderName, TDQReportItem repItem) {
+    public static void checkAndUpdateRepFolderName4Rename(IFolder parentFolder, String oldFolderName, TDQReportItem repItem) {
         // new report folder name
         String newFolderName = ReportUtils.getSimpleName(repItem.getProperty());
         // if the report's name changed, update the report folder name also
         if (!oldFolderName.equals(newFolderName)) {
-            IContainer repItemParent = PropertyHelper.getItemFile(repItem.getProperty()).getParent();
-            File oldFolder = WorkspaceUtils.ifolderToFile(repItemParent.getFolder(Path
+            // IContainer repItemParent = PropertyHelper.getItemFile(repItem.getProperty()).getParent();
+            File oldFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
                     .fromPortableString(PluginConstant.DOT_STRING + oldFolderName)));
-            File newFolder = WorkspaceUtils.ifolderToFile(repItemParent.getFolder(Path
+            File newFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
                     .fromPortableString(PluginConstant.DOT_STRING + newFolderName)));
             try {
                 // rename the folder
                 oldFolder.renameTo(newFolder);
                 // replace the path in the .report.list
-                File file = new File(ReportHelper.getOutputFolderNameDefault((IFolder) repItemParent, newFolderName)
-                        + File.separator + REPORT_LIST);
+                File file = new File(ReportHelper.getOutputFolderNameDefault(parentFolder, newFolderName) + File.separator
+                        + REPORT_LIST);
                 if (file.exists() && file.isFile()) {
-                    FilesUtils.replaceInFile(oldFolder.toString(), file.toString(), newFolder.toString());
+                    replaceReportGenDocFilePath(file, oldFolder.toString(), newFolder.toString());
                 }
                 // refresh the container
-                repItemParent.refreshLocal(IResource.DEPTH_INFINITE, null);
+                parentFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (Exception e) {
                 log.warn(e, e);
             }
@@ -557,15 +556,25 @@ public final class ReportUtils {
             File newFolder = WorkspaceUtils.ifolderToFile(targetFolder.getFolder(outputFolder.getName()));
             File file = new File(newFolder.getAbsolutePath() + File.separator + ReportUtils.REPORT_LIST);
             if (file.exists() && file.isFile()) {
-                String str1 = oldFolder.toString();
-                String str2 = newFolder.toString();
-                str1 = StringUtils.replace(str1, "\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
-                str2 = StringUtils.replace(str2, "\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
-                FilesUtils.replaceInFile(str1, file.toString(), str2);
+                replaceReportGenDocFilePath(file, oldFolder.toString(), newFolder.toString());
             }
         } catch (Exception e) {
             log.warn(e, e);
         }
+    }
+
+    /**
+     * DOC xqliu Comment method "replaceReportGenDocFilePath".
+     * 
+     * @param file
+     * @param regex
+     * @param replacement
+     * @throws IOException
+     */
+    public static void replaceReportGenDocFilePath(File file, String regex, String replacement) throws IOException {
+        String str1 = StringUtils.replace(regex, "\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
+        String str2 = StringUtils.replace(replacement, "\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
+        FilesUtils.replaceInFile(str1, file.toString(), str2);
     }
 
     /**
