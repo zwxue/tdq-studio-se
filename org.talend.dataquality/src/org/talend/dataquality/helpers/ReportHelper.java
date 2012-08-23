@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -60,7 +59,7 @@ public final class ReportHelper {
     public static final String USER_DEFINED = "User defined"; // TODO externalize
 
     private static final TypedProperties PROPS = PropertiesLoader
-            .getProperties(ReportHelper.class, "predefined_jrxml.properties");
+            .getProperties(ReportHelper.class, "predefined_jrxml.properties"); //$NON-NLS-1$
 
     public static final boolean USE_REPORT_DB_CONN = true;
 
@@ -364,7 +363,7 @@ public final class ReportHelper {
                 analyses.add(analysis);
             }
         }
-        
+
         return analyses;
     }
 
@@ -919,7 +918,7 @@ public final class ReportHelper {
      */
     public static String getOutputFolderNameDefault(IFolder reportContainer, String simpleName) {
         return ResourcesPlugin.getWorkspace().getRoot().getRawLocation().toOSString()
-                + reportContainer.getFolder("." + simpleName).getFullPath().toOSString();
+                + reportContainer.getFolder("." + simpleName).getFullPath().toOSString(); //$NON-NLS-1$
     }
 
     /**
@@ -928,6 +927,6 @@ public final class ReportHelper {
      * @return
      */
     public static IPath getSubReportsPath() {
-        return new Path(PROPS.getProperty("SUB_REPORT_FOLDER"));
+        return new Path(PROPS.getProperty("SUB_REPORT_FOLDER")); //$NON-NLS-1$
     }
 }

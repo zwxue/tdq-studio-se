@@ -31,7 +31,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public final class WorkspaceUtils {
 
     private WorkspaceUtils() {
-
     }
 
     public static File ifolderToFile(IFolder ifolder) {
@@ -59,7 +58,7 @@ public final class WorkspaceUtils {
     public static IFolder fileToIFolder(File file) {
         IFolder folder = null;
         String filePath = file.getAbsolutePath();
-        String rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocationURI().getPath();
+        String rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
         if (filePath.startsWith(rootPath)) {
             folder = ResourcesPlugin.getWorkspace().getRoot()
                     .getFolder(new Path(filePath.substring(rootPath.length(), filePath.length())));
