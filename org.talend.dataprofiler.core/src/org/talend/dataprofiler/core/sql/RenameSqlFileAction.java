@@ -59,12 +59,10 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
-import org.talend.dq.writer.impl.SQLSourceFileWriter;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -135,13 +133,13 @@ public class RenameSqlFileAction extends Action {
                 if (!isNeedToMove(newFolderPath)) {
                     renameSourceFile((Project) project);
                 } else {
-                    moveSourceFile(project, newFolderPath);
+                moveSourceFile(project, newFolderPath);
                 }
                 CorePlugin.getDefault().refreshDQView(parentNode);
             } catch (PersistenceException e) {
-                log.error(e);
+                log.error(e.getMessage(), e);
             } catch (BusinessException e) {
-                log.error(e);
+                log.error(e.getMessage(), e);
             }
 
         }
@@ -151,6 +149,7 @@ public class RenameSqlFileAction extends Action {
     private void moveSourceFile(Project project, String newFolderPath) throws PersistenceException, BusinessException {
         renameSourceFile(project);
         List<IRepositoryNode> children = this.parentNode.getChildren();
+
         IPath path = new Path(newFolderPath);
         IPath targetPath = path.makeRelativeTo(ResourceManager.getSourceFileFolder().getProjectRelativePath());
         for (IRepositoryNode newNode : children) {
@@ -162,17 +161,16 @@ public class RenameSqlFileAction extends Action {
 
     private void renameSourceFile(Project project) throws PersistenceException {
         CorePlugin.getDefault().closeEditorIfOpened(sourceFiletem);
-        // Added yyin 20120705 TDQ-5716, rename sql file error
-        // load the file content into bytearray
-        SQLSourceFileWriter ssWriter = org.talend.dq.writer.impl.ElementWriterFactory.getInstance().createSQLSourceFileWriter();
-        ReturnCode rc = ssWriter.save(sourceFiletem, false);
-        // ~
 
         Property property = sourceFiletem.getProperty();
         property.setLabel(newName);
         sourceFiletem.setName(newName);
         sourceFiletem.setFileExtension(FileConstants.SQL_EXTENSION);
         // sourceFiletem.setFilename(filePath.toString());
+
+        String newPath = newName + "_" + property.getVersion() + "." + sourceFiletem.getExtension();
+        IPath path = filePath.removeLastSegments(0).append(newPath);
+
         ProxyRepositoryFactory.getInstance().save(project, sourceFiletem);
         CorePlugin.getDefault().refreshDQView(parentNode);
     }
