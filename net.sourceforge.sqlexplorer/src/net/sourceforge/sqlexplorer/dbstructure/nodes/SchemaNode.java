@@ -28,6 +28,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.util.ImageUtil;
 import net.sourceforge.sqlexplorer.util.TextUtil;
 import net.sourceforge.squirrel_sql.fw.sql.ITableInfo;
+import net.sourceforge.squirrel_sql.fw.sql.SQLDatabaseMetaData;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +37,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.talend.utils.sql.ConnectionUtils;
 
 public class SchemaNode extends AbstractNode {
 
@@ -288,7 +290,15 @@ public class SchemaNode extends AbstractNode {
             String[] tableTypes = _session.getMetaData().getTableTypes();
 
             try {
-                tables = _session.getMetaData().getTables(_name, _name, "%", tableTypes, null);
+                // MOD qiongli 2012-8-22 TDQ-5898,get tables should without catalog name for odbc teradata.
+                SQLDatabaseMetaData metaData = _session.getMetaData();
+                boolean isODBCTeradata = ConnectionUtils.isOdbcTeradata(metaData.getJDBCMetaData()) ? true : false;
+                if (isODBCTeradata) {
+                    tables = metaData.getTables(null, _name, "%", tableTypes, null);
+                } else {
+                    tables = metaData.getTables(_name, _name, "%", tableTypes, null);
+                }
+
             } catch (Throwable e) {
                 _logger.debug("Loading all tables at once is not supported");
             }
@@ -303,11 +313,14 @@ public class SchemaNode extends AbstractNode {
                         addChildNode(childNode);
                     }
                 } else {
-                    TableFolderNode node = new TableFolderNode(this, tableTypes[i], _session, tables);
-                    _childNames.add(node.getLabelText());
-                    if (!isExcludedByFilter(node.getLabelText())) {
-                        addChildNode(node);
+                    if (tables != null) {
+                        TableFolderNode node = new TableFolderNode(this, tableTypes[i], _session, tables);
+                        _childNames.add(node.getLabelText());
+                        if (!isExcludedByFilter(node.getLabelText())) {
+                            addChildNode(node);
+                        }
                     }
+
                 }
             }
 
