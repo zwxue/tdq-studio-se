@@ -14,6 +14,8 @@ package org.talend.dq.helper;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +63,7 @@ public class DQDeleteHelperTest {
         when(item.getProperty()).thenReturn(prop);
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getItemFile(prop)).thenReturn(file);
-        PowerMockito.mockStatic(ReportUtils.class);
-        when(ReportUtils.getOutputFolder(file)).thenReturn(folder);
+        stub(method(ReportUtils.class, "getOutputFolder", IFile.class)).toReturn(folder);
         ReturnCode rc = DQDeleteHelper.deleteRelations(item);
         assertTrue(rc.isOk());
 
