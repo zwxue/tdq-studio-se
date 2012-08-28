@@ -108,16 +108,11 @@ public class ResourceViewLabelProviderTest {
      * @return
      */
     public IFolder initFolder(String folderName) {
-        //        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local");//$NON-NLS-1$
-        // ProxyRepositoryFactory proRepInstance = ProxyRepositoryFactory.getInstance();
-        // if (proRepInstance.getRepositoryFactoryFromProvider() == null) {
-        // ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(repository);
-        // }
         IProject rootProject = ReponsitoryContextBridge.getRootProject();
         if (!rootProject.exists()) {
             initProxyRepository(rootProject);
         }
-        // CorePlugin.getDefault().initProxyRepository();
+
         if (DQStructureManager.getInstance().isNeedCreateStructure()) {
             DQStructureManager.getInstance().createDQStructure();
         }
@@ -130,6 +125,7 @@ public class ResourceViewLabelProviderTest {
                 e.printStackTrace();
             }
         }
+
         // for analyses
         if (anaFolderName.equals(folderName)) {
             IFolder subfolder1 = createFolder(aa, "subfolder1");//$NON-NLS-1$
@@ -153,7 +149,6 @@ public class ResourceViewLabelProviderTest {
             createReport("a3", subfolder2, false);//$NON-NLS-1$
             createReport("a2", subfolder1, false);//$NON-NLS-1$
         }
-        ;
         return aa;
     }
 
