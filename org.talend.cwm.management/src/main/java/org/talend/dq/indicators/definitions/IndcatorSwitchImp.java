@@ -17,6 +17,7 @@ import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
+import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
 import org.talend.dataquality.indicators.BinFrequencyIndicator;
 import org.talend.dataquality.indicators.BinLowFrequencyIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
@@ -666,6 +667,11 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     @Override
     public Boolean caseFormatFreqPieIndicator(FormatFreqPieIndicator object) {
         return setIndicatorDefinition(object, "Format Frequency Pie");
+    }
+
+    @Override
+    public Boolean caseBenfordLawFrequencyIndicator(BenfordLawFrequencyIndicator object) {
+        return setIndicatorDefinition(object, IndicatorEnum.BenfordLawFrequencyIndicatorEnum.getLabel());
     }
 
 }

@@ -193,6 +193,7 @@ public final class IndicatorCommonUtil {
                     case DatePatternFreqIndicatorEnum:
                     case SoundexIndicatorEnum:
                     case SoundexLowIndicatorEnum:
+                    case BenfordLawFrequencyIndicatorEnum:
                         value = handleFrequency(indicator);
                         break;
 

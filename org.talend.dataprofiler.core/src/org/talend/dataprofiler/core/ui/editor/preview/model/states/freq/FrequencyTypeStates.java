@@ -78,7 +78,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                         keyLabel = SpecialValueDisplay.EMPTY_FIELD;
                     }
 
-                    customerdataset.addValue(freqExt.getValue(), "", keyLabel); //$NON-NLS-1$
+                    setValueToDataset(customerdataset, freqExt, keyLabel);
 
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setIndicator(unit.getIndicator());
@@ -96,6 +96,17 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
             }
         }
         return customerdataset;
+    }
+
+    /**
+     * extract the method for change the addvalue parameter for benford law
+     * 
+     * @param customerdataset
+     * @param freqExt
+     * @param keyLabel
+     */
+    protected void setValueToDataset(CustomerDefaultCategoryDataset customerdataset, FrequencyExt freqExt, String keyLabel) {
+        customerdataset.addValue(freqExt.getValue(), "", keyLabel); //$NON-NLS-1$
     }
 
     public JFreeChart getExampleChart() {

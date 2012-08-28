@@ -13,6 +13,7 @@
 package org.talend.dq.indicators.preview;
 
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dq.analysis.explore.BenfordLawFrequencyExplorer;
 import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
 import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
@@ -31,8 +32,7 @@ public enum EIndicatorChartType {
     TEXT_STATISTICS(Messages.getString("EIndicatorChartType.TextStatistics"), new TextStatisticsExplorer()), //$NON-NLS-1$
     FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.FrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
     BIN_FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.BinFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
-    LOW_FREQUENCE_STATISTICS(
-                             Messages.getString("EIndicatorChartType.LowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
+    LOW_FREQUENCE_STATISTICS(Messages.getString("EIndicatorChartType.LowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
     BIN_LOW_FREQUENCE_STATISTICS(
                                  Messages.getString("EIndicatorChartType.BinLowFrequencyStatistics"), new FrequencyStatisticsExplorer()), //$NON-NLS-1$
     PATTERN_FREQUENCE_STATISTICS(
@@ -81,7 +81,9 @@ public enum EIndicatorChartType {
 
     PHONE_NUMBER_STATISTICS(Messages.getString("EIndicatorChartType.PhoneNumbStatistics"), null), //$NON-NLS-1$
 
-    FORMAT_FREQ_PIE_STATISTICS(Messages.getString("EIndicatorChartType.FormatFreqPieStatistics"), null); //$NON-NLS-1$
+    FORMAT_FREQ_PIE_STATISTICS(Messages.getString("EIndicatorChartType.FormatFreqPieStatistics"), null), //$NON-NLS-1$
+
+    BENFORD_LAW_STATISTICS(Messages.getString("EIndicatorChartType.BenfordLawStatistics"), new BenfordLawFrequencyExplorer()); //$NON-NLS-1$
 
     private String literal;
 

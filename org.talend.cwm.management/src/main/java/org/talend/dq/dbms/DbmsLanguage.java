@@ -268,6 +268,10 @@ public class DbmsLanguage {
         return surroundWithSpaces(SqlPredicate.UNION.getLiteral());
     }
 
+    public String like() {
+        return surroundWithSpaces(SqlPredicate.LIKE.getLiteral());
+    }
+
     public String from() {
         return surroundWithSpaces("FROM"); //$NON-NLS-1$
     }

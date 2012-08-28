@@ -348,7 +348,12 @@ public enum IndicatorEnum {
                                      new IndicatorEnum[] { ValidPhoneCountIndicatorEnum, ValidRegCodeCountIndicatorEnum,
                                              InvalidRegCodeCountIndicatorEnum, PossiblePhoneCountIndicatorEnum,
                                              WellFormIntePhoneCountIndicatorEnum, WellFormNationalPhoneCountIndicatorEnum,
-                                             WellFormE164PhoneCountIndicatorEnum, FormatFreqPieIndictorEnum });
+                                             WellFormE164PhoneCountIndicatorEnum, FormatFreqPieIndictorEnum }),
+    BenfordLawFrequencyIndicatorEnum(
+                                     IndicatorsPackage.BENFORD_LAW_FREQUENCY_INDICATOR,
+                                     IndicatorsPackage.Literals.BENFORD_LAW_FREQUENCY_INDICATOR,
+                                     "Benford Law Frequency", //$NON-NLS-1$
+                                     null);
 
     private EClass indicatorType;
 
@@ -570,6 +575,8 @@ public enum IndicatorEnum {
             returnEnum = PhoneNumbStatisticsIndicatorEnum;
         } else if (indicatorType == FormatFreqPieIndictorEnum.getIndicatorType()) {
             returnEnum = FormatFreqPieIndictorEnum;
+        } else if (indicatorType == BenfordLawFrequencyIndicatorEnum.getIndicatorType()) {
+            returnEnum = BenfordLawFrequencyIndicatorEnum;
         }
 
         return returnEnum;

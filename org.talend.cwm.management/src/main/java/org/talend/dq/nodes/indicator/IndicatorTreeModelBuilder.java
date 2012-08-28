@@ -67,8 +67,13 @@ public final class IndicatorTreeModelBuilder {
         IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode(Messages
                 .getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums); //$NON-NLS-1$
 
+        // Added yyin 20120827, TDQ-5076, build Fraud Detection category and SIndicator
+        IndicatorEnum[] fraudIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.BenfordLawFrequencyIndicatorEnum };
+        IndicatorCategoryNode fraudCategoryNode = new IndicatorCategoryNode(
+                Messages.getString("IndicatorTreeModelBuilder.FraudStatistics"), fraudIndicatorEnums);
+
         indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
-                advanceCategoryNode, patternFinderCategoryNode, soundexCategoryNode, phoneCategoryNode };
+                advanceCategoryNode, patternFinderCategoryNode, soundexCategoryNode, phoneCategoryNode, fraudCategoryNode };
         return indicatorCategoryNodes;
     }
 }

@@ -102,9 +102,11 @@ public enum EResourceConstant {
                                       "TDQ_Libraries/Indicators/System Indicators/Text Statistics",//$NON-NLS-1$
                                       ResourceConstant.READONLY),
     SYSTEM_INDICATORS_PHONENUMBER_STATISTICS(
-                                             "Phone Number Statistics",
-                                             "TDQ_Libraries/Indicators/System Indicators/Phone Number Statistics",
+"Phone Number Statistics",//$NON-NLS-1$
+                                             "TDQ_Libraries/Indicators/System Indicators/Phone Number Statistics",//$NON-NLS-1$
                                              ResourceConstant.READONLY),
+    SYSTEM_INDICATORS_FRAUDDETECTION("Fraud Detection",//$NON-NLS-1$
+                                     "TDQ_Libraries/Indicators/System Indicators/Fraud Detection", ResourceConstant.READONLY), //$NON-NLS-1$
     JRXML_TEMPLATE("JRXML Template", "TDQ_Libraries/JRXML Template", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     PATTERNS("Patterns", "TDQ_Libraries/Patterns", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     PATTERN_REGEX("Regex", "TDQ_Libraries/Patterns/Regex", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$

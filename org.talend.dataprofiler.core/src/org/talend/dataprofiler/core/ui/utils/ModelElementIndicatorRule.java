@@ -220,6 +220,7 @@ public final class ModelElementIndicatorRule {
             break;
         case BinFrequencyIndicatorEnum:
         case BinLowFrequencyIndicatorEnum:
+        case BenfordLawFrequencyIndicatorEnum:
             if (Java2SqlType.isNumbericInSQL(javaType)
                     && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
                 return true;

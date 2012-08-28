@@ -288,6 +288,8 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.METADATA_MDMCONNECTION;
         } else if (EResourceConstant.FILEDELIMITED.getPath().equals(path)) {
             return ERepositoryObjectType.METADATA_FILE_DELIMITED;
+        } else if (EResourceConstant.SYSTEM_INDICATORS_FRAUDDETECTION.getPath().equals(path)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION;
         }
         return null;
     }

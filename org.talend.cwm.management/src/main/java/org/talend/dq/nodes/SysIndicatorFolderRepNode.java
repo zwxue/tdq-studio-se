@@ -138,6 +138,8 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS).endsWith(
                 label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_PHONENUMBER_STATISTICS;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_FRAUDDETECTION;
         }
         return null;
     }

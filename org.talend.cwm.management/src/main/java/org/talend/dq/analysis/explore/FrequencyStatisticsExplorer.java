@@ -248,4 +248,5 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : columnName + dbmsLanguage.equal() + value;
         return clause;
     }
+
 }

@@ -31,6 +31,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIFrequencyS
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDIMatchStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.UDISimpleStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BenfordLawFrequencyState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BinFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BinLowFrequencyStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.DateFrequencyStatisticsState;
@@ -139,6 +140,8 @@ public final class ChartTypeStatesOperator {
             return new PhoneNumbStatisticsState(units);
         case FORMAT_FREQ_PIE_STATISTICS:
             return new PieStatisticsState(units, DefaultMessagesImpl.getString("PieStatisticsState.Title"));
+        case BENFORD_LAW_STATISTICS:
+            return new BenfordLawFrequencyState(units);
         default:
             return null;
         }

@@ -47,7 +47,7 @@ public final class CompositeIndicator {
 
     private List<TableIndicatorUnit> tableSimpleList, tableWhereRuleList;
 
-    private List<IndicatorUnit> binFrequencyList;
+    private List<IndicatorUnit> binFrequencyList, fraudList;
 
     private List<IndicatorUnit> binLowFrequencyList;
 
@@ -114,6 +114,7 @@ public final class CompositeIndicator {
         // ~
         phoneNumbList = new ArrayList<IndicatorUnit>();
         formatFreqList = new ArrayList<IndicatorUnit>();
+        fraudList = new ArrayList<IndicatorUnit>();
     }
 
     private void clear() {
@@ -157,6 +158,8 @@ public final class CompositeIndicator {
         yearLowFrequencyList.clear();
         phoneNumbList.clear();
         formatFreqList.clear();
+        fraudList.clear();
+
     }
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
@@ -311,6 +314,10 @@ public final class CompositeIndicator {
                 break;
             case FormatFreqPieIndictorEnum:
                 formatFreqList.add(one);
+                break;
+            case BenfordLawFrequencyIndicatorEnum:
+                fraudList.add(one);
+                break;
             default:
             }
         }
@@ -351,6 +358,7 @@ public final class CompositeIndicator {
         separatedMap.put(EIndicatorChartType.UDI_REALVALUE, udiRealValueList);
         separatedMap.put(EIndicatorChartType.PHONE_NUMBER_STATISTICS, phoneNumbList);
         separatedMap.put(EIndicatorChartType.FORMAT_FREQ_PIE_STATISTICS, formatFreqList);
+        separatedMap.put(EIndicatorChartType.BENFORD_LAW_STATISTICS, fraudList);
 
         return separatedMap;
     }

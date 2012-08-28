@@ -61,6 +61,9 @@ public final class ComparatorsFactory {
 
     public static final int REPOSITORY_NODE_COMPARATOR_ID = 10;
 
+    // ADDED yyin 2012-08-28 TDQ_5076
+    public static final int BENFORDLAW_FREQUENCY_COMPARATOR_ID = 11;
+
     /**
      * DOC zqin Comment method "sort".
      * 
@@ -119,6 +122,8 @@ public final class ComparatorsFactory {
             return new DQRecyclebinComparator();
         case REPOSITORY_NODE_COMPARATOR_ID:
             return new RepositoryNodeComparator();
+        case BENFORDLAW_FREQUENCY_COMPARATOR_ID:// ADDED yyin 2012-08-28 TDQ_5076
+            return new BenfordLawIndicatorComparator();
         default:
             return new ModelElementComparator();
         }
@@ -247,6 +252,17 @@ public final class ComparatorsFactory {
         }
 
     }
+
+    // ADDED yyin 2012-08-28 TDQ_5076
+    static class BenfordLawIndicatorComparator implements Comparator<FrequencyExt> {
+
+        public int compare(FrequencyExt o1, FrequencyExt o2) {
+            if (Integer.parseInt(o1.getKey().toString()) > Integer.parseInt(o2.getKey().toString())) {
+                return 1;
+            }
+            return -1;
+        }
+    }// ~
 
     /**
      * DOC Zqin ComparatorsFactory class global comment. Detailled comment
