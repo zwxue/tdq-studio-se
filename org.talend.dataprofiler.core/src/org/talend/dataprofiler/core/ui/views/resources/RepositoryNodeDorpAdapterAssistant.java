@@ -316,7 +316,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param targetNode
      * @throws PersistenceException
      */
-    private void moveReportRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+    public void moveReportRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         // MOD yyi 2012-02-22:TDQ-4545 Update user define jrxml template path.
         relocateJrxmlTemplates(sourceNode, targetNode);
 

@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -30,7 +32,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.jfree.util.Log;
 import org.powermock.api.mockito.PowerMockito;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
@@ -39,6 +40,7 @@ import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
@@ -46,9 +48,14 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.helper.StatusHelper;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryObject;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.i18n.Messages;
+import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.RepositoryFactoryProvider;
@@ -61,6 +68,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
+import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -72,9 +80,16 @@ import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.ReportFolderRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -84,7 +99,6 @@ import common.Logger;
  * created by yyin on 2012-8-22 Detailled comment: include some structure methods which can be used for any tests who
  * need related object. some are mocked object with the start "mock" on its method name; some are real created object
  * with the start "createReal" on its method name;
- * 
  */
 public class UnitTestBuildHelper {
 
@@ -149,7 +163,12 @@ public class UnitTestBuildHelper {
         return expression;
     }
 
-    public static IProject createRealProject() {
+    /**
+     * create a default TOP project.
+     * 
+     * @return
+     */
+    public static IProject createRealProjectTop() {
         IProject rootProject = ReponsitoryContextBridge.getRootProject();
         if (!rootProject.exists()) {
             initProxyRepository(rootProject);
@@ -159,6 +178,31 @@ public class UnitTestBuildHelper {
             DQStructureManager.getInstance().createDQStructure();
         }
         return rootProject;
+    }
+
+    /**
+     * create a default TOP project with TDQ folders.
+     * 
+     * @return
+     */
+    public static IProject createRealProjectTdq() {
+        IProject project = createRealProjectTop();
+        initTdqFolders();
+        return project;
+    }
+
+    /**
+     * create the structure for TDQ.
+     */
+    public static void initTdqFolders() {
+        try {
+            // create reports folder
+            Folder reportFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING,
+                    Path.EMPTY, EResourceConstant.REPORTS.getName());
+        } catch (PersistenceException e) {
+            ExceptionHandler.process(e);
+            log.error(e, e);
+        }
     }
 
     /**
@@ -216,7 +260,6 @@ public class UnitTestBuildHelper {
     }
 
     /**
-     * 
      * DOC talend Comment method "createRealReport".
      * 
      * @param name the name of report
@@ -243,8 +286,8 @@ public class UnitTestBuildHelper {
         try {
             ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
         } catch (PersistenceException e) {
-            Log.error(e, e);
-            e.printStackTrace();
+            ExceptionHandler.process(e);
+            log.error(e, e);
         }
         return report1;
     }
@@ -270,14 +313,13 @@ public class UnitTestBuildHelper {
         try {
             ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
         } catch (PersistenceException e) {
-            Log.error(e, e);
-            e.printStackTrace();
+            ExceptionHandler.process(e);
+            log.error(e, e);
         }
         return analysis1;
     }
 
     /**
-     * 
      * DOC zshen Comment method "createFolder". create the subfolder under the parentFolder and named for folderName
      * 
      * @param parentFolder
@@ -290,15 +332,14 @@ public class UnitTestBuildHelper {
             try {
                 currFolder.create(true, true, null);
             } catch (CoreException e) {
-                Log.error(e, e);
-                e.printStackTrace();
+                ExceptionHandler.process(e);
+                log.error(e, e);
             }
         }
         return currFolder;
     }
 
     /**
-     * 
      * DOC zshen Comment method "checkFileName".
      * 
      * @param fileName
@@ -314,7 +355,6 @@ public class UnitTestBuildHelper {
     }
 
     private static void initRepositoryContext(Project project) {
-
         RepositoryContext repositoryContext = new RepositoryContext();
         repositoryContext.setUser(project.getAuthor());
         repositoryContext.setClearPassword(project.getLabel());
@@ -328,5 +368,128 @@ public class UnitTestBuildHelper {
         // MOD zshen for bug tdq-4757 remove this init from corePlugin.start() to here because the initLocal command of
         // commandLine
         SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
+    }
+
+    /**
+     * create the real RepositoryNode for DataProfiling.
+     * 
+     * @return
+     */
+    public static RepositoryNode createRealDataProfilingNode(IProject project) {
+        RepositoryNode node = null;
+
+        RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
+        FolderHelper folderHelper = instance.getFolderHelper();
+
+        IFolder iFolder = project.getFolder(Path.fromPortableString(ERepositoryObjectType.TDQ_DATA_PROFILING.getFolder()));
+        IRepositoryViewObject viewObject = null;
+        if (folderHelper != null) {
+            IPath relativePath = iFolder.getFullPath().makeRelativeTo((project).getFullPath());
+            FolderItem folder2 = folderHelper.getFolder(relativePath);
+            if (folder2 != null && relativePath != null) {
+                viewObject = new Folder(folder2.getProperty(), instance.retrieveRepObjectTypeByPath(relativePath.toOSString()));
+            }
+        } else {
+            viewObject = new Folder(iFolder.getName(), iFolder.getName());
+        }
+        node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
+        viewObject.setRepositoryNode(node);
+
+        return node;
+    }
+
+    /**
+     * create the real ReportFolderRepNode.
+     * 
+     * @param parentNode
+     * @return
+     */
+    public static ReportFolderRepNode createRealReportFolderRepNode(RepositoryNode parentNode) {
+        ReportFolderRepNode node = null;
+        RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
+        try {
+            node = (ReportFolderRepNode) instance.createRepositoryNodeSystemFolder(instance.getFolderHelper(), parentNode,
+                    EResourceConstant.REPORTS);
+        } catch (PersistenceException e) {
+            ExceptionHandler.process(e);
+            log.error(e, e);
+        }
+        return node;
+    }
+
+    /**
+     * create a real ReportSubFolderRepNode.
+     * 
+     * @param parentNode the parent node
+     * @param folderName the folder name
+     * @return
+     */
+    public static ReportSubFolderRepNode createRealReportSubFolderRepNode(RepositoryNode parentNode, String folderName) {
+        ReportSubFolderRepNode folderNode = null;
+
+        // create the sub folder
+        IFolder iFolder = RepositoryNodeHelper.getIFolder(parentNode);
+        createRealFolder(iFolder, folderName);
+
+        // get the ReportSubFolderRepNode
+        List<IRepositoryNode> subFolders = new ArrayList<IRepositoryNode>();
+        if (parentNode instanceof ReportFolderRepNode) {
+            subFolders = ((ReportFolderRepNode) parentNode).getChildren(false);
+        } else if (parentNode instanceof ReportSubFolderRepNode) {
+            subFolders = ((ReportSubFolderRepNode) parentNode).getChildren(false);
+        }
+
+        if (!subFolders.isEmpty()) {
+            for (IRepositoryNode node : subFolders) {
+                if (node instanceof ReportSubFolderRepNode) {
+                    ReportSubFolderRepNode subNode = (ReportSubFolderRepNode) node;
+                    if (folderName.equals(subNode.getLabel())) {
+                        folderNode = subNode;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return folderNode;
+    }
+
+    /**
+     * create a real ReportRepNode.
+     * 
+     * @param name report name
+     * @param folder report's parent folder
+     * @param isDelete delete flag
+     * @return
+     */
+    public static ReportRepNode createRealReportNode(String name, RepositoryNode parentNode, IPath createPath, Boolean isDelete) {
+        ReportRepNode reportRepNode = null;
+
+        Report report = ReportHelper.createReport(name);
+        TDQReportItem reportItem = PropertiesFactoryImpl.eINSTANCE.createTDQReportItem();
+        org.talend.core.model.properties.Property reportProperty = PropertiesFactory.eINSTANCE.createProperty();
+
+        reportProperty.setId(EcoreUtil.generateUUID());
+        reportProperty.setItem(reportItem);
+        reportProperty.setLabel(report.getName());
+
+        reportItem.setProperty(reportProperty);
+        reportItem.setReport(report);
+
+        ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
+        itemState.setDeleted(isDelete);
+        reportItem.setState(itemState);
+
+        try {
+            ProxyRepositoryFactory.getInstance().create(reportItem, createPath, false);
+
+            IRepositoryViewObject reportViewObject = new RepositoryViewObject(reportProperty);
+            reportRepNode = new ReportRepNode(reportViewObject, parentNode, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        } catch (PersistenceException e) {
+            ExceptionHandler.process(e);
+            log.error(e, e);
+        }
+
+        return reportRepNode;
     }
 }
