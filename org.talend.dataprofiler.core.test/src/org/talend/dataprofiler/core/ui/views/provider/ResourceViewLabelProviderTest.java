@@ -90,7 +90,7 @@ public class ResourceViewLabelProviderTest {
      */
     @Test
     public void testGetFileCount() {
-
+        deleteCurrentProject();
         IFolder anaFolder = initFolder(EResourceConstant.ANALYSIS.getPath());
         IFolder repFolder = initFolder(EResourceConstant.REPORTS.getPath());
         ResourceViewLabelProvider reViewLabelProvider = new ResourceViewLabelProvider();
@@ -98,6 +98,21 @@ public class ResourceViewLabelProviderTest {
         int reportNum = reViewLabelProvider.getFileCount(repFolder, filterExtensions);
         assertEquals(AnalysisNum, 3);
         assertEquals(reportNum, 3);
+    }
+
+    /**
+     * DOC talend Comment method "deleteCurrentProject".
+     */
+    private void deleteCurrentProject() {
+        IProject rootProject = ReponsitoryContextBridge.getRootProject();
+        if (rootProject.exists()) {
+            try {
+                rootProject.delete(true, true, null);
+            } catch (CoreException e) {
+                log.error(e, e);
+            }
+        }
+
     }
 
     /**
