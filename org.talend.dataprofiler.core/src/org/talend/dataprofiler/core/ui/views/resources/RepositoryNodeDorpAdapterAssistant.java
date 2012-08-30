@@ -180,7 +180,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             if (LocalSelectionTransfer.getTransfer().isSupportedType(currentTransfer)) {
                 selectedRepositoryNodes = getSelectedRepositoryNodes();
             }
-            computeRepNodeType(selectedRepositoryNodes, targetNode);
+            moveRepositoryNodes(selectedRepositoryNodes, targetNode);
 
             // MOD gdbu 2011-11-17 TDQ-3969 : after move folder or items re-filter the tree , to create a new list .
             if (DQRepositoryNode.isOnFilterring()) {
@@ -221,10 +221,17 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         return selectedRepositoryNodes.toArray(new IRepositoryNode[selectedRepositoryNodes.size()]);
     }
 
-    private void computeRepNodeType(IRepositoryNode[] selectedRepositoryNodes, IRepositoryNode targetNode)
+    /**
+     * move RepositoryNode to the target RepositoryNode.
+     * 
+     * @param repositoryNodes
+     * @param targetNode
+     * @throws PersistenceException
+     */
+    public void moveRepositoryNodes(IRepositoryNode[] repositoryNodes, IRepositoryNode targetNode)
             throws PersistenceException {
-        if (selectedRepositoryNodes != null) {
-            for (IRepositoryNode sourceNode : selectedRepositoryNodes) {
+        if (repositoryNodes != null) {
+            for (IRepositoryNode sourceNode : repositoryNodes) {
                 if (targetNode == sourceNode.getParent()) {
                     continue;
                 }
@@ -316,7 +323,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param targetNode
      * @throws PersistenceException
      */
-    public void moveReportRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+    private void moveReportRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         // MOD yyi 2012-02-22:TDQ-4545 Update user define jrxml template path.
         relocateJrxmlTemplates(sourceNode, targetNode);
 
@@ -340,8 +347,12 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             File targetFile = WorkspaceUtils.ifolderToFile(targetFolder);
 
             // move the report generate doc folder
-            FilesUtils.copyDirectory(sourceFile, targetFile);
-            FilesUtils.deleteFile(sourceFile, true);
+            if (sourceFile.exists()) {
+                if (targetFile.exists()) {
+                    FilesUtils.copyDirectory(sourceFile, targetFile);
+                }
+                FilesUtils.deleteFile(sourceFile, true);
+            }
 
             // update the file .report.list
             ReportUtils.updateReportListFile(outputFolder, targetFolder);

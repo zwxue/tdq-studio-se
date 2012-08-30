@@ -90,7 +90,6 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 import common.Logger;
@@ -164,12 +163,13 @@ public class UnitTestBuildHelper {
     }
 
     /**
-     * create a default TOP project.
+     * create project with a specified name.
      * 
+     * @param projectName specified project name
      * @return
      */
-    public static IProject createRealProjectTop() {
-        IProject rootProject = ReponsitoryContextBridge.getRootProject();
+    public static IProject createRealProject(String projectName) {
+        IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
         if (!rootProject.exists()) {
             initProxyRepository(rootProject);
         }
@@ -178,31 +178,6 @@ public class UnitTestBuildHelper {
             DQStructureManager.getInstance().createDQStructure();
         }
         return rootProject;
-    }
-
-    /**
-     * create a default TOP project with TDQ folders.
-     * 
-     * @return
-     */
-    public static IProject createRealProjectTdq() {
-        IProject project = createRealProjectTop();
-        initTdqFolders();
-        return project;
-    }
-
-    /**
-     * create the structure for TDQ.
-     */
-    public static void initTdqFolders() {
-        try {
-            // create reports folder
-            Folder reportFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING,
-                    Path.EMPTY, EResourceConstant.REPORTS.getName());
-        } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-            log.error(e, e);
-        }
     }
 
     /**
@@ -232,7 +207,7 @@ public class UnitTestBuildHelper {
                 User user = org.talend.core.model.properties.impl.PropertiesFactoryImpl.eINSTANCE.createUser();
                 user.setLogin("talend@talend.com"); //$NON-NLS-1$
                 user.setPassword("talend@talend.com".getBytes()); //$NON-NLS-1$
-                String projectName = ResourceManager.getRootProjectName();
+                String projectName = rootProject.getName();
                 String projectDesc = ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment();
                 Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA.getName(), user);
 
@@ -256,7 +231,6 @@ public class UnitTestBuildHelper {
             ExceptionHandler.process(e);
             log.error(e, e);
         }
-
     }
 
     /**
@@ -484,7 +458,7 @@ public class UnitTestBuildHelper {
             ProxyRepositoryFactory.getInstance().create(reportItem, createPath, false);
 
             IRepositoryViewObject reportViewObject = new RepositoryViewObject(reportProperty);
-            reportRepNode = new ReportRepNode(reportViewObject, parentNode, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            reportRepNode = new ReportRepNode(reportViewObject, parentNode, ENodeType.REPOSITORY_ELEMENT);
         } catch (PersistenceException e) {
             ExceptionHandler.process(e);
             log.error(e, e);
