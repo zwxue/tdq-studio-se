@@ -110,9 +110,4 @@ public class RepositoryNodeDorpAdapterAssistantRealTest {
             fail("project is null!"); //$NON-NLS-1$
         }
     }
-
-    @Test
-    public void testMoveReportRepNode2() {
-        assertTrue(true);
-    }
 }
