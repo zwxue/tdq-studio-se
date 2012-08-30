@@ -9,4 +9,5 @@
   <sqlGenericExpression xmi:id="_a4Ksp41qEd-xwI2imLgHRA" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="DB2"/>
   <sqlGenericExpression xmi:id="_a4KsqI1qEd-xwI2imLgHRA" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Ingres"/>
   <sqlGenericExpression xmi:id="_a4KsqQ1qEd-xwI2imLgHRA" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="SQLite"/>
+  <sqlGenericExpression xmi:id="_F_I1IPC9EeGgeNoy8x7q7Q" body="SELECT MIN(LENGTH(&lt;%=__COLUMN_NAMES__%>)) FROM &lt;%=__TABLE_NAME__%> &lt;%=__WHERE_CLAUSE__%>" language="Hive"/>
 </dataquality.indicators.definition:IndicatorDefinition>

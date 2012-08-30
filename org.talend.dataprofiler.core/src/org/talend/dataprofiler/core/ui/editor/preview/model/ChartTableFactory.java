@@ -110,6 +110,7 @@ public final class ChartTableFactory {
         final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
         final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
         final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
+        final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
 
         final Table table = tbViewer.getTable();
 
@@ -382,7 +383,7 @@ public final class ChartTableFactory {
                                 });
                             }
                         }
-                        if (PluginChecker.isTDCPLoaded() && !isMDMAnalysis && !isDelimitedFileAnalysis) {
+                        if (PluginChecker.isTDCPLoaded() && !(isMDMAnalysis || isDelimitedFileAnalysis || isHiveConnection)) {
                             final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault()
                                     .getService(IJobService.class);
                             if (service != null) {

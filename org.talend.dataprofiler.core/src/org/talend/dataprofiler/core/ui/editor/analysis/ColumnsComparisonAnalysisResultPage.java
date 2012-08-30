@@ -368,12 +368,32 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             return null;
         }
         Menu menu = new Menu(resultTable);
-        MenuItem itemMatch = new MenuItem(menu, SWT.PUSH);
+
         MenuItem itemNotMatch = new MenuItem(menu, SWT.PUSH);
         MenuItem itemRow = new MenuItem(menu, SWT.PUSH);
 
-        itemMatch.setText(DataExplorer.MENU_VIEW_MATCH_ROWS);
-        itemMatch.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+        // MOD qiongli 2012-8-30 TDQ-5907 hide 'view match row' menue for hive connection.
+        final Connection provider = ConnectionHelper.getDataProvider(columnSet);
+        if (!ConnectionHelper.isHive(provider)) {
+            MenuItem itemMatch = new MenuItem(menu, SWT.PUSH);
+            itemMatch.setText(DataExplorer.MENU_VIEW_MATCH_ROWS);
+            itemMatch.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
+            itemMatch.addListener(SWT.Selection, new Listener() {
+
+                public void handleEvent(Event event) {
+
+                    RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
+                    rowMatchExplorer.setAnalysis(masterPage.analysis);
+                    rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
+
+                    String query = rowMatchExplorer.getRowsMatchStatement();
+                    if (provider != null) {
+                        CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+                    }
+                }
+
+            });
+        }
 
         itemNotMatch.setText(DataExplorer.MENU_VIEW_NOT_MATCH_ROWS);
         itemNotMatch.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
@@ -381,34 +401,18 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         itemRow.setText(DataExplorer.MENU_VIEW_ROWS);
         itemRow.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
 
-        itemMatch.addListener(SWT.Selection, new Listener() {
-
-            public void handleEvent(Event event) {
-
-                Connection provider = ConnectionHelper.getDataProvider(columnSet);
-
-                RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
-                rowMatchExplorer.setAnalysis(masterPage.analysis);
-                rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
-
-                String query = rowMatchExplorer.getRowsMatchStatement();
-                CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
-            }
-
-        });
-
         itemNotMatch.addListener(SWT.Selection, new Listener() {
 
             public void handleEvent(Event event) {
-
-                Connection provider = ConnectionHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
                 rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                 String query = rowMatchExplorer.getRowsNotMatchStatement();
-                CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+                if (provider != null) {
+                    CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+                }
             }
         });
 
@@ -423,15 +427,15 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                 //                String query = "SELECT * " + dbmsLanguage.from() + dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName()) //$NON-NLS-1$
                 //                        + "." + dbmsLanguage.quote(columnSet.getName()); //$NON-NLS-1$
                 // MOD 10913 zshen:unify the method that get sql query
-                Connection provider = ConnectionHelper.getDataProvider(columnSet);
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
                 rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                 String query = rowMatchExplorer.getAllRowsStatement();
-
-                CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+                if (provider != null) {
+                    CorePlugin.getDefault().runInDQViewer(provider, query, columnSet.getName());
+                }
                 // ~10913
             }
 

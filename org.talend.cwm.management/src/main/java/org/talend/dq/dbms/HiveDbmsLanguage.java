@@ -62,4 +62,29 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         return query + " LIMIT " + n; //$NON-NLS-1$
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
+     */
+    @Override
+    public String charLength(String columnName) {
+        return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String regexLike(String element, String regex) {
+        return surroundWithSpaces(element + " REGEXP " + regex); //$NON-NLS-1$
+    }
+
+    @Override
+    public String regexNotLike(String element, String regex) {
+        return surroundWithSpaces(element + " NOT REGEXP " + regex); //$NON-NLS-1$
+    }
+
 }

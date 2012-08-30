@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dq.dbms.HiveDbmsLanguage;
 
 /**
  * DOC zqin class global comment. Detailled comment
@@ -34,6 +35,8 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
         // MOD qiongli 2011-3-4,feature 19192:filter menue 'view rows' for columSet AnalysisType.
         AnalysisType analysisType = this.analysis.getParameters().getAnalysisType();
+        // MOD qiongli 2012-8-29 hive don't support 'where in...'
+        boolean isHive = dbmsLanguage instanceof HiveDbmsLanguage;
         if (!isXml() || !isSqlEngine) {
 
             switch (this.indicatorEnum) {
@@ -46,7 +49,11 @@ public class SimpleStatisticsExplorer extends DataExplorer {
 
             case UniqueIndicatorEnum:
                 if (analysisType != AnalysisType.COLUMN_SET) {
-                    map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                    if (!isHive) {
+                        map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                    } else if (!isSqlEngine) {
+                        map.put(MENU_VIEW_ROWS, null);
+                    }
                 }
                 map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
                 break;
@@ -57,7 +64,11 @@ public class SimpleStatisticsExplorer extends DataExplorer {
 
             case DuplicateCountIndicatorEnum:
                 if (analysisType != AnalysisType.COLUMN_SET) {
-                    map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                    if (!isHive) {
+                        map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatementWithSubQuery() : null);
+                    } else if (!isSqlEngine) {
+                        map.put(MENU_VIEW_ROWS, null);
+                    }
                 }
                 map.put(MENU_VIEW_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALUES) + getValuesStatement(this.columnName) : null);
                 break;
