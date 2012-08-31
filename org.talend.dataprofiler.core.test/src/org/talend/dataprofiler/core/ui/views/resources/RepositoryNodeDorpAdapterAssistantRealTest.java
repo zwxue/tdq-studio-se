@@ -12,9 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.List;
@@ -49,10 +47,12 @@ public class RepositoryNodeDorpAdapterAssistantRealTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        // do something here
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
+        // do something here
     }
 
     @Before
