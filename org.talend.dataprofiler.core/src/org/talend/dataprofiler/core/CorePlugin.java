@@ -130,6 +130,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
      */
+    @SuppressWarnings("restriction")
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
@@ -207,8 +208,9 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return the specified sql editor.
      */
     public SQLEditor openInSqlEditor(Connection tdDataProvider, String query, String editorName) {
-        if (editorName == null) {
-            editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
+        String lEditorName = editorName;
+        if (lEditorName == null) {
+            lEditorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
 
         String username = JavaSqlFactory.getUsername(tdDataProvider);
@@ -241,7 +243,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 if (dataProvider.getName().equals(tdDataProvider.getName())) {
                     // ~ 15756
                     CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
-                    openInSqlEditor(tdDataProvider, query, editorName);
+                    openInSqlEditor(tdDataProvider, query, lEditorName);
                 }
             }
         } else {
@@ -249,7 +251,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
                 if (connection != null) {
                     String userName = JavaSqlFactory.getUsername(connection);
-                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + lEditorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     input.setUser(alias.getUser(userName));
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
                     SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
