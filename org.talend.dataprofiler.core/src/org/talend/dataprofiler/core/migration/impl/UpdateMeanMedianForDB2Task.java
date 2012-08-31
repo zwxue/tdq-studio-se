@@ -60,8 +60,8 @@ public class UpdateMeanMedianForDB2Task extends AbstractWorksapceUpdateTask {
     @Override
     protected boolean doExecute() throws Exception {
         DefinitionHandler definitionHandler = DefinitionHandler.getInstance();
-        boolean isMeanAdded = false;
-        boolean isMedianUpdated = false;
+        boolean isMeanAdded = true;
+        boolean isMedianUpdated = true;
 
         // Add sql of DB2 to Mean indicator
         IndicatorDefinition meanDefinition = definitionHandler.getDefinitionById(MEAN_UUID);
