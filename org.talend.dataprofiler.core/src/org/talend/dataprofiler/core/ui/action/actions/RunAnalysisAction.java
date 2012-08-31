@@ -259,7 +259,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
                 monitor.beginTask(
-                        DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
+                        DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ 
 
                 Display.getDefault().asyncExec(new Runnable() {
 
@@ -328,7 +328,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             return;
         }
         AnalysisEditor anaEditor = (AnalysisEditor) editor;
-        AbstractAnalysisMetadataPage masterPage = (AbstractAnalysisMetadataPage) anaEditor.getMasterPage();
+        AbstractAnalysisMetadataPage masterPage = anaEditor.getMasterPage();
         listener = masterPage;
         // ~
         run();
@@ -339,7 +339,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
             log.info(DefaultMessagesImpl
                     .getString(
-                            "RunAnalysisAction.displayInformation", new Object[] { analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                            "RunAnalysisAction.displayInformation", new Object[] { analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ 
 
         }
 

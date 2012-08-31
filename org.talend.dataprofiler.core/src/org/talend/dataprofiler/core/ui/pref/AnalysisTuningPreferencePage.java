@@ -153,7 +153,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
         // MOD yyi 2012-06-19 TDQ-4916 if the value is set to zero the threshold function would be disabled.
         memoryScaleField = new ScaleFieldEditor(AnalysisThreadMemoryChangeNotifier.ANALYSIS_MEMORY_THRESHOLD,
-                "", compositeScale, 0, memMax - memTotal, 1, 8); //$NON-NLS-1$
+                "", compositeScale, 0, memMax, 1, 8); //$NON-NLS-1$
 
         memoryScaleField.setPropertyChangeListener(new IPropertyChangeListener() {
 
@@ -169,9 +169,8 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         memoryScaleField.load();
 
         labelScale2.setText(String.valueOf(memoryScaleField.getMaximum()));
-        if (autoComboField.getBooleanValue()) {
-            labelScale2.setText(String.valueOf(memoryScaleField.getScaleControl().getSelection()));
-        } else {
+        labelScale2.setText(String.valueOf(memoryScaleField.getScaleControl().getSelection()));
+        if (!autoComboField.getBooleanValue()) {
             memoryScaleField.getScaleControl().setEnabled(false);
         }
 
@@ -232,6 +231,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
      * @param gdText
      * @deprecated don't delete this method, we will use it later
      */
+    @Deprecated
     private void createNumberOfConnectionsPerAnalysisLine(Composite composite, GridData gdText) {
         Label labelNocpa = new Label(composite, SWT.NONE);
         labelNocpa.setAlignment(SWT.CENTER);
@@ -335,6 +335,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
      * 
      * @deprecated don't delete this method, we will use it later
      */
+    @Deprecated
     private void saveNumberOfConnectionsPerAnalysis() {
         if (this.textNumberOfConnectionsPerAnalysis != null) {
             String text = this.textNumberOfConnectionsPerAnalysis.getText();
