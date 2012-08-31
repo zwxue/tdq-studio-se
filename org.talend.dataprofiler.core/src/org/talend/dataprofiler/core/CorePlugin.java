@@ -130,6 +130,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
      */
+    @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
@@ -143,9 +144,6 @@ public class CorePlugin extends AbstractUIPlugin {
         } catch (Exception e) {
             log.error(e, e);
         }
-
-        // repositoryInitialized = this.initProxyRepository().isOk();
-        // SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
     }
 
     /*
@@ -153,10 +151,10 @@ public class CorePlugin extends AbstractUIPlugin {
      * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
      */
+    @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         super.stop(context);
-        // save();
     }
 
     /**
@@ -168,10 +166,6 @@ public class CorePlugin extends AbstractUIPlugin {
         return plugin;
     }
 
-    // public void save() {
-    // NeedSaveDataProviderHelper.saveAllDataProvider();
-    // }
-
     /**
      * Returns an image descriptor for the image file at the given plug-in relative path.
      * 
@@ -181,22 +175,6 @@ public class CorePlugin extends AbstractUIPlugin {
     public static ImageDescriptor getImageDescriptor(String path) {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
-
-    // public void loadExternalDriver(String driverPaths, String driverName,
-    // String url) {
-    // String[] driverJarPath = driverPaths.split(";");
-    // LinkedList<String> driverFile = new LinkedList<String>();
-    // for (String driverpath : driverJarPath) {
-    // driverFile.add(driverpath);
-    // }
-    // ManagedDriver driver = new
-    // ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel
-    // ().createUniqueId());
-    // driver.setJars(driverFile);
-    // driver.setDriverClassName(driverName);
-    // driver.setUrl(url);
-    // SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
-    // }
 
     /**
      * DOC Zqin Comment method "getCurrentActiveEditor".
@@ -233,12 +211,12 @@ public class CorePlugin extends AbstractUIPlugin {
             editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
 
-		String username = JavaSqlFactory.getUsername(tdDataProvider);
-		if (username == null || "".equals(username)) { //$NON-NLS-1$
-			MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
-			return null;
-		}
-		
+        String username = JavaSqlFactory.getUsername(tdDataProvider);
+        if (username == null || "".equals(username)) { //$NON-NLS-1$
+            MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
+            return null;
+        }
+
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
@@ -274,7 +252,7 @@ public class CorePlugin extends AbstractUIPlugin {
                     SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     input.setUser(alias.getUser(userName));
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
-                    SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+                    SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
                     editorPart.setText(query);
                     return editorPart;
                 }
@@ -294,9 +272,9 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return
      * @deprecated
      */
+    @Deprecated
     public IEditorPart openEditor(IFile file, String editorId) {
         FileEditorInput input = new FileEditorInput(file);
-        // input.setUser(alias.getDefaultUser());
         try {
 
             return this.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input, editorId);
@@ -307,7 +285,6 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * 
      * DOC mzhao open editor with editor input.
      * 
      * @param editorInput
@@ -346,13 +323,20 @@ public class CorePlugin extends AbstractUIPlugin {
     public void refreshWorkSpace() {
         if (refreshAction == null) {
             refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-
         }
         refreshAction.run();
     }
 
+    /**
+     * refresh the whole DQReposirotyView.
+     */
     public void refreshDQView() {
-        getRepositoryView().getCommonViewer().refresh();
+        DQRespositoryView repositoryView = getRepositoryView();
+        if (repositoryView != null && repositoryView.getCommonViewer() != null) {
+            repositoryView.getCommonViewer().refresh();
+        } else {
+            log.error(DefaultMessagesImpl.getString("CorePlugin.nullViewWhenRefresh")); //$NON-NLS-1$
+        }
     }
 
     public IRepositoryNode getCurrentSelectionNode() {
@@ -366,11 +350,21 @@ public class CorePlugin extends AbstractUIPlugin {
 
     }
 
+    /**
+     * refresh the object of DQReposirotyView.
+     * 
+     * @param object
+     */
     public void refreshDQView(Object object) {
         if (object == null) {
             refreshDQView();
         } else {
-            getRepositoryView().getCommonViewer().refresh(object);
+            DQRespositoryView repositoryView = getRepositoryView();
+            if (repositoryView != null && repositoryView.getCommonViewer() != null) {
+                repositoryView.getCommonViewer().refresh(object);
+            } else {
+                log.error(DefaultMessagesImpl.getString("CorePlugin.nullViewWhenRefresh")); //$NON-NLS-1$
+            }
         }
     }
 
@@ -484,9 +478,7 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * 
      * DOC zshen Comment method "initProxyRepository".
-     * 
      */
     public ReturnCode initProxyRepository() {
         ReturnCode rc = new ReturnCode();
@@ -567,7 +559,6 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     private void initRepositoryContext(Project project) {
-
         RepositoryContext repositoryContext = new RepositoryContext();
         repositoryContext.setUser(project.getAuthor());
         repositoryContext.setClearPassword(project.getLabel());
@@ -584,13 +575,10 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * 
-     * DOC zshen Comment method "checkFileName".
+     * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      * 
      * @param fileName
      * @param pattern
-     * 
-     * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      */
     private void checkFileName(String fileName, String pattern) {
         if (!Pattern.matches(pattern, fileName)) {
@@ -598,5 +586,4 @@ public class CorePlugin extends AbstractUIPlugin {
                     "ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", new Object[] { fileName, pattern })); //$NON-NLS-1$
         }
     }
-
 }
