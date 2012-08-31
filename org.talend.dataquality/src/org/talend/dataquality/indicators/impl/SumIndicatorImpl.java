@@ -72,46 +72,39 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
     protected int datatype = DATATYPE_EDEFAULT;
 
     /**
-     * ADDED scorreia 2008-04-08 a class for handling sum in a generic way.
+     * MOD msjian 2012-8-31 TDQ-5960: use BigDecimal to make the number more bigger. because when the database is Db2,
+     * the sum result is incorrect when the number is bigger than Integer.MAX_VALUE
      */
-    protected static abstract class GenericSum<T> {
+    protected class GenericSum {
 
-        protected T sum = getDefaultValue();
+        public BigDecimal sum = new BigDecimal("0"); //$NON-NLS-N$
 
         public void sumObject(Object object) {
-            addNumber(castObject(object));
+            BigDecimal obj = new BigDecimal(String.valueOf(object));
+            sum = sum.add(obj);
         }
 
-        @SuppressWarnings("unchecked")
-        T castObject(Object object) {
-            return (T) object;
+        public void reset() {
+            this.sum = new BigDecimal("0"); //$NON-NLS-N$
         }
-
-        abstract void addNumber(T number);
-
-        abstract T getDefaultValue();
-
-        void reset() {
-            this.sum = getDefaultValue();
-        }
-
+        
         public String getAsString() {
-            return String.valueOf(sum);
+            return this.sum.toString();
         }
 
-        public Double getMean(long count) {
-            if (this.sum != null && this.sum instanceof Number) {
+        public BigDecimal getMean(long count) {
+            if (this.sum != null) {
                 if (count <= 0) {
                     return null;
                 }
-                return ((Number) this.sum).doubleValue() / count;
+                return this.sum.divide(BigDecimal.valueOf(count));
             }
             return null;
         }
 
     }
 
-    protected GenericSum<?> genericSum;
+    protected GenericSum genericSum;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -270,124 +263,20 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
             return false;
         }
         // assert data instanceof Integer : "Sum indicator wants integer data, got: " + data;
-        this.getGenericSum(data).sumObject(data);
+        getGenericSum().sumObject(data);
         return handled;
     }
-
 
     /**
      * DOC scorreia Comment method "getGenericSum".
      * 
      * @return
      */
-    private GenericSum<?> getGenericSum(Object object) {
+    private GenericSum getGenericSum() {
         if (genericSum == null) {
-            genericSum = instantiateGenericSum(object);
+            genericSum = new GenericSum();
         }
         return genericSum;
-    }
-
-    private GenericSum<?> instantiateGenericSum(Object object) {
-        if (object instanceof Integer) {
-            return new GenericSum<Integer>() {
-
-                @Override
-                Integer getDefaultValue() {
-                    return 0;
-                }
-
-                @Override
-                void addNumber(Integer number) {
-                    this.sum += number;
-                }
-
-            };
-        } else if (object instanceof Double) {
-            return new GenericSum<Double>() {
-
-                @Override
-                Double getDefaultValue() {
-                    return 0.0;
-                }
-
-                @Override
-                void addNumber(Double number) {
-                    this.sum += number;
-                }
-
-            };
-        } else if (object instanceof BigDecimal) {
-            return new GenericSum<BigDecimal>() {
-
-                @Override
-                BigDecimal getDefaultValue() {
-                    return BigDecimal.ZERO;
-                }
-
-                @Override
-                void addNumber(BigDecimal number) {
-                        sum = sum.add(number);
-                }
-
-            };
-        } else if (object instanceof Long) {
-            return new GenericSum<Long>() {
-
-                @Override
-                Long getDefaultValue() {
-                    return 0l;
-                }
-
-                @Override
-                void addNumber(Long number) {
-                    this.sum += number;
-                }
-
-            };
-        } else if (object instanceof Float) {
-            return new GenericSum<Float>() {
-
-                @Override
-                Float getDefaultValue() {
-                    return 0f;
-                }
-
-                @Override
-                void addNumber(Float number) {
-                    this.sum += number;
-                }
-
-            };
-        } else if (object instanceof Short) {
-            return new GenericSum<Short>() {
-
-                @Override
-                Short getDefaultValue() {
-                    return 0;
-                }
-
-                @Override
-                void addNumber(Short number) {
-                    sum = Short.valueOf(String.valueOf(sum.shortValue() + number.shortValue()));
-                }
-
-            };
-        }
-
-        // TODO scorreia probably throw an exception here
-        return new GenericSum<Object>() {
-
-            @Override
-            Object getDefaultValue() {
-                return null;
-            }
-
-            @Override
-            void addNumber(Object number) {
-            }
-
-        };
-
     }
 
     /*

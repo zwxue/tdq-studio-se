@@ -1467,6 +1467,12 @@
            name="Update Sqlite Username Task"
            version="5.1.2">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateMeanMedianForDB2Task"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateMeanMedianForDB2Task"
+           name="Update Mean Median For DB2 Task"
+           version="5.1.2">
+     </workspacetask> 
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
