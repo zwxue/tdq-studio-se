@@ -33,6 +33,8 @@ import org.talend.dq.analysis.memory.IMemoryChangeListener;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
+import sun.management.ManagementFactory;
+
 /**
  * @author scorreia
  * 
@@ -44,6 +46,8 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
     private static Logger log = Logger.getLogger(Evaluator.class);
 
     private volatile boolean isLowMemory = false;
+
+    private long usedMemory;
 
     protected Connection connection;
 
@@ -116,12 +120,9 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
                 return rc;
             }
 
-            AnalysisThreadMemoryChangeNotifier.getInstance().addListener(this);
-
-            rc = executeSqlQuery(sqlStatement);
-
-            AnalysisThreadMemoryChangeNotifier.getInstance().removeListener(this);
-
+            if (this.continueRun()) {
+                rc = executeSqlQuery(sqlStatement);
+            }
             if (!rc.isOk()) {
                 return rc;
             }
@@ -129,7 +130,7 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
                 rc.setReturnCode(Messages.getString("Evaluator.ProblemFinalizeIndicators"), false); //$NON-NLS-1$
             }
             if (isLowMemory) {
-                rc.setReturnCode(Messages.getString("Evaluator.OutOfMomory", freeMemory), false); //$NON-NLS-1$
+                rc.setReturnCode(Messages.getString("Evaluator.OutOfMomory", usedMemory), false); //$NON-NLS-1$
             }
             return rc;
         } catch (SQLException e) {
@@ -279,10 +280,16 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
         boolean ret = true;
         if (getMonitor() != null && getMonitor().isCanceled()) {
             ret = false;
-        } else if (isLowMemory) {
+        } else if (this.isLowMemory) {
             ret = false;
+        } else if (AnalysisThreadMemoryChangeNotifier.getInstance().isUsageThresholdExceeded()) {
+            this.usedMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(ManagementFactory.getMemoryMXBean()
+                    .getHeapMemoryUsage().getUsed());
+            ret = false;
+            this.isLowMemory = true;
         }
         return ret;
+
     }
 
     /*

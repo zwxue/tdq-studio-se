@@ -738,10 +738,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             String singleSelect = getCompletedSingleSelect(indicator, singleStatement, colName, table, whereExpression,
                     rangeStrings.get(i));
             // parenthesis necessary for MySQL
-            buf.append('('); //$NON-NLS-1$ 
+            buf.append('(');
             buf.append(singleSelect);
             // parenthesis necessary for MySQL
-            buf.append(')'); //$NON-NLS-1$  
+            buf.append(')');
             if (i != last - 1) {
                 buf.append(dbms().unionAll());
             }
@@ -1050,7 +1050,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (!connection.isOk()) {
                     log.error(connection.getMessage());
                     this.errorMessage = connection.getMessage();
-                    return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$//$NON-NLS-1$  
+                    return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$
                 }
 
                 ok = runAnalysisIndicators(connection.getObject(), elementToIndicator, indicators);
@@ -1065,7 +1065,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } finally {
             if (connection != null) {
                 ReturnCode rc = closeConnection(analysis, connection.getObject());
-                ok = rc.isOk();
+                ok = ok && rc.isOk();
             }
         }
 
@@ -1086,6 +1086,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } else {
             rc.setOk(Boolean.FALSE);
             rc.setMessage("Connection is null when running analysis: " + analysis.getName()); //$NON-NLS-1$
+            log.error(rc.getMessage());
         }
         return rc;
     }
@@ -1170,6 +1171,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         protected IStatus run(IProgressMonitor monitor) {
             ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
                     connection, elementToIndicator, indicator);
+
             columnSqlParallel.run();
 
             if (columnSqlParallel.ok) {
@@ -1216,16 +1218,20 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     excuteAnalysisJober.add(eaj);
                     eaj.schedule();
                     jobs.add(eaj);
-                    if (eaj.errorMessage != null) {
-                        ColumnAnalysisSqlExecutor.this.errorMessage = eaj.errorMessage;
-                        ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
-                    }
+
                 }
             }
 
             for (ExecutiveAnalysisJob job : jobs) {
-                job.join();
+                if (this.continueRun()) {
+                    job.join();
+                }
+                if (job.errorMessage != null) {
+                    ColumnAnalysisSqlExecutor.this.errorMessage = job.errorMessage;
+                    ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
+                }
             }
+
         } catch (Throwable thr) {
             log.error(thr);
         } finally {
@@ -1382,30 +1388,32 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (log.isInfoEnabled()) {
             log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$  
         }
+        List<Object[]> myResultSet = new ArrayList<Object[]>();
         // MOD xqliu 2009-02-09 bug 6237
         if (continueRun()) {
             statement.execute(queryStmt);
-        }
 
-        // get the results
-        ResultSet resultSet = statement.getResultSet();
-        if (resultSet == null) {
-            String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$  
-            log.warn(mess);
-            return null;
-        }
-        ResultSetMetaData metaData = resultSet.getMetaData();
-        int columnCount = metaData.getColumnCount();
-        List<Object[]> myResultSet = new ArrayList<Object[]>();
-        while (resultSet.next()) {
-            Object[] result = new Object[columnCount];
-            for (int i = 0; i < columnCount; i++) {
-                result[i] = resultSet.getObject(i + 1);
+            // get the results
+            ResultSet resultSet = statement.getResultSet();
+            if (resultSet == null) {
+                String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$  
+                log.warn(mess);
+                return null;
             }
-            myResultSet.add(result);
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            while (resultSet.next()) {
+                Object[] result = new Object[columnCount];
+                for (int i = 0; i < columnCount; i++) {
+                    result[i] = resultSet.getObject(i + 1);
+                }
+                myResultSet.add(result);
+            }
+            resultSet.close();
         }
         // -- release resources
-        resultSet.close();
+
         statement.close();
 
         return myResultSet;
@@ -1423,7 +1431,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD xqliu 2009-12-09 bug 9822
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
                     || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ConnectionUtils
-                    .isHive(connection))) {
+                        .isHive(connection))) {
                 // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
                 connection.setCatalog(catalogName);
             }

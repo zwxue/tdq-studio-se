@@ -103,8 +103,18 @@ public final class AnalysisThreadMemoryChangeNotifier extends AbstractMemoryChan
         }
     }
 
-    private long megaToByte(int numMb) {
-        return Integer.parseInt(String.valueOf(numMb * 1024 * 1024 - 512 * 1024));
+    public static long megaToByte(int numMb) {
+        return numMb * 1024 * 1024 - 512 * 1024;
+    }
+
+    public static int convertToMB(long numByte) {
+        return Math.round(numByte / 1024 / 1024);
+    }
+
+    public static boolean isAnaMemControl() {
+        boolean canControl = PlatformUI.getPreferenceStore().getBoolean(
+                AnalysisThreadMemoryChangeNotifier.ANALYSIS_AUTOMATIC_MEMORY_CONTROL);
+        return canControl;
     }
 
     // Get top or d defulat method.
@@ -115,4 +125,5 @@ public final class AnalysisThreadMemoryChangeNotifier extends AbstractMemoryChan
         return DEFALUT_MEMORY_THRESHOLD_TDQ;
 
     }
+
 }

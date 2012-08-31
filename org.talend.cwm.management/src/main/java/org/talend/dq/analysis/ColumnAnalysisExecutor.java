@@ -72,6 +72,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         return ResourceHelper.areSame(dataprovider, dp);
     }
 
+    @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         IndicatorEvaluator eval = new IndicatorEvaluator(analysis);
         // MOD xqliu 2009-02-09 bug 6237
@@ -211,7 +212,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
                 sql.append(this.quote(col.getName()));
                 // append comma if more columns exist
                 if (iterator.hasNext()) {
-                    sql.append(',');//$NON-NLS-1$
+                    sql.append(',');
                 }
             }
 
@@ -260,7 +261,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         } else if (parentRelation instanceof Catalog) {
             String ownerUser = null;
             if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-                ownerUser = ColumnSetHelper.getTableOwner((ModelElement) element);
+                ownerUser = ColumnSetHelper.getTableOwner(element);
             }
             sql.append(dbms().toQualifiedName(parentRelation.getName(), ownerUser, element.getName()));
         }
@@ -275,9 +276,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();
         handler.setAnalysis(analysis);
         String stringDataFilter = handler.getStringDataFilter();
-
-        sql.append(GenericSQLHandler.WHERE_CLAUSE);
-
+        if (!(stringDataFilter == null || "".equals(stringDataFilter))) { //$NON-NLS-1$
+            sql.append(GenericSQLHandler.WHERE_CLAUSE);
+        }
         String sqlStatement = sql.toString();
         sqlStatement = dbms().addWhereToStatement(sqlStatement, stringDataFilter);
         return sqlStatement;

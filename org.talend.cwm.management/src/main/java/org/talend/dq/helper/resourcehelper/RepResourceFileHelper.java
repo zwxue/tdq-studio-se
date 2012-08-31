@@ -36,6 +36,7 @@ public final class RepResourceFileHelper extends ResourceFileMap {
 
     ReportsSwitch<TdReport> reportSwitch = new ReportsSwitch<TdReport>() {
 
+        @Override
         public TdReport caseTdReport(TdReport object) {
             return object;
         }

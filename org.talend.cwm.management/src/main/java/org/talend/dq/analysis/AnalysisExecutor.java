@@ -38,6 +38,7 @@ import org.talend.dataquality.indicators.ValueIndicator;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionHelper;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPoolMap;
+import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.EObjectHelper;
@@ -51,6 +52,8 @@ import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
+
+import sun.management.ManagementFactory;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -71,6 +74,19 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     private DbmsLanguage dbmsLanguage;
 
     protected Analysis cachedAnalysis;
+
+    private long usedMemory;
+
+    /**
+     * Getter for usedMemory.
+     * 
+     * @return the usedMemory
+     */
+    public long getUsedMemory() {
+        return this.usedMemory;
+    }
+
+    private volatile boolean isLowMemory = false;
 
     /*
      * (non-Javadoc)
@@ -109,7 +125,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // --- run analysis
         boolean ok = false;
         try { // catch any exception
-            ok = runAnalysis(analysis, sql);
+            if (this.continueRun()) {
+                ok = runAnalysis(analysis, sql);
+            }
         } catch (Exception e) {
             log.error(e, e);
         } finally {
@@ -123,26 +141,32 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         resultMetadata.setLastRunOk(ok);
         int executionNumber = resultMetadata.getExecutionNumber() + 1;
         resultMetadata.setExecutionNumber(executionNumber);
-        if (ok) {
+        if (this.isLowMemory) {
+            errorMessage = Messages.getString("Evaluator.OutOfMomory", usedMemory);//$NON-NLS-1$
+            resultMetadata.setMessage(errorMessage);
+        } else if (ok) {
             resultMetadata.setLastExecutionNumberOk(executionNumber);
             resultMetadata.setMessage(null); // reset error message
+
         } else {
             resultMetadata.setMessage(errorMessage);
         }
 
         // --- compute execution duration
-        long endtime = System.currentTimeMillis();
-        resultMetadata.setExecutionDuration((int) (endtime - startime));
+        if (this.continueRun()) {
+            long endtime = System.currentTimeMillis();
+            resultMetadata.setExecutionDuration((int) (endtime - startime));
 
-        // MOD qiongli 2010-8-10, feature 14252
-        EList<Indicator> indicatorLs = analysis.getResults().getIndicators();
-        resultMetadata.setOutThreshold(false);
-        for (Indicator indicator : indicatorLs) {
-            if (hasOutThreshold(indicator)) {
-                resultMetadata.setOutThreshold(true);
-                break;
-            }
-        }// ~
+            // MOD qiongli 2010-8-10, feature 14252
+            EList<Indicator> indicatorLs = analysis.getResults().getIndicators();
+            resultMetadata.setOutThreshold(false);
+            for (Indicator indicator : indicatorLs) {
+                if (hasOutThreshold(indicator)) {
+                    resultMetadata.setOutThreshold(true);
+                    break;
+                }
+            }// ~
+        }
         return new ReturnCode(this.errorMessage, ok);
     }
 
@@ -174,7 +198,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             }
         }
         List<Indicator> leaves = IndicatorHelper.getIndicatorLeaves(indicator);
-        if (leaves.size() > 0 && !((Indicator) leaves.get(0)).equals(indicator)) {
+        if (leaves.size() > 0 && !leaves.get(0).equals(indicator)) {
             for (Indicator leaveIndicator : leaves) {
                 if (hasOutThreshold(leaveIndicator)) {
                     return true;
@@ -406,6 +430,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @param connection the java.sql.Connection
      * @param colseConn close and remove the connection from the pool
      */
+    @Deprecated
     protected void releasePooledConnection(Analysis analysis, Connection dataProvider, java.sql.Connection connection,
             boolean closeConn) {
         if (dataProvider == null) {
@@ -426,6 +451,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @param connection
      * @param closeConn
      */
+    @Deprecated
     protected void releasePooledConnection(java.sql.Connection connection, boolean closeConn) {
         TdqAnalysisConnectionPool connectionPool = getConnectionPool();
         if (connectionPool != null) {
@@ -502,6 +528,13 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         boolean ret = true;
         if (getMonitor() != null && getMonitor().isCanceled()) {
             ret = false;
+        } else if (this.isLowMemory) {
+            ret = false;
+        } else if (AnalysisThreadMemoryChangeNotifier.getInstance().isUsageThresholdExceeded()) {
+            this.usedMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(ManagementFactory.getMemoryMXBean()
+                    .getHeapMemoryUsage().getUsed());
+            ret = false;
+            this.isLowMemory = true;
         }
         return ret;
     }
@@ -566,4 +599,5 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             modHandler.initializeIndicator(ind);
         }
     }
+
 }

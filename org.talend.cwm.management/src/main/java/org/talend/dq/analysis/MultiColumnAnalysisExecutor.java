@@ -306,7 +306,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             ok = traceError(e.getMessage());
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
-            ok = rc.isOk();
+            ok = ok && rc.isOk();
         }
         return ok;
     }
