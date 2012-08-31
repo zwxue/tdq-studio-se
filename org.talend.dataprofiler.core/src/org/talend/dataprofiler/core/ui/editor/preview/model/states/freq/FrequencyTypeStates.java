@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -154,14 +155,18 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
             ModelElement currentAnalyzedElement = indicator.getAnalyzedElement();
             InternalEObject eIndicator = (InternalEObject) indicator;
             AnalysisResult result = (AnalysisResult) eIndicator.eContainer();
-            for (Indicator indi : result.getIndicators()) {
-                ModelElement analyzedElement = indi.getAnalyzedElement();
-                if (analyzedElement == currentAnalyzedElement) {
-                    if (indi instanceof RowCountIndicator) {
-                        return true;
-                    } else if (indi instanceof CountsIndicator) {
-                        CountsIndicator cindi = (CountsIndicator) indi;
-                        return cindi.getRowCountIndicator() != null;
+            // MOD msjian TDQ-5960: fix a NPE
+            EList<Indicator> indicators = result.getIndicators();
+            if (indicators != null) {
+                for (Indicator indi : indicators) {
+                    ModelElement analyzedElement = indi.getAnalyzedElement();
+                    if (analyzedElement == currentAnalyzedElement) {
+                        if (indi instanceof RowCountIndicator) {
+                            return true;
+                        } else if (indi instanceof CountsIndicator) {
+                            CountsIndicator cindi = (CountsIndicator) indi;
+                            return cindi.getRowCountIndicator() != null;
+                        }
                     }
                 }
             }

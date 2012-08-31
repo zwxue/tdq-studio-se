@@ -1479,7 +1479,13 @@
            name="change pattern&apos;s expression type from Expression to TdExpression"
            version="5.2.0">
      </workspacetask>
-     <workspacetask class="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorForHiveTask" id="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorForHiveTask" name="Update Indicators For Hive Task" version="5.2.0" /> 
+     <workspacetask class="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorForHiveTask" id="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorForHiveTask" name="Update Indicators For Hive Task" version="5.2.0" />
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateMeanMedianForDB2Task"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateMeanMedianForDB2Task"
+           name="Update Mean Median For DB2 Task"
+           version="5.2.0">
+     </workspacetask> 
      
   </extension>
   <extension
