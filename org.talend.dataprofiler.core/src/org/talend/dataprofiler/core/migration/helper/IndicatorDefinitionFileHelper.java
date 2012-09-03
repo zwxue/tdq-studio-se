@@ -47,10 +47,30 @@ public final class IndicatorDefinitionFileHelper {
      * @return true if sql expression be added.
      */
     public static boolean addSqlExpression(IndicatorDefinition definition, String language, String body) {
-        if (null == definition)
+        if (null == definition) {
             return false;
+        }
 
         TdExpression e = BooleanExpressionHelper.createTdExpression(language, body);
+        return definition.getSqlGenericExpression().add(e);
+    }
+
+    /**
+     * keep the modify date
+     * 
+     * @param definition
+     * @param language
+     * @param body
+     * @param modifyDate
+     * @return
+     */
+    public static boolean addSqlExpression(IndicatorDefinition definition, String language, String body, String modifyDate) {
+        if (null == definition) {
+            return false;
+        }
+
+        TdExpression e = BooleanExpressionHelper.createTdExpression(language, body);
+        e.setModificationDate(modifyDate);
         return definition.getSqlGenericExpression().add(e);
     }
 
@@ -63,8 +83,9 @@ public final class IndicatorDefinitionFileHelper {
      * @return true if sql expression be removed.
      */
     public static boolean removeSqlExpression(IndicatorDefinition definition, String language) {
-        if (null == definition)
+        if (null == definition) {
             return false;
+        }
         TdExpression removeExpression = null;
         for (TdExpression e : definition.getSqlGenericExpression()) {
             if (e.getLanguage().equals(language)) {
@@ -86,5 +107,24 @@ public final class IndicatorDefinitionFileHelper {
      */
     public static boolean save(IndicatorDefinition definition) {
         return IndicatorResourceFileHelper.getInstance().save(definition).isOk();
+    }
+
+    /**
+     * 
+     * judge if exist a sq expression with specify language.
+     * 
+     * @param definition
+     * @param language
+     * @return
+     */
+    public static boolean isExistSqlExprWithLanguage(IndicatorDefinition definition, String language) {
+        if (null == definition)
+            return false;
+        for (TdExpression e : definition.getSqlGenericExpression()) {
+            if (e.getLanguage().equals(language)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
