@@ -120,8 +120,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             if (ProxyRepositoryFactory.getInstance().getStatus(item) == ERepositoryStatus.LOCK_BY_OTHER) {
                 CorePlugin.getDefault().refreshDQView(node);
                 MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                        DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"),
-                        DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers"));
+                        DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers")); //$NON-NLS-1$
                 return;
             }
             // ~ TDQ-5452
@@ -130,7 +130,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
         // MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
         if (selectionFile != null) {
-            // editor = CorePlugin.getDefault().openEditor(selectionFile, AnalysisEditor.class.getName());
             analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
             RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
             if (recursiveFind != null) {
@@ -141,7 +140,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
         // ~
         if (editor == null) {
-            analysis = this.node.getAnalysis();// AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
+            analysis = this.node.getAnalysis();
         } else {
             AnalysisEditor anaEditor = (AnalysisEditor) editor;
             if (editor.isDirty()) {
@@ -149,7 +148,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 // MOD klliu bug 19991 3td 2011-03-29
                 ReturnCode canSave = anaEditor.getMasterPage().canSave();
                 if (!canSave.isOk()) {
-                    MessageDialog.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"),
+                    MessageDialog.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
                             canSave.getMessage());
                     return;
                 }
@@ -175,18 +174,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     try {
                         // MOD qiongli bug 16505.
                         IEditorInput editorInput = reference.getEditorInput();
-                        // if (editorInput instanceof FileEditorInput) {
-                        // finput = (FileEditorInput) reference.getEditorInput();
-                        // if (finput.getFile().equals(selectionFile)) {
-                        // IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true))
-                        // .getActivePageInstance();
-                        // // MOD qiongli bug 13880
-                        // // if (reference instanceof IRuningStatusListener) {
-                        // if (activePageInstance instanceof IRuningStatusListener) {
-                        // listener = (IRuningStatusListener) activePageInstance;
-                        // }
-                        // }
-                        // }
                         if (editorInput instanceof AnalysisItemEditorInput) {
                             analysisItemEditorInput = (AnalysisItemEditorInput) editorInput;
                             Analysis ana = ((TDQAnalysisItem) analysisItemEditorInput.getItem()).getAnalysis();
@@ -263,7 +250,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
                 monitor.beginTask(
-                        DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ //$NON-NLS-2$
+                        DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ 
 
                 Display.getDefault().asyncExec(new Runnable() {
 
@@ -332,7 +319,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             return;
         }
         AnalysisEditor anaEditor = (AnalysisEditor) editor;
-        AbstractAnalysisMetadataPage masterPage = (AbstractAnalysisMetadataPage) anaEditor.getMasterPage();
+        AbstractAnalysisMetadataPage masterPage = anaEditor.getMasterPage();
         listener = masterPage;
         // ~
         run();
@@ -343,7 +330,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
             log.info(DefaultMessagesImpl
                     .getString(
-                            "RunAnalysisAction.displayInformation", new Object[] { analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                            "RunAnalysisAction.displayInformation", new Object[] { analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ 
 
         }
 

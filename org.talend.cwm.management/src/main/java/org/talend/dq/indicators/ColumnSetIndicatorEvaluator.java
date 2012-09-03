@@ -43,7 +43,6 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
-import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmStatement;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
@@ -348,7 +347,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             if (!continueRun() || limitValue != 0 && currentRecord > limitValue - 1) {
                 break;
             }
-            if (dfCon.isFirstLineCaption() && currentRecord == 0) { //$NON-NLS-1$
+            if (dfCon.isFirstLineCaption() && currentRecord == 0) {
                 continue;
             }
             String[] rowValues = csvReader.getValues();
@@ -396,7 +395,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
         }
         if (mColumn != null) {
-            List<MetadataColumn> columnList = ((MetadataTable) ColumnHelper.getColumnOwnerAsMetadataTable(mColumn)).getColumns();
+            List<MetadataColumn> columnList = ColumnHelper.getColumnOwnerAsMetadataTable(mColumn).getColumns();
             handleObjects(objectLs, rowValues, columnList);
         }
     }
@@ -450,10 +449,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         }
         List<String> columnNames = getAnalyzedElementsName();
         for (int i = 0; i < resultSetList.size(); i++) {
-            Map<String, String> rowMap = (Map<String, String>) resultSetList.get(i);
+            if (!this.continueRun()) {
+                break;
+            }
+            Map<String, String> rowMap = resultSetList.get(i);
             EList<Object> objectLs = new BasicEList<Object>();
             Iterator<String> it = columnNames.iterator();
             while (it.hasNext()) {
+                if (!this.continueRun()) {
+                    break;
+                }
                 Object obj = rowMap.get(it.next());
                 if (obj != null && (PluginConstant.EMPTY_STRING.equals(obj.toString().trim()))) {
                     obj = obj.toString().trim();
@@ -476,12 +481,16 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      * @throws SQLException
      */
     private void handleObjects(EList<Object> objectLs, ResultSet resultSet) throws SQLException {
-        if (objectLs.size() == 0)
+        if (objectLs.size() == 0) {
             return;
+        }
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
         int recordIncrement = 0;
         for (Indicator indicator : indicators) {
+            if (!this.continueRun()) {
+                break;
+            }
             if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                 indicator.handle(objectLs);
                 // feature 19192 ,save data for drill down RowCountIndicator.
@@ -566,12 +575,18 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         int recordIncrement = 0;
         if (indicators != null) {
             for (Indicator indicator : indicators) {
+                if (!this.continueRun()) {
+                    break;
+                }
                 if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                     indicator.handle(objectLs);
                     // feature 19192,store all rows value for RowCountIndicator
                     if (indicator instanceof SimpleStatIndicator) {
                         SimpleStatIndicator simpIndi = (SimpleStatIndicator) indicator;
                         for (Indicator leafIndicator : simpIndi.getLeafIndicators()) {
+                            if (!this.continueRun()) {
+                                break;
+                            }
                             if (!(leafIndicator instanceof RowCountIndicator) || !analysis.getParameters().isStoreData()) {
                                 continue;
                             }
@@ -581,6 +596,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                             Object[] valueObject = new Object[columnList.size()];
                             if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                                 for (int j = 0; j < columnList.size(); j++) {
+                                    if (!this.continueRun()) {
+                                        break;
+                                    }
                                     Object newobject = PluginConstant.EMPTY_STRING;
                                     // if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                                     if (j < rowValues.length) {
@@ -615,6 +633,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
         int recordIncrement = 0;
         for (Indicator indicator : indicators) {
+            if (!this.continueRun()) {
+                break;
+            }
             if (ColumnsetPackage.eINSTANCE.getColumnSetMultiValueIndicator().isSuperTypeOf(indicator.eClass())) {
                 indicator.handle(objectLs);
                 if (indicator instanceof SimpleStatIndicator) {
@@ -623,6 +644,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                     }
                     SimpleStatIndicator simpIndi = (SimpleStatIndicator) indicator;
                     for (Indicator leafIndicator : simpIndi.getLeafIndicators()) {
+                        if (!this.continueRun()) {
+                            break;
+                        }
                         if (!(leafIndicator instanceof RowCountIndicator)) {
                             continue;
                         }
@@ -631,6 +655,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
                         int offset = 0;
                         for (TdXmlElementType columnElement : columnList) {
+                            if (!this.continueRun()) {
+                                break;
+                            }
                             Object newobject = rowMap.get(columnElement.getName());
                             if (recordIncrement < analysis.getParameters().getMaxNumberRows()) {
                                 if (recordIncrement < valueObjectList.size()) {

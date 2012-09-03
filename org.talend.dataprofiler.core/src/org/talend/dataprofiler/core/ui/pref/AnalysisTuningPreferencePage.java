@@ -154,7 +154,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         compositeScale.setLayoutData(gridData1);
 
         memoryScaleField = new ScaleFieldEditor(AnalysisThreadMemoryChangeNotifier.ANALYSIS_MEMORY_THRESHOLD,
-                "", compositeScale, memTotal - memFree, memMax, 1, 8); //$NON-NLS-1$
+                "", compositeScale, 0, memMax, 1, 8); //$NON-NLS-1$
 
         memoryScaleField.setPropertyChangeListener(new IPropertyChangeListener() {
 
@@ -169,9 +169,9 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         memoryScaleField.load();
 
         labelScale2.setText(String.valueOf(memoryScaleField.getMaximum()));
-        if (autoComboField.getBooleanValue()) {
-            labelScale2.setText(String.valueOf(memoryScaleField.getScaleControl().getSelection()));
-        } else {
+
+        labelScale2.setText(String.valueOf(memoryScaleField.getScaleControl().getSelection()));
+        if (!autoComboField.getBooleanValue()) {
             memoryScaleField.getScaleControl().setEnabled(false);
         }
 

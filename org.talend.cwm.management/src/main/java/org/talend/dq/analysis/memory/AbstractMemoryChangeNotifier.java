@@ -89,8 +89,20 @@ public abstract class AbstractMemoryChangeNotifier implements IMemoryChangeNotif
             long usedMemory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();
             long maxMemory = tenuredGenPoll.getUsage().getMax();
             // the threshold shoudle less than max memory
-            tenuredGenPoll.setUsageThreshold(Math.min(Math.max(threshold, usedMemory), maxMemory));
+            tenuredGenPoll.setUsageThreshold(threshold);
         }
+    }
+
+    public boolean isUsageThresholdExceeded() {
+        if (!AnalysisThreadMemoryChangeNotifier.isAnaMemControl()) {
+            return false;
+        }
+        boolean isExceeded = tenuredGenPoll.isUsageThresholdExceeded();
+        if (isExceeded) {
+            ManagementFactory.getMemoryMXBean().gc();
+            isExceeded = tenuredGenPoll.isUsageThresholdExceeded();
+        }
+        return isExceeded;
     }
 
 }
