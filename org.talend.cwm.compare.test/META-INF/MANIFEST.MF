@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Fragment-Host: org.talend.cwm.compare;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.mockito,
+Require-Bundle: org.talend.testutils,
  org.talend.common.ui.runtime
 Bundle-ClassPath: .
 Export-Package: org.talend.cwm.compare
