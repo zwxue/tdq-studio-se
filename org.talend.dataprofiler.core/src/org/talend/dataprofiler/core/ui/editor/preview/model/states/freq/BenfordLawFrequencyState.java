@@ -41,8 +41,9 @@ import org.talend.dq.indicators.ext.FrequencyExt;
  */
 public class BenfordLawFrequencyState extends FrequencyTypeStates {
 
-    // 1~9,Numerically, the leading digits have the following distribution in Benford's law
-    private double[] formalValues = { 0.301, 0.176, 0.125, 0.097, 0.079, 0.067, 0.058, 0.051, 0.046 };
+    // 1~9,Numerically, the leading digits have the following distribution in Benford's law, add: 0, invalid with value
+    // 0.0
+    private double[] formalValues = { 0.301, 0.176, 0.125, 0.097, 0.079, 0.067, 0.058, 0.051, 0.046, 0.0, 0.0 };
 
     /**
      * DOC yyin BenfordLawFrequencyState constructor comment.
@@ -79,6 +80,8 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
         }
     }
 
+
+
     /**
      * using frequency insteadof value
      */
@@ -93,9 +96,11 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
     @SuppressWarnings("deprecation")
     @Override
     public JFreeChart getChart() {
-        JFreeChart barChart = TopChartFactory.createBarChart(getTitle(), getDataset(), false); //$NON-NLS-1$
+        CategoryDataset dataset = getDataset();
+
+        JFreeChart barChart = TopChartFactory.createBarChart(getTitle(), dataset, false); //$NON-NLS-1$
         JFreeChart lineChart = ChartFactory.createLineChart(null, getTitle(),
-                DefaultMessagesImpl.getString("TopChartFactory.Value"), getLineDataset(),
+                DefaultMessagesImpl.getString("TopChartFactory.Value"), getLineDataset(dataset.getColumnCount()),
  PlotOrientation.VERTICAL, false, false,
                 false);
         CategoryPlot plot = lineChart.getCategoryPlot();
@@ -121,6 +126,11 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
         CategoryPlot barplot = barChart.getCategoryPlot();
         // display percentage on top of the bar
         barplot.getRenderer().setItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", df));
+        // the invalid bar should be RED
+        // Paint lastPaint = barplot.getRenderer().getSeriesPaint(9);
+        // if (lastPaint != null) {
+            barplot.getRenderer().setSeriesPaint(9, Color.RED);
+        // }
         // add the bar chart into the line chart
         plot.setDataset(1, getDataset());
         plot.setRenderer(1, barplot.getRenderer());
@@ -129,15 +139,23 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
     }
 
     /**
-     * DOC yyin Comment method "getLineDataset".
+     * get the dataset of standard points.
+     * 
+     * @param j
      * 
      * @return
      */
-    private CategoryDataset getLineDataset() {
+    private CategoryDataset getLineDataset(int points) {
         CustomerDefaultCategoryDataset linedataset = new CustomerDefaultCategoryDataset();
 
         for (int i = 0; i < 9; i++) {
             linedataset.addValue(formalValues[i], "", String.valueOf(i + 1)); //$NON-NLS-1$
+        }
+        if (points == 10) {
+            linedataset.addValue(formalValues[9], "", "0");
+        }
+        if (points == 11) {
+            linedataset.addValue(formalValues[10], "", "invalid");
         }
 
         return linedataset;
@@ -149,6 +167,15 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
     @Override
     protected String getTitle() {
         return DefaultMessagesImpl.getString("FrequencyTypeStates.BenfordLawFrequencyStatistics");
+    }
+
+    /**
+     * make it return true to show the frequency in the table. because this indicator has the frequency, no matter with
+     * row count or not
+     */
+    @Override
+    protected boolean isWithRowCountIndicator() {
+        return true;
     }
 
 }

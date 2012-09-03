@@ -12,10 +12,13 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+
+
 
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * return the where clause for benford law indicator, but for different DB type, the clause is different.
  */
 public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
@@ -23,7 +26,26 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
     protected String getInstantiatedClause() {
         Object value = "'" + entity.getKey() + "%'"; //$NON-NLS-1$ //$NON-NLS-2$
 
-        String clause = entity.isLabelNull() ? columnName + dbmsLanguage.isNull() : columnName + dbmsLanguage.like() + value;
+        String clause = entity.isLabelNull() ? getColumnName() + dbmsLanguage.isNull() : getColumnName() + dbmsLanguage.like()
+                + value;
         return clause;
     }
+
+    /**
+     * DOC yyin Comment method "getColumnName".
+     * 
+     * @return
+     */
+    private String getColumnName() {
+        String name = this.dbmsLanguage.getDbmsName();
+
+        if (SupportDBUrlType.SYBASEDEFAULTURL.getLanguage().equals(name)) {
+            return "convert(char(15)," + this.columnName + ")";
+        } else if (SupportDBUrlType.TERADATADEFAULTURL.getLanguage().equals(name)
+                || SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage().equals(name)) {
+            return "cast(" + this.columnName + " as char)";
+        }
+        return this.columnName;
+    }
+
 }

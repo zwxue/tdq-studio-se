@@ -1485,7 +1485,13 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateMeanMedianForDB2Task"
            name="Update Mean Median For DB2 Task"
            version="5.2.0">
-     </workspacetask> 
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.CreateBenforLawIndicatorTask"
+           id="org.talend.dataprofiler.core.migration.impl.CreateBenforLawIndicatorTask"
+           name="Create Benford Law SYstem Indicator Task"
+           version="5.2.0">
+     </workspacetask>  
      
   </extension>
   <extension

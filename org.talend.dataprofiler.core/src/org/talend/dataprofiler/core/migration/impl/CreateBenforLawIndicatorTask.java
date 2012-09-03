@@ -16,26 +16,24 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-/**
- * DOC qiongli class global comment. Detailled comment <br/>
- * 
- * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
- */
-public class CreatePhoneNumIndicatorTask extends CreateSystemIndicatorTask {
 
-    String phoneNumStr = " <categories xmi:id=\"_Ohyz4bEEEeCVE-ofo1XCug\" name=\"Phone Number Statistics\" label=\"Phone Number Statistics\">\r\n"
-            + "    <taggedValue xmi:id=\"_ZSFGoLEEEeCVE-ofo1XCug\" tag=\"Description\" value=\"do some phone number statistics by several counting methods\"/>\r\n"
-            + "    <taggedValue xmi:id=\"_rEFIoLEEEeCVE-ofo1XCug\" tag=\"Purpose\" value=\"evaluate different phone number of records\"/>\r\n"
+/**
+ * DOC yyin  class global comment. Detailled comment
+ */
+public class CreateBenforLawIndicatorTask extends CreateSystemIndicatorTask {
+
+    String fraudStr = " <categories xmi:id=\"_2aGLUOzJEeG0fbygDv6UrQ\" name=\"Fraud Detection\" label=\"Fraud Detection\">\r\n"
+            + "    <taggedValue xmi:id=\"_I31R8OzKEeG0fbygDv6UrQ\" tag=\"Description\" value=\"contains fraud detection indicators\"/>\r\n"
+            + "    <taggedValue xmi:id=\"_LHMsgOzKEeG0fbygDv6UrQ\" tag=\"Purpose\" value=\"detect possible instances of fraud\"/>\r\n"
             + "  </categories>";
 
-    private static Logger log = Logger.getLogger(CreatePhoneNumIndicatorTask.class);
+    private static Logger log = Logger.getLogger(CreateBenforLawIndicatorTask.class);
 
     /* (non-Javadoc)
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
-        return createDate(2011, 10, 25);
+        return createDate(2012, 8, 31);
     }
 
     /*
@@ -45,17 +43,18 @@ public class CreatePhoneNumIndicatorTask extends CreateSystemIndicatorTask {
      */
     @Override
     protected String getFoldername() {
-        return "Phone Number Statistics";
+        return "Fraud Detection";
     }
 
-    /*
+
+        /*
      * (non-Javadoc)
      * 
      * @see org.talend.dataprofiler.core.migration.impl.CreateSystemIndicatorTask#getCategoryString()
      */
     @Override
     protected String getCategoryString() {
-        return phoneNumStr;
+        return fraudStr;
     }
 
 }

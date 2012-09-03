@@ -257,7 +257,10 @@ public final class ComparatorsFactory {
     static class BenfordLawIndicatorComparator implements Comparator<FrequencyExt> {
 
         public int compare(FrequencyExt o1, FrequencyExt o2) {
-            if (Integer.parseInt(o1.getKey().toString()) > Integer.parseInt(o2.getKey().toString())) {
+            if (o1.getKey() == null || o2.getKey() == null) {
+                return -1;
+            }
+            if (o1.getKey().toString().compareTo(o2.getKey().toString()) > 0) {
                 return 1;
             }
             return -1;
