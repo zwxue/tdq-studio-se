@@ -18,8 +18,10 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.RefreshAction;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -29,10 +31,7 @@ import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
-import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dq.nodes.ReportFolderRepNode;
-import org.talend.dq.nodes.ReportRepNode;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -40,6 +39,8 @@ import org.talend.utils.sugars.ReturnCode;
  * DOC xqliu class global comment. Detailled comment
  */
 public class ReportUtilsRealTest {
+
+    private RefreshAction refreshAction;
 
     private String projectName = null;
 
@@ -78,15 +79,14 @@ public class ReportUtilsRealTest {
     @Test
     public void testGetReportListFile() {
         if (this.realProject != null) {
+            String folderName1 = ERepositoryObjectType.TDQ_DATA_PROFILING.getFolder();
+            String folderName2 = ERepositoryObjectType.TDQ_REPORT_ELEMENT.getFolder();
             String reportName = "B" + StringUtilities.getRandomString(7); //$NON-NLS-1$
 
-            RepositoryNode realDataProfilingNode = UnitTestBuildHelper.createRealDataProfilingNode(this.realProject);
-            ReportFolderRepNode realReportFolderRepNode = UnitTestBuildHelper
-                    .createRealReportFolderRepNode(realDataProfilingNode);
-            ReportRepNode realReportNode = UnitTestBuildHelper.createRealReportNode(reportName, realReportFolderRepNode,
-                    Path.EMPTY, false);
+            UnitTestBuildHelper.createRealFolder(this.realProject, folderName1);
+            IFolder folder2 = UnitTestBuildHelper.createRealFolder(this.realProject, folderName2);
+            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + ".rep"); //$NON-NLS-1$
 
-            IFile iFile = RepositoryNodeHelper.getIFile(realReportNode);
             try {
                 File reportListFile = ReportUtils.getReportListFile(iFile);
                 assertTrue(reportListFile.exists());
@@ -134,18 +134,17 @@ public class ReportUtilsRealTest {
     @Test
     public void testInitRepListFile() {
         if (this.realProject != null) {
+            String folderName1 = ERepositoryObjectType.TDQ_DATA_PROFILING.getFolder();
+            String folderName2 = ERepositoryObjectType.TDQ_REPORT_ELEMENT.getFolder();
             String reportName = "B" + StringUtilities.getRandomString(7); //$NON-NLS-1$
 
-            RepositoryNode realDataProfilingNode = UnitTestBuildHelper.createRealDataProfilingNode(this.realProject);
-            ReportFolderRepNode realReportFolderRepNode = UnitTestBuildHelper
-                    .createRealReportFolderRepNode(realDataProfilingNode);
-            ReportRepNode realReportNode = UnitTestBuildHelper.createRealReportNode(reportName, realReportFolderRepNode,
-                    Path.EMPTY, false);
+            UnitTestBuildHelper.createRealFolder(this.realProject, folderName1);
+            IFolder folder2 = UnitTestBuildHelper.createRealFolder(this.realProject, folderName2);
+            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + ".rep"); //$NON-NLS-1$
 
-            IFile iFile = RepositoryNodeHelper.getIFile(realReportNode);
             try {
                 File repListFile = ReportUtils.getReportListFile(iFile);
-                CorePlugin.getDefault().refreshWorkSpace();
+                refreshWorkSpace();
                 Thread.sleep(1000);
                 ReportUtils.initRepListFile(iFile);
                 assertTrue(repListFile.exists() && (repListFile.length() > 0));
@@ -164,18 +163,17 @@ public class ReportUtilsRealTest {
     @Test
     public void testDeleteRepOutputFolder() {
         if (this.realProject != null) {
+            String folderName1 = ERepositoryObjectType.TDQ_DATA_PROFILING.getFolder();
+            String folderName2 = ERepositoryObjectType.TDQ_REPORT_ELEMENT.getFolder();
             String reportName = "B" + StringUtilities.getRandomString(7); //$NON-NLS-1$
 
-            RepositoryNode realDataProfilingNode = UnitTestBuildHelper.createRealDataProfilingNode(this.realProject);
-            ReportFolderRepNode realReportFolderRepNode = UnitTestBuildHelper
-                    .createRealReportFolderRepNode(realDataProfilingNode);
-            ReportRepNode realReportNode = UnitTestBuildHelper.createRealReportNode(reportName, realReportFolderRepNode,
-                    Path.EMPTY, false);
+            UnitTestBuildHelper.createRealFolder(this.realProject, folderName1);
+            IFolder folder2 = UnitTestBuildHelper.createRealFolder(this.realProject, folderName2);
+            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + ".rep"); //$NON-NLS-1$
 
-            IFile iFile = RepositoryNodeHelper.getIFile(realReportNode);
             try {
                 ReportUtils.getReportListFile(iFile);
-                CorePlugin.getDefault().refreshWorkSpace();
+                refreshWorkSpace();
                 Thread.sleep(1000);
 
                 File outputFolder = WorkspaceUtils.ifolderToFile(ReportUtils.getOutputFolder(iFile));
@@ -189,5 +187,15 @@ public class ReportUtilsRealTest {
         } else {
             fail("project is null!"); //$NON-NLS-1$
         }
+    }
+
+    /**
+     * refresh the workspace.
+     */
+    public void refreshWorkSpace() {
+        if (refreshAction == null) {
+            refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+        }
+        refreshAction.run();
     }
 }
