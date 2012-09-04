@@ -13,8 +13,11 @@
 package org.talend.dataprofiler.core.helper;
 
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -27,6 +30,7 @@ import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.utils.sql.TalendTypeConvert;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -97,4 +101,26 @@ public final class ModelElementIndicatorHelper {
         return null;
     }
 
+    /**
+     * DOC xqliu Comment method "getModelElementDisplayName".
+     * 
+     * @param meIndicator
+     * @return
+     */
+    public static final String getModelElementDisplayName(ModelElementIndicator meIndicator) {
+        String meName = meIndicator.getElementName();
+        String typeName = "";//$NON-NLS-1$
+        if (meIndicator instanceof ColumnIndicator) {
+            // MOD scorreia 2010-10-20 bug 16403 avoid NPE here
+            TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
+            typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";//$NON-NLS-1$
+        } else if (meIndicator instanceof XmlElementIndicator) {
+            typeName = ((MDMXmlElementRepNode) meIndicator.getModelElementRepositoryNode()).getTdXmlElementType().getJavaType();
+        } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
+            MetadataColumn mColumn = ((DelimitedFileIndicatorImpl) meIndicator).getMetadataColumn();
+            typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());
+        }
+        return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
+                + PluginConstant.PARENTHESIS_RIGHT : "null";//$NON-NLS-1$
+    }
 }

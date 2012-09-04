@@ -52,7 +52,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
@@ -61,18 +60,15 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQPreferenceManager;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
-import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -96,10 +92,8 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
@@ -502,7 +496,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             treeItem.setImage(getColumnElementImage(elements[i]));
 
             final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
-            treeItem.setText(0, getModelElemetnDisplayName(meIndicator)); //$NON-NLS-1$
+            treeItem.setText(0, ModelElementIndicatorHelper.getModelElementDisplayName(meIndicator)); //$NON-NLS-1$
             treeItem.setData(MODELELEMENT_INDICATOR_KEY, meIndicator);
 
             TreeEditor comboEditor = new TreeEditor(tree);
@@ -682,29 +676,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         addUdiEditor.minimumWidth = addUdiLabl.getImage().getBounds().width;
         addUdiEditor.setEditor(addUdiLabl, treeItem, columnIndex);
         return addUdiEditor;
-    }
-
-    /**
-     * DOC xqliu Comment method "getModelElemetnDisplayName".
-     * 
-     * @param meIndicator
-     * @return
-     */
-    private String getModelElemetnDisplayName(ModelElementIndicator meIndicator) {
-        String meName = meIndicator.getElementName();
-        String typeName = "";//$NON-NLS-1$
-        if (meIndicator instanceof ColumnIndicator) {
-            // MOD scorreia 2010-10-20 bug 16403 avoid NPE here
-            TdSqlDataType sqlDataType = ((ColumnIndicator) meIndicator).getTdColumn().getSqlDataType();
-            typeName = sqlDataType != null ? sqlDataType.getName() : "unknown";//$NON-NLS-1$
-        } else if (meIndicator instanceof XmlElementIndicator) {
-            typeName = ((MDMXmlElementRepNode) meIndicator.getModelElementRepositoryNode()).getTdXmlElementType().getJavaType();
-        } else if (meIndicator instanceof DelimitedFileIndicatorImpl) {
-            MetadataColumn mColumn = ((DelimitedFileIndicatorImpl) meIndicator).getMetadataColumn();
-            typeName = TalendTypeConvert.convertToJavaType(mColumn.getTalendType());
-        }
-        return meName != null ? meName + PluginConstant.SPACE_STRING + PluginConstant.PARENTHESIS_LEFT + typeName
-                + PluginConstant.PARENTHESIS_RIGHT : "null";//$NON-NLS-1$
     }
 
     /**

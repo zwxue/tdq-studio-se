@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -186,7 +187,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
             renderer = new TdColumnHeaderRenderer();
             newCol.setHeaderRenderer(renderer);
             newCol.setCellRenderer(new TdCellRenderer());
-            newCol.setText(getResult()[i].getElementName());
+            newCol.setText(ModelElementIndicatorHelper.getModelElementDisplayName(getResult()[i]));
             newCol.setWidth(COLUMN_WIDTH);
             newCol.setData(getResult()[i]);
         }
@@ -213,6 +214,8 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
         grid.setHeaderVisible(true);
         grid.setEmptyColumnHeaderRenderer(new TdEmptyColumnHeaderRenderer());
+        grid.setEmptyRowHeaderRenderer(new TdEmptyCellRenderer());
+        grid.setEmptyCellRenderer(new TdEmptyCellRenderer());
         // show fixed row header
         grid.setRowHeaderRenderer(new TdRowHeaderRenderer());
         grid.setRowHeaderVisible(true);
