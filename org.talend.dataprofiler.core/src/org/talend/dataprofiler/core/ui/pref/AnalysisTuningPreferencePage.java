@@ -160,6 +160,7 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
 
             public void propertyChange(PropertyChangeEvent event) {
                 labelScale2.setText(event.getNewValue().toString());
+                composite4.pack();
             }
 
         });
