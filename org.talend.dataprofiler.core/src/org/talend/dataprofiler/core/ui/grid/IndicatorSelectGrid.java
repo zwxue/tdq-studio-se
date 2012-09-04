@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
@@ -135,7 +136,10 @@ public class IndicatorSelectGrid extends Grid {
                 TdRowHeaderRenderer renderer = ((TdRowHeaderRenderer) getRowHeaderRenderer());
                 renderer.setBounds(getRowHeaderBounds(item));
                 renderer.notify(IInternalWidget.LeftMouseButtonDown, new Point(e.x, e.y), item);
+                e.x = renderer.getSize().x + 1;
+                onMouseMove(e);
                 _dialog.updateIndicatorInfo(item);
+
             }
         }
     }
@@ -153,7 +157,8 @@ public class IndicatorSelectGrid extends Grid {
 
         getItem(cell.y).setChecked(cell.x, tick);
 
-        IndicatorEnum indicatorEnum = (IndicatorEnum) getItem(cell.y).getData();
+        IIndicatorNode indicatorNode = (IIndicatorNode) getItem(cell.y).getData();
+        IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();
         ModelElementIndicator meIndicator = (ModelElementIndicator) getColumn(cell.x).getData();
         if (meIndicator != null) {
             if (tick) {

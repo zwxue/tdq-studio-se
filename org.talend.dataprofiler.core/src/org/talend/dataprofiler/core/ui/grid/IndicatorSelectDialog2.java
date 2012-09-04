@@ -208,16 +208,6 @@ public class IndicatorSelectDialog2 extends TrayDialog {
             newCol.setData(getResult()[i]);
         }
 
-        // for (int i = 0; i < 10; i++) {
-        // GridColumn newCol = new GridColumn(grid, SWT.NONE);
-        // renderer = new TdColumnHeaderRenderer();
-        // newCol.setHeaderRenderer(renderer);
-        // newCol.setCellRenderer(new TdCellRenderer());
-        // newCol.setText("Column #" + i + 1);
-        // newCol.setWidth(COLUMN_WIDTH);
-        // newCol.setData(getResult()[0]);
-        // }
-
         IIndicatorNode[] branchNodes = IndicatorTreeModelBuilder.buildIndicatorCategory();
         for (int i = 0; i < branchNodes.length; i++) {
             // indicator category row
@@ -225,6 +215,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
             GridItem item = new GridItem(grid, SWT.NONE);
             item.setText(indicatorNode.getLabel());
+            item.setData(indicatorNode);
             createChildNodes(grid, item, indicatorNode);
         }
 
@@ -256,7 +247,6 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
         grid.setLineColor(IndicatorSelectGrid.lightBlue);
         grid.setColumnScrolling(true);
-        grid.setSelectionEnabled(false);
         grid.setRowsResizeable(false);
 
         grid.setFocusRenderer(null);
