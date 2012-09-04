@@ -12,11 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.grid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
@@ -27,6 +25,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -37,8 +36,11 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
@@ -57,6 +59,8 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
     private static final int COLUMN_WIDTH = 50;
 
+    private static final int ROW_MAX_LENGTH = 107;
+
     private ModelElementIndicator[] modelElementIndicators;
 
     private final String title;
@@ -66,11 +70,13 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
     private DbmsLanguage dbms;
 
-    private List<Button> checkButtons = new ArrayList<Button>();
-
     private int allColumnsCountSize = 0;// Record the total number of Columns.
 
     private Button okButton = null;
+
+    private Label purposeLabel;
+
+    private Label descriptionLabel;
 
     Composite parent = null;
 
@@ -143,16 +149,11 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         style |= SWT.BORDER;
         style |= SWT.SINGLE;
 
-        IndicatorSelectGrid grid = new IndicatorSelectGrid(comp, style);
-        initializeGrid(grid);
+        IndicatorSelectGrid grid = new IndicatorSelectGrid(this, comp, style);
 
-        return comp;
-    }
-
-    private void initializeGrid(IndicatorSelectGrid grid) {
         GridData controlGridData = new GridData();
-        controlGridData.minimumWidth = 500;
-        controlGridData.heightHint = 600;
+        controlGridData.minimumWidth = 650;
+        controlGridData.heightHint = 500;
 
         controlGridData.verticalAlignment = SWT.FILL;
         controlGridData.grabExcessVerticalSpace = true;
@@ -161,6 +162,21 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         controlGridData.grabExcessHorizontalSpace = true;
 
         grid.setLayoutData(controlGridData);
+        initializeGrid(grid);
+
+        this.buttomComp = new Composite(comp, SWT.NONE);
+        buttomComp.setLayout(new GridLayout());
+        buttomComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        purposeLabel = new Label(buttomComp, SWT.WRAP);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(purposeLabel);
+        descriptionLabel = new Label(buttomComp, SWT.WRAP);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(descriptionLabel);
+
+        return comp;
+    }
+
+    private void initializeGrid(IndicatorSelectGrid grid) {
 
         GridColumn col = new GridColumn(grid, SWT.NONE);
         col.setTree(true);
@@ -268,9 +284,9 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
             GridItem childItem = new GridItem(currentItem, SWT.NONE);
             childItem.setText(childNode.getLabel());
+            childItem.setData(childNode);
 
             for (int j = 0; j < grid.getColumnCount(); j++) {
-
                 IndicatorEnum indicatorEnum = childNode.getIndicatorEnum();
                 if (j == 0) {
                     // Indicator title column
@@ -289,8 +305,6 @@ public class IndicatorSelectDialog2 extends TrayDialog {
                     } else {
                         meIndicator = getResult()[0];
                     }
-
-                    childItem.setData(indicatorEnum);
 
                     // Enable/disable the check box
                     boolean isMatch = isMatchCurrentIndicator(meIndicator, childNode);
@@ -340,6 +354,20 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
     public ModelElementIndicator[] getResult() {
         return modelElementIndicators;
+    }
+
+    public void updateIndicatorInfo(GridItem item) {
+        IIndicatorNode indicatorNode = ((IIndicatorNode) item.getData());
+        if (indicatorNode == null) {
+            purposeLabel.setText(PURPOSE + " " + item.getText());
+            descriptionLabel.setText(DESCRIPTION + " " + item.getText());
+            return;
+        }
+        Indicator indicator = indicatorNode.getIndicatorInstance();
+        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+        purposeLabel.setText(PURPOSE + " " + MetadataHelper.getPurpose(indicatorDefinition));
+        String description = DESCRIPTION + " " + MetadataHelper.getDescription(indicatorDefinition);
+        descriptionLabel.setText(description);
     }
 
 }

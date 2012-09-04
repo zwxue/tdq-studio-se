@@ -34,6 +34,8 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  */
 public class IndicatorSelectGrid extends Grid {
 
+    private IndicatorSelectDialog2 _dialog;
+
     static final Color gray = new Color(Display.getCurrent(), 240, 240, 240);
 
     static final Color yellow = new Color(Display.getCurrent(), 255, 255, 40);
@@ -52,8 +54,9 @@ public class IndicatorSelectGrid extends Grid {
      * @param parent
      * @param style
      */
-    public IndicatorSelectGrid(Composite parent, int style) {
+    public IndicatorSelectGrid(IndicatorSelectDialog2 dialog, Composite parent, int style) {
         super(parent, style);
+        _dialog = dialog;
         addExtraListeners();
     }
 
@@ -132,6 +135,7 @@ public class IndicatorSelectGrid extends Grid {
                 TdRowHeaderRenderer renderer = ((TdRowHeaderRenderer) getRowHeaderRenderer());
                 renderer.setBounds(getRowHeaderBounds(item));
                 renderer.notify(IInternalWidget.LeftMouseButtonDown, new Point(e.x, e.y), item);
+                _dialog.updateIndicatorInfo(item);
             }
         }
     }
