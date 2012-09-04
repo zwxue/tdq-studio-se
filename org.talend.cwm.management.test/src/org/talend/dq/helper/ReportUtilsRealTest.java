@@ -20,8 +20,6 @@ import java.io.IOException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.RefreshAction;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -39,8 +37,6 @@ import org.talend.utils.sugars.ReturnCode;
  * DOC xqliu class global comment. Detailled comment
  */
 public class ReportUtilsRealTest {
-
-    private RefreshAction refreshAction;
 
     private String projectName = null;
 
@@ -144,9 +140,9 @@ public class ReportUtilsRealTest {
 
             try {
                 File repListFile = ReportUtils.getReportListFile(iFile);
-                refreshWorkSpace();
-                Thread.sleep(1000);
+                Thread.sleep(1500);
                 ReportUtils.initRepListFile(iFile);
+                Thread.sleep(1500);
                 assertTrue(repListFile.exists() && (repListFile.length() > 0));
             } catch (Exception e) {
                 fail(e.getMessage());
@@ -173,13 +169,13 @@ public class ReportUtilsRealTest {
 
             try {
                 ReportUtils.getReportListFile(iFile);
-                refreshWorkSpace();
-                Thread.sleep(1000);
+                Thread.sleep(1500);
 
                 File outputFolder = WorkspaceUtils.ifolderToFile(ReportUtils.getOutputFolder(iFile));
                 assertTrue(outputFolder.exists() && outputFolder.isDirectory());
                 ReturnCode rc = ReportUtils.deleteRepOutputFolder(iFile);
                 assertTrue(rc.isOk());
+                Thread.sleep(1500);
                 assertFalse(outputFolder.exists());
             } catch (Exception e) {
                 fail(e.getMessage());
@@ -187,15 +183,5 @@ public class ReportUtilsRealTest {
         } else {
             fail("project is null!"); //$NON-NLS-1$
         }
-    }
-
-    /**
-     * refresh the workspace.
-     */
-    public void refreshWorkSpace() {
-        if (refreshAction == null) {
-            refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-        }
-        refreshAction.run();
     }
 }
