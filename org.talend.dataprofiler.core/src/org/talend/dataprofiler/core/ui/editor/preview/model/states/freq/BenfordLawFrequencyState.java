@@ -87,7 +87,11 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
      */
     @Override
     protected void setValueToDataset(CustomerDefaultCategoryDataset customerdataset, FrequencyExt freqExt, String keyLabel) {
-        customerdataset.addValue(freqExt.getFrequency(), "", keyLabel); //$NON-NLS-1$
+        if (keyLabel.equals("invalid") || keyLabel.equals("0")) {
+            customerdataset.addValue(freqExt.getFrequency(), "2", keyLabel); //$NON-NLS-1$
+        } else {
+            customerdataset.addValue(freqExt.getFrequency(), "1", keyLabel); //$NON-NLS-1$
+        }
     }
 
     /**
@@ -127,10 +131,10 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
         // display percentage on top of the bar
         barplot.getRenderer().setItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", df));
         // the invalid bar should be RED
-        // Paint lastPaint = barplot.getRenderer().getSeriesPaint(9);
-        // if (lastPaint != null) {
-        barplot.getRenderer().setSeriesPaint(9, Color.GREEN);
-        // }
+        barplot.getRenderer().setSeriesPaint(0, Color.RED);
+        barplot.getRenderer().setSeriesPaint(1, Color.GREEN);
+        // barplot.getRenderer().setBaseShape(null);
+
         // add the bar chart into the line chart
         plot.setDataset(1, getDataset());
         plot.setRenderer(1, barplot.getRenderer());

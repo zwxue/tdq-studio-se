@@ -24,6 +24,9 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     @Override
     protected String getInstantiatedClause() {
+        if (entity.getKey().toString().equals("invalid")) {//$NON-NLS-1$ //$NON-NLS-2$
+            return getInvalidClause();
+        }
         Object value = "'" + entity.getKey() + "%'"; //$NON-NLS-1$ //$NON-NLS-2$
 
         String clause = entity.isLabelNull() ? getColumnName() + dbmsLanguage.isNull() : getColumnName() + dbmsLanguage.like()
@@ -32,20 +35,71 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
     }
 
     /**
+     * when the drill down is : invalid, should find all rows which not start with 1~9,and 0. this include: null, and
+     * not digitals.
+     * 
+     * @return
+     */
+    private String getInvalidClause() {
+        String value = " not REGEXP '^[0-9]'";
+        if (isSybase()) {
+            return columnName
+                    + " = null or left(convert(char(15)," + this.columnName + "),1) not " + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isPostGreSQL()) {
+            return columnName + " = null or LEFT(CAST(" + columnName + " as text),1)  ~ '[^0-9]'";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isTeradata()) {
+            return columnName + " is null or cast(" + columnName + " as char(1)) not in ('1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isOracle()) {
+            value = " not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        return columnName + " = null or " + columnName + value;
+    }
+
+    /**
      * DOC yyin Comment method "getColumnName".
      * 
      * @return
      */
     private String getColumnName() {
-        String name = this.dbmsLanguage.getDbmsName();
-
-        if (SupportDBUrlType.SYBASEDEFAULTURL.getLanguage().equals(name)) {
-            return "convert(char(15)," + this.columnName + ")";
-        } else if (SupportDBUrlType.TERADATADEFAULTURL.getLanguage().equals(name)
-                || SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage().equals(name)) {
-            return "cast(" + this.columnName + " as char)";
+        if (isSybase()) {
+            return "convert(char(15)," + this.columnName + ")";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isPostGreSQL() || isTeradata()) {
+            return "cast(" + this.columnName + " as char)";//$NON-NLS-1$ //$NON-NLS-2$
         }
         return this.columnName;
     }
 
+    /**
+     * DOC yyin Comment method "isOracle".
+     * 
+     * @return
+     */
+    private boolean isOracle() {
+        if (SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isSybase() {
+        if (SupportDBUrlType.SYBASEDEFAULTURL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isPostGreSQL() {
+        if (SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isTeradata() {
+        if (SupportDBUrlType.TERADATADEFAULTURL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+            return true;
+        }
+        return false;
+    }
 }

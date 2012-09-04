@@ -107,7 +107,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
      * @param keyLabel
      */
     protected void setValueToDataset(CustomerDefaultCategoryDataset customerdataset, FrequencyExt freqExt, String keyLabel) {
-        customerdataset.addValue(freqExt.getValue(), "", keyLabel); //$NON-NLS-1$
+        customerdataset.addValue(freqExt.getValue(), "1", keyLabel); //$NON-NLS-1$
     }
 
     public JFreeChart getExampleChart() {
