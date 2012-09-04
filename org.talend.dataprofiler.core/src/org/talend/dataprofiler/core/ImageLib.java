@@ -226,7 +226,9 @@ public final class ImageLib {
 
     public static final String RULE_TEST = "test.gif";
 
-    public static final String ICON_LOCK_BYOTHER = "locked_red_overlay.gif"; //$NON-NLS-1$ 
+    public static final String ICON_LOCK_BYOTHER = "locked_red_overlay.gif"; //$NON-NLS-1$     
+
+    public static final String TICK_IMAGE = "checked.gif"; //$NON-NLS-1$
 
     /**
      * DOC bzhou ImageLib constructor comment.

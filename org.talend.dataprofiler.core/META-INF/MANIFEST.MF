@@ -49,30 +49,10 @@ Require-Bundle: org.eclipse.ui,
  org.talend.repository.mdm,
  org.eclipse.ui.intro,
  org.talend.dataprofiler.migration,
- org.talend.repository.metadata
+ org.talend.repository.metadata,
+ org.eclipse.nebula.widgets.grid
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.nebula.jface.gridviewer;
-  uses:="org.eclipse.swt.events,
-   org.eclipse.swt.graphics,
-   org.eclipse.jface.viewers,
-   org.eclipse.swt.widgets,
-   org.eclipse.nebula.widgets.grid",
- org.eclipse.nebula.jface.tablecomboviewer,
- org.eclipse.nebula.widgets.grid;
-  uses:="org.eclipse.nebula.widgets.grid.internal,
-   org.eclipse.swt.events,
-   org.eclipse.swt.custom,
-   org.eclipse.swt.dnd,
-   org.eclipse.swt.graphics,
-   new org.eclipse.nebula.widgets.grid,
-   org.eclipse.swt.widgets,
-   org.eclipse.swt.accessibility",
- org.eclipse.nebula.widgets.grid.internal;
-  uses:="org.eclipse.swt.events,
-   org.eclipse.swt.graphics,
-   org.eclipse.swt.widgets,
-   org.eclipse.nebula.widgets.grid",
- org.eclipse.nebula.widgets.tablecombo,
+Export-Package: org.eclipse.nebula.jface.tablecomboviewer,
  org.talend.dataprofiler.core;
   uses:="org.eclipse.jface.resource,
    net.sourceforge.sqlexplorer.plugin.editors,
@@ -632,6 +612,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.apache.log4j, org.talend.testutils
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
- lib/org.eclipse.nebula.jface.gridviewer_1.0.0.jar,
- lib/org.eclipse.nebula.widgets.grid_1.0.0.jar,
  lib/org.eclipse.nebula.widgets.tablecombo_1.0.0.201203301341.jar

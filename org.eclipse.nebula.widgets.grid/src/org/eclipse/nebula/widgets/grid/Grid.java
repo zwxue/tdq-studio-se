@@ -979,7 +979,7 @@ public class Grid extends Canvas
         {
             y = hHint;
         }
-
+        x += 50;
         return new Point(x, y);
     }
 
@@ -5468,7 +5468,7 @@ public class Grid extends Canvas
                     }
                     if(y >= headerHeight)
                     {
-	                    rowHeaderRenderer.setBounds(0, y, rowHeaderWidth, item.getHeight() + 1);
+	                    rowHeaderRenderer.setBounds(0, y, rowHeaderWidth, item.getHeight());
 	                    rowHeaderRenderer.paint(e.gc, item);
                     }
                     x += rowHeaderWidth;

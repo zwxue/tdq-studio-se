@@ -79,6 +79,7 @@ import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog2;
 import org.talend.dataprofiler.core.ui.pref.AnalysisTuningPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
@@ -728,38 +729,79 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
-        final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
-                shell,
-                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators()); //$NON-NLS-1$
-        dialog.create();
+        String oldgrid = System.getProperty("talend.profiler.oldgrid");
+        if ("true".equals(oldgrid) || getAnalysis().getName().endsWith("oldgrid")) {
 
-        if (!DQPreferenceManager.isBlockWeb()) {
-            dialog.getShell().addShellListener(new ShellAdapter() {
+            final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
+                    shell,
+                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators()); //$NON-NLS-1$
+            dialog.create();
 
-                @Override
-                public void shellActivated(ShellEvent e) {
-                    dialog.getShell().setFocus();
-                    IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
-                    PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
+            if (!DQPreferenceManager.isBlockWeb()) {
+                dialog.getShell().addShellListener(new ShellAdapter() {
+
+                    @Override
+                    public void shellActivated(ShellEvent e) {
+                        dialog.getShell().setFocus();
+                        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
+                        PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
+                    }
+                });
+            }
+
+            if (dialog.open() == Window.OK) {
+                ModelElementIndicator[] result = dialog.getResult();
+                for (ModelElementIndicator modelElementIndicator : result) {
+                    modelElementIndicator.storeTempIndicator();
                 }
-            });
-        }
 
-        if (dialog.open() == Window.OK) {
-            ModelElementIndicator[] result = dialog.getResult();
-            for (ModelElementIndicator modelElementIndicator : result) {
-                modelElementIndicator.storeTempIndicator();
+                // this.setElements(result);
+                return result;
+            } else {
+                ModelElementIndicator[] result = dialog.getResult();
+                for (ModelElementIndicator modelElementIndicator : result) {
+                    modelElementIndicator.getTempIndicator().clear();
+                }
+                return new ModelElementIndicator[0];
             }
 
-            // this.setElements(result);
-            return result;
         } else {
-            ModelElementIndicator[] result = dialog.getResult();
-            for (ModelElementIndicator modelElementIndicator : result) {
-                modelElementIndicator.getTempIndicator().clear();
+
+            final IndicatorSelectDialog2 dialog = new IndicatorSelectDialog2(
+                    shell,
+                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators()); //$NON-NLS-1$
+            dialog.create();
+
+            if (!DQPreferenceManager.isBlockWeb()) {
+                dialog.getShell().addShellListener(new ShellAdapter() {
+
+                    @Override
+                    public void shellActivated(ShellEvent e) {
+                        dialog.getShell().setFocus();
+                        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
+                        PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
+                    }
+                });
             }
-            return new ModelElementIndicator[0];
+
+            if (dialog.open() == Window.OK) {
+                ModelElementIndicator[] result = dialog.getResult();
+                for (ModelElementIndicator modelElementIndicator : result) {
+                    modelElementIndicator.storeTempIndicator();
+                }
+
+                // this.setElements(result);
+                return result;
+            } else {
+                ModelElementIndicator[] result = dialog.getResult();
+                for (ModelElementIndicator modelElementIndicator : result) {
+                    modelElementIndicator.getTempIndicator().clear();
+                }
+                return new ModelElementIndicator[0];
+            }
+
         }
+
     }
 
     /**
