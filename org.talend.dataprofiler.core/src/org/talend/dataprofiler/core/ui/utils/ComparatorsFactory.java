@@ -260,6 +260,12 @@ public final class ComparatorsFactory {
             if (o1.getKey() == null || o2.getKey() == null) {
                 return -1;
             }
+            if ("0".equals(o1.getKey().toString())) {
+                return 1;
+            }
+            if ("0".equals(o2.getKey().toString())) {
+                return -1;
+            }
             if (o1.getKey().toString().compareTo(o2.getKey().toString()) > 0) {
                 return 1;
             }

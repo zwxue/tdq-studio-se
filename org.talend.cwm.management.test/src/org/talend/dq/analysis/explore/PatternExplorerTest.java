@@ -13,13 +13,10 @@
 package org.talend.dq.analysis.explore;
 
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
-
-import java.util.ResourceBundle;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,13 +27,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -69,18 +64,8 @@ public class PatternExplorerTest {
 
     @Before
     public void setUp() throws Exception {
-        ResourceBundle rb2 = mock(ResourceBundle.class);
-        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb2);
-        PowerMockito.mockStatic(Messages.class);
-        when(Messages.getString(anyString())).thenReturn("unit test");
+        DataExplorerTestHelper.initDataExplorer();
         patternExplorer = new PatternExplorer();
-
-        // mock : setAnalysis(Analysis analysis) in DataExplorer
-        Analysis analysis = mock(Analysis.class);
-        AnalysisContext context = mock(AnalysisContext.class);
-        when(analysis.getContext()).thenReturn(context);
-        DataManager dataManager = mock(DataManager.class);
-        when(context.getConnection()).thenReturn(dataManager);
 
         // mock setEntity
         indicator = mock(PatternMatchingIndicator.class);
@@ -98,10 +83,7 @@ public class PatternExplorerTest {
         when(dbmsLanguage.and()).thenReturn(" AND ");
         when(dbmsLanguage.from()).thenReturn(" FROM ");
 
-        // MOCKING STATIC METHODS
-        PowerMockito.mockStatic(DbmsLanguageFactory.class);
-        when(DbmsLanguageFactory.createDbmsLanguage(dataManager)).thenReturn(dbmsLanguage);
-
+        Analysis analysis = DataExplorerTestHelper.getAnalysis(indicator, dbmsLanguage);
         Assert.assertTrue(patternExplorer.setAnalysis(analysis));
 
         ChartDataEntity cdEntity = mock(ChartDataEntity.class);

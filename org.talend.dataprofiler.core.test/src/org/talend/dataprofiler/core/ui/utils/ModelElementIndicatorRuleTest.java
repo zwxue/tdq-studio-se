@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.sql.Types;
 
@@ -38,12 +39,19 @@ public class ModelElementIndicatorRuleTest {
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
 
+    private TdSqlDataType tdsql;
+
+    private TdColumn me;
     /**
      * DOC yyin Comment method "setUp".
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+        tdsql = mock(TdSqlDataType.class);
+        me = mock(TdColumn.class);
+        when(me.getSqlDataType()).thenReturn(tdsql);
+        when(me.getContentType()).thenReturn("type");
     }
 
     /**
@@ -55,27 +63,15 @@ public class ModelElementIndicatorRuleTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule#match(org.talend.dq.nodes.indicator.IIndicatorNode, org.talend.dataprofiler.core.model.ModelElementIndicator, org.talend.dataquality.analysis.ExecutionLanguage)}.
-     */
-    @Test
-    public void testMatch() {
-        // fail("Not yet implemented");
-    }
-
-    /**
      * TDQ-5241 Test method for
      * {@link org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRule#patternRule(org.talend.dq.nodes.indicator.type.IndicatorEnum, orgomg.cwm.objectmodel.core.ModelElement, org.talend.dataquality.analysis.ExecutionLanguage)}
      * .
      */
     @Test
-    public void testPatternRule() {
+    public void testPatternRule_1() {
         // modified: when the column is TIME type, any indicator using year(),month(),week() ,quarter(),day() should be
         // disabled
-        TdSqlDataType tdsql = mock(TdSqlDataType.class);
-        TdColumn me = mock(TdColumn.class);
-        when(me.getSqlDataType()).thenReturn(tdsql);
         when(tdsql.getJavaDataType()).thenReturn(Types.TIME);
-        when(me.getContentType()).thenReturn("type");
         // ExecutionLanguage el = mock(ExecutionLanguage.class);
         // can not mock final class
         // PowerMockito.mockStatic(MetadataHelper.class);
@@ -109,4 +105,19 @@ public class ModelElementIndicatorRuleTest {
 
     }
 
+    /**
+     * test for BenfordLaw indicator
+     */
+    @Test
+    public void testPatternRule_2() {
+        // modified: when the column is TIME type, any indicator using year(),month(),week() ,quarter(),day() should be
+        // disabled
+        when(tdsql.getJavaDataType()).thenReturn(Types.DOUBLE).thenReturn(Types.INTEGER).thenReturn(Types.VARCHAR);
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+    }
 }

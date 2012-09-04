@@ -129,7 +129,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
         // the invalid bar should be RED
         // Paint lastPaint = barplot.getRenderer().getSeriesPaint(9);
         // if (lastPaint != null) {
-            barplot.getRenderer().setSeriesPaint(9, Color.RED);
+        barplot.getRenderer().setSeriesPaint(9, Color.GREEN);
         // }
         // add the bar chart into the line chart
         plot.setDataset(1, getDataset());
