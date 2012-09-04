@@ -108,12 +108,9 @@ public class AnalysisExecutorTest {
         setMemoryValue(100);
         ReturnCode execute1 = spy.execute(createAnalysis);
 
-        MemoryPoolMXBean findTenuredGenPool = findTenuredGenPool();
-        findTenuredGenPool.setUsageThreshold(0);
         assert (execute1.isOk());
         assert (execute1.getMessage() == null);
         Mockito.verify(spy, Mockito.times(1)).execute(createAnalysis);
-        Mockito.verify(spy).runAnalysis(((Analysis) Mockito.anyObject()), Mockito.anyString());
 
     }
 
