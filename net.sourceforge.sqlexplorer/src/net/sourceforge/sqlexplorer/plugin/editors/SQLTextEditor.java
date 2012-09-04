@@ -14,6 +14,10 @@
  */
 package net.sourceforge.sqlexplorer.plugin.editors;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -113,6 +117,8 @@ public class SQLTextEditor extends TextEditor {
 
     private static final String DEFAULT_VERSION_STRING = "_0.1";
 
+    private static final String SOURCE_FILE_FOLDER_NAME = "Source Files";
+
     public SQLTextEditor(SQLEditor editor) {
         super();
         this.editor = editor;
@@ -199,21 +205,10 @@ public class SQLTextEditor extends TextEditor {
             }
         });
         dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
-        // SaveAsDialog dialog = new SaveAsDialog(shell);
-        // IFile original = (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
-        // if (original != null)
-        // dialog.setOriginalFile(original);
-
-        // dialog.create();
-
-        // if (provider.isDeleted(input) && original != null) {
-        // String message = "The file is already deleted.";
-        // dialog.setErrorMessage(null);
-        // dialog.setMessage(message, IMessageProvider.WARNING);
-        // }
         if (dialog.open() == Window.CANCEL) {
-            if (progressMonitor != null)
+            if (progressMonitor != null) {
                 progressMonitor.setCanceled(true);
+            }
             return;
         }
 
@@ -225,27 +220,16 @@ public class SQLTextEditor extends TextEditor {
             IPath filePath = ((IFolder) elem).getFullPath();
             filePath = filePath.append(fileName);
             if (filePath == null) {
-                if (progressMonitor != null)
+                if (progressMonitor != null) {
                     progressMonitor.setCanceled(true);
+                }
                 return;
             }
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IFile file = workspace.getRoot().getFile(filePath);
 
-            // MOD xqliu 2010-03-08 feature 10675
-            // PTODO qzhang 4753: Ask for a new name when saving a file with an already existing name
-            // if (file.exists() && SQLExplorerPlugin.isEditorSerialName(filePath.lastSegment())) {
-            // InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name",
-            // "this file exists already, please input new file name: ", filePath.lastSegment(), null);
-            // if (inputDialog.open() == InputDialog.CANCEL) {
-            // return;
-            // } else {
-            // IPath lseg = filePath.removeLastSegments(1);
-            // IPath append = lseg.append(inputDialog.getValue());
-            // file = workspace.getRoot().getFile(append);
-            // }
-            // }
-            while (fileExist(file)) {
+            File sourceFilesFolder = getSourceFilesFolder(file);
+            while (fileNameExist(sourceFilesFolder, file.getName())) {
                 InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name",
                         "this file exists already, please input new file name: ", filePath.lastSegment(), null);
                 if (inputDialog.open() == InputDialog.CANCEL) {
@@ -256,7 +240,6 @@ public class SQLTextEditor extends TextEditor {
                     file = workspace.getRoot().getFile(filePath);
                 }
             }
-            // ~10675
 
             newInput = new FileEditorInput(file);
             if (provider == null) {
@@ -282,12 +265,82 @@ public class SQLTextEditor extends TextEditor {
                 }
             } finally {
                 provider.changed(newInput);
-                if (success)
+                if (success) {
                     setInput(newInput);
+                }
             }
 
-            if (progressMonitor != null)
+            if (progressMonitor != null) {
                 progressMonitor.setCanceled(!success);
+            }
+        }
+    }
+
+    /**
+     * check the fileName exist in the folder (recursive).
+     * 
+     * @param folder
+     * @param fileName
+     * @return
+     */
+    private boolean fileNameExist(File folder, String fileName) {
+        boolean result = false;
+        String realFileName = getRealFileName(fileName);
+        List<File> files = new ArrayList<File>();
+        getAllSqlFiles(files, folder);
+        for (File file : files) {
+            if (realFileName.equals(file.getName())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * get the final source file name (with the version).
+     * 
+     * @param fileName source file name (without the version)
+     * @return
+     */
+    private String getRealFileName(String fileName) {
+        return fileName.substring(0, fileName.lastIndexOf(DEFAULT_FILE_EXTENSION)) + DEFAULT_VERSION_STRING
+                + DEFAULT_FILE_EXTENSION;
+    }
+
+    /**
+     * get the source files folder.
+     * 
+     * @param iFile source file
+     * @return
+     */
+    private File getSourceFilesFolder(IFile iFile) {
+        String path1 = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
+        String path2 = iFile.getFullPath().toOSString();
+        String temp = "";
+        if (!path1.endsWith(File.separator) && !path2.startsWith(File.separator)) {
+            temp = File.separator;
+        }
+        String path = path1 + temp + path2;
+        return new File(path.substring(0, path.indexOf(SOURCE_FILE_FOLDER_NAME) + SOURCE_FILE_FOLDER_NAME.length()));
+    }
+
+    /**
+     * get all sql files which under parentFile (recursive).
+     * 
+     * @param files
+     * @param parentFile
+     */
+    private void getAllSqlFiles(List<File> files, File parentFile) {
+        if (parentFile.isFile()) {
+            if (parentFile.getName().endsWith(DEFAULT_FILE_EXTENSION)) {
+                files.add(parentFile);
+            }
+        } else if (parentFile.isDirectory()) {
+            File[] listFiles = parentFile.listFiles();
+            for (File file : listFiles) {
+                getAllSqlFiles(files, file);
+            }
         }
     }
 
@@ -302,16 +355,6 @@ public class SQLTextEditor extends TextEditor {
             return fileName + DEFAULT_FILE_EXTENSION;
         }
         return fileName;
-    }
-
-    /**
-     * DOC xqliu Comment method "fileExist". ADD xqliu 2010-03-08 feature 10675
-     * 
-     * @param file
-     * @return
-     */
-    private boolean fileExist(IFile file) {
-        return getCorrectPath(file).exists();
     }
 
     /**
@@ -353,28 +396,12 @@ public class SQLTextEditor extends TextEditor {
         return file;
     }
 
-    private IFile getCorrectPath(IFile file) {
-        String fName = StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION);
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IPath rootPath = new Path("TDQ_Libraries/Source Files");
-        IPath location = file.getLocation();
-        if (location != null) {
-
-            location = location.removeLastSegments(1);
-            StringBuffer strb = new StringBuffer();
-            strb.append(location.toString());
-            strb.append(Path.SEPARATOR).append(fName).append(DEFAULT_VERSION_STRING).append(DEFAULT_FILE_EXTENSION);
-            location = Path.fromOSString(strb.toString());
-            file = workspace.getRoot().getFileForLocation(location);
-        }
-        return file;
-    }
-
     /*
      * (non-Javadoc)
      * 
      * @see org.eclipse.ui.texteditor.AbstractTextEditor#createActions()
      */
+    @Override
     protected void createActions() {
 
         super.createActions();
@@ -385,6 +412,7 @@ public class SQLTextEditor extends TextEditor {
 
         Action action = new Action("Auto-Completion") {
 
+            @Override
             public void run() {
                 sqlTextViewer.showAssistance();
             }
@@ -396,6 +424,7 @@ public class SQLTextEditor extends TextEditor {
 
     }
 
+    @Override
     public void createPartControl(Composite parent) {
 
         super.createPartControl(parent);
@@ -416,6 +445,7 @@ public class SQLTextEditor extends TextEditor {
         }
     }
 
+    @Override
     protected ISourceViewer createSourceViewer(final Composite parent, IVerticalRuler ruler, int style) {
 
         parent.setLayout(new FillLayout());
@@ -476,6 +506,7 @@ public class SQLTextEditor extends TextEditor {
 
         sqlTextViewer.getTextWidget().addKeyListener(new KeyAdapter() {
 
+            @Override
             public void keyPressed(KeyEvent e) {
 
                 SQLTextEditor.this.editor.getEditorSite().getPage().activate(SQLTextEditor.this.editor.getEditorSite().getPart());
@@ -493,20 +524,18 @@ public class SQLTextEditor extends TextEditor {
     }
 
     public void setNewDictionary(final Dictionary dictionary) {
-        if (editor.getSite() != null && editor.getSite().getShell() != null && editor.getSite().getShell().getDisplay() != null)
+        if (editor.getSite() != null && editor.getSite().getShell() != null && editor.getSite().getShell().getDisplay() != null) {
             editor.getSite().getShell().getDisplay().asyncExec(new Runnable() {
 
                 public void run() {
 
                     if (sqlTextViewer != null) {
                         sqlTextViewer.setNewDictionary(dictionary);
-                        // if (editor.getSession() != null) {
-                        // sqlTextViewer.refresh();
-                        // }
                     }
 
                 }
             });
+        }
     }
 
     public void onEditorSessionChanged(Session session) {
@@ -522,9 +551,11 @@ public class SQLTextEditor extends TextEditor {
      * 
      * @see org.eclipse.ui.IWorkbenchPart#dispose()
      */
+    @Override
     public void dispose() {
-        if (partListener != null)
+        if (partListener != null) {
             editor.getEditorSite().getPage().removePartListener(partListener);
+        }
         mcl.uninstall();
         super.dispose();
     }
