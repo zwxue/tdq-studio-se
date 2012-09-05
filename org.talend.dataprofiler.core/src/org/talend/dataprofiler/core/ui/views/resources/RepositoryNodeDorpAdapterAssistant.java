@@ -136,8 +136,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     private boolean allowDND(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         // MOD klliu Bug TDQ-4330 if targetCount's lenth is 1,that means targetNode is the root and system node.
         // so there is not any operations on it,then the operation of DND is not allowed.
-        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
         int sourceCount = sourcePath.segmentCount();
         int targetCount = targetPath.segmentCount();
         if (sourceCount == 1 || targetCount == 1) {
@@ -182,7 +182,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             if (LocalSelectionTransfer.getTransfer().isSupportedType(currentTransfer)) {
                 selectedRepositoryNodes = getSelectedRepositoryNodes();
             }
-            computeRepNodeType(selectedRepositoryNodes, targetNode);
+            moveRepositoryNodes(selectedRepositoryNodes, targetNode);
 
             // MOD gdbu 2011-11-17 TDQ-3969 : after move folder or items re-filter the tree , to create a new list .
             if (DQRepositoryNode.isOnFilterring()) {
@@ -223,10 +223,16 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         return selectedRepositoryNodes.toArray(new IRepositoryNode[selectedRepositoryNodes.size()]);
     }
 
-    private void computeRepNodeType(IRepositoryNode[] selectedRepositoryNodes, IRepositoryNode targetNode)
-            throws PersistenceException {
-        if (selectedRepositoryNodes != null) {
-            for (IRepositoryNode sourceNode : selectedRepositoryNodes) {
+    /**
+     * move RepositoryNode to the target RepositoryNode.
+     * 
+     * @param repositoryNodes
+     * @param targetNode
+     * @throws PersistenceException
+     */
+    public void moveRepositoryNodes(IRepositoryNode[] repositoryNodes, IRepositoryNode targetNode) throws PersistenceException {
+        if (repositoryNodes != null) {
+            for (IRepositoryNode sourceNode : repositoryNodes) {
                 if (targetNode == sourceNode.getParent()) {
                     continue;
                 }
@@ -342,8 +348,12 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             File targetFile = WorkspaceUtils.ifolderToFile(targetFolder);
 
             // move the report generate doc folder
-            FilesUtils.copyDirectory(sourceFile, targetFile);
-            FilesUtils.deleteFile(sourceFile, true);
+            if (sourceFile.exists()) {
+                if (targetFile.exists()) {
+                    FilesUtils.copyDirectory(sourceFile, targetFile);
+                }
+                FilesUtils.deleteFile(sourceFile, true);
+            }
 
             // update the file .report.list
             ReportUtils.updateReportListFile(outputFolder, targetFolder);
@@ -537,8 +547,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
         RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         FolderHelper folderHelper = instance.getFolderHelper();
-        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
         ERepositoryObjectType objectType = targetNode.getContentType();
         IPath nodeFullPath = this.getNodeFullPath(objectType);
         IPath makeRelativeTo = nodeFullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
@@ -607,6 +617,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @throws PersistenceException
      * @deprecated use ProxyRepositoryFactory.getInstance().renameFolder() instead
      */
+    @Deprecated
     public void renameFolderRepNode(IRepositoryNode folderNode, String label) throws PersistenceException {
         if (folderNode == null || label == null || "".equals(label)) { //$NON-NLS-1$
             return;
@@ -634,11 +645,13 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         path = path.startsWith(String.valueOf(IPath.SEPARATOR)) ? path : IPath.SEPARATOR + path;
 
         // MOD sizhaoliu 2012-7-11 TDQ-5613 check lock status before removing/renaming a folder
-    	ProxyRepositoryFactory.getInstance().updateLockStatus();
-        if (ProxyRepositoryManager.getInstance().hasLockedItems(folderNode)){
-        	MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                    DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameFolderLocked")); //$NON-NLS-1$
-        	return;
+        ProxyRepositoryFactory.getInstance().updateLockStatus();
+        if (ProxyRepositoryManager.getInstance().hasLockedItems(folderNode)) {
+            MessageDialog
+                    .openError(
+                            PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                            DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameFolderLocked")); //$NON-NLS-1$
+            return;
         }
 
         // create target folder
@@ -650,7 +663,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         // refresh the dq view (if the rename folder havs sub folders, must to refresh before move these sub folders)
         CorePlugin.getDefault().refreshDQView(parentNode);
 
-        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) folderNode);
+        IPath sourcePath = WorkbenchUtils.getPath(folderNode);
 
         // move children from source folder to target folder
         List<IRepositoryNode> children = folderNode.getChildren();
@@ -701,8 +714,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
     private boolean isSameType(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         // check root node
-        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
         int sourceCount = sourcePath.segmentCount();
         int targetCount = targetPath.segmentCount();
         String sourceString = sourcePath.removeLastSegments(sourceCount - 2).toOSString();
@@ -771,7 +784,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      */
     public void moveObject(IRepositoryViewObject objectToMove, IRepositoryNode sourceNode, IRepositoryNode targetNode,
             IPath basePath) {
-        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
         try {
             IPath makeRelativeTo = Path.EMPTY;
             if (!basePath.isEmpty()) {
@@ -786,21 +799,28 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     private void closeEditorIfOpened(IRepositoryNode fileNode) {
-        IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorReference[] editorReferences = activePage.getEditorReferences();
-        for (IEditorReference reference : editorReferences) {
-            try {
-                IEditorInput editorInput = reference.getEditorInput();
-                if (editorInput instanceof AbstractItemEditorInput) {
-                    AbstractItemEditorInput fileInput = (AbstractItemEditorInput) editorInput;
+        if (CorePlugin.getDefault() != null && CorePlugin.getDefault().getWorkbench() != null
+                && CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow() != null) {
+            IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            if (activePage != null) {
+                IEditorReference[] editorReferences = activePage.getEditorReferences();
+                if (editorReferences != null) {
+                    for (IEditorReference reference : editorReferences) {
+                        try {
+                            IEditorInput editorInput = reference.getEditorInput();
+                            if (editorInput instanceof AbstractItemEditorInput) {
+                                AbstractItemEditorInput fileInput = (AbstractItemEditorInput) editorInput;
 
-                    if (fileNode.getObject().getLabel().equals(fileInput.getItem().getProperty().getLabel())) {
-                        activePage.closeEditor(reference.getEditor(false), false);
-                        break;
+                                if (fileNode.getObject().getLabel().equals(fileInput.getItem().getProperty().getLabel())) {
+                                    activePage.closeEditor(reference.getEditor(false), false);
+                                    break;
+                                }
+                            }
+                        } catch (PartInitException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            } catch (PartInitException e) {
-                e.printStackTrace();
             }
         }
     }
