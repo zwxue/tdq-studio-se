@@ -81,7 +81,9 @@ public class ReportUtilsRealTest {
 
             UnitTestBuildHelper.createRealFolder(this.realProject, folderName1);
             IFolder folder2 = UnitTestBuildHelper.createRealFolder(this.realProject, folderName2);
-            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + ".rep"); //$NON-NLS-1$
+            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + "_0.1.rep"); //$NON-NLS-1$
+            assertTrue(iFile.exists());
+            assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
 
             try {
                 File reportListFile = ReportUtils.getReportListFile(iFile);
@@ -136,14 +138,20 @@ public class ReportUtilsRealTest {
 
             UnitTestBuildHelper.createRealFolder(this.realProject, folderName1);
             IFolder folder2 = UnitTestBuildHelper.createRealFolder(this.realProject, folderName2);
-            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + ".rep"); //$NON-NLS-1$
+            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + "_0.1.rep"); //$NON-NLS-1$
+            assertTrue(iFile.exists());
+            assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
+            IFolder iFolder = UnitTestBuildHelper.createRealFolder(folder2, ReportUtils.getOutputFolder(iFile).getFullPath()
+                    .lastSegment());
+            assertTrue(iFolder.exists());
+            assertTrue(WorkspaceUtils.ifolderToFile(iFolder).exists());
 
             try {
                 File repListFile = ReportUtils.getReportListFile(iFile);
-                Thread.sleep(1500);
+                assertTrue(repListFile.exists());
+
                 ReportUtils.initRepListFile(iFile);
-                Thread.sleep(1500);
-                assertTrue(repListFile.exists() && (repListFile.length() > 0));
+                assertTrue(repListFile.length() > 0);
             } catch (Exception e) {
                 fail(e.getMessage());
             }
@@ -165,17 +173,21 @@ public class ReportUtilsRealTest {
 
             UnitTestBuildHelper.createRealFolder(this.realProject, folderName1);
             IFolder folder2 = UnitTestBuildHelper.createRealFolder(this.realProject, folderName2);
-            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + ".rep"); //$NON-NLS-1$
+            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + "_0.1.rep"); //$NON-NLS-1$
+            assertTrue(iFile.exists());
+            assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
+            IFolder iFolder = UnitTestBuildHelper.createRealFolder(folder2, ReportUtils.getOutputFolder(iFile).getFullPath()
+                    .lastSegment());
+            assertTrue(iFolder.exists());
+            assertTrue(WorkspaceUtils.ifolderToFile(iFolder).exists());
 
             try {
                 ReportUtils.getReportListFile(iFile);
-                Thread.sleep(1500);
 
                 File outputFolder = WorkspaceUtils.ifolderToFile(ReportUtils.getOutputFolder(iFile));
                 assertTrue(outputFolder.exists() && outputFolder.isDirectory());
                 ReturnCode rc = ReportUtils.deleteRepOutputFolder(iFile);
                 assertTrue(rc.isOk());
-                Thread.sleep(1500);
                 assertFalse(outputFolder.exists());
             } catch (Exception e) {
                 fail(e.getMessage());

@@ -13,6 +13,7 @@
 package org.talend.dq.helper;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
@@ -257,6 +259,10 @@ public class UnitTestBuildHelper {
         if (!iFolder.exists()) {
             try {
                 iFolder.create(true, true, null);
+                File file = WorkspaceUtils.ifolderToFile(iFolder);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
             } catch (CoreException e) {
                 ExceptionHandler.process(e);
                 log.error(e, e);
@@ -277,6 +283,10 @@ public class UnitTestBuildHelper {
         if (!iFolder.exists()) {
             try {
                 iFolder.create(true, true, null);
+                File file = WorkspaceUtils.ifolderToFile(iFolder);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
             } catch (CoreException e) {
                 ExceptionHandler.process(e);
                 log.error(e, e);
@@ -297,7 +307,18 @@ public class UnitTestBuildHelper {
         if (!iFile.exists()) {
             try {
                 iFile.create(null, true, null);
+                File file = WorkspaceUtils.ifileToFile(iFile);
+                if (!file.exists()) {
+                    File parentFile = file.getParentFile();
+                    if (!parentFile.exists()) {
+                        parentFile.mkdirs();
+                    }
+                    file.createNewFile();
+                }
             } catch (CoreException e) {
+                ExceptionHandler.process(e);
+                log.error(e, e);
+            } catch (IOException e) {
                 ExceptionHandler.process(e);
                 log.error(e, e);
             }
