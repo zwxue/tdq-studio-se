@@ -55,11 +55,11 @@ public final class ReportUtils {
 
     public static final String REPORT_LIST = ".report.list";//$NON-NLS-1$
 
-    public static final char CURRENT_SEPARATOR = '\t';//$NON-NLS-1$
+    public static final char CURRENT_SEPARATOR = '\t';
 
     public static final boolean USE_TEXT_QUAL = true;
 
-    public static final char TEXT_QUAL = '"';//$NON-NLS-1$
+    public static final char TEXT_QUAL = '"';
 
     public static final int ESCAPE_MODE_BACKSLASH = CsvReader.ESCAPE_MODE_BACKSLASH;
 
@@ -287,7 +287,7 @@ public final class ReportUtils {
         if (reportFileFolder != null && reportFileFolder.exists()) {
 
             File repListFile = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName)
-                    + File.separator + REPORT_LIST);//$NON-NLS-1$
+                    + File.separator + REPORT_LIST);
             List<ReportListParameters> repList = new ArrayList<ReportListParameters>();
 
             IResource[] members = reportFileFolder.members();
@@ -318,9 +318,9 @@ public final class ReportUtils {
         String createTime;
 
         public ReportListParameters() {
-            name = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
-            path = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
-            createTime = PluginConstant.EMPTY_STRING; //$NON-NLS-1$
+            name = PluginConstant.EMPTY_STRING;
+            path = PluginConstant.EMPTY_STRING;
+            createTime = PluginConstant.EMPTY_STRING;
         }
     }
 
@@ -434,16 +434,18 @@ public final class ReportUtils {
      */
     public static List<IFile> getRepDocLinkFiles(IFile file) {
         List<IFile> linkFiles = new ArrayList<IFile>();
-        try {
-            IResource[] reportListFiles = ReportUtils.getReportListFiles(file);
-            for (IResource res : reportListFiles) {
-                IFile linkFile = ResourceManager.getRoot().getFile(res.getFullPath());
-                if (linkFile.exists() && linkFile.isLinked()) {
-                    linkFiles.add(linkFile);
+        if (file != null) {
+            try {
+                IResource[] reportListFiles = ReportUtils.getReportListFiles(file);
+                for (IResource res : reportListFiles) {
+                    IFile linkFile = ResourceManager.getRoot().getFile(res.getFullPath());
+                    if (linkFile.exists() && linkFile.isLinked()) {
+                        linkFiles.add(linkFile);
+                    }
                 }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
             }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
         }
         return linkFiles;
     }

@@ -68,6 +68,9 @@ public final class DQDeleteHelper {
      * @return
      */
     public static boolean canEmptyRecyBin(List<IRepositoryNode> allNodes) {
+        if (allNodes == null) {
+            return false;
+        }
         for (IRepositoryNode node : allNodes) {
             List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
             if (dependencies == null || dependencies.isEmpty()) {
