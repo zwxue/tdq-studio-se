@@ -12,10 +12,9 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,6 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -38,27 +38,25 @@ import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.helper.ColumnHelper;
-
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.indicators.Indicator;
-
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ColumnHelper.class,LanguageManager.class})
+@PrepareForTest({ ColumnHelper.class, LanguageManager.class })
 public class DelimitedFileIndicatorEvaluatorTest {
 
     @Test
     public void testExecuteSqlQuery_delimetd() throws Exception {
-    	String empty="";
+        String empty = "";
         Analysis analysis = mock(Analysis.class);
         DelimitedFileIndicatorEvaluator delFileIndiEvaluator = new DelimitedFileIndicatorEvaluator(analysis);
-        stub(method(DelimitedFileIndicatorEvaluator.class,"handleByARow"));
-        stub(method(DelimitedFileIndicatorEvaluator.class,"addResultToIndicatorToRowMap",Indicator.class,EMap.class));
+        DelimitedFileIndicatorEvaluator spyEvaluator = Mockito.spy(delFileIndiEvaluator);
+        stub(method(DelimitedFileIndicatorEvaluator.class, "handleByARow"));
+        stub(method(DelimitedFileIndicatorEvaluator.class, "addResultToIndicatorToRowMap", Indicator.class, EMap.class));
         AnalysisContext context = mock(AnalysisContext.class);
         when(analysis.getContext()).thenReturn(context);
         DelimitedFileConnection deliFileConn = mock(DelimitedFileConnection.class);
@@ -92,11 +90,11 @@ public class DelimitedFileIndicatorEvaluatorTest {
         columnElementList2.add(mc0);
         columnElementList2.add(mc1);
         columnElementList2.add(mc2);
-        EList<ModelElement> eLs=(EList<ModelElement>)columnElementList;
-        when(context.getAnalysedElements()).thenReturn( eLs);
+        EList<ModelElement> eLs = (EList<ModelElement>) columnElementList;
+        when(context.getAnalysedElements()).thenReturn(eLs);
         PowerMockito.mockStatic(ColumnHelper.class);
         MetadataTable mTable = mock(MetadataTable.class);
-        when(mTable.getColumns()).thenReturn((EList<MetadataColumn>)columnElementList2);
+        when(mTable.getColumns()).thenReturn((EList<MetadataColumn>) columnElementList2);
         when(ColumnHelper.getColumnOwnerAsMetadataTable(mc0)).thenReturn(mTable);
         when(ColumnHelper.getColumnOwnerAsMetadataTable(mc1)).thenReturn(mTable);
         when(deliFileConn.getHeaderValue()).thenReturn(empty);
@@ -106,10 +104,12 @@ public class DelimitedFileIndicatorEvaluatorTest {
         when(deliFileConn.getRowSeparatorValue()).thenReturn("\\n");
         when(deliFileConn.isRemoveEmptyRow()).thenReturn(false);
         when(deliFileConn.isSplitRecord()).thenReturn(false);
-        
+
         PowerMockito.mockStatic(LanguageManager.class);
         when(LanguageManager.getCurrentLanguage()).thenReturn(ECodeLanguage.JAVA);
-        delFileIndiEvaluator.executeSqlQuery(empty);
+
+        Mockito.doReturn(true).when(spyEvaluator).continueRun();
+        spyEvaluator.executeSqlQuery(empty);
     }
 
 }

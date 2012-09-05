@@ -12,12 +12,11 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,6 +30,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
@@ -56,8 +56,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC msjian class global comment. Detailled comment
  */
-@PrepareForTest({ LanguageManager.class, ConnectionUtils.class, ResourceBundle.class, Messages.class,
-        ConnectionUtils.class, LanguageManager.class, ParameterUtil.class, StringUtils.class, ColumnHelper.class })
+@PrepareForTest({ LanguageManager.class, ConnectionUtils.class, ResourceBundle.class, Messages.class, ConnectionUtils.class,
+        LanguageManager.class, ParameterUtil.class, StringUtils.class, ColumnHelper.class })
 public class ColumnSetIndicatorEvaluatorTest {
 
     public static String empty = ""; //$NON-NLS-1$
@@ -179,7 +179,9 @@ public class ColumnSetIndicatorEvaluatorTest {
         when(ColumnHelper.getColumnOwnerAsMetadataTable(mc2)).thenReturn(mTable);
 
         ColumnSetIndicatorEvaluator evaluator = new ColumnSetIndicatorEvaluator(analysis);
-        ReturnCode rc = evaluator.executeSqlQuery(empty);
+        ColumnSetIndicatorEvaluator spyEvaluator = Mockito.spy(evaluator);
+        Mockito.doReturn(true).when(spyEvaluator).continueRun();
+        ReturnCode rc = spyEvaluator.executeSqlQuery(empty);
         assertTrue(rc.isOk());
 
     }
