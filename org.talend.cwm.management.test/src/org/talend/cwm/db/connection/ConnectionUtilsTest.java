@@ -12,15 +12,13 @@
 // ============================================================================
 package org.talend.cwm.db.connection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +34,10 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -62,7 +62,7 @@ import orgomg.cwm.resource.relational.impl.SchemaImpl;
  */
 @PrepareForTest({ ConnectionUtils.class, ColumnSetHelper.class, ConnectionHelper.class, JavaSqlFactory.class,
         CatalogHelper.class, SchemaHelper.class, org.talend.utils.sql.ConnectionUtils.class, ElementWriterFactory.class,
-        Messages.class })
+        Messages.class, ExtractMetaDataUtils.class, MetadataConnectionUtils.class })
 public class ConnectionUtilsTest {
 
     @Rule
@@ -83,7 +83,7 @@ public class ConnectionUtilsTest {
         TdColumnImpl testColumn = mock(TdColumnImpl.class);
         when(testColumn.getName()).thenReturn("testColumnName"); //$NON-NLS-1$
         columnList.add(testColumn);
-        when(ColumnSetHelper.getColumns((ColumnSet) tdTable)).thenReturn(columnList);
+        when(ColumnSetHelper.getColumns(tdTable)).thenReturn(columnList);
 
         Connection tempConnection = mock(Connection.class);
         PowerMockito.mockStatic(ConnectionHelper.class);
@@ -204,4 +204,27 @@ public class ConnectionUtilsTest {
         assertFalse(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
         assertTrue(username.equals(sqliteConn.getUsername()));
     }
+
+    /**
+     * 
+     * test this to judge if it is hive connection.
+     * 
+     * @throws SQLException
+     */
+    @Test
+    public void testisHive() throws SQLException {
+        java.sql.Connection connection = mock(java.sql.Connection.class);
+        DatabaseMetaData connectionMetadata = mock(DatabaseMetaData.class);
+        PowerMockito.mockStatic(ExtractMetaDataUtils.class);
+        when(ExtractMetaDataUtils.getConnectionMetadata(connection)).thenReturn(connectionMetadata);
+        PowerMockito.mockStatic(MetadataConnectionUtils.class);
+        when(MetadataConnectionUtils.isHive(connectionMetadata)).thenReturn(true);
+        boolean isHive = ConnectionUtils.isHive(connection);
+        assertTrue(isHive);
+
+        when(MetadataConnectionUtils.isHive(connectionMetadata)).thenReturn(false);
+        isHive = ConnectionUtils.isHive(connection);
+        assertFalse(isHive);
+    }
+
 }

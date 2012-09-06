@@ -12,28 +12,29 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.sql.Types;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
-
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
+@PrepareForTest({ ConnectionHelper.class })
 public class ModelElementIndicatorRuleTest {
 
     @Rule
@@ -42,8 +43,10 @@ public class ModelElementIndicatorRuleTest {
     private TdSqlDataType tdsql;
 
     private TdColumn me;
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -51,15 +54,7 @@ public class ModelElementIndicatorRuleTest {
         tdsql = mock(TdSqlDataType.class);
         me = mock(TdColumn.class);
         when(me.getSqlDataType()).thenReturn(tdsql);
-        when(me.getContentType()).thenReturn("type");
-    }
-
-    /**
-     * DOC yyin Comment method "tearDown".
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
+        when(me.getContentType()).thenReturn("type"); //$NON-NLS-1$
     }
 
     /**
@@ -76,10 +71,9 @@ public class ModelElementIndicatorRuleTest {
         // can not mock final class
         // PowerMockito.mockStatic(MetadataHelper.class);
         // when(MetadataHelper.getDataminingType(me)).thenReturn(DataminingType.OTHER);
-        
+
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.ModeIndicatorEnum, me, ExecutionLanguage.JAVA));
-        Assert.assertTrue(ModelElementIndicatorRule
-                .patternRule(IndicatorEnum.FrequencyIndicatorEnum, me, ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.FrequencyIndicatorEnum, me, ExecutionLanguage.JAVA));
         // Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowFrequencyIndicatorEnum, me,
         // ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.DateFrequencyIndicatorEnum, me,
@@ -118,6 +112,32 @@ public class ModelElementIndicatorRuleTest {
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
                 ExecutionLanguage.SQL));
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+    }
+
+    /**
+     * 
+     * test for Hive connection and some indicators should be disabled.
+     */
+    @Test
+    public void testPatternRule_3() {
+        when(tdsql.getJavaDataType()).thenReturn(Types.VARCHAR);
+        DatabaseConnection connection = mock(DatabaseConnection.class);
+        PowerMockito.mockStatic(ConnectionHelper.class);
+        when(ConnectionHelper.getTdDataProvider(me)).thenReturn(connection);
+        when(ConnectionHelper.isHive(connection)).thenReturn(true);
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.SoundexIndicatorEnum, me, ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule
+                .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        when(tdsql.getJavaDataType()).thenReturn(Types.INTEGER);
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.MedianIndicatorEnum, me, ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.UpperQuartileIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowerQuartileIndicatorEnum, me,
                 ExecutionLanguage.SQL));
     }
 }
