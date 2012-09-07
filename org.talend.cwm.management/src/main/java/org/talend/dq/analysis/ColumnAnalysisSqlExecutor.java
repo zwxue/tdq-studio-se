@@ -1055,9 +1055,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
                 ok = runAnalysisIndicators(connection.getObject(), elementToIndicator, indicators);
 
-                // --- finalize indicators by setting the row count and null when they exist.
-                setRowCountAndNullCount(elementToIndicator);
             }
+            // --- finalize indicators by setting the row count and null when they exist.
+            setRowCountAndNullCount(elementToIndicator);
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
