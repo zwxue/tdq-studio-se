@@ -114,7 +114,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             // try to lock item, the status will be updated in case it is already locked by someone else
             ProxyRepositoryManager.getInstance().lock(item);
             if (ProxyRepositoryFactory.getInstance().getStatus(item) == ERepositoryStatus.LOCK_BY_OTHER) {
-                CorePlugin.getDefault().refreshDQView(node);
+                CorePlugin.getDefault().refreshDQView(node.getParent());
                 MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                         DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"),
                         DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers"));

@@ -139,10 +139,10 @@ public class RenameTdqFolderAction extends AContextualAction {
                 }
             } catch (PersistenceException e) {
                 log.error(e.getMessage());
-                MessageDialog
-                        .openError(
-                                PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                                DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameFolderLocked")); //$NON-NLS-1$ 
+                CorePlugin.getDefault().refreshDQView(this.repositoryNode.getParent());
+                MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                        DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), e.getMessage()); //$NON-NLS-1$
+
             }
         }
     }
