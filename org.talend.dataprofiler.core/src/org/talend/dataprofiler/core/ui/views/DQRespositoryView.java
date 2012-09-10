@@ -93,7 +93,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.swt.dialogs.ProgressDialog;
-import org.talend.core.PluginChecker;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.ConnectionItem;
@@ -510,17 +509,18 @@ public class DQRespositoryView extends CommonNavigator {
                 // return;
                 // }
                 // ADD xwang 2011-08-30
-                if (PluginChecker.isSVNProviderPluginLoaded()) {
-                    RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open editor") {
-
-                        @Override
-                        protected void run() {
-
-                        }
-                    };
-                    workUnit.setAvoidUnloadResources(true);
-                    ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
-                }
+                // MOD sizhaoliu 2012-09-10 TDQ-5612 remove the following part to reduce operation latency with remote connection.
+                // if (PluginChecker.isSVNProviderPluginLoaded()) {
+                // RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open editor") {
+                //
+                // @Override
+                // protected void run() {
+                //
+                // }
+                // };
+                // workUnit.setAvoidUnloadResources(true);
+                // ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+                // }
                 // MOD klliu 2011-12-19 TDQ-4197
                 Iterator<?> iterator = selection.iterator();
                 while (iterator.hasNext()) {
@@ -1069,10 +1069,6 @@ public class DQRespositoryView extends CommonNavigator {
 
     private static void setOnUpDownStatus(boolean isOnUpDownStatus) {
         DQRespositoryView.isOnUpDownStatus = isOnUpDownStatus;
-    }
-
-    public void xxxxx() {
-
     }
 
 }
