@@ -198,7 +198,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
             GridItem item = new GridItem(grid, SWT.NONE);
             item.setText(indicatorNode.getLabel());
             item.setData(indicatorNode);
-            createChildNodes(grid, item, indicatorNode);
+            createChildNodes(grid, null, item, indicatorNode);
         }
 
         grid.setHeaderVisible(true);
@@ -246,17 +246,25 @@ public class IndicatorSelectDialog2 extends TrayDialog {
      * @param currentItem
      * @param indicatorNode
      */
-    private void createChildNodes(IndicatorSelectGrid grid, GridItem currentItem, IIndicatorNode indicatorNode) {
+    private void createChildNodes(IndicatorSelectGrid grid, GridItem parentItem, GridItem currentItem,
+            IIndicatorNode indicatorNode) {
 
-        currentItem.setExpanded(true);
+        Boolean hasCheckableInColumn[] = new Boolean[grid.getColumnCount()];
 
-        for (IIndicatorNode childNode : indicatorNode.getChildren()) {
+        for (int j = 1; j < grid.getColumnCount(); j++) {
+            hasCheckableInColumn[j] = false;
+        }
 
+        for (int i = 0; i < indicatorNode.getChildren().length; i++) {
+            IIndicatorNode childNode = indicatorNode.getChildren()[i];
             GridItem childItem = new GridItem(currentItem, SWT.NONE);
             childItem.setText(childNode.getLabel());
             childItem.setData(childNode);
 
+            boolean hasCheckableInRow = false;
+
             for (int j = 0; j < grid.getColumnCount(); j++) {
+
                 IndicatorEnum indicatorEnum = childNode.getIndicatorEnum();
                 if (j == 0) {
                     // Indicator title column
@@ -281,18 +289,87 @@ public class IndicatorSelectDialog2 extends TrayDialog {
                     childItem.setCheckable(j, isMatch);
 
                     if (isMatch) {
+                        hasCheckableInRow = true;
+                        hasCheckableInColumn[j] = true;
                         // Check the box if it is already selected
                         if (meIndicator != null && meIndicator.tempContains(indicatorEnum)) {
                             childItem.setChecked(j, true);
                         }
                     }
-
                 }
             }
 
+            childItem.setCheckable(1, hasCheckableInRow);
+
             if (childNode.hasChildren()) {
-                createChildNodes(grid, childItem, childNode);
+                createChildNodes(grid, currentItem, childItem, childNode);
             }
+
+        }
+
+        boolean entireCategoryCheckable = false;
+        for (int j = 2; j < grid.getColumnCount(); j++) {
+            if (hasCheckableInColumn[j]) {
+                entireCategoryCheckable = true;
+            } else {
+                currentItem.setCheckable(j, false);
+            }
+        }
+        currentItem.setCheckable(1, entireCategoryCheckable);
+        processNodeSelection(grid, parentItem, currentItem);
+
+    }
+
+    private void processNodeSelection(IndicatorSelectGrid grid, GridItem parentItem, GridItem currentItem) {
+
+        Boolean allCheckedInColumn[] = new Boolean[grid.getColumnCount()];
+        Boolean hasCheckedInColumn[] = new Boolean[grid.getColumnCount()];
+
+        for (int j = 1; j < grid.getColumnCount(); j++) {
+            allCheckedInColumn[j] = true;
+            hasCheckedInColumn[j] = false;
+        }
+
+        for (int i = 0; i < currentItem.getItemCount(); i++) {
+            boolean allCheckedInRow = true;
+            boolean hasCheckedInRow = false;
+            GridItem childItem = currentItem.getItem(i);
+
+            for (int j = 2; j < grid.getColumnCount(); j++) {
+                if (childItem.getChecked(j)) {
+                    hasCheckedInRow = true;
+                    hasCheckedInColumn[j] = true;
+                } else {
+                    if (childItem.getCheckable(j)) {
+                        allCheckedInRow = false;
+                        allCheckedInColumn[j] = false;
+                    }
+                }
+            }
+            if (hasCheckedInRow && allCheckedInRow) {
+                childItem.setChecked(1, true);
+            }
+        }
+
+        boolean entireCategoryChecked = true;
+
+        for (int j = 2; j < grid.getColumnCount(); j++) {
+            if (hasCheckedInColumn[j]) {
+                currentItem.setExpanded(true);
+                if (parentItem != null) {
+                    parentItem.setExpanded(true);
+                }
+                if (allCheckedInColumn[j]) {
+                    currentItem.setChecked(j, true);
+                }
+            } else {
+                if (currentItem.getCheckable(j)) {
+                    entireCategoryChecked = false;
+                }
+            }
+        }
+        if (currentItem.getCheckable(1)) {
+            currentItem.setChecked(1, entireCategoryChecked);
         }
     }
 
