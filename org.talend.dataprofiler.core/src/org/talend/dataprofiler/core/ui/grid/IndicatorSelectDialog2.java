@@ -21,7 +21,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -41,15 +40,12 @@ import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.dbms.DbmsLanguage;
-import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.IndicatorTreeModelBuilder;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
- * This dialog use to select the indictor object for different columns.
+ * This dialog is used to select indicator objects for different columns.
  */
 public class IndicatorSelectDialog2 extends TrayDialog {
 
@@ -59,8 +55,6 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
     private static final int COLUMN_WIDTH = 50;
 
-    private static final int ROW_MAX_LENGTH = 107;
-
     private ModelElementIndicator[] modelElementIndicators;
 
     private final String title;
@@ -68,11 +62,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
     // ADD by zshen:need language to decide DatePatternFrequencyIndicator whether can be choose bu user.
     private ExecutionLanguage language;
 
-    private DbmsLanguage dbms;
-
     private int allColumnsCountSize = 0;// Record the total number of Columns.
-
-    private Button okButton = null;
 
     private Label purposeLabel;
 
@@ -117,9 +107,6 @@ public class IndicatorSelectDialog2 extends TrayDialog {
             if (analyEditor.getMasterPage() instanceof ColumnMasterDetailsPage) {
                 this.language = ExecutionLanguage.get(((ColumnMasterDetailsPage) analyEditor.getMasterPage()).getExecCombo()
                         .getText());
-                DataManager connection = ((ColumnMasterDetailsPage) analyEditor.getMasterPage()).getAnalysis().getContext()
-                        .getConnection();
-                this.dbms = DbmsLanguageFactory.createDbmsLanguage(connection);
             }
         }
         // ~
@@ -150,10 +137,10 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         style |= SWT.SINGLE;
 
         IndicatorSelectGrid grid = new IndicatorSelectGrid(this, comp, style);
-
         GridData controlGridData = new GridData();
-        controlGridData.minimumWidth = 650;
-        controlGridData.heightHint = 500;
+        controlGridData.minimumWidth = 600;
+        controlGridData.heightHint = 600;
+        controlGridData.widthHint = Math.min(COLUMN_WIDTH * this.allColumnsCountSize + 400, 800);
 
         controlGridData.verticalAlignment = SWT.FILL;
         controlGridData.grabExcessVerticalSpace = true;
@@ -184,11 +171,6 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         // hide first column
         grid.getColumn(0).setVisible(false);
 
-        int groupStyle = SWT.NONE;
-        groupStyle |= SWT.TOGGLE;
-        int colStyle = SWT.NONE;
-        colStyle |= SWT.CENTER;
-        colStyle |= SWT.CHECK;
         TdColumnHeaderRenderer renderer = null;
 
         GridColumn rowSelectCol = new GridColumn(grid, SWT.CHECK);
@@ -233,8 +215,6 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         grid.setColumnScrolling(true);
         for (int i = 0; i < grid.getColumns().length; i++) {
             grid.getColumn(i).setMoveable(true);
-        }
-        for (int i = 0; i < grid.getColumns().length; i++) {
             grid.getColumn(i).setResizeable(true);
         }
         grid.setSelectionEnabled(false);
@@ -338,7 +318,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         parent.setLayout(new GridLayout(4, false));
-        okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
         createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
     }
 
@@ -348,16 +328,18 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
     public void updateIndicatorInfo(GridItem item) {
         IIndicatorNode indicatorNode = ((IIndicatorNode) item.getData());
-        if (indicatorNode == null) {
-            purposeLabel.setText(PURPOSE + " " + item.getText());
-            descriptionLabel.setText(DESCRIPTION + " " + item.getText());
-            return;
+        if (indicatorNode != null) {
+            Indicator indicator = indicatorNode.getIndicatorInstance();
+            if (indicator != null) {
+                IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+                purposeLabel.setText(PURPOSE + " " + MetadataHelper.getPurpose(indicatorDefinition));
+                String description = DESCRIPTION + " " + MetadataHelper.getDescription(indicatorDefinition);
+                descriptionLabel.setText(description);
+                return;
+            }
         }
-        Indicator indicator = indicatorNode.getIndicatorInstance();
-        IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-        purposeLabel.setText(PURPOSE + " " + MetadataHelper.getPurpose(indicatorDefinition));
-        String description = DESCRIPTION + " " + MetadataHelper.getDescription(indicatorDefinition);
-        descriptionLabel.setText(description);
+        purposeLabel.setText(PURPOSE + " " + item.getText());
+        descriptionLabel.setText(DESCRIPTION + " " + item.getText());
     }
 
 }
