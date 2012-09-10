@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -36,6 +37,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.jfree.util.Log;
@@ -193,8 +195,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             if (log.isInfoEnabled()) {
                 // e.printStackTrace();
                 log.info(e.toString());
-
             }
+            MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                    DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.moveError"), e.getMessage()); //$NON-NLS-1$
 
         }
         // MOD gdbu TDQ-3546 unload resource after move item.
