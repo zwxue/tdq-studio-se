@@ -738,10 +738,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             String singleSelect = getCompletedSingleSelect(indicator, singleStatement, colName, table, whereExpression,
                     rangeStrings.get(i));
             // parenthesis necessary for MySQL
-            buf.append('('); //$NON-NLS-1$ 
+            buf.append('(');
             buf.append(singleSelect);
             // parenthesis necessary for MySQL
-            buf.append(')'); //$NON-NLS-1$  
+            buf.append(')');
             if (i != last - 1) {
                 buf.append(dbms().unionAll());
             }
@@ -1050,14 +1050,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (!connection.isOk()) {
                     log.error(connection.getMessage());
                     this.errorMessage = connection.getMessage();
-                    return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$//$NON-NLS-1$  
+                    return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
                 }
 
                 ok = runAnalysisIndicators(connection.getObject(), elementToIndicator, indicators);
 
-                // --- finalize indicators by setting the row count and null when they exist.
-                setRowCountAndNullCount(elementToIndicator);
             }
+            // --- finalize indicators by setting the row count and null when they exist.
+            setRowCountAndNullCount(elementToIndicator);
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
