@@ -1050,14 +1050,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (!connection.isOk()) {
                     log.error(connection.getMessage());
                     this.errorMessage = connection.getMessage();
-                    return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$
+                    return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$//$NON-NLS-2$
                 }
 
                 ok = runAnalysisIndicators(connection.getObject(), elementToIndicator, indicators);
 
-                // --- finalize indicators by setting the row count and null when they exist.
-                setRowCountAndNullCount(elementToIndicator);
             }
+            // --- finalize indicators by setting the row count and null when they exist.
+            setRowCountAndNullCount(elementToIndicator);
         } catch (SQLException e) {
             log.error(e, e);
             this.errorMessage = e.getMessage();
@@ -1141,7 +1141,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     // TDQ Guodong bu 2011-2-25, feature 19107
     // FIXME use a static inner class instead
-    class ExecutiveAnalysisJob extends Job {
+    static class ExecutiveAnalysisJob extends Job {
 
         ColumnAnalysisSqlExecutor parent;
 
