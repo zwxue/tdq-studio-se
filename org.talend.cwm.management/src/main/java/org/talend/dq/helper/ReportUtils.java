@@ -394,6 +394,7 @@ public final class ReportUtils {
     /**
      * if the report's name changed, need to update the report folder name also.
      * 
+     * @param parentFolder
      * @param oldFolderName
      * @param repItem
      */
@@ -402,7 +403,6 @@ public final class ReportUtils {
         String newFolderName = ReportUtils.getSimpleName(repItem.getProperty());
         // if the report's name changed, update the report folder name also
         if (!oldFolderName.equals(newFolderName)) {
-            // IContainer repItemParent = PropertyHelper.getItemFile(repItem.getProperty()).getParent();
             File oldFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
                     .fromPortableString(PluginConstant.DOT_STRING + oldFolderName)));
             File newFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
@@ -432,16 +432,18 @@ public final class ReportUtils {
      */
     public static List<IFile> getRepDocLinkFiles(IFile file) {
         List<IFile> linkFiles = new ArrayList<IFile>();
-        try {
-            IResource[] reportListFiles = ReportUtils.getReportListFiles(file);
-            for (IResource res : reportListFiles) {
-                IFile linkFile = ResourceManager.getRoot().getFile(res.getFullPath());
-                if (linkFile.exists() && linkFile.isLinked()) {
-                    linkFiles.add(linkFile);
+        if (file != null) {
+            try {
+                IResource[] reportListFiles = ReportUtils.getReportListFiles(file);
+                for (IResource res : reportListFiles) {
+                    IFile linkFile = ResourceManager.getRoot().getFile(res.getFullPath());
+                    if (linkFile.exists() && linkFile.isLinked()) {
+                        linkFiles.add(linkFile);
+                    }
                 }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
             }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
         }
         return linkFiles;
     }

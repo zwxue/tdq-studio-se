@@ -787,21 +787,28 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     private void closeEditorIfOpened(IRepositoryNode fileNode) {
-        IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorReference[] editorReferences = activePage.getEditorReferences();
-        for (IEditorReference reference : editorReferences) {
-            try {
-                IEditorInput editorInput = reference.getEditorInput();
-                if (editorInput instanceof AbstractItemEditorInput) {
-                    AbstractItemEditorInput fileInput = (AbstractItemEditorInput) editorInput;
+        if (CorePlugin.getDefault() != null && CorePlugin.getDefault().getWorkbench() != null
+                && CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow() != null) {
+            IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            if (activePage != null) {
+                IEditorReference[] editorReferences = activePage.getEditorReferences();
+                if (editorReferences != null) {
+                    for (IEditorReference reference : editorReferences) {
+                        try {
+                            IEditorInput editorInput = reference.getEditorInput();
+                            if (editorInput instanceof AbstractItemEditorInput) {
+                                AbstractItemEditorInput fileInput = (AbstractItemEditorInput) editorInput;
 
-                    if (fileNode.getObject().getLabel().equals(fileInput.getItem().getProperty().getLabel())) {
-                        activePage.closeEditor(reference.getEditor(false), false);
-                        break;
+                                if (fileNode.getObject().getLabel().equals(fileInput.getItem().getProperty().getLabel())) {
+                                    activePage.closeEditor(reference.getEditor(false), false);
+                                    break;
+                                }
+                            }
+                        } catch (PartInitException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            } catch (PartInitException e) {
-                e.printStackTrace();
             }
         }
     }
