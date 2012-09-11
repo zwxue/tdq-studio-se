@@ -43,7 +43,6 @@ public class DQRuleWriter extends AElementPersistance {
      */
     @Override
     protected void addDependencies(ModelElement element) {
-        // TODO Auto-generated method stub
 
     }
 

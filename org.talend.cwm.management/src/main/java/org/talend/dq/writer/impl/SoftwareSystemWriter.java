@@ -28,18 +28,7 @@ public class SoftwareSystemWriter extends AElementPersistance {
      * DOC bZhou SoftwareSystemWriter constructor comment.
      */
     SoftwareSystemWriter() {
-        // TODO Auto-generated constructor stub
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
-     */
-    @Override
-    protected void addDependencies(ModelElement element) {
-        // TODO Auto-generated method stub
-
+        super();
     }
 
     /*
@@ -53,7 +42,6 @@ public class SoftwareSystemWriter extends AElementPersistance {
     }
 
     public ReturnCode save(Item item, boolean careDependency) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -66,12 +54,12 @@ public class SoftwareSystemWriter extends AElementPersistance {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
+     * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
-    // @Override
-    // protected void updateDependencies(ModelElement element) {
-    // // TODO Auto-generated method stub
-    //
-    // }
+    @Override
+    protected void addDependencies(ModelElement element) {
+
+
+    }
 
 }

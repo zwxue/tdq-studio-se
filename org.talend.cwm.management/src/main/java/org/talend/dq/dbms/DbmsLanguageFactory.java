@@ -168,6 +168,7 @@ public final class DbmsLanguageFactory {
      * @param connection a connection (must be open)
      * @return the appropriate DbmsLanguage or a default one if something failed with the connection.
      */
+    @SuppressWarnings("deprecation")
     public static DbmsLanguage createDbmsLanguage(java.sql.Connection connection) {
         assert connection != null;
         // MOD xqliu 2009-07-13 bug 7888

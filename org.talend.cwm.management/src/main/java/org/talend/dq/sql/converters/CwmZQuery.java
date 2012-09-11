@@ -117,7 +117,6 @@ public class CwmZQuery {
         try {
             return this.zQuery.toString();
         } catch (RuntimeException e) {
-            // TODO Auto-generated catch block
             log.error(e, e);
         }
         return null;

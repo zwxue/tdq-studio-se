@@ -126,7 +126,6 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
             }
         }
 
-        // FIXME the first instance of resultSetList is never used.
         List<Map<String, String>> resultSetList = new ArrayList<Map<String, String>>();
         if (analysis.getParameters().isStoreData()) {
             resultSetList = statement.tidyResultSet(columnList.toArray(new ModelElement[columnList.size()]), resultSet);

@@ -106,7 +106,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
         if (indicator.getIndicatorDefinition() == null) {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }
-        // FIXME xqliu case of composite indicators, add children to result.
+        // xqliu case of composite indicators, add children to result.
         if (indicator instanceof CompositeIndicator) {
             for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
                 initializeIndicator(child, set); // recurse

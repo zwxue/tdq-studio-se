@@ -96,17 +96,7 @@ public final class DependenciesHandler {
             // MOD qiongli bug 15587.if dependcy is Proxy,reload it and remove the client element
             if (dependency.eIsProxy()) {
                 dependency = (Dependency) EObjectHelper.resolveObject(dependency);
-                // EList<ModelElement> client = dependency.getClient();
-                // Iterator<ModelElement> iterator = client.iterator();
-                // while (iterator.hasNext()) {
-                // ModelElement modelElement = iterator.next();
-                // if (modelElement.getName().equals(elementToDelete.getName())) {
-                // iterator.remove();
-                // }
-                // }
-                //
-                // if (client.size() == 0)
-                // it.remove();
+
             }// ~
             Resource dependencyResource = dependency.eResource();
             if (dependencyResource != null) {
@@ -236,32 +226,6 @@ public final class DependenciesHandler {
     }
 
     /**
-     * Method "removeSupplierDependencies". The given element (supplier) is an element required by other elements (the
-     * clients). This method gets all the dependencies that link the supplier to the clients. Then for each client, the
-     * dependency toward the supplier is removed. And finally the list of dependencies that link the supplier to its
-     * clients is suppressed.
-     * 
-     * @param supplierElement an element that is required by other elements
-     * @return
-     */
-    // boolean removeSupplierDependencies(ModelElement supplierElement) {
-    // return ModelElementHelper.removeSupplierDependencies(supplierElement);
-    // }
-    /**
-     * Method "getDependencyBetween" the dependency that relates the supplier to the client. This method looks into the
-     * list of dependencies of both the supplier and the client.
-     * 
-     * @param kind the kind of dependency looked for (could be null)
-     * @param clientElement
-     * @param supplierElement
-     * @return the dependency that relates the supplier to the client or null if none is found.
-     */
-    // Dependency getDependencyBetween(String kind, ModelElement clientElement,
-    // ModelElement supplierElement) {
-    // return ModelElementHelper.getDependencyBetween(kind, clientElement,
-    // supplierElement);
-    // }
-    /**
      * Method "createUsageDependencyOn".
      * 
      * @param clientElement the analysis that depends on the data provider.
@@ -277,24 +241,6 @@ public final class DependenciesHandler {
         return rc;
     }
 
-    // /**
-    // * Method "createUsageDependencyOn".
-    // *
-    // * @param report the analysis that depends on the data provider.
-    // * @param analysis the data provider
-    // * @return a true return code if the dependency has been correctly added
-    // to the resource of the supplier element.
-    // * Return false otherwise. In any case, the dependency is created and the
-    // getObject() method returns it.
-    // */
-    // TypedReturnCode<Dependency> createUsageDependencyOn(TdReport report,
-    // Analysis analysis) {
-    // assert analysis != null;
-    // Dependency dependency = createDependencyOn(USAGE, report, analysis);
-    // TypedReturnCode<Dependency> rc = new TypedReturnCode<Dependency>();
-    // rc.setObject(dependency);
-    // return rc;
-    // }
 
     /**
      * Method "setDependencyOn" sets the dependency between the analysis and the data manager.

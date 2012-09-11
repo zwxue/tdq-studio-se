@@ -35,7 +35,6 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
      */
     SybaseASEDbmsLanguage(ProductVersion dbVersion) {
         super(DbmsLanguage.SYBASE, dbVersion);
-        // TODO Auto-generated constructor stub
     }
 
     /*

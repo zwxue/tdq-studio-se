@@ -68,7 +68,9 @@ public final class PrvResourceFileHelper extends ResourceFileMap {
      */
     @Override
     protected boolean checkFile(IFile file) {
-        // FIXME check file is null or not should be the fist line code.
+        if (file == null) {
+            return false;
+        }
         String fileExtension = file.getFileExtension();
         return file != null && (FactoriesUtil.isProvFile(fileExtension) || FactoriesUtil.isItemFile(fileExtension));
     }

@@ -55,7 +55,6 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
@@ -523,7 +522,6 @@ public final class ConnectionUtils {
         try {
             connection = ConnectionUtils.createConnection(url, driver, props);
             if (connection != null) {
-                // FIXME stat should be closed.
                 Statement stat = connection.createStatement();
                 if (!org.talend.dataquality.PluginConstant.EMPTY_STRING.equals(schema)) {
                     stat.executeQuery("Select * from " + schema.toUpperCase() + org.talend.dataquality.PluginConstant.DOT_STRING + tableName); //$NON-NLS-1$
@@ -556,6 +554,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isOdbcMssql(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -567,6 +566,7 @@ public final class ConnectionUtils {
     }
 
     public static boolean isOdbcProgress(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -601,6 +601,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isMssql(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && !connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -716,6 +717,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isMysql(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.MYSQL_PRODUCT_NAME)
@@ -811,6 +813,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isOdbcExcel(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -829,6 +832,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isOdbcConnection(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)) {
@@ -888,6 +892,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isOdbcPostgresql(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -906,6 +911,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isOdbcOracle(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -925,6 +931,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isOdbcTeradata(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -943,6 +950,7 @@ public final class ConnectionUtils {
      * @throws SQLException
      */
     public static boolean isOdbcIngres(java.sql.Connection connection) throws SQLException {
+        @SuppressWarnings("deprecation")
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
                 && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)
@@ -960,6 +968,7 @@ public final class ConnectionUtils {
      * @return
      * @throws SQLException
      */
+    @SuppressWarnings("deprecation")
     public static boolean isJdbcIngres(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
         if (connectionMetadata.getDriverName() != null
@@ -1216,22 +1225,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * update the RETRIEVE_ALL tagged value of this connection.
-     * 
-     * @param conn
-     */
-    private static void updateRetrieveAllFlag(Connection conn) {
-        if (conn != null && conn instanceof DatabaseConnection) {
-            String sid = ((DatabaseConnection) conn).getSID();
-            if (sid != null && sid.trim().length() > 0) {
-                TaggedValueHelper.setTaggedValue(conn, TaggedValueHelper.RETRIEVE_ALL, "false");//$NON-NLS-1$
-            } else {
-                TaggedValueHelper.setTaggedValue(conn, TaggedValueHelper.RETRIEVE_ALL, "true");//$NON-NLS-1$
-            }
-        }
-    }
-
-    /**
      * DOC xqliu Comment method "fillConnectionInformation".
      * 
      * @param conns
@@ -1462,7 +1455,6 @@ public final class ConnectionUtils {
         if (tdTableList == null) {
             return;
         }
-        List<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
         for (MetadataTable currColumnSet : tdTableList) {
             retrieveColumn(currColumnSet);
         }
@@ -1647,6 +1639,7 @@ public final class ConnectionUtils {
     public static List<TdSqlDataType> getDataType(String catalogName, String schemaPattern, String tablePattern,
             String columnPattern, java.sql.Connection connection) throws SQLException {
         List<TdSqlDataType> sqlDatatypes = new ArrayList<TdSqlDataType>();
+        @SuppressWarnings("deprecation")
         ResultSet columns = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection).getColumns(catalogName,
                 schemaPattern, tablePattern, columnPattern);
         while (columns.next()) {

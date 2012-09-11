@@ -19,6 +19,7 @@ import java.util.HashSet;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -101,7 +102,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
             DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator);
         }
 
-        // FIXME scorreia in case of composite indicators, add children to result.
+        // scorreia in case of composite indicators, add children to result.
         if (indicator instanceof CompositeIndicator) {
             for (Indicator child : ((CompositeIndicator) indicator).getChildIndicators()) {
                 initializeIndicator(child, modelElement); // recurse
@@ -204,8 +205,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
      */
     public void setDatamingType(String dataminingTypeLiteral, ModelElement modelElement) {
         DataminingType type = DataminingType.get(dataminingTypeLiteral);
-        // FIXME it always return true.
-        if (modelElement instanceof ModelElement) {
+        if (modelElement instanceof MetadataColumn) {
             MetadataHelper.setDataminingType(type, (ModelElement) modelElement);
         } else if (modelElement instanceof TdXmlElementType) {
             MetadataHelper.setDataminingType(type, (TdXmlElementType) modelElement);

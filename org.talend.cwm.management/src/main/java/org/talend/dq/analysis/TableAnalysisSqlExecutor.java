@@ -46,7 +46,6 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
@@ -167,11 +166,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                     joinConditions.add(joinCopy);
                 }
             }
-        }
-        // FIXME parameters is never used, remove it.
-        IndicatorParameters parameters = indicator.getParameters();
-        if (parameters != null) {
-            // TODO handle parameters here
         }
 
         String schemaName = getQuotedSchemaName(set);

@@ -202,8 +202,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             }
             ColumnSet colSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
             if (colSet == null) {
-                // FIXME colSet is Null.
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName(), colSet); //$NON-NLS-1$
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName()); //$NON-NLS-1$
                 return null;
             }
             // else add into select

@@ -36,7 +36,6 @@ public class DB2DbmsLanguage extends DbmsLanguage {
      */
     DB2DbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
-        // TODO Auto-generated constructor stub
     }
 
     /*

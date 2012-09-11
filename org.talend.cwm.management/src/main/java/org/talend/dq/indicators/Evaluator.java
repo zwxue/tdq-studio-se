@@ -266,8 +266,6 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
 
     private IProgressMonitor monitor;
 
-    private long freeMemory;
-
     public IProgressMonitor getMonitor() {
         return monitor;
     }
@@ -298,7 +296,6 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
      * @see org.talend.dq.analysis.memory.IMemoryChangeListener#onLowMemory(long)
      */
     public void onMemoryChange(long freeMemory) {
-        this.freeMemory = (freeMemory + (512 * 1024)) / (1024 * 1024);
         this.isLowMemory = true;
     }
 }

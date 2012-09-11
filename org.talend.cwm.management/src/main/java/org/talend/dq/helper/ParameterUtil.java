@@ -139,6 +139,7 @@ public final class ParameterUtil {
      * 
      * @param args
      */
+    @SuppressWarnings("unused")
     private static void main(String[] args) {
         DBConnectionParameter dbParameter = new DBConnectionParameter();
         dbParameter.setParameters(new Properties());

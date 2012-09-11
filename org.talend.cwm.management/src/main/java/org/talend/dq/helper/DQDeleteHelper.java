@@ -14,7 +14,6 @@ package org.talend.dq.helper;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
@@ -31,8 +30,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * 
  */
 public final class DQDeleteHelper {
-
-    private static Logger log = Logger.getLogger(DQDeleteHelper.class);
 
     private DQDeleteHelper() {
     }

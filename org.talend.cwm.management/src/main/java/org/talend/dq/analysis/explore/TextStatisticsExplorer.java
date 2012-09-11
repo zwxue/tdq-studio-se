@@ -80,16 +80,6 @@ public class TextStatisticsExplorer extends DataExplorer {
     }
 
     /**
-     * DOC yyi 2011-06-14 22246:view rows for aveagge length
-     * 
-     * @return
-     */
-    private String getAverageLengthRowsStatement() {
-        String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
-        return dbmsLanguage.fillGenericQueryWithColumnsAndTable(dbmsLanguage.getAverageLengthRows(), this.columnName, tableName);
-    }
-
-    /**
      * DOC qiongli 2011-09-8 TDQ-2474:view rows for average length with blank.
      * 
      * @return

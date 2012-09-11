@@ -196,9 +196,6 @@ public final class EMFSharedResources {
      * @return
      * @deprecated do not use directly EMFUtil.
      * 
-     * TODO rli use {@link #saveAll()} method when needed.
-     * 
-     * TODO rli create other methods in this class when needed.
      */
     public static EMFUtil getSharedEmfUtil() {
         return getInstance().emfUtil;

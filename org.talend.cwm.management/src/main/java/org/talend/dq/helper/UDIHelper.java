@@ -13,7 +13,6 @@
 package org.talend.dq.helper;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -341,7 +340,6 @@ public final class UDIHelper {
      * @return
      */
     public static boolean isJavaUDI(Indicator indicator) {
-        // TODO Auto-generated method stub
         IndicatorDefinition definition = indicator.getIndicatorDefinition();
         boolean systemIndicator = definition != null && definition.eResource() != null
                 && definition.eResource().getURI().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());

@@ -301,6 +301,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     protected List<Object[]> initDataSet(Indicator indicator, EMap<Indicator, AnalyzedDataSet> indicToRowMap, Object object) {
         AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
         List<Object[]> valueObjectList = null;

@@ -144,6 +144,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
         return folder.getProperty().getLabel() + "/" + path;//$NON-NLS-1$
     }
 
+    @SuppressWarnings("unchecked")
     private void addItemToRecycleBin(DQRepositoryNode parentNode, Item item, List<DQRepositoryNode> foldersList) {
         ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
         DQRepositoryNode currentParentNode = parentNode;
@@ -173,12 +174,12 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                     folderNode.setParent(parentNode);
                 }
 
-                for (Item curItem : (List<Item>) new ArrayList(((FolderItem) item).getChildren())) {
+                for (Item curItem : (List<Item>) new ArrayList<Item>(((FolderItem) item).getChildren())) {
                     addItemToRecycleBin(folderNode, curItem, foldersList);
                 }
                 currentParentNode = folderNode;
             } else {
-                for (Item curItem : (List<Item>) new ArrayList(((FolderItem) item).getChildren())) {
+                for (Item curItem : (List<Item>) new ArrayList<Item>(((FolderItem) item).getChildren())) {
                     addItemToRecycleBin(parentNode, curItem, foldersList);
                 }
             }

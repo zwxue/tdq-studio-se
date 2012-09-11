@@ -2664,6 +2664,7 @@ public final class RepositoryNodeHelper {
         return sortChildrenList;
     }
 
+    @SuppressWarnings("unchecked")
     private static Object[] sortChildren(Object[] objects) {
         if (objects == null || objects.length <= 1) {
             return objects;
@@ -2672,6 +2673,7 @@ public final class RepositoryNodeHelper {
         return objects;
     }
 
+    @SuppressWarnings("rawtypes")
     private static Comparator buildComparator() {
         return new RepositoryNodeComparator();
     }

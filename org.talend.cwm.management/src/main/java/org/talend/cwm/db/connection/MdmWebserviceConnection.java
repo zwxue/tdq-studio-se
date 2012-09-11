@@ -254,8 +254,7 @@ public class MdmWebserviceConnection implements IXMLDBConnection {
         try {
             file.create(new ByteArrayInputStream(resXSD.getBytes("UTF-8")), true, new NullProgressMonitor());//$NON-NLS-1$
         } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e);
         }
         // ~14089
         TdXmlSchema tdXmlDoc = XmlFactory.eINSTANCE.createTdXmlSchema();

@@ -152,6 +152,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws ParseException
      * @throws AnalysisExecutionException
      */
+    @SuppressWarnings("deprecation")
     private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
             AnalysisExecutionException {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
@@ -350,7 +351,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     final EList<CharactersMapping> charactersMapping = indicatorDefinition.getCharactersMapping();
                     colName = dbms().getPatternFinderFunction(colName, charactersMapping);
                     if (colName == null) { // no replacement found, try the default one
-                        // FIXME dbms().getPatternFinderDefaultFunction(colName) return null.
                         colName = dbms().getPatternFinderDefaultFunction(colName);
                     }
                     if (colName == null) { // no replacement found, try the default one
@@ -625,7 +625,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private String getDateAggregatedCompletedStringWithoutAlia(Expression sqlExpression, String colName, String table,
             DateGrain dateAggregationType) {
-        int nbExtractedColumns = 0;
         String result = PluginConstant.EMPTY_STRING;
         //        String aliases = ""; // used in group by clause in MySQL //$NON-NLS-1$
         // String alias;
@@ -633,35 +632,24 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         case DAY:
             // alias = getAlias(colName, DateGrain.DAY);
             result = dbms().extractDay(colName) + comma(result);
-            // aliases = alias + comma(aliases);
-            nbExtractedColumns++;
         case WEEK:
             // alias = getAlias(colName, DateGrain.WEEK);
             result = dbms().extractWeek(colName) + comma(result);
-            // aliases = alias + comma(aliases);
-            nbExtractedColumns++;
             // no break
         case MONTH:
             // alias = getAlias(colName, DateGrain.MONTH);
             result = dbms().extractMonth(colName) + comma(result);
-            // aliases = alias + comma(aliases);
-            nbExtractedColumns++;
             // no break
         case QUARTER:
             // alias = getAlias(colName, DateGrain.QUARTER);
             result = dbms().extractQuarter(colName) + comma(result);
-            // aliases = alias + comma(aliases);
-            nbExtractedColumns++;
             // no break
         case YEAR:
             // alias = getAlias(colName, DateGrain.YEAR);
             result = dbms().extractYear(colName) + comma(result);
-            // aliases = alias + comma(aliases);
-            nbExtractedColumns++;
             break;
         case NONE:
             result = colName;
-            nbExtractedColumns++;
             // aliases = colName; // bug 5336 fixed aliases must not be empty otherwise the group by clause is empty.
             break;
         default:
@@ -1454,6 +1442,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         try {
             TypedReturnCode<Connection> typedReturnCode = this.getConnection(cachedAnalysis);
             connection = typedReturnCode.getObject();
+            @SuppressWarnings("deprecation")
             DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
             if (connectionMetadata.getDriverName() != null
                     && connectionMetadata.getDriverName().toLowerCase().startsWith(DatabaseConstant.ODBC_DRIVER_NAME)) {

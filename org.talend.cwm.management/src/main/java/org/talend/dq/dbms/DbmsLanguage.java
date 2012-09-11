@@ -372,12 +372,6 @@ public class DbmsLanguage {
                     // go to next character mapping
                     continue;
                 }
-                // try with default language in case we don't find the appropriate language
-                if (this.getDefaultLanguage().equalsIgnoreCase(charactersMap.getLanguage())) {
-                    // FIXME resultingExpressionWithDefaultLang is never used.
-                    resultingExpressionWithDefaultLang = this.getPatternFinderFunction(colName, charactersToReplace,
-                            replacementCharacters);
-                }
                 return this.getPatternFinderFunction(colName, charactersToReplace, replacementCharacters);
             }
 
@@ -467,8 +461,7 @@ public class DbmsLanguage {
      * @return the n first row of the given query
      */
     public String getTopNQuery(String query, int n) {
-        // default: I don't know, simply return the query
-        return query; // FIXME find how to get top n in generic SQL or maybe return null
+        return null;
     }
 
     /**

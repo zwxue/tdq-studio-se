@@ -48,6 +48,7 @@ public final class WhereRuleHandler {
      */
     public WhereRule getWhereRule(String name) {
         WhereRule result = null;
+        @SuppressWarnings("unchecked")
         List<DQRule> rules = (List<DQRule>) DQRuleResourceFileHelper.getInstance().getAllElement();
         for (DQRule rule : rules) {
             if (rule instanceof WhereRule && name.equals(rule.getName())) {

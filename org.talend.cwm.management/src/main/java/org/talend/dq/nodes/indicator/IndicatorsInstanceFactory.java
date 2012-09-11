@@ -36,10 +36,8 @@ public class IndicatorsInstanceFactory {
                 indicator = cla.newInstance();
                 instanceMap.put(cla.getSimpleName(), indicator);
             } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
                 log.error(e, e);
             } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
                 log.error(e, e);
             }
         }

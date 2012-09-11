@@ -55,6 +55,7 @@ public class ConnectionService {
             java.sql.Connection sqlConn = null;
             try {
             if (rc instanceof TypedReturnCode) {
+                    @SuppressWarnings("rawtypes")
                 Object sqlConnObject=((TypedReturnCode) rc).getObject();
                 if(sqlConnObject instanceof java.sql.Connection){
                     sqlConn = (java.sql.Connection) sqlConnObject;

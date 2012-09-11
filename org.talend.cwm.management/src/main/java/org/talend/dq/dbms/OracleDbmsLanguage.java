@@ -50,7 +50,6 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     OracleDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
-        // TODO Auto-generated constructor stub
     }
 
     /*

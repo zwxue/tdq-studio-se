@@ -123,6 +123,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
         return colName;
     }
 
+    @SuppressWarnings("deprecation")
     private String columnNameConvert() {
         String colName = columnName;
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();

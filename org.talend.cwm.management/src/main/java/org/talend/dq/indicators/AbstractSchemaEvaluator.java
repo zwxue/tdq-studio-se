@@ -224,6 +224,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @return
      * @throws SQLException
      */
+    @SuppressWarnings("deprecation")
     private int getIndexCount(String catalog, String schema, String table) throws SQLException {
         int idxCount = 0;
         ResultSet idx = null;
@@ -263,6 +264,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      * @return
      * @throws SQLException
      */
+    @SuppressWarnings("deprecation")
     private int getPKCount(String catalog, String schema, String table) throws SQLException {
         int pkCount = 0;
         ResultSet pk = null;

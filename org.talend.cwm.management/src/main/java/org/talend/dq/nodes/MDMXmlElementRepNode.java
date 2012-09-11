@@ -69,7 +69,9 @@ public class MDMXmlElementRepNode extends DQRepositoryNode {
         }
 
         // FIXME xmlElements might be null.
-        if (xmlElements.size() > 0) {
+        if (xmlElements == null || xmlElements.size() < 1) {
+            return new ArrayList<IRepositoryNode>();
+        } else { // xmlElements.size() > 0
             for (ModelElement mElement : xmlElements) {
                 MetadataXmlElementTypeRepositoryObject metadataXmlElementType = new MetadataXmlElementTypeRepositoryObject(
                         this.getObject(), (TdXmlElementType) mElement);
@@ -83,8 +85,6 @@ public class MDMXmlElementRepNode extends DQRepositoryNode {
             }
             return filterResultsIfAny(childrenNode);
             // ~22204
-        } else {
-            return new ArrayList<IRepositoryNode>();
         }
     }
 

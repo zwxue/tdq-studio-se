@@ -23,7 +23,6 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 public class PhoneNumbStatisticsExplorer extends DataExplorer {
 
     public PhoneNumbStatisticsExplorer() {
-        // TODO Auto-generated constructor stub
     }
 
     /* (non-Jsdoc)

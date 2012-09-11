@@ -189,7 +189,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                 TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
                 if (parentXmlElement == null) {
                     this.errorMessage = Messages.getString(
-                            "ColumnAnalysisExecutor.NoContainerFound", parentElement.getName(), parentXmlElement); //$NON-NLS-1$
+"ColumnAnalysisExecutor.NoContainerFound", parentElement.getName()); //$NON-NLS-1$
                     return null;
                 }
                 sql.append(parentXmlElement.getName());
@@ -237,8 +237,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
             ColumnSet colSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
             if (colSet == null) {
-                // FIXME colSet is a null.
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName(), colSet); //$NON-NLS-1$
+                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName()); //$NON-NLS-1$
                 return null;
             }
             // else add into select

@@ -92,8 +92,6 @@ public final class DefinitionHandler {
 
     private static final String FD_RULE_DEFINITION = "_YqcX0XHpEd6udst2R2sgpA"; //$NON-NLS-1$
 
-    private static final String REGULAR_EXPRESSION_MATCHING_DEFINITION = "_yb-_8Dh8Ed2XmO7pl5Yuyg"; //$NON-NLS-1$ 
-
     private static Map<String, IndicatorCategory> userDefinedIndicatorCategoryMap;
 
     private List<IndicatorDefinition> indicatorDefinitions = new ArrayList<IndicatorDefinition>();
@@ -124,6 +122,7 @@ public final class DefinitionHandler {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void initializeDefinitions() {
         this.indicatorDefinitions.clear();
         this.indicatorCategories = loadDefinitionsFromFile().getCategories();

@@ -42,7 +42,6 @@ public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
      * @see org.talend.dataprofiler.core.model.nodes.analysis.IAnalysisTypeNode#getChildren()
      */
     public Object[] getChildren() {
-        // TODO Auto-generated method stub
         return this.children;
     }
 
@@ -50,7 +49,6 @@ public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
      * @see org.talend.dataprofiler.core.model.nodes.analysis.IAnalysisTypeNode#getName()
      */
     public String getName() {
-        // TODO Auto-generated method stub
         return this.name;
     }
 
@@ -58,7 +56,6 @@ public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
      * @see org.talend.dataprofiler.core.model.nodes.analysis.IAnalysisTypeNode#setChildren(java.util.List)
      */
     public void setChildren(Object[] children) {
-        // TODO Auto-generated method stub
         this.children = children;
     }
 
@@ -66,8 +63,6 @@ public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
      * @see org.talend.dataprofiler.core.model.nodes.analysis.IAnalysisTypeNode#setName(java.lang.String)
      */
     public void setName(String name) {
-        // TODO Auto-generated method stub
-
         this.name = name;
     }
 
@@ -75,7 +70,6 @@ public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
      * @see org.talend.dataprofiler.core.model.nodes.analysis.IAnalysisTypeNode#getParent()
      */
     public Object getParent() {
-        // TODO Auto-generated method stub
         return this.parent;
     }
 
@@ -83,7 +77,6 @@ public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
      * @see org.talend.dataprofiler.core.model.nodes.analysis.IAnalysisTypeNode#setParent(java.lang.Object)
      */
     public void setParent(Object parent) {
-        // TODO Auto-generated method stub
         this.parent = parent;
     }
 

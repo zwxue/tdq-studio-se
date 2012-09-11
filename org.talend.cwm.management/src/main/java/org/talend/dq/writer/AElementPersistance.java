@@ -71,7 +71,6 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -328,7 +327,6 @@ public abstract class AElementPersistance {
         Resource propResource = util.createResource(uri);
         propResource.getContents().add(property);
 
-        // FIXME rc is assigned value two times. remove one.
         rc = saveProperty(property);
 
         return rc;

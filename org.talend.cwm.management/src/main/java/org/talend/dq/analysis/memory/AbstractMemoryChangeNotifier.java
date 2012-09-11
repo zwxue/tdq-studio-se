@@ -86,8 +86,6 @@ public abstract class AbstractMemoryChangeNotifier implements IMemoryChangeNotif
         if (threshold <= 0) {
             tenuredGenPoll.setUsageThreshold(0);
         } else {
-            long usedMemory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();
-            long maxMemory = tenuredGenPoll.getUsage().getMax();
             // the threshold shoudle less than max memory
             tenuredGenPoll.setUsageThreshold(threshold);
         }
